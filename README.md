@@ -21,4 +21,6 @@
 
 #Cmds used till now
 
+npm install @headlessui/react @heroicons/react
 npm install react-transition-group
+npm i --save react-select

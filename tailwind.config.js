@@ -5,6 +5,11 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
+    input: {
+      focus: {
+        boxShadow: "none",
+      },
+    },
     extend: {
       container: {
         center: true,
@@ -15,5 +20,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

@@ -10,6 +10,12 @@ import Product from "./components/Product";
 import Scheme from "./components/Scheme";
 import Notifications from "./components/Notifications";
 import Expense from "./components/Expense";
+import SlideNav from "./components/SlideNav";
+import CashLoan from "./components/CashLoan";
+import CreditScore from "./components/CreditScore";
+import RacMatrixConfig from "./components/RacMatrixConfig";
+import LoanProductConfig from "./components/LoanProductConfig";
+import DebtBurdenConfig from "./components/DebtBurdenConfig";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -22,7 +28,7 @@ const AppLayout = () => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex max-w-full overflow-x-hidden">
         <LeftPanel />
         <div className="flex grow flex-col min-h-screen">
           <Header />
@@ -57,6 +63,30 @@ function App() {
         {
           path: "/product",
           element: <Product />,
+          children: [
+            {
+              path: "cash-loan",
+              element: <CashLoan />,
+              children: [
+                {
+                  path: "rmc",
+                  element: <RacMatrixConfig />,
+                },
+                {
+                  path: "credit-score",
+                  element: <CreditScore />,
+                },
+                {
+                  path: "loan-product-config",
+                  element: <LoanProductConfig />,
+                },
+                {
+                  path: "debt-burden-config",
+                  element: <DebtBurdenConfig />,
+                },
+              ],
+            },
+          ],
         },
         {
           path: "/scheme",
@@ -69,6 +99,10 @@ function App() {
         {
           path: "/expense",
           element: <Expense />,
+        },
+        {
+          path: "/slidenav",
+          element: <SlideNav />,
         },
       ],
     },
