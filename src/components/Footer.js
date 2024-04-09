@@ -7,7 +7,7 @@ const Footer = () => {
           <div className="container">
             <div className="flex justify-between">
               <div> © {year} All Rights Reserved</div>
-              <div>Developed by: VA North Star</div>
+              <div>powered by PhotonMatters</div>
             </div>
           </div>
         </div>

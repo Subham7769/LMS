@@ -17,7 +17,7 @@ const options = [
   { value: "yearly", label: "Yearly" },
 ];
 
-const SlideNav = () => {
+const CreditPolicy = () => {
   const [inputList, setInputList] = useState([
     {
       id: 1,
@@ -58,7 +58,7 @@ const SlideNav = () => {
   return (
     <>
       <MaxFinAmtTen />
-      <div className="border-b border-gray-300 pb-8 mb-8">
+      <div className="border-b border-gray-300 pb-8 my-8">
         <div className=" text-center my-4">
           Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
           (*Length of Service*C%) + (*Cities*D%)]
@@ -128,7 +128,7 @@ const SlideNav = () => {
           </button>
         </div>
         {inputList.map((item, index) => (
-          <div key={item.id} className="flex gap-5 mt-2 items-end">
+          <div key={item.id} className="flex gap-8 mt-2 items-end">
             <InequalityNumber
               labelText={"Minimum Risk Based Pricing:"}
               placeholder={"0.5"}
@@ -187,7 +187,7 @@ const SlideNav = () => {
         </div>
       </div>
       <LengthofService />
-      <div className="flex">
+      <div className="flex gap-10">
         <TagsComp label={"City"} />
         <TagsComp label={"Occupation"} />
       </div>
@@ -195,4 +195,4 @@ const SlideNav = () => {
   );
 };
 
-export default SlideNav;
+export default CreditPolicy;

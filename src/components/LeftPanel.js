@@ -18,6 +18,13 @@ const Menus = [
     icon: FolderIcon,
     count: "12",
     current: false,
+    submenu: true,
+    submenuItems: [
+      { title: "Cash Loan RAC", href: "/rac/cash-loan/rmc" },
+      { title: "BNPL RAC", href: "#" },
+      { title: "Overdraft RAC", href: "#" },
+    ],
+    isOpen: false,
   },
   {
     title: "Product",
@@ -28,10 +35,11 @@ const Menus = [
     spacing: false,
     submenu: true,
     submenuItems: [
-      { title: "Cash Loan", href: "/product/cash-loan/rmc" },
+      { title: "Cash Loan", href: "/product/cash-loan/loan-product-config" },
       { title: "BNPL", href: "#" },
       { title: "Overdraft", href: "#" },
     ],
+    isOpen: false,
   },
   {
     title: "Group",
@@ -63,7 +71,10 @@ function classNames(...classes) {
 
 const LeftPanel = () => {
   const [open, setOpen] = useState(true);
-  const [submenuOpen, setSubmenuOpen] = useState(false);
+  // const [submenuOpen, setSubmenuOpen] = useState(false);
+  const [submenuStates, setSubmenuStates] = useState(
+    Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
+  );
   const [navItems, setNavItems] = useState(Menus);
   const toggleSidebar = () => {
     setOpen(!open);
@@ -77,7 +88,16 @@ const LeftPanel = () => {
       };
     });
     setNavItems(updatedNavItems);
-    console.log("handleClicked");
+  };
+
+  const toggleSubmenu = (index) => {
+    setSubmenuStates(
+      Menus.map((menu, i) =>
+        i === index && menu.submenu
+          ? { isOpen: !submenuStates[index].isOpen }
+          : submenuStates[i]
+      )
+    );
   };
 
   return (
@@ -133,7 +153,12 @@ const LeftPanel = () => {
         </button>
         <ul className="pt-2">
           {navItems.map((menu, index) => (
-            <>
+            <div key={menu.title}>
+              {open && menu.spacing && (
+                <span className="block text-gray-500 mt-4 mb-2 pl-3">
+                  Subheading
+                </span>
+              )}
               <Link
                 to={menu.href}
                 onClick={() => handleItemClick(index)}
@@ -143,9 +168,7 @@ const LeftPanel = () => {
               >
                 <li
                   key={menu.title}
-                  className={`text-gray-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600 ${
-                    menu.spacing ? "mt-9" : "mt-2"
-                  }`}
+                  className={`text-gray-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600`}
                 >
                   <span className="text-2xl block float-left">
                     <menu.icon
@@ -158,40 +181,47 @@ const LeftPanel = () => {
                     />
                   </span>
                   <span
-                    className={`text-base font-medium flex-1 duration-200 ${
-                      !open && "hidden"
-                    }`}
+                    className={classNames(
+                      menu.current
+                        ? `text-indigo-600`
+                        : `text-gray-400 group-hover:text-indigo-600`,
+                      `text-base font-medium flex-1 duration-200 ${
+                        !open && "hidden"
+                      }`
+                    )}
                   >
                     {menu.title}
                   </span>
                   {menu.submenu && open && (
                     <ChevronRightIcon
                       className={classNames(
-                        submenuOpen
+                        submenuStates[index]?.isOpen
                           ? "rotate-90 text-gray-500"
                           : "text-gray-400",
                         "h-5 w-5 shrink-0"
                       )}
-                      onClick={() => setSubmenuOpen(!submenuOpen)}
+                      onClick={() => toggleSubmenu(index)}
                     />
                   )}
                 </li>
               </Link>
-              {menu.submenu && submenuOpen && open && (
+              {menu.submenu && submenuStates[index]?.isOpen && open && (
                 <ul>
-                  {menu.submenuItems.map((submenuItem, index) => (
-                    <Link to={submenuItem.href}>
-                      <li
-                        key={submenuItem.title}
-                        className="text-gray-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600"
-                      >
-                        {submenuItem.title}
-                      </li>
-                    </Link>
+                  {menu.submenuItems.map((submenuItem) => (
+                    <div key={submenuItem.title}>
+                      <Link to={submenuItem.href}>
+                        <li
+                          key={submenuItem.title}
+                          className="text-gray-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600"
+                        >
+                          {submenuItem.title}
+                        </li>
+                      </Link>
+                    </div>
                   ))}
                 </ul>
               )}
-            </>
+            </div>
           ))}
         </ul>
       </div>

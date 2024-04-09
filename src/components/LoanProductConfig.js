@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { PlusIcon } from "@heroicons/react/20/solid";
-import { TrashIcon } from "@heroicons/react/20/solid";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import {
+  PlusIcon,
+  TrashIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/20/solid";
 import Select from "react-select";
 
 const options = [

@@ -16,6 +16,8 @@ import CreditScore from "./components/CreditScore";
 import RacMatrixConfig from "./components/RacMatrixConfig";
 import LoanProductConfig from "./components/LoanProductConfig";
 import DebtBurdenConfig from "./components/DebtBurdenConfig";
+import CashLoanRAC from "./components/CashLoanRAC";
+import CreditPolicy from "./components/CreditPolicy";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -59,6 +61,18 @@ function App() {
         {
           path: "/rac",
           element: <RAC />,
+          children: [
+            {
+              path: "cash-loan",
+              element: <CashLoanRAC />,
+              children: [
+                {
+                  path: "rmc",
+                  element: <RacMatrixConfig />,
+                },
+              ],
+            },
+          ],
         },
         {
           path: "/product",
@@ -68,10 +82,6 @@ function App() {
               path: "cash-loan",
               element: <CashLoan />,
               children: [
-                {
-                  path: "rmc",
-                  element: <RacMatrixConfig />,
-                },
                 {
                   path: "credit-score",
                   element: <CreditScore />,
@@ -83,6 +93,10 @@ function App() {
                 {
                   path: "debt-burden-config",
                   element: <DebtBurdenConfig />,
+                },
+                {
+                  path: "credit-policy",
+                  element: <CreditPolicy />,
                 },
               ],
             },
