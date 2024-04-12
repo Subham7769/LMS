@@ -1,8 +1,8 @@
-const Footer = () => {
+const Footer = ({ mgLeft }) => {
   const year = new Date().getFullYear();
   return (
     <>
-      <footer className="mt-auto">
+      <footer style={{ marginLeft: `${mgLeft}px` }} className="mt-auto">
         <div className=" text-grey-700 py-3 mt-20 text-sm">
           <div className="container">
             <div className="flex justify-between">

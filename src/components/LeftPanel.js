@@ -48,8 +48,8 @@ const Menus = [
     current: false,
   },
   {
-    title: "Notifications",
-    href: "/notification",
+    title: "Global Configuration",
+    href: "/global-config",
     icon: ChartPieIcon,
     current: false,
   },
@@ -61,7 +61,13 @@ const Menus = [
     current: false,
     spacing: true,
   },
-  { id: 2, title: "Tailwind", href: "#", icon: UsersIcon, current: false },
+  {
+    id: 2,
+    title: "Customer Care",
+    href: "/customer-care",
+    icon: UsersIcon,
+    current: false,
+  },
   { id: 3, title: "Workcation", href: "#", icon: UsersIcon, current: false },
 ];
 
@@ -103,8 +109,9 @@ const LeftPanel = () => {
   return (
     <>
       <div
-        className={`border-r border-gray-200 text-left flex flex-col pl-4 gap-y-5 transform duration-1000 ease-in-out ${
-          open ? "w-72" : "w-16"
+        id="leftPanelId"
+        className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4 gap-y-5 transform duration-1000 ease-in-out ${
+          open ? "w-64" : "w-16"
         }`}
       >
         <div className="flex h-16 shrink-0 items-center">
