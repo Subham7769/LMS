@@ -46,7 +46,7 @@ const SubscriberInfo = () => {
     // Update the state with the formatted date
     setRegDate(formattedDate);
   }
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="">
@@ -100,13 +100,15 @@ const SubscriberInfo = () => {
             </div>
           </div>
           <div className="shadow-md rounded-lg p-3 mt-4">
-            <div className="flex justify-between">
+            <div
+              className="flex justify-between"
+              onClick={() => setOpen(!open)}
+            >
               <div className="text-xl">Residential Details</div>
               <ChevronRightIcon
                 className={`z-10 h-5 w-5 shrink-0 rotate-90 transform duration-500 ease-in-out ${
                   open ? "-rotate-90 text-gray-500" : "text-gray-400"
                 }`}
-                onClick={() => setOpen(!open)}
               />
             </div>
             <div

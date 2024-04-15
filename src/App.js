@@ -22,6 +22,11 @@ import GlobalConfig from "./components/GlobalConfig/GlobalConfig";
 import GcCreditPolicy from "./components/GlobalConfig/GcCreditPolicy";
 import CustomerCare from "./components/CustomerCare/CustomerCare";
 import SubscriberInfo from "./components/CustomerCare/SubscriberInfo";
+import LiabilitiesMatrix from "./components/GlobalConfig/LiabilitiesMatrix";
+import RiskGradeCal from "./components/GlobalConfig/RiskGradeCal";
+import BareMinimumExp from "./components/GlobalConfig/BareMinimumExp";
+import NotificationText from "./components/GlobalConfig/NotificationText";
+import SystemConfig from "./components/GlobalConfig/SystemConfig";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -135,6 +140,26 @@ function App() {
             {
               path: "cp",
               element: <GcCreditPolicy />,
+            },
+            {
+              path: "liability-matrix",
+              element: <LiabilitiesMatrix />,
+            },
+            {
+              path: "risk-grade-cal",
+              element: <RiskGradeCal />,
+            },
+            {
+              path: "bare-min-exp",
+              element: <BareMinimumExp />,
+            },
+            {
+              path: "notification-text",
+              element: <NotificationText />,
+            },
+            {
+              path: "system-config",
+              element: <SystemConfig />,
             },
           ],
         },

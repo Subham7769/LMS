@@ -12,7 +12,7 @@ const productOptions = [
   { value: "overdraft", label: "Overdraft" },
 ];
 
-const SlideNav = () => {
+const SystemConfig = () => {
   const [inputList, setInputList] = useState([
     {
       id: 1,
@@ -163,4 +163,4 @@ const SlideNav = () => {
   );
 };
 
-export default SlideNav;
+export default SystemConfig;

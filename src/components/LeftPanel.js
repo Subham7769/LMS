@@ -111,7 +111,7 @@ const LeftPanel = () => {
       <div
         id="leftPanelId"
         className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4 gap-y-5 transform duration-1000 ease-in-out ${
-          open ? "w-64" : "w-16"
+          open ? "w-60" : "w-16"
         }`}
       >
         <div className="flex h-16 shrink-0 items-center">

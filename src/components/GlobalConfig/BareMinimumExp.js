@@ -6,20 +6,28 @@ import {
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
 
-const productOptions = [
-  { value: "cashLoan", label: "Cash Loan" },
-  { value: "BNPL", label: "BNPL" },
-  { value: "overdraft", label: "Overdraft" },
+const typeOptions = [
+  { value: "loan", label: "Loan" },
+  { value: "dependents", label: "Dependents" },
+  { value: "children", label: "Children" },
+  { value: "domesticWorkers", label: "Domestic Workers" },
 ];
 
-const SlideNav = () => {
+const frequencyOptions = [
+  { value: "daily", label: "Daily" },
+  { value: "weekly", label: "Weekly" },
+  { value: "monthly", label: "Monthly" },
+  { value: "yearly", label: "Yearly" },
+];
+
+const BareMinimumExp = () => {
   const [inputList, setInputList] = useState([
     {
       id: 1,
-      product: "",
-      mgmtFeeVat: "",
-      noEMIEarlySetle: "",
-      refinaceWith: "",
+      expense: "",
+      type: "",
+      frequency: "",
+      minExpense: "",
     },
   ]);
   const handleAddFields = () => {
@@ -27,10 +35,10 @@ const SlideNav = () => {
       ...inputList,
       {
         id: Date.now(),
-        product: "",
-        mgmtFeeVat: "",
-        noEMIEarlySetle: "",
-        refinaceWith: "",
+        expense: "",
+        type: "",
+        frequency: "",
+        minExpense: "",
       },
     ]);
   };
@@ -57,7 +65,7 @@ const SlideNav = () => {
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
       <div className="flex items-center justify-between ">
-        <div className="">System Configuration</div>
+        <div className="">Bare Minimum Expenses</div>
         <button
           onClick={handleAddFields}
           type="button"
@@ -70,76 +78,77 @@ const SlideNav = () => {
         <div key={item.id} className="flex gap-4 items-end mt-5">
           <div className="relative">
             <label
-              htmlFor={`product_${item.id}`}
+              htmlFor={`expense_${item.id}`}
+              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+            >
+              Expenses
+            </label>
+            <input
+              type="text"
+              name="expense"
+              id={`expense_${item.id}`}
+              value={item.expense}
+              onChange={(e) => handleChange(e, item.id)}
+              className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Food and Living"
+            />
+          </div>
+          <div className="relative">
+            <label
+              htmlFor={`type_${item.id}`}
               className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
             >
-              Product Name
+              Type
             </label>
             <Select
-              className="w-48"
-              options={productOptions}
-              id={`product_${item.id}`}
-              name="product"
-              value={productOptions.find(
-                (option) => option.value === item.product
-              )}
+              className="w-64"
+              options={typeOptions}
+              id={`type_${item.id}`}
+              name="type"
+              value={typeOptions.find((option) => option.value === item.type)}
               onChange={(selectedOption) =>
-                handleDDChange("product", selectedOption, item.id)
+                handleDDChange("type", selectedOption, item.id)
               }
               isSearchable={false}
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`mgmtFeeVat_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              htmlFor={`frequency_${item.id}`}
+              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
             >
-              Management Fee Vat
+              Expenses Frequency
             </label>
-            <input
-              type="number"
-              name="mgmtFeeVat"
-              id={`mgmtFeeVat_${item.id}`}
-              value={item.mgmtFeeVat}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="15%"
+            <Select
+              className="w-64"
+              options={frequencyOptions}
+              id={`frequency_${item.id}`}
+              name="frequency"
+              value={frequencyOptions.find(
+                (option) => option.value === item.frequency
+              )}
+              onChange={(selectedOption) =>
+                handleDDChange("frequency", selectedOption, item.id)
+              }
+              isSearchable={false}
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`noEMIEarlySetle_${item.id}`}
+              htmlFor={`minExpense_${item.id}`}
               className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
             >
-              Number Of Emis For Early Settlement
+              Bare Minimum Expense Per Person
             </label>
             <input
-              type="number"
-              name="noEMIEarlySetle"
-              id={`noEMIEarlySetle_${item.id}`}
-              value={item.noEMIEarlySetle}
+              type="text"
+              name="minExpense"
+              id={`minExpense_${item.id}`}
+              value={item.minExpense}
               onChange={(e) => handleChange(e, item.id)}
-              className="block w-60 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="3"
+              className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="200"
             />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`refinaceWith_${item.id}`}
-              className=" text-gray-900 block text-xs text-center w-24 mb-2"
-            >
-              Refinanced With
-            </label>
-            <div className="flex h-6 justify-center">
-              <input
-                id={`refinaceWith_${item.id}`}
-                value={item.refinaceWith}
-                name="refinaceWith"
-                type="checkbox"
-                onChange={(e) => handleChange(e, item.id)}
-                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              />
-            </div>
           </div>
           <button
             onClick={() => handleDelete(index)}
@@ -163,4 +172,4 @@ const SlideNav = () => {
   );
 };
 
-export default SlideNav;
+export default BareMinimumExp;
