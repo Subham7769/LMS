@@ -4,7 +4,7 @@ const CashLoanRAC = () => {
   return (
     <div className="mt-4">
       <h2 className="mb-5">
-        RAC Name: <b>Cash Loan</b>
+        Name: <b>Cash Loan</b>
       </h2>
       <div className="">
         <Outlet />

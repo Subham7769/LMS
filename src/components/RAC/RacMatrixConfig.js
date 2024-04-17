@@ -1,7 +1,7 @@
-import DeliquencyEq from "./DeliquencyEq";
-import InequalityNumber from "./InequalityNumber";
-import TagsDropdown from "./TagsDropdown";
-import ToggleSwitch from "./ToggleSwitch";
+import DeliquencyEq from "../DeliquencyEq";
+import InequalityNumber from "../InequalityNumber";
+import TagsDropdown from "../TagsDropdown";
+import ToggleSwitch from "../ToggleSwitch";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
 const options = [

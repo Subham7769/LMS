@@ -1,74 +1,107 @@
 import { useState } from "react";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { NavLink } from "react-router-dom";
 
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
-  CalendarIcon,
-  ChartPieIcon,
-  FolderIcon,
+  AdjustmentsHorizontalIcon,
+  Cog6ToothIcon,
+  ClipboardDocumentCheckIcon,
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
 
 const Menus = [
   { title: "Home", href: "/", icon: HomeIcon, count: "5", current: true },
   {
     title: "RAC",
     href: "/rac",
-    icon: FolderIcon,
-    count: "12",
+    icon: ClipboardDocumentCheckIcon,
     current: false,
     submenu: true,
     submenuItems: [
       { title: "Cash Loan RAC", href: "/rac/cash-loan/rmc" },
-      { title: "BNPL RAC", href: "#" },
-      { title: "Overdraft RAC", href: "#" },
+      { title: "BNPL RAC", href: "/slidenav" },
+      { title: "Overdraft RAC", href: "/slidenav" },
     ],
     isOpen: false,
   },
   {
     title: "Product",
-    href: "/product",
-    icon: CalendarIcon,
-    count: "20+",
+    href: "/product/cash-loan/loan-product-config",
+    icon: AdjustmentsHorizontalIcon,
     current: false,
     spacing: false,
     submenu: true,
     submenuItems: [
-      { title: "Cash Loan", href: "/product/cash-loan/loan-product-config" },
-      { title: "BNPL", href: "#" },
-      { title: "Overdraft", href: "#" },
+      {
+        title: "Cash Loan",
+        href: "/product/cash-loan/loan-product-config",
+      },
+      { title: "BNPL", href: "/slidenav" },
+      { title: "Overdraft", href: "/slidenav" },
     ],
     isOpen: false,
   },
   {
     title: "Group",
-    href: "/group",
+    href: "/group/1",
     icon: UsersIcon,
     current: false,
+    spacing: false,
+    submenu: true,
+    submenuItems: [
+      {
+        title: "Group 1",
+        href: "/group/1",
+      },
+      { title: "Group 2", href: "/group/2" },
+      { title: "Group 3", href: "/group/3" },
+    ],
+    isOpen: false,
   },
   {
-    title: "Global Configuration",
-    href: "/global-config",
-    icon: ChartPieIcon,
+    title: "Global Config",
+    href: "/global-config/cp",
+    icon: Cog6ToothIcon,
     current: false,
+    spacing: false,
+    submenu: true,
+    submenuItems: [
+      { title: "Credit Policy", href: "/global-config/cp", current: false },
+      {
+        title: "Liabilities Matrix",
+        href: "/global-config/liability-matrix",
+        current: false,
+      },
+      {
+        title: "Risk Grading Cal",
+        href: "/global-config/risk-grade-cal",
+        current: false,
+      },
+      {
+        title: "Minimum Expense",
+        href: "/global-config/bare-min-exp",
+        current: false,
+      },
+      {
+        title: "Notification Text",
+        href: "/global-config/notification-text",
+        current: false,
+      },
+      {
+        title: "System Config",
+        href: "/global-config/system-config",
+        current: false,
+      },
+    ],
+    isOpen: false,
   },
   {
-    id: 1,
-    title: "Expense",
-    href: "/expense",
-    icon: UsersIcon,
-    current: false,
-    spacing: true,
-  },
-  {
-    id: 2,
     title: "Customer Care",
     href: "/customer-care",
     icon: UsersIcon,
     current: false,
   },
-  { id: 3, title: "Workcation", href: "#", icon: UsersIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -77,23 +110,11 @@ function classNames(...classes) {
 
 const LeftPanel = () => {
   const [open, setOpen] = useState(true);
-  // const [submenuOpen, setSubmenuOpen] = useState(false);
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
   );
-  const [navItems, setNavItems] = useState(Menus);
   const toggleSidebar = () => {
     setOpen(!open);
-  };
-
-  const handleItemClick = (index) => {
-    const updatedNavItems = navItems.map((item, i) => {
-      return {
-        ...item,
-        current: i === index ? true : false,
-      };
-    });
-    setNavItems(updatedNavItems);
   };
 
   const toggleSubmenu = (index) => {
@@ -105,12 +126,11 @@ const LeftPanel = () => {
       )
     );
   };
-
   return (
     <>
       <div
         id="leftPanelId"
-        className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4 gap-y-5 transform duration-1000 ease-in-out ${
+        className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4  transform duration-1000 ease-in-out ${
           open ? "w-60" : "w-16"
         }`}
       >
@@ -122,12 +142,12 @@ const LeftPanel = () => {
           />
         </div>
         <button onClick={toggleSidebar} className="flex justify-end">
-          <div className="-mr-4 absolute top-64">
-            <div className="bg-indigo-600 h-8 w-8 rounded-full p-1">
+          <div className="-mr-3 absolute top-60">
+            <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
               {open ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
+                  className="h-4 w-4 text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -142,7 +162,7 @@ const LeftPanel = () => {
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
+                  className="h-4 w-4 text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -158,40 +178,19 @@ const LeftPanel = () => {
             </div>
           </div>
         </button>
-        <ul className="pt-2">
-          {navItems.map((menu, index) => (
+        <ul className="pt-2 pr-1.5">
+          {Menus.map((menu, index) => (
             <div key={menu.title}>
-              {open && menu.spacing && (
-                <span className="block text-gray-500 mt-4 mb-2 pl-3">
-                  Subheading
-                </span>
-              )}
-              <Link
-                to={menu.href}
-                onClick={() => handleItemClick(index)}
-                className={classNames(
-                  menu.current ? " text-indigo-600" : "hover:text-indigo-600"
-                )}
-              >
+              <NavLink to={menu.href} className="text-gray-500 ">
                 <li
                   key={menu.title}
-                  className={`text-gray-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600`}
+                  className={`text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600`}
                 >
                   <span className="text-2xl block float-left">
-                    <menu.icon
-                      className={classNames(
-                        menu.current
-                          ? "text-indigo-600"
-                          : "text-gray-400 group-hover:text-indigo-600",
-                        "h-6 w-6 shrink-0"
-                      )}
-                    />
+                    <menu.icon className={classNames("h-6 w-6 shrink-0")} />
                   </span>
                   <span
                     className={classNames(
-                      menu.current
-                        ? `text-indigo-600`
-                        : `text-gray-400 group-hover:text-indigo-600`,
                       `text-base font-medium flex-1 duration-200 ${
                         !open && "hidden"
                       }`
@@ -211,19 +210,19 @@ const LeftPanel = () => {
                     />
                   )}
                 </li>
-              </Link>
+              </NavLink>
               {menu.submenu && submenuStates[index]?.isOpen && open && (
                 <ul>
-                  {menu.submenuItems.map((submenuItem) => (
+                  {menu.submenuItems.map((submenuItem, subIndex) => (
                     <div key={submenuItem.title}>
-                      <Link to={submenuItem.href}>
+                      <NavLink to={submenuItem.href} className="text-gray-500">
                         <li
                           key={submenuItem.title}
-                          className="text-gray-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600"
+                          className="text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600"
                         >
                           {submenuItem.title}
                         </li>
-                      </Link>
+                      </NavLink>
                     </div>
                   ))}
                 </ul>

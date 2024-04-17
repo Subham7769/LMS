@@ -23,7 +23,7 @@ const MaxFinAmtTen = () => {
     <>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 mx-auto max-w-[660px] border border-red-600">
         <div className="flex items-center justify-between ">
-          <div className="">Max Finance Amount With Tenure </div>
+          <div className="text-lg">Max Finance Amount With Tenure </div>
           <button
             onClick={handleAddFields}
             type="button"

@@ -1,7 +1,8 @@
+import { Outlet } from "react-router-dom";
 const Group = () => {
   return (
     <>
-      <p>Group Component</p>
+      <Outlet />
     </>
   );
 };

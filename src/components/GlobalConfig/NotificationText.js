@@ -60,8 +60,8 @@ const NotificationText = () => {
   };
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-      <div className="flex items-center justify-between ">
-        <div className="">Notification Text</div>
+      <div className="flex items-start justify-between ">
+        <div className="mb-10 text-lg">Notification Text</div>
         <button
           onClick={handleAddFields}
           type="button"
@@ -71,123 +71,130 @@ const NotificationText = () => {
         </button>
       </div>
       {inputList.map((item, index) => (
-        <div key={item.id} className="flex gap-4 mt-5">
-          <div className="relative">
-            <label
-              htmlFor={`notiType_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+        <div
+          key={item.id}
+          className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
+        >
+          <div className="flex gap-8">
+            <div className="relative">
+              <label
+                htmlFor={`notiType_${item.id}`}
+                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Notification Type
+              </label>
+              <input
+                type="text"
+                name="notiType"
+                id={`notiType_${item.id}`}
+                value={item.notiType}
+                onChange={(e) => handleChange(e, item.id)}
+                className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
+                placeholder="REMINDER_EMI"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`notiDisplayName_${item.id}`}
+                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Notification Display Name
+              </label>
+              <input
+                type="text"
+                name="notiDisplayName"
+                id={`notiDisplayName_${item.id}`}
+                value={item.notiDisplayName}
+                onChange={(e) => handleChange(e, item.id)}
+                className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Installment reminder"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`notiChannel_${item.id}`}
+                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Notification Channel
+              </label>
+              <Select
+                className="w-80"
+                options={notiChannelOptions}
+                id={`notiChannel_${item.id}`}
+                name="notiChannel"
+                value={notiChannelOptions.find(
+                  (option) => option.value === item.notiChannel
+                )}
+                onChange={(selectedOption) =>
+                  handleDDChange("notiChannel", selectedOption, item.id)
+                }
+                isSearchable={false}
+              />
+            </div>
+            <button
+              onClick={() => handleDelete(index)}
+              type="button"
+              className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             >
-              Notification Type
-            </label>
-            <input
-              type="text"
-              name="notiType"
-              id={`notiType_${item.id}`}
-              value={item.notiType}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="REMINDER_EMI"
-            />
+              <TrashIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
-          <div className="relative">
-            <label
-              htmlFor={`notiMsg_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Notification Message En
-            </label>
-            <textarea
-              type="text"
-              rows={4}
-              name="notiMsg"
-              id={`notiMsg_${item.id}`}
-              value={item.notiMsg}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-48 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="This is the emi reminder message, last payment amount is"
-            />
+          <div className="flex gap-8">
+            <div className="relative">
+              <label
+                htmlFor={`notiMsg_${item.id}`}
+                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Notification Message En
+              </label>
+              <textarea
+                type="text"
+                rows={2}
+                name="notiMsg"
+                id={`notiMsg_${item.id}`}
+                value={item.notiMsg}
+                onChange={(e) => handleChange(e, item.id)}
+                className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="This is the emi reminder message, last payment amount is"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`notiMsgHi_${item.id}`}
+                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Notification Message Hi
+              </label>
+              <textarea
+                type="text"
+                rows={2}
+                name="notiMsgHi"
+                id={`notiMsgHi_${item.id}`}
+                value={item.notiMsgHi}
+                onChange={(e) => handleChange(e, item.id)}
+                className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="This is the emi reminder message, last payment amount is"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`notiDescription_${item.id}`}
+                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Notification Description
+              </label>
+              <textarea
+                type="text"
+                rows={2}
+                name="notiDescription"
+                id={`notiDescription_${item.id}`}
+                value={item.notiDescription}
+                onChange={(e) => handleChange(e, item.id)}
+                className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="2 days before the upcoming installment"
+              />
+            </div>
           </div>
-          <div className="relative">
-            <label
-              htmlFor={`notiMsgHi_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Notification Message Hi
-            </label>
-            <textarea
-              type="text"
-              rows={4}
-              name="notiMsgHi"
-              id={`notiMsgHi_${item.id}`}
-              value={item.notiMsgHi}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-48 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="This is the emi reminder message, last payment amount is"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`notiDescription_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Notification Description
-            </label>
-            <textarea
-              type="text"
-              rows={4}
-              name="notiDescription"
-              id={`notiDescription_${item.id}`}
-              value={item.notiDescription}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="2 days before the upcoming installment"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`notiDisplayName_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Notification Display Name
-            </label>
-            <input
-              type="text"
-              name="notiDisplayName"
-              id={`notiDisplayName_${item.id}`}
-              value={item.notiDisplayName}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Installment reminder"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`notiChannel_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Notification Channel
-            </label>
-            <Select
-              className="w-40"
-              options={notiChannelOptions}
-              id={`notiChannel_${item.id}`}
-              name="notiChannel"
-              value={notiChannelOptions.find(
-                (option) => option.value === item.notiChannel
-              )}
-              onChange={(selectedOption) =>
-                handleDDChange("notiChannel", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <button
-            onClick={() => handleDelete(index)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
         </div>
       ))}
       <div className="text-right mt-5">

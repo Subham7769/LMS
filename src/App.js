@@ -4,19 +4,18 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LeftPanel from "./components/LeftPanel";
 import { useEffect, useRef, useState } from "react";
-import Group from "./Group";
-import RAC from "./components/RAC";
+import Group from "./components/Group/Group";
+import RAC from "./components/RAC/RAC";
 import Product from "./components/Product";
 import Scheme from "./components/Scheme";
 import Notifications from "./components/Notifications";
-import Expense from "./components/Expense";
 import SlideNav from "./components/SlideNav";
 import CashLoan from "./components/CashLoan";
 import CreditScore from "./components/CreditScore";
-import RacMatrixConfig from "./components/RacMatrixConfig";
+import RacMatrixConfig from "./components/RAC/RacMatrixConfig";
 import LoanProductConfig from "./components/LoanProductConfig";
 import DebtBurdenConfig from "./components/DebtBurdenConfig";
-import CashLoanRAC from "./components/CashLoanRAC";
+import CashLoanRAC from "./components/RAC/CashLoanRAC";
 import CreditPolicy from "./components/CreditPolicy";
 import GlobalConfig from "./components/GlobalConfig/GlobalConfig";
 import GcCreditPolicy from "./components/GlobalConfig/GcCreditPolicy";
@@ -27,6 +26,7 @@ import RiskGradeCal from "./components/GlobalConfig/RiskGradeCal";
 import BareMinimumExp from "./components/GlobalConfig/BareMinimumExp";
 import NotificationText from "./components/GlobalConfig/NotificationText";
 import SystemConfig from "./components/GlobalConfig/SystemConfig";
+import GroupTab from "./components/Group/GroupTab";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -88,20 +88,24 @@ function App() {
         {
           path: "/group",
           element: <Group />,
+          children: [
+            {
+              path: ":grpNo",
+              element: <GroupTab />,
+            },
+          ],
         },
         {
           path: "/rac",
           element: <RAC />,
+        },
+        {
+          path: "/rac/cash-loan",
+          element: <CashLoanRAC />,
           children: [
             {
-              path: "cash-loan",
-              element: <CashLoanRAC />,
-              children: [
-                {
-                  path: "rmc",
-                  element: <RacMatrixConfig />,
-                },
-              ],
+              path: "rmc",
+              element: <RacMatrixConfig />,
             },
           ],
         },
@@ -172,15 +176,11 @@ function App() {
           element: <Notifications />,
         },
         {
-          path: "/expense",
-          element: <Expense />,
-        },
-        {
           path: "/customer-care",
           element: <CustomerCare />,
         },
         {
-          path: "/subscriber/:subID",
+          path: "/borrower/:subID",
           element: <SubscriberInfo />,
         },
         {

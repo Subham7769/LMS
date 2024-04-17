@@ -7,7 +7,7 @@ const options = [
   { value: "BNPL", label: "BNPL" },
   { value: "Overdraft", label: "Overdraft" },
 ];
-const SlideNav = ({ label }) => {
+const GroupComponent = ({ grpNo }) => {
   const [tagValue, setTagValue] = useState({ city: "", points: "" });
   const [tags, setTags] = useState([]);
   const [selectedOption, setSelctedOption] = useState([]);
@@ -18,7 +18,7 @@ const SlideNav = ({ label }) => {
   const addTags = () => {
     if (tagValue) {
       if (isSimilarTag(tagValue.city)) {
-        alert("Already exists");
+        alert("Product already exists");
         return true;
       }
 
@@ -42,7 +42,7 @@ const SlideNav = ({ label }) => {
     <>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full">
         <div className="flex items-center justify-between mb-3">
-          <div className="text-lg">{label}</div>
+          <div className="text-lg">Group {grpNo}</div>
           <button
             onClick={addTags}
             type="button"
@@ -54,7 +54,7 @@ const SlideNav = ({ label }) => {
         <div className="flex gap-10">
           <div className="mb-3">
             <label htmlFor="city" className="block">
-              Add {label}
+              Add Products
             </label>
             <Select
               className="w-[350px]"
@@ -77,7 +77,7 @@ const SlideNav = ({ label }) => {
           </div>
           <div className="mb-3">
             <label htmlFor="cityPoints" className="block">
-              Max {label} Limit
+              Max Product Limit
             </label>
             <input
               type="number"
@@ -143,4 +143,4 @@ const SlideNav = ({ label }) => {
   );
 };
 
-export default SlideNav;
+export default GroupComponent;

@@ -60,7 +60,7 @@ const DebtBurdenConfig = () => {
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
       <div className="flex items-center justify-between ">
-        <div className="">Cash loan Loans</div>
+        <div className="text-lg">Cash loan Loans</div>
         <button
           onClick={handleAddFields}
           type="button"

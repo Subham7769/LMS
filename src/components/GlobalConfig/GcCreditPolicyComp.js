@@ -41,7 +41,7 @@ const GcCreditPolicyComp = (props) => {
     <>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 my-7">
         <div className="flex items-center justify-between ">
-          <div className="">{cardTitle}</div>
+          <div className="text-lg">{cardTitle}</div>
           <button
             onClick={handleAddFields}
             type="button"

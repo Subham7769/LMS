@@ -77,7 +77,7 @@ const LoanProductConfig = () => {
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
       <div className="flex items-center justify-between ">
-        <div className="">Unsecured Retail Loan</div>
+        <div className="text-lg">Unsecured Retail Loan</div>
         <button
           onClick={handleAddFields}
           type="button"

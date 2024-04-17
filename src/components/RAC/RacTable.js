@@ -3,31 +3,31 @@ import { Link } from "react-router-dom";
 
 const products = [
   {
-    name: "Cash Loan",
+    name: "Cash Loan RAC",
     created: "07/06/2021",
-    openLoans: "2367",
-    disbursedPrincipal: "$234M",
+    approved: "40%",
+    processed: "2367",
     status: "Active",
     href: "/product/cash-loan/loan-product-config",
   },
   {
-    name: "BNPL",
+    name: "BNPL RAC",
     created: "14/09/2022",
-    openLoans: "1490",
-    disbursedPrincipal: "$750M",
+    approved: "20%",
+    processed: "750",
     status: "Active",
   },
   {
-    name: "Overdraft",
+    name: "Overdraft RAC",
     created: "19/09/2022",
-    openLoans: "185",
-    disbursedPrincipal: "$90M",
+    approved: "85%",
+    processed: "901",
     status: "Inactive",
   },
   // More people...
 ];
 
-const ProductTable = () => {
+const RacTable = () => {
   return (
     <div className="bg-gray-100 py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -55,17 +55,9 @@ const ProductTable = () => {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Product List
+              RAC List
             </h1>
           </div>
-          {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <button
-              type="button"
-              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Add user
-            </button>
-          </div> */}
         </div>
         <div className="mt-4 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -90,13 +82,13 @@ const ProductTable = () => {
                         scope="col"
                         className="px-3 py-3.5 w-1/5 text-center text-sm font-medium text-gray-900"
                       >
-                        Open Loans
+                        % Approved
                       </th>
                       <th
                         scope="col"
                         className="px-3 py-3.5 w-1/5 text-center text-sm font-medium text-gray-900"
                       >
-                        Total Disbursed Principal
+                        Total Processed
                       </th>
                       <th
                         scope="col"
@@ -116,10 +108,10 @@ const ProductTable = () => {
                           {product.created}
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          {product.openLoans}
+                          {product.approved}
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          {product.disbursedPrincipal}
+                          {product.processed}
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                           {product.status}
@@ -137,4 +129,4 @@ const ProductTable = () => {
   );
 };
 
-export default ProductTable;
+export default RacTable;

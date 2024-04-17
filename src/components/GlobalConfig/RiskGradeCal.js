@@ -40,7 +40,7 @@ const RiskGradeCal = () => {
     <>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 my-7">
         <div className="flex items-center justify-between ">
-          <div className="">Risk Grading Calculation</div>
+          <div className="text-lg mb-5">Risk Grading Calculation</div>
           <button
             onClick={handleAddFields}
             type="button"
@@ -50,7 +50,7 @@ const RiskGradeCal = () => {
           </button>
         </div>
         <div className="flex gap-[345px]">
-          <label className="block">Dayes Past Due:</label>
+          <label className="block">Days Past Due:</label>
           <label className="block">Risk Grade :</label>
         </div>
         {inputList.map((item, index) => (

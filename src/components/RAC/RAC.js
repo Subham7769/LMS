@@ -1,5 +1,6 @@
+// import { Outlet } from "react-router-dom";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
-import ProductTable from "./ProductTable";
+import RacTable from "./RacTable";
 import {
   ClipboardDocumentListIcon,
   CurrencyRupeeIcon,
@@ -9,23 +10,23 @@ import {
 const stats = [
   {
     id: 1,
-    name: "Total Borrowers",
-    stat: "71,897",
+    name: "Avg. Approval Daily",
+    stat: "723",
     icon: UsersIcon,
     change: "122",
     changeType: "increase",
   },
   {
     id: 2,
-    name: "Avg. Lending / Day",
-    stat: "$58.16M",
+    name: "Active RAC",
+    stat: "2 / 3",
     icon: CurrencyRupeeIcon,
     change: "5.4%",
     changeType: "increase",
   },
   {
     id: 3,
-    name: "Avg. Loans Closed / Day",
+    name: "Avg. Rejection / Day",
     stat: "24.57",
     icon: ClipboardDocumentListIcon,
     change: "3.2%",
@@ -36,14 +37,13 @@ const stats = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
-const Body = () => {
+const RAC = () => {
   return (
     <>
       <div className="">
         {/* cards */}
-        <div className="mx-auto px-8">
-          <div className="mx-auto  max-w-none">
+        <div className="mx-auto px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className="bg-gray-100 rounded-xl">
               <div className="mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div>
@@ -121,12 +121,13 @@ const Body = () => {
                 </div>
               </div>
             </div>
-            <ProductTable />
+            <RacTable />
           </div>
         </div>
       </div>
+      {/* <Outlet /> */}
     </>
   );
 };
 
-export default Body;
+export default RAC;

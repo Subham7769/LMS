@@ -59,7 +59,7 @@ const CreditPolicy = () => {
     <>
       <MaxFinAmtTen />
       <div className="border-b border-gray-300 pb-8 my-8">
-        <div className=" text-center my-4">
+        <div className=" text-center my-4 text-lg">
           Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
           (*Length of Service*C%) + (*Cities*D%)]
         </div>
@@ -118,7 +118,7 @@ const CreditPolicy = () => {
       </div>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-center justify-between ">
-          <div className="">Risk Based Pricing</div>
+          <div className="text-lg">Risk Based Pricing</div>
           <button
             onClick={handleAddFields}
             type="button"

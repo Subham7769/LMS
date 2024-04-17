@@ -80,9 +80,9 @@ const LiabilitiesMatrix = () => {
     setInputList(deleteList);
   };
   return (
-    <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+    <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
       <div className="flex items-center justify-between ">
-        <div className="">SIMAH Liabilities Matrix</div>
+        <div className="text-lg">Credit Burea Liabilities Matrix</div>
         <button
           onClick={handleAddFields}
           type="button"
@@ -92,154 +92,161 @@ const LiabilitiesMatrix = () => {
         </button>
       </div>
       {inputList.map((item, index) => (
-        <div key={item.id} className="flex gap-2 items-end mt-5">
-          <div className="relative">
-            <label
-              htmlFor={`product_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Product
-            </label>
-            <Select
-              className="w-36"
-              options={productOptions}
-              id={`product_${item.id}`}
-              name="product"
-              value={productOptions.find(
-                (option) => option.value === item.product
-              )}
-              onChange={(selectedOption) =>
-                handleDDChange("product", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`simahCode_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              SIMAH Description (CODE)
-            </label>
-            <input
-              type="text"
-              name="simahCode"
-              id={`simahCode_${item.id}`}
-              value={item.simahCode}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="TMTG"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`issuer_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Issuer
-            </label>
-            <Select
-              className="w-36"
-              options={issuerOptions}
-              id={`issuer_${item.id}`}
-              name="issuer"
-              value={issuerOptions.find(
-                (option) => option.value === item.issuer
-              )}
-              onChange={(selectedOption) =>
-                handleDDChange("issuer", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`gdbrWoMortage_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              GDBR (Without Mortgage)
-            </label>
-            <Select
-              className="w-44"
-              options={gdbrWoMortageOptions}
-              id={`gdbrWoMortage_${item.id}`}
-              name="gdbrWoMortage"
-              value={gdbrWoMortageOptions.find(
-                (option) => option.value === item.gdbrWoMortage
-              )}
-              onChange={(selectedOption) =>
-                handleDDChange("gdbrWoMortage", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`gdbrWMortage_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              GDBR (including Mortgage)
-            </label>
-            <Select
-              className="w-44"
-              options={gdbrWMortageOptions}
-              id={`gdbrWMortage_${item.id}`}
-              name="gdbrWMortage"
-              value={gdbrWMortageOptions.find(
-                (option) => option.value === item.gdbrWMortage
-              )}
-              onChange={(selectedOption) =>
-                handleDDChange("gdbrWMortage", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`defaultScore_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Default considered in SIMAH score
-            </label>
-            <Select
-              className="w-56"
-              options={defaultScoreOptions}
-              id={`defaultScore_${item.id}`}
-              name="defaultScore"
-              value={defaultScoreOptions.find(
-                (option) => option.value === item.defaultScore
-              )}
-              onChange={(selectedOption) =>
-                handleDDChange("defaultScore", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`comments_${item.id}`}
-              className=" text-gray-900 block text-xs mx-auto w-16 mb-2"
-            >
-              Active Rule
-            </label>
-            <div className="flex h-6 justify-center">
+        <div
+          key={item.id}
+          className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
+        >
+          <div className="flex gap-8 items-end">
+            <div className="relative z-[3]">
+              <label
+                htmlFor={`product_${item.id}`}
+                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Product
+              </label>
+              <Select
+                className="w-64"
+                options={productOptions}
+                id={`product_${item.id}`}
+                name="product"
+                value={productOptions.find(
+                  (option) => option.value === item.product
+                )}
+                onChange={(selectedOption) =>
+                  handleDDChange("product", selectedOption, item.id)
+                }
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`simahCode_${item.id}`}
+                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                CB Description (CODE)
+              </label>
               <input
-                id={`comments_${item.id}`}
-                value={item.comments}
-                name="comments"
-                type="checkbox"
+                type="text"
+                name="simahCode"
+                id={`simahCode_${item.id}`}
+                value={item.simahCode}
                 onChange={(e) => handleChange(e, item.id)}
-                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="TMTG"
+              />
+            </div>
+            <div className="relative z-[3]">
+              <label
+                htmlFor={`issuer_${item.id}`}
+                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Issuer
+              </label>
+              <Select
+                className="w-64"
+                options={issuerOptions}
+                id={`issuer_${item.id}`}
+                name="issuer"
+                value={issuerOptions.find(
+                  (option) => option.value === item.issuer
+                )}
+                onChange={(selectedOption) =>
+                  handleDDChange("issuer", selectedOption, item.id)
+                }
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`comments_${item.id}`}
+                className=" text-gray-900 block text-xs mx-auto w-16 mb-2"
+              >
+                Active Rule
+              </label>
+              <div className="flex h-6 justify-center">
+                <input
+                  id={`comments_${item.id}`}
+                  value={item.comments}
+                  name="comments"
+                  type="checkbox"
+                  onChange={(e) => handleChange(e, item.id)}
+                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                />
+              </div>
+            </div>
+            <button
+              onClick={() => handleDelete(index)}
+              type="button"
+              className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            >
+              <TrashIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="flex gap-8 items-end">
+            <div className="relative">
+              <label
+                htmlFor={`gdbrWoMortage_${item.id}`}
+                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                GDBR (Without Mortgage)
+              </label>
+              <Select
+                className="w-64"
+                options={gdbrWoMortageOptions}
+                id={`gdbrWoMortage_${item.id}`}
+                name="gdbrWoMortage"
+                value={gdbrWoMortageOptions.find(
+                  (option) => option.value === item.gdbrWoMortage
+                )}
+                onChange={(selectedOption) =>
+                  handleDDChange("gdbrWoMortage", selectedOption, item.id)
+                }
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`gdbrWMortage_${item.id}`}
+                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                GDBR (including Mortgage)
+              </label>
+              <Select
+                className="w-64"
+                options={gdbrWMortageOptions}
+                id={`gdbrWMortage_${item.id}`}
+                name="gdbrWMortage"
+                value={gdbrWMortageOptions.find(
+                  (option) => option.value === item.gdbrWMortage
+                )}
+                onChange={(selectedOption) =>
+                  handleDDChange("gdbrWMortage", selectedOption, item.id)
+                }
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`defaultScore_${item.id}`}
+                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              >
+                Default considered in CB score
+              </label>
+              <Select
+                className="w-64"
+                options={defaultScoreOptions}
+                id={`defaultScore_${item.id}`}
+                name="defaultScore"
+                value={defaultScoreOptions.find(
+                  (option) => option.value === item.defaultScore
+                )}
+                onChange={(selectedOption) =>
+                  handleDDChange("defaultScore", selectedOption, item.id)
+                }
+                isSearchable={false}
               />
             </div>
           </div>
-          <button
-            onClick={() => handleDelete(index)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
         </div>
       ))}
       <div className="text-right mt-5">
@@ -250,6 +257,9 @@ const LiabilitiesMatrix = () => {
           <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
           Save
         </button>
+      </div>
+      <div className="absolute bottom-1 left-2 text-xs text-gray-500">
+        *CB - Credit Burea
       </div>
     </div>
   );

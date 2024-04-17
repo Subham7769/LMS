@@ -37,7 +37,7 @@ const LengthofService = () => {
     <>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 my-7">
         <div className="flex items-center justify-between ">
-          <div className="">Length of Service</div>
+          <div className="text-lg">Length of Service</div>
           <button
             onClick={handleAddFields}
             type="button"

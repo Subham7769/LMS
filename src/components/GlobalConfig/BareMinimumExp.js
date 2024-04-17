@@ -65,7 +65,7 @@ const BareMinimumExp = () => {
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
       <div className="flex items-center justify-between ">
-        <div className="">Bare Minimum Expenses</div>
+        <div className="text-lg">Bare Minimum Expenses</div>
         <button
           onClick={handleAddFields}
           type="button"
