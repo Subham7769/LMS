@@ -7,7 +7,7 @@ const CreditScore = () => {
       <div className="border-b border-gray-300 pb-8 mb-8">
         <h2 className="text-xl text-center">Nationality Score</h2>
         <div className=" text-center my-4">
-          ((simahScore-300)*A/550) + (nationality*B) + (netIncome*C) +
+          ((creditBureauScore-300)*A/550) + (nationality*B) + (netIncome*C) +
           (dependents*D) + (maritalStatus*E) + (residentialStatus*F)
         </div>
         <div className="flex justify-center">
@@ -90,7 +90,7 @@ const CreditScore = () => {
             <thead>
               <tr className="divide-x divide-gray-200">
                 <th className="py-3.5 px-2 text-center text-gray-900">
-                  Saudis Credit Score
+                  Resident Credit Score
                 </th>
                 <th className="py-3.5 px-2 text-center text-gray-900">
                   Expatriates Credit Score

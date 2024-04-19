@@ -139,7 +139,7 @@ const Header = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to="/product/cash-loan/loan-product-config"
+                          to="/product"
                           className={classNames(
                             active
                               ? "bg-gray-100 text-gray-900"

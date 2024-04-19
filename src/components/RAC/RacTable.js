@@ -8,7 +8,7 @@ const products = [
     approved: "40%",
     processed: "2367",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/rac/cash-loan/rmc",
   },
   {
     name: "BNPL RAC",
@@ -102,19 +102,29 @@ const RacTable = () => {
                     {products.map((product) => (
                       <tr key={product.name}>
                         <td className="whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                          <Link to={product.href}>{product.name}</Link>
+                          <Link className="w-full block" to={product.href}>
+                            {product.name}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          {product.created}
+                          <Link className="w-full block" to={product.href}>
+                            {product.created}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          {product.approved}
+                          <Link className="w-full block" to={product.href}>
+                            {product.approved}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          {product.processed}
+                          <Link className="w-full block" to={product.href}>
+                            {product.processed}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          {product.status}
+                          <Link className="w-full block" to={product.href}>
+                            {product.status}
+                          </Link>
                         </td>
                       </tr>
                     ))}

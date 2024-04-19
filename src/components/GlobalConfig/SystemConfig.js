@@ -71,7 +71,7 @@ const SystemConfig = () => {
           <div className="relative">
             <label
               htmlFor={`product_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" px-1 text-xs text-gray-900"
             >
               Product Name
             </label>
@@ -92,7 +92,7 @@ const SystemConfig = () => {
           <div className="relative">
             <label
               htmlFor={`mgmtFeeVat_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" px-1 text-xs text-gray-900"
             >
               Management Fee Vat
             </label>
@@ -109,7 +109,7 @@ const SystemConfig = () => {
           <div className="relative">
             <label
               htmlFor={`noEMIEarlySetle_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" px-1 text-xs text-gray-900"
             >
               Number Of Emis For Early Settlement
             </label>

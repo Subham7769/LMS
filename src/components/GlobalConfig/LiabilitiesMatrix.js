@@ -82,7 +82,7 @@ const LiabilitiesMatrix = () => {
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
       <div className="flex items-center justify-between ">
-        <div className="text-lg">Credit Burea Liabilities Matrix</div>
+        <div className="text-lg">Credit Bureau Liabilities Matrix</div>
         <button
           onClick={handleAddFields}
           type="button"
@@ -97,10 +97,10 @@ const LiabilitiesMatrix = () => {
           className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
         >
           <div className="flex gap-8 items-end">
-            <div className="relative z-[3]">
+            <div className="relative ">
               <label
                 htmlFor={`product_${item.id}`}
-                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Product
               </label>
@@ -121,7 +121,7 @@ const LiabilitiesMatrix = () => {
             <div className="relative">
               <label
                 htmlFor={`simahCode_${item.id}`}
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 CB Description (CODE)
               </label>
@@ -135,10 +135,10 @@ const LiabilitiesMatrix = () => {
                 placeholder="TMTG"
               />
             </div>
-            <div className="relative z-[3]">
+            <div className="relative ">
               <label
                 htmlFor={`issuer_${item.id}`}
-                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Issuer
               </label>
@@ -186,7 +186,7 @@ const LiabilitiesMatrix = () => {
             <div className="relative">
               <label
                 htmlFor={`gdbrWoMortage_${item.id}`}
-                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 GDBR (Without Mortgage)
               </label>
@@ -207,7 +207,7 @@ const LiabilitiesMatrix = () => {
             <div className="relative">
               <label
                 htmlFor={`gdbrWMortage_${item.id}`}
-                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 GDBR (including Mortgage)
               </label>
@@ -228,7 +228,7 @@ const LiabilitiesMatrix = () => {
             <div className="relative">
               <label
                 htmlFor={`defaultScore_${item.id}`}
-                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Default considered in CB score
               </label>
@@ -259,7 +259,7 @@ const LiabilitiesMatrix = () => {
         </button>
       </div>
       <div className="absolute bottom-1 left-2 text-xs text-gray-500">
-        *CB - Credit Burea
+        *CB - Credit Bureau
       </div>
     </div>
   );

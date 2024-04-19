@@ -1,33 +1,33 @@
 import { useEffect, useState } from "react";
 import { Outlet, Link, useParams } from "react-router-dom";
 
-const CashLoan = () => {
+const Overdraft = () => {
   const [activeLink, setActiveLink] = useState(
-    "/product/cash-loan/loan-product-config"
+    "/product/overdraft/loan-product-config"
   );
   const { purl } = useParams();
   useEffect(() => {
     if (purl === "loan-product-config") {
-      setActiveLink("/product/cash-loan/loan-product-config");
+      setActiveLink("/product/overdraft/loan-product-config");
     }
   }, [purl]);
 
   return (
     <div className="mt-4">
       <h2 className="mb-5">
-        Name: <b>Cash Loan</b>
+        Name: <b>Overdraft</b>
       </h2>
       <div className="flex mb-5">
         <div className="border-r border-gray-400 px-2">
           <Link
-            to="/product/cash-loan/loan-product-config"
+            to="/product/overdraft/loan-product-config"
             className={`py-1 px-1.5  ${
-              activeLink === "/product/cash-loan/loan-product-config"
+              activeLink === "/product/overdraft/loan-product-config"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
             onClick={() =>
-              setActiveLink("/product/cash-loan/loan-product-config")
+              setActiveLink("/product/overdraft/loan-product-config")
             }
           >
             Product Config
@@ -35,27 +35,27 @@ const CashLoan = () => {
         </div>
         <div className="border-r border-gray-400 px-2">
           <Link
-            to="/product/cash-loan/credit-score"
+            to="/product/overdraft/credit-score"
             className={`py-1 px-1.5 rounded ${
-              activeLink === "/product/cash-loan/credit-score"
+              activeLink === "/product/overdraft/credit-score"
                 ? "text-white bg-indigo-500"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
-            onClick={() => setActiveLink("/product/cash-loan/credit-score")}
+            onClick={() => setActiveLink("/product/overdraft/credit-score")}
           >
             Credit Score
           </Link>
         </div>
         <div className="border-r border-gray-400 px-2">
           <Link
-            to="/product/cash-loan/debt-burden-config"
+            to="/product/overdraft/debt-burden-config"
             className={`py-1 px-1.5 rounded ${
-              activeLink === "/product/cash-loan/debt-burden-config"
+              activeLink === "/product/overdraft/debt-burden-config"
                 ? "text-white bg-indigo-500"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
             onClick={() =>
-              setActiveLink("/product/cash-loan/debt-burden-config")
+              setActiveLink("/product/overdraft/debt-burden-config")
             }
           >
             Debt Burden Config
@@ -63,13 +63,13 @@ const CashLoan = () => {
         </div>
         <div className="px-2">
           <Link
-            to="/product/cash-loan/credit-policy"
+            to="/product/overdraft/credit-policy"
             className={`py-1 px-1.5 rounded ${
-              activeLink === "/product/cash-loan/credit-policy"
+              activeLink === "/product/overdraft/credit-policy"
                 ? "text-white bg-indigo-500"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
-            onClick={() => setActiveLink("/product/cash-loan/credit-policy")}
+            onClick={() => setActiveLink("/product/overdraft/credit-policy")}
           >
             Credit Policy
           </Link>
@@ -82,4 +82,4 @@ const CashLoan = () => {
   );
 };
 
-export default CashLoan;
+export default Overdraft;

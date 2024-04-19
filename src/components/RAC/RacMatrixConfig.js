@@ -140,7 +140,7 @@ const RacMatrixConfig = () => {
           </div>
           <div className="mt-5">
             <label htmlFor="nationality" className="block">
-              Saudi Basic Salary Percentage From Gross:
+              Resident Basic Salary Percentage From Gross:
             </label>
             <div className="flex gap-3 items-center mt-2">
               <div>basic wage</div>
@@ -172,8 +172,8 @@ const RacMatrixConfig = () => {
         <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
           <InequalityNumber labelText={"Expats Minimum Write Off"} />
           <InequalityNumber labelText={"Expats Maximum Write Off"} />
-          <InequalityNumber labelText={"Saudi Minimum Write Off"} />
-          <InequalityNumber labelText={"Saudi Maximum Write Off"} />
+          <InequalityNumber labelText={"Resident Minimum Write Off"} />
+          <InequalityNumber labelText={"Resident Maximum Write Off"} />
           <div className="text-right mt-5">
             <button
               type="button"
@@ -186,7 +186,7 @@ const RacMatrixConfig = () => {
         </div>
         <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
           <InequalityNumber labelText={"Expats gross salary"} />
-          <InequalityNumber labelText={"Saudi gross salary"} />
+          <InequalityNumber labelText={"Resident gross salary"} />
           <div className="text-right mt-5">
             <button
               type="button"
@@ -198,8 +198,8 @@ const RacMatrixConfig = () => {
           </div>
         </div>
         <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-          <InequalityNumber labelText={"Expats Simah Score"} />
-          <InequalityNumber labelText={"Saudi Simah Score"} />
+          <InequalityNumber labelText={"Expats Credit Bureau Score"} />
+          <InequalityNumber labelText={"Resident Credit Bureau Score"} />
           <div className="text-right mt-5">
             <button
               type="button"
@@ -228,8 +228,8 @@ const RacMatrixConfig = () => {
         <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
           <InequalityNumber labelText={"Expats Minimum Age"} />
           <InequalityNumber labelText={"Expats Maximum Age"} />
-          <InequalityNumber labelText={"Saudi Minimum Age"} />
-          <InequalityNumber labelText={"Saudi Maximum Age"} />
+          <InequalityNumber labelText={"Resident Minimum Age"} />
+          <InequalityNumber labelText={"Resident Maximum Age"} />
           <div className="text-right mt-5">
             <button
               type="button"
@@ -242,7 +242,7 @@ const RacMatrixConfig = () => {
         </div>
         <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
           <InequalityNumber labelText={"Expats Number Of Working Months"} />
-          <InequalityNumber labelText={"Saudi Number Of Working Months"} />
+          <InequalityNumber labelText={"Resident Number Of Working Months"} />
           <div className="text-right mt-5">
             <button
               type="button"
@@ -255,7 +255,7 @@ const RacMatrixConfig = () => {
         </div>
         <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
           <InequalityNumber labelText={"Expats Disposableincome"} />
-          <InequalityNumber labelText={"Saudi Disposableincome"} />
+          <InequalityNumber labelText={"Resident Disposableincome"} />
           <div className="text-right mt-5">
             <button
               type="button"

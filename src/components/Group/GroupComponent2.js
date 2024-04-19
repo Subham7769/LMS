@@ -7,7 +7,7 @@ const options = [
   { value: "BNPL", label: "BNPL" },
   { value: "Overdraft", label: "Overdraft" },
 ];
-const GroupComponent = () => {
+const GroupComponent2 = () => {
   const [tagValue, setTagValue] = useState({ city: "", points: "" });
   const [tags, setTags] = useState([]);
   const [selectedOption, setSelctedOption] = useState([]);
@@ -42,7 +42,7 @@ const GroupComponent = () => {
     <>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full">
         <div className="flex items-center justify-between mb-3">
-          <div className="text-lg">Group 1</div>
+          <div className="text-lg">Group 2</div>
           {/* <button
             onClick={addTags}
             type="button"
@@ -150,4 +150,4 @@ const GroupComponent = () => {
   );
 };
 
-export default GroupComponent;
+export default GroupComponent2;

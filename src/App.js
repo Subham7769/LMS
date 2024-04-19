@@ -26,7 +26,17 @@ import RiskGradeCal from "./components/GlobalConfig/RiskGradeCal";
 import BareMinimumExp from "./components/GlobalConfig/BareMinimumExp";
 import NotificationText from "./components/GlobalConfig/NotificationText";
 import SystemConfig from "./components/GlobalConfig/SystemConfig";
-import GroupTab from "./components/Group/GroupTab";
+import BnplRac from "./components/RAC/BnplRac";
+import OverdraftRAC from "./components/RAC/OverdraftRAC";
+import BNPL from "./BNPL";
+import Overdraft from "./components/Overdraft";
+import GroupComponent from "./components/Group/GroupComponent";
+import GroupComponent2 from "./components/Group/GroupComponent2";
+import GroupComponent3 from "./components/Group/GroupComponent3";
+import BorrowerInfoTabs from "./components/CustomerCare/BorrowerInfoTabs";
+import KYCDetails from "./components/CustomerCare/KYCDetails";
+import CreditProfile from "./components/CustomerCare/CreditProfile";
+import LoanNPaymentHist from "./components/CustomerCare/LoanNPaymentHis";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -44,7 +54,7 @@ const AppLayout = () => {
 
     const resizeObserver = new ResizeObserver((entries) => {
       const newWidth = entries[0].contentRect.width;
-      setLeftPanelWidth(newWidth + 35); // Update state with padding
+      setLeftPanelWidth(newWidth + 50); // Update state with padding
       leftPanelWidthRef.current = newWidth; // Update reference
     });
 
@@ -88,12 +98,18 @@ function App() {
         {
           path: "/group",
           element: <Group />,
-          children: [
-            {
-              path: ":grpNo",
-              element: <GroupTab />,
-            },
-          ],
+        },
+        {
+          path: "group/1",
+          element: <GroupComponent />,
+        },
+        {
+          path: "group/2",
+          element: <GroupComponent2 />,
+        },
+        {
+          path: "group/3",
+          element: <GroupComponent3 />,
         },
         {
           path: "/rac",
@@ -110,30 +126,80 @@ function App() {
           ],
         },
         {
+          path: "/rac/bnpl/rmc",
+          element: <BnplRac />,
+        },
+        {
+          path: "/rac/overdraft/rmc",
+          element: <OverdraftRAC />,
+        },
+        {
           path: "/product",
           element: <Product />,
+        },
+        {
+          path: "/product/cash-loan",
+          element: <CashLoan />,
           children: [
             {
-              path: "cash-loan",
-              element: <CashLoan />,
-              children: [
-                {
-                  path: "credit-score",
-                  element: <CreditScore />,
-                },
-                {
-                  path: "loan-product-config",
-                  element: <LoanProductConfig />,
-                },
-                {
-                  path: "debt-burden-config",
-                  element: <DebtBurdenConfig />,
-                },
-                {
-                  path: "credit-policy",
-                  element: <CreditPolicy />,
-                },
-              ],
+              path: "credit-score",
+              element: <CreditScore />,
+            },
+            {
+              path: ":purl",
+              element: <LoanProductConfig />,
+            },
+            {
+              path: "debt-burden-config",
+              element: <DebtBurdenConfig />,
+            },
+            {
+              path: "credit-policy",
+              element: <CreditPolicy />,
+            },
+          ],
+        },
+        {
+          path: "/product/bnpl",
+          element: <BNPL />,
+          children: [
+            {
+              path: "credit-score",
+              element: <CreditScore />,
+            },
+            {
+              path: ":purl",
+              element: <LoanProductConfig />,
+            },
+            {
+              path: "debt-burden-config",
+              element: <DebtBurdenConfig />,
+            },
+            {
+              path: "credit-policy",
+              element: <CreditPolicy />,
+            },
+          ],
+        },
+        {
+          path: "/product/overdraft",
+          element: <Overdraft />,
+          children: [
+            {
+              path: "credit-score",
+              element: <CreditScore />,
+            },
+            {
+              path: ":purl",
+              element: <LoanProductConfig />,
+            },
+            {
+              path: "debt-burden-config",
+              element: <DebtBurdenConfig />,
+            },
+            {
+              path: "credit-policy",
+              element: <CreditPolicy />,
             },
           ],
         },
@@ -181,7 +247,25 @@ function App() {
         },
         {
           path: "/borrower/:subID",
-          element: <SubscriberInfo />,
+          element: <BorrowerInfoTabs />,
+          children: [
+            {
+              path: "personal-info",
+              element: <SubscriberInfo />,
+            },
+            {
+              path: "kyc",
+              element: <KYCDetails />,
+            },
+            {
+              path: "credit-profile",
+              element: <CreditProfile />,
+            },
+            {
+              path: "loanNpayment",
+              element: <LoanNPaymentHist />,
+            },
+          ],
         },
         {
           path: "/slidenav",

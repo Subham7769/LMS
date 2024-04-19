@@ -37,7 +37,7 @@ const MaxFinAmtTen = () => {
             <div className="relative">
               <label
                 htmlFor="amount"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Amount
               </label>
@@ -54,7 +54,7 @@ const MaxFinAmtTen = () => {
             <div className="relative">
               <label
                 htmlFor="tenure"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Tenure
               </label>

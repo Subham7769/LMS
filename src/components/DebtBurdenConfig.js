@@ -60,7 +60,7 @@ const DebtBurdenConfig = () => {
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
       <div className="flex items-center justify-between ">
-        <div className="text-lg">Cash loan Loans</div>
+        <div className="text-lg">Loans</div>
         <button
           onClick={handleAddFields}
           type="button"
@@ -74,7 +74,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`startincome_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Start Net Income Bracket In SA Rule
             </label>
@@ -91,7 +91,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`endincome_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               End Net Income Bracket In SA Rule
             </label>
@@ -108,7 +108,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`productLevel_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Product Level
             </label>
@@ -125,7 +125,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`consumerDBR_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Consumer DBR
             </label>
@@ -142,7 +142,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`gdbrWOmtg_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               GDBR (Without MTG)
             </label>
@@ -159,7 +159,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`empRtr_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className="bg-white px-1 text-xs text-gray-900"
             >
               Emplyer Retired
             </label>
@@ -179,7 +179,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <label
               htmlFor={`gdbrWmtg_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               GDBR (including MTG)
             </label>

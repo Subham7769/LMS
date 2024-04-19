@@ -79,7 +79,7 @@ const BareMinimumExp = () => {
           <div className="relative">
             <label
               htmlFor={`expense_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Expenses
             </label>
@@ -96,7 +96,7 @@ const BareMinimumExp = () => {
           <div className="relative">
             <label
               htmlFor={`type_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Type
             </label>
@@ -115,7 +115,7 @@ const BareMinimumExp = () => {
           <div className="relative">
             <label
               htmlFor={`frequency_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Expenses Frequency
             </label>
@@ -136,7 +136,7 @@ const BareMinimumExp = () => {
           <div className="relative">
             <label
               htmlFor={`minExpense_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Bare Minimum Expense Per Person
             </label>

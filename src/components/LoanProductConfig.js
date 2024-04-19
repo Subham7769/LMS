@@ -21,9 +21,9 @@ const tenureOptions = [
 ];
 
 const racOptions = [
-  { value: "r1", label: "R1" },
-  { value: "r2", label: "R2" },
-  { value: "r3", label: "R3" },
+  { value: "r1", label: "Cash Loan RAC" },
+  { value: "r2", label: "BNPL RAC" },
+  { value: "r3", label: "Overdraft RAC" },
 ];
 
 const LoanProductConfig = () => {
@@ -91,7 +91,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`simpleInterest_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className="px-1 text-xs text-gray-900"
             >
               Simple Interest
             </label>
@@ -108,7 +108,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`per_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900 gray-"
             >
               PER
             </label>
@@ -127,7 +127,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`tenure_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" px-1 text-xs text-gray-900"
             >
               Tenure
             </label>
@@ -144,7 +144,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`tenureType_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               Tenure Type
             </label>
@@ -166,7 +166,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`minCredit_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" px-1 text-xs text-gray-900"
             >
               Min Credit Score
             </label>
@@ -183,7 +183,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`maxCredit_${item.id}`}
-              className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" px-1 text-xs text-gray-900"
             >
               Max Credit Score
             </label>
@@ -200,7 +200,7 @@ const LoanProductConfig = () => {
           <div className="relative">
             <label
               htmlFor={`rac_${item.id}`}
-              className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
               RAC
             </label>

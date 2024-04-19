@@ -79,7 +79,7 @@ const NotificationText = () => {
             <div className="relative">
               <label
                 htmlFor={`notiType_${item.id}`}
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Notification Type
               </label>
@@ -96,7 +96,7 @@ const NotificationText = () => {
             <div className="relative">
               <label
                 htmlFor={`notiDisplayName_${item.id}`}
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Notification Display Name
               </label>
@@ -113,7 +113,7 @@ const NotificationText = () => {
             <div className="relative">
               <label
                 htmlFor={`notiChannel_${item.id}`}
-                className="absolute z-[2] -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Notification Channel
               </label>
@@ -143,7 +143,7 @@ const NotificationText = () => {
             <div className="relative">
               <label
                 htmlFor={`notiMsg_${item.id}`}
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Notification Message En
               </label>
@@ -161,7 +161,7 @@ const NotificationText = () => {
             <div className="relative">
               <label
                 htmlFor={`notiMsgHi_${item.id}`}
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Notification Message Hi
               </label>
@@ -179,7 +179,7 @@ const NotificationText = () => {
             <div className="relative">
               <label
                 htmlFor={`notiDescription_${item.id}`}
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs text-gray-900"
+                className=" bg-white px-1 text-xs text-gray-900"
               >
                 Notification Description
               </label>

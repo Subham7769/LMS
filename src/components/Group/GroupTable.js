@@ -3,31 +3,33 @@ import { Link } from "react-router-dom";
 
 const products = [
   {
-    name: "Cash Loan",
+    name: "Group 1",
     created: "07/06/2021",
     openLoans: "2367",
     disbursedPrincipal: "$234M",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/group/1",
   },
   {
-    name: "BNPL",
+    name: "Group 2",
     created: "14/09/2022",
     openLoans: "1490",
     disbursedPrincipal: "$750M",
     status: "Active",
+    href: "/group/2",
   },
   {
-    name: "Overdraft",
+    name: "Group 3",
     created: "19/09/2022",
     openLoans: "185",
     disbursedPrincipal: "$90M",
     status: "Inactive",
+    href: "/group/3",
   },
   // More people...
 ];
 
-const ProductTable = () => {
+const GroupTable = () => {
   return (
     <div className="bg-gray-100 py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -55,7 +57,7 @@ const ProductTable = () => {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Product List
+              Group List
             </h1>
           </div>
           {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -147,4 +149,4 @@ const ProductTable = () => {
   );
 };
 
-export default ProductTable;
+export default GroupTable;

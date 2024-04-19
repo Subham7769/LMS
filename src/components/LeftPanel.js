@@ -20,14 +20,14 @@ const Menus = [
     submenu: true,
     submenuItems: [
       { title: "Cash Loan RAC", href: "/rac/cash-loan/rmc" },
-      { title: "BNPL RAC", href: "/slidenav" },
-      { title: "Overdraft RAC", href: "/slidenav" },
+      { title: "BNPL RAC", href: "/rac/bnpl/rmc" },
+      { title: "Overdraft RAC", href: "/rac/overdraft/rmc" },
     ],
     isOpen: false,
   },
   {
     title: "Product",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product",
     icon: AdjustmentsHorizontalIcon,
     current: false,
     spacing: false,
@@ -37,14 +37,14 @@ const Menus = [
         title: "Cash Loan",
         href: "/product/cash-loan/loan-product-config",
       },
-      { title: "BNPL", href: "/slidenav" },
-      { title: "Overdraft", href: "/slidenav" },
+      { title: "BNPL", href: "/product/bnpl/loan-product-config" },
+      { title: "Overdraft", href: "/product/overdraft/loan-product-config" },
     ],
     isOpen: false,
   },
   {
     title: "Group",
-    href: "/group/1",
+    href: "/group",
     icon: UsersIcon,
     current: false,
     spacing: false,
@@ -131,7 +131,7 @@ const LeftPanel = () => {
       <div
         id="leftPanelId"
         className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4  transform duration-1000 ease-in-out ${
-          open ? "w-60" : "w-16"
+          open ? "w-64" : "w-16"
         }`}
       >
         <div className="flex h-16 shrink-0 items-center">
@@ -142,7 +142,7 @@ const LeftPanel = () => {
           />
         </div>
         <button onClick={toggleSidebar} className="flex justify-end">
-          <div className="-mr-3 absolute top-60">
+          <div className="-right-3 absolute top-60">
             <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
               {open ? (
                 <svg
@@ -178,7 +178,7 @@ const LeftPanel = () => {
             </div>
           </div>
         </button>
-        <ul className="pt-2 pr-1.5">
+        <ul className="pt-2 pr-3 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white scrollbar-track-white">
           {Menus.map((menu, index) => (
             <div key={menu.title}>
               <NavLink to={menu.href} className="text-gray-500 ">

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { subscriberList } from "../../config";
-import { useEffect, useState } from "react";
 import FamilyDetails from "./FamilyDetails";
+import useDateExtract from "../utils/useDateExtract";
 
 const SubscriberInfo = () => {
   const { subID } = useParams();
@@ -27,24 +27,7 @@ const SubscriberInfo = () => {
     rent,
   } = subscriberList.borrowerProfile.residenceDetails;
 
-  const [regDate, setRegDate] = useState(registrationDate);
-  useEffect(() => {
-    handleExtractDate();
-  }, []);
-  async function handleExtractDate() {
-    const dateObj = new Date(regDate);
-
-    // Extract the year, month, and day components
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Add leading zero for single-digit months
-    const day = String(dateObj.getDate()).padStart(2, "0");
-
-    // Format the date in YYYY-MM-DD
-    const formattedDate = `${year}-${month}-${day}`;
-
-    // Update the state with the formatted date
-    setRegDate(formattedDate);
-  }
+  const regiDate = useDateExtract(registrationDate);
 
   return (
     <div>
@@ -93,7 +76,7 @@ const SubscriberInfo = () => {
           <div className="px-4 py-2 flex flex-col">
             <div className="flex gap-2 py-2">
               <div className="w-48">Account Creation Date :</div>
-              <div>{regDate}</div>
+              <div>{regiDate}</div>
             </div>
           </div>
         </div>
