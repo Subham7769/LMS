@@ -1,8 +1,28 @@
 import { loans } from "../../config";
 import { useEffect, useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import LoanInfoModal from "./LoanInfoModal";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import Select from "react-select";
+
+const loanStatusOptions = [
+  { value: "all", label: "All" },
+  { value: "pendingApproval", label: "Pending Approval" },
+  { value: "activated", label: "Activated" },
+  { value: "closed", label: "Closed" },
+  { value: "frozen", label: "Frozen" },
+  { value: "rollOvered", label: "Roll Overed" },
+  { value: "cancelled", label: "Cancelled" },
+  { value: "late", label: "Late" },
+  { value: "returned", label: "Returned" },
+  { value: "defaulted", label: "Defaulted" },
+];
 
 const LoanHistory = () => {
+  const [selectedOption, setSelctedOption] = useState(loanStatusOptions[0]);
+  const handleChange = (selectedOption) => {
+    setSelctedOption(selectedOption);
+  };
   const [loansarr, setLoansarr] = useState(
     loans.map((loan) => ({
       ...loan,
@@ -41,9 +61,60 @@ const LoanHistory = () => {
       };
     });
     setLoansarr(formattedLoans);
-  }, [loansarr]);
+  }, []);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+
+  const handleViewDetails = (loan) => {
+    setSelectedLoan(loan);
+    setShowModal(true);
+  };
   return (
     <>
+      <div className="flex items-end mb-10 w-full">
+        <div className="w-1/3">&nbsp;</div>
+        <div className="w-1/3 flex">
+          <div>
+            <label htmlFor="search" className="sr-only">
+              Search
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </div>
+              <input
+                id="search"
+                name="search"
+                className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                placeholder="Search"
+                type="search"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="relative w-1/3 flex justify-end">
+          <div>
+            <label
+              htmlFor="loanStatus"
+              className=" bg-white px-1 text-xs text-gray-900 gray-"
+            >
+              Select Loan Status
+            </label>
+            <Select
+              className="w-52"
+              options={loanStatusOptions}
+              id="loanStatus"
+              name="loanStatus"
+              value={selectedOption}
+              onChange={handleChange}
+              isSearchable={false}
+            />
+          </div>
+        </div>
+      </div>
       <table className="divide-y divide-gray-300">
         <thead>
           <tr className="divide-x divide-gray-200">
@@ -113,8 +184,15 @@ const LoanHistory = () => {
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    View Details
+                    <button onClick={() => handleViewDetails(loan)}>
+                      View Details
+                    </button>
                   </div>
+                  <LoanInfoModal
+                    onClose={() => setShowModal(false)}
+                    visible={showModal}
+                    loanDetails={selectedLoan}
+                  />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <div

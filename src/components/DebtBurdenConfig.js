@@ -113,7 +113,7 @@ const DebtBurdenConfig = () => {
               Product Level
             </label>
             <input
-              type="number"
+              type="text"
               name="productLevel"
               id={`productLevel_${item.id}`}
               value={item.productLevel}
@@ -130,7 +130,7 @@ const DebtBurdenConfig = () => {
               Consumer DBR
             </label>
             <input
-              type="number"
+              type="text"
               name="consumerDBR"
               id={`consumerDBR_${item.id}`}
               value={item.consumerDBR}
@@ -147,7 +147,7 @@ const DebtBurdenConfig = () => {
               GDBR (Without MTG)
             </label>
             <input
-              type="number"
+              type="text"
               name="gdbrWOmtg"
               id={`gdbrWOmtg_${item.id}`}
               value={item.gdbrWOmtg}
@@ -184,7 +184,7 @@ const DebtBurdenConfig = () => {
               GDBR (including MTG)
             </label>
             <input
-              type="number"
+              type="text"
               name="gdbrWmtg"
               id={`gdbrWmtg_${item.id}`}
               value={item.gdbrWmtg}

@@ -97,7 +97,7 @@ const SystemConfig = () => {
               Management Fee Vat
             </label>
             <input
-              type="number"
+              type="text"
               name="mgmtFeeVat"
               id={`mgmtFeeVat_${item.id}`}
               value={item.mgmtFeeVat}

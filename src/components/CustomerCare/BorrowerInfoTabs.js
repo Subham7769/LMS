@@ -7,12 +7,6 @@ const BorrowerInfoTabs = () => {
     "/borrower/" + subID + "/personal-info"
   );
 
-  // useEffect(() => {
-  //   if (purl === "loan-product-config") {
-  //     setActiveLink("/product/cash-loan/loan-product-config");
-  //   }
-  // }, [purl]);
-
   return (
     <div className="mt-4">
       <div className="flex mb-10">
@@ -72,6 +66,36 @@ const BorrowerInfoTabs = () => {
             }
           >
             Loan & Payment History
+          </Link>
+        </div>
+        <div className="border-r border-gray-400 px-2">
+          <Link
+            to={"/borrower/" + subID + "/rejection-history"}
+            className={`py-1 px-1.5 ${
+              activeLink === "/borrower/" + subID + "/rejection-history"
+                ? "text-white bg-indigo-500 rounded"
+                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+            }`}
+            onClick={() =>
+              setActiveLink("/borrower/" + subID + "/rejection-history")
+            }
+          >
+            Rejection History
+          </Link>
+        </div>
+        <div className=" px-2">
+          <Link
+            to={"/borrower/" + subID + "/credit-bureau-details"}
+            className={`py-1 px-1.5 ${
+              activeLink === "/borrower/" + subID + "/credit-bureau-details"
+                ? "text-white bg-indigo-500 rounded"
+                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+            }`}
+            onClick={() =>
+              setActiveLink("/borrower/" + subID + "/credit-bureau-details")
+            }
+          >
+            Credit Bureau Details
           </Link>
         </div>
       </div>

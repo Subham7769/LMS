@@ -96,7 +96,7 @@ const LoanProductConfig = () => {
               Simple Interest
             </label>
             <input
-              type="number"
+              type="text"
               name="simpleInterest"
               id={`simpleInterest_${item.id}`}
               value={item.simpleInterest}

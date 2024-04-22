@@ -37,6 +37,8 @@ import BorrowerInfoTabs from "./components/CustomerCare/BorrowerInfoTabs";
 import KYCDetails from "./components/CustomerCare/KYCDetails";
 import CreditProfile from "./components/CustomerCare/CreditProfile";
 import LoanNPaymentHist from "./components/CustomerCare/LoanNPaymentHis";
+import RejectionHistory from "./components/CustomerCare/RejectionHistory";
+import CreditBureauDetails from "./components/CustomerCare/CreditBureauDetails";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -264,6 +266,14 @@ function App() {
             {
               path: "loanNpayment",
               element: <LoanNPaymentHist />,
+            },
+            {
+              path: "rejection-history",
+              element: <RejectionHistory />,
+            },
+            {
+              path: "credit-bureau-details",
+              element: <CreditBureauDetails />,
             },
           ],
         },
