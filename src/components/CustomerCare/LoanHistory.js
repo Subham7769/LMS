@@ -62,6 +62,7 @@ const LoanHistory = () => {
     });
     setLoansarr(formattedLoans);
   }, []);
+
   const [showModal, setShowModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
 
@@ -195,16 +196,8 @@ const LoanHistory = () => {
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <div
-                    title={loan.loanAmount}
-                    className="w-[100px] cursor-pointer flex mx-auto hover:text-gray-900"
-                  >
-                    <div className="w-[84px] whitespace-nowrap overflow-hidden text-ellipsis">
-                      {loan.loanAmount}
-                    </div>
-                    <div>
-                      <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-                    </div>
+                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {loan.loanAmount.toFixed(2)}
                   </div>
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">

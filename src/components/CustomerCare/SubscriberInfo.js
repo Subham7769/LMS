@@ -28,6 +28,7 @@ const SubscriberInfo = () => {
   } = subscriberList.borrowerProfile.residenceDetails;
 
   const regiDate = useDateExtract(registrationDate);
+  const formattedDateOfBirth = useDateExtract(dateOfBirth);
 
   return (
     <div>
@@ -56,7 +57,7 @@ const SubscriberInfo = () => {
           <div className=" px-4 py-2  flex flex-col border-r border-gray-300">
             <div className="flex gap-2 py-2">
               <div className="w-32">Date of Birth:</div>
-              <div>{dateOfBirth}</div>
+              <div>{formattedDateOfBirth}</div>
             </div>
             <div className="flex gap-2 py-2">
               <div className="w-32">Active Id Type :</div>

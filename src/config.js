@@ -3,9 +3,9 @@ export const subscriberList = {
   uid: "10000000000",
   borrowerProfile: {
     msisdn: "966500751048",
-    firstNameEn: "MAHESH",
-    middleNameEn: "PARASRAM",
-    lastNameEn: "LALWANI",
+    firstNameEn: "SANJAY",
+    middleNameEn: "BABULNATH",
+    lastNameEn: "MEHRA",
     firstNameAr: "علي",
     middleNameAr: "يوسف",
     lastNameAr: "علي",

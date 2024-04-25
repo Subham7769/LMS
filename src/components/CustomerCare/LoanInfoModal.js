@@ -1,5 +1,38 @@
+import { useEffect, useState } from "react";
+
 const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
+  const [loansarrModal, setLoansarrModal] = useState([]);
+  useEffect(() => {
+    if (!loanDetails) return;
+    const formattedLoansModal = loanDetails.installments.map((loanModal) => {
+      const dateObjSubmit = new Date(loanModal.installmentDate);
+      const yearSubmit = dateObjSubmit.getFullYear();
+
+      // Month formatting with leading zero and to lowercase
+      const monthSubmit = String(dateObjSubmit.getMonth() + 1).padStart(2, "0");
+      const monthNameSubmit = new Date(
+        yearSubmit,
+        monthSubmit - 1
+      ).toLocaleString("en-US", { month: "short" });
+      const daySubmit = String(dateObjSubmit.getDate()).padStart(2, "0");
+      const formattedInstallmentDate = `${daySubmit} ${monthNameSubmit} ${yearSubmit}`;
+
+      return {
+        ...loanModal,
+        formattedInstallmentDate: formattedInstallmentDate,
+      };
+    });
+    setLoansarrModal(formattedLoansModal);
+  }, [loanDetails]);
   if (!visible) return null;
+  // For loanInfo Modal Date Conversion
+  // const [loansarrModal, setLoansarrModal] = useState(
+  //   loanDetails.installments.map((loanModal) => ({
+  //     ...loanModal,
+  //     formattedInstallmentDate: "",
+  //   }))
+  // );
+
   const handleOnClose = (e) => {
     if (e.target.id === "loanInfoContainer") onClose();
   };
@@ -57,7 +90,7 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {loanDetails.installments.map((loan, index) => {
+              {loansarrModal.map((loan, index) => {
                 return (
                   <tr
                     key={loan.installmentId}
@@ -70,7 +103,7 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
                     </td>
                     <td className="py-4 px-2 text-gray-500 whitespace-nowrap">
                       <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {loan.installmentDate}
+                        {loan.formattedInstallmentDate}
                       </div>
                     </td>
                     <td className="whitespace-nowrap py-4 px-2 text-gray-500">
@@ -107,13 +140,13 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="w-9 h-9"
+            className="w-9 h-9"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               fill="rgb(220 38 38)"
             />

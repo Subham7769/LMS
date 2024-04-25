@@ -5,3 +5,21 @@
 .active {
   @apply text-indigo-600;
 }
+
+.slick-next:before,
+.slick-prev:before {
+  content: "" !important;
+}
+
+.slick-prev,
+.slick-next {
+  top: 25% !important;
+  z-index: 1;
+}
+
+.slick-prev {
+  left: -15px !important;
+}
+.slick-next {
+  right: -8px !important;
+}

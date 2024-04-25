@@ -118,7 +118,7 @@ const CreditProfile = () => {
           <div className="pr-6 py-2 flex flex-col">
             <div className="flex gap-2 py-2">
               <div className="w-52">Disposal income : </div>
-              <div>{disposableIncome}</div>
+              <div>{disposableIncome.toFixed(2)}</div>
             </div>
             <div className="flex gap-2 py-2">
               <div className="w-52">Maximum EMI amount : </div>
@@ -126,7 +126,7 @@ const CreditProfile = () => {
             </div>
             <div className="flex gap-2 py-2">
               <div className="w-52">Propensity to pay : </div>
-              <div>{propensityToPay}</div>
+              <div>{propensityToPay.toFixed(2)}</div>
             </div>
             <div className="flex gap-2 py-2">
               <div className="w-52">Bare Minimum Expenses : </div>

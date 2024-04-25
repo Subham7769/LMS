@@ -40,7 +40,7 @@ const GroupComponent3 = () => {
   };
   return (
     <>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full">
+      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full mt-5">
         <div className="flex items-center justify-between mb-3">
           <div className="text-lg">Group 3</div>
           {/* <button

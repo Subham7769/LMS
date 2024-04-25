@@ -38,7 +38,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 const CustomerCare = () => {
-  const [borrowerID, setBorrowerID] = useState();
+  const [borrowerID, setBorrowerID] = useState("");
   return (
     <>
       {/* Cards */}
