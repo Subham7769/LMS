@@ -1,9 +1,19 @@
-import { creditProfileList } from "../../config";
-import { loanOfferCal } from "../../config";
-
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import useBorrowerInfo from "../utils/useBorrowerInfo";
 
 const CreditProfile = () => {
+  const url = "/credit-profile";
+  const url2 = "/loan-offers-calculations";
+  const creditProfileData = useBorrowerInfo(url);
+  const loanOfferCalData = useBorrowerInfo(url2);
+  if (creditProfileData.length === 0 || loanOfferCalData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
+
   const {
     simahLiabilitiesTotalMontllyInstallments,
     adjustedEMI,
@@ -16,12 +26,12 @@ const CreditProfile = () => {
     eligibleEMI,
     propensityToPay,
     bareMinimumExpenses,
-  } = loanOfferCal;
+  } = loanOfferCalData;
   return (
     <>
       <div className="rounded-xl pt-5 px-5 border border-red-600 w-fit">
-        {creditProfileList.map((cp) => (
-          <div key={cp.netTCL}>
+        {creditProfileData.map((cp, index) => (
+          <div key={index}>
             <div className="flex gap-10 mb-5 border-b border-gray-300 pb-4">
               <div className="flex gap-5 border-r border-gray-300 pr-10">
                 <div>Project Name : </div>

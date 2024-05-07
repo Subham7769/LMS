@@ -1,8 +1,8 @@
-import { CBDetails } from "../../config";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import useBorrowerInfo from "../utils/useBorrowerInfo";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -53,8 +53,18 @@ function SamplePrevArrow(props) {
 }
 
 const CreditInstrument = () => {
+  const url = "/simah-recent-response";
+  const CBDetilsData = useBorrowerInfo(url);
+  if (CBDetilsData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
   const cidetail =
-    CBDetails.response.message.item[0].rspreport.consumer[0].cidetails.cidetail;
+    CBDetilsData.response.message.item[0].rspreport.consumer[0].cidetails
+      .cidetail;
   const settings = {
     dots: false,
     infinite: true,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
 import {
   ClipboardDocumentListIcon,
@@ -39,6 +39,42 @@ function classNames(...classes) {
 }
 const CustomerCare = () => {
   const [borrowerID, setBorrowerID] = useState("");
+  const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
+
+  async function checkBorrowerInfo(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/borrowers/" +
+          borrowerID,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.status === 404) {
+        console.log("Borrower Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/customer-care"); // Redirect to login page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/borrower/" + borrowerID + "/personal-info");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       {/* Cards */}
@@ -133,16 +169,18 @@ const CustomerCare = () => {
           />
         </div>
         <div>
-          <Link to={"/borrower/" + borrowerID + "/personal-info"}>
-            <button
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Search
-            </button>
-          </Link>
+          <button
+            onClick={() => checkBorrowerInfo(borrowerID)}
+            type="button"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Search
+          </button>
         </div>
       </div>
+      {borrowerNotFound && (
+        <div className="text-red-600 mt-4 text-center">Borrower Not Found</div>
+      )}
     </>
   );
 };

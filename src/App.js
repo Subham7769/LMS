@@ -39,6 +39,8 @@ import CreditProfile from "./components/CustomerCare/CreditProfile";
 import LoanNPaymentHist from "./components/CustomerCare/LoanNPaymentHis";
 import RejectionHistory from "./components/CustomerCare/RejectionHistory";
 import CreditBureauDetails from "./components/CustomerCare/CreditBureauDetails";
+import Login from "./components/Login";
+import ForgotPassword from "./components/ForgotPassword";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -282,6 +284,14 @@ function App() {
           element: <SlideNav />,
         },
       ],
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPassword />,
     },
   ]);
   return (

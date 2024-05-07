@@ -1,9 +1,19 @@
-import { CBDetails } from "../../config";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import useBorrowerInfo from "../utils/useBorrowerInfo";
 
 const DefaultDetails = () => {
+  const url = "/simah-recent-response";
+  const CBDetilsData = useBorrowerInfo(url);
+  if (CBDetilsData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
   const defaultDet =
-    CBDetails.response.message.item[0].rspreport.consumer[0].defaults.default;
+    CBDetilsData.response.message.item[0].rspreport.consumer[0].defaults
+      .default;
   return (
     <>
       <table className="divide-y divide-gray-300">

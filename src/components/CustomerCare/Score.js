@@ -1,7 +1,17 @@
-import { CBDetails } from "../../config";
+import useBorrowerInfo from "../utils/useBorrowerInfo";
 
 const Score = () => {
-  const score = CBDetails.response.message.item[0].rspreport.consumer[0].score;
+  const url = "/simah-recent-response";
+  const CBDetilsData = useBorrowerInfo(url);
+  if (CBDetilsData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
+  const score =
+    CBDetilsData.response.message.item[0].rspreport.consumer[0].score;
   return (
     <>
       <div className="shadow-md rounded-xl py-5 px-10 border border-red-600 w-fit mx-auto">

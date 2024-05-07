@@ -1,9 +1,19 @@
-import { CBDetails } from "../../config";
+import useBorrowerInfo from "../utils/useBorrowerInfo";
 // import { useEffect, useState } from "react";
 
 const CustomerAddress = () => {
+  const url = "/simah-recent-response";
+  const CBDetilsData = useBorrowerInfo(url);
+  if (CBDetilsData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
   const address =
-    CBDetails.response.message.item[0].rspreport.consumer[0].addresses.address;
+    CBDetilsData.response.message.item[0].rspreport.consumer[0].addresses
+      .address;
   // const [addressarr, setAddressarr] = useState(
   //   address.map((add) => ({
   //     ...add,
