@@ -41,6 +41,9 @@ import RejectionHistory from "./components/CustomerCare/RejectionHistory";
 import CreditBureauDetails from "./components/CustomerCare/CreditBureauDetails";
 import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
+import LoanForm from "./components/Project/LoanForm";
+import CreateRac from "./components/RAC/CreateRac";
+import NewCreatedRAC from "./components/RAC/NewCreatedRAC";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -114,6 +117,18 @@ function App() {
         {
           path: "group/3",
           element: <GroupComponent3 />,
+        },
+        {
+          path: "/loan-form",
+          element: <LoanForm />,
+        },
+        {
+          path: "/create-rac",
+          element: <CreateRac />,
+        },
+        {
+          path: "/newrac/:racID",
+          element: <NewCreatedRAC />,
         },
         {
           path: "/rac",

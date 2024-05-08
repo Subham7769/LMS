@@ -5,22 +5,28 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
+import useGlobalConfig from "../utils/useGlobalConfig";
 
 const typeOptions = [
-  { value: "loan", label: "Loan" },
-  { value: "dependents", label: "Dependents" },
-  { value: "children", label: "Children" },
-  { value: "domesticWorkers", label: "Domestic Workers" },
+  { value: "LOAN", label: "Loan" },
+  { value: "DEPENDENTS", label: "Dependents" },
+  { value: "CHILDREN", label: "Children" },
+  { value: "DOMESTIC_WORKERS", label: "Domestic Workers" },
 ];
 
 const frequencyOptions = [
-  { value: "daily", label: "Daily" },
-  { value: "weekly", label: "Weekly" },
-  { value: "monthly", label: "Monthly" },
-  { value: "yearly", label: "Yearly" },
+  { value: "DAILY", label: "Daily" },
+  { value: "WEEKLY", label: "Weekly" },
+  { value: "MONTHLY", label: "Monthly" },
+  { value: "YEARLY", label: "Yearly" },
 ];
 
 const BareMinimumExp = () => {
+  const [ExpenseDataNew, setExpenseDataNew] = useState([]);
+  const [expensesName, setExpensesName] = useState("");
+  const [expensesFrequency, setExpensesFrequency] = useState("");
+  const [bareMinimum, setBareMinimum] = useState("");
+  const [dependantType, setDependantType] = useState("");
   const [inputList, setInputList] = useState([
     {
       id: 1,
@@ -30,17 +36,74 @@ const BareMinimumExp = () => {
       minExpense: "",
     },
   ]);
-  const handleAddFields = () => {
-    setInputList([
-      ...inputList,
-      {
-        id: Date.now(),
-        expense: "",
-        type: "",
-        frequency: "",
-        minExpense: "",
-      },
-    ]);
+  const url = "expenses";
+  const ExpenseData = useGlobalConfig(url);
+  // console.log(ExpenseData.expenses);
+  if (ExpenseData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
+  const handleAddFields = async () => {
+    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
+
+    // Define the data to be sent with the POST request
+    const postData = {
+      // You need to define the structure of the data you are posting
+      // For example:
+      // id: Date.now(),
+      expensesName: expensesName,
+      expensesFrequency: expensesFrequency.value,
+      bareMinimum: bareMinimum,
+      dependantType: dependantType.value,
+    };
+
+    try {
+      // POST request to add new fields
+      const postResponse = await fetch(
+        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/expenses/add",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
+
+      if (!postResponse.ok) {
+        throw new Error(`HTTP error! Status: ${postResponse.status}`);
+      }
+
+      // If the POST was successful, make a GET request to fetch the updated data
+      const getResponse = await fetch(
+        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/expenses",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!getResponse.ok) {
+        throw new Error(`HTTP error! Status: ${getResponse.status}`);
+      }
+
+      const updatedData = await getResponse.json(); // Assuming the server returns JSON
+      // Update your state with the fetched data
+      setExpenseDataNew(updatedData.expenses); // Replace 'setYourStateHere' with your actual state update function
+      setExpensesName("");
+      setExpensesFrequency("");
+      setBareMinimum("");
+      setDependantType("");
+    } catch (error) {
+      console.error("Failed to update data:", error);
+    }
   };
   const handleChange = (e, id) => {
     const { name, value } = e.target;
@@ -57,10 +120,49 @@ const BareMinimumExp = () => {
     setInputList(list2);
   };
 
-  const handleDelete = (index) => {
-    const deleteList = [...inputList];
-    deleteList.splice(index, 1);
-    setInputList(deleteList);
+  const handleDelete = async (deleteURL) => {
+    try {
+      const token = localStorage.getItem("authToken"); // Assuming you store your token in localStorage
+
+      // First, send a DELETE request
+      const deleteResponse = await fetch(
+        `https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/expenses/${deleteURL}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!deleteResponse.ok) {
+        throw new Error("Failed to delete the item");
+      }
+
+      // After deletion, fetch the updated data list
+      const getResponse = await fetch(
+        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/expenses",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!getResponse.ok) {
+        throw new Error("Failed to fetch updated data");
+      }
+
+      const updatedData = await getResponse.json();
+
+      setExpenseDataNew(updatedData.expenses); // Assuming you have a state or function like this to update your UI
+    } catch (error) {
+      console.error(error);
+      // Optionally, handle the error in the UI, such as showing an error message
+    }
   };
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
@@ -74,11 +176,84 @@ const BareMinimumExp = () => {
           <PlusIcon className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
-      {inputList.map((item, index) => (
-        <div key={item.id} className="flex gap-4 items-end mt-5">
+      <div className="flex gap-4 items-end mt-5">
+        <div className="relative">
+          <label
+            htmlFor="expensesName"
+            className=" bg-white px-1 text-xs text-gray-900"
+          >
+            Expenses
+          </label>
+          <input
+            type="text"
+            name="expensesName"
+            // id={`expense_${item.id}`}
+            value={expensesName}
+            onChange={(e) => setExpensesName(e.target.value)}
+            className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Food and Living"
+          />
+        </div>
+        <div className="relative">
+          <label
+            htmlFor="dependantType"
+            className=" bg-white px-1 text-xs text-gray-900"
+          >
+            Type
+          </label>
+          <Select
+            className="w-64"
+            options={typeOptions}
+            // id={`type_${item.id}`}
+            name="dependantType"
+            value={dependantType}
+            onChange={(selectedOption) => setDependantType(selectedOption)}
+            isSearchable={false}
+          />
+        </div>
+        <div className="relative">
+          <label
+            htmlFor="expensesFrequency"
+            className=" bg-white px-1 text-xs text-gray-900"
+          >
+            Expenses Frequency
+          </label>
+          <Select
+            className="w-64"
+            options={frequencyOptions}
+            // id={`frequency_${item.id}`}
+            name="expensesFrequency"
+            value={expensesFrequency}
+            onChange={(selectedOption) => setExpensesFrequency(selectedOption)}
+            isSearchable={false}
+          />
+        </div>
+        <div className="relative">
+          <label
+            htmlFor="bareMinimum"
+            className=" bg-white px-1 text-xs text-gray-900"
+          >
+            Bare Minimum Expense Per Person
+          </label>
+          <input
+            type="text"
+            name="bareMinimum"
+            // id={`minExpense_${item.id}`}
+            value={bareMinimum}
+            onChange={(e) => setBareMinimum(e.target.value)}
+            className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="200"
+          />
+        </div>
+      </div>
+      {(ExpenseDataNew.length === 0
+        ? ExpenseData.expenses
+        : ExpenseDataNew
+      ).map((expdata) => (
+        <div key={expdata.id} className="flex gap-4 items-end mt-5">
           <div className="relative">
             <label
-              htmlFor={`expense_${item.id}`}
+              htmlFor={`expense_${expdata.id}`}
               className=" bg-white px-1 text-xs text-gray-900"
             >
               Expenses
@@ -86,16 +261,16 @@ const BareMinimumExp = () => {
             <input
               type="text"
               name="expense"
-              id={`expense_${item.id}`}
-              value={item.expense}
-              onChange={(e) => handleChange(e, item.id)}
+              id={`expense_${expdata.id}`}
+              value={expdata.expensesName}
+              onChange={(e) => handleChange(e, expdata.id)}
               className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="Food and Living"
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`type_${item.id}`}
+              htmlFor={`type_${expdata.id}`}
               className=" bg-white px-1 text-xs text-gray-900"
             >
               Type
@@ -103,18 +278,20 @@ const BareMinimumExp = () => {
             <Select
               className="w-64"
               options={typeOptions}
-              id={`type_${item.id}`}
+              id={`type_${expdata.id}`}
               name="type"
-              value={typeOptions.find((option) => option.value === item.type)}
+              value={typeOptions.find(
+                (option) => option.value === expdata.dependantType
+              )}
               onChange={(selectedOption) =>
-                handleDDChange("type", selectedOption, item.id)
+                handleDDChange("type", selectedOption, expdata.id)
               }
               isSearchable={false}
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`frequency_${item.id}`}
+              htmlFor={`frequency_${expdata.id}`}
               className=" bg-white px-1 text-xs text-gray-900"
             >
               Expenses Frequency
@@ -122,20 +299,20 @@ const BareMinimumExp = () => {
             <Select
               className="w-64"
               options={frequencyOptions}
-              id={`frequency_${item.id}`}
+              id={`frequency_${expdata.id}`}
               name="frequency"
               value={frequencyOptions.find(
-                (option) => option.value === item.frequency
+                (option) => option.value === expdata.expensesFrequency
               )}
               onChange={(selectedOption) =>
-                handleDDChange("frequency", selectedOption, item.id)
+                handleDDChange("frequency", selectedOption, expdata.id)
               }
               isSearchable={false}
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`minExpense_${item.id}`}
+              htmlFor={`minExpense_${expdata.id}`}
               className=" bg-white px-1 text-xs text-gray-900"
             >
               Bare Minimum Expense Per Person
@@ -143,15 +320,15 @@ const BareMinimumExp = () => {
             <input
               type="text"
               name="minExpense"
-              id={`minExpense_${item.id}`}
-              value={item.minExpense}
-              onChange={(e) => handleChange(e, item.id)}
+              id={`minExpense_${expdata.id}`}
+              value={expdata.bareMinimum}
+              onChange={(e) => handleChange(e, expdata.id)}
               className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="200"
             />
           </div>
           <button
-            onClick={() => handleDelete(index)}
+            onClick={() => handleDelete(expdata.id)}
             type="button"
             className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
           >

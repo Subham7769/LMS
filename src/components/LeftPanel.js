@@ -9,6 +9,7 @@ import {
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import useRACInfo from "./utils/useRACInfo";
 
 const Menus = [
   { title: "Home", href: "/", icon: HomeIcon, count: "5", current: true },
@@ -19,11 +20,17 @@ const Menus = [
     current: false,
     submenu: true,
     submenuItems: [
-      { title: "Cash Loan RAC", href: "/rac/cash-loan/rmc" },
-      { title: "BNPL RAC", href: "/rac/bnpl/rmc" },
-      { title: "Overdraft RAC", href: "/rac/overdraft/rmc" },
+      { name: "Cash Loan RAC", href: "/rac/cash-loan/rmc" },
+      { name: "BNPL RAC", href: "/rac/bnpl/rmc" },
+      { name: "Overdraft RAC", href: "/rac/overdraft/rmc" },
     ],
     isOpen: false,
+  },
+  {
+    title: "Project",
+    href: "/loan-form",
+    icon: ClipboardDocumentCheckIcon,
+    current: false,
   },
   {
     title: "Product",
@@ -34,11 +41,11 @@ const Menus = [
     submenu: true,
     submenuItems: [
       {
-        title: "Cash Loan",
+        name: "Cash Loan",
         href: "/product/cash-loan/loan-product-config",
       },
-      { title: "BNPL", href: "/product/bnpl/loan-product-config" },
-      { title: "Overdraft", href: "/product/overdraft/loan-product-config" },
+      { name: "BNPL", href: "/product/bnpl/loan-product-config" },
+      { name: "Overdraft", href: "/product/overdraft/loan-product-config" },
     ],
     isOpen: false,
   },
@@ -51,11 +58,11 @@ const Menus = [
     submenu: true,
     submenuItems: [
       {
-        title: "Group 1",
+        name: "Group 1",
         href: "/group/1",
       },
-      { title: "Group 2", href: "/group/2" },
-      { title: "Group 3", href: "/group/3" },
+      { name: "Group 2", href: "/group/2" },
+      { name: "Group 3", href: "/group/3" },
     ],
     isOpen: false,
   },
@@ -67,29 +74,29 @@ const Menus = [
     spacing: false,
     submenu: true,
     submenuItems: [
-      { title: "Credit Policy", href: "/global-config/cp", current: false },
+      { name: "Credit Policy", href: "/global-config/cp", current: false },
       {
-        title: "Liabilities Matrix",
+        name: "Liabilities Matrix",
         href: "/global-config/liability-matrix",
         current: false,
       },
       {
-        title: "Risk Grading Cal",
+        name: "Risk Grading Cal",
         href: "/global-config/risk-grade-cal",
         current: false,
       },
       {
-        title: "Minimum Expense",
+        name: "Minimum Expense",
         href: "/global-config/bare-min-exp",
         current: false,
       },
       {
-        title: "Notification Text",
+        name: "Notification Text",
         href: "/global-config/notification-text",
         current: false,
       },
       {
-        title: "System Config",
+        name: "System Config",
         href: "/global-config/system-config",
         current: false,
       },
@@ -110,6 +117,8 @@ function classNames(...classes) {
 
 const LeftPanel = () => {
   const [open, setOpen] = useState(true);
+  const RACDataInfo = useRACInfo();
+  console.log(RACDataInfo);
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
   );
@@ -214,13 +223,13 @@ const LeftPanel = () => {
               {menu.submenu && submenuStates[index]?.isOpen && open && (
                 <ul>
                   {menu.submenuItems.map((submenuItem, subIndex) => (
-                    <div key={submenuItem.title}>
+                    <div key={submenuItem.name}>
                       <NavLink to={submenuItem.href} className="text-gray-500">
                         <li
-                          key={submenuItem.title}
+                          key={submenuItem.name}
                           className="text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600"
                         >
-                          {submenuItem.title}
+                          {submenuItem.name}
                         </li>
                       </NavLink>
                     </div>

@@ -150,9 +150,11 @@ const LiabilitiesMatrix = () => {
     const { name, value } = e.target;
     console.log("Field Changed:", name, "New Value:", value);
     const token = localStorage.getItem("authToken");
-    const currentItem = LiabilitiesMatrixData.find(
-      (item) => item.simahDescriptionCode === simahDescriptionCode
-    );
+    const currentItem = (
+      LiabilitiesMatrixDataNew.length === 0
+        ? LiabilitiesMatrixData
+        : LiabilitiesMatrixDataNew
+    ).find((item) => item.simahDescriptionCode === simahDescriptionCode);
 
     if (!currentItem) {
       console.error("Item not found!");
@@ -160,7 +162,8 @@ const LiabilitiesMatrix = () => {
     }
     const updatedData = {
       ...currentItem, // Spread all existing data
-      [name]: value, // Use computed property names to set the key dynamically
+      // [name]: value, // Use computed property names to set the key dynamically
+      newSimahDescriptionCode: value,
     };
     try {
       // PUT request to update the value
@@ -210,9 +213,11 @@ const LiabilitiesMatrix = () => {
     simahDescriptionCode
   ) => {
     const token = localStorage.getItem("authToken");
-    const currentItem = LiabilitiesMatrixData.find(
-      (item) => item.simahDescriptionCode === simahDescriptionCode
-    );
+    const currentItem = (
+      LiabilitiesMatrixDataNew.length === 0
+        ? LiabilitiesMatrixData
+        : LiabilitiesMatrixDataNew
+    ).find((item) => item.simahDescriptionCode === simahDescriptionCode);
 
     if (!currentItem) {
       console.error("Item not found!");
@@ -221,7 +226,7 @@ const LiabilitiesMatrix = () => {
     const updatedData = {
       ...currentItem, // Spread all existing data
       [propName]: selectedOption.value, // Use computed property names to set the key dynamically
-      simahDescriptionCode: simahDescriptionCode,
+      newSimahDescriptionCode: simahDescriptionCode,
     };
 
     try {
@@ -308,16 +313,6 @@ const LiabilitiesMatrix = () => {
       // Optionally, handle the error in the UI, such as showing an error message
     }
   }
-
-  // const url = "simah-liabilities";
-  // setLiabilitiesMatrixData(useGlobalConfig(url));
-  // if (LiabilitiesMatrixData === 0) {
-  //   return (
-  //     <>
-  //       <div>Fetching Data</div>
-  //     </>
-  //   );
-  // }
   return (
     <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
       <div className="flex items-center justify-between ">
@@ -566,7 +561,7 @@ const LiabilitiesMatrix = () => {
           <div className="flex gap-8 items-end">
             <div className="relative">
               <label
-                htmlFor={`gdbrWoMortage_${lmdata.id}`}
+                htmlFor="applicabilityGDBR"
                 className=" bg-white px-1 text-xs text-gray-900"
               >
                 GDBR (Without Mortgage)
@@ -574,20 +569,19 @@ const LiabilitiesMatrix = () => {
               <Select
                 className="w-64"
                 options={gdbrWoMortageOptions}
-                id={`gdbrWoMortage_${lmdata.id}`}
-                name="gdbrWoMortage"
+                name="applicabilityGDBR"
                 value={gdbrWoMortageOptions.find(
                   (option) => option.value === lmdata.applicabilityGDBR
                 )}
                 onChange={(selectedOption) =>
-                  handleDDChange("gdbrWoMortage", selectedOption, lmdata.id)
+                  handleDDChange("applicabilityGDBR", selectedOption, lmdata.id)
                 }
                 isSearchable={false}
               />
             </div>
             <div className="relative">
               <label
-                htmlFor={`gdbrWMortage_${lmdata.id}`}
+                htmlFor="totalExposure"
                 className=" bg-white px-1 text-xs text-gray-900"
               >
                 GDBR (including Mortgage)
@@ -595,20 +589,19 @@ const LiabilitiesMatrix = () => {
               <Select
                 className="w-64"
                 options={gdbrWMortageOptions}
-                id={`gdbrWMortage_${lmdata.id}`}
-                name="gdbrWMortage"
+                name="totalExposure"
                 value={gdbrWMortageOptions.find(
                   (option) => option.value === lmdata.totalExposure
                 )}
                 onChange={(selectedOption) =>
-                  handleDDChange("gdbrWMortage", selectedOption, lmdata.id)
+                  handleDDChange("totalExposure", selectedOption, lmdata.id)
                 }
                 isSearchable={false}
               />
             </div>
             <div className="relative">
               <label
-                htmlFor={`defaultScore_${lmdata.id}`}
+                htmlFor="defaultConsideredInSIMAHscore"
                 className=" bg-white px-1 text-xs text-gray-900"
               >
                 Default considered in CB score
@@ -616,14 +609,17 @@ const LiabilitiesMatrix = () => {
               <Select
                 className="w-64"
                 options={defaultScoreOptions}
-                id={`defaultScore_${lmdata.id}`}
-                name="defaultScore"
+                name="defaultConsideredInSIMAHscore"
                 value={defaultScoreOptions.find(
                   (option) =>
                     option.value === lmdata.defaultConsideredInSIMAHscore
                 )}
                 onChange={(selectedOption) =>
-                  handleDDChange("defaultScore", selectedOption, lmdata.id)
+                  handleDDChange(
+                    "defaultConsideredInSIMAHscore",
+                    selectedOption,
+                    lmdata.id
+                  )
                 }
                 isSearchable={false}
               />
