@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { Switch } from "@headlessui/react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const ToggleSwitch = () => {
-  const [enabled, setEnabled] = useState(false);
+const ToggleSwitch = ({ enabled, setEnabled }) => {
   return (
     <>
       <div className="flex">

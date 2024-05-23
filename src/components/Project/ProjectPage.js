@@ -1,5 +1,5 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
-import RacTable from "./RacTable";
+import ProductTable from "../ProductTable";
 import {
   ClipboardDocumentListIcon,
   CurrencyRupeeIcon,
@@ -9,23 +9,23 @@ import {
 const stats = [
   {
     id: 1,
-    name: "Avg. Approval Daily",
-    stat: "723",
+    name: "Total Borrowers",
+    stat: "71,897",
     icon: UsersIcon,
     change: "122",
     changeType: "increase",
   },
   {
     id: 2,
-    name: "Active RAC",
-    stat: "2 / 3",
+    name: "Avg. Lending / Day",
+    stat: "$58.16M",
     icon: CurrencyRupeeIcon,
     change: "5.4%",
     changeType: "increase",
   },
   {
     id: 3,
-    name: "Avg. Rejection / Day",
+    name: "Avg. Loans Closed / Day",
     stat: "24.57",
     icon: ClipboardDocumentListIcon,
     change: "3.2%",
@@ -36,13 +36,14 @@ const stats = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-const RAC = () => {
+
+const ProjectPage = () => {
   return (
     <>
       <div className="">
         {/* cards */}
-        <div className="mx-auto px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:max-w-none">
+        <div className="mx-auto px-8">
+          <div className="mx-auto  max-w-none">
             <div className="bg-gray-100 rounded-xl">
               <div className="mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div>
@@ -120,7 +121,7 @@ const RAC = () => {
                 </div>
               </div>
             </div>
-            <RacTable />
+            <ProductTable />
           </div>
         </div>
       </div>
@@ -128,4 +129,4 @@ const RAC = () => {
   );
 };
 
-export default RAC;
+export default ProjectPage;

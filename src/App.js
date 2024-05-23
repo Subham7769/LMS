@@ -12,10 +12,8 @@ import Notifications from "./components/Notifications";
 import SlideNav from "./components/SlideNav";
 import CashLoan from "./components/CashLoan";
 import CreditScore from "./components/CreditScore";
-import RacMatrixConfig from "./components/RAC/RacMatrixConfig";
 import LoanProductConfig from "./components/LoanProductConfig";
 import DebtBurdenConfig from "./components/DebtBurdenConfig";
-import CashLoanRAC from "./components/RAC/CashLoanRAC";
 import CreditPolicy from "./components/CreditPolicy";
 import GlobalConfig from "./components/GlobalConfig/GlobalConfig";
 import GcCreditPolicy from "./components/GlobalConfig/GcCreditPolicy";
@@ -26,8 +24,6 @@ import RiskGradeCal from "./components/GlobalConfig/RiskGradeCal";
 import BareMinimumExp from "./components/GlobalConfig/BareMinimumExp";
 import NotificationText from "./components/GlobalConfig/NotificationText";
 import SystemConfig from "./components/GlobalConfig/SystemConfig";
-import BnplRac from "./components/RAC/BnplRac";
-import OverdraftRAC from "./components/RAC/OverdraftRAC";
 import BNPL from "./BNPL";
 import Overdraft from "./components/Overdraft";
 import GroupComponent from "./components/Group/GroupComponent";
@@ -44,6 +40,11 @@ import ForgotPassword from "./components/ForgotPassword";
 import LoanForm from "./components/Project/LoanForm";
 import CreateRac from "./components/RAC/CreateRac";
 import NewCreatedRAC from "./components/RAC/NewCreatedRAC";
+import BpmnComponent from "./components/BusinessRule/BpmnComponent";
+import BpmnComponent2 from "./components/BusinessRule/BpmnComponent2";
+import BpmnComponent3 from "./components/BusinessRule/BpmnComponent3";
+import ProjectPage from "./components/Project/ProjectPage";
+import NewProjectPage from "./components/Project/NewProjectPage";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -119,8 +120,28 @@ function App() {
           element: <GroupComponent3 />,
         },
         {
-          path: "/loan-form",
+          path: "/project/:projectId",
           element: <LoanForm />,
+        },
+        {
+          path: "/project/loan-form",
+          element: <ProjectPage />,
+        },
+        {
+          path: "/project/newProject",
+          element: <NewProjectPage />,
+        },
+        {
+          path: "/business-rule/1",
+          element: <BpmnComponent />,
+        },
+        {
+          path: "/business-rule/2",
+          element: <BpmnComponent2 />,
+        },
+        {
+          path: "/business-rule/3",
+          element: <BpmnComponent3 />,
         },
         {
           path: "/create-rac",
@@ -135,24 +156,6 @@ function App() {
           element: <RAC />,
         },
         {
-          path: "/rac/cash-loan",
-          element: <CashLoanRAC />,
-          children: [
-            {
-              path: "rmc",
-              element: <RacMatrixConfig />,
-            },
-          ],
-        },
-        {
-          path: "/rac/bnpl/rmc",
-          element: <BnplRac />,
-        },
-        {
-          path: "/rac/overdraft/rmc",
-          element: <OverdraftRAC />,
-        },
-        {
           path: "/product",
           element: <Product />,
         },
@@ -161,11 +164,11 @@ function App() {
           element: <CashLoan />,
           children: [
             {
-              path: "credit-score",
+              path: "credit-score/:projectId",
               element: <CreditScore />,
             },
             {
-              path: ":purl",
+              path: ":purl/:productType",
               element: <LoanProductConfig />,
             },
             {
@@ -173,7 +176,7 @@ function App() {
               element: <DebtBurdenConfig />,
             },
             {
-              path: "credit-policy",
+              path: "credit-policy/:projectId",
               element: <CreditPolicy />,
             },
           ],
@@ -183,11 +186,11 @@ function App() {
           element: <BNPL />,
           children: [
             {
-              path: "credit-score",
+              path: "credit-score/:projectId",
               element: <CreditScore />,
             },
             {
-              path: ":purl",
+              path: ":purl/:productType",
               element: <LoanProductConfig />,
             },
             {
@@ -195,7 +198,7 @@ function App() {
               element: <DebtBurdenConfig />,
             },
             {
-              path: "credit-policy",
+              path: "credit-policy/:projectId",
               element: <CreditPolicy />,
             },
           ],
@@ -205,11 +208,11 @@ function App() {
           element: <Overdraft />,
           children: [
             {
-              path: "credit-score",
+              path: "credit-score/:projectId",
               element: <CreditScore />,
             },
             {
-              path: ":purl",
+              path: ":purl/:productType",
               element: <LoanProductConfig />,
             },
             {
@@ -217,7 +220,7 @@ function App() {
               element: <DebtBurdenConfig />,
             },
             {
-              path: "credit-policy",
+              path: "credit-policy/:projectId",
               element: <CreditPolicy />,
             },
           ],

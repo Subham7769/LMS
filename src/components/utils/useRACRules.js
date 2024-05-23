@@ -1,18 +1,23 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const useRACInfo = () => {
-  const [RACData, setRACData] = useState([]);
-  const navigate = useNavigate();
-  useEffect(() => {
-    getRACInfo();
-  }, []);
+const useRacRules = (url1, url2) => {
+  const [RACRulesInfo, setRACRulesInfo] = useState([]);
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const { racID } = useParams();
 
-  async function getRACInfo() {
+  useEffect(() => {
+    getRACRulesInfo();
+  }, [racID]);
+
+  async function getRACRulesInfo() {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/rac/",
+        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/rac/" +
+          racID +
+          url1 +
+          url2,
         {
           method: "GET",
           headers: {
@@ -27,21 +32,15 @@ const useRACInfo = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      const racDetails = await data.json();
-
-      // Transform the RAC data to the desired format
-      const formattedRACData = racDetails.map(({ name, racId }) => ({
-        name,
-        href: "/newrac/" + racId,
-      }));
-
-      setRACData(formattedRACData);
-      // console.log(RACData);
+      const json = await data.json();
+      setRACRulesInfo(json);
+      // console.log(RACRulesInfo);
     } catch (error) {
       console.error(error);
     }
   }
-  return RACData;
+  // console.log(subscriberListNew);
+  return RACRulesInfo;
 };
 
-export default useRACInfo;
+export default useRacRules;

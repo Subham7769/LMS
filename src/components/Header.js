@@ -126,7 +126,7 @@ const Header = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to="/rac"
+                          to="/create-rac"
                           className={classNames(
                             active
                               ? "bg-gray-100 text-gray-900"
@@ -135,6 +135,21 @@ const Header = () => {
                           )}
                         >
                           RAC
+                        </Link>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          to="/project/newProject"
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          Project
                         </Link>
                       )}
                     </Menu.Item>
@@ -165,6 +180,21 @@ const Header = () => {
                           )}
                         >
                           Group
+                        </Link>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          to="/business-rule/1"
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          Business Rule
                         </Link>
                       )}
                     </Menu.Item>

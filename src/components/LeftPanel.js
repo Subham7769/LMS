@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-
+import Logo from "../assets/img/xurti-logo.png";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
   AdjustmentsHorizontalIcon,
@@ -8,10 +8,12 @@ import {
   ClipboardDocumentCheckIcon,
   HomeIcon,
   UsersIcon,
+  CircleStackIcon,
 } from "@heroicons/react/24/outline";
 import useRACInfo from "./utils/useRACInfo";
+import useAllProjectInfo from "./utils/useAllProjectInfo";
 
-const Menus = [
+const MenusInitial = [
   { title: "Home", href: "/", icon: HomeIcon, count: "5", current: true },
   {
     title: "RAC",
@@ -28,9 +30,16 @@ const Menus = [
   },
   {
     title: "Project",
-    href: "/loan-form",
-    icon: ClipboardDocumentCheckIcon,
+    href: "/project/loan-form",
+    icon: CircleStackIcon,
     current: false,
+    submenu: true,
+    submenuItems: [
+      { name: "Project 1", href: "/project/loan-form" },
+      { name: "Project 2", href: "/project/loan-form/2" },
+      { name: "Project 3", href: "/project/loan-form/3" },
+    ],
+    isOpen: false,
   },
   {
     title: "Product",
@@ -42,10 +51,16 @@ const Menus = [
     submenuItems: [
       {
         name: "Cash Loan",
-        href: "/product/cash-loan/loan-product-config",
+        href: "/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN",
       },
-      { name: "BNPL", href: "/product/bnpl/loan-product-config" },
-      { name: "Overdraft", href: "/product/overdraft/loan-product-config" },
+      {
+        name: "BNPL",
+        href: "/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN",
+      },
+      {
+        name: "Overdraft",
+        href: "/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2",
+      },
     ],
     isOpen: false,
   },
@@ -63,6 +78,23 @@ const Menus = [
       },
       { name: "Group 2", href: "/group/2" },
       { name: "Group 3", href: "/group/3" },
+    ],
+    isOpen: false,
+  },
+  {
+    title: "Business Rule",
+    href: "/business-rule/1",
+    icon: UsersIcon,
+    current: false,
+    spacing: false,
+    submenu: true,
+    submenuItems: [
+      {
+        name: "Business Rule 1",
+        href: "/business-rule/1",
+      },
+      { name: "Business Rule 2", href: "/business-rule/2" },
+      { name: "Business Rule 3", href: "/business-rule/3" },
     ],
     isOpen: false,
   },
@@ -117,8 +149,37 @@ function classNames(...classes) {
 
 const LeftPanel = () => {
   const [open, setOpen] = useState(true);
+  const [Menus, setMenus] = useState(MenusInitial);
   const RACDataInfo = useRACInfo();
-  console.log(RACDataInfo);
+  // console.log(RACDataInfo);
+  useEffect(() => {
+    setMenus((prevMenus) =>
+      prevMenus.map((menu) => {
+        if (menu.title === "RAC") {
+          return {
+            ...menu,
+            submenuItems: RACDataInfo,
+          };
+        }
+        return menu;
+      })
+    );
+  }, [RACDataInfo]);
+  const ProjectDataInfo = useAllProjectInfo();
+  useEffect(() => {
+    setMenus((prevMenus) =>
+      prevMenus.map((menu) => {
+        if (menu.title === "Project") {
+          return {
+            ...menu,
+            submenuItems: ProjectDataInfo,
+          };
+        }
+        return menu;
+      })
+    );
+  }, [ProjectDataInfo]);
+
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
   );
@@ -145,8 +206,9 @@ const LeftPanel = () => {
       >
         <div className="flex h-16 shrink-0 items-center">
           <img
-            className="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            className={`h-8 ${open ? "w-auto" : "w-10 h-auto"}`}
+            // src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            src={Logo}
             alt="Your Company"
           />
         </div>

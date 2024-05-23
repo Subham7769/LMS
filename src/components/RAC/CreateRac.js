@@ -6,8 +6,7 @@ const CreateRac = () => {
   const navigate = useNavigate();
   async function createNewRac(racName) {
     try {
-      const token =
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdXBlcmFkbWluLTE1IiwiZXhwIjoxNzE1MTcxOTUxfQ.naMfg8jq_fs5qVnL8zBXrwtVj07H1eYCcI-M9An1Acm0ybYl1vGTGjS9CCV9alUoeWB0izKKFFZMys3_gF7rYg";
+      const token = localStorage.getItem("authToken");
       const data = await fetch(
         "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/rac/" +
           racName,
@@ -19,21 +18,16 @@ const CreateRac = () => {
           },
         }
       );
-      if (data.status === 404) {
-        console.log("The resource you were trying to reach is not found"); // Clear the token
-        // navigate("/create-rac"); // Redirect to login page
-        return; // Stop further execution
-      }
       // Check for token expiration or invalid token
       if (data.status === 401 || data.status === 403) {
-        console.log("Check for token expiration or invalid token");
-        // localStorage.removeItem("authToken"); // Clear the token
-        // navigate("/create-rac"); // Redirect to login page
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
       const racDetails = await data.json();
       console.log(racDetails);
       navigate("/newrac/" + racDetails.racId);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }

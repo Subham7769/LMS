@@ -6,7 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 
-const LoanForm = () => {
+const NewProjectPage = () => {
   const [ProjectData, setProjectData] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -410,106 +410,106 @@ const LoanForm = () => {
     { value: ">=", label: ">=" },
   ];
 
-  useEffect(() => {
-    getProjectInfo();
-  }, [projectId]);
+  // useEffect(() => {
+  //   getProjectInfo();
+  // }, [projectId]);
 
-  async function getProjectInfo() {
-    try {
-      const ptoken = localStorage.getItem("projectToken");
-      const data = await fetch(
-        "http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects/" +
-          projectId,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${ptoken}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const projectDetails = await data.json();
+  // async function getProjectInfo() {
+  //   try {
+  //     const ptoken = localStorage.getItem("projectToken");
+  //     const data = await fetch(
+  //       "http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects/" +
+  //         projectId,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${ptoken}`,
+  //         },
+  //       }
+  //     );
+  //     // Check for token expiration or invalid token
+  //     if (data.status === 401 || data.status === 403) {
+  //       localStorage.removeItem("authToken"); // Clear the token
+  //       navigate("/login"); // Redirect to login page
+  //       return; // Stop further execution
+  //     }
+  //     const projectDetails = await data.json();
 
-      // Transform the RAC data to the desired format
+  //     // Transform the RAC data to the desired format
 
-      setProjectData(projectDetails);
-      //   // console.log(ProjectData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  //     setProjectData(projectDetails);
+  //     //   // console.log(ProjectData);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
-  useEffect(() => {
-    if (ProjectData.length === 0) {
-      console.log("Fetching data");
-    } else {
-      setName(ProjectData.name);
-      setprojectDescription(ProjectData.projectDescription);
-      const selectedCountry = countryOptions.find(
-        (item) => item.value === ProjectData.country
-      );
-      const formattedcountry = {
-        value: ProjectData.country,
-        label: selectedCountry ? selectedCountry.label : ProjectData.country,
-      };
-      const formattedlocation = {
-        value: ProjectData.location,
-        label: ProjectData.location,
-      };
-      const selectedCurrency = currencyOptions.find(
-        (item) => item.value === ProjectData.currencyName
-      );
-      const formattedcurrencyName = {
-        value: ProjectData.currencyName,
-        label: selectedCurrency
-          ? selectedCurrency.label
-          : ProjectData.currencyName,
-      };
-      const formattedloanType = {
-        value: ProjectData.loanType,
-        label: ProjectData.loanType,
-      };
-      setcountry(formattedcountry);
-      setlocation(formattedlocation);
-      setcurrencyName(formattedcurrencyName);
-      setloanType(formattedloanType);
-      setFlatInterestRate(ProjectData.flatInterestRate);
-      setInterestRatePeriod(ProjectData.interestRatePeriod);
-      const formattedInterestRatePeriodUnit = {
-        value: ProjectData.interestPeriodUnit,
-        label: ProjectData.interestPeriodUnit,
-      };
-      setInterestPeriodUnit(formattedInterestRatePeriodUnit);
-      setGracePeriodDown(ProjectData.downRepaymentGracePeriod);
-      setGraceForEmis(ProjectData.emiRepaymentGracePeriod);
-      setLoanGrace(ProjectData.loanGracePeriod);
-      setRollOverP(ProjectData.rollOverGracePeriod);
-      setRollOverF(ProjectData.rollOverPenaltyFactor);
-      setRollOverIR(ProjectData.rollOverInterestRate);
-      setLateEmiPernalty(ProjectData.lateEmiPenaltyFactor);
-      setMaxPaymentAttempt(ProjectData.maxPaymetAttemps);
-      setRollOverEquation(null);
-      setStartDate(formattedDate(ProjectData.startDate));
-      setEndDate(formattedDate(ProjectData.endDate));
-      // setStartDate(ProjectData.startDate);
-      // setEndDate(ProjectData.endDate);
-      setCriteria(ProjectData.criteria);
-      setServiceFee(ProjectData.serviceFee);
-      setClient(ProjectData.clientIds);
-      setEarlyPay(ProjectData.hasEarlyLateRepayment);
-      setCalInterest(ProjectData.calculateInterest);
-      setHasDownPayPer(ProjectData.downPaymentPercentage);
-      setHasDownPayFix(ProjectData.downPaymentFixed);
-      setTclFee(ProjectData.tclIncludeFee);
-      setTclInterest(ProjectData.tclIncludeInterest);
-    }
-  }, [ProjectData]);
+  // useEffect(() => {
+  //   if (ProjectData.length === 0) {
+  //     console.log("Fetching data");
+  //   } else {
+  //     setName(ProjectData.name);
+  //     setprojectDescription(ProjectData.projectDescription);
+  //     const selectedCountry = countryOptions.find(
+  //       (item) => item.value === ProjectData.country
+  //     );
+  //     const formattedcountry = {
+  //       value: ProjectData.country,
+  //       label: selectedCountry ? selectedCountry.label : ProjectData.country,
+  //     };
+  //     const formattedlocation = {
+  //       value: ProjectData.location,
+  //       label: ProjectData.location,
+  //     };
+  //     const selectedCurrency = currencyOptions.find(
+  //       (item) => item.value === ProjectData.currencyName
+  //     );
+  //     const formattedcurrencyName = {
+  //       value: ProjectData.currencyName,
+  //       label: selectedCurrency
+  //         ? selectedCurrency.label
+  //         : ProjectData.currencyName,
+  //     };
+  //     const formattedloanType = {
+  //       value: ProjectData.loanType,
+  //       label: ProjectData.loanType,
+  //     };
+  //     setcountry(formattedcountry);
+  //     setlocation(formattedlocation);
+  //     setcurrencyName(formattedcurrencyName);
+  //     setloanType(formattedloanType);
+  //     setFlatInterestRate(ProjectData.flatInterestRate);
+  //     setInterestRatePeriod(ProjectData.interestRatePeriod);
+  //     const formattedInterestRatePeriodUnit = {
+  //       value: ProjectData.interestPeriodUnit,
+  //       label: ProjectData.interestPeriodUnit,
+  //     };
+  //     setInterestPeriodUnit(formattedInterestRatePeriodUnit);
+  //     setGracePeriodDown(ProjectData.downRepaymentGracePeriod);
+  //     setGraceForEmis(ProjectData.emiRepaymentGracePeriod);
+  //     setLoanGrace(ProjectData.loanGracePeriod);
+  //     setRollOverP(ProjectData.rollOverGracePeriod);
+  //     setRollOverF(ProjectData.rollOverPenaltyFactor);
+  //     setRollOverIR(ProjectData.rollOverInterestRate);
+  //     setLateEmiPernalty(ProjectData.lateEmiPenaltyFactor);
+  //     setMaxPaymentAttempt(ProjectData.maxPaymetAttemps);
+  //     setRollOverEquation(null);
+  //     setStartDate(formattedDate(ProjectData.startDate));
+  //     setEndDate(formattedDate(ProjectData.endDate));
+  //     // setStartDate(ProjectData.startDate);
+  //     // setEndDate(ProjectData.endDate);
+  //     setCriteria(ProjectData.criteria);
+  //     setServiceFee(ProjectData.serviceFee);
+  //     setClient(ProjectData.clientIds);
+  //     setEarlyPay(ProjectData.hasEarlyLateRepayment);
+  //     setCalInterest(ProjectData.calculateInterest);
+  //     setHasDownPayPer(ProjectData.downPaymentPercentage);
+  //     setHasDownPayFix(ProjectData.downPaymentFixed);
+  //     setTclFee(ProjectData.tclIncludeFee);
+  //     setTclInterest(ProjectData.tclIncludeInterest);
+  //   }
+  // }, [ProjectData]);
 
   useEffect(() => {
     const pattern = /([a-zA-Z]+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
@@ -625,7 +625,6 @@ const LoanForm = () => {
     const formattedstartDate = `${startDate} 00:00:00`;
     const formattedendDate = `${endDate} 00:00:00`;
     const payload = {
-      projectId: projectId,
       startDate: formattedstartDate,
       endDate: formattedendDate,
       projectTimeZone: ProjectData.projectTimeZone,
@@ -721,9 +720,6 @@ const LoanForm = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <form className="">
-        <h2 className="mb-5">
-          Name: <b>{ProjectData.name}</b>
-        </h2>
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
             {/* Name */}
@@ -1281,28 +1277,18 @@ const LoanForm = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="inline-flex items-center gap-x-1.5 mt-3 rounded-md bg-green-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 w-full justify-center"
-          >
-            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Update
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center gap-x-1.5 mt-3 rounded-md bg-red-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-full justify-center"
-          >
-            <XCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Delete
-          </button>
-        </div>
 
         {/* Submit Button */}
+        <button
+          type="submit"
+          className="flex items-center justify-center mt-3 w-full bg-indigo-600  hover:bg-white hover:text-black hover:border hover:drop-shadow-lg text-white p-2 rounded-md"
+        >
+          <FaCheckCircle className="mr-2" />
+          Create
+        </button>
       </form>
     </>
   );
 };
 
-export default LoanForm;
+export default NewProjectPage;

@@ -23,3 +23,7 @@
 .slick-next {
   right: -8px !important;
 }
+
+.bjs-powered-by {
+  display: none !important;
+}

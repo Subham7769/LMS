@@ -1,113 +1,223 @@
-import { useState } from "react";
+import useRACInfo from "./utils/useRACInfo";
+import { useEffect, useState } from "react";
 import {
   PlusIcon,
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
+import { useParams, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { RowChanged } from "./Toasts";
 
 const options = [
-  { value: "daily", label: "Daily" },
-  { value: "weekly", label: "Weekly" },
-  { value: "monthly", label: "Monthly" },
-  { value: "yearly", label: "Yearly" },
+  { value: "DAILY", label: "DAILY" },
+  { value: "WEEKLY", label: "WEEKLY" },
+  { value: "MONTHLY", label: "MONTHLY" },
+  { value: "YEARLY", label: "YEARLY" },
 ];
 
 const tenureOptions = [
-  { value: "days", label: "Days" },
-  { value: "weeks", label: "Weeks" },
-  { value: "months", label: "Months" },
-  { value: "years", label: "Years" },
+  { value: "CORPORATE", label: "CORPORATE" },
+  { value: "E_COMMERCE", label: "E_COMMERCE" },
+  { value: "CONSUMER", label: "CONSUMER" },
 ];
 
-const racOptions = [
-  { value: "r1", label: "Cash Loan RAC" },
-  { value: "r2", label: "BNPL RAC" },
-  { value: "r3", label: "Overdraft RAC" },
+const racOptionsInitial = [
+  { value: "r1", label: "Cash Product RAC" },
+  { value: "r2", label: "BNPL Product RAC" },
+  { value: "r3", label: "Overdraft Product RAC" },
 ];
 
 const LoanProductConfig = () => {
+  const { productType } = useParams();
+  const navigate = useNavigate();
+  const [productConfigData, setProductConfigData] = useState([]);
+  const [eligibleCustomerType, setEligibleCustomerType] = useState([]);
+  const [interestPeriodType, setInterestPeriodType] = useState([]);
+  const [racType, setRacType] = useState("");
+  const [fee, setFee] = useState("");
+  const [racOptions, setRacOptions] = useState(racOptionsInitial);
+  const RACDataInfo = useRACInfo();
+
+  useEffect(() => {
+    getProductInfo();
+  }, [productType]);
+
+  async function getProductInfo() {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "http://194.163.172.33:32299/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
+          productType,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      const productConfigDetails = await data.json();
+      // console.log(racDetails);
+      setProductConfigData(productConfigDetails);
+      //   window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    if (productConfigData.length === 0) {
+      console.log("Fetching data");
+    } else {
+      setFee(productConfigData.fee);
+      const formattedCustomerType = {
+        value: productConfigData.eligibleCustomerType,
+        label: productConfigData.eligibleCustomerType,
+      };
+      const formattedPER = {
+        value: productConfigData.interestPeriodType,
+        label: productConfigData.interestPeriodType,
+      };
+      setEligibleCustomerType(formattedCustomerType);
+      setInterestPeriodType(formattedPER);
+      setRacType(
+        racOptions.find((option) => option.value === productConfigData.racId)
+      );
+      setInputList(productConfigData.interestEligibleTenure);
+    }
+  }, [productConfigData]);
+
+  useEffect(() => {
+    const formattedRACData = RACDataInfo.map(({ name, href }) => ({
+      value: href.replace("/newrac/", ""),
+      label: name,
+    }));
+    setRacOptions(formattedRACData);
+  }, [RACDataInfo]);
   const [inputList, setInputList] = useState([
     {
-      id: 1,
-      simpleInterest: "",
-      per: "",
+      interestRate: "",
       tenure: "",
-      tenureType: "",
-      minCredit: "",
-      maxCredit: "",
-      rac: "",
     },
   ]);
   const handleAddFields = () => {
     setInputList([
       ...inputList,
       {
-        id: Date.now(),
-        simpleInterest: "",
-        per: "",
+        interestRate: "",
         tenure: "",
-        tenureType: "",
-        minCredit: "",
-        maxCredit: "",
-        rac: "",
       },
     ]);
   };
-  const handleChange = (e, id) => {
+  const handleChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
-    const index = list.findIndex((item) => item.id === id);
     list[index][name] = value;
     setInputList(list);
   };
-  const handleDDChange = (propName, selectedOption, id) => {
-    const name = propName;
-    const list2 = [...inputList];
-    const index = list2.findIndex((item) => item.id === id);
-    list2[index][name] = selectedOption.value;
-    setInputList(list2);
-  };
-
   const handleDelete = (index) => {
     const deleteList = [...inputList];
     deleteList.splice(index, 1);
     setInputList(deleteList);
   };
+  const handleSave = async () => {
+    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
+
+    // Define the data to be sent with the POST request
+    const postData = {
+      eligibleCustomerType: eligibleCustomerType.value,
+      fee: fee,
+      interestEligibleTenure: inputList,
+      interestPeriodType: interestPeriodType.value,
+      productType: productConfigData.productType,
+      racId: racType.value,
+    };
+
+    try {
+      // POST request to add new fields
+      const postResponse = await fetch(
+        "http://194.163.172.33:32299/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
+          productType,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
+
+      if (!postResponse.ok) {
+        throw new Error(`HTTP error! Status: ${postResponse.status}`);
+      } else if (postResponse.ok) {
+        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+      }
+    } catch (error) {
+      console.error("Failed to update data:", error);
+    }
+  };
+  if (productConfigData.length === 0) {
+    return <>Fetching Data</>;
+  }
   return (
-    <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-      <div className="flex items-center justify-between ">
-        <div className="text-lg">Unsecured Retail Loan</div>
-        <button
-          onClick={handleAddFields}
-          type="button"
-          className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <PlusIcon className="h-5 w-5" aria-hidden="true" />
-        </button>
-      </div>
-      {inputList.map((item, index) => (
-        <div key={item.id} className="flex gap-2 items-end mt-5">
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+        <div className="flex items-center justify-between ">
+          <div className="text-lg">{productConfigData.productType}</div>
+          <button
+            onClick={handleAddFields}
+            type="button"
+            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            <PlusIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="flex gap-5 border-b border-gray-300 pb-5">
           <div className="relative">
             <label
-              htmlFor={`simpleInterest_${item.id}`}
-              className="px-1 text-xs text-gray-900"
+              htmlFor="eligibleCustomerType"
+              className=" bg-white px-1 text-xs text-gray-900"
             >
-              Simple Interest
+              Eligible Customer Type
+            </label>
+            <Select
+              className="w-40"
+              options={tenureOptions}
+              // id={`tenureType_${item.id}`}
+              name="eligibleCustomerType"
+              value={eligibleCustomerType}
+              onChange={(eligibleCustomerType) => {
+                setEligibleCustomerType(eligibleCustomerType);
+              }}
+              isSearchable={false}
+            />
+          </div>
+          <div className="relative">
+            <label htmlFor="fee" className=" px-1 text-xs text-gray-900">
+              Processing Fee
             </label>
             <input
               type="text"
-              name="simpleInterest"
-              id={`simpleInterest_${item.id}`}
-              value={item.simpleInterest}
-              onChange={(e) => handleChange(e, item.id)}
+              name="fee"
+              // id={`minCredit_${item.id}`}
+              value={fee}
+              onChange={(e) => setFee(e.target.value)}
               className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="2%"
+              placeholder="1%"
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`per_${item.id}`}
+              htmlFor="interestPeriodType"
               className=" bg-white px-1 text-xs text-gray-900 gray-"
             >
               PER
@@ -115,55 +225,68 @@ const LoanProductConfig = () => {
             <Select
               className="w-36"
               options={options}
-              id={`per_${item.id}`}
-              name="per"
-              value={options.find((option) => option.value === item.per)}
-              onChange={(selectedOption) =>
-                handleDDChange("per", selectedOption, item.id)
-              }
+              // id={`per_${item.id}`}
+              name="interestPeriodType"
+              value={interestPeriodType}
+              onChange={(interestPeriodType) => {
+                setInterestPeriodType(interestPeriodType);
+              }}
               isSearchable={false}
             />
           </div>
           <div className="relative">
             <label
-              htmlFor={`tenure_${item.id}`}
-              className=" px-1 text-xs text-gray-900"
-            >
-              Tenure
-            </label>
-            <input
-              type="number"
-              name="tenure"
-              id={`tenure_${item.id}`}
-              value={item.tenure}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="3"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`tenureType_${item.id}`}
+              htmlFor="rac"
               className=" bg-white px-1 text-xs text-gray-900"
             >
-              Tenure Type
+              RAC
             </label>
             <Select
-              className="w-36"
-              options={tenureOptions}
-              id={`tenureType_${item.id}`}
-              name="tenureType"
-              value={tenureOptions.find(
-                (option) => option.value === item.tenureType
-              )}
-              // onChange={(newValue) => handleDDChange("tenureType", newValue, index)}
-              onChange={(selectedOption) =>
-                handleDDChange("tenureType", selectedOption, item.id)
-              }
+              className="w-44"
+              options={racOptions}
+              // id={`rac_${item.id}`}
+              name="rac"
+              value={racType}
+              // onChange={(newValue) => handleDDChange("rac", newValue, index)}
+              onChange={(racselectedOption) => setRacType(racselectedOption)}
               isSearchable={false}
             />
           </div>
-          <div className="relative">
+        </div>
+        {inputList.map((item, index) => (
+          <div key={index} className="flex gap-5 items-end mt-5">
+            <div className="relative">
+              <label
+                htmlFor="interestRate"
+                className="px-1 text-xs text-gray-900"
+              >
+                Simple Interest
+              </label>
+              <input
+                type="text"
+                name="interestRate"
+                // id={`simpleInterest_${item.id}`}
+                value={item.interestRate}
+                onChange={(e) => handleChange(e, index)}
+                className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="2%"
+              />
+            </div>
+            <div className="relative">
+              <label htmlFor="tenure" className=" px-1 text-xs text-gray-900">
+                Tenure
+              </label>
+              <input
+                type="number"
+                name="tenure"
+                // id={`tenure_${item.id}`}
+                value={item.tenure}
+                onChange={(e) => handleChange(e, index)}
+                className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="3"
+              />
+            </div>
+            {/* <div className="relative">
             <label
               htmlFor={`minCredit_${item.id}`}
               className=" px-1 text-xs text-gray-900"
@@ -196,46 +319,28 @@ const LoanProductConfig = () => {
               className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="2"
             />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`rac_${item.id}`}
-              className=" bg-white px-1 text-xs text-gray-900"
+          </div> */}
+            <button
+              onClick={() => handleDelete(index)}
+              type="button"
+              className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             >
-              RAC
-            </label>
-            <Select
-              className="w-36"
-              options={racOptions}
-              id={`rac_${item.id}`}
-              name="rac"
-              value={racOptions.find((option) => option.value === item.rac)}
-              // onChange={(newValue) => handleDDChange("rac", newValue, index)}
-              onChange={(selectedOption) =>
-                handleDDChange("rac", selectedOption, item.id)
-              }
-              isSearchable={false}
-            />
+              <TrashIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
+        ))}
+        <div className="text-right mt-5">
           <button
-            onClick={() => handleDelete(index)}
             type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            onClick={handleSave}
+            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
+            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+            Save
           </button>
         </div>
-      ))}
-      <div className="text-right mt-5">
-        <button
-          type="button"
-          className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-          Save
-        </button>
       </div>
-    </div>
+    </>
   );
 };
 

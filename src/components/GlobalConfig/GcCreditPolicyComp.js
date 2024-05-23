@@ -56,7 +56,7 @@ const GcCreditPolicyComp = (props) => {
             <InequalityNumber labelText={label2} placeholder={placeholder2} />
             <div className="mb-3">
               <label htmlFor={`maxAmt_${item.id}`} className="block">
-                Max Amount For Expats
+                Max Amount For Applicants
               </label>
               <input
                 type="number"

@@ -2,12 +2,6 @@ import { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// const options = [
-//   { value: "chocolate", label: "Chocolate" },
-//   { value: "strawberry", label: "Strawberry" },
-//   { value: "vanilla", label: "Vanilla" },
-// ];
-
 const animatedComponents = makeAnimated();
 
 const TagsDropdown = ({ options }) => {
@@ -15,6 +9,7 @@ const TagsDropdown = ({ options }) => {
   const handleChange = (selectedOption) => {
     setSelctedOption(selectedOption);
   };
+  // console.log(selectedOption);
   return (
     <Select
       className="w-[350px]"

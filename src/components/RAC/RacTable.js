@@ -1,9 +1,11 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
+import useRACInfo from "../utils/useRACInfo";
+import { useEffect, useState } from "react";
 
-const products = [
+const productsInitial = [
   {
-    name: "Cash Loan RAC",
+    name: "Cash Product RAC",
     created: "07/06/2021",
     approved: "40%",
     processed: "2367",
@@ -11,23 +13,30 @@ const products = [
     href: "/rac/cash-loan/rmc",
   },
   {
-    name: "BNPL RAC",
+    name: "BNPL Product RAC",
     created: "14/09/2022",
     approved: "20%",
     processed: "750",
     status: "Active",
+    href: "/rac/cash-loan/rmc",
   },
   {
-    name: "Overdraft RAC",
+    name: "Overdraft Product RAC",
     created: "19/09/2022",
     approved: "85%",
     processed: "901",
     status: "Inactive",
+    href: "/rac/cash-loan/rmc",
   },
   // More people...
 ];
 
 const RacTable = () => {
+  const [products, setProducts] = useState(productsInitial);
+  const RACDataInfo = useRACInfo();
+  useEffect(() => {
+    setProducts(RACDataInfo);
+  }, [RACDataInfo]);
   return (
     <div className="bg-gray-100 py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -108,22 +117,22 @@ const RacTable = () => {
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                           <Link className="w-full block" to={product.href}>
-                            {product.created}
+                            {/* {product.created} */}07/06/2021
                           </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                           <Link className="w-full block" to={product.href}>
-                            {product.approved}
+                            {/* {product.approved} */}40%
                           </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                           <Link className="w-full block" to={product.href}>
-                            {product.processed}
+                            {/* {product.processed} */}2367
                           </Link>
                         </td>
                         <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                           <Link className="w-full block" to={product.href}>
-                            {product.status}
+                            {/* {product.status} */}Active
                           </Link>
                         </td>
                       </tr>

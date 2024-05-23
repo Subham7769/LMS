@@ -124,7 +124,7 @@ const MaxFinAmt = () => {
             </div>
             <div className="mb-3">
               <label htmlFor={`maxLoanAmount_${item.id}`} className="block">
-                Max Amount For Expats
+                Max Amount For Applicants
               </label>
               <input
                 type="number"
