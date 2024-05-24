@@ -10,35 +10,7 @@ const NewProjectPage = () => {
   const [ProjectData, setProjectData] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    country: "",
-    location: "",
-    currency: "",
-    loanType: "",
-    flatInterestRate: "",
-    interestPeriodUnit: "",
-    interestRatePeriod: "",
-    gracePeriodDownPayment: "",
-    gracePeriodEMIs: "",
-    loanGracePeriod: "",
-    rollOverPeriod: "",
-    rollOverFees: "",
-    rollOverInterestRate: "",
-    lateEMIPenalty: "",
-    maxPaymentAttempt: "",
-    rollOverEquation: "",
-    startDate: "",
-    endDate: "",
-    loanAmount: "",
-    numberOfInstallments: "",
-    loanSchemeTCL: "",
-    totalOpenLoans: "",
-    downPayment: "",
-    serviceFee: "",
-    client: "",
-  });
+
   const formattedDate = (date) => {
     return date.substring(0, 10);
   };
@@ -594,100 +566,83 @@ const NewProjectPage = () => {
     }
   }, [country]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   const positiveIntegerFields = [
+  //     "interestRatePeriod",
+  //     "gracePeriodDownPayment",
+  //     "gracePeriodEMIs",
+  //     "loanGracePeriod",
+  //     "rollOverPeriod",
+  //   ];
 
-    if (
-      name === "interestRatePeriod" ||
-      name === "gracePeriodDownPayment" ||
-      name === "gracePeriodEMIs" ||
-      name === "loanGracePeriod" ||
-      name === "rollOverPeriod"
-    ) {
-      const isPositiveInteger = /^[1-9]\d*$/.test(value);
-      if (isPositiveInteger) {
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
-      } else {
-        alert("Please enter a positive integer.");
-      }
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
+  //   if (positiveIntegerFields.includes(name)) {
+  //     const isPositiveInteger = /^[1-9]\d*$/.test(value);
+  //     if (!isPositiveInteger) {
+  //       alert("Please enter a positive integer.");
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
 
+  console.log(flatInterestRate);
   const handleSubmit = async () => {
     const formattedstartDate = `${startDate} 00:00:00`;
     const formattedendDate = `${endDate} 00:00:00`;
-    const payload = {
+
+    const postData = {
       startDate: formattedstartDate,
       endDate: formattedendDate,
-      projectTimeZone: ProjectData.projectTimeZone,
-      paymentOption: ProjectData.paymentOption,
-      bearers: ProjectData.bearers,
+      projectTimeZone: "GMT-180",
+      paymentOption: ["mobile wallet", "top up", "credit card"],
+      bearers: ["SMS", "USSD"],
       currencyName: currencyName.value,
       criteria: `tcl ${tclOperator.value} ${tclAmount} and loanAmount ${minLoanOperator.value} ${minLoanAmount} and loanAmount ${maxLoanOperator.value} ${maxLoanAmount} and numberOfInstallments ${minInstallmentsOperator.value} ${minInstallmentsAmount} and numberOfInstallments ${maxInstallmentsOperator.value} ${maxInstallmentsAmount} and freqCap ${openLoanOperator.value} ${openLoanAmount}`,
-      flatInterestRate: flatInterestRate,
+      flatInterestRate: 0,
       interestRatePeriod: interestRatePeriod,
       country: country.value,
       location: location.value,
       projectDescription: projectDescription,
       interestPeriodUnit: interestPeriodUnit.value,
       loanType: loanType.value,
-      lateRepaymentPenalty: "0.0%",
-      earlyRepaymentDiscount: "0",
+      lateRepaymentPenalty: "0.0%", // Add to UI
+      earlyRepaymentDiscount: "0", // Add to UI
       maxPaymetAttemps: maxPaymentAttempt,
-      hasDownPayment: ProjectData.hasDownPayment,
-      serviceFee: "0",
-      clientIds: ProjectData.clientIds,
+      hasDownPayment: true,
+      serviceFee: serviceFee,
+      clientIds: [client],
       downRepaymentGracePeriod: gracePeriodDownPayment,
       emiRepaymentGracePeriod: graceForEmis,
       loanGracePeriod: loanGrace,
       rollOverGracePeriod: rollOverP,
-      rollOverPenaltyFactor: rollOverF,
+      rollOverPenaltyFactor: "0", // Add to UI
       lateEmiPenaltyFactor: lateEMIPenalty,
       rollOverInterestRate: rollOverIR,
-      hasEarlyLateRepayment: earlyPay,
+      hasEarlyLateRepayment: true,
       name: name,
-      calculateInterest: calInterest,
-      managementFee: "1%",
-      vatFee: "15%",
-
-      // projectOption: {
-      //   tclOperation: tclOperator,
-      //   tclValue: tclAmount,
-      //   arpuOperation: "",
-      //   arpuValue: null,
-      //   aspuOperation: "",
-      //   aspuValue: null,
-      // },
-
-      // rollOverEquation: {
-      //   equation: null,
-      //   variables: null,
-      // },
-      // serviceFee: serviceFee,
-      // tclIncludeFee: false,
-      // tclIncludeInterest: false,
+      calculateInterest: false,
+      managementFee: "1%", // Add to UI
+      vatFee: "15%", // Add to UI
+      tclIncludeFee: true,
+      tclIncludeInterest: true,
     };
+
     try {
       const authToken = localStorage.getItem("projectToken");
       const response = await fetch(
-        `http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects`,
+        "http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects",
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(postData),
         }
       );
+      const responseData = await response.json();
+      console.log("Project updated successfully:", responseData);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -701,8 +656,8 @@ const NewProjectPage = () => {
         ));
         throw new Error(errorData.message || "Failed to update the project");
       }
-      const responseData = await response.json();
-      console.log("Project updated successfully:", responseData);
+      // const responseData = await response.json();
+      // console.log("Project updated successfully:", responseData);
       toast.custom((t) => (
         <Passed
           t={t}
@@ -800,7 +755,6 @@ const NewProjectPage = () => {
                 isSearchable={false}
                 onChange={(currencyName) => {
                   setcurrencyName(currencyName);
-                  console.log(currencyName);
                 }}
               />
             </div>
@@ -816,7 +770,9 @@ const NewProjectPage = () => {
                 options={loanTypeOptions}
                 value={loanType}
                 isSearchable={false}
-                isDisabled
+                onChange={(loanType) => {
+                  setloanType(loanType);
+                }}
               />
             </div>
 
@@ -830,9 +786,9 @@ const NewProjectPage = () => {
                 name="flatInterestRate"
                 value={flatInterestRate}
                 placeholder="6"
-                disabled
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 required
+                onChange={(e) => setFlatInterestRate(e.target.value)}
               />
             </div>
 
@@ -849,7 +805,9 @@ const NewProjectPage = () => {
                 className="focus:ring focus:ring-blue-600 pb-2"
                 options={interestPeriodOptions}
                 value={interestPeriodUnit}
-                isDisabled
+                onChange={(interestPeriodUnit) => {
+                  setInterestPeriodUnit(interestPeriodUnit);
+                }}
               />
             </div>
 
@@ -884,7 +842,7 @@ const NewProjectPage = () => {
                 name="gracePeriodDownPayment"
                 value={gracePeriodDownPayment}
                 placeholder="30"
-                disabled
+                onChange={(e) => setGracePeriodDown(e.target.value)}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -957,7 +915,7 @@ const NewProjectPage = () => {
                 Roll Over Interest Rate
               </label>
               <input
-                type="number"
+                type="text"
                 name="rollOverInterestRate"
                 value={rollOverIR}
                 onChange={(e) => setRollOverIR(e.target.value)}
@@ -1225,6 +1183,7 @@ const NewProjectPage = () => {
                 name="client"
                 rows={3}
                 value={client}
+                onChange={(e) => setClient(e.target.value)}
                 placeholder="DarwinClient"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -1281,6 +1240,7 @@ const NewProjectPage = () => {
         {/* Submit Button */}
         <button
           type="submit"
+          onClick={handleSubmit}
           className="flex items-center justify-center mt-3 w-full bg-indigo-600  hover:bg-white hover:text-black hover:border hover:drop-shadow-lg text-white p-2 rounded-md"
         >
           <FaCheckCircle className="mr-2" />

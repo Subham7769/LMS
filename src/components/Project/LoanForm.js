@@ -10,35 +10,6 @@ const LoanForm = () => {
   const [ProjectData, setProjectData] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    country: "",
-    location: "",
-    currency: "",
-    loanType: "",
-    flatInterestRate: "",
-    interestPeriodUnit: "",
-    interestRatePeriod: "",
-    gracePeriodDownPayment: "",
-    gracePeriodEMIs: "",
-    loanGracePeriod: "",
-    rollOverPeriod: "",
-    rollOverFees: "",
-    rollOverInterestRate: "",
-    lateEMIPenalty: "",
-    maxPaymentAttempt: "",
-    rollOverEquation: "",
-    startDate: "",
-    endDate: "",
-    loanAmount: "",
-    numberOfInstallments: "",
-    loanSchemeTCL: "",
-    totalOpenLoans: "",
-    downPayment: "",
-    serviceFee: "",
-    client: "",
-  });
   const formattedDate = (date) => {
     return date.substring(0, 10);
   };
@@ -596,29 +567,22 @@ const LoanForm = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    const positiveIntegerFields = [
+      "interestRatePeriod",
+      "gracePeriodDownPayment",
+      "gracePeriodEMIs",
+      "loanGracePeriod",
+      "rollOverPeriod",
+    ];
 
-    if (
-      name === "interestRatePeriod" ||
-      name === "gracePeriodDownPayment" ||
-      name === "gracePeriodEMIs" ||
-      name === "loanGracePeriod" ||
-      name === "rollOverPeriod"
-    ) {
+    if (positiveIntegerFields.includes(name)) {
       const isPositiveInteger = /^[1-9]\d*$/.test(value);
-      if (isPositiveInteger) {
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
-      } else {
+      if (!isPositiveInteger) {
         alert("Please enter a positive integer.");
+        return false;
       }
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
     }
+    return true;
   };
 
   const handleSubmit = async () => {
@@ -701,19 +665,50 @@ const LoanForm = () => {
           />
         ));
         throw new Error(errorData.message || "Failed to update the project");
+      } else if (response.ok) {
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Update Successful"}
+            message={"The data was updated successfully"}
+          />
+        ));
       }
       const responseData = await response.json();
       console.log("Project updated successfully:", responseData);
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Update Successful"}
-          message={"The data was updated successfully"}
-        />
-      ));
     } catch (error) {
       console.error("Error updating project:", error);
+    }
+  };
+
+  const handleIRPChange = (e) => {
+    if (handleChange(e)) {
+      setInterestRatePeriod(e.target.value);
+    }
+  };
+
+  const handleGPDPChange = (e) => {
+    if (handleChange(e)) {
+      setGracePeriodDown(e.target.value);
+    }
+  };
+
+  const handleGPEChange = (e) => {
+    if (handleChange(e)) {
+      setGraceForEmis(e.target.value);
+    }
+  };
+
+  const handleLGPChange = (e) => {
+    if (handleChange(e)) {
+      setLoanGrace(e.target.value);
+    }
+  };
+
+  const handleROPChange = (e) => {
+    if (handleChange(e)) {
+      setRollOverP(e.target.value);
     }
   };
 
@@ -869,7 +864,7 @@ const LoanForm = () => {
                 type="number"
                 name="interestRatePeriod"
                 value={interestRatePeriod}
-                onChange={(e) => setInterestRatePeriod(e.target.value)}
+                onChange={handleIRPChange}
                 placeholder="30"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -887,6 +882,7 @@ const LoanForm = () => {
                 type="number"
                 name="gracePeriodDownPayment"
                 value={gracePeriodDownPayment}
+                onChange={handleGPDPChange}
                 placeholder="30"
                 disabled
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -902,7 +898,7 @@ const LoanForm = () => {
                 type="number"
                 name="gracePeriodEMIs"
                 value={graceForEmis}
-                onChange={(e) => setGraceForEmis(e.target.value)}
+                onChange={handleGPEChange}
                 placeholder="30"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -917,7 +913,7 @@ const LoanForm = () => {
                 type="number"
                 name="loanGracePeriod"
                 value={loanGrace}
-                onChange={(e) => setLoanGrace(e.target.value)}
+                onChange={handleLGPChange}
                 placeholder="30"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -932,7 +928,7 @@ const LoanForm = () => {
                 type="number"
                 name="rollOverPeriod"
                 value={rollOverP}
-                onChange={(e) => setRollOverP(e.target.value)}
+                onChange={handleROPChange}
                 placeholder="30"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
