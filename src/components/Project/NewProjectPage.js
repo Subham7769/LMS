@@ -591,39 +591,77 @@ const NewProjectPage = () => {
     const formattedstartDate = `${startDate} 00:00:00`;
     const formattedendDate = `${endDate} 00:00:00`;
 
+    // const postData = {
+    //   startDate: formattedstartDate,
+    //   endDate: formattedendDate,
+    //   projectTimeZone: "GMT-180",
+    //   paymentOption: ["mobile wallet", "top up", "credit card"],
+    //   bearers: ["SMS", "USSD"],
+    //   currencyName: currencyName.value,
+    //   criteria: `tcl ${tclOperator.value} ${tclAmount} and loanAmount ${minLoanOperator.value} ${minLoanAmount} and loanAmount ${maxLoanOperator.value} ${maxLoanAmount} and numberOfInstallments ${minInstallmentsOperator.value} ${minInstallmentsAmount} and numberOfInstallments ${maxInstallmentsOperator.value} ${maxInstallmentsAmount} and freqCap ${openLoanOperator.value} ${openLoanAmount}`,
+    //   flatInterestRate: 0,
+    //   interestRatePeriod: interestRatePeriod,
+    //   country: country.value,
+    //   location: location.value,
+    //   projectDescription: projectDescription,
+    //   interestPeriodUnit: interestPeriodUnit.value,
+    //   loanType: loanType.value,
+    //   lateRepaymentPenalty: "0.0%", // Add to UI
+    //   earlyRepaymentDiscount: "0", // Add to UI
+    //   maxPaymetAttemps: maxPaymentAttempt,
+    //   hasDownPayment: true,
+    //   serviceFee: serviceFee,
+    //   clientIds: [client],
+    //   downRepaymentGracePeriod: gracePeriodDownPayment,
+    //   emiRepaymentGracePeriod: graceForEmis,
+    //   loanGracePeriod: loanGrace,
+    //   rollOverGracePeriod: rollOverP,
+    //   rollOverPenaltyFactor: "0", // Add to UI
+    //   lateEmiPenaltyFactor: lateEMIPenalty,
+    //   rollOverInterestRate: rollOverIR,
+    //   hasEarlyLateRepayment: true,
+    //   name: name,
+    //   calculateInterest: false,
+    //   managementFee: "1%", // Add to UI
+    //   vatFee: "15%", // Add to UI
+    //   tclIncludeFee: true,
+    //   tclIncludeInterest: true,
+    // };
+
     const postData = {
-      startDate: formattedstartDate,
-      endDate: formattedendDate,
+      startDate: "2024-05-24 00:00:00",
+      endDate: "2024-05-31 00:00:00",
       projectTimeZone: "GMT-180",
       paymentOption: ["mobile wallet", "top up", "credit card"],
       bearers: ["SMS", "USSD"],
-      currencyName: currencyName.value,
-      criteria: `tcl ${tclOperator.value} ${tclAmount} and loanAmount ${minLoanOperator.value} ${minLoanAmount} and loanAmount ${maxLoanOperator.value} ${maxLoanAmount} and numberOfInstallments ${minInstallmentsOperator.value} ${minInstallmentsAmount} and numberOfInstallments ${maxInstallmentsOperator.value} ${maxInstallmentsAmount} and freqCap ${openLoanOperator.value} ${openLoanAmount}`,
+      currencyName: "DZD",
+      criteria:
+        "tcl <= 2500000 and loanAmount >= 3000 and loanAmount <= 30000 and numberOfInstallments >= 1 and numberOfInstallments <= 24 and freqCap < 1",
       flatInterestRate: 0,
       interestRatePeriod: interestRatePeriod,
       country: country.value,
       location: location.value,
-      projectDescription: projectDescription,
-      interestPeriodUnit: interestPeriodUnit.value,
-      loanType: loanType.value,
-      lateRepaymentPenalty: "0.0%", // Add to UI
-      earlyRepaymentDiscount: "0", // Add to UI
-      maxPaymetAttemps: maxPaymentAttempt,
-      hasDownPayment: true,
-      serviceFee: serviceFee,
-      clientIds: [client],
-      downRepaymentGracePeriod: gracePeriodDownPayment,
-      emiRepaymentGracePeriod: graceForEmis,
-      loanGracePeriod: loanGrace,
-      rollOverGracePeriod: rollOverP,
-      rollOverPenaltyFactor: "0", // Add to UI
-      lateEmiPenaltyFactor: lateEMIPenalty,
-      rollOverInterestRate: rollOverIR,
+      projectDescription: "test description789",
+      interestPeriodUnit: "Weekly",
+      loanType: "cash",
+      lateRepaymentPenalty: "0.0%",
+      earlyRepaymentDiscount: "0",
+      maxPaymetAttemps: 3,
+      hasDownPayment: false,
+      serviceFee: "0",
+      clientIds: ["DarwinClient"],
+      downRepaymentGracePeriod: 10,
+      emiRepaymentGracePeriod: 0,
+      loanGracePeriod: 30,
+      rollOverGracePeriod: 180,
+      rollOverPenaltyFactor: "0",
+      lateEmiPenaltyFactor: "0",
+      rollOverInterestRate: 0,
       hasEarlyLateRepayment: true,
-      name: name,
+      name: "test789",
       calculateInterest: false,
-      managementFee: "1%", // Add to UI
-      vatFee: "15%", // Add to UI
+      managementFee: "1%",
+      vatFee: "15%",
       tclIncludeFee: true,
       tclIncludeInterest: true,
     };
@@ -656,8 +694,8 @@ const NewProjectPage = () => {
         ));
         throw new Error(errorData.message || "Failed to update the project");
       }
-      // const responseData = await response.json();
-      // console.log("Project updated successfully:", responseData);
+      navigate("/project/" + responseData.projectId);
+      window.location.reload();
       toast.custom((t) => (
         <Passed
           t={t}
@@ -1236,16 +1274,17 @@ const NewProjectPage = () => {
             </div>
           </div>
         </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="flex items-center justify-center mt-3 w-full bg-indigo-600  hover:bg-white hover:text-black hover:border hover:drop-shadow-lg text-white p-2 rounded-md"
-        >
-          <FaCheckCircle className="mr-2" />
-          Create
-        </button>
+        <div className="flex mt-4  justify-end ">
+          {/* Submit Button */}
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="flex items-center justify-center mt-3 w-44 bg-indigo-600  hover:bg-white hover:text-black hover:border hover:drop-shadow-lg text-white p-2 rounded-md"
+          >
+            <FaCheckCircle className="mr-2" />
+            Create
+          </button>
+        </div>
       </form>
     </>
   );
