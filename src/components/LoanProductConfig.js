@@ -48,7 +48,7 @@ const LoanProductConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://194.163.172.33:32299/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
+        "https://lmscarbon.com/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
           productType,
         {
           method: "GET",
