@@ -312,7 +312,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/risk-based-pricing-equation-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/risk-based-pricing-equation-rule",
         {
           method: "PUT",
           headers: {

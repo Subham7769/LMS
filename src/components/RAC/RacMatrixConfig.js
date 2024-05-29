@@ -614,7 +614,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/nationality-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/nationality-rule",
         {
           method: updateFlag ? "PUT" : "POST",
           headers: {
@@ -665,7 +665,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/gender-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/gender-rule",
         {
           method: GEupdateFlag ? "PUT" : "POST",
           headers: {
@@ -716,7 +716,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/marital-status-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/marital-status-rule",
         {
           method: MSupdateFlag ? "PUT" : "POST",
           headers: {
@@ -767,7 +767,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/residential-Status-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/residential-Status-rule",
         {
           method: RSupdateFlag ? "PUT" : "POST",
           headers: {
@@ -817,7 +817,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/occupation-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/occupation-rule",
         {
           method: OccupationFlag ? "PUT" : "POST",
           headers: {
@@ -867,7 +867,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/region-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/region-rule",
         {
           method: RegionFlag ? "PUT" : "POST",
           headers: {
@@ -917,7 +917,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/sector-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/sector-rule",
         {
           method: SectorFlag ? "PUT" : "POST",
           headers: {
@@ -978,7 +978,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/basic-to-gross-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/basic-to-gross-rule",
         {
           method: baseSalaryFlag ? "PUT" : "POST",
           headers: {
@@ -1042,7 +1042,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/write-off-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/write-off-rule",
         {
           method: writeOffFlag ? "PUT" : "POST",
           headers: {
@@ -1106,7 +1106,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/age-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/age-rule",
         {
           method: ageFlag ? "PUT" : "POST",
           headers: {
@@ -1167,7 +1167,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/gross-salary-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/gross-salary-rule",
         {
           method: grossFlag ? "PUT" : "POST",
           headers: {
@@ -1228,7 +1228,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/simah-score-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/simah-score-rule",
         {
           method: simahFlag ? "PUT" : "POST",
           headers: {
@@ -1280,7 +1280,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/active-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/active-rule",
         {
           method: activeFlag ? "PUT" : "POST",
           headers: {
@@ -1341,7 +1341,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/los-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/los-rule",
         {
           method: losFlag ? "PUT" : "POST",
           headers: {
@@ -1402,7 +1402,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/disposable-income-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/disposable-income-rule",
         {
           method: dispFlag ? "PUT" : "POST",
           headers: {
@@ -1452,7 +1452,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/dependents-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/dependents-rule",
         {
           method: depFlag ? "PUT" : "POST",
           headers: {
@@ -1502,7 +1502,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xtracash/rules/credit-score-rule",
+        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/credit-score-rule",
         {
           method: csFlag ? "PUT" : "POST",
           headers: {

@@ -11,14 +11,14 @@ const useAllProjectInfo = () => {
   async function getRACInfo() {
     try {
       const token = await fetch(
-        "http://194.163.172.33:32400/lms-carbon-client-registration/api/v1/client/DarwinClient/token"
+        "https://lms-api-dev.lmscarbon.com/lms-carbon-client-registration/api/v1/client/DarwinClient/token"
       );
       const tokenValue = await token.json();
 
       localStorage.setItem("projectToken", tokenValue.value);
       //   console.log(tokenValue.value);
       const data = await fetch(
-        "http://194.163.172.33:32400/lms-carbon-rule/api/v1/allprojects?limit=10&offset=0",
+        "https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/allprojects?limit=10&offset=0",
         {
           method: "GET",
           headers: {

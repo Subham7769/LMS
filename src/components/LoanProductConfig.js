@@ -48,7 +48,7 @@ const LoanProductConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://lmscarbon.com/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
+        "https://api-dev.lmscarbon.com/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
           productType,
         {
           method: "GET",
@@ -143,7 +143,7 @@ const LoanProductConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://194.163.172.33:32299/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
+        "https://api-dev.lmscarbon.com/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
           productType,
         {
           method: "PUT",

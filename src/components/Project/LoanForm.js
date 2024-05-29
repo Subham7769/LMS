@@ -2860,7 +2860,7 @@ const LoanForm = () => {
     try {
       const ptoken = localStorage.getItem("projectToken");
       const data = await fetch(
-        "http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects/" +
+        "https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects/" +
           projectId,
         {
           method: "GET",
@@ -3093,7 +3093,7 @@ const LoanForm = () => {
     try {
       const authToken = localStorage.getItem("projectToken");
       const response = await fetch(
-        `http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects`,
+        `https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects`,
         {
           method: "PUT",
           headers: {
@@ -3167,7 +3167,7 @@ const LoanForm = () => {
       const token = localStorage.getItem("projectToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects/${projectId}`,
+        `https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects/${projectId}`,
         {
           method: "DELETE",
           headers: {

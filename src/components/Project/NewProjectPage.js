@@ -3008,7 +3008,7 @@ const NewProjectPage = () => {
     try {
       const authToken = localStorage.getItem("projectToken");
       const response = await fetch(
-        "http://194.163.172.33:32400/lms-carbon-rule/api/v1/projects",
+        "https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects",
         {
           method: "POST",
           headers: {
