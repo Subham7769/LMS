@@ -37,7 +37,7 @@ const stats = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-const CustomerCare = () => {
+const UserPage = () => {
   const [borrowerID, setBorrowerID] = useState("");
   const [borrowerNotFound, setBorrowerNotFound] = useState(false);
   const navigate = useNavigate(); // Adding useNavigate  for navigation
@@ -46,10 +46,11 @@ const CustomerCare = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/borrowers/" +
-          borrowerID,
+        "http://194.163.172.33:32299/carbon-registration-service/xcbe/api/v1/borrowers/" +
+          borrowerID +
+          "/check-availability/14-11-1981",
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -68,7 +69,7 @@ const CustomerCare = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      navigate("/borrower/" + borrowerID + "/personal-info");
+      navigate("/user/" + borrowerID + "/user-info");
       setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);
@@ -154,7 +155,7 @@ const CustomerCare = () => {
       </div>
       {/* --------------------------Search Bar------------------------------------- */}
       <div className="flex items-center gap-5 justify-center mt-10">
-        <div>Customer ID</div>
+        <div>User ID</div>
         <div>
           <input
             type="number"
@@ -185,4 +186,4 @@ const CustomerCare = () => {
   );
 };
 
-export default CustomerCare;
+export default UserPage;

@@ -3202,10 +3202,13 @@ const LoanForm = () => {
           Name: <b>{ProjectData.name}</b>
         </h2>
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Name */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="name">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -3221,7 +3224,10 @@ const LoanForm = () => {
 
             {/* Description */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="description">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="description"
+              >
                 Description
               </label>
               <input
@@ -3235,7 +3241,10 @@ const LoanForm = () => {
 
             {/* Country */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="country">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="country"
+              >
                 Country
               </label>
               <Select
@@ -3253,7 +3262,10 @@ const LoanForm = () => {
 
             {/* Location */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="location">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="location"
+              >
                 Location
               </label>
               <Select
@@ -3270,7 +3282,10 @@ const LoanForm = () => {
 
             {/* Loan Scheme Currency */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="currency">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="currency"
+              >
                 Loan Scheme Currency
               </label>
               <Select
@@ -3288,7 +3303,10 @@ const LoanForm = () => {
 
             {/* Loan Scheme Type */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="loanType">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanType"
+              >
                 Loan Scheme Type
               </label>
               <Select
@@ -3303,7 +3321,10 @@ const LoanForm = () => {
 
             {/* Flat Interest Rate */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="flatInterestRate">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="flatInterestRate"
+              >
                 Flat Interest Rate
               </label>
               <input
@@ -3320,7 +3341,7 @@ const LoanForm = () => {
             {/* Interest Period Unit */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="interestPeriodUnit"
               >
                 Interest Period Unit
@@ -3337,7 +3358,7 @@ const LoanForm = () => {
             {/* Interest Rate Period */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="interestRatePeriod"
               >
                 Interest Rate Period
@@ -3355,7 +3376,7 @@ const LoanForm = () => {
             {/* Grace Period For Down Payment (Days) */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="gracePeriodDownPayment"
               >
                 Grace Period For Down Payment (Days)
@@ -3373,7 +3394,10 @@ const LoanForm = () => {
 
             {/* Grace Period For EMIs (Days) */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="gracePeriodEMIs">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="gracePeriodEMIs"
+              >
                 Grace Period For EMIs (Days)
               </label>
               <input
@@ -3388,7 +3412,10 @@ const LoanForm = () => {
 
             {/* Loan Grace Period (Days) */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="loanGracePeriod">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanGracePeriod"
+              >
                 Loan Grace Period (Days)
               </label>
               <input
@@ -3403,7 +3430,10 @@ const LoanForm = () => {
 
             {/* Roll Over Period (Days) */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="rollOverPeriod">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="rollOverPeriod"
+              >
                 Roll Over Period (Days)
               </label>
               <input
@@ -3418,7 +3448,10 @@ const LoanForm = () => {
 
             {/* Roll Over Fees */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="rollOverFees">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="rollOverFees"
+              >
                 Roll Over Fees
               </label>
               <input
@@ -3433,7 +3466,7 @@ const LoanForm = () => {
             {/* Roll Over Interest Rate */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="rollOverInterestRate"
               >
                 Roll Over Interest Rate
@@ -3450,7 +3483,10 @@ const LoanForm = () => {
 
             {/* Late EMI Penalty */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="lateEMIPenalty">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="lateEMIPenalty"
+              >
                 Late EMI Penalty
               </label>
               <input
@@ -3466,7 +3502,7 @@ const LoanForm = () => {
             {/* Max. Payment Attempt */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="maxPaymentAttempt"
               >
                 Max. Payment Attempt
@@ -3483,7 +3519,10 @@ const LoanForm = () => {
 
             {/* Roll Over Equation */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="rollOverEquation">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="rollOverEquation"
+              >
                 Roll Over Equation
               </label>
               <input
@@ -3498,7 +3537,10 @@ const LoanForm = () => {
 
             {/* Start Date */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="startDate">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="startDate"
+              >
                 Start Date
               </label>
               <input
@@ -3512,7 +3554,10 @@ const LoanForm = () => {
 
             {/* End Date */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="endDate">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="endDate"
+              >
                 End Date
               </label>
               <input
@@ -3527,7 +3572,7 @@ const LoanForm = () => {
             {/* Late Repayment Penalty */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="lateRepaymentPenalty"
               >
                 Late Repayment Penalty
@@ -3545,7 +3590,7 @@ const LoanForm = () => {
             {/* Early Repayment Discount */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="lateRepaymentPenalty"
               >
                 Early Repayment Discount
@@ -3563,7 +3608,7 @@ const LoanForm = () => {
             {/* RollOver Penalty Factor */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="rollOverPenaltyFactor"
               >
                 RollOver Penalty Factor
@@ -3583,7 +3628,10 @@ const LoanForm = () => {
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
             <div>
-              <label className="block text-gray-700" htmlFor="loanAmount">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanAmount"
+              >
                 Loan Amount
               </label>
               <div className="flex items-center space-x-2">
@@ -3624,7 +3672,10 @@ const LoanForm = () => {
 
             {/* Number of Installments */}
             <div>
-              <label className="block text-gray-700" htmlFor="loanAmount">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanAmount"
+              >
                 Number of Installments
               </label>
               <div className="flex items-center space-x-2">
@@ -3667,7 +3718,10 @@ const LoanForm = () => {
           </div>
           <div className="grid grid-cols-4 gap-5">
             <div className="">
-              <label className="block text-gray-700" htmlFor="loanSchemeTCL">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanSchemeTCL"
+              >
                 Loan Scheme TCL
               </label>
               <div className="flex items-center space-x-2">
@@ -3690,7 +3744,10 @@ const LoanForm = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="totalOpenLoans">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="totalOpenLoans"
+              >
                 Total Open Loans
               </label>
               <div className="flex items-center space-x-2">
@@ -3713,7 +3770,10 @@ const LoanForm = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="downPayment">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="downPayment"
+              >
                 Down Payment (Fixed or Percent)
               </label>
               <div className="flex items-center space-x-2">
@@ -3734,7 +3794,10 @@ const LoanForm = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="serviceFee">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="serviceFee"
+              >
                 Service Fee
               </label>
               <div className="flex items-center space-x-2">
@@ -3750,9 +3813,12 @@ const LoanForm = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-5">
+          <div className="grid grid-cols-4 gap-5 mt-4">
             <div className="">
-              <label className="block text-gray-700" htmlFor="managementFee">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="managementFee"
+              >
                 Management Fee
               </label>
               <div className="flex items-center space-x-2">
@@ -3767,7 +3833,10 @@ const LoanForm = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="vatFee">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="vatFee"
+              >
                 Vat Fee
               </label>
               <div className="flex items-center space-x-2">
@@ -3786,7 +3855,10 @@ const LoanForm = () => {
         <div className="w-full mx-auto bg-white shadow-md rounded-xl border border-red-600 p-6 mt-8">
           <div className="gap-5">
             <div>
-              <label className="block text-gray-700" htmlFor="client">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="client"
+              >
                 Client
               </label>
               <textarea

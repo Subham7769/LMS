@@ -141,6 +141,12 @@ const MenusInitial = [
     icon: UsersIcon,
     current: false,
   },
+  {
+    title: "New User",
+    href: "/user",
+    icon: UsersIcon,
+    current: false,
+  },
 ];
 
 function classNames(...classes) {

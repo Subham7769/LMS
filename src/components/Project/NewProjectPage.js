@@ -63,7 +63,7 @@ const NewProjectPage = () => {
   const [maxInstallmentsOperator, setMaxInstallmentsOperator] = useState("");
   const [maxInstallmentsAmount, setMaxInstallmentsAmount] = useState(0);
   const [serviceFee, setServiceFee] = useState("");
-  const [client, setClient] = useState("");
+  const [client, setClient] = useState("DarwinClient");
   const [earlyPay, setEarlyPay] = useState(null);
   const [calInterest, setCalInterest] = useState(null);
   const [hasDownPayPer, setHasDownPayPer] = useState(null);
@@ -2968,6 +2968,64 @@ const NewProjectPage = () => {
     const formattedstartDate = `${startDate} 00:00:00`;
     const formattedendDate = `${endDate} 00:00:00`;
 
+    const startDateObj = new Date(formattedstartDate);
+    const endDateObj = new Date(formattedendDate);
+
+    // Check if the end date is not in the past relative to the start date
+    if (endDateObj < startDateObj) {
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Validation Error"}
+          message={"End date cannot be earlier than start date."}
+        />
+      ));
+      return;
+    }
+
+    if (
+      !startDate ||
+      !endDate ||
+      !currencyName.value ||
+      !tclAmount ||
+      !minLoanAmount ||
+      !maxLoanAmount ||
+      !minInstallmentsAmount ||
+      !maxInstallmentsAmount ||
+      !openLoanAmount ||
+      !interestRatePeriod ||
+      !country.value ||
+      !location.value ||
+      !projectDescription ||
+      !interestPeriodUnit.value ||
+      !loanType.value ||
+      !lateRepaymentPenalty ||
+      !earlyRepaymentDiscount ||
+      !maxPaymentAttempt ||
+      !serviceFee ||
+      !gracePeriodDownPayment ||
+      !graceForEmis ||
+      !loanGrace ||
+      !rollOverP ||
+      !rollOverPenaltyFactor ||
+      !lateEMIPenalty ||
+      !rollOverIR ||
+      !name ||
+      !managementFee ||
+      !vatFee
+    ) {
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Validation Error"}
+          message={"Please fill in all required fields."}
+        />
+      ));
+      return;
+    }
+
     const postData = {
       startDate: formattedstartDate,
       endDate: formattedendDate,
@@ -3019,7 +3077,6 @@ const NewProjectPage = () => {
         }
       );
       const responseData = await response.json();
-      console.log("Project updated successfully:", responseData);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -3027,7 +3084,7 @@ const NewProjectPage = () => {
           <Failed
             t={t}
             toast={toast}
-            title={"Update Failed"}
+            title={"Post Failed"}
             message={errorData.message}
           />
         ));
@@ -3043,7 +3100,15 @@ const NewProjectPage = () => {
       ));
       navigate("/project/" + responseData.projectId);
     } catch (error) {
-      console.error("Error updating project:", error);
+      console.error("Error adding project:", error);
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Post Failed"}
+          message={error.message}
+        />
+      ));
     }
   };
 
@@ -3093,10 +3158,13 @@ const NewProjectPage = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <form className="">
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Name */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="name">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -3112,7 +3180,10 @@ const NewProjectPage = () => {
 
             {/* Description */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="description">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="description"
+              >
                 Description
               </label>
               <input
@@ -3120,13 +3191,17 @@ const NewProjectPage = () => {
                 name="projectDescription"
                 value={projectDescription}
                 onChange={(e) => setprojectDescription(e.target.value)}
+                required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
 
             {/* Country */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="country">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="country"
+              >
                 Country
               </label>
               <Select
@@ -3139,12 +3214,16 @@ const NewProjectPage = () => {
                   setcountry(country);
                   setLocationFlag(true);
                 }}
+                required
               />
             </div>
 
             {/* Location */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="location">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="location"
+              >
                 Location
               </label>
               <Select
@@ -3156,12 +3235,16 @@ const NewProjectPage = () => {
                 onChange={(location) => {
                   setlocation(location);
                 }}
+                required
               />
             </div>
 
             {/* Loan Scheme Currency */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="currency">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="currency"
+              >
                 Loan Scheme Currency
               </label>
               <Select
@@ -3173,12 +3256,16 @@ const NewProjectPage = () => {
                 onChange={(currencyName) => {
                   setcurrencyName(currencyName);
                 }}
+                required
               />
             </div>
 
             {/* Loan Scheme Type */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="loanType">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanType"
+              >
                 Loan Scheme Type
               </label>
               <Select
@@ -3190,12 +3277,16 @@ const NewProjectPage = () => {
                 onChange={(loanType) => {
                   setloanType(loanType);
                 }}
+                required
               />
             </div>
 
             {/* Flat Interest Rate */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="flatInterestRate">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="flatInterestRate"
+              >
                 Flat Interest Rate
               </label>
               <input
@@ -3212,7 +3303,7 @@ const NewProjectPage = () => {
             {/* Interest Period Unit */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="interestPeriodUnit"
               >
                 Interest Period Unit
@@ -3225,13 +3316,14 @@ const NewProjectPage = () => {
                 onChange={(interestPeriodUnit) => {
                   setInterestPeriodUnit(interestPeriodUnit);
                 }}
+                required
               />
             </div>
 
             {/* Interest Rate Period */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="interestRatePeriod"
               >
                 Interest Rate Period
@@ -3242,6 +3334,7 @@ const NewProjectPage = () => {
                 value={interestRatePeriod}
                 onChange={handleIRPChange}
                 placeholder="30"
+                required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -3249,7 +3342,7 @@ const NewProjectPage = () => {
             {/* Grace Period For Down Payment (Days) */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="gracePeriodDownPayment"
               >
                 Grace Period For Down Payment (Days)
@@ -3259,6 +3352,7 @@ const NewProjectPage = () => {
                 name="gracePeriodDownPayment"
                 value={gracePeriodDownPayment}
                 placeholder="30"
+                required
                 onChange={handleGPDPChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -3266,7 +3360,10 @@ const NewProjectPage = () => {
 
             {/* Grace Period For EMIs (Days) */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="gracePeriodEMIs">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="gracePeriodEMIs"
+              >
                 Grace Period For EMIs (Days)
               </label>
               <input
@@ -3275,13 +3372,17 @@ const NewProjectPage = () => {
                 value={graceForEmis}
                 onChange={handleGPEChange}
                 placeholder="30"
+                required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
 
             {/* Loan Grace Period (Days) */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="loanGracePeriod">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanGracePeriod"
+              >
                 Loan Grace Period (Days)
               </label>
               <input
@@ -3290,13 +3391,17 @@ const NewProjectPage = () => {
                 value={loanGrace}
                 onChange={handleLGPChange}
                 placeholder="30"
+                required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
 
             {/* Roll Over Period (Days) */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="rollOverPeriod">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="rollOverPeriod"
+              >
                 Roll Over Period (Days)
               </label>
               <input
@@ -3311,7 +3416,10 @@ const NewProjectPage = () => {
 
             {/* Roll Over Fees */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="rollOverFees">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="rollOverFees"
+              >
                 Roll Over Fees
               </label>
               <input
@@ -3326,7 +3434,7 @@ const NewProjectPage = () => {
             {/* Roll Over Interest Rate */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="rollOverInterestRate"
               >
                 Roll Over Interest Rate
@@ -3343,7 +3451,10 @@ const NewProjectPage = () => {
 
             {/* Late EMI Penalty */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="lateEMIPenalty">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="lateEMIPenalty"
+              >
                 Late EMI Penalty
               </label>
               <input
@@ -3359,7 +3470,7 @@ const NewProjectPage = () => {
             {/* Max. Payment Attempt */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="maxPaymentAttempt"
               >
                 Max. Payment Attempt
@@ -3376,7 +3487,10 @@ const NewProjectPage = () => {
 
             {/* Roll Over Equation */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="rollOverEquation">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="rollOverEquation"
+              >
                 Roll Over Equation
               </label>
               <input
@@ -3391,7 +3505,10 @@ const NewProjectPage = () => {
 
             {/* Start Date */}
             <div className="col-span-1" onClick={addNoEditToast}>
-              <label className="block text-gray-700" htmlFor="startDate">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="startDate"
+              >
                 Start Date
               </label>
               <input
@@ -3405,7 +3522,10 @@ const NewProjectPage = () => {
 
             {/* End Date */}
             <div className="col-span-1">
-              <label className="block text-gray-700" htmlFor="endDate">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="endDate"
+              >
                 End Date
               </label>
               <input
@@ -3420,7 +3540,7 @@ const NewProjectPage = () => {
             {/* Late Repayment Penalty */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="lateRepaymentPenalty"
               >
                 Late Repayment Penalty
@@ -3438,7 +3558,7 @@ const NewProjectPage = () => {
             {/* Early Repayment Discount */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="lateRepaymentPenalty"
               >
                 Early Repayment Discount
@@ -3456,7 +3576,7 @@ const NewProjectPage = () => {
             {/* RollOver Penalty Factor */}
             <div className="col-span-1">
               <label
-                className="block text-gray-700"
+                className="block text-gray-700 px-1 text-[14px]"
                 htmlFor="rollOverPenaltyFactor"
               >
                 RollOver Penalty Factor
@@ -3476,7 +3596,10 @@ const NewProjectPage = () => {
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
             <div>
-              <label className="block text-gray-700" htmlFor="loanAmount">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanAmount"
+              >
                 Loan Amount
               </label>
               <div className="flex items-center space-x-2">
@@ -3517,7 +3640,10 @@ const NewProjectPage = () => {
 
             {/* Number of Installments */}
             <div>
-              <label className="block text-gray-700" htmlFor="loanAmount">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanAmount"
+              >
                 Number of Installments
               </label>
               <div className="flex items-center space-x-2">
@@ -3560,7 +3686,10 @@ const NewProjectPage = () => {
           </div>
           <div className="grid grid-cols-4 gap-5 mb-[24px]">
             <div className="">
-              <label className="block text-gray-700" htmlFor="loanSchemeTCL">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="loanSchemeTCL"
+              >
                 Loan Scheme TCL
               </label>
               <div className="flex items-center space-x-2">
@@ -3583,7 +3712,10 @@ const NewProjectPage = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="totalOpenLoans">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="totalOpenLoans"
+              >
                 Total Open Loans
               </label>
               <div className="flex items-center space-x-2">
@@ -3606,7 +3738,10 @@ const NewProjectPage = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="downPayment">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="downPayment"
+              >
                 Down Payment (Fixed or Percent)
               </label>
               <div className="flex items-center space-x-2">
@@ -3627,7 +3762,10 @@ const NewProjectPage = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="serviceFee">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="serviceFee"
+              >
                 Service Fee
               </label>
               <div className="flex items-center space-x-2">
@@ -3645,7 +3783,10 @@ const NewProjectPage = () => {
 
           <div className="grid grid-cols-4 gap-5">
             <div className="">
-              <label className="block text-gray-700" htmlFor="managementFee">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="managementFee"
+              >
                 Management Fee
               </label>
               <div className="flex items-center space-x-2">
@@ -3660,7 +3801,10 @@ const NewProjectPage = () => {
               </div>
             </div>
             <div className="">
-              <label className="block text-gray-700" htmlFor="vatFee">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="vatFee"
+              >
                 Vat Fee
               </label>
               <div className="flex items-center space-x-2">
@@ -3679,7 +3823,10 @@ const NewProjectPage = () => {
         <div className="w-full mx-auto bg-white shadow-md rounded-xl border border-red-600 p-6 mt-8">
           <div className="gap-5">
             <div>
-              <label className="block text-gray-700" htmlFor="client">
+              <label
+                className="block text-gray-700 px-1 text-[14px]"
+                htmlFor="client"
+              >
                 Client
               </label>
               <textarea

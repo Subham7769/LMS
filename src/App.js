@@ -45,6 +45,9 @@ import BpmnComponent2 from "./components/BusinessRule/BpmnComponent2";
 import BpmnComponent3 from "./components/BusinessRule/BpmnComponent3";
 import ProjectPage from "./components/Project/ProjectPage";
 import NewProjectPage from "./components/Project/NewProjectPage";
+import UserPage from "./components/NewUser/UserPage";
+import UserInfoTabs from "./components/NewUser/UserInfoTabs";
+import UserInfo from "./components/NewUser/UserInfo";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -294,6 +297,20 @@ function App() {
             {
               path: "credit-bureau-details",
               element: <CreditBureauDetails />,
+            },
+          ],
+        },
+        {
+          path: "/user",
+          element: <UserPage />,
+        },
+        {
+          path: "/user/:userID",
+          element: <UserInfoTabs />,
+          children: [
+            {
+              path: "user-info",
+              element: <UserInfo />,
             },
           ],
         },
