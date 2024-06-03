@@ -58,9 +58,9 @@ const UserPage = () => {
         }
       );
       if (data.status === 404) {
-        console.log("Borrower Not Found"); // Clear the token
+        console.log("User Not Found"); // Clear the token
         setBorrowerNotFound(true);
-        navigate("/customer-care"); // Redirect to login page
+        navigate("/user"); // Redirect to login page
         return; // Stop further execution
       }
       // Check for token expiration or invalid token

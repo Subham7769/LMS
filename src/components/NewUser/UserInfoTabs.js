@@ -20,61 +20,46 @@ const UserInfoTabs = () => {
             }`}
             onClick={() => setActiveLink("/user/" + userID + "/user-info")}
           >
-            User Info
+            Eligibility
           </Link>
         </div>
         <div className="border-r border-gray-400 px-2">
           <Link
-            to={"/user/" + userID + "/credit-profile"}
-            className={`py-1 px-1.5 ${
-              activeLink === "/user/" + userID + "/credit-profile"
+            to={"/user/" + userID + "/register"}
+            className={`py-1 px-1.5  ${
+              activeLink === "/user/" + userID + "/register"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
             }`}
-            onClick={() => setActiveLink("/user/" + userID + "/credit-profile")}
+            onClick={() => setActiveLink("/user/" + userID + "/register")}
           >
-            Credit Profile
+            Register
           </Link>
         </div>
         <div className="border-r border-gray-400 px-2">
           <Link
-            to={"/user/" + userID + "/kyc"}
-            className={`py-1 px-1.5 ${
-              activeLink === "/user/" + userID + "/kyc"
+            to={"/user/" + userID + "/loan-config"}
+            className={`py-1 px-1.5  ${
+              activeLink === "/user/" + userID + "/loan-config"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
             }`}
-            onClick={() => setActiveLink("/user/" + userID + "/kyc")}
+            onClick={() => setActiveLink("/user/" + userID + "/loan-config")}
           >
-            KYC Details
+            Loan Config
           </Link>
         </div>
         <div className="border-r border-gray-400 px-2">
           <Link
-            to={"/user/" + userID + "/loanNpayment"}
+            to={"/user/" + userID + "/disbursement"}
             className={`py-1 px-1.5 ${
-              activeLink === "/user/" + userID + "/loanNpayment"
+              activeLink === "/user/" + userID + "/disbursement"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
             }`}
-            onClick={() => setActiveLink("/user/" + userID + "/loanNpayment")}
+            onClick={() => setActiveLink("/user/" + userID + "/disbursement")}
           >
-            Loan & Payment History
-          </Link>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <Link
-            to={"/user/" + userID + "/rejection-history"}
-            className={`py-1 px-1.5 ${
-              activeLink === "/user/" + userID + "/rejection-history"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() =>
-              setActiveLink("/user/" + userID + "/rejection-history")
-            }
-          >
-            Rejection History
+            Disbursement Status
           </Link>
         </div>
         <div className=" px-2">
@@ -89,7 +74,7 @@ const UserInfoTabs = () => {
               setActiveLink("/user/" + userID + "/credit-bureau-details")
             }
           >
-            Credit Bureau Details
+            Backend Repayments
           </Link>
         </div>
       </div>

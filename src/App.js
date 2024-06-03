@@ -48,6 +48,9 @@ import NewProjectPage from "./components/Project/NewProjectPage";
 import UserPage from "./components/NewUser/UserPage";
 import UserInfoTabs from "./components/NewUser/UserInfoTabs";
 import UserInfo from "./components/NewUser/UserInfo";
+import Disbursement from "./components/NewUser/Disbursement";
+import Register from "./components/NewUser/Register";
+import LoanConfig from "./components/NewUser/LoanConfig";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -311,6 +314,18 @@ function App() {
             {
               path: "user-info",
               element: <UserInfo />,
+            },
+            {
+              path: "register",
+              element: <Register />,
+            },
+            {
+              path: "loan-config",
+              element: <LoanConfig />,
+            },
+            {
+              path: "disbursement",
+              element: <Disbursement />,
             },
           ],
         },

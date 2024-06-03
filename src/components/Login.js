@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import Slider from "react-slick";
 import BG from "../assets/bg/1.webp";
 import BG1 from "../assets/bg/2.webp";
 import BG2 from "../assets/bg/3.webp";
@@ -8,33 +8,10 @@ import BG3 from "../assets/bg/4.webp";
 import BG4 from "../assets/bg/5.webp";
 import BG5 from "../assets/bg/6.jpg";
 
-const imageVariants = {
-  enter: (direction) => ({
-    x: direction > 0 ? 1000 : -1000,
-    opacity: 0,
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction) => ({
-    zIndex: 0,
-    x: direction < 0 ? 1000 : -1000,
-    opacity: 0,
-  }),
-};
-
-const transition = {
-  x: { type: "spring", stiffness: 300, damping: 30 },
-  opacity: { duration: 0.2 },
-};
-
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [direction, setDirection] = useState(1);
   const [imageIndex, setImageIndex] = useState(0);
   const images = [BG, BG1, BG2, BG3, BG4, BG5];
   const navigate = useNavigate();
@@ -44,7 +21,7 @@ const Login = () => {
   };
 
   // Function to handle login
-  function login(username, password) {
+  const login = (username, password) => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,21 +33,14 @@ const Login = () => {
       requestOptions
     )
       .then((response) => {
-        // Check if the response is ok (status code 200-299)
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        // Access the authorization token from the response header
         const authToken = response.headers.get("Authorization");
-
-        // Optionally, you can strip 'Bearer ' if it's included
         const token = authToken.replace("Bearer ", "");
         console.log(token);
-
-        // Store the token for later use
         localStorage.setItem("authToken", token);
-
-        return response.json(); // Parse JSON body of the response
+        return response.json();
       })
       .then((data) => {
         console.log("Login Successful:", data);
@@ -78,59 +48,41 @@ const Login = () => {
         setTimeout(() => {
           navigate("/");
         }, 0);
-        // Handle further actions after successful login if necessary
       })
       .catch((error) => {
         console.error("Failed to login:", error);
       });
-  }
-
-  const moveToNextImage = () => {
-    setDirection(1);
-    setImageIndex((prevIndex) => (prevIndex + 2) % images.length);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      moveToNextImage();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    pauseOnHover: false,
+    beforeChange: (current, next) => setImageIndex(next),
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-200">
       <div className="w-1/2 h-screen flex justify-between relative">
-        {[images[imageIndex], images[(imageIndex + 1) % images.length]].map(
-          (image, index) => (
-            <motion.img
-              key={image}
-              src={image}
-              custom={direction}
-              variants={imageVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={transition}
-              className="w-[50%] h-full object-cover block m-auto"
-            />
-          )
-        )}
-        <div className="inset-0 bg-black bg-opacity-50 absolute z-10" />
-        <div className="absolute bottom-8 z-20 w-full flex justify-center space-x-2">
-          {Array.from({ length: Math.ceil(images.length / 2) }).map(
-            (_, index) => (
-              <button
-                onClick={() => setImageIndex(index * 2)}
-                key={index}
-                className={`w-4 h-4 rounded-full border-2 border-black ${
-                  imageIndex === index * 2 ? "bg-gray-500" : "bg-white"
-                }`}
-              >
-                {" "}
-              </button>
-            )
-          )}
+        <div className="w-full min-h-screen">
+          <Slider {...settings}>
+            {images.map((image, index) => (
+              <div key={index} className="flex items-center justify-center">
+                <img
+                  src={image}
+                  className="w-full h-screen object-cover block"
+                  alt={`Slide ${index}`}
+                />
+              </div>
+            ))}
+          </Slider>
         </div>
+        <div className="inset-0 bg-black bg-opacity-50 absolute z-10" />
       </div>
 
       <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-8 max-sm:w-full md:w-full lg:w-1/2 max-w-md mx-auto">
@@ -210,7 +162,7 @@ const Login = () => {
           {!isSignup && (
             <p className="mt-2 text-sm">
               <Link
-                href="/forgot-password"
+                to="/forgot-password"
                 className="text-indigo-600 hover:underline"
               >
                 Forgot password?

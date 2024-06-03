@@ -1,7 +1,18 @@
 import { useParams } from "react-router-dom";
+import useUserInfo from "../utils/useUserInfo";
 
 const UserInfo = () => {
   const { userID } = useParams();
+  const url = "/check-eligibility";
+  const methodType = "POST";
+  const eligibilityData = useUserInfo(url, methodType);
+  if (eligibilityData.length === 0) {
+    return (
+      <>
+        <div>Fetching Data</div>
+      </>
+    );
+  }
 
   return (
     <div>
@@ -15,6 +26,41 @@ const UserInfo = () => {
         </div>
         <div className="text-xl">User Id : {userID}</div>
       </div>
+      <table className="divide-y divide-gray-300">
+        <thead>
+          <tr className="divide-x divide-gray-200">
+            <th className="py-3.5 px-4 text-center">Project Name</th>
+            <th className="py-3.5 px-4 text-center ">Eligibility Status</th>
+            <th className="py-3.5 px-4 text-center ">Comments</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {eligibilityData.eligibilityResults.map((eligible, index) => {
+            return (
+              <tr
+                key={index}
+                className="divide-x divide-gray-200 text-center w-full"
+              >
+                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                  <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {eligible.projectName}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                  <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {eligible.eligibleStatus.replace(/_/g, " ")}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                  <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {eligible.inEligibilityReasons}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
