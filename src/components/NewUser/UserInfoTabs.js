@@ -3,6 +3,7 @@ import { Outlet, Link, useParams } from "react-router-dom";
 
 const UserInfoTabs = () => {
   const { userID } = useParams();
+  const { installIndex } = useParams();
   const [activeLink, setActiveLink] = useState(
     "/user/" + userID + "/user-info"
   );

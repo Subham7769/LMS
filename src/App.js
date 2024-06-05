@@ -51,6 +51,9 @@ import UserInfo from "./components/NewUser/UserInfo";
 import Disbursement from "./components/NewUser/Disbursement";
 import Register from "./components/NewUser/Register";
 import LoanConfig from "./components/NewUser/LoanConfig";
+import InstallmentInfoComp from "./components/NewUser/InstallmentInfoComp";
+import LoanConfigDD from "./components/NewUser/LoanConfigDD";
+import BlockedEmployer from "./components/BlockedEmployer";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -185,6 +188,10 @@ function App() {
               path: "credit-policy/:projectId",
               element: <CreditPolicy />,
             },
+            {
+              path: "blocked-employer/:projectId",
+              element: <BlockedEmployer />,
+            },
           ],
         },
         {
@@ -207,6 +214,10 @@ function App() {
               path: "credit-policy/:projectId",
               element: <CreditPolicy />,
             },
+            {
+              path: "blocked-employer/:projectId",
+              element: <BlockedEmployer />,
+            },
           ],
         },
         {
@@ -228,6 +239,10 @@ function App() {
             {
               path: "credit-policy/:projectId",
               element: <CreditPolicy />,
+            },
+            {
+              path: "blocked-employer/:projectId",
+              element: <BlockedEmployer />,
             },
           ],
         },
@@ -321,7 +336,11 @@ function App() {
             },
             {
               path: "loan-config",
-              element: <LoanConfig />,
+              element: <LoanConfigDD />,
+            },
+            {
+              path: "loan-config/:installIndex/installment",
+              element: <InstallmentInfoComp />,
             },
             {
               path: "disbursement",

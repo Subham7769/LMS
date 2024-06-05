@@ -68,7 +68,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-200">
-      <div className="w-1/2 h-screen flex justify-between relative">
+      <div className="w-1/2 h-screen flex justify-between relative overflow-hidden">
         <div className="w-full min-h-screen">
           <Slider {...settings}>
             {images.map((image, index) => (

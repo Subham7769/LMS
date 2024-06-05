@@ -8,7 +8,7 @@ import {
 import Select from "react-select";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { RowChanged } from "./Toasts";
+import { RowChanged, Warning } from "./Toasts";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -35,10 +35,19 @@ const LoanProductConfig = () => {
   const [productConfigData, setProductConfigData] = useState([]);
   const [eligibleCustomerType, setEligibleCustomerType] = useState([]);
   const [interestPeriodType, setInterestPeriodType] = useState([]);
+  const [tenureType, setTenureType] = useState([]);
   const [racType, setRacType] = useState("");
   const [fee, setFee] = useState("");
   const [racOptions, setRacOptions] = useState(racOptionsInitial);
   const RACDataInfo = useRACInfo();
+  const [notice, setNotice] = useState(false);
+  const [initialTenureType, setInitialTenureType] = useState([]);
+  const [initialInterestPeriodType, setInitialInterestPeriodType] = useState(
+    []
+  );
+  const [newInterest, setNewInterest] = useState("");
+  const [newTenure, setNewTenure] = useState("");
+  const [delay, setDelay] = useState(false);
 
   useEffect(() => {
     getProductInfo();
@@ -87,6 +96,13 @@ const LoanProductConfig = () => {
       };
       setEligibleCustomerType(formattedCustomerType);
       setInterestPeriodType(formattedPER);
+      setInitialInterestPeriodType(formattedPER);
+      const formattedTenureType = {
+        value: productConfigData.tenureType,
+        label: productConfigData.tenureType,
+      };
+      setTenureType(formattedTenureType);
+      setInitialTenureType(formattedTenureType);
       setRacType(
         racOptions.find((option) => option.value === productConfigData.racId)
       );
@@ -101,6 +117,20 @@ const LoanProductConfig = () => {
     }));
     setRacOptions(formattedRACData);
   }, [RACDataInfo]);
+
+  // For Tracking if the user is changing PER or Tenure Type
+  useEffect(() => {
+    if (
+      JSON.stringify(tenureType) === JSON.stringify(initialTenureType) &&
+      JSON.stringify(interestPeriodType) ===
+        JSON.stringify(initialInterestPeriodType)
+    ) {
+      setNotice(false);
+    } else {
+      setNotice(true);
+    }
+  }, [tenureType, interestPeriodType]);
+
   const [inputList, setInputList] = useState([
     {
       interestRate: "",
@@ -109,13 +139,24 @@ const LoanProductConfig = () => {
   ]);
   const handleAddFields = () => {
     setInputList([
-      ...inputList,
       {
-        interestRate: "",
-        tenure: "",
+        interestRate: newInterest,
+        tenure: newTenure,
       },
+      ...inputList,
     ]);
+    setNewTenure("");
+    setNewInterest("");
+    toast.custom((t) => (
+      <Warning
+        t={t}
+        toast={toast}
+        title={"Notice!"}
+        message={"Please click the save button to ensure your entry is saved"}
+      />
+    ));
   };
+
   const handleChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
@@ -126,9 +167,21 @@ const LoanProductConfig = () => {
     const deleteList = [...inputList];
     deleteList.splice(index, 1);
     setInputList(deleteList);
+    setNotice(false);
+    toast.custom((t) => (
+      <Warning
+        t={t}
+        toast={toast}
+        title={"Not Yet Deleted!"}
+        message={"Please click the save button to confirm removal of entry"}
+      />
+    ));
   };
   const handleSave = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
+    // if (newInterest && newTenure) {
+    //   handleAddFields();
+    // }
 
     // Define the data to be sent with the POST request
     const postData = {
@@ -136,6 +189,7 @@ const LoanProductConfig = () => {
       fee: fee,
       interestEligibleTenure: inputList,
       interestPeriodType: interestPeriodType.value,
+      tenureType: tenureType.value,
       productType: productConfigData.productType,
       racId: racType.value,
     };
@@ -159,12 +213,14 @@ const LoanProductConfig = () => {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
         toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        setNotice(false);
       }
     } catch (error) {
       console.error("Failed to update data:", error);
     }
   };
-  if (productConfigData.length === 0) {
+
+  if (productConfigData?.length === 0) {
     return <>Fetching Data</>;
   }
   return (
@@ -173,13 +229,6 @@ const LoanProductConfig = () => {
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-center justify-between ">
           <div className="text-lg">{productConfigData.productType}</div>
-          <button
-            onClick={handleAddFields}
-            type="button"
-            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
         </div>
         <div className="flex gap-5 border-b border-gray-300 pb-5">
           <div className="relative">
@@ -215,6 +264,67 @@ const LoanProductConfig = () => {
               placeholder="1%"
             />
           </div>
+          {/* <div className="relative">
+            <label
+              htmlFor="interestPeriodType"
+              className=" bg-white px-1 text-xs text-gray-900 gray-"
+            >
+              PER
+            </label>
+            <Select
+              className="w-36"
+              options={options}
+              // id={`per_${item.id}`}
+              name="interestPeriodType"
+              value={interestPeriodType}
+              onChange={(interestPeriodType) => {
+                setInterestPeriodType(interestPeriodType);
+              }}
+              isSearchable={false}
+            />
+          </div> */}
+          <div className="relative">
+            <label
+              htmlFor="rac"
+              className=" bg-white px-1 text-xs text-gray-900"
+            >
+              RAC
+            </label>
+            <Select
+              className="w-44"
+              options={racOptions}
+              // id={`rac_${item.id}`}
+              name="rac"
+              value={racType}
+              // onChange={(newValue) => handleDDChange("rac", newValue, index)}
+              onChange={(racselectedOption) => setRacType(racselectedOption)}
+              isSearchable={false}
+            />
+          </div>
+        </div>
+        {notice && (
+          <p className="text-red-500 font-bold text-sm text-start mt-2">
+            Please Note that changing the PER/Tenure Type will change it for all
+            loans
+          </p>
+        )}
+        <div className="flex gap-5 items-end mt-5 border-b pb-5">
+          <div className="relative">
+            <label
+              htmlFor="interestRate"
+              className="px-1 text-xs text-gray-900"
+            >
+              Simple Interest
+            </label>
+            <input
+              type="text"
+              name="interestRate"
+              value={newInterest}
+              onChange={(e) => setNewInterest(e.target.value)}
+              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="2%"
+            />
+          </div>
           <div className="relative">
             <label
               htmlFor="interestPeriodType"
@@ -235,23 +345,44 @@ const LoanProductConfig = () => {
             />
           </div>
           <div className="relative">
+            <label htmlFor="tenure" className=" px-1 text-xs text-gray-900">
+              Tenure
+            </label>
+            <input
+              type="number"
+              name="tenure"
+              value={newTenure}
+              onChange={(e) => setNewTenure(e.target.value)}
+              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="3"
+            />
+          </div>
+          <div className="relative">
             <label
-              htmlFor="rac"
-              className=" bg-white px-1 text-xs text-gray-900"
+              htmlFor="tenureType"
+              className=" bg-white px-1 text-xs text-gray-900 gray-"
             >
-              RAC
+              Tenure Type
             </label>
             <Select
-              className="w-44"
-              options={racOptions}
-              // id={`rac_${item.id}`}
-              name="rac"
-              value={racType}
-              // onChange={(newValue) => handleDDChange("rac", newValue, index)}
-              onChange={(racselectedOption) => setRacType(racselectedOption)}
+              className="w-36"
+              options={options}
+              // id={`per_${item.id}`}
+              name="tenureType"
+              value={tenureType}
+              onChange={(tenureType) => {
+                setTenureType(tenureType);
+              }}
               isSearchable={false}
             />
           </div>
+          <button
+            onClick={handleAddFields}
+            type="button"
+            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            <PlusIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
         </div>
         {inputList.map((item, index) => (
           <div key={index} className="flex gap-5 items-end mt-5">
@@ -273,6 +404,25 @@ const LoanProductConfig = () => {
               />
             </div>
             <div className="relative">
+              <label
+                htmlFor="interestPeriodType"
+                className=" bg-white px-1 text-xs text-gray-900 gray-"
+              >
+                PER
+              </label>
+              <Select
+                className="w-36"
+                options={options}
+                // id={`per_${item.id}`}
+                name="interestPeriodType"
+                value={interestPeriodType}
+                onChange={(interestPeriodType) => {
+                  setInterestPeriodType(interestPeriodType);
+                }}
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
               <label htmlFor="tenure" className=" px-1 text-xs text-gray-900">
                 Tenure
               </label>
@@ -286,40 +436,32 @@ const LoanProductConfig = () => {
                 placeholder="3"
               />
             </div>
-            {/* <div className="relative">
-            <label
-              htmlFor={`minCredit_${item.id}`}
-              className=" px-1 text-xs text-gray-900"
+            <div className="relative">
+              <label
+                htmlFor="tenureType"
+                className=" bg-white px-1 text-xs text-gray-900 gray-"
+              >
+                Tenure Type
+              </label>
+              <Select
+                className="w-36"
+                options={options}
+                // id={`per_${item.id}`}
+                name="tenureType"
+                value={tenureType}
+                onChange={(tenureType) => {
+                  setTenureType(tenureType);
+                }}
+                isSearchable={false}
+              />
+            </div>
+            {/* <button
+              onClick={() => handleSave()}
+              type="button"
+              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Min Credit Score
-            </label>
-            <input
-              type="number"
-              name="minCredit"
-              id={`minCredit_${item.id}`}
-              value={item.minCredit}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="0.3"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`maxCredit_${item.id}`}
-              className=" px-1 text-xs text-gray-900"
-            >
-              Max Credit Score
-            </label>
-            <input
-              type="number"
-              name="maxCredit"
-              id={`maxCredit_${item.id}`}
-              value={item.maxCredit}
-              onChange={(e) => handleChange(e, item.id)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="2"
-            />
-          </div> */}
+              <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+            </button> */}
             <button
               onClick={() => handleDelete(index)}
               type="button"

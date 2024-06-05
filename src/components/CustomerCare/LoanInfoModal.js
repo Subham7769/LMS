@@ -25,13 +25,6 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
     setLoansarrModal(formattedLoansModal);
   }, [loanDetails]);
   if (!visible) return null;
-  // For loanInfo Modal Date Conversion
-  // const [loansarrModal, setLoansarrModal] = useState(
-  //   loanDetails.installments.map((loanModal) => ({
-  //     ...loanModal,
-  //     formattedInstallmentDate: "",
-  //   }))
-  // );
 
   const handleOnClose = (e) => {
     if (e.target.id === "loanInfoContainer") onClose();

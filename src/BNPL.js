@@ -69,7 +69,7 @@ const BNPL = () => {
             Debt Burden Config
           </Link>
         </div>
-        <div className="px-2">
+        <div className="border-r border-gray-400 px-2">
           <Link
             to="/product/bnpl/credit-policy/4486edd6-8e24-46ce-b6ea-67d6a2c1032b"
             className={`py-1 px-1.5 rounded ${
@@ -85,6 +85,24 @@ const BNPL = () => {
             }
           >
             Credit Policy
+          </Link>
+        </div>
+        <div className="px-2">
+          <Link
+            to="/product/bnpl/blocked-employer/4486edd6-8e24-46ce-b6ea-67d6a2c1032b"
+            className={`py-1 px-1.5 rounded ${
+              activeLink ===
+              "/product/bnpl/blocked-employer/4486edd6-8e24-46ce-b6ea-67d6a2c1032b"
+                ? "text-white bg-indigo-500"
+                : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
+            }`}
+            onClick={() =>
+              setActiveLink(
+                "/product/bnpl/blocked-employer/4486edd6-8e24-46ce-b6ea-67d6a2c1032b"
+              )
+            }
+          >
+            Blocked Employer
           </Link>
         </div>
       </div>
