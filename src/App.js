@@ -56,6 +56,8 @@ import LoanConfigDD from "./components/NewUser/LoanConfigDD";
 import BlockedEmployer from "./components/BlockedEmployer";
 import LoanFullDetails from "./components/NewUser/LoanFullDetails";
 import Repayment from "./components/NewUser/Repayments";
+import FamilyDetails from "./components/NewUser/FamilyDetails";
+import EmploymentDetails from "./components/NewUser/EmploymentDetails";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -355,6 +357,14 @@ function App() {
             {
               path: "repayment",
               element: <Repayment />,
+            },
+            {
+              path: "family-details",
+              element: <FamilyDetails />,
+            },
+            {
+              path: "employment-details",
+              element: <EmploymentDetails />,
             },
           ],
         },

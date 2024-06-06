@@ -104,7 +104,7 @@ const SubscriberInfoComponet = ({ subscriberListNew }) => {
               </div>
             </div>
           </div>
-          <FamilyDetails />
+          <FamilyDetails info={subscriberListNew} />
         </div>
       </div>
     </>

@@ -584,10 +584,6 @@ const RacMatrixConfig = () => {
   }, [csData]);
 
   const handleAddFields = async () => {
-    if (!enabledNationality) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
     // Define the data to be sent with the POST request
@@ -606,7 +602,7 @@ const RacMatrixConfig = () => {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledNationality ? "USED" : "NOT_USED",
         },
       ],
     };
@@ -635,10 +631,6 @@ const RacMatrixConfig = () => {
     }
   };
   const handleAddGEFields = async () => {
-    if (!enabledGender) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
     // Define the data to be sent with the POST request
@@ -657,7 +649,7 @@ const RacMatrixConfig = () => {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledGender ? "USED" : "NOT_USED",
         },
       ],
     };
@@ -686,10 +678,6 @@ const RacMatrixConfig = () => {
     }
   };
   const handleAddMSFields = async () => {
-    if (!enabledMaritalStatus) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
     // Define the data to be sent with the POST request
@@ -708,7 +696,7 @@ const RacMatrixConfig = () => {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledMaritalStatus ? "USED" : "NOT_USED",
         },
       ],
     };
@@ -737,10 +725,6 @@ const RacMatrixConfig = () => {
     }
   };
   const handleAddRSFields = async () => {
-    if (!enabledResidential) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
     // Define the data to be sent with the POST request
@@ -759,7 +743,7 @@ const RacMatrixConfig = () => {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledResidential ? "USED" : "NOT_USED",
         },
       ],
     };
@@ -788,10 +772,6 @@ const RacMatrixConfig = () => {
     }
   };
   const handleAddBOFields = async () => {
-    if (!enabledOccupation) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken");
 
     const postData = {
@@ -809,7 +789,7 @@ const RacMatrixConfig = () => {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledOccupation ? "USED" : "NOT_USED",
         },
       ],
     };
@@ -838,10 +818,6 @@ const RacMatrixConfig = () => {
     }
   };
   const handleAddBRFields = async () => {
-    if (!enabledRegion) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken");
 
     const postData = {
@@ -859,7 +835,7 @@ const RacMatrixConfig = () => {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledRegion ? "USED" : "NOT_USED",
         },
       ],
     };
@@ -888,17 +864,13 @@ const RacMatrixConfig = () => {
     }
   };
   const handleAddBSFields = async () => {
-    if (!enabledSector) {
-      toast.custom((t) => <NotToggled t={t} toast={toast} />);
-      return;
-    }
     const token = localStorage.getItem("authToken");
 
     const postData = {
       ruleUsage: [
         {
           racId: racID,
-          ruleUsage: "USED",
+          ruleUsage: enabledSector ? "USED" : "NOT_USED",
         },
       ],
       sectorRules: [

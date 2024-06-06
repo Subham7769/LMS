@@ -1,8 +1,10 @@
 import { subscriberList } from "../../config";
 
-const FamilyDetails = () => {
+const FamilyDetails = ({ info }) => {
   const { maritalStatus, noOfDomesticWorkers, noOfChildren, totalDependent } =
-    subscriberList.borrowerProfile.maritalDetails;
+    info?.borrowerProfile?.maritalDetails;
+
+  console.log(info.borrowerProfile.maritalDetails);
   return (
     <>
       <div className="mt-4">

@@ -63,7 +63,7 @@ const UserInfoTabs = () => {
             Disbursement Status
           </Link>
         </div>
-        <div className=" px-2">
+        <div className="border-r border-gray-400 px-2">
           <Link
             to={"/user/" + userID + "/repayment"}
             className={`py-1 px-1.5 ${
@@ -74,6 +74,34 @@ const UserInfoTabs = () => {
             onClick={() => setActiveLink("/user/" + userID + "/repayment")}
           >
             Backend Repayments
+          </Link>
+        </div>
+        <div className="border-r border-gray-400 px-2">
+          <Link
+            to={"/user/" + userID + "/family-details"}
+            className={`py-1 px-1.5 ${
+              activeLink === "/user/" + userID + "/family-details"
+                ? "text-white bg-indigo-500 rounded"
+                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+            }`}
+            onClick={() => setActiveLink("/user/" + userID + "/family-details")}
+          >
+            Family Details
+          </Link>
+        </div>
+        <div className="px-2">
+          <Link
+            to={"/user/" + userID + "/employment-details"}
+            className={`py-1 px-1.5 ${
+              activeLink === "/user/" + userID + "/employment-details"
+                ? "text-white bg-indigo-500 rounded"
+                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+            }`}
+            onClick={() =>
+              setActiveLink("/user/" + userID + "/employment-details")
+            }
+          >
+            Employment Details
           </Link>
         </div>
       </div>
