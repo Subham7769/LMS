@@ -65,15 +65,13 @@ const UserInfoTabs = () => {
         </div>
         <div className=" px-2">
           <Link
-            to={"/user/" + userID + "/credit-bureau-details"}
+            to={"/user/" + userID + "/repayment"}
             className={`py-1 px-1.5 ${
-              activeLink === "/user/" + userID + "/credit-bureau-details"
+              activeLink === "/user/" + userID + "/repayment"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
             }`}
-            onClick={() =>
-              setActiveLink("/user/" + userID + "/credit-bureau-details")
-            }
+            onClick={() => setActiveLink("/user/" + userID + "/repayment")}
           >
             Backend Repayments
           </Link>

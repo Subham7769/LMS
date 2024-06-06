@@ -3,31 +3,35 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 
-const Disbursement = () => {
+const Repayment = () => {
   const [amount, setamount] = useState("");
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const { userID } = useParams();
   const { loanID } = useParams();
-
   const [userloanID, setuserloanID] = useState(loanID);
 
-  const handleDisbursement = async () => {
-    const transID = userloanID + "-reactivate";
+  const handleRepayment = async () => {
+    const RtransID = "MANUAL_" + userloanID;
+    const RinstID = userloanID + "-1";
     const postData = {
+      requestId: null,
       loanId: userloanID,
+      transactionId: RtransID,
+      installmentId: RinstID,
+      processDate: "2024-04-09 10:00:13",
       status: true,
-      transactionId: transID,
-      activationType: 2,
-      processDate: "2024-05-09 15:18:00",
-      amount: amount,
-      reconciliationMethod: "mobile wallet",
+      repaymentOriginator: "USER_PAYMENT",
+      reconciliationMethod: "sariee transfer",
+      payAll: true,
+      serviceFeeRepayment: false,
+      emiAmount: amount,
     };
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-dev.lmscarbon.com/carbon-payment-service/xcbe/api/v1/borrowers/" +
           userID +
-          "/disbursement-status",
+          "/backend-repayments",
         {
           method: "POST",
           headers: {
@@ -43,13 +47,13 @@ const Disbursement = () => {
         return; // Stop further execution
       }
       if (data.status === 202) {
-        console.log("Disbursement done Successfully !!");
+        console.log("Repayment done Successfully !!");
         toast.custom((t) => (
           <Passed
             t={t}
             toast={toast}
             title={"Success"}
-            message={"Disbursement done Successfully !!"}
+            message={"Repayment done Successfully !!"}
           />
         ));
         setTimeout(() => {
@@ -64,7 +68,7 @@ const Disbursement = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
-        <div className="text-lg">Proceed for disbursement</div>
+        <div className="text-lg">Proceed for Repayments</div>
         <div className="flex gap-4">
           <div className="relative my-5">
             <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
@@ -95,7 +99,7 @@ const Disbursement = () => {
         </div>
         <div
           className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer w-fit"
-          onClick={handleDisbursement}
+          onClick={handleRepayment}
         >
           Submit
         </div>
@@ -104,4 +108,4 @@ const Disbursement = () => {
   );
 };
 
-export default Disbursement;
+export default Repayment;

@@ -54,6 +54,8 @@ import LoanConfig from "./components/NewUser/LoanConfig";
 import InstallmentInfoComp from "./components/NewUser/InstallmentInfoComp";
 import LoanConfigDD from "./components/NewUser/LoanConfigDD";
 import BlockedEmployer from "./components/BlockedEmployer";
+import LoanFullDetails from "./components/NewUser/LoanFullDetails";
+import Repayment from "./components/NewUser/Repayments";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -343,11 +345,20 @@ function App() {
               element: <InstallmentInfoComp />,
             },
             {
+              path: "loan-config/:loanID",
+              element: <LoanFullDetails />,
+            },
+            {
               path: "disbursement",
               element: <Disbursement />,
             },
+            {
+              path: "repayment",
+              element: <Repayment />,
+            },
           ],
         },
+
         {
           path: "/slidenav",
           element: <SlideNav />,

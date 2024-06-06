@@ -68,7 +68,7 @@ const Register = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://194.163.172.33:32299/carbon-registration-service/xcbe/api/v1/borrowers/" +
+        "https://api-dev.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
           userID,
         {
           method: "PUT",

@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react";
 
+const loanStatusOptions = [
+  { value: 0, label: "All" },
+  { value: 1, label: "Pending Approval" },
+  { value: 2, label: "Activated" },
+  { value: 3, label: "Closed" },
+  { value: 4, label: "Frozen" },
+  { value: 5, label: "Roll Overed" },
+  { value: 6, label: "Cancelled" },
+  { value: 7, label: "Late" },
+  { value: 8, label: "Returned" },
+  { value: 9, label: "Defaulted" },
+];
+
 const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
   const [loansarrModal, setLoansarrModal] = useState([]);
   useEffect(() => {
@@ -34,7 +47,7 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
       <div
         id="loanInfoContainer"
         onClick={handleOnClose}
-        className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center"
+        className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex justify-center items-center"
       >
         <div className="bg-white p-4 rounded overflow-y-auto overflow-x-hidden h-[400px] relative">
           <div className="font-semibold text-center text-xl text-gray-700 mb-5">
@@ -54,7 +67,7 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
             <div className="flex flex-col gap-y-3">
               <div className="flex">
                 <div className="w-44">Loan Status : </div>
-                <div>Closed</div>
+                <div>{loanStatusOptions[loanDetails.loanStatus].label}</div>
               </div>
               <div className="flex">
                 <div className="w-44">Outstanding Principal : </div>
@@ -127,7 +140,7 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
         </div>
         <div
           onClick={onClose}
-          className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-32 right-[330px]"
+          className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-32 right-[300px]"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
