@@ -54,7 +54,6 @@ import LoanConfig from "./components/NewUser/LoanConfig";
 import InstallmentInfoComp from "./components/NewUser/InstallmentInfoComp";
 import LoanConfigDD from "./components/NewUser/LoanConfigDD";
 import BlockedEmployer from "./components/BlockedEmployer";
-import LoanFullDetails from "./components/NewUser/LoanFullDetails";
 import Repayment from "./components/NewUser/Repayments";
 import FamilyDetails from "./components/NewUser/FamilyDetails";
 import EmploymentDetails from "./components/NewUser/EmploymentDetails";
@@ -345,10 +344,6 @@ function App() {
             {
               path: "loan-config/:installIndex/installment",
               element: <InstallmentInfoComp />,
-            },
-            {
-              path: "loan-config/:loanID",
-              element: <LoanFullDetails />,
             },
             {
               path: "disbursement",

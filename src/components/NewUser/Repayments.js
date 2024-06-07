@@ -2,20 +2,24 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import Select from "react-select";
+
+const loanIdOptionsInitial = [{ value: "test", label: "test" }];
 
 const Repayment = () => {
+  const [repaymentData, setrepaymentData] = useState([]);
   const [amount, setamount] = useState("");
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const { userID } = useParams();
-  const { loanID } = useParams();
-  const [userloanID, setuserloanID] = useState(loanID);
+  const [userloanID, setuserloanID] = useState([]);
+  const [loanIdOptions, setloanIdOptions] = useState(loanIdOptionsInitial);
 
   const handleRepayment = async () => {
-    const RtransID = "MANUAL_" + userloanID;
-    const RinstID = userloanID + "-1";
+    const RtransID = "MANUAL_" + userloanID.value;
+    const RinstID = userloanID.value + "-1";
     const postData = {
       requestId: null,
-      loanId: userloanID,
+      loanId: userloanID.value,
       transactionId: RtransID,
       installmentId: RinstID,
       processDate: "2024-04-09 10:00:13",
@@ -64,6 +68,62 @@ const Repayment = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    getrepaymentInfo();
+  }, []);
+
+  async function getrepaymentInfo() {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-dev.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
+          userID +
+          "/loans/closure",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      const json = await data.json();
+      setrepaymentData(json);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    const formattedRACData = repaymentData.map(({ loanId }) => ({
+      value: loanId,
+      label: loanId,
+    }));
+    setloanIdOptions(formattedRACData);
+  }, [repaymentData]);
+
+  const handleLoanIdChange = (selectedOption) => {
+    setuserloanID(selectedOption);
+    const selectedLoan = repaymentData.find(
+      (loan) => loan.loanId === selectedOption.value
+    );
+    console.log(selectedLoan);
+    if (selectedLoan) {
+      setamount(selectedLoan.closureAmount);
+    }
+  };
+
+  if (repaymentData.length === 0) {
+    return <div>Fetching Data</div>;
+  }
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -71,16 +131,16 @@ const Repayment = () => {
         <div className="text-lg">Proceed for Repayments</div>
         <div className="flex gap-4">
           <div className="relative my-5">
-            <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
-              Enter Loan Id
+            <label htmlFor="userloanID" className=" px-1 text-xs text-gray-900">
+              Select Loan Id
             </label>
-            <input
-              type="text"
-              name="amount"
+            <Select
+              className="w-96"
+              options={loanIdOptions}
+              name="userloanID"
               value={userloanID}
-              onChange={(e) => setuserloanID(e.target.value)}
-              className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="7cc473f2-04a9-4779-ac7e-d8ff6fa19410"
+              onChange={handleLoanIdChange}
+              isSearchable={false}
             />
           </div>
           <div className="relative my-5">

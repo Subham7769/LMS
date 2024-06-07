@@ -4,12 +4,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 
 const Disbursement = () => {
+  const [disbursementData, setdisbursementData] = useState([]);
   const [amount, setamount] = useState("");
+  const [userloanID, setuserloanID] = useState("");
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const { userID } = useParams();
-  const { loanID } = useParams();
-
-  const [userloanID, setuserloanID] = useState(loanID);
 
   const handleDisbursement = async () => {
     const transID = userloanID + "-reactivate";
@@ -60,6 +59,49 @@ const Disbursement = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    getDisbursementInfo();
+  }, []);
+
+  async function getDisbursementInfo() {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-dev.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
+          userID +
+          "/disbursement",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      const json = await data.json();
+      setdisbursementData(json);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    console.log(disbursementData);
+    setuserloanID(disbursementData.loanId);
+    setamount(disbursementData.principleAmount);
+  }, [disbursementData]);
+
+  if (disbursementData.length === 0) {
+    return <div>Fetching Data</div>;
+  }
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -67,16 +109,16 @@ const Disbursement = () => {
         <div className="text-lg">Proceed for disbursement</div>
         <div className="flex gap-4">
           <div className="relative my-5">
-            <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
-              Enter Loan Id
+            <label htmlFor="loanID" className=" px-1 text-xs text-gray-900">
+              Loan Id
             </label>
             <input
               type="text"
-              name="amount"
+              name="loanID"
+              disabled
               value={userloanID}
               onChange={(e) => setuserloanID(e.target.value)}
-              className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="7cc473f2-04a9-4779-ac7e-d8ff6fa19410"
+              className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="relative my-5">
