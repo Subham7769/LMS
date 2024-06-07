@@ -109,9 +109,11 @@ const Register = () => {
     <table className="divide-y divide-gray-300">
       <thead>
         <tr className="divide-x divide-gray-200">
-          <th className="py-3.5 px-4 text-center">Project Name</th>
-          <th className="py-3.5 px-4 text-center ">Eligibility Status</th>
-          <th className="py-3.5 px-4 text-center ">Register</th>
+          <th className="py-3.5 px-4 text-center">Product Name</th>
+          <th className="py-3.5 px-4 text-center ">
+            Registration Eligibility Status
+          </th>
+          <th className="py-3.5 px-4 text-center ">Registered</th>
           <th className="py-3.5 px-4 text-center ">Comments</th>
         </tr>
       </thead>

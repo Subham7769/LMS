@@ -113,7 +113,7 @@ const MenusInitial = [
         current: false,
       },
       {
-        name: "Risk Grading Cal",
+        name: "Risk Grading",
         href: "/global-config/risk-grade-cal",
         current: false,
       },

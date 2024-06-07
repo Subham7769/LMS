@@ -2332,7 +2332,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
       <div className="font-semibold mb-2 mt-8">Cash Loan Stats : </div>
       <div className="rounded-xl pt-2 pb-2 px-5 border border-red-600 mb-8 relative">
         <div className="flex gap-6 py-3">
-          <div className=" pr-6 py-2 flex flex-col border-r border-gray-300">
+          {/* <div className=" pr-6 py-2 flex flex-col border-r border-gray-300">
             <div className="flex gap-2 py-2">
               <div className="w-56">Max Loan Duration Months : </div>
               <div>{loanConfigData.cashLoanStats.maxLoanDurationMonths}</div>
@@ -2341,7 +2341,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
               <div className="w-56">Mix Loan Duration Months : </div>
               <div>{loanConfigData.cashLoanStats.minLoanDurationMonths}</div>
             </div>
-          </div>
+          </div> */}
           <div className="pr-6 py-2 flex flex-col border-r border-gray-300">
             <div className="flex gap-2 py-2">
               <div className="w-44">Max Loan Amount : </div>
@@ -2354,21 +2354,21 @@ const LoanConfig = ({ visible, loanType, amount }) => {
           </div>
           <div className=" pr-6 py-2 flex flex-col border-r border-gray-300">
             <div className="flex gap-2 py-2">
-              <div className="w-44">Max Loan Duration : </div>
+              <div className="w-52">Max Loan Duration Days : </div>
               <div>{loanConfigData.cashLoanStats.maxLoanDuration}</div>
             </div>
             <div className="flex gap-2 py-2">
-              <div className="w-44">Min Loan Duration : </div>
+              <div className="w-52">Min Loan Duration Days : </div>
               <div>{loanConfigData.cashLoanStats.minLoanDuration}</div>
             </div>
           </div>
           <div className="pr-6 py-2 flex flex-col">
             <div className="flex gap-2 py-2">
-              <div className="w-32">Max Tenure : </div>
+              <div className="w-52">Max Tenure Months : </div>
               <div>{loanConfigData.cashLoanStats.maxTenure}</div>
             </div>
             <div className="flex gap-2 py-2">
-              <div className="w-32">Min Tenure : </div>
+              <div className="w-52">Min Tenure Months : </div>
               <div>{loanConfigData.cashLoanStats.minTenure}</div>
             </div>
           </div>

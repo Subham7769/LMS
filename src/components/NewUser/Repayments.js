@@ -121,7 +121,7 @@ const Repayment = () => {
   };
 
   if (repaymentData.length === 0) {
-    return <div>Fetching Data</div>;
+    return <div>No open loans to pay</div>;
   }
 
   return (

@@ -238,7 +238,7 @@ const BareMinimumExp = () => {
             <PlusIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
-        <div className="flex gap-4 items-end mt-5">
+        <div className="flex gap-4 items-end mt-5 border-b border-gray-300 pb-5">
           <div className="relative">
             <label
               htmlFor="expensesName"
