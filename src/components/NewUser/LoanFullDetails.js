@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoanHistoryComp from "../CustomerCare/LoanHistoryComp";
+import LoadingState from "../LoadingState";
 
 const LoanFullDetails = () => {
   const { loanID } = useParams();
@@ -129,7 +130,7 @@ const LoanFullDetails = () => {
   if (loanFullDetailsData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

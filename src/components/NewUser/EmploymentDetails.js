@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { Passed } from "../Toasts";
+import LoadingState from "../LoadingState";
 
 function EmploymentDetails() {
   const [clientData, setClientData] = useState([]);
@@ -127,7 +128,7 @@ function EmploymentDetails() {
   }, [clientData]);
 
   if (clientData.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />
   }
 
   return (

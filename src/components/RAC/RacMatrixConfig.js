@@ -591,10 +591,9 @@ const RacMatrixConfig = () => {
       nationalityRules: [
         {
           availableNationality: availableNationalityData,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: ruleNameID,
           ruleUsed: "USED",
         },
@@ -638,10 +637,9 @@ const RacMatrixConfig = () => {
       genderRules: [
         {
           availableGender: availableGenderData,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: GEruleNameID,
           ruleUsed: "USED",
         },
@@ -685,10 +683,9 @@ const RacMatrixConfig = () => {
       maritalStatusRules: [
         {
           availableMaritalStatus: availableMaritalStatusData,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: MSruleNameID,
           ruleUsed: "USED",
         },
@@ -732,10 +729,9 @@ const RacMatrixConfig = () => {
       residentialStatusRules: [
         {
           availableResidentialStatus: availableResidentialStatusData,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: RSruleNameID,
           ruleUsed: "USED",
         },
@@ -778,10 +774,9 @@ const RacMatrixConfig = () => {
       occupationRules: [
         {
           blockedOccupation: occupationArray,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: occuRuleNameID,
           ruleUsed: "USED",
         },
@@ -824,10 +819,9 @@ const RacMatrixConfig = () => {
       regionRules: [
         {
           blockedRegions: regionArray,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: regRuleNameID,
           ruleUsed: "USED",
         },
@@ -876,10 +870,9 @@ const RacMatrixConfig = () => {
       sectorRules: [
         {
           blockedSectors: sectorArray,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: sectRuleNameID,
           ruleUsed: "USED",
         },
@@ -917,21 +910,19 @@ const RacMatrixConfig = () => {
       btgRules: [
         {
           basicWageToGrossSalary: appBaseSalary,
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "1",
+          isSaudi: 0,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: ABSruleNameID,
           ruleUsed: "USED",
         },
         {
           basicWageToGrossSalary: resBaseSalary,
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "0",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: RBSruleNameID,
           ruleUsed: "USED",
         },
@@ -987,23 +978,21 @@ const RacMatrixConfig = () => {
       ],
       writeOffRules: [
         {
-          error: "string",
           fieldType: "Employer",
           firstWriteOff: appFirstWriteOff,
-          isSaudi: "1",
+          isSaudi: 0,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: AWOruleNameID,
           ruleUsed: "USED",
           secondWriteOff: appSecondWriteOff,
         },
         {
-          error: "string",
           fieldType: "Employer",
           firstWriteOff: resFirstWriteOff,
-          isSaudi: "0",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: RWOruleNameID,
           ruleUsed: "USED",
           secondWriteOff: resSecondWriteOff,
@@ -1041,23 +1030,21 @@ const RacMatrixConfig = () => {
     const postData = {
       ageRules: [
         {
-          error: "string",
           fieldType: "Employer",
           firstAge: appFirstAge,
-          isSaudi: "1",
+          isSaudi: 0,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: AAgeruleNameID,
           ruleUsed: "USED",
           secondAge: appSecondAge,
         },
         {
-          error: "string",
           fieldType: "Employer",
           firstAge: resFirstAge,
-          isSaudi: "0",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: RAgeruleNameID,
           ruleUsed: "USED",
           secondAge: resSecondAge,
@@ -1105,22 +1092,20 @@ const RacMatrixConfig = () => {
     const postData = {
       grossSalaryRules: [
         {
-          error: "string",
           fieldType: "Employer",
           grossSalary: appGrossSalary,
-          isSaudi: "1",
+          isSaudi: 0,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: appGrossRuleNameID,
           ruleUsed: "USED",
         },
         {
-          error: "string",
           fieldType: "Employer",
           grossSalary: resGrossSalary,
-          isSaudi: "0",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: resGrossRuleNameID,
           ruleUsed: "USED",
         },
@@ -1175,21 +1160,19 @@ const RacMatrixConfig = () => {
       ],
       simahScoreRules: [
         {
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "1",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 0,
           ruleName: appSimahRuleNameID,
           ruleUsed: "USED",
           simahScore: appSimahScore,
         },
         {
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "0",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: resSimahRuleNameID,
           ruleUsed: "USED",
           simahScore: resSimahScore,
@@ -1227,11 +1210,10 @@ const RacMatrixConfig = () => {
     const postData = {
       activeRules: [
         {
-          error: "string",
           fieldType: "Employer",
           firstGrossSalary: minActive,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: activeRuleNameID,
           ruleUsed: "USED",
           secondGrossSalary: maxActive,
@@ -1279,22 +1261,20 @@ const RacMatrixConfig = () => {
     const postData = {
       losRules: [
         {
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "1",
+          isSaudi: 0,
           lengthOfService: appLos,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: appLosRuleNameID,
           ruleUsed: "USED",
         },
         {
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "0",
+          isSaudi: 1,
           lengthOfService: resLos,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: resLosRuleNameID,
           ruleUsed: "USED",
         },
@@ -1341,21 +1321,19 @@ const RacMatrixConfig = () => {
       disposableIncomeRules: [
         {
           disposableIncome: appDisp,
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "1",
+          isSaudi: 0,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: appDispRuleNameID,
           ruleUsed: "USED",
         },
         {
           disposableIncome: resDisp,
-          error: "string",
           fieldType: "Employer",
-          isSaudi: "0",
+          isSaudi: 1,
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: resDispRuleNameID,
           ruleUsed: "USED",
         },
@@ -1402,10 +1380,9 @@ const RacMatrixConfig = () => {
       dependentsRules: [
         {
           dependents: dependents,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: depRuleNameID,
           ruleUsed: "USED",
         },
@@ -1452,10 +1429,9 @@ const RacMatrixConfig = () => {
       creditScoreRules: [
         {
           creditScore: cScore,
-          error: "string",
           fieldType: "Employer",
           racId: racID,
-          result: "string",
+          result: 1,
           ruleName: csRuleNameID,
           ruleUsed: "USED",
         },

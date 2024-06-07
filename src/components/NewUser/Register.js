@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import LoadingState from "../LoadingState";
 
 const Register = () => {
   const [registrationResultsData, setregistrationResultsData] = useState([]);
@@ -100,7 +101,7 @@ const Register = () => {
   if (registrationResultsData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

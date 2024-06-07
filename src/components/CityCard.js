@@ -127,13 +127,6 @@ const CityCard = ({ cityData, fetchData }) => {
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full">
         <div className="flex items-center justify-between mb-3">
           <div className="text-lg">City</div>
-          <button
-            onClick={addTags}
-            type="button"
-            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
         </div>
         <div className="flex gap-10">
           <div className="mb-3">
@@ -168,16 +161,36 @@ const CityCard = ({ cityData, fetchData }) => {
               placeholder="0.75"
             />
           </div>
+          <div className="relative mt-6">
+            <button
+              onClick={addTags}
+              type="button"
+              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              <PlusIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
         </div>
         <div className="flex flex-wrap">
           {tags.map((item, index) => {
             return (
               <>
-                <div className="bg-yellow-400 m-2 p-2 rounded-md flex items-center gap-2">
-                  <div>
-                    <button key={index} className="mr-1 cursor-auto">
-                      {item.city} | {item.points}
-                    </button>
+                <div className="bg-yellow-400 m-2 p-2 min-w-[30%] max-w-[35] rounded-md flex items-center justify-between gap-2">
+                  <div className="flex-grow flex items-center justify-between gap-2">
+                    <div className="flex w-[80%] items-start justify-start">
+                      <button
+                        key={index}
+                        className="mr-1 cursor-auto flex-grow text-left"
+                      >
+                        <span className="w-full">{item.city}</span>
+                      </button>
+                    </div>
+                    <p>|</p>
+                    <div className="flex w-[20%] justify-end">
+                      <span className="w-[70%] mr-2 text-center">
+                        {parseFloat(item.points).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                   <div>
                     <span

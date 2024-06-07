@@ -8,6 +8,7 @@ import Select from "react-select";
 import useGlobalConfig from "../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import LoadingState from "../LoadingState";
 
 const typeOptions = [
   { value: "LOAN", label: "Loan" },
@@ -37,7 +38,7 @@ const BareMinimumExp = () => {
   if (ExpenseData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

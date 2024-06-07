@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RacMatrixConfig from "./RacMatrixConfig";
 import { TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
+import LoadingState from "../LoadingState";
 const NewCreatedRAC = () => {
   const [RACData, setRACData] = useState([]);
   const [cloneRAC, setCloneRAC] = useState(false);
@@ -43,7 +44,7 @@ const NewCreatedRAC = () => {
     }
   }
   if (RACData.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
   const handleDelete = async (deleteURL) => {
     try {

@@ -3,13 +3,13 @@ import { Outlet, Link, useParams } from "react-router-dom";
 
 const CashLoan = () => {
   const [activeLink, setActiveLink] = useState(
-    "/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN"
+    "/product/cash-loan/loan-product-config/CASH_LOAN"
   );
   const { purl } = useParams();
   useEffect(() => {
     if (purl === "loan-product-config") {
       setActiveLink(
-        "/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN"
+        "/product/cash-loan/loan-product-config/CASH_LOAN"
       );
     }
   }, [purl]);
@@ -22,16 +22,16 @@ const CashLoan = () => {
       <div className="flex mb-5">
         <div className="border-r border-gray-400 px-2">
           <Link
-            to="/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN"
+            to="/product/cash-loan/loan-product-config/CASH_LOAN"
             className={`py-1 px-1.5  ${
               activeLink ===
-              "/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN"
+              "/product/cash-loan/loan-product-config/CASH_LOAN"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
             onClick={() =>
               setActiveLink(
-                "/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN"
+                "/product/cash-loan/loan-product-config/CASH_LOAN"
               )
             }
           >

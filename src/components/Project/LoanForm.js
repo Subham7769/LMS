@@ -5,6 +5,7 @@ import Select from "react-select";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
+import LoadingState from "../LoadingState";
 
 const LoanForm = () => {
   const [ProjectData, setProjectData] = useState([]);
@@ -3192,7 +3193,7 @@ const LoanForm = () => {
   };
 
   if (ProjectData.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
   return (
     <>

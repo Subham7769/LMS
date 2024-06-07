@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import useUserInfo from "../utils/useUserInfo";
+import LoadingState from "../LoadingState";
 
 const UserInfo = () => {
   const { userID } = useParams();
@@ -9,7 +10,7 @@ const UserInfo = () => {
   if (eligibilityData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

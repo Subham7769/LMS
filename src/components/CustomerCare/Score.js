@@ -1,3 +1,4 @@
+import LoadingState from "../LoadingState";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
 
 const Score = () => {
@@ -6,7 +7,7 @@ const Score = () => {
   if (CBDetilsData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

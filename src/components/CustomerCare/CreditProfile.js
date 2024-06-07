@@ -1,5 +1,6 @@
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
+import LoadingState from "../LoadingState";
 
 const CreditProfile = () => {
   const url = "/credit-profile";
@@ -9,7 +10,7 @@ const CreditProfile = () => {
   if (creditProfileData.length === 0 || loanOfferCalData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

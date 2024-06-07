@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import SubscriberInfoComponet from "./SubscriberInfoComponet";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
+import LoadingState from "../LoadingState";
 
 const SubscriberInfo = () => {
   const { subID } = useParams();
@@ -9,7 +10,7 @@ const SubscriberInfo = () => {
   if (kycInfo.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

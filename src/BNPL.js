@@ -3,13 +3,13 @@ import { Outlet, Link, useParams } from "react-router-dom";
 
 const BNPL = () => {
   const [activeLink, setActiveLink] = useState(
-    "/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN"
+    "/product/bnpl/loan-product-config/BNPL"
   );
   const { purl } = useParams();
   useEffect(() => {
     if (purl === "loan-product-config") {
       setActiveLink(
-        "/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN"
+        "/product/bnpl/loan-product-config/BNPL"
       );
     }
   }, [purl]);
@@ -22,16 +22,16 @@ const BNPL = () => {
       <div className="flex mb-5">
         <div className="border-r border-gray-400 px-2">
           <Link
-            to="/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN"
+            to="/product/bnpl/loan-product-config/BNPL"
             className={`py-1 px-1.5  ${
               activeLink ===
-              "/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN"
+              "/product/bnpl/loan-product-config/BNPL"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
             onClick={() =>
               setActiveLink(
-                "/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN"
+                "/product/bnpl/loan-product-config/BNPL"
               )
             }
           >

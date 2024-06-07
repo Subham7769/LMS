@@ -7,6 +7,7 @@ import {
 import useGlobalConfig from "../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import LoadingState from "../LoadingState";
 const RiskGradeCal = () => {
   const [RiskGradeDataNew, setRiskGradeDataNew] = useState([]);
   const [from, setFrom] = useState("");
@@ -17,7 +18,7 @@ const RiskGradeCal = () => {
   if (RiskGradeData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

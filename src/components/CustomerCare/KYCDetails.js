@@ -1,3 +1,4 @@
+import LoadingState from "../LoadingState";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
 
 const KYCDetails = () => {
@@ -7,7 +8,7 @@ const KYCDetails = () => {
   if (kycInfo.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

@@ -1,3 +1,4 @@
+import LoadingState from "../LoadingState";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
 import RejectionHistoryComp from "./RejectionHistoryComp";
 
@@ -7,7 +8,7 @@ const RejectionHistory = () => {
   if (rejectionHistoryData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

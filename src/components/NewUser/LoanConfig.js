@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import InstallmentInfoComp from "./InstallmentInfoComp";
+import LoadingState from "../LoadingState";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -2286,7 +2287,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
   if (loanConfigData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

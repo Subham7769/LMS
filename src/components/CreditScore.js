@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 import { RowChanged } from "./Toasts";
+import LoadingState from "./LoadingState";
 
 const options = [
   { value: "==", label: "==" },
@@ -222,7 +223,7 @@ const CreditScore = () => {
   };
 
   if (creditScoreData.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
   return (
     <>

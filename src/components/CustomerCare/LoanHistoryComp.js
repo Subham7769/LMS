@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import LoanInfoModal from "./LoanInfoModal";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
@@ -19,6 +19,23 @@ const loanStatusOptions = [
 ];
 
 const LoanHistoryComp = ({ loanHistoryData }) => {
+  const [leftPanelWidth, setLeftPanelWidth] = useState(0);
+  const leftPanelWidthRef = useRef(0);
+
+  useEffect(() => {
+    const leftPanel = document.getElementById("leftPanelId");
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const newWidth = entries[0].contentRect.width;
+      setLeftPanelWidth(newWidth); // Update state with padding
+      leftPanelWidthRef.current = newWidth; // Update reference
+    });
+
+    resizeObserver.observe(leftPanel);
+
+    return () => resizeObserver.disconnect(); // Cleanup on unmount
+  }, []);
+
   const [loansarr, setLoansarr] = useState(
     loanHistoryData.map((loan) => ({
       ...loan,
@@ -252,6 +269,7 @@ const LoanHistoryComp = ({ loanHistoryData }) => {
                       onClose={() => setShowModal(false)}
                       visible={showModal}
                       loanDetails={selectedLoan}
+                      mgLeft={leftPanelWidth}
                     />
                   </td>
                   <td className="whitespace-nowrap py-4 px-2 text-gray-500">

@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import Select from "react-select";
 import { Passed } from "../Toasts";
+import LoadingState from "../LoadingState";
 
 const maritalOptions = [
   { value: "Single", label: "Single" },
@@ -131,7 +132,7 @@ function FamilyDetails() {
   }, [clientData]);
 
   if (clientData.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
 
   return (

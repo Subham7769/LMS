@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "./Toasts";
 import { useParams } from "react-router-dom";
+import LoadingState from "./LoadingState";
 
 const BlockedEmployer = () => {
   const [name, setName] = useState("");
@@ -118,7 +119,7 @@ const BlockedEmployer = () => {
   }, []);
 
   if (data.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
   return (
     <>

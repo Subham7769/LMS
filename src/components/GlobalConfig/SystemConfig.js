@@ -4,6 +4,7 @@ import Select from "react-select";
 import useGlobalConfig from "../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import LoadingState from "../LoadingState";
 
 const productOptions = [
   { value: "Cash loan", label: "Cash Loan" },
@@ -27,7 +28,7 @@ const SystemConfig = () => {
   if (systemConfigData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

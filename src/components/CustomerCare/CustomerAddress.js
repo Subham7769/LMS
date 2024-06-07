@@ -1,3 +1,4 @@
+import LoadingState from "../LoadingState";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
 // import { useEffect, useState } from "react";
 
@@ -7,7 +8,7 @@ const CustomerAddress = () => {
   if (CBDetilsData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

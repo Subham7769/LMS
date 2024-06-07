@@ -51,15 +51,15 @@ const MenusInitial = [
     submenuItems: [
       {
         name: "Cash Loan",
-        href: "/product/cash-loan/loan-product-config/UNSECURED_RETAIL_LOAN",
+        href: "/product/cash-loan/loan-product-config/CASH_LOAN",
       },
       {
         name: "BNPL",
-        href: "/product/bnpl/loan-product-config/DIGITAL_INSTALLMENT_LOAN",
+        href: "/product/bnpl/loan-product-config/BNPL",
       },
       {
         name: "Overdraft",
-        href: "/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2",
+        href: "/product/overdraft/loan-product-config/OVERDRAFT",
       },
     ],
     isOpen: false,

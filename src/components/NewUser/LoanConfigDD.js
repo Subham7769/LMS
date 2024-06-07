@@ -3,6 +3,7 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
+import LoadingState from "../LoadingState";
 
 const loanTypeOptionsInitital = [
   { value: "Cash loan", label: "Cash Loan" },
@@ -116,7 +117,7 @@ const LoanConfigDD = () => {
   // if (registrationResultsData.length === 0) {
   //   return (
   //     <>
-  //       <div>Fetching Data</div>
+  //       <LoadingState />
   //     </>
   //   );
   // }

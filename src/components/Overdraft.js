@@ -3,13 +3,13 @@ import { Outlet, Link, useParams } from "react-router-dom";
 
 const Overdraft = () => {
   const [activeLink, setActiveLink] = useState(
-    "/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2"
+    "/product/overdraft/loan-product-config/OVERDRAFT"
   );
   const { purl } = useParams();
   useEffect(() => {
     if (purl === "loan-product-config") {
       setActiveLink(
-        "/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2"
+        "/product/overdraft/loan-product-config/OVERDRAFT"
       );
     }
   }, [purl]);
@@ -22,20 +22,20 @@ const Overdraft = () => {
       <div className="flex mb-5">
         <div className="border-r border-gray-400 px-2">
           <Link
-            to="/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2"
+            to="/product/overdraft/loan-product-config/OVERDRAFT"
             className={`py-1 px-1.5  ${
               activeLink ===
-              "/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2"
+              "/product/overdraft/loan-product-config/OVERDRAFT"
                 ? "text-white bg-indigo-500 rounded"
                 : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
             }`}
             onClick={() =>
               setActiveLink(
-                "/product/overdraft/loan-product-config/UNSECURED_RETAIL_LOAN_V2"
+                "/product/overdraft/loan-product-config/OVERDRAFT"
               )
             }
           >
-            Product Config
+            Product Configuration
           </Link>
         </div>
         <div className="border-r border-gray-400 px-2">

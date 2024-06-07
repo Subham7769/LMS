@@ -9,6 +9,7 @@ import Select from "react-select";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { RowChanged, Warning } from "./Toasts";
+import LoadingState from "./LoadingState";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -221,7 +222,7 @@ const LoanProductConfig = () => {
   };
 
   if (productConfigData?.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
   return (
     <>
@@ -239,7 +240,7 @@ const LoanProductConfig = () => {
               Eligible Customer Type
             </label>
             <Select
-              className="w-40"
+              className="w-[200px]"
               options={tenureOptions}
               // id={`tenureType_${item.id}`}
               name="eligibleCustomerType"
@@ -291,7 +292,7 @@ const LoanProductConfig = () => {
               RAC
             </label>
             <Select
-              className="w-44"
+              className="w-[300px]"
               options={racOptions}
               // id={`rac_${item.id}`}
               name="rac"
@@ -300,6 +301,15 @@ const LoanProductConfig = () => {
               onChange={(racselectedOption) => setRacType(racselectedOption)}
               isSearchable={false}
             />
+          </div>
+          <div className="relative mt-6">
+            <button
+              onClick={handleAddFields}
+              type="button"
+              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              <PlusIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
         </div>
         {notice && (
@@ -376,13 +386,6 @@ const LoanProductConfig = () => {
               isSearchable={false}
             />
           </div>
-          <button
-            onClick={handleAddFields}
-            type="button"
-            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
         </div>
         {inputList.map((item, index) => (
           <div key={index} className="flex gap-5 items-end mt-5">

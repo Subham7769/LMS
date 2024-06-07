@@ -7,6 +7,7 @@ import {
 import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "./Toasts";
+import LoadingState from "./LoadingState";
 
 const empOptions = [
   { value: "true", label: "true" },
@@ -173,7 +174,7 @@ const DebtBurdenConfig = () => {
   };
 
   if (rules.length === 0) {
-    return <>Fetching Data</>;
+    return <LoadingState />;
   }
   return (
     <>

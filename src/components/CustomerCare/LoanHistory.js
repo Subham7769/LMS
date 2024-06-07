@@ -1,5 +1,6 @@
 import LoanHistoryComp from "./LoanHistoryComp";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
+import LoadingState from "../LoadingState";
 
 const LoanHistory = () => {
   const url = "/loans";
@@ -7,7 +8,7 @@ const LoanHistory = () => {
   if (loanHistoryData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }

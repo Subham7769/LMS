@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useBorrowerInfo from "../utils/useBorrowerInfo";
+import LoadingState from "../LoadingState";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -58,7 +59,7 @@ const CreditInstrument = () => {
   if (CBDetilsData.length === 0) {
     return (
       <>
-        <div>Fetching Data</div>
+        <LoadingState />
       </>
     );
   }
