@@ -34,3 +34,18 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #6366f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #636363;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #636363;
+}

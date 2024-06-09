@@ -174,7 +174,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
           {tags.map((item, index) => {
             return (
               <>
-                <div className="bg-yellow-400 m-2 p-2 min-w-[30%] max-w-[35] rounded-md flex items-center justify-between gap-2">
+                <div className="bg-yellow-400 m-2 p-2 w-[40%] rounded-md flex items-center justify-between gap-2">
                   <div className="flex-grow flex items-center justify-between gap-2">
                     <div className="flex w-[80%] items-start justify-start">
                       <button
