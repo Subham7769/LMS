@@ -8,7 +8,7 @@ import makeAnimated from "react-select/animated";
 import { useParams } from "react-router-dom";
 import useRacRules from "../utils/useRACRules";
 import toast, { Toaster } from "react-hot-toast";
-import { NotToggled, RowChanged } from "../Toasts";
+import { RowChanged } from "../Toasts";
 
 const animatedComponents = makeAnimated();
 
@@ -458,12 +458,11 @@ const RacMatrixConfig = () => {
       if (availableAppGrossSalary && availableResGrossSalary) {
         setAppGrossSalary(availableAppGrossSalary);
         setResGrossSalary(availableResGrossSalary);
-        setGSoperator([
-          {
-            label: grossSalaryData.operators.grossSalaryOperator,
-            value: grossSalaryData.operators.grossSalaryOperator,
-          },
-        ]);
+        const formattedGSO = {
+          label: grossSalaryData.operators.grossSalaryOperator,
+          value: grossSalaryData.operators.grossSalaryOperator,
+        };
+        setGSoperator(formattedGSO);
         setAppGrossRuleNameID(grossSalaryData.rules[1].ruleName);
         setResGrossRuleNameID(grossSalaryData.rules[0].ruleName);
       }
@@ -477,12 +476,11 @@ const RacMatrixConfig = () => {
       if (availableAppSimahScore && availableResSimahScore) {
         setAppSimahScore(availableAppSimahScore);
         setResSimahScore(availableResSimahScore);
-        setSSoperator([
-          {
-            label: simahScoreData.operators.simahScoreOperator,
-            value: simahScoreData.operators.simahScoreOperator,
-          },
-        ]);
+        const formattedSSOperator = {
+          label: simahScoreData.operators.simahScoreOperator,
+          value: simahScoreData.operators.simahScoreOperator,
+        };
+        setSSoperator(formattedSSOperator);
         setAppSimahRuleNameID(simahScoreData.rules[1].ruleName);
         setResSimahRuleNameID(simahScoreData.rules[0].ruleName);
       }
@@ -496,18 +494,16 @@ const RacMatrixConfig = () => {
       if (availableMinActive && availableMaxActive) {
         setMinActive(availableMinActive);
         setMaxActive(availableMaxActive);
-        setMinActiveOperator([
-          {
-            label: activeData.operators.firstGrossSalaryOperator,
-            value: activeData.operators.firstGrossSalaryOperator,
-          },
-        ]);
-        setMaxActiveOperator([
-          {
-            label: activeData.operators.secondGrossSalaryOperator,
-            value: activeData.operators.secondGrossSalaryOperator,
-          },
-        ]);
+        const formattedMAOperator = {
+          label: activeData.operators.firstGrossSalaryOperator,
+          value: activeData.operators.firstGrossSalaryOperator,
+        };
+        setMinActiveOperator(formattedMAOperator);
+        const formattedMaxOperator = {
+          label: activeData.operators.secondGrossSalaryOperator,
+          value: activeData.operators.secondGrossSalaryOperator,
+        };
+        setMaxActiveOperator(formattedMaxOperator);
         setActiveRuleNameID(activeData.rules[0].ruleName);
       }
     }
@@ -520,12 +516,11 @@ const RacMatrixConfig = () => {
       if (availableAppLos && availableResLos) {
         setAppLos(availableAppLos);
         setResLos(availableResLos);
-        setLosOperator([
-          {
-            label: losData.operators.losOperator,
-            value: losData.operators.losOperator,
-          },
-        ]);
+        const formattedLOSoperator = {
+          label: losData.operators.losOperator,
+          value: losData.operators.losOperator,
+        };
+        setLosOperator(formattedLOSoperator);
         setAppLosRuleNameID(losData.rules[1].ruleName);
         setResLosRuleNameID(losData.rules[0].ruleName);
       }
@@ -539,12 +534,11 @@ const RacMatrixConfig = () => {
       if (availableAppDisp && availableResDisp) {
         setAppDisp(availableAppDisp);
         setResDisp(availableResDisp);
-        setDispOperator([
-          {
-            label: dispData.operators.disposableIncomeOperator,
-            value: dispData.operators.disposableIncomeOperator,
-          },
-        ]);
+        const formattedDispOperator = {
+          label: dispData.operators.disposableIncomeOperator,
+          value: dispData.operators.disposableIncomeOperator,
+        };
+        setDispOperator(formattedDispOperator);
         setAppDispRuleNameID(dispData.rules[1].ruleName);
         setResDispRuleNameID(dispData.rules[0].ruleName);
       }
@@ -556,12 +550,11 @@ const RacMatrixConfig = () => {
       setDepFlag(true);
       if (availableDep) {
         setDependents(availableDep);
-        setDepOperator([
-          {
-            label: depData.operators.dependentsOperator,
-            value: depData.operators.dependentsOperator,
-          },
-        ]);
+        const formattedDepOperator = {
+          label: depData.operators.dependentsOperator,
+          value: depData.operators.dependentsOperator,
+        };
+        setDepOperator(formattedDepOperator);
         setDepRuleNameID(depData.rules[0].ruleName);
       }
     }
@@ -572,12 +565,11 @@ const RacMatrixConfig = () => {
       setCsFlag(true);
       if (availableCS) {
         setCScore(availableCS);
-        setCSOperator([
-          {
-            label: csData.operators.creditScoreOperator,
-            value: csData.operators.creditScoreOperator,
-          },
-        ]);
+        const formattedCSoperator = {
+          label: csData.operators.creditScoreOperator,
+          value: csData.operators.creditScoreOperator,
+        };
+        setCSOperator(formattedCSoperator);
         setCsRuleNameID(csData.rules[0].ruleName);
       }
     }
@@ -2300,79 +2292,77 @@ const RacMatrixConfig = () => {
             </div>
           </div>
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            <div className="mb-3">
-              <label htmlFor="number" className="block">
-                Dependents
-              </label>
-              <div className="flex items-center gap-4 justify-between">
-                <div className="flex gap-4">
-                  <Select
-                    className="min-w-20"
-                    options={operatorOptions}
-                    value={depOperator}
-                    isSearchable={false}
-                    onChange={(selectedOption) =>
-                      setDepOperator(selectedOption)
-                    }
-                  />
-                  <input
-                    type="number"
-                    name="gsnumber1"
-                    value={dependents}
-                    onChange={(e) => setDependents(e.target.value)}
-                    className="block w-40 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder={"4000"}
-                  />
-                </div>
-                <div className="text-right">
-                  <button
-                    onClick={handleAddDependents}
-                    type="button"
-                    className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    <CheckCircleIcon
-                      className="-ml-0.5 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
+            <label htmlFor="number" className="block">
+              Dependents
+            </label>
+            <div className="flex items-center gap-4 justify-between">
+              <div className="flex gap-4">
+                <Select
+                  className="min-w-20"
+                  options={operatorOptions}
+                  value={depOperator}
+                  isSearchable={false}
+                  onChange={(selectedOption) => setDepOperator(selectedOption)}
+                />
+                <input
+                  type="number"
+                  name="gsnumber1"
+                  value={dependents}
+                  onChange={(e) => setDependents(e.target.value)}
+                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder={"4000"}
+                />
               </div>
             </div>
-            <div className="mb-3">
-              <label htmlFor="number" className="block">
-                Credit Score
-              </label>
-              <div className="flex items-center gap-4 justify-between">
-                <div className="flex gap-4">
-                  <Select
-                    className="min-w-20"
-                    options={operatorOptions}
-                    value={csOperator}
-                    isSearchable={false}
-                    onChange={(selectedOption) => setCSOperator(selectedOption)}
-                  />
-                  <input
-                    type="number"
-                    name="gsnumber1"
-                    value={cScore}
-                    onChange={(e) => setCScore(e.target.value)}
-                    className="block w-40 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder={"4000"}
-                  />
-                </div>
-                <div className="text-right">
-                  <button
-                    onClick={handleAddCscore}
-                    type="button"
-                    className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    <CheckCircleIcon
-                      className="-ml-0.5 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
+            <div className="text-right mt-5">
+              <button
+                onClick={handleAddDependents}
+                type="button"
+                className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <CheckCircleIcon
+                  className="-ml-0.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Save
+              </button>
+            </div>
+          </div>
+          <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            <label htmlFor="number" className="block">
+              Credit Score
+            </label>
+            <div className="flex items-center gap-4 justify-between">
+              <div className="flex gap-4">
+                <Select
+                  className="min-w-20"
+                  options={operatorOptions}
+                  value={csOperator}
+                  isSearchable={false}
+                  onChange={(selectedOption) => setCSOperator(selectedOption)}
+                />
+                <input
+                  type="number"
+                  name="gsnumber1"
+                  value={cScore}
+                  onChange={(e) => setCScore(e.target.value)}
+                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder={"4000"}
+                />
               </div>
+            </div>
+            <div className="text-right mt-5">
+              <button
+                onClick={handleAddCscore}
+                type="button"
+                className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <CheckCircleIcon
+                  className="-ml-0.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Save
+              </button>
             </div>
           </div>
         </div>
