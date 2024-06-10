@@ -2318,10 +2318,10 @@ const LoanConfig = ({ visible, loanType, amount }) => {
         </div>
         <div>
           <div className="flex gap-10 mb-5 border-b border-gray-300 pb-4">
-            <div className="flex gap-5 border-r border-gray-300 w-[236px] pr-10">
+            {/* <div className="flex gap-5 border-r border-gray-300 w-[236px] pr-10">
               <div>Cash Seed : </div>
               <div>{loanConfigData.profile.cashSeed ? "True" : "False"}</div>
-            </div>
+            </div> */}
             <div className="flex gap-5">
               <div>Net Cash TCL : </div>
               <div>{loanConfigData.profile.netCashTCL}</div>
@@ -2409,18 +2409,18 @@ const LoanConfig = ({ visible, loanType, amount }) => {
               </tr>
               <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Apr As Per Tenor Percent</div>
+                  <div className="w-[320px]">APR As Per Tenure Percent</div>
                 </td>
               </tr>
               <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Apr Per Month Percent</div>
+                  <div className="w-[320px]">APR Per Month Percent</div>
                 </td>
               </tr>
               <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
                 <td className="py-2  text-gray-500">
                   <div className="w-[320px]">
-                    Apr Without Fee Per Month Percent
+                    APR Without Fee Per Month Percent
                   </div>
                 </td>
               </tr>

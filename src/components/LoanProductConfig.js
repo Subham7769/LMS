@@ -229,7 +229,7 @@ const LoanProductConfig = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-center justify-between ">
-          <div className="text-lg">{productConfigData.productType}</div>
+          {/* <div className="text-lg">{productConfigData.productType}</div> */}
         </div>
         <div className="flex gap-5 border-b border-gray-300 pb-5">
           <div className="relative">

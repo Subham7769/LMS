@@ -109,9 +109,11 @@ const Register = () => {
     <table className="divide-y divide-gray-300">
       <thead>
         <tr className="divide-x divide-gray-200">
-          <th className="py-3.5 px-4 text-center">Product Name</th>
+          <th className="py-3.5 px-4 text-center">
+            <div className=" w-36">Product Name</div>
+          </th>
           <th className="py-3.5 px-4 text-center ">
-            Registration Eligibility Status
+            <div className="w-36">Registration Eligibility Status</div>
           </th>
           <th className="py-3.5 px-4 text-center ">Registered</th>
           <th className="py-3.5 px-4 text-center ">Comments</th>
@@ -141,9 +143,9 @@ const Register = () => {
                   {/* {console.log(register.alreadyRegistered)} */}
                 </div>
               </td>
-              <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-                <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                  {register.inEligibilityReasons}
+              <td className=" py-4 px-4 text-gray-500">
+                <div className=" mx-auto">
+                  {register.inEligibilityReasons?.join(", ")}
                 </div>
               </td>
             </tr>

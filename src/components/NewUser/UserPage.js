@@ -155,7 +155,7 @@ const UserPage = () => {
       </div>
       {/* --------------------------Search Bar------------------------------------- */}
       <div className="flex items-center gap-5 justify-center mt-10">
-        <div>User ID</div>
+        <div>Borrower ID</div>
         <div>
           <input
             type="number"

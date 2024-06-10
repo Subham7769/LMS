@@ -55,8 +55,8 @@ const UserInfo = () => {
                   </div>
                 </td>
                 <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-                  <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {eligible.inEligibilityReasons}
+                  <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {eligible.inEligibilityReasons?.join(", ")}
                   </div>
                 </td>
               </tr>

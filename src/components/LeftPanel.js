@@ -128,7 +128,7 @@ const MenusInitial = [
         current: false,
       },
       {
-        name: "System Config",
+        name: "System Configuration",
         href: "/global-config/system-config",
         current: false,
       },
