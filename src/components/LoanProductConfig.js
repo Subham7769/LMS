@@ -8,8 +8,9 @@ import {
 import Select from "react-select";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { RowChanged, Warning } from "./Toasts";
+import { Passed, RowChanged, Warning } from "./Toasts";
 import LoadingState from "./LoadingState";
+import useGlobalConfig from "./utils/useGlobalConfig";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -48,7 +49,38 @@ const LoanProductConfig = () => {
   );
   const [newInterest, setNewInterest] = useState("");
   const [newTenure, setNewTenure] = useState("");
-  const [delay, setDelay] = useState(false);
+  const [managementFee, setManagementFee] = useState("");
+  const [noOfEmis, setNoOfEmis] = useState("");
+  const [refinanced, setRefinanced] = useState(null);
+  const url = "project-system-configs";
+  const [systemData, setSystemData] = useState([]);
+  const systemConfigData = useGlobalConfig(url);
+
+  useEffect(() => {
+    if (systemConfigData.length > 0) {
+      const matchedData = systemConfigData.filter((data) => {
+        let normalizedProductType = productType.toLowerCase();
+        let normalizedProjectName = data.projectName.toLowerCase();
+        if (normalizedProductType === "cash_loan") {
+          normalizedProductType = "cash loan";
+        }
+
+        return normalizedProductType === normalizedProjectName;
+      });
+
+      if (matchedData.length > 0) {
+        setSystemData(matchedData);
+      }
+    }
+  }, [systemConfigData, productType]);
+
+  useEffect(() => {
+    if (systemData.length > 0) {
+      setManagementFee(systemData[0].managementFeeVat);
+      setNoOfEmis(systemData[0].numberOfEmisForEarlySettlement);
+      setRefinanced(systemData[0].refinancedWith);
+    }
+  }, [systemData]);
 
   useEffect(() => {
     getProductInfo();
@@ -221,6 +253,52 @@ const LoanProductConfig = () => {
     }
   };
 
+  async function handleBoth() {
+    await handleSystemChanges();
+    await handleSave();
+  }
+
+  async function handleSystemChanges() {
+    const token = localStorage.getItem("authToken");
+    const targetData = {
+      projectId: systemData.projectId,
+      projectName: systemData.projectName,
+      managementFeeVat: managementFee,
+      numberOfEmisForEarlySettlement: noOfEmis,
+      refinancedWith: refinanced,
+      triggerValue: systemData.triggerValue,
+    };
+    try {
+      const response = await fetch(
+        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/project-system-configs",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(targetData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
+        console.log(`Data for ${systemData.projectName} saved successfully`);
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Saved Successfully"}
+            message={`The item ${systemData.projectName} has been updated`}
+          />
+        ));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   if (productConfigData?.length === 0) {
     return <LoadingState />;
   }
@@ -302,15 +380,64 @@ const LoanProductConfig = () => {
               isSearchable={false}
             />
           </div>
-          <div className="relative mt-6">
-            <button
-              onClick={handleAddFields}
-              type="button"
-              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          <div className="relative">
+            <label
+              htmlFor={`managementFeeVat`}
+              className=" px-1 text-xs text-gray-900"
             >
-              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
+              Management Fee Vat
+            </label>
+            <input
+              type="text"
+              name="managementFeeVat"
+              value={managementFee}
+              onChange={(e) => setManagementFee(e.target.value)}
+              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="15%"
+            />
           </div>
+          <div className="relative">
+            <label
+              htmlFor={`numberOfEmisForEarlySettlement`}
+              className=" px-1 text-xs text-gray-900"
+            >
+              Number Of Emis For Early Settlement
+            </label>
+            <input
+              type="number"
+              name="numberOfEmisForEarlySettlement"
+              value={noOfEmis}
+              onChange={(e) => setNoOfEmis(e.target.value)}
+              className="block w-60 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="3"
+            />
+          </div>
+          <div className="relative mt-1">
+            <label
+              htmlFor={`refinaceWith`}
+              className=" text-gray-900 block text-xs text-center w-24 mb-2"
+            >
+              Refinanced With
+            </label>
+            <div className="flex h-6 justify-center">
+              <input
+                id={`refinancedWith`}
+                value={refinanced}
+                checked={refinanced}
+                onChange={(e) => setRefinanced(e.target.checked)}
+                name="refinancedWith"
+                type="checkbox"
+                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleBoth}
+            className="w-9 h-9 rounded-md bg-indigo-600 p-2 ml-4 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          >
+            <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
         </div>
         {notice && (
           <p className="text-red-500 font-bold text-sm text-start mt-2">
@@ -385,6 +512,15 @@ const LoanProductConfig = () => {
               }}
               isSearchable={false}
             />
+          </div>
+          <div className="relative mt-6">
+            <button
+              onClick={handleAddFields}
+              type="button"
+              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              <PlusIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
         </div>
         {inputList.map((item, index) => (
