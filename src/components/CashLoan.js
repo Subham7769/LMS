@@ -1,18 +1,31 @@
-import { useEffect, useState } from "react";
-import { Outlet, Link, useParams } from "react-router-dom";
+import { useLocation, Link, Outlet } from "react-router-dom";
 
 const CashLoan = () => {
-  const [activeLink, setActiveLink] = useState(
-    "/product/cash-loan/loan-product-config/CASH_LOAN"
-  );
-  const { purl } = useParams();
-  useEffect(() => {
-    if (purl === "loan-product-config") {
-      setActiveLink(
-        "/product/cash-loan/loan-product-config/CASH_LOAN"
-      );
-    }
-  }, [purl]);
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const tabs = [
+    {
+      path: "/product/cash-loan/loan-product-config/CASH_LOAN",
+      label: "Product Config",
+    },
+    {
+      path: "/product/cash-loan/credit-score/183c8ec2-33fd-4388-8c46-695098bdbd74",
+      label: "Credit Score",
+    },
+    {
+      path: "/product/cash-loan/debt-burden-config",
+      label: "Debt Burden Config",
+    },
+    {
+      path: "/product/cash-loan/credit-policy/183c8ec2-33fd-4388-8c46-695098bdbd74",
+      label: "Credit Policy",
+    },
+    {
+      path: "/product/cash-loan/blocked-employer/183c8ec2-33fd-4388-8c46-695098bdbd74",
+      label: "Blocked Employer",
+    },
+  ];
 
   return (
     <div className="mt-4">
@@ -20,95 +33,22 @@ const CashLoan = () => {
         Name: <b>Cash Loan</b>
       </h2>
       <div className="flex mb-5">
-        <div className="border-r border-gray-400 px-2">
-          <Link
-            to="/product/cash-loan/loan-product-config/CASH_LOAN"
-            className={`py-1 px-1.5  ${
-              activeLink ===
-              "/product/cash-loan/loan-product-config/CASH_LOAN"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() =>
-              setActiveLink(
-                "/product/cash-loan/loan-product-config/CASH_LOAN"
-              )
-            }
-          >
-            Product Config
-          </Link>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <Link
-            to="/product/cash-loan/credit-score/183c8ec2-33fd-4388-8c46-695098bdbd74"
-            className={`py-1 px-1.5 rounded ${
-              activeLink ===
-              "/product/cash-loan/credit-score/183c8ec2-33fd-4388-8c46-695098bdbd74"
-                ? "text-white bg-indigo-500"
-                : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() =>
-              setActiveLink(
-                "/product/cash-loan/credit-score/183c8ec2-33fd-4388-8c46-695098bdbd74"
-              )
-            }
-          >
-            Credit Score
-          </Link>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <Link
-            to="/product/cash-loan/debt-burden-config"
-            className={`py-1 px-1.5 rounded ${
-              activeLink === "/product/cash-loan/debt-burden-config"
-                ? "text-white bg-indigo-500"
-                : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() =>
-              setActiveLink("/product/cash-loan/debt-burden-config")
-            }
-          >
-            Debt Burden Config
-          </Link>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <Link
-            to="/product/cash-loan/credit-policy/183c8ec2-33fd-4388-8c46-695098bdbd74"
-            className={`py-1 px-1.5 rounded ${
-              activeLink ===
-              "/product/cash-loan/credit-policy/183c8ec2-33fd-4388-8c46-695098bdbd74"
-                ? "text-white bg-indigo-500"
-                : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() =>
-              setActiveLink(
-                "/product/cash-loan/credit-policy/183c8ec2-33fd-4388-8c46-695098bdbd74"
-              )
-            }
-          >
-            Credit Policy
-          </Link>
-        </div>
-        <div className="px-2">
-          <Link
-            to="/product/cash-loan/blocked-employer/183c8ec2-33fd-4388-8c46-695098bdbd74"
-            className={`py-1 px-1.5 rounded ${
-              activeLink ===
-              "/product/cash-loan/blocked-employer/183c8ec2-33fd-4388-8c46-695098bdbd74"
-                ? "text-white bg-indigo-500"
-                : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() =>
-              setActiveLink(
-                "/product/cash-loan/blocked-employer/183c8ec2-33fd-4388-8c46-695098bdbd74"
-              )
-            }
-          >
-            Blocked Employer
-          </Link>
-        </div>
+        {tabs.map((tab) => (
+          <div className="border-r border-gray-400 px-2" key={tab.path}>
+            <Link
+              to={tab.path}
+              className={`py-1 px-1.5 ${
+                currentPath === tab.path
+                  ? "text-white bg-indigo-500 rounded"
+                  : "text-indigo-500 hover:border-b hover:border-gray-400 hover:text-indigo-700 hover:font-medium"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          </div>
+        ))}
       </div>
-      <div className="">
+      <div>
         <Outlet />
       </div>
     </div>

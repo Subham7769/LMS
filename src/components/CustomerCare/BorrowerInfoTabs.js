@@ -1,121 +1,64 @@
 import { useState } from "react";
-import { Outlet, Link, useParams } from "react-router-dom";
+import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 
 const BorrowerInfoTabs = () => {
   const { subID } = useParams();
-  const [activeLink, setActiveLink] = useState(
-    "/borrower/" + subID + "/personal-info"
-  );
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const tabs = [
+    { path: `/borrower/${subID}/personal-info`, label: "Personal Info" },
+    { path: `/borrower/${subID}/credit-profile`, label: "Credit Profile" },
+    { path: `/borrower/${subID}/kyc`, label: "KYC Details" },
+    {
+      path: `/borrower/${subID}/loanNpayment`,
+      label: "Loan & Payment History",
+    },
+    {
+      path: `/borrower/${subID}/rejection-history`,
+      label: "Rejection History",
+    },
+    {
+      path: `/borrower/${subID}/credit-bureau-details`,
+      label: "Credit Bureau Details",
+    },
+    { path: `/user/${subID}/user-info`, label: "Back to User Page" },
+  ];
 
   return (
     <div className="mt-4">
       <div className="flex justify-between">
         <div className="flex mb-10">
-          <div className="border-r border-gray-400 px-2">
-            <Link
-              to={"/borrower/" + subID + "/personal-info"}
-              className={`py-1 px-1.5  ${
-                activeLink === "/borrower/" + subID + "/personal-info"
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-              }`}
-              onClick={() =>
-                setActiveLink("/borrower/" + subID + "/personal-info")
-              }
-            >
-              Personal Info
-            </Link>
-          </div>
-          <div className="border-r border-gray-400 px-2">
-            <Link
-              to={"/borrower/" + subID + "/credit-profile"}
-              className={`py-1 px-1.5 ${
-                activeLink === "/borrower/" + subID + "/credit-profile"
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-              }`}
-              onClick={() =>
-                setActiveLink("/borrower/" + subID + "/credit-profile")
-              }
-            >
-              Credit Profile
-            </Link>
-          </div>
-          <div className="border-r border-gray-400 px-2">
-            <Link
-              to={"/borrower/" + subID + "/kyc"}
-              className={`py-1 px-1.5 ${
-                activeLink === "/borrower/" + subID + "/kyc"
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-              }`}
-              onClick={() => setActiveLink("/borrower/" + subID + "/kyc")}
-            >
-              KYC Details
-            </Link>
-          </div>
-          <div className="border-r border-gray-400 px-2">
-            <Link
-              to={"/borrower/" + subID + "/loanNpayment"}
-              className={`py-1 px-1.5 ${
-                activeLink === "/borrower/" + subID + "/loanNpayment"
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-              }`}
-              onClick={() =>
-                setActiveLink("/borrower/" + subID + "/loanNpayment")
-              }
-            >
-              Loan & Payment History
-            </Link>
-          </div>
-          <div className="border-r border-gray-400 px-2">
-            <Link
-              to={"/borrower/" + subID + "/rejection-history"}
-              className={`py-1 px-1.5 ${
-                activeLink === "/borrower/" + subID + "/rejection-history"
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-              }`}
-              onClick={() =>
-                setActiveLink("/borrower/" + subID + "/rejection-history")
-              }
-            >
-              Rejection History
-            </Link>
-          </div>
-          <div className=" px-2">
-            <Link
-              to={"/borrower/" + subID + "/credit-bureau-details"}
-              className={`py-1 px-1.5 ${
-                activeLink === "/borrower/" + subID + "/credit-bureau-details"
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-              }`}
-              onClick={() =>
-                setActiveLink("/borrower/" + subID + "/credit-bureau-details")
-              }
-            >
-              Credit Bureau Details
-            </Link>
-          </div>
+          {tabs.slice(0, 6).map((tab) => (
+            <div className="border-r border-gray-400 px-2" key={tab.path}>
+              <Link
+                to={tab.path}
+                className={`py-1 px-1.5 ${
+                  currentPath === tab.path
+                    ? "text-white bg-indigo-500 rounded"
+                    : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+                }`}
+              >
+                {tab.label}
+              </Link>
+            </div>
+          ))}
         </div>
-        <div className=" px-2">
+        <div className="px-2">
           <Link
-            to={"/user/" + subID + "/user-info"}
+            to={tabs[6].path}
             className={`bg-gray-500 rounded py-1 px-1.5 ${
-              activeLink === "/user/" + subID + "/user-info"
+              currentPath === tabs[6].path
                 ? "text-white bg-indigo-500 rounded"
                 : "text-white hover:border-b hover:border-red-600 hover:font-medium"
             }`}
-            onClick={() => setActiveLink("/user/" + subID + "/user-info")}
           >
-            Back to User Page
+            {tabs[6].label}
           </Link>
         </div>
       </div>
 
-      <div className="">
+      <div>
         <Outlet />
       </div>
     </div>
