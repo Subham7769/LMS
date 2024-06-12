@@ -140,7 +140,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     };
 
     fetch(
-      "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/finance-amount-with-tenure-rule",
+      "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/finance-amount-with-tenure-rule",
       {
         method: "POST",
         headers: {

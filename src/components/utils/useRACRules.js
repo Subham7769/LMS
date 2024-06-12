@@ -14,7 +14,7 @@ const useRacRules = (url1, url2) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/rac/" +
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" +
           racID +
           url1 +
           url2,

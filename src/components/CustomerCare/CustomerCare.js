@@ -46,7 +46,7 @@ const CustomerCare = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/borrowers/" +
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
           borrowerID,
         {
           method: "GET",

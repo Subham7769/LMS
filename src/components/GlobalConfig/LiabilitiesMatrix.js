@@ -70,7 +70,7 @@ const LiabilitiesMatrix = () => {
 
     try {
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
         {
           method: "POST",
           headers: {
@@ -95,7 +95,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -169,7 +169,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -269,7 +269,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -336,7 +336,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -386,7 +386,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {

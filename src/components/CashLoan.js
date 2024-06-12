@@ -1,28 +1,29 @@
-import { useLocation, Link, Outlet } from "react-router-dom";
+import { useLocation, Link, Outlet, useParams } from "react-router-dom";
 
 const CashLoan = () => {
   const location = useLocation();
+  const { productType, projectId } = useParams();
   const currentPath = location.pathname;
 
   const tabs = [
     {
-      path: "/product/cash-loan/loan-product-config/CASH_LOAN",
+      path: "/product/" + productType + "/loan-product-config/" + projectId,
       label: "Product Config",
     },
     {
-      path: "/product/cash-loan/credit-score/183c8ec2-33fd-4388-8c46-695098bdbd74",
+      path: "/product/" + productType + "/credit-score/" + projectId,
       label: "Credit Score",
     },
     {
-      path: "/product/cash-loan/debt-burden-config",
+      path: "/product/" + productType + "/debt-burden-config/" + projectId,
       label: "Debt Burden Config",
     },
     {
-      path: "/product/cash-loan/credit-policy/183c8ec2-33fd-4388-8c46-695098bdbd74",
+      path: "/product/" + productType + "/credit-policy/" + projectId,
       label: "Credit Policy",
     },
     {
-      path: "/product/cash-loan/blocked-employer/183c8ec2-33fd-4388-8c46-695098bdbd74",
+      path: "/product/" + productType + "/blocked-employer/" + projectId,
       label: "Blocked Employer",
     },
   ];
@@ -30,7 +31,7 @@ const CashLoan = () => {
   return (
     <div className="mt-4">
       <h2 className="mb-5">
-        Name: <b>Cash Loan</b>
+        Name: <b>{productType.replace(/_/g, " ")}</b>
       </h2>
       <div className="flex mb-5">
         {tabs.map((tab) => (

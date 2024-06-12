@@ -29,8 +29,8 @@ function FamilyDetails() {
   const { userID } = useParams();
   const token = localStorage.getItem("authToken");
   const url =
-    "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/borrowers/";
-  const url2 = `https://api-dev.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/${userID}/borrower-profile`;
+    "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/";
+  const url2 = `http://10.10.10.70:32014/carbon-registration-service/xcbe/api/v1/borrowers/${userID}/borrower-profile`;
 
   const fetchData = async () => {
     try {

@@ -33,7 +33,7 @@ const Repayment = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-payment-service/xcbe/api/v1/borrowers/" +
+        "http://10.10.10.70:32014/carbon-payment-service/xcbe/api/v1/borrowers/" +
           userID +
           "/backend-repayments",
         {
@@ -77,7 +77,7 @@ const Repayment = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
+        "http://10.10.10.70:32014/carbon-offers-service/xcbe/api/v1/borrowers/" +
           userID +
           "/loans/closure",
         {

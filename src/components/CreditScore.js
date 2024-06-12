@@ -59,7 +59,7 @@ const CreditScore = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/credit-score-equation/" +
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/credit-score-equation/" +
           projectId,
         {
           method: "GET",
@@ -200,7 +200,7 @@ const CreditScore = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/credit-score-equation/" +
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/credit-score-equation/" +
           projectId,
         {
           method: "PUT",

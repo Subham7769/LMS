@@ -1,18 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const useRACInfo = () => {
-  const [RACData, setRACData] = useState([]);
+const useProductInfo = () => {
+  const [ProductData, setProductData] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    getRACInfo();
+    getProductInfo();
   }, []);
 
-  async function getRACInfo() {
+  async function getProductInfo() {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/loan-products",
         {
           method: "GET",
           headers: {
@@ -27,21 +27,23 @@ const useRACInfo = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      const racDetails = await data.json();
+      const ProductDetails = await data.json();
 
-      // Transform the RAC data to the desired format
-      const formattedRACData = racDetails.map(({ name, racId }) => ({
-        name,
-        href: "/newrac/" + racId,
-      }));
+      // Transform the Product data to the desired format
+      const formattedProductData = ProductDetails.map(
+        ({ productType, projectId }) => ({
+          name: productType.replace(/_/g, " "),
+          href: "/product/" + productType + "/loan-product-config/" + projectId,
+        })
+      );
 
-      setRACData(formattedRACData);
-      // console.log(RACData);
+      setProductData(formattedProductData);
+      // console.log(ProductData);
     } catch (error) {
       console.error(error);
     }
   }
-  return RACData;
+  return ProductData;
 };
 
-export default useRACInfo;
+export default useProductInfo;

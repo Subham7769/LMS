@@ -45,7 +45,7 @@ const LengthofService = ({
 
   const token = localStorage.getItem("authToken");
   const API_URL =
-    "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/length-of-service-point-rule";
+    "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/length-of-service-point-rule";
   const handleAddFields = async () => {
     const token = localStorage.getItem("authToken");
     const postData = {
@@ -67,7 +67,7 @@ const LengthofService = ({
 
     try {
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/length-of-service-point-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/length-of-service-point-rule",
         {
           method: "POST",
           headers: {
@@ -144,7 +144,7 @@ const LengthofService = ({
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/length-of-service-point-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/length-of-service-point-rule",
         {
           method: "PUT",
           headers: {

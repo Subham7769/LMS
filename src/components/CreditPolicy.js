@@ -14,6 +14,7 @@ import CityCard from "./CityCard";
 import OccupationCard from "./OccupationCard";
 import { Passed } from "./Toasts";
 import toast, { Toaster } from "react-hot-toast";
+import LoadingState from "./LoadingState";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -85,7 +86,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/all-rule-policy",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/all-rule-policy",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -181,7 +182,7 @@ const CreditPolicy = () => {
 
     try {
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/risk-based-pricing-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/risk-based-pricing-rule",
         {
           method: "POST",
           headers: {
@@ -249,7 +250,7 @@ const CreditPolicy = () => {
   const handlePost = async (newEntry) => {
     try {
       const response = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/risk-based-pricing-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/risk-based-pricing-rule",
         {
           method: "POST",
           headers: {
@@ -281,7 +282,7 @@ const CreditPolicy = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/risk-based-pricing-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/risk-based-pricing-rule",
         {
           method: "PUT",
           headers: {
@@ -312,7 +313,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/risk-based-pricing-equation-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/risk-based-pricing-equation-rule",
         {
           method: "PUT",
           headers: {
@@ -344,6 +345,9 @@ const CreditPolicy = () => {
       console.error("Error updating data:", error.message);
     }
   };
+  if (allRuleData.length === 0) {
+    <LoadingState />;
+  }
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+// import Logo from "../assets/img/xurti-logo.png";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
   AdjustmentsHorizontalIcon,
@@ -11,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import useRACInfo from "./utils/useRACInfo";
 import useAllProjectInfo from "./utils/useAllProjectInfo";
+import useProductInfo from "./utils/useProductInfo";
 
 const MenusInitial = [
   { title: "Home", href: "/", icon: HomeIcon, count: "5", current: true },
@@ -126,11 +128,6 @@ const MenusInitial = [
         href: "/global-config/notification-text",
         current: false,
       },
-      {
-        name: "System Configuration",
-        href: "/global-config/system-config",
-        current: false,
-      },
     ],
     isOpen: false,
   },
@@ -170,6 +167,7 @@ const LeftPanel = () => {
       })
     );
   }, [RACDataInfo]);
+
   const ProjectDataInfo = useAllProjectInfo();
   useEffect(() => {
     setMenus((prevMenus) =>
@@ -184,6 +182,21 @@ const LeftPanel = () => {
       })
     );
   }, [ProjectDataInfo]);
+
+  const ProductDataInfo = useProductInfo();
+  useEffect(() => {
+    setMenus((prevMenus) =>
+      prevMenus.map((menu) => {
+        if (menu.title === "Product") {
+          return {
+            ...menu,
+            submenuItems: ProductDataInfo,
+          };
+        }
+        return menu;
+      })
+    );
+  }, [ProductDataInfo]);
 
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
@@ -209,6 +222,14 @@ const LeftPanel = () => {
           open ? "w-64" : "w-16"
         }`}
       >
+        <div className="flex h-16 shrink-0 items-center">
+          <img
+            className={`h-8 ${open ? "w-auto" : "w-10 h-auto"}`}
+            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            // src={Logo}
+            alt="Your Company"
+          />
+        </div>
         <button onClick={toggleSidebar} className="flex justify-end">
           <div className="-right-3 absolute top-60">
             <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">

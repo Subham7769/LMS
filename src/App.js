@@ -50,7 +50,6 @@ import UserInfoTabs from "./components/NewUser/UserInfoTabs";
 import UserInfo from "./components/NewUser/UserInfo";
 import Disbursement from "./components/NewUser/Disbursement";
 import Register from "./components/NewUser/Register";
-import LoanConfig from "./components/NewUser/LoanConfig";
 import InstallmentInfoComp from "./components/NewUser/InstallmentInfoComp";
 import LoanConfigDD from "./components/NewUser/LoanConfigDD";
 import BlockedEmployer from "./components/BlockedEmployer";
@@ -172,7 +171,7 @@ function App() {
           element: <Product />,
         },
         {
-          path: "/product/cash-loan",
+          path: "/product/:productType",
           element: <CashLoan />,
           children: [
             {
@@ -180,11 +179,11 @@ function App() {
               element: <CreditScore />,
             },
             {
-              path: ":purl/:productType",
+              path: "loan-product-config/:projectId",
               element: <LoanProductConfig />,
             },
             {
-              path: "debt-burden-config",
+              path: "debt-burden-config/:projectId",
               element: <DebtBurdenConfig />,
             },
             {

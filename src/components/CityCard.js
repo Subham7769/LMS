@@ -43,7 +43,7 @@ const CityCard = ({ cityData, fetchData }) => {
 
       try {
         const postResponse = await fetch(
-          "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/city-point-rule",
+          "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/city-point-rule",
           {
             method: "POST",
             headers: {

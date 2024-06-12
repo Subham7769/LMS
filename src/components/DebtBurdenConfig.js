@@ -23,7 +23,7 @@ const operatorOptions = [
 ];
 
 const API_URL =
-  "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/debit-burden-cab-celling";
+  "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling";
 const authToken = localStorage.getItem("authToken");
 
 const DebtBurdenConfig = () => {

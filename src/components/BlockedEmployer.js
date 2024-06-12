@@ -14,7 +14,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/block-employers-rule",
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/block-employers-rule",
         {
           method: "GET",
           headers: {

@@ -38,7 +38,7 @@ const RiskGradeCal = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/risk-gradings/add",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/risk-gradings/add",
         {
           method: "PUT",
           headers: {
@@ -64,7 +64,7 @@ const RiskGradeCal = () => {
 
       // If the POST was successful, make a GET request to fetch the updated data
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/risk-gradings",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/risk-gradings",
         {
           method: "GET",
           headers: {
@@ -169,7 +169,7 @@ const RiskGradeCal = () => {
 
       // After deletion, fetch the updated data list
       const getResponse = await fetch(
-        "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/risk-gradings",
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/risk-gradings",
         {
           method: "GET",
           headers: {

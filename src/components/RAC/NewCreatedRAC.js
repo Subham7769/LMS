@@ -19,7 +19,7 @@ const NewCreatedRAC = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/rac/id/" +
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/id/" +
           racID,
         {
           method: "GET",
@@ -51,7 +51,7 @@ const NewCreatedRAC = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/rac//${deleteURL}`,
+        `http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac//${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -81,7 +81,7 @@ const NewCreatedRAC = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/rac/" +
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" +
           racID +
           "/clone/" +
           cloneRACName,
@@ -114,7 +114,7 @@ const NewCreatedRAC = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/rac/" +
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" +
           racID +
           "/name/" +
           updateRACName,

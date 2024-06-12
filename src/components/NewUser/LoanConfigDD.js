@@ -84,7 +84,7 @@ const LoanConfigDD = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+        "http://10.10.10.70:32014/carbon-registration-service/xcbe/api/v1/borrowers/" +
           userID,
         {
           method: "PUT",
@@ -137,7 +137,7 @@ const LoanConfigDD = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
+        "http://10.10.10.70:32014/carbon-offers-service/xcbe/api/v1/borrowers/" +
           userID +
           "/loans/configurations",
         {

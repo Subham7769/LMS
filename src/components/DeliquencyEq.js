@@ -44,7 +44,7 @@ const DeliquencyEq = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-dev.lmscarbon.com/carbon-product-service/xtracash/rules/delinquency-rule/" +
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/delinquency-rule/" +
           racID,
         {
           method: "PUT",
