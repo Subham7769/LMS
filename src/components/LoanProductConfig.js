@@ -55,6 +55,9 @@ const LoanProductConfig = () => {
   const url = "project-system-configs";
   const [systemData, setSystemData] = useState([]);
   const systemConfigData = useGlobalConfig(url);
+  const [projectId, setProjectId] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [triggerValue, setTriggerValue] = useState("");
 
   useEffect(() => {
     if (systemConfigData.length > 0) {
@@ -79,6 +82,9 @@ const LoanProductConfig = () => {
       setManagementFee(systemData[0].managementFeeVat);
       setNoOfEmis(systemData[0].numberOfEmisForEarlySettlement);
       setRefinanced(systemData[0].refinancedWith);
+      setProjectId(systemData[0].projectId);
+      setProjectName(systemData[0].projectName);
+      setTriggerValue(systemData[0].triggerValue);
     }
   }, [systemData]);
 
@@ -261,13 +267,14 @@ const LoanProductConfig = () => {
   async function handleSystemChanges() {
     const token = localStorage.getItem("authToken");
     const targetData = {
-      projectId: systemData.projectId,
-      projectName: systemData.projectName,
+      projectId: projectId,
+      projectName: projectName,
       managementFeeVat: managementFee,
       numberOfEmisForEarlySettlement: noOfEmis,
       refinancedWith: refinanced,
-      triggerValue: systemData.triggerValue,
+      triggerValue: triggerValue,
     };
+    console.log(targetData);
     try {
       const response = await fetch(
         "https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/project-system-configs",
@@ -284,13 +291,13 @@ const LoanProductConfig = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       } else {
-        console.log(`Data for ${systemData.projectName} saved successfully`);
+        console.log(`Data for ${projectName} saved successfully`);
         toast.custom((t) => (
           <Passed
             t={t}
             toast={toast}
             title={"Saved Successfully"}
-            message={`The item ${systemData.projectName} has been updated`}
+            message={`The item ${projectName} has been updated`}
           />
         ));
       }
@@ -318,7 +325,7 @@ const LoanProductConfig = () => {
               Eligible Customer Type
             </label>
             <Select
-              className="w-[200px]"
+              className="w-[180px]"
               options={tenureOptions}
               // id={`tenureType_${item.id}`}
               name="eligibleCustomerType"
@@ -336,32 +343,12 @@ const LoanProductConfig = () => {
             <input
               type="text"
               name="fee"
-              // id={`minCredit_${item.id}`}
               value={fee}
               onChange={(e) => setFee(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-28 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="1%"
             />
           </div>
-          {/* <div className="relative">
-            <label
-              htmlFor="interestPeriodType"
-              className=" bg-white px-1 text-xs text-gray-900 gray-"
-            >
-              PER
-            </label>
-            <Select
-              className="w-36"
-              options={options}
-              // id={`per_${item.id}`}
-              name="interestPeriodType"
-              value={interestPeriodType}
-              onChange={(interestPeriodType) => {
-                setInterestPeriodType(interestPeriodType);
-              }}
-              isSearchable={false}
-            />
-          </div> */}
           <div className="relative">
             <label
               htmlFor="rac"
@@ -370,12 +357,10 @@ const LoanProductConfig = () => {
               RAC
             </label>
             <Select
-              className="w-[300px]"
+              className="w-[240px]"
               options={racOptions}
-              // id={`rac_${item.id}`}
               name="rac"
               value={racType}
-              // onChange={(newValue) => handleDDChange("rac", newValue, index)}
               onChange={(racselectedOption) => setRacType(racselectedOption)}
               isSearchable={false}
             />
@@ -392,7 +377,7 @@ const LoanProductConfig = () => {
               name="managementFeeVat"
               value={managementFee}
               onChange={(e) => setManagementFee(e.target.value)}
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="15%"
             />
           </div>
@@ -408,7 +393,7 @@ const LoanProductConfig = () => {
               name="numberOfEmisForEarlySettlement"
               value={noOfEmis}
               onChange={(e) => setNoOfEmis(e.target.value)}
-              className="block w-60 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-56 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="3"
             />
           </div>
