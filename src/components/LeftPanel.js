@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import Logo from "../assets/img/xurti-logo.png";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
   AdjustmentsHorizontalIcon,
@@ -210,14 +209,6 @@ const LeftPanel = () => {
           open ? "w-64" : "w-16"
         }`}
       >
-        <div className="flex h-16 shrink-0 items-center">
-          <img
-            className={`h-8 ${open ? "w-auto" : "w-10 h-auto"}`}
-            // src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            src={Logo}
-            alt="Your Company"
-          />
-        </div>
         <button onClick={toggleSidebar} className="flex justify-end">
           <div className="-right-3 absolute top-60">
             <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
