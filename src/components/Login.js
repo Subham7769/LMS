@@ -13,6 +13,8 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [buttonText, setButtonText] = useState("Login");
   const images = [BG, BG1, BG2, BG3, BG4, BG5];
   const navigate = useNavigate();
 
@@ -22,6 +24,7 @@ const Login = () => {
 
   // Function to handle login
   const login = (username, password) => {
+    setButtonText("Validating User");
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,20 +32,26 @@ const Login = () => {
     };
 
     fetch(
-      "http://10.10.10.70:32014//carbon-product-service/xcbe/api/v1/users/login",
+      "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/users/login",
       requestOptions
     )
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          // Handle non-OK responses
+          return response.json().then((errorData) => {
+            setButtonText(errorData.message || "Try Again!");
+            throw new Error(errorData.message || "Failed to login");
+          });
         }
         const authToken = response.headers.get("Authorization");
-        const token = authToken.replace("Bearer ", "");
-        console.log(token);
-        localStorage.setItem("authToken", token);
+        const token = authToken ? authToken.replace("Bearer ", "") : null;
+        if (token) {
+          localStorage.setItem("authToken", token);
+        }
         return response.json();
       })
       .then((data) => {
+        setButtonText("Validated!");
         console.log("Login Successful:", data);
         localStorage.setItem("username", username);
         setTimeout(() => {
@@ -50,7 +59,9 @@ const Login = () => {
         }, 0);
       })
       .catch((error) => {
-        console.error("Failed to login:", error);
+        setButtonText("Try Again!");
+        console.error("Failed to login:", error.message);
+        setErrorMsg(error.message);
       });
   };
 
@@ -141,12 +152,24 @@ const Login = () => {
               placeholder="Your password"
             />
           </div>
+          {errorMsg && (
+            <p className="text-red-500 text-center mb-2">{errorMsg}!</p>
+          )}
           <button
             type="button"
             onClick={() => login(username, password)}
             className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            {isSignup ? "Sign Up" : "Login"}
+            {isSignup ? (
+              "Sign Up"
+            ) : buttonText === "Validating User" ? (
+              <>
+                {buttonText}
+                <span className="animate-pulse">...</span>
+              </>
+            ) : (
+              buttonText
+            )}
           </button>
         </form>
         <div className="mt-6 text-center">

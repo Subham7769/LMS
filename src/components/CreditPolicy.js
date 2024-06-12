@@ -346,7 +346,7 @@ const CreditPolicy = () => {
     }
   };
   if (allRuleData.length === 0) {
-    <LoadingState />;
+    return <LoadingState />;
   }
   return (
     <>
