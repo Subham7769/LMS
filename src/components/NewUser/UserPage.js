@@ -46,7 +46,7 @@ const UserPage = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-registration-service/xcbe/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
           borrowerID +
           "/check-availability/14-11-1981",
         {

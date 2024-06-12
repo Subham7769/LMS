@@ -38,30 +38,32 @@ const UserInfo = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {eligibilityData.eligibilityResults.map((eligible, index) => {
-            return (
-              <tr
-                key={index}
-                className="divide-x divide-gray-200 text-center w-full"
-              >
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-                  <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {eligible.projectName}
-                  </div>
-                </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-                  <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {eligible.eligibleStatus.replace(/_/g, " ")}
-                  </div>
-                </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-                  <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {eligible.inEligibilityReasons?.join(", ")}
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+          {eligibilityData.eligibilityResults.projects.map(
+            (eligible, index) => {
+              return (
+                <tr
+                  key={index}
+                  className="divide-x divide-gray-200 text-center w-full"
+                >
+                  <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                      {eligible.projectName}
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                      {/* {eligible.eligibleStatus.replace(/_/g, " ")} */}
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                      {eligible.inEligibilityReasons?.join(", ")}
+                    </div>
+                  </td>
+                </tr>
+              );
+            }
+          )}
         </tbody>
       </table>
     </div>

@@ -2215,7 +2215,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-offers-service/xcbe/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
           userID +
           "/loans",
         {
@@ -2253,7 +2253,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-offers-service/xcbe/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
           userID +
           "/loans/configurations",
         {
