@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   PlusIcon,
   TrashIcon,
@@ -22,12 +23,10 @@ const operatorOptions = [
   { value: ">=", label: ">=" },
 ];
 
-const API_URL =
-  "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling";
-const authToken = localStorage.getItem("authToken");
-
 const DebtBurdenConfig = () => {
+  const navigate = useNavigate();
   const [rules, setRules] = useState([]);
+  const [debtBurdenData, setDebtBurdenData] = useState([]);
   const [operators, setOperators] = useState({
     firstNetIncomeBracketInSARuleOperator: ">=",
     secondNetIncomeBracketInSARuleOperator: "==",
@@ -57,14 +56,25 @@ const DebtBurdenConfig = () => {
 
   const fetchRules = async () => {
     try {
-      const response = await fetch(API_URL, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      const data = await response.json();
-      setRules(data.dbrRules);
-      setOperators(data.operators);
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      const debtBurdenConfig = await data.json();
+      setDebtBurdenData(debtBurdenConfig);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -89,14 +99,17 @@ const DebtBurdenConfig = () => {
     const authToken = localStorage.getItem("authToken");
 
     try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ operators, dbrRules: newRules }),
-      });
+      const response = await fetch(
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ operators, dbrRules: newRules }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -118,14 +131,19 @@ const DebtBurdenConfig = () => {
   };
 
   const handleDelete = async (index) => {
+    const authToken = localStorage.getItem("authToken");
     const ruleToDelete = rules[index];
     try {
-      const response = await fetch(`${API_URL}/${ruleToDelete.ruleName}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling/" +
+          ruleToDelete.ruleName,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       if (response.ok) {
         setRules(rules.filter((_, i) => i !== index));
         toast.custom((t) => (
@@ -143,20 +161,24 @@ const DebtBurdenConfig = () => {
   };
 
   const handleChange = async (index, field, value) => {
+    const authToken = localStorage.getItem("authToken");
     const newRules = [...rules];
     newRules[index][field] = value;
     setRules(newRules);
 
     // Make a PUT request to update the data
     try {
-      const response = await fetch(API_URL, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ operators, dbrRules: newRules }),
-      });
+      const response = await fetch(
+        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ operators, dbrRules: newRules }),
+        }
+      );
       if (response.ok) {
         console.log("Data updated successfully");
         toast.custom((t) => (
@@ -173,7 +195,16 @@ const DebtBurdenConfig = () => {
     }
   };
 
-  if (rules.length === 0) {
+  useEffect(() => {
+    if (debtBurdenData.length === 0) {
+      console.log("Fetching data");
+    } else {
+      console.log(debtBurdenData);
+      setRules(debtBurdenData.dbrRules);
+      setOperators(debtBurdenData.operators);
+    }
+  }, [debtBurdenData]);
+  if (debtBurdenData.length === 0) {
     return <LoadingState />;
   }
   return (
