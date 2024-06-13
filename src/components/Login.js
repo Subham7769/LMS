@@ -25,6 +25,7 @@ const Login = () => {
   // Function to handle login
   const login = (username, password) => {
     setButtonText("Validating User");
+    setErrorMsg("");
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
