@@ -229,8 +229,8 @@ const CreditScore = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="border-b border-gray-300 pb-8 mb-8">
-        <h2 className="text-xl text-center">Nationality Score</h2>
-        <div className=" text-center my-4">
+        {/* <h2 className="text-xl text-center">Nationality Score</h2> */}
+        <div className=" text-center mt-8 mb-4">
           ((creditBureauScore-300)*A/550) + (nationality*B) + (netIncome*C) +
           (dependents*D) + (maritalStatus*E) + (residentialStatus*F)
         </div>

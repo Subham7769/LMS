@@ -215,7 +215,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
                   <div>{loanConfigData.cashLoanStats.maxLoanAmount}</div>
                 </div>
                 <div className="flex gap-2 py-2">
-                  <div className="w-40">Mix Loan Amount : </div>
+                  <div className="w-40">Min Loan Amount : </div>
                   <div>{loanConfigData.cashLoanStats.minLoanAmount}</div>
                 </div>
               </div>
