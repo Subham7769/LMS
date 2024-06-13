@@ -2302,74 +2302,66 @@ const LoanConfig = ({ visible, loanType, amount }) => {
   };
   return (
     <>
-      <div className="font-semibold mt-5 mb-2">Profile : </div>
-      <div className="rounded-xl pt-5 px-5 border border-red-600 w-fit">
+      <div className="flex gap-5 items-baseline mb-8">
         <div>
-          <div className="flex gap-10 mb-5 border-b border-gray-300 pb-4">
-            <div className="flex gap-5 border-r border-gray-300 pr-10">
-              <div>Cash Credit Score : </div>
-              <div>{loanConfigData.profile.cashCreditScore}</div>
+          <div className="font-semibold mt-5 mb-2">Profile : </div>
+          <div className="rounded-xl pt-6 pb-2 px-5 border border-red-600 w-fit">
+            <div>
+              <div className="flex gap-5 mb-5 border-b border-gray-300 pb-4">
+                <div className="flex gap-5 border-r border-gray-300 pr-5">
+                  <div>Cash Credit Score : </div>
+                  <div>{loanConfigData.profile.cashCreditScore}</div>
+                </div>
+                <div className="flex gap-5">
+                  <div>Cash TCL : </div>
+                  <div>{loanConfigData.profile.cashTCL}</div>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-5">
-              <div>Cash TCL : </div>
-              <div>{loanConfigData.profile.cashTCL}</div>
+            <div>
+              <div className="flex gap-10 mb-5">
+                <div className="flex gap-5">
+                  <div>Net Cash TCL : </div>
+                  <div>{loanConfigData.profile.netCashTCL}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div>
-          <div className="flex gap-10 mb-5 border-b border-gray-300 pb-4">
-            {/* <div className="flex gap-5 border-r border-gray-300 w-[236px] pr-10">
-              <div>Cash Seed : </div>
-              <div>{loanConfigData.profile.cashSeed ? "True" : "False"}</div>
-            </div> */}
-            <div className="flex gap-5">
-              <div>Net Cash TCL : </div>
-              <div>{loanConfigData.profile.netCashTCL}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="font-semibold mb-2 mt-8">Cash Loan Stats : </div>
-      <div className="rounded-xl pt-2 pb-2 px-5 border border-red-600 mb-8 relative">
-        <div className="flex gap-6 py-3">
-          {/* <div className=" pr-6 py-2 flex flex-col border-r border-gray-300">
-            <div className="flex gap-2 py-2">
-              <div className="w-56">Max Loan Duration Months : </div>
-              <div>{loanConfigData.cashLoanStats.maxLoanDurationMonths}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-56">Mix Loan Duration Months : </div>
-              <div>{loanConfigData.cashLoanStats.minLoanDurationMonths}</div>
-            </div>
-          </div> */}
-          <div className="pr-6 py-2 flex flex-col border-r border-gray-300">
-            <div className="flex gap-2 py-2">
-              <div className="w-44">Max Loan Amount : </div>
-              <div>{loanConfigData.cashLoanStats.maxLoanAmount}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-44">Mix Loan Amount : </div>
-              <div>{loanConfigData.cashLoanStats.minLoanAmount}</div>
-            </div>
-          </div>
-          <div className=" pr-6 py-2 flex flex-col border-r border-gray-300">
-            <div className="flex gap-2 py-2">
-              <div className="w-52">Max Loan Duration Days : </div>
-              <div>{loanConfigData.cashLoanStats.maxLoanDuration}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-52">Min Loan Duration Days : </div>
-              <div>{loanConfigData.cashLoanStats.minLoanDuration}</div>
-            </div>
-          </div>
-          <div className="pr-6 py-2 flex flex-col">
-            <div className="flex gap-2 py-2">
-              <div className="w-52">Max Tenure Months : </div>
-              <div>{loanConfigData.cashLoanStats.maxTenure}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-52">Min Tenure Months : </div>
-              <div>{loanConfigData.cashLoanStats.minTenure}</div>
+          <div className="font-semibold mb-2 mt-8">Cash Loan Stats : </div>
+          <div className="rounded-xl pt-2 pb-2 px-5 border border-red-600 relative">
+            <div className="flex gap-5 py-3">
+              <div className="pr-5 py-2 flex flex-col border-r border-gray-300">
+                <div className="flex gap-2 py-2">
+                  <div className="w-40">Max Loan Amount : </div>
+                  <div>{loanConfigData.cashLoanStats.maxLoanAmount}</div>
+                </div>
+                <div className="flex gap-2 py-2">
+                  <div className="w-40">Min Loan Amount : </div>
+                  <div>{loanConfigData.cashLoanStats.minLoanAmount}</div>
+                </div>
+              </div>
+              <div className=" pr-5 py-2 flex flex-col border-r border-gray-300">
+                <div className="flex gap-2 py-2">
+                  <div className="w-52">Max Loan Duration Days : </div>
+                  <div>{loanConfigData.cashLoanStats.maxLoanDuration}</div>
+                </div>
+                <div className="flex gap-2 py-2">
+                  <div className="w-52">Min Loan Duration Days : </div>
+                  <div>{loanConfigData.cashLoanStats.minLoanDuration}</div>
+                </div>
+              </div>
+              <div className="py-2 flex flex-col">
+                <div className="flex gap-2 py-2">
+                  <div className="w-40">Max Tenure Months : </div>
+                  <div>{loanConfigData.cashLoanStats.maxTenure}</div>
+                </div>
+                <div className="flex gap-2 py-2">
+                  <div className="w-40">Min Tenure Months : </div>
+                  <div>{loanConfigData.cashLoanStats.minTenure}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

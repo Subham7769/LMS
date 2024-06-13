@@ -84,7 +84,7 @@ const LoanInfoModal = ({ visible, onClose, loanDetails, mgLeft }) => {
         style={{ marginLeft: `${mgLeft}px` }}
         className="fixed inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center"
       >
-        <div className="bg-white border border-red-600 p-8 rounded-xl overflow-y-auto overflow-x-hidden w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
+        <div className="bg-white border border-red-600 p-8 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
           <div className="font-semibold text-center text-xl text-gray-700 mb-5">
             Loan Information
           </div>
@@ -141,67 +141,71 @@ const LoanInfoModal = ({ visible, onClose, loanDetails, mgLeft }) => {
             </div>
           </div>
           <div className="text-lg mt-5">Installment Schedule</div>
-          <table className="divide-y divide-gray-300 w-full">
-            <thead>
-              <tr className="divide-x divide-gray-200">
-                <th className="py-3.5 px-2 text-center text-gray-900">No.</th>
-                <th className="py-3.5 px-2 text-center text-gray-900">Date</th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Amount
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Status
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Interest Value
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Principal Value
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {loansarrModal.map((loan, index) => {
-                return (
-                  <tr
-                    key={loan.installmentId}
-                    className="divide-x divide-gray-200 text-center w-full"
-                  >
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {index + 1}
-                      </div>
-                    </td>
-                    <td className="py-4 px-2 text-gray-500 whitespace-nowrap">
-                      <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {loan.formattedInstallmentDate}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {loan.totalRequiredAmount}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {loan.installmentStatus}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {loan.interestValue}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                        {loan.princpleValue}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="overflow-auto max-h-[260px]">
+            <table className="divide-y divide-gray-300 w-full">
+              <thead className="bg-white sticky top-0">
+                <tr className="divide-x divide-gray-200">
+                  <th className="py-3.5 px-2 text-center text-gray-900">No.</th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">
+                    Date
+                  </th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">
+                    Amount
+                  </th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">
+                    Status
+                  </th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">
+                    Interest Value
+                  </th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">
+                    Principal Value
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {loansarrModal.map((loan, index) => {
+                  return (
+                    <tr
+                      key={loan.installmentId}
+                      className="divide-x divide-gray-200 text-center w-full"
+                    >
+                      <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                        <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {index + 1}
+                        </div>
+                      </td>
+                      <td className="py-4 px-2 text-gray-500 whitespace-nowrap">
+                        <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {loan.formattedInstallmentDate}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                        <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {loan.totalRequiredAmount}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                        <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {loan.installmentStatus}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                        <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {loan.interestValue}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                        <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {loan.princpleValue}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
           <div
             onClick={onClose}
             className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-2 right-2"
