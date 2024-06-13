@@ -31,9 +31,15 @@ const useProductInfo = () => {
 
       // Transform the Product data to the desired format
       const formattedProductData = ProductDetails.map(
-        ({ productType, projectId }) => ({
+        ({ productType, projectId, loanProductId }) => ({
           name: productType.replace(/_/g, " "),
-          href: "/product/" + productType + "/loan-product-config/" + projectId,
+          href:
+            "/product/" +
+            productType +
+            "/loan-product-config/" +
+            projectId +
+            "/" +
+            loanProductId,
         })
       );
 

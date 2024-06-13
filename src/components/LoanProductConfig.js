@@ -231,6 +231,8 @@ const LoanProductConfig = () => {
       tenureType: tenureType.value,
       productType: productConfigData.productType,
       racId: racType.value,
+      isDisableRac: true,
+      projectId: "183c8ec2-33fd-4388-8c46-695098bdbd74",
     };
 
     try {

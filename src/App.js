@@ -175,23 +175,23 @@ function App() {
           element: <CashLoan />,
           children: [
             {
-              path: "credit-score/:projectId",
+              path: "credit-score/:projectId/:loanProId",
               element: <CreditScore />,
             },
             {
-              path: "loan-product-config/:projectId",
+              path: "loan-product-config/:projectId/:loanProId",
               element: <LoanProductConfig />,
             },
             {
-              path: "debt-burden-config/:projectId",
+              path: "debt-burden-config/:projectId/:loanProId",
               element: <DebtBurdenConfig />,
             },
             {
-              path: "credit-policy/:projectId",
+              path: "credit-policy/:projectId/:loanProId",
               element: <CreditPolicy />,
             },
             {
-              path: "blocked-employer/:projectId",
+              path: "blocked-employer/:projectId/:loanProId",
               element: <BlockedEmployer />,
             },
           ],
