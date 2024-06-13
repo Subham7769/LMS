@@ -32,7 +32,7 @@ const racOptionsInitial = [
 ];
 
 const LoanProductConfig = () => {
-  const { productType } = useParams();
+  const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
   const [productConfigData, setProductConfigData] = useState([]);
   const [eligibleCustomerType, setEligibleCustomerType] = useState([]);
@@ -55,36 +55,33 @@ const LoanProductConfig = () => {
   const url = "project-system-configs";
   const [systemData, setSystemData] = useState([]);
   const systemConfigData = useGlobalConfig(url);
-  const [projectId, setProjectId] = useState("");
+  const [projectId2, setProjectId2] = useState("");
   const [projectName, setProjectName] = useState("");
   const [triggerValue, setTriggerValue] = useState("");
+  const [disabledRAC, setDisabledRAC] = useState(null);
+  const [bnplBoolean, setBNPL] = useState(null);
 
   useEffect(() => {
     if (systemConfigData.length > 0) {
-      const matchedData = systemConfigData.filter((data) => {
-        let normalizedProductType = productType.toLowerCase();
-        let normalizedProjectName = data.projectName.toLowerCase();
-        if (normalizedProductType === "cash_loan") {
-          normalizedProductType = "cash loan";
-        }
-
-        return normalizedProductType === normalizedProjectName;
-      });
+      const matchedData = systemConfigData.filter(
+        (data) => data.projectId === projectId
+      );
 
       if (matchedData.length > 0) {
         setSystemData(matchedData);
       }
     }
-  }, [systemConfigData, productType]);
+  }, [systemConfigData, projectId]);
 
   useEffect(() => {
     if (systemData.length > 0) {
       setManagementFee(systemData[0].managementFeeVat);
       setNoOfEmis(systemData[0].numberOfEmisForEarlySettlement);
       setRefinanced(systemData[0].refinancedWith);
-      setProjectId(systemData[0].projectId);
+      setProjectId2(systemData[0].projectId);
       setProjectName(systemData[0].projectName);
       setTriggerValue(systemData[0].triggerValue);
+      setBNPL(systemData[0].bnpl);
     }
   }, [systemData]);
 
@@ -142,6 +139,7 @@ const LoanProductConfig = () => {
       };
       setTenureType(formattedTenureType);
       setInitialTenureType(formattedTenureType);
+      setDisabledRAC(productConfigData.disableRac);
       setRacType(
         racOptions.find((option) => option.value === productConfigData.racId)
       );
@@ -231,15 +229,15 @@ const LoanProductConfig = () => {
       tenureType: tenureType.value,
       productType: productConfigData.productType,
       racId: racType.value,
-      isDisableRac: true,
-      projectId: "183c8ec2-33fd-4388-8c46-695098bdbd74",
+      isDisableRac: disabledRAC,
+      projectId: productConfigData.projectId,
     };
 
     try {
       // POST request to add new fields
       const postResponse = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/loan-products/" +
-          productType,
+          loanProId,
         {
           method: "PUT",
           headers: {
@@ -269,12 +267,13 @@ const LoanProductConfig = () => {
   async function handleSystemChanges() {
     const token = localStorage.getItem("authToken");
     const targetData = {
-      projectId: projectId,
+      projectId: projectId2,
       projectName: projectName,
       managementFeeVat: managementFee,
       numberOfEmisForEarlySettlement: noOfEmis,
       refinancedWith: refinanced,
       triggerValue: triggerValue,
+      isBnpl: bnplBoolean,
     };
     console.log(targetData);
     try {
@@ -413,6 +412,25 @@ const LoanProductConfig = () => {
                 checked={refinanced}
                 onChange={(e) => setRefinanced(e.target.checked)}
                 name="refinancedWith"
+                type="checkbox"
+                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+            </div>
+          </div>
+          <div className="relative mt-1">
+            <label
+              htmlFor={`isDisableRac`}
+              className=" text-gray-900 block text-xs text-center w-24 mb-2"
+            >
+              Disable RAC
+            </label>
+            <div className="flex h-6 justify-center">
+              <input
+                id={`isDisableRac`}
+                value={disabledRAC}
+                checked={disabledRAC}
+                onChange={(e) => setDisabledRAC(e.target.checked)}
+                name="isDisableRac"
                 type="checkbox"
                 className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
               />
