@@ -56,6 +56,7 @@ import BlockedEmployer from "./components/BlockedEmployer";
 import Repayment from "./components/NewUser/Repayments";
 import FamilyDetails from "./components/NewUser/FamilyDetails";
 import EmploymentDetails from "./components/NewUser/EmploymentDetails";
+import CreateProduct from "./components/CreateProduct";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -171,6 +172,10 @@ function App() {
           element: <Product />,
         },
         {
+          path: "/create-product",
+          element: <CreateProduct />,
+        },
+        {
           path: "/product/:productType",
           element: <CashLoan />,
           children: [
@@ -192,58 +197,6 @@ function App() {
             },
             {
               path: "blocked-employer/:projectId/:loanProId",
-              element: <BlockedEmployer />,
-            },
-          ],
-        },
-        {
-          path: "/product/bnpl",
-          element: <BNPL />,
-          children: [
-            {
-              path: "credit-score/:projectId",
-              element: <CreditScore />,
-            },
-            {
-              path: ":purl/:productType",
-              element: <LoanProductConfig />,
-            },
-            {
-              path: "debt-burden-config",
-              element: <DebtBurdenConfig />,
-            },
-            {
-              path: "credit-policy/:projectId",
-              element: <CreditPolicy />,
-            },
-            {
-              path: "blocked-employer/:projectId",
-              element: <BlockedEmployer />,
-            },
-          ],
-        },
-        {
-          path: "/product/overdraft",
-          element: <Overdraft />,
-          children: [
-            {
-              path: "credit-score/:projectId",
-              element: <CreditScore />,
-            },
-            {
-              path: ":purl/:productType",
-              element: <LoanProductConfig />,
-            },
-            {
-              path: "debt-burden-config",
-              element: <DebtBurdenConfig />,
-            },
-            {
-              path: "credit-policy/:projectId",
-              element: <CreditPolicy />,
-            },
-            {
-              path: "blocked-employer/:projectId",
               element: <BlockedEmployer />,
             },
           ],

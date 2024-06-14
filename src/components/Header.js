@@ -161,7 +161,7 @@ const Header = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to="/product"
+                          to="/create-product"
                           className={classNames(
                             active
                               ? "bg-gray-100 text-gray-900"
