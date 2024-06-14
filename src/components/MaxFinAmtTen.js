@@ -40,7 +40,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const handleDelete = (index) => {
     const ruleToDelete = inputList[index];
     fetch(
-      `https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
+      `http://10.10.10.70:32014/carbon-product-service/xtracash/rules/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
       {
         method: "DELETE",
         headers: {
@@ -89,7 +89,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     };
 
     fetch(
-      `https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/finance-amount-with-tenure-rule`,
+      `http://10.10.10.70:32014/carbon-product-service/xtracash/rules/finance-amount-with-tenure-rule`,
       {
         method: "PUT",
         headers: {
@@ -132,7 +132,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
         {
           ruleName: "0",
           fieldType: "Employer",
-          projectId: inputList[0].projectId,
+          projectId: projectId,
           financeAmount: inputList[inputList.length - 1].financeAmount,
           tenure: inputList[inputList.length - 1].tenure,
         },
@@ -227,7 +227,24 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                 placeholder="6"
               />
             </div>
-            {item.fieldType && (
+            {!item.ruleName || !item.fieldType ? (
+              <>
+                <button
+                  onClick={() => handleClear(index)}
+                  type="button"
+                  className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                >
+                  <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+                <button
+                  onClick={handleSave}
+                  type="button"
+                  className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                >
+                  <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </>
+            ) : (
               <>
                 <button
                   onClick={() => handleDelete(index)}
@@ -243,20 +260,11 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                 >
                   <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
-                {item.financeAmount === "" ? (
-                  <button
-                    onClick={() => handleClear(index)}
-                    type="button"
-                    className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                  >
-                    <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                ) : null}
               </>
             )}
           </div>
         ))}
-        <div className="text-right mt-7">
+        {/* <div className="text-right mt-7">
           <button
             onClick={handleSave}
             type="button"
@@ -265,7 +273,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
             <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
             Save
           </button>
-        </div>
+        </div> */}
       </div>
     </>
   );

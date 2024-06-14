@@ -13,7 +13,7 @@ const user = {
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "/login" },
+  { name: "Sign out", href: "/login", function: () => localStorage.clear() },
 ];
 
 function classNames(...classes) {
@@ -99,6 +99,11 @@ const Header = () => {
                             active ? "bg-gray-100" : "",
                             "block px-4 py-2 text-sm text-gray-700"
                           )}
+                          onClick={() => {
+                            if (item.function) {
+                              item.function();
+                            }
+                          }}
                         >
                           {item.name}
                         </Link>
