@@ -30,21 +30,45 @@ const CreditProfile = () => {
   } = loanOfferCalData;
   return (
     <>
-      <div className="rounded-xl pt-5 px-5 border border-red-600 w-fit">
-        {creditProfileData.map((cp, index) => (
-          <div key={index}>
-            <div className="flex gap-10 mb-5 border-b border-gray-300 pb-4">
-              <div className="flex gap-5 border-r border-gray-300 pr-10">
-                <div>Project Name : </div>
-                <div>{cp.projectName}</div>
-              </div>
-              <div className="flex gap-5">
-                <div>Net TCL : </div>
-                <div>{cp.netTCL}</div>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="rounded-xl p-4 border border-red-600 w-fit overflow-auto max-h-[260px] pr-5">
+        <table className="divide-y divide-gray-300 w-full">
+          <thead className="bg-white sticky top-0">
+            <tr className="divide-x divide-gray-200">
+              <th className="py-3.5 px-2 text-center text-gray-900">No.</th>
+              <th className="py-3.5 px-2 text-center text-gray-900">
+                Project Name
+              </th>
+              <th className="py-3.5 px-2 text-center text-gray-900">Total TCL</th>
+              <th className="py-3.5 px-2 text-center text-gray-900">Net TCL</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {creditProfileData.map((cp, index) => (
+              <tr key={index} className="divide-x divide-gray-200 text-center">
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {index + 1}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {cp.projectName}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {cp.totalTCL ? cp.totalTCL : "N/A"}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                    {cp.netTCL}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
         <div className="flex gap-6 py-3">
