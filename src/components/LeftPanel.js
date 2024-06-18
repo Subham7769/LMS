@@ -30,6 +30,19 @@ const MenusInitial = [
     isOpen: false,
   },
   {
+    title: "TCL",
+    href: "/tcl",
+    icon: ClipboardDocumentCheckIcon,
+    current: false,
+    submenu: true,
+    submenuItems: [
+      { name: "TCL 1", href: "/tcl/1" },
+      { name: "TCL 2", href: "/tcl/2" },
+      { name: "TCL 3", href: "/tcl/3" },
+    ],
+    isOpen: false,
+  },
+  {
     title: "Project",
     href: "/project/loan-form",
     icon: CircleStackIcon,

@@ -24,8 +24,6 @@ import RiskGradeCal from "./components/GlobalConfig/RiskGradeCal";
 import BareMinimumExp from "./components/GlobalConfig/BareMinimumExp";
 import NotificationText from "./components/GlobalConfig/NotificationText";
 import SystemConfig from "./components/GlobalConfig/SystemConfig";
-import BNPL from "./BNPL";
-import Overdraft from "./components/Overdraft";
 import GroupComponent from "./components/Group/GroupComponent";
 import GroupComponent2 from "./components/Group/GroupComponent2";
 import GroupComponent3 from "./components/Group/GroupComponent3";
@@ -57,6 +55,8 @@ import Repayment from "./components/NewUser/Repayments";
 import FamilyDetails from "./components/NewUser/FamilyDetails";
 import EmploymentDetails from "./components/NewUser/EmploymentDetails";
 import CreateProduct from "./components/CreateProduct";
+import Tcl from "./components/Tcl/Tcl";
+import TclComponent1 from "./components/Tcl/TclComponent1";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -114,6 +114,14 @@ function App() {
         {
           path: "/",
           element: <Body />,
+        },
+        {
+          path: "/tcl",
+          element: <Tcl />,
+        },
+        {
+          path: "/tcl/1",
+          element: <TclComponent1 />,
         },
         {
           path: "/group",
