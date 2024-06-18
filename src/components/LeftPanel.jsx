@@ -9,6 +9,7 @@ import {
   HomeIcon,
   UsersIcon,
   CircleStackIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 import useRACInfo from "./utils/useRACInfo";
 import useAllProjectInfo from "./utils/useAllProjectInfo";
@@ -154,6 +155,12 @@ const MenusInitial = [
     title: "New User",
     href: "/user",
     icon: UsersIcon,
+    current: false,
+  },
+  {
+    title: "Ledger",
+    href: "/ledger",
+    icon: BookOpenIcon,
     current: false,
   },
 ];

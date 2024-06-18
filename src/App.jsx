@@ -57,6 +57,9 @@ import EmploymentDetails from "./components/NewUser/EmploymentDetails";
 import CreateProduct from "./components/CreateProduct";
 import Tcl from "./components/Tcl/Tcl";
 import TclComponent1 from "./components/Tcl/TclComponent1";
+import TclComponent2 from "./components/Tcl/TclComponent2";
+import TclComponent3 from "./components/Tcl/TclComponent3";
+import Ledger from "./components/Ledger/Ledger";
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -122,6 +125,14 @@ function App() {
         {
           path: "/tcl/1",
           element: <TclComponent1 />,
+        },
+        {
+          path: "/tcl/2",
+          element: <TclComponent2 />,
+        },
+        {
+          path: "/tcl/3",
+          element: <TclComponent3 />,
         },
         {
           path: "/group",
@@ -323,7 +334,10 @@ function App() {
             },
           ],
         },
-
+        {
+          path: "/ledger",
+          element: <Ledger />,
+        },
         {
           path: "/slidenav",
           element: <SlideNav />,
