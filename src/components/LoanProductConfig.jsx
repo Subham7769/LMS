@@ -13,12 +13,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed, RowChanged, Warning } from "./Toasts";
 import LoadingState from "./LoadingState";
-<<<<<<< Updated upstream
-import useGlobalConfig from "./utils/useGlobalConfig";
-import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-=======
 import useGlobalConfig from "../Utils/useGlobalConfig";
->>>>>>> Stashed changes
 
 const options = [
   { value: "DAILY", label: "DAILY" },
