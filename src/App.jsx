@@ -1,65 +1,66 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import Body from "./components/Body";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import LeftPanel from "./components/LeftPanel";
+import Body from "./Components/Body";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import LeftPanel from "./Components/LeftPanel";
 import { useEffect, useRef, useState } from "react";
-import Group from "./components/Group/Group";
-import RAC from "./components/RAC/RAC";
-import Product from "./components/Product";
-import Scheme from "./components/Scheme";
-import Notifications from "./components/Notifications";
-import SlideNav from "./components/SlideNav";
-import CashLoan from "./components/CashLoan";
-import CreditScore from "./components/CreditScore";
-import LoanProductConfig from "./components/LoanProductConfig";
-import DebtBurdenConfig from "./components/DebtBurdenConfig";
-import CreditPolicy from "./components/CreditPolicy";
-import GlobalConfig from "./components/GlobalConfig/GlobalConfig";
-import GcCreditPolicy from "./components/GlobalConfig/GcCreditPolicy";
-import CustomerCare from "./components/CustomerCare/CustomerCare";
-import SubscriberInfo from "./components/CustomerCare/SubscriberInfo";
-import LiabilitiesMatrix from "./components/GlobalConfig/LiabilitiesMatrix";
-import RiskGradeCal from "./components/GlobalConfig/RiskGradeCal";
-import BareMinimumExp from "./components/GlobalConfig/BareMinimumExp";
-import NotificationText from "./components/GlobalConfig/NotificationText";
-import SystemConfig from "./components/GlobalConfig/SystemConfig";
-import GroupComponent from "./components/Group/GroupComponent";
-import GroupComponent2 from "./components/Group/GroupComponent2";
-import GroupComponent3 from "./components/Group/GroupComponent3";
-import BorrowerInfoTabs from "./components/CustomerCare/BorrowerInfoTabs";
-import KYCDetails from "./components/CustomerCare/KYCDetails";
-import CreditProfile from "./components/CustomerCare/CreditProfile";
-import LoanNPaymentHist from "./components/CustomerCare/LoanNPaymentHis";
-import RejectionHistory from "./components/CustomerCare/RejectionHistory";
-import CreditBureauDetails from "./components/CustomerCare/CreditBureauDetails";
-import Login from "./components/Login";
-import ForgotPassword from "./components/ForgotPassword";
-import LoanForm from "./components/Project/LoanForm";
-import CreateRac from "./components/RAC/CreateRac";
-import NewCreatedRAC from "./components/RAC/NewCreatedRAC";
-import BpmnComponent from "./components/BusinessRule/BpmnComponent";
-import BpmnComponent2 from "./components/BusinessRule/BpmnComponent2";
-import BpmnComponent3 from "./components/BusinessRule/BpmnComponent3";
-import ProjectPage from "./components/Project/ProjectPage";
-import NewProjectPage from "./components/Project/NewProjectPage";
-import UserPage from "./components/NewUser/UserPage";
-import UserInfoTabs from "./components/NewUser/UserInfoTabs";
-import UserInfo from "./components/NewUser/UserInfo";
-import Disbursement from "./components/NewUser/Disbursement";
-import Register from "./components/NewUser/Register";
-import InstallmentInfoComp from "./components/NewUser/InstallmentInfoComp";
-import LoanConfigDD from "./components/NewUser/LoanConfigDD";
-import BlockedEmployer from "./components/BlockedEmployer";
-import Repayment from "./components/NewUser/Repayments";
-import FamilyDetails from "./components/NewUser/FamilyDetails";
-import EmploymentDetails from "./components/NewUser/EmploymentDetails";
-import CreateProduct from "./components/CreateProduct";
-import Tcl from "./components/Tcl/Tcl";
-import TclComponent1 from "./components/Tcl/TclComponent1";
-import TclComponent2 from "./components/Tcl/TclComponent2";
-import TclComponent3 from "./components/Tcl/TclComponent3";
-import Ledger from "./components/Ledger/Ledger";
+import Group from "./Components/Group/Group";
+import RAC from "./Components/RAC/RAC";
+import Product from "./Components/Product";
+import Scheme from "./Components/Scheme";
+import Notifications from "./Components/Notifications";
+import SlideNav from "./Components/SlideNav";
+import CashLoan from "./Components/CashLoan";
+import CreditScore from "./Components/CreditScore";
+import LoanProductConfig from "./Components/LoanProductConfig";
+import DebtBurdenConfig from "./Components/DebtBurdenConfig";
+import CreditPolicy from "./Components/CreditPolicy";
+import GlobalConfig from "./Components/GlobalConfig/GlobalConfig";
+import GcCreditPolicy from "./Components/GlobalConfig/GcCreditPolicy";
+import CustomerCare from "./Components/CustomerCare/CustomerCare";
+import SubscriberInfo from "./Components/CustomerCare/SubscriberInfo";
+import LiabilitiesMatrix from "./Components/GlobalConfig/LiabilitiesMatrix";
+import RiskGradeCal from "./Components/GlobalConfig/RiskGradeCal";
+import BareMinimumExp from "./Components/GlobalConfig/BareMinimumExp";
+import NotificationText from "./Components/GlobalConfig/NotificationText";
+import SystemConfig from "./Components/GlobalConfig/SystemConfig";
+import GroupComponent from "./Components/Group/GroupComponent";
+import GroupComponent2 from "./Components/Group/GroupComponent2";
+import GroupComponent3 from "./Components/Group/GroupComponent3";
+import BorrowerInfoTabs from "./Components/CustomerCare/BorrowerInfoTabs";
+import KYCDetails from "./Components/CustomerCare/KYCDetails";
+import CreditProfile from "./Components/CustomerCare/CreditProfile";
+import LoanNPaymentHist from "./Components/CustomerCare/LoanNPaymentHis";
+import RejectionHistory from "./Components/CustomerCare/RejectionHistory";
+import CreditBureauDetails from "./Components/CustomerCare/CreditBureauDetails";
+import Login from "./Components/Login";
+import ForgotPassword from "./Components/ForgotPassword";
+import LoanForm from "./Components/Project/LoanForm";
+import CreateRac from "./Components/RAC/CreateRac";
+import NewCreatedRAC from "./Components/RAC/NewCreatedRAC";
+import BpmnComponent from "./Components/BusinessRule/BpmnComponent";
+import BpmnComponent2 from "./Components/BusinessRule/BpmnComponent2";
+import BpmnComponent3 from "./Components/BusinessRule/BpmnComponent3";
+import ProjectPage from "./Components/Project/ProjectPage";
+import NewProjectPage from "./Components/Project/NewProjectPage";
+import UserPage from "./Components/NewUser/UserPage";
+import UserInfoTabs from "./Components/NewUser/UserInfoTabs";
+import UserInfo from "./Components/NewUser/UserInfo";
+import Disbursement from "./Components/NewUser/Disbursement";
+import Register from "./Components/NewUser/Register";
+import InstallmentInfoComp from "./Components/NewUser/InstallmentInfoComp";
+import LoanConfigDD from "./Components/NewUser/LoanConfigDD";
+import BlockedEmployer from "./Components/BlockedEmployer";
+import Repayment from "./Components/NewUser/Repayments";
+import FamilyDetails from "./Components/NewUser/FamilyDetails";
+import EmploymentDetails from "./Components/NewUser/EmploymentDetails";
+import CreateProduct from "./Components/CreateProduct";
+import Tcl from "./Components/Tcl/Tcl";
+import TclComponent1 from "./Components/Tcl/TclComponent1";
+import TclComponent2 from "./Components/Tcl/TclComponent2";
+import TclComponent3 from "./Components/Tcl/TclComponent3";
+import Ledger from "./Components/Ledger/Ledger";
+import TestComponent from './Components/TestComponent/TestComponent';
 
 const AppLayout = () => {
   const [navBarHeight, setNavBarHeight] = useState(0);
@@ -67,13 +68,10 @@ const AppLayout = () => {
   const leftPanelWidthRef = useRef(0);
 
   useEffect(() => {
+    const leftPanel = document.getElementById("leftPanelId");
     const navbar = document.getElementById("navBarId");
     const height = navbar.offsetHeight;
     setNavBarHeight(height + 20);
-  }, []);
-
-  useEffect(() => {
-    const leftPanel = document.getElementById("leftPanelId");
 
     const resizeObserver = new ResizeObserver((entries) => {
       const newWidth = entries[0].contentRect.width;
@@ -341,6 +339,10 @@ function App() {
         {
           path: "/slidenav",
           element: <SlideNav />,
+        },
+        {
+          path: "/test",
+          element: <TestComponent />,
         },
       ],
     },

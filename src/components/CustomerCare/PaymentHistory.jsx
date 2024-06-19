@@ -1,5 +1,5 @@
 import LoadingState from "../LoadingState";
-import useBorrowerInfo from "../utils/useBorrowerInfo";
+import useBorrowerInfo from "../../Utils/useBorrowerInfo";
 import PaymentHistoryComp from "./PaymentHistoryComp";
 
 const PaymentHistory = () => {

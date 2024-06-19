@@ -4,7 +4,7 @@ import {
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import useGlobalConfig from "../utils/useGlobalConfig";
+import useGlobalConfig from "../../Utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState";

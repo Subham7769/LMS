@@ -1,5 +1,5 @@
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import useBorrowerInfo from "../utils/useBorrowerInfo";
+import useBorrowerInfo from "../../Utils/useBorrowerInfo";
 import LoadingState from "../LoadingState";
 
 const DefaultDetails = () => {

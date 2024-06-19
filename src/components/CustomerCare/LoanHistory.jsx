@@ -1,5 +1,5 @@
 import LoanHistoryComp from "./LoanHistoryComp";
-import useBorrowerInfo from "../utils/useBorrowerInfo";
+import useBorrowerInfo from "../../Utils/useBorrowerInfo";
 import LoadingState from "../LoadingState";
 
 const LoanHistory = () => {

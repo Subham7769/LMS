@@ -1,6 +1,6 @@
 import React from "react";
 import FamilyDetails from "./FamilyDetails";
-import useDateExtract from "../utils/useDateExtract";
+import useDateExtract from "../../Utils/useDateExtract";
 
 const SubscriberInfoComponet = ({ subscriberListNew }) => {
   const {

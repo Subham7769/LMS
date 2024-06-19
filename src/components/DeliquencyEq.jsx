@@ -3,7 +3,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
-import useRacRules from "./utils/useRACRules";
+import useRacRules from "../Utils/useRACRules";
 import toast from "react-hot-toast";
 import { RowChanged } from "./Toasts";
 

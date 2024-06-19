@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import _ from "lodash";
-import useGlobalConfig from "../utils/useGlobalConfig";
+import useGlobalConfig from "../../Utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState";

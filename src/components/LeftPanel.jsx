@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 // import Logo from "../assets/img/xurti-logo.png";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronRightIcon, BeakerIcon } from "@heroicons/react/20/solid";
 import {
   AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
@@ -11,9 +11,9 @@ import {
   CircleStackIcon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
-import useRACInfo from "./utils/useRACInfo";
-import useAllProjectInfo from "./utils/useAllProjectInfo";
-import useProductInfo from "./utils/useProductInfo";
+import useRACInfo from "../Utils/useRACInfo";
+import useAllProjectInfo from "../Utils/useAllProjectInfo";
+import useProductInfo from "../Utils/useProductInfo";
 
 const MenusInitial = [
   { title: "Home", href: "/", icon: HomeIcon, count: "5", current: true },
@@ -163,6 +163,12 @@ const MenusInitial = [
     icon: BookOpenIcon,
     current: false,
   },
+  {
+    title: "TestComponent",
+    href: "/test",
+    icon: BeakerIcon,
+    current: false,
+  },
 ];
 
 function classNames(...classes) {
@@ -252,38 +258,21 @@ const LeftPanel = () => {
         </div>
         <button onClick={toggleSidebar} className="flex justify-end">
           <div className="-right-3 absolute top-60">
-            <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
-              {open ? (
+          <div className="bg-indigo-600 h-6 w-6 rounded-full p-1" onClick={() => setOpen(!open)}>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`h-4 w-4 text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 19l-7-7 7-7"
-                  />
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                    />
                 </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              )}
             </div>
           </div>
         </button>
