@@ -391,8 +391,8 @@ const LengthofService = ({
                           />
                         </div>
                       ) : (
-                        <div className="flex items-center justify-start gap-5">
-                          <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        <div className="flex items-center justify-start ml-20 gap-5">
+                          <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
                             {firstLengthOfServiceOperator.value}
                           </span>
                           <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -426,8 +426,8 @@ const LengthofService = ({
                           />
                         </div>
                       ) : (
-                        <div className="flex items-center justify-start gap-5">
-                          <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        <div className="flex items-center justify-start ml-20 gap-5">
+                          <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
                             {secondLengthOfServiceOperator.value}
                           </span>
                           <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
