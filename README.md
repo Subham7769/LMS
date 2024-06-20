@@ -49,6 +49,93 @@ This folder structure promotes a clear separation of concerns, making the projec
 ---
 &emsp;
 
+# Component Documentation Template
+# [ComponentName]
+
+### Description
+[ComponentName] is a React component designed to [brief description of what the component does]. This component is responsible for [specific functionalities or features].
+
+### Purpose
+The primary purpose of [ComponentName] is to [explanation of why this component was created]. It aims to [specific goals or improvements, such as enhancing user experience, providing new functionality, or optimizing performance].
+
+### Features
+- [Feature 1: Detailed description of the feature]
+- [Feature 2: Detailed description of the feature]
+- [Feature 3: Detailed description of the feature]
+
+### Usage
+To use the [ComponentName] component, follow the example below:
+
+```jsx
+import [ComponentName] from './Components/[ComponentName]';
+
+// Usage within a parent component
+function ParentComponent() {
+  return (
+    <div>
+      <Header />
+      <[ComponentName] />
+      <Footer />
+    </div>
+  );
+}
+```
+
+### Props
+The [ComponentName] component accepts the following props:
+
+| Prop Name     | Type     | Description                                               | Default Value |
+|---------------|----------|-----------------------------------------------------------|---------------|
+| `propName1`   | `type1`  | Description of what propName1 does                        | `default1`    |
+| `propName2`   | `type2`  | Description of what propName2 does                        | `default2`    |
+| `propName3`   | `type3`  | Description of what propName3 does                        | `default3`    |
+
+### Example
+Here is a more detailed example of how to implement [ComponentName]:
+
+```jsx
+import React from 'react';
+import [ComponentName] from './Components/[ComponentName]';
+
+function ExampleComponent() {
+  return (
+    <div>
+      <[ComponentName]
+        propName1="value1"
+        propName2="value2"
+        propName3="value3"
+      />
+    </div>
+  );
+}
+
+export default ExampleComponent;
+```
+
+### Additional Notes
+- Ensure that [any important considerations or prerequisites].
+- [Additional notes or caveats about using the component].
+
+---
+
+
+&emsp;
+
+# Creating Component Documentation Using Component Documentation Template With ChatGPT
+
+You are supposed to give all the details in one prompt. 
+
+## Commands:
+1. Use the provided template in readme format.
+2. Paste the template directly.
+3. Generate a readme using the template for your specific code.
+4. Share your entire code for processing.
+
+---
+
+
+&emsp;
+
 
 # App.js optimizations
 
@@ -58,7 +145,7 @@ This folder structure promotes a clear separation of concerns, making the projec
 
 In the new version, two `useEffect` hooks were merged into one for better efficiency and maintainability.
 
-#### Old Code
+#### **Before:**
 
 ```javascript
 useEffect(() => {
@@ -82,7 +169,7 @@ useEffect(() => {
 }, []);
 ```
 
-#### New Code
+#### **After:**
 
 ```javascript
 useEffect(() => {
@@ -115,11 +202,14 @@ useEffect(() => {
 
 # LeftPanel.jsx Optimizations
 ##### (19/06/2024)
+This document outlines the optimizations made to the `LeftPanel` component to improve readability, reduce redundancy, and enhance performance.
+
+## Optimizations
 ### Optimized `SVG` element creation
 
 This update consolidates two similar SVG elements within a conditional render block for a cleaner and more maintainable codebase.
 
-#### Old Code
+#### **Before:**
 
 ```jsx
 <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
@@ -157,7 +247,7 @@ This update consolidates two similar SVG elements within a conditional render bl
 </div>
 ```
 
-#### New Code
+#### **After:**
 
 ```jsx
 <div
@@ -183,12 +273,96 @@ This update consolidates two similar SVG elements within a conditional render bl
 </div>
 ```
 
-### Benefits
 
-1. **Consistency:** Ensures uniform rendering for both SVG icons.
-2. **Maintainability:** Simplifies code, making it easier to manage and update.
-3. **Clarity:** Improves readability by reducing redundancy.
+
+### Combined Similar `useEffect` Hooks
+Consolidated multiple `useEffect` hooks into one to streamline menu updates.
+
+**Before:**
+```jsx
+useEffect(() => {
+  setMenus((prevMenus) =>
+    prevMenus.map((menu) => {
+      if (menu.title === "RAC") {
+        return { ...menu, submenuItems: RACDataInfo };
+      }
+      return menu;
+    })
+  );
+}, [RACDataInfo]);
+
+useEffect(() => {
+  setMenus((prevMenus) =>
+    prevMenus.map((menu) => {
+      if (menu.title === "Project") {
+        return { ...menu, submenuItems: ProjectDataInfo };
+      }
+      return menu;
+    })
+  );
+}, [ProjectDataInfo]);
+
+useEffect(() => {
+  setMenus((prevMenus) =>
+    prevMenus.map((menu) => {
+      if (menu.title === "Product") {
+        return { ...menu, submenuItems: ProductDataInfo };
+      }
+      return menu;
+    })
+  );
+}, [ProductDataInfo]);
+```
+
+**After:**
+```jsx
+useEffect(() => {
+  setMenus((prevMenus) =>
+    prevMenus.map((menu) => {
+      if (menu.title === "RAC") {
+        return { ...menu, submenuItems: RACDataInfo };
+      }
+      if (menu.title === "Project") {
+        return { ...menu, submenuItems: ProjectDataInfo };
+      }
+      if (menu.title === "Product") {
+        return { ...menu, submenuItems: ProductDataInfo };
+      }
+      return menu;
+    })
+  );
+}, [RACDataInfo, ProjectDataInfo, ProductDataInfo]);
+```
+
+### Optimized State Updates
+Simplified state update logic for submenu states.
+
+**Before:**
+```jsx
+const toggleSubmenu = (index) => {
+  setSubmenuStates(
+    Menus.map((menu, i) =>
+      i === index && menu.submenu
+        ? { isOpen: !submenuStates[index].isOpen }
+        : submenuStates[i]
+    )
+  );
+};
+```
+
+**After:**
+```jsx
+const toggleSubmenu = (index) => {
+  setSubmenuStates(
+    submenuStates.map((state, i) =>
+      i === index ? { isOpen: !state.isOpen } : state
+    )
+  );
+};
+```
+
+## Summary
+These optimizations improve the `LeftPanel` component by reducing redundancy, enhancing readability, and boosting performance.
 
 ---
-
-
+&emsp;

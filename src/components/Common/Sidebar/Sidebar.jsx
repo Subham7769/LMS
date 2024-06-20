@@ -1,0 +1,123 @@
+import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import useRACInfo from "../../../Utils/useRACInfo";
+import useAllProjectInfo from "../../../Utils/useAllProjectInfo";
+import useProductInfo from "../../../Utils/useProductInfo";
+import { MenusInitial } from '../../../Data/MenuData'
+
+
+const SideBar = () => {
+  const [open, setOpen] = useState(true);
+  const [Menus, setMenus] = useState(MenusInitial);
+
+  const RACDataInfo = useRACInfo();
+  const ProjectDataInfo = useAllProjectInfo();
+  const ProductDataInfo = useProductInfo();
+
+  useEffect(() => {
+    setMenus((prevMenus) =>
+      prevMenus.map((menu) => {
+        if (menu.title === "RAC") {
+          return { ...menu, submenuItems: RACDataInfo };
+        }
+        if (menu.title === "Project") {
+          return { ...menu, submenuItems: ProjectDataInfo };
+        }
+        if (menu.title === "Product") {
+          return { ...menu, submenuItems: ProductDataInfo };
+        }
+        return menu;
+      })
+    );
+  }, [RACDataInfo, ProjectDataInfo, ProductDataInfo]);
+
+  const [submenuStates, setSubmenuStates] = useState(
+    Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
+  );
+
+  const toggleSidebar = () => setOpen(!open);
+
+  const toggleSubmenu = (index) => {
+    setSubmenuStates(
+      submenuStates.map((state, i) =>
+        i === index ? { isOpen: !state.isOpen } : state
+      )
+    );
+  };
+
+  return (
+    <div
+      id="SideBarId"
+      className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4 transform duration-1000 ease-in-out ${open ? "w-64" : "w-16"
+        }`}
+    >
+      <div className="flex h-16 shrink-0 items-center">
+        <img
+          className={`h-8 ${open ? "w-auto" : "w-10 h-auto"}`}
+          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          alt="Your Company"
+        />
+      </div>
+
+      <button onClick={toggleSidebar} className="flex justify-end">
+        <div className="-right-3 absolute top-60">
+          <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-4 w-4 text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      <ul className="pt-2 pr-3 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white scrollbar-track-white">
+        {Menus.map((menu, index) => (
+          <div key={menu.title}>
+            <NavLink to={menu.href} className="text-gray-500">
+              <li className="text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                <span className="text-2xl block float-left">
+                  <menu.icon className="h-6 w-6 shrink-0" />
+                </span>
+                <span className={`text-base font-medium flex-1 duration-200 ${!open && "hidden"}`}>
+                  {menu.title}
+                </span>
+                {menu.submenu && open && (
+                  <ChevronRightIcon
+                    className={`text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""}`}
+                    onClick={() => toggleSubmenu(index)}
+                  />
+                )}
+              </li>
+            </NavLink>
+            {menu.submenu && submenuStates[index]?.isOpen && open && (
+              <ul>
+                {menu.submenuItems.map((submenuItem) => (
+                  <div key={submenuItem.name}>
+                    <NavLink to={submenuItem.href} className="text-gray-500">
+                      <li className="text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                        {submenuItem.name}
+                      </li>
+                    </NavLink>
+                  </div>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default SideBar;
