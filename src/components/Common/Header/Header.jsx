@@ -12,6 +12,7 @@ const userNavigation = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
 const Header = () => {
   return (
     <>
@@ -27,7 +28,7 @@ const Header = () => {
               <label htmlFor="search" className="sr-only">
                 Search
               </label>
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <MagnifyingGlassIcon
                     className="h-5 w-5 text-gray-400"
@@ -41,7 +42,7 @@ const Header = () => {
                   placeholder="Search"
                   type="search"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="px-8 py-3 relative flex justify-end items-end gap-8 w-1/3">
