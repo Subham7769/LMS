@@ -3,7 +3,7 @@ import LoadingState from "../LoadingState";
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import Sorry from "../../Assets/Image/sorry.png";
+import Sorry from "../../assets/image/sorry.png";
 
 const CommentsModal = ({ margin, closeModal, message }) => {
   return (

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import SubscriberInfoComponet from "./SubscriberInfoComponet";
-import useBorrowerInfo from "../../Utils/useBorrowerInfo";
+import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState";
 
 const SubscriberInfo = () => {

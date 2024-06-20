@@ -1,5 +1,5 @@
 import LoadingState from "../LoadingState";
-import useBorrowerInfo from "../../Utils/useBorrowerInfo";
+import useBorrowerInfo from "../../utils/useBorrowerInfo";
 
 const Score = () => {
   const url = "/simah-recent-response";

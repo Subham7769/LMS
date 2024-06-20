@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import useRACInfo from "../../../Utils/useRACInfo";
-import useAllProjectInfo from "../../../Utils/useAllProjectInfo";
-import useProductInfo from "../../../Utils/useProductInfo";
-import { MenusInitial } from '../../../Data/MenuData'
+import useRACInfo from "../../../utils/useRACInfo";
+import useAllProjectInfo from "../../../utils/useAllProjectInfo";
+import useProductInfo from "../../../utils/useProductInfo";
+import { MenusInitial } from '../../../data/MenuData'
 
 
 const SideBar = () => {

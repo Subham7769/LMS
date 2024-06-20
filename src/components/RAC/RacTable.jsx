@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
-import useRACInfo from "../../Utils/useRACInfo";
+import useRACInfo from "../../utils/useRACInfo";
 import { useEffect, useState } from "react";
 
 const productsInitial = [

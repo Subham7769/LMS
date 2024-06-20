@@ -1,5 +1,5 @@
 import LoadingState from "../LoadingState";
-import useBorrowerInfo from "../../Utils/useBorrowerInfo";
+import useBorrowerInfo from "../../utils/useBorrowerInfo";
 // import { useEffect, useState } from "react";
 
 const CustomerAddress = () => {

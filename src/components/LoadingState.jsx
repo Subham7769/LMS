@@ -1,4 +1,4 @@
-import Loader from "../../src/Assets/Image/loader1.gif";
+import Loader from "../../src/assets/image/loader1.gif";
 
 export default function LoadingState() {
   return (

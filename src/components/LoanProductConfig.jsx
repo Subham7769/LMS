@@ -1,4 +1,4 @@
-import useRACInfo from "../Utils/useRACInfo";
+import useRACInfo from "../utils/useRACInfo";
 import { useEffect, useState } from "react";
 import {
   PlusIcon,
@@ -13,9 +13,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed, RowChanged, Warning } from "./Toasts";
 import LoadingState from "./LoadingState";
-import useGlobalConfig from "../Utils/useGlobalConfig";
+import useGlobalConfig from "../utils/useGlobalConfig";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import useAllProjectInfo from "../Utils/useAllProjectInfo";
+import useAllProjectInfo from "../utils/useAllProjectInfo";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
