@@ -18,7 +18,7 @@ const Ledger = () => {
         },
         {
           accountName: "DAYS_PAST_DUE",
-          accountCode: "1003",
+          accountCode: "1004",
           debitValue: 4000,
           creditValue: 0,
         },
@@ -40,7 +40,7 @@ const Ledger = () => {
       account: [
         {
           accountName: "DAYS_PAST_DUE",
-          accountCode: "1001",
+          accountCode: "1004",
           debitValue: 150,
           creditValue: 0,
         },
@@ -66,11 +66,13 @@ const Ledger = () => {
         <thead>
           <tr className="divide-x divide-gray-200">
             <th className="py-3.5 px-4 text-center">Date</th>
-            <th className="py-3.5 px-4 text-center">Account Code</th>
+            <th className="py-3.5 px-4 text-center">Entry ID</th>
             <th className="py-3.5 px-4 text-center text-gray-900">
-              Account Name
+              Entry Name
             </th>
-            <th className="py-3.5 px-4 text-center text-gray-900">User Id</th>
+            <th className="py-3.5 px-4 text-center text-gray-900">
+              Borrower ID
+            </th>
             <th className="py-3.5 px-4 text-center text-gray-900">Loan ID</th>
             <th className="py-3.5 px-4 text-center text-gray-900">
               Debit Amount

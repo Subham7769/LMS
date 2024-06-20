@@ -14,6 +14,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed, RowChanged, Warning } from "./Toasts";
 import LoadingState from "./LoadingState";
 import useGlobalConfig from "../Utils/useGlobalConfig";
+import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import useAllProjectInfo from "../Utils/useAllProjectInfo";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -32,6 +34,18 @@ const racOptionsInitial = [
   { value: "r1", label: "Cash Product RAC" },
   { value: "r2", label: "BNPL Product RAC" },
   { value: "r3", label: "Overdraft Product RAC" },
+];
+
+const projectOptionsInitial = [
+  { value: "p1", label: "Cash Project" },
+  { value: "p2", label: "BNPL Project" },
+  { value: "p3", label: "Overdraft Project" },
+];
+
+const tclOptionsInitial = [
+  { value: "T1", label: "TCL 1" },
+  { value: "T2", label: "TCL 2" },
+  { value: "T3", label: "TCL 3" },
 ];
 
 const LoanProductConfig = () => {
@@ -67,6 +81,11 @@ const LoanProductConfig = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+  const [projectType, setProjectType] = useState("");
+  const [projectOptions, setProjectOptions] = useState(projectOptionsInitial);
+  const ProjectDataInfo = useAllProjectInfo();
+  const [tclType, setTclType] = useState(tclOptionsInitial[0]);
+  const [tclOptions, setTclOptions] = useState(tclOptionsInitial);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -175,6 +194,11 @@ const LoanProductConfig = () => {
       setRacType(
         racOptions.find((option) => option.value === productConfigData.racId)
       );
+      setProjectType(
+        projectOptions.find(
+          (option) => option.value === productConfigData.projectId
+        )
+      );
       setInputList(productConfigData.interestEligibleTenure);
     }
   }, [productConfigData]);
@@ -186,6 +210,14 @@ const LoanProductConfig = () => {
     }));
     setRacOptions(formattedRACData);
   }, [RACDataInfo]);
+
+  useEffect(() => {
+    const formattedProjectData = ProjectDataInfo.map(({ name, href }) => ({
+      value: href.replace("/project/", ""),
+      label: name,
+    }));
+    setProjectOptions(formattedProjectData);
+  }, [ProjectDataInfo]);
 
   // For Tracking if the user is changing PER or Tenure Type
   useEffect(() => {
@@ -262,7 +294,7 @@ const LoanProductConfig = () => {
       productType: productConfigData.productType,
       racId: racType.value,
       isDisableRac: disabledRAC,
-      projectId: productConfigData.projectId,
+      projectId: projectType.value,
     };
 
     try {
@@ -388,135 +420,172 @@ const LoanProductConfig = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="flex items-center justify-between ">
-          {/* <div className="text-lg">{productConfigData.productType}</div> */}
-        </div>
-        <div className="flex gap-5 border-b border-gray-300 pb-5">
-          <div className="relative">
-            <label
-              htmlFor="eligibleCustomerType"
-              className=" bg-white px-1 text-xs text-gray-900"
-            >
-              Eligible Customer Type
-            </label>
-            <Select
-              className="w-[180px]"
-              options={tenureOptions}
-              // id={`tenureType_${item.id}`}
-              name="eligibleCustomerType"
-              value={eligibleCustomerType}
-              onChange={(eligibleCustomerType) => {
-                setEligibleCustomerType(eligibleCustomerType);
-              }}
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label htmlFor="fee" className=" px-1 text-xs text-gray-900">
-              Processing Fee
-            </label>
-            <input
-              type="text"
-              name="fee"
-              value={fee}
-              onChange={(e) => setFee(e.target.value)}
-              className="block w-28 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="1%"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor="rac"
-              className=" bg-white px-1 text-xs text-gray-900"
-            >
-              RAC
-            </label>
-            <Select
-              className="w-[240px]"
-              options={racOptions}
-              name="rac"
-              value={racType}
-              onChange={(racselectedOption) => setRacType(racselectedOption)}
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`managementFeeVat`}
-              className=" px-1 text-xs text-gray-900"
-            >
-              Management Fee Vat
-            </label>
-            <input
-              type="text"
-              name="managementFeeVat"
-              value={managementFee}
-              onChange={(e) => setManagementFee(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="15%"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor={`numberOfEmisForEarlySettlement`}
-              className=" px-1 text-xs text-gray-900"
-            >
-              Number Of Emis For Early Settlement
-            </label>
-            <input
-              type="number"
-              name="numberOfEmisForEarlySettlement"
-              value={noOfEmis}
-              onChange={(e) => setNoOfEmis(e.target.value)}
-              className="block w-56 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="3"
-            />
-          </div>
-          <div className="relative mt-1">
-            <label
-              htmlFor={`refinaceWith`}
-              className=" text-gray-900 block text-xs text-center w-24 mb-2"
-            >
-              Refinanced With
-            </label>
-            <div className="flex h-6 justify-center">
-              <input
-                id={`refinancedWith`}
-                value={refinanced}
-                checked={refinanced}
-                onChange={(e) => setRefinanced(e.target.checked)}
-                name="refinancedWith"
-                type="checkbox"
-                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+        <div className="border-b border-gray-300 pb-5">
+          <div className="flex gap-5 items-end pb-7">
+            <div className="relative">
+              <label
+                htmlFor="eligibleCustomerType"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                Eligible Customer Type
+              </label>
+              <Select
+                className="w-[170px]"
+                options={tenureOptions}
+                // id={`tenureType_${item.id}`}
+                name="eligibleCustomerType"
+                value={eligibleCustomerType}
+                onChange={(eligibleCustomerType) => {
+                  setEligibleCustomerType(eligibleCustomerType);
+                }}
+                isSearchable={false}
               />
             </div>
-          </div>
-          <div className="relative mt-1">
-            <label
-              htmlFor={`isDisableRac`}
-              className=" text-gray-900 block text-xs text-center w-24 mb-2"
-            >
-              Disable RAC
-            </label>
-            <div className="flex h-6 justify-center">
-              <input
-                id={`isDisableRac`}
-                value={disabledRAC}
-                checked={disabledRAC}
-                onChange={(e) => setDisabledRAC(e.target.checked)}
-                name="isDisableRac"
-                type="checkbox"
-                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+            <div className="relative">
+              <label
+                htmlFor="rac"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                RAC
+              </label>
+              <Select
+                className="w-[230px]"
+                options={racOptions}
+                name="rac"
+                value={racType}
+                onChange={(racselectedOption) => setRacType(racselectedOption)}
+                isSearchable={false}
               />
             </div>
+            <div className="relative">
+              <label
+                htmlFor="project"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                Project
+              </label>
+              <Select
+                className="w-[200px]"
+                options={projectOptions}
+                name="project"
+                value={projectType}
+                onChange={(projectSelectedOption) =>
+                  setProjectType(projectSelectedOption)
+                }
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor="project"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                TCL
+              </label>
+              <Select
+                className="w-[180px]"
+                options={tclOptions}
+                name="project"
+                value={tclType}
+                onChange={(tclSelectedOption) => setTclType(tclSelectedOption)}
+                isSearchable={false}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleBoth}
+              className="w-9 h-9 rounded-md bg-indigo-600 p-2 ml-4 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            >
+              <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleBoth}
-            className="w-9 h-9 rounded-md bg-indigo-600 p-2 ml-4 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <div className="flex gap-5 items-end">
+            <div className="relative">
+              <label htmlFor="fee" className=" px-1 text-xs text-gray-900">
+                <div className="absolute -top-2">Processing Fee</div>
+              </label>
+              <input
+                type="text"
+                name="fee"
+                value={fee}
+                onChange={(e) => setFee(e.target.value)}
+                className="block w-16 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="1%"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`managementFeeVat`}
+                className=" px-1 text-xs text-gray-900"
+              >
+                <div className="absolute -top-2">Management Fee Vat</div>
+              </label>
+              <input
+                type="text"
+                name="managementFeeVat"
+                value={managementFee}
+                onChange={(e) => setManagementFee(e.target.value)}
+                className="block w-20 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="15%"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor={`numberOfEmisForEarlySettlement`}
+                className=" px-1 text-xs text-gray-900"
+              >
+                <div className="absolute -top-2">
+                  Number Of Emis For Early Settlement
+                </div>
+              </label>
+              <input
+                type="number"
+                name="numberOfEmisForEarlySettlement"
+                value={noOfEmis}
+                onChange={(e) => setNoOfEmis(e.target.value)}
+                className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="3"
+              />
+            </div>
+            <div className="relative mt-1">
+              <label
+                htmlFor={`refinaceWith`}
+                className=" text-gray-900 block text-xs text-center w-16 mb-2"
+              >
+                <div className="absolute -top-8">Refinanced With</div>
+              </label>
+              <div className="flex h-6 justify-center">
+                <input
+                  id={`refinancedWith`}
+                  value={refinanced}
+                  checked={refinanced}
+                  onChange={(e) => setRefinanced(e.target.checked)}
+                  name="refinancedWith"
+                  type="checkbox"
+                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                />
+              </div>
+            </div>
+            <div className="relative mt-1">
+              <label
+                htmlFor={`isDisableRac`}
+                className=" text-gray-900 block text-xs text-center w-16 mb-2"
+              >
+                <div className="absolute -top-8">Disable RAC</div>
+              </label>
+              <div className="flex h-6 justify-center">
+                <input
+                  id={`isDisableRac`}
+                  value={disabledRAC}
+                  checked={disabledRAC}
+                  onChange={(e) => setDisabledRAC(e.target.checked)}
+                  name="isDisableRac"
+                  type="checkbox"
+                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         {notice && (
           <p className="text-red-500 font-bold text-sm text-start mt-2">
