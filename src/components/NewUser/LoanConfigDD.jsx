@@ -3,7 +3,6 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
-import LoadingState from "../LoadingState";
 
 const loanTypeOptionsInitital = [
   { value: "Cash loan", label: "Cash Loan" },
@@ -116,9 +115,14 @@ const LoanConfigDD = () => {
 
   useEffect(() => {
     if (registrationResultsData.length === 0) return;
-    const eligibleProjects = registrationResultsData.registrationResults.filter(
-      (result) => result.eligibleStatus === "ELIGIBLE"
-    );
+    // const eligibleProjects = registrationResultsData.registrationResults.filter(
+    //   (result) => result.eligibleStatus === "ELIGIBLE"
+    // );
+
+    const eligibleProjects =
+      registrationResultsData.registrationResults.projects.filter(
+        (result) => result.alreadyRegistered === true
+      );
 
     const formattedRACData = eligibleProjects.map(({ projectName }) => ({
       value: projectName,
@@ -189,7 +193,7 @@ const LoanConfigDD = () => {
             isSearchable={false}
           />
         </div>
-        {loanType.value === "BNPL" ? (
+        {loanType.value === "DIGITAL-INSTALLMENT" ? (
           <div className="relative">
             <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
               Amount

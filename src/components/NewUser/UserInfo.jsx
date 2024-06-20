@@ -51,7 +51,7 @@ const EligibilityResults = ({ eligibilityResults }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const leftPanel = document.getElementById("leftPanelId");
+    const leftPanel = document.getElementById("SideBarId");
 
     const resizeObserver = new ResizeObserver((entries) => {
       const newWidth = entries[0].contentRect.width;
