@@ -24,6 +24,13 @@ const options = [
   { value: "YEARLY", label: "YEARLY" },
 ];
 
+const tenureTypeOptions = [
+  { value: "DAY", label: "DAY" },
+  { value: "WEEK", label: "WEEK" },
+  { value: "MONTH", label: "MONTH" },
+  { value: "YEAR", label: "YEAR" },
+];
+
 const tenureOptions = [
   { value: "CORPORATE", label: "CORPORATE" },
   { value: "E_COMMERCE", label: "E_COMMERCE" },
@@ -188,7 +195,8 @@ const LoanProductConfig = () => {
         value: productConfigData.tenureType,
         label: productConfigData.tenureType,
       };
-      setTenureType(formattedTenureType);
+      // setTenureType(formattedTenureType);
+      setTenureType(tenureTypeOptions[2]);
       setInitialTenureType(formattedTenureType);
       setDisabledRAC(productConfigData.disableRac);
       setRacType(
@@ -535,7 +543,7 @@ const LoanProductConfig = () => {
                 className=" px-1 text-xs text-gray-900"
               >
                 <div className="absolute -top-2">
-                  Number Of Emis For Early Settlement
+                  No. of Installments For Early Settlement
                 </div>
               </label>
               <input
@@ -651,9 +659,10 @@ const LoanProductConfig = () => {
             </label>
             <Select
               className="w-36"
-              options={options}
+              options={tenureTypeOptions}
               // id={`per_${item.id}`}
               name="tenureType"
+              defaultValue={tenureTypeOptions[0]}
               value={tenureType}
               onChange={(tenureType) => {
                 setTenureType(tenureType);
@@ -672,7 +681,7 @@ const LoanProductConfig = () => {
           </div>
         </div>
         <div>
-          <table className="w-[60%] divide-y divide-gray-200">
+          <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th scope="col" onClick={() => handleSort("interestRate")}>
@@ -775,7 +784,7 @@ const LoanProductConfig = () => {
                       {editingIndex === index ? (
                         <Select
                           className="w-[150px]"
-                          options={options}
+                          options={tenureTypeOptions}
                           name="tenureType"
                           value={tenureType}
                           onChange={(tenureType) => {

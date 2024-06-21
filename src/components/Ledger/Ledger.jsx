@@ -2,55 +2,114 @@ import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Select from "react-select";
 
-const ledgerarr = Array.from({ length: 100 }, (_, index) => {
-  const getRandomInt = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-  const randomDate = (start, end) => {
-    const date = new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-    return `${date.getDate()} ${date.toLocaleString("default", {
-      month: "short",
-    })} ${date.getFullYear()}`;
-  };
+// const ledgerarr = Array.from({ length: 100 }, (_, index) => {
+//   const getRandomInt = (min, max) =>
+//     Math.floor(Math.random() * (max - min + 1)) + min;
+//   const randomDate = (start, end) => {
+//     const date = new Date(
+//       start.getTime() + Math.random() * (end.getTime() - start.getTime())
+//     );
+//     return `${date.getDate()} ${date.toLocaleString("default", {
+//       month: "short",
+//     })} ${date.getFullYear()}`;
+//   };
 
-  const randomId = () => Math.random().toString(36).substr(2, 16);
-  const randomLoanId = () =>
-    `${randomId()}-eb55-44cb-be73-0403883e${getRandomInt(1000, 9999)}`;
-  const randomTransactionId = () => (Math.random() > 0.5 ? randomId() : null);
-  const randomAccount = () => {
-    const accountNames = [
-      "CASH_IN_BANK",
-      "DAYS_PAST_DUE",
-      "EARNED_INTEREST",
-      "EARNED_PRINCIPAL",
-    ];
-    const accountCodes = ["1002", "1004", "1003"];
-    const accountName = accountNames[getRandomInt(0, accountNames.length - 1)];
-    const accountCode = accountCodes[getRandomInt(0, accountCodes.length - 1)];
-    const debitValue = Math.random() > 0.5 ? getRandomInt(0, 5000) : 0;
-    const creditValue = debitValue === 0 ? getRandomInt(0, 5000) : 0;
+//   const randomId = () => Math.random().toString(36).substr(2, 16);
+//   const randomLoanId = () =>
+//     `${randomId()}-eb55-44cb-be73-0403883e${getRandomInt(1000, 9999)}`;
+//   const randomTransactionId = () => (Math.random() > 0.5 ? randomId() : null);
+//   const randomAccount = () => {
+//     const accountNames = [
+//       "CASH_IN_BANK",
+//       "DAYS_PAST_DUE",
+//       "EARNED_INTEREST",
+//       "EARNED_PRINCIPAL",
+//     ];
+//     const accountCodes = ["1002", "1004", "1003"];
+//     const accountName = accountNames[getRandomInt(0, accountNames.length - 1)];
+//     const accountCode = accountCodes[getRandomInt(0, accountCodes.length - 1)];
+//     const debitValue = Math.random() > 0.5 ? getRandomInt(0, 5000) : 0;
+//     const creditValue = debitValue === 0 ? getRandomInt(0, 5000) : 0;
 
-    return {
-      accountName,
-      accountCode,
-      debitValue,
-      creditValue,
-    };
-  };
+//     return {
+//       accountName,
+//       accountCode,
+//       debitValue,
+//       creditValue,
+//     };
+//   };
 
-  return {
-    id: randomId(),
-    userId: getRandomInt(1000000000, 1999999999).toString(),
-    loanId: randomLoanId(),
-    transactionId: randomTransactionId(),
-    transactionDate: randomTransactionId()
-      ? randomDate(new Date(2023, 0, 1), new Date(2024, 5, 30))
-      : null,
-    date: randomDate(new Date(2024, 0, 1), new Date(2024, 5, 30)),
-    account: Array.from({ length: getRandomInt(1, 3) }, randomAccount),
-  };
-});
+//   return {
+//     id: randomId(),
+//     userId: getRandomInt(1000000000, 1999999999).toString(),
+//     loanId: randomLoanId(),
+//     transactionId: randomTransactionId(),
+//     transactionDate: randomTransactionId()
+//       ? randomDate(new Date(2023, 0, 1), new Date(2024, 5, 30))
+//       : null,
+//     date: randomDate(new Date(2024, 0, 1), new Date(2024, 5, 30)),
+//     account: Array.from({ length: getRandomInt(1, 3) }, randomAccount),
+//   };
+// });
+
+const ledgerarr = [
+  {
+    id: "666c7ca699ba1348a3e1c029",
+    userId: "1055533324",
+    loanId: "59562361-eb55-44cb-be73-0403883e8536",
+    transactionId: null,
+    transactionDate: null,
+    date: "14 Jun 2024",
+    account: [
+      {
+        accountName: "CASH_IN_BANK",
+        accountCode: "1002",
+        debitValue: 0,
+        creditValue: 4944.5,
+      },
+      {
+        accountName: "DAYS_PAST_DUE",
+        accountCode: "1004",
+        debitValue: 4000,
+        creditValue: 0,
+      },
+      {
+        accountName: "DAYS_PAST_DUE",
+        accountCode: "1004",
+        debitValue: 944.5,
+        creditValue: 0,
+      },
+    ],
+  },
+  {
+    id: "666c7ca699ba1348a3e1c029",
+    userId: "1055533325",
+    loanId: "59562361-eb55-44cb-be73-0403883e8537",
+    transactionId: null,
+    transactionDate: null,
+    date: "15 Jun 2024",
+    account: [
+      {
+        accountName: "DAYS_PAST_DUE",
+        accountCode: "1004",
+        debitValue: 150,
+        creditValue: 0,
+      },
+      {
+        accountName: "EARNED_INTEREST",
+        accountCode: "1002",
+        debitValue: 0,
+        creditValue: 100,
+      },
+      {
+        accountName: "EARNED_PRINCIPAL",
+        accountCode: "1003",
+        debitValue: 0,
+        creditValue: 50,
+      },
+    ],
+  },
+];
 
 const Ledger = () => {
   const tableRef = useRef(null);

@@ -16,7 +16,7 @@ const data = [
     avgTCL: "150",
     totalUser: "10",
     uploadedDate: "1 Aug 2023",
-    totalRows: 3,
+    totalRows: 10,
   },
   {
     name: "BNPL TCL",
@@ -25,7 +25,7 @@ const data = [
     avgTCL: "350",
     totalUser: "20",
     uploadedDate: "1 Sept 2023",
-    totalRows: 5,
+    totalRows: 20,
   },
   {
     name: "Overdraft TCL",
@@ -34,11 +34,11 @@ const data = [
     avgTCL: "550",
     totalUser: "30",
     uploadedDate: "1 Oct 2023",
-    totalRows: 7,
+    totalRows: 30,
   },
 ];
 
-const TclComponent2 = () => {
+const TclComponent1 = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [message, setMessage] = useState("");
@@ -105,17 +105,57 @@ const TclComponent2 = () => {
 
       {message && <div className="mb-4 text-red-500">{message}</div>}
 
-      <table className="divide-y divide-gray-300 min-w-[60%] max-w-[80%]">
-        <thead>
-          <tr className="divide-x divide-gray-200">
-            <th className="py-3.5 px-4 text-center">File Name</th>
-            <th className="py-3.5 px-4 text-center">Min TCL</th>
-            <th className="py-3.5 px-4 text-center">Max TCL</th>
-            <th className="py-3.5 px-4 text-center">Avg TCL</th>
-            <th className="py-3.5 px-4 text-center">Total User</th>
-            <th className="py-3.5 px-4 text-center">Uploaded Date</th>
-            <th className="py-3.5 px-4 text-center">Total Rows</th>
-            <th className="py-3.5 px-4 text-center">Actions</th>
+      <table className="min-w-full divide-y divide-gray-300">
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              File Name
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Min TCL
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Max TCL
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Avg TCL
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Total User
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Uploaded Date
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Total Rows
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
@@ -127,55 +167,50 @@ const TclComponent2 = () => {
             </tr>
           ) : (
             tableData.map((row, index) => (
-              <tr
-                key={index}
-                className="divide-x divide-gray-200 text-center w-full"
-              >
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+              <tr key={index}>
+                <td className=" whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.name}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.minTCL}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.maxTCL}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.avgTCL}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.totalUser}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.uploadedDate}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                   <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
                     {row.totalRows}
                   </div>
                 </td>
-                <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-                  <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    <button
-                      onClick={() => handleDelete(index)}
-                      type="button"
-                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                    >
-                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                  </div>
+                <td className=" whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                  <button
+                    onClick={() => handleDelete(index)}
+                    type="button"
+                    className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  >
+                    <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
                 </td>
               </tr>
             ))
@@ -186,4 +221,4 @@ const TclComponent2 = () => {
   );
 };
 
-export default TclComponent2;
+export default TclComponent1;
