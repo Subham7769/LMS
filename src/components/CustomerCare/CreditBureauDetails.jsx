@@ -1,9 +1,9 @@
 import { useState } from "react";
-import CustomerAddress from "./CustomerAddress";
-import CreditInstrument from "./CreditInstrument";
-import DefaultDetails from "./DefaultDetails";
-import Score from "./Score";
-import DownloadReports from "./DownloadReports";
+const CustomerAddress = React.lazy(() => import("./CustomerAddress"));
+const CreditInstrument = React.lazy(() => import("./CreditInstrument"));
+const DefaultDetails = React.lazy(() => import("./DefaultDetails"));
+const Score = React.lazy(() => import("./Score"));
+const DownloadReports = React.lazy(() => import("./DownloadReports"));
 
 const CreditBureauDetails = () => {
   const [activeTab, setActiveTab] = useState("customer-address");
