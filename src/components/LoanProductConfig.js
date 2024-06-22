@@ -312,7 +312,6 @@ const LoanProductConfig = () => {
     return <LoadingState />;
   }
 
-  
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -583,13 +582,20 @@ const LoanProductConfig = () => {
                 isSearchable={false}
               />
             </div>
-            {/* <button
+            <button
               onClick={() => handleSave()}
               type="button"
-              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="inline-flex w-[100px] items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-            </button> */}
+              {productConfigData.interestEligibleTenure.some(
+                (configItem) =>
+                  configItem.interestRate === item.interestRate &&
+                  configItem.tenure === item.tenure
+              )
+                ? "Update"
+                : "Save"}
+            </button>
             <button
               onClick={() => handleDelete(index)}
               type="button"
@@ -599,7 +605,7 @@ const LoanProductConfig = () => {
             </button>
           </div>
         ))}
-        <div className="text-right mt-5">
+        {/* <div className="text-right mt-5">
           <button
             type="button"
             onClick={handleSave}
@@ -608,7 +614,7 @@ const LoanProductConfig = () => {
             <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
             Save
           </button>
-        </div>
+        </div> */}
       </div>
     </>
   );
