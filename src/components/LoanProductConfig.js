@@ -202,6 +202,7 @@ const LoanProductConfig = () => {
     list[index][name] = value;
     setInputList(list);
   };
+
   const handleDelete = (index) => {
     const deleteList = [...inputList];
     deleteList.splice(index, 1);
@@ -216,6 +217,7 @@ const LoanProductConfig = () => {
       />
     ));
   };
+
   const handleSave = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
     // if (newInterest && newTenure) {
@@ -259,11 +261,6 @@ const LoanProductConfig = () => {
     }
   };
 
-  async function handleBoth() {
-    await handleSystemChanges();
-    await handleSave();
-  }
-
   async function handleSystemChanges() {
     const token = localStorage.getItem("authToken");
     const targetData = {
@@ -306,9 +303,16 @@ const LoanProductConfig = () => {
     }
   }
 
+  async function handleBoth() {
+    await handleSystemChanges();
+    await handleSave();
+  }
+
   if (productConfigData?.length === 0) {
     return <LoadingState />;
   }
+
+  
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />

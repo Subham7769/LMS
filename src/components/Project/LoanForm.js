@@ -2882,7 +2882,7 @@ const LoanForm = () => {
       // Transform the RAC data to the desired format
 
       setProjectData(projectDetails);
-      //   // console.log(ProjectData);
+      // console.log(ProjectData);
     } catch (error) {
       console.error(error);
     }
