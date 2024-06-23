@@ -2,9 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-const Body = lazy(() => import("./components/Body"));
 const Group = lazy(() => import("./components/Group/Group"));
-const RAC = lazy(() => import("./components/RAC/RAC"));
 const Product = lazy(() => import("./components/Product"));
 const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
@@ -78,7 +76,6 @@ const BpmnComponent2 = lazy(() =>
 const BpmnComponent3 = lazy(() =>
   import("./components/BusinessRule/BpmnComponent3")
 );
-const ProjectPage = lazy(() => import("./components/Project/ProjectPage"));
 const NewProjectPage = lazy(() =>
   import("./components/Project/NewProjectPage")
 );
@@ -98,7 +95,6 @@ const EmploymentDetails = lazy(() =>
   import("./components/NewUser/EmploymentDetails")
 );
 const CreateProduct = lazy(() => import("./components/CreateProduct"));
-const Tcl = lazy(() => import("./components/Tcl/Tcl"));
 const TclComponent1 = lazy(() => import("./components/Tcl/TclComponent1"));
 const TclComponent2 = lazy(() => import("./components/Tcl/TclComponent2"));
 const TclComponent3 = lazy(() => import("./components/Tcl/TclComponent3"));
@@ -107,14 +103,21 @@ const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
 );
 const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
-import LoadingState from "./components/LoadingState";
+
+const LoadingState = lazy(() => import("./components/LoadingState"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const TclPage = lazy(() => import("./pages/TclPage"));
+const RacPage = lazy(() => import("./pages/RacPage"));
+const ProjectPage = lazy(() => import("./pages/ProjectPage"));
+
 const routes = [
   {
     path: "/",
     element: <AppLayout />,
     children: [
-      { path: "/", element: <Body /> },
-      { path: "/tcl", element: <Tcl /> },
+      { path: "/", element: <HomePage /> },
+      { path: "/rac", element: <RacPage /> },
+      { path: "/tcl", element: <TclPage /> },
       { path: "/tcl/1", element: <TclComponent1 /> },
       { path: "/tcl/2", element: <TclComponent2 /> },
       { path: "/tcl/3", element: <TclComponent3 /> },
@@ -130,7 +133,6 @@ const routes = [
       { path: "/business-rule/3", element: <BpmnComponent3 /> },
       { path: "/create-rac", element: <CreateRac /> },
       { path: "/newrac/:racID", element: <NewCreatedRAC /> },
-      { path: "/rac", element: <RAC /> },
       { path: "/product", element: <Product /> },
       { path: "/create-product", element: <CreateProduct /> },
       {

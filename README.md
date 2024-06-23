@@ -1,4 +1,4 @@
-# Project Folder Structure
+# 1 - Project Folder Structure
 
 This document outlines the folder structure of the project to maintain consistency and improve code organization.
 
@@ -27,7 +27,7 @@ Contains all the project's Root files/folders.
   - **Store.js** : Configures and exports the Redux store.
 - **Utils/** : Contains utility functions and helper methods that can be used throughout the project.
 
-![Folder Structure](./src/Assets/Image/FolderStructure.png)
+![Folder Structure](./src/assets/image/FolderStructure.png)
 
 ### `Root` Files
 - **App.jsx** : The root component that sets up the main structure and routing of the application.
@@ -49,7 +49,7 @@ This folder structure promotes a clear separation of concerns, making the projec
 ---
 &emsp;
 
-# Component Documentation Template
+# 2 - Component Documentation Template
 # [ComponentName]
 
 ### Description
@@ -121,7 +121,7 @@ export default ExampleComponent;
 
 &emsp;
 
-# Creating Component Documentation Using Component Documentation Template With ChatGPT
+# 3 - Creating Component Documentation Using Component Documentation Template With ChatGPT
 
 You are supposed to give all the details in one prompt. 
 
@@ -133,11 +133,162 @@ You are supposed to give all the details in one prompt.
 
 ---
 
+&emsp;
+
+# 4 - Code Migrations 
+
+To manage code migration and merging across different branches and environments, it's important to establish a clear workflow that aligns with your development, testing, and deployment processes. Here’s a structured approach to handle code migration from your `features` branch to the `development` branch and finally to the `main` branch, each corresponding to `Local`, `Test`, and `Demo` environments respectively:
+
+![Folder Structure](./src/assets/image/CodeMigrationWorkflow.png)
+
+### Workflow Overview
+
+1. **Feature Development (Local Environment)**
+    - **Branch:** `features`
+    - **Environment:** Local
+    - **API Endpoints:** Local endpoints for development
+
+2. **Testing (Test Environment)**
+    - **Branch:** `Development`
+    - **Environment:** Test
+    - **API Endpoints:** Test endpoints
+
+3. **Deployment (Demo Environment)**
+    - **Branch:** `Main`
+    - **Environment:** Demo
+    - **API Endpoints:** Demo endpoints
+
+### Detailed Workflow
+
+#### 1. Feature Development
+
+- **Develop Features:**
+    - Developers work on the `features` branch locally.
+    - Use local API endpoints suitable for development.
+    
+- **Commit and Push:**
+    - Commit changes to the `features` branch.
+    - Push the `features` branch to the remote repository.
+
+#### 2. Code Review and Merge to Development
+
+- **Create Pull Request:**
+    - Once features are developed and tested locally, create a pull request (PR) from `features` to `Development`.
+    
+- **Code Review:**
+    - Conduct a code review. Address any feedback and make necessary changes.
+    
+- **Merge to Development:**
+    - Once the PR is approved, merge `features` into `Development`.
+    - Resolve any merge conflicts if they arise.
+
+- **Test Environment Deployment:**
+    - Deploy the `Development` branch to the test environment.
+    - Update API endpoints in the configuration to use the test environment endpoints.
+
+- **Testing:**
+    - Perform thorough testing in the test environment.
+    - Fix any bugs and push fixes to the `Development` branch.
+
+#### 3. Merge to Main for Demo
+
+- **Create Pull Request:**
+    - Once testing is successful, create a pull request from `Development` to `Main`.
+    
+- **Code Review:**
+    - Conduct a final review. Address any feedback and make necessary changes.
+    
+- **Merge to Main:**
+    - Once the PR is approved, merge `Development` into `Main`.
+    - Resolve any merge conflicts if they arise.
+
+- **Demo Environment Deployment:**
+    - Deploy the `Main` branch to the demo environment.
+    - Update API endpoints in the configuration to use the demo environment endpoints.
+
+- **Demo Testing:**
+    - Perform final testing in the demo environment.
+    - Ensure everything works as expected.
+
+### Handling API Endpoint Changes
+
+To handle different API endpoints across environments, you can use environment-specific configuration files or environment variables. Here's a basic example using environment variables:
+
+1. **Local Environment Configuration:**
+    ```bash
+    export API_ENDPOINT="http://localhost:3000/api"
+    ```
+
+2. **Test Environment Configuration:**
+    ```bash
+    export API_ENDPOINT="http://test.api.example.com/api"
+    ```
+
+3. **Demo Environment Configuration:**
+    ```bash
+    export API_ENDPOINT="http://demo.api.example.com/api"
+    ```
+
+In your code, you can access these environment variables:
+
+```javascript
+const apiEndpoint = process.env.API_ENDPOINT;
+```
+
+### Summary
+
+- **Develop** features on the `features` branch using local endpoints.
+- **Merge** features into the `Development` branch for testing, updating endpoints for the test environment.
+- **Merge** tested code into the `Main` branch for deployment to the demo environment, updating endpoints accordingly.
+
+This workflow ensures that code is progressively tested and integrated, reducing the likelihood of bugs in the production environment. Adjust the specifics to fit your team's processes and tools.
+
+
+
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
 
 &emsp;
 
 
-# App.js optimizations
+# 5 - Component Optimizations
+# App.jsx optimizations
 
 ##### (19/06/2024)
 
@@ -200,7 +351,7 @@ useEffect(() => {
 
 &emsp;
 
-# LeftPanel.jsx Optimizations
+# LeftPanel.jsx -> SideBar.jsx Optimizations
 ##### (19/06/2024)
 This document outlines the optimizations made to the `LeftPanel` component to improve readability, reduce redundancy, and enhance performance.
 
@@ -360,9 +511,1055 @@ const toggleSubmenu = (index) => {
   );
 };
 ```
+## Future Optimizations:
+Refactor Nested Mapping:
+
+Currently, you're mapping over Menus and its submenuItems within the JSX. Consider refactoring this logic into separate components or functions for better separation of concerns and improved code readability.
+Memoization for Hooks:
+
+To prevent unnecessary re-renders and optimize performance, consider using memoization techniques (useMemo, useCallback) for hooks like useRACInfo, useAllProjectInfo, useProductInfo. This ensures that expensive computations are memoized and only recalculated when dependencies change.
+Error Handling in Hooks:
+
+Implement error handling mechanisms within custom hooks (useRACInfo, useAllProjectInfo, useProductInfo) to gracefully manage and display errors when data fetching fails.
+Accessibility and Keyboard Navigation:
+
+Ensure accessibility standards are met by improving keyboard navigation and focus management within the sidebar and submenu items. Use role, aria-* attributes where necessary.
+Testing and Optimization of Rendering Performance:
+
+Conduct performance profiling to identify potential bottlenecks and optimize rendering performance, especially when dealing with large datasets or complex UI interactions.
+Code Splitting and Lazy Loading:
+
+Consider implementing code splitting and lazy loading techniques, especially if the application grows in size. This can significantly improve initial load times by deferring the loading of less critical parts of the application until they are needed.
+Type Safety and PropTypes:
+
 
 ## Summary
 These optimizations improve the `LeftPanel` component by reducing redundancy, enhancing readability, and boosting performance.
 
 ---
+
+&emsp;
+
+
+# Header.jsx Component Optimization
+
+This document outlines the optimizations made to the `Header` component in your React project. The changes focus on improving performance, readability, and maintainability.
+
+## Key Optimizations
+
+1. **Memoization of `userNavigation` Array**
+2. **Extraction of Subcomponents**
+3. **Simplification of Conditional CSS Classes**
+
+### Memoization of `userNavigation` Array
+
+The `userNavigation` array was being recreated on every render. By using the `useMemo` hook, we can ensure that the array is only recreated when its dependencies change. This helps in optimizing performance by preventing unnecessary re-renders.
+
+**Before:**
+```javascript
+const userNavigation = [
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "/login", function: () => localStorage.clear() },
+];
+```
+
+**After:**
+```javascript
+import React, { useMemo } from 'react';
+
+const Header = () => {
+  const userNavigation = useMemo(() => [
+    { name: 'Your Profile', href: '#' },
+    { name: 'Settings', href: '#' },
+    { name: 'Sign out', href: '/login', action: () => localStorage.clear() },
+  ], []);
+  // Rest of the component
+};
+```
+
+### Extraction of Subcomponents
+
+To enhance readability and maintainability, we extracted complex JSX elements into smaller, reusable subcomponents. This modular approach makes the `Header` component cleaner and easier to understand.
+
+**Before:**
+```javascript
+// Complex JSX directly in the Header component
+```
+
+**After:**
+```javascript
+const NotificationButton = () => (
+  <Link to="/notification">
+    <button
+      type="button"
+      className="relative ml-5 flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    >
+      <span className="absolute -inset-1.5" />
+      <span className="sr-only">View notifications</span>
+      <BellIcon className="h-6 w-6" aria-hidden="true" />
+    </button>
+  </Link>
+);
+
+const UserMenu = ({ userNavigation }) => (
+  <Menu as="div" className="relative">
+    <div className="flex items-center gap-2">
+      <Menu.Button className="relative flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <span className="absolute -inset-1.5" />
+        <span className="sr-only">Open user menu</span>
+        <img className="h-8 w-8 rounded-full" src={UserImg} alt="User" />
+      </Menu.Button>
+      <div className="text-gray-500">Hello, {localStorage.getItem('username')}</div>
+    </div>
+    <Transition
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-75"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
+    >
+      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        {userNavigation.map(item => (
+          <Menu.Item key={item.name}>
+            {({ active }) => (
+              <Link
+                to={item.href}
+                className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-700' : 'text-gray-700'}`}
+                onClick={item.action}
+              >
+                {item.name}
+              </Link>
+            )}
+          </Menu.Item>
+        ))}
+      </Menu.Items>
+    </Transition>
+  </Menu>
+);
+
+const CreateMenu = () => (
+  <Menu as="div" className="relative">
+    <Menu.Button className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+      <PlusIcon className="h-5 w-5" aria-hidden="true" />
+    </Menu.Button>
+    <Transition
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-75"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
+    >
+      <Menu.Items className="absolute right-2 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div className="py-1">
+          {[
+            { to: '/create-rac', text: 'RAC' },
+            { to: '/project/newProject', text: 'Project' },
+            { to: '/create-product', text: 'Product' },
+            { to: '/group/1', text: 'Group' },
+            { to: '/business-rule/1', text: 'Business Rule' },
+          ].map(item => (
+            <Menu.Item key={item.to}>
+              {({ active }) => (
+                <Link
+                  to={item.to}
+                  className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                >
+                  {item.text}
+                </Link>
+              )}
+            </Menu.Item>
+          ))}
+        </div>
+      </Menu.Items>
+    </Transition>
+  </Menu>
+);
+
+// Header component using subcomponents
+const Header = () => {
+  const userNavigation = useMemo(() => [
+    { name: 'Your Profile', href: '#' },
+    { name: 'Settings', href: '#' },
+    { name: 'Sign out', href: '/login', action: () => localStorage.clear() },
+  ], []);
+
+  return (
+    <header className="shadow-md bg-white z-50 w-full fixed top-0 left-0 flex items-center justify-between" id="navBarId">
+      <div className="w-1/3">&nbsp;</div>
+      <div className="flex justify-center w-1/3">
+        <div>
+          <label htmlFor="search" className="sr-only">Search</label>
+          {/* Uncomment and customize the search input if needed */}
+          {/* <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </div>
+            <input
+              id="search"
+              name="search"
+              className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+              placeholder="Search"
+              type="search"
+            />
+          </div> */}
+        </div>
+      </div>
+      <div className="px-8 py-3 relative flex justify-end items-end gap-8 w-1/3">
+        <NotificationButton />
+        <UserMenu userNavigation={userNavigation} />
+        <CreateMenu />
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+```
+
+### Simplification of Conditional CSS Classes
+
+The conditional application of CSS classes has been simplified for better readability. This involves using template literals to conditionally apply classes in a more concise and readable manner.
+
+**Before:**
+```javascript
+className={
+  active ? "bg-gray-100 block px-4 py-2 text-sm text-gray-700" : "block px-4 py-2 text-sm text-gray-700"
+}
+```
+
+**After:**
+```javascript
+className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-700' : 'text-gray-700'}`}
+```
+
+## Summary
+
+These optimizations enhance the performance, readability, and maintainability of the `Header` component. By memoizing the `userNavigation` array, extracting complex JSX into subcomponents, and simplifying CSS class application, the code becomes more efficient and easier to manage.
+
+---
+
+
+
+&emsp;
+
+# Header.jsx Component Optimization
+
+**Before:**
+
+```javascript
+import React from 'react';
+
+const Footer = ({ mgLeft }) => {
+  const year = new Date().getFullYear();
+  return (
+    <>
+      <footer style={{ marginLeft: `${mgLeft}px` }} className="mt-auto">
+        <div className="text-grey-700 py-3 mt-20 text-sm">
+          <div className="container">
+            <div className="flex justify-between">
+              <div>© {year} All Rights Reserved</div>
+              <div>Powered by PhotonMatters</div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+};
+
+export default Footer;
+```
+
+**After:**
+
+```javascript
+import React from 'react';
+
+const Footer = ({ mgLeft }) => {
+  const year = new Date().getFullYear();
+  return (
+    <footer style={{ marginLeft: mgLeft }} className="mt-auto">
+      <div className="text-grey-700 py-3 mt-20 text-sm container flex justify-between">
+        <div>© {year} All Rights Reserved</div>
+        <div>Powered by PhotonMatters</div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+```
+## Summary
+
+1. Removed unnecessary `Fragment` wrapper.
+2. Simplified the `style` attribute by directly passing the `mgLeft` prop.
+3. Consolidated nested `div` elements to reduce the component's depth and improve readability.
+
+---
+
+
+&emsp;
+
+# Footer.jsx Component Optimization 
+
+**Before:**
+```javascript
+const Footer = ({ mgLeft }) => {
+  const year = new Date().getFullYear();
+  return (
+    <>
+      <footer style={{ marginLeft: `${mgLeft}px` }} className="mt-auto">
+        <div className=" text-grey-700 py-3 mt-20 text-sm">
+          <div className="container">
+            <div className="flex justify-between">
+              <div> © {year} All Rights Reserved</div>
+              <div>powered by PhotonMatters</div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+};
+```
+
+**After:**
+```javascript
+import React from 'react';
+
+const Footer = ({ mgLeft }) => {
+  const year = new Date().getFullYear();
+  return (
+    <footer style={{ marginLeft: mgLeft }} className="mt-auto text-grey-700 py-3 mt-20 text-sm container flex justify-between">
+      <div>© {year} All Rights Reserved</div>
+      <div>Powered by PhotonMatters</div>
+    </footer>
+  );
+};
+
+export default Footer;
+```
+
+## Summary
+- Simplified inline style handling for `marginLeft`.
+- Consolidated and simplified class names for cleaner styling.
+- Improved structure by eliminating unnecessary nesting and fragments.
+
+---
+
+&emsp;
+
+# Body.jsx -> HomePage Optimization Breakdown
+
+The new code has been optimized in several key ways, making it more modular, maintainable, and reusable. Here's a breakdown of the optimizations:
+
+1. **Modular Structure:**
+   - **Old Code:**
+     - The `Body` component contained all the logic for rendering the stats and the product table in a single component, making it monolithic and harder to manage.
+   - **New Code:**
+     - The logic is split into separate, smaller components (`Body`, `StatContainer`, `StatCard`), each with a single responsibility. This improves readability and maintainability.
+
+2. **Data Separation:**
+   - **Old Code:**
+     - The stats data was hard-coded within the same file as the component.
+   - **New Code:**
+     - The stats data (`HomeStats`) is separated into a different file (`../data/HomeStats`). This makes it easier to manage and update the data independently from the component logic.
+
+3. **Reuse of Components:**
+   - **Old Code:**
+     - The `Body` component directly contained the HTML and JSX for rendering each stat card.
+   - **New Code:**
+     - The `StatCard` component is created for individual stat cards, allowing for reuse and easier updates.
+     - The `StatContainer` component wraps the collection of `StatCard` components.
+
+4. **Dynamic Class Assignment:**
+   - **Old Code:**
+     - Used a utility function `classNames` to conditionally apply classes.
+   - **New Code:**
+     - Simplified the conditional class application directly within the JSX using template literals.
+
+5. **Functional Decomposition:**
+   - **Old Code:**
+     - Mixed different concerns in a single component.
+   - **New Code:**
+     - Separated concerns by dividing the functionality into different components (`Body`, `StatContainer`, `StatCard`), making the code cleaner and easier to test.
+
+6. **Improved Readability and Maintainability:**
+   - **Old Code:**
+     - The logic was harder to follow due to its monolithic structure.
+   - **New Code:**
+     - Improved readability by creating smaller, focused components.
+7. **Props and Data Management:**
+
+    - Introduced ListName, ListHeader, and ListItem as props to customize the table's title, headers, and data dynamically. This makes the component more flexible and reusable across different parts of the application.
+
+8. **Conditional Rendering for Links:**
+
+    - Implemented conditional rendering in Object.keys(product).map() to selectively render table cells (<td>) as links (<Link>) based on the presence of the href property in the product object. This ensures that only clickable items are linked appropriately.
+
+9. **CSS and Styling Improvements:**
+
+    - Enhanced CSS classes and styling (className) to maintain consistent design principles across the application, ensuring readability and maintainability.
+
+## Summary
+
+#### New `HomePage` Component
+
+```javascript
+import React from 'react'
+import Body from '../components/Common/Body/Body'
+import ListTable from "../components/Common/ListTable/ListTable";
+import { HomeStats, HeaderList, ProductList } from '../data/HomeData';
+import StatContainer from '../components/Common/StatContainer/StatContainer';
+
+
+const HomePage = () => {
+    return (
+        <Body>
+            <StatContainer stats={HomeStats} />
+            <ListTable ListName={"Product List"} ListHeader={HeaderList} ListItem={ProductList}/>
+        </Body>
+    )
+}
+
+export default HomePage
+```
+
+### HomeStats:
+Contains statistics data (id, name, stat, icon, change, changeType) for displaying various metrics.
+Icons imported (UsersIcon, CurrencyRupeeIcon, ClipboardDocumentListIcon) from Heroicons to visually represent each statistic.
+
+### HeaderList:
+Array of strings representing headers for the ListTable component (Name, Created On, Open Loans, Total Disbursed Principal, Status).
+
+### ProductList:
+Array of objects representing data for products (name, created, openLoans, disbursedPrincipal, status, href for linking to product details).
+
+#### New `Body` Component
+
+```javascript
+import React from 'react';
+
+const Body = ({ children }) => {
+  return (
+    <div className="mx-auto max-w-none">
+      {children}
+    </div>
+  );
+};
+
+export default Body;
+```
+
+#### New `StatContainer` Component
+
+```javascript
+import React from 'react';
+import StatCard from '../StatCard/StatCard';
+
+const StatContainer = ({ stats }) => (
+  <div className="bg-gray-100 rounded-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <h3 className="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>
+    <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {stats.map((stat) => (
+        <StatCard key={stat.id} stat={stat} />
+      ))}
+    </dl>
+  </div>
+);
+
+export default StatContainer;
+```
+
+#### New `StatCard` Component
+
+```javascript
+import React from 'react';
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
+
+const StatCard = ({ stat }) => {
+  const isIncrease = stat.changeType === "increase";
+  const IconComponent = isIncrease ? ArrowUpIcon : ArrowDownIcon;
+  const textColorClass = isIncrease ? "text-green-600" : "text-red-600";
+  const iconColorClass = isIncrease ? "text-green-500" : "text-red-500";
+
+  return (
+    <div className="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
+      <dt>
+        <div className="absolute rounded-md bg-indigo-500 p-3">
+          <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
+        </div>
+        <p className="ml-16 truncate text-sm font-medium text-gray-500">{stat.name}</p>
+      </dt>
+      <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
+        <p className="text-2xl font-semibold text-gray-900">{stat.stat}</p>
+        <p className={`${textColorClass} ml-2 flex items-baseline text-sm font-semibold`}>
+          <IconComponent className={`h-5 w-5 flex-shrink-0 self-center ${iconColorClass}`} aria-hidden="true" />
+          <span className="sr-only">
+            {isIncrease ? "Increased" : "Decreased"} by{" "}
+          </span>
+          {stat.change}
+        </p>
+        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+          <div className="text-sm">
+            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+              View all<span className="sr-only"> {stat.name} stats</span>
+            </a>
+          </div>
+        </div>
+      </dd>
+    </div>
+  );
+};
+
+export default StatCard;
+```
+
+#### New `HomeStats` Data
+
+```javascript
+import {
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
+export const HomeStats = [
+  {
+    id: 1,
+    name: "Total Borrowers",
+    stat: "71,897",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Avg. Lending / Day",
+    stat: "$58.16M",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Avg. Loans Closed / Day",
+    stat: "24.57",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
+];
+
+export const HeaderList = [
+  "Name",
+  "Created On",
+  "Open Loans",
+  "Total Disbursed Principal",
+  "Status",
+];
+
+export const ProductList = [
+  {
+    name: "Cash Loan",
+    created: "07/06/2021",
+    openLoans: "2367",
+    disbursedPrincipal: "$234M",
+    status: "Active",
+    href: "/product/cash-loan/loan-product-config",
+  },
+  {
+    name: "BNPL",
+    created: "14/09/2022",
+    openLoans: "1490",
+    disbursedPrincipal: "$750M",
+    status: "Active",
+  },
+  {
+    name: "Overdraft",
+    created: "19/09/2022",
+    openLoans: "185",
+    disbursedPrincipal: "$90M",
+    status: "Inactive",
+  },
+];
+
+```
+
+#### New `ListTable` Component
+
+```javascript
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
+
+const ListTable = ({ ListName, ListHeader, ListItem }) => {
+  return (
+    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+      <div className="px-4 sm:px-6 lg:px-8">
+        {/* Search bar */}
+        <div className="mb-5 w-96">
+          <label htmlFor="search" className="sr-only">Search</label>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </div>
+            <input
+              id="search"
+              name="search"
+              className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+              placeholder="Search"
+              type="search"
+            />
+          </div>
+        </div>
+        {/* Table title */}
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
+          </div>
+        </div>
+        {/* Table */}
+        <div className="mt-4 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {ListHeader.map((header, index) => (
+                        <th
+                          key={index}
+                          scope="col"
+                          className="px-3 py-3.5 w-1/5 text-center text-sm font-medium text-gray-900"
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {ListItem.map((product) => (
+                      <tr key={product.name}>
+                        {Object.keys(product).map((key, idx) => (
+                          key !== "href" ? (
+                            <td key={idx} className="w-1/5 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                              {product.href ? (
+                                <Link className="w-full block" to={product.href}>
+                                  {product[key]}
+                                </Link>
+                              ) : (
+                                product[key]
+                              )}
+                            </td>
+                          ) : null
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ListTable;
+
+```
+
+
+## Summary
+1. Split `Body` component into smaller, focused components.
+2. Moved stats data to a separate file (`HomeStats`).
+3. Created reusable `StatCard` component.
+4. Used template literals for dynamic class assignment.
+5. Improved readability with functional decomposition.
+6. Enhanced maintainability with organized code structure.
+
+These optimizations create a clear separation of concerns, improve code readability, and facilitate easier maintenance and updates.
+
+---
+
+&emsp;
+
+# Tcl.js - > TclPage Optimizations BreakDown 
+Here's a breakdown of the  you made in transitioning from the old code (``) to the new code (`TclPage.js`), focusing on improving modularity, maintainability, and readability:
+
+### Optimizations Made:
+
+1. **Modular Structure:**
+   - **Old Code (Tcl.js):**
+     - All logic and JSX were combined within a single component (`Tcl`), making it monolithic and harder to maintain.
+   - **New Code (TclPage.js):**
+     - Introduced a modular structure by extracting logic into separate components (`Body`, `StatContainer`, `ListTable`).
+     - `StatContainer` component now handles the rendering of statistics (`TclStats`).
+     - `ListTable` component is responsible for rendering a table (`ProductList`) with dynamic headers (`HeaderList`).
+
+2. **Data Separation:**
+   - **Old Code:**
+     - Stats (`stats`) were hardcoded within the component file (`Tcl.js`).
+   - **New Code:**
+     - Moved stats data (`TclStats`) and table data (`HeaderList`, `ProductList`) to a separate file (`TclData.js`).
+     - This separation enhances maintainability as data can be updated independently from component logic.
+
+3. **Component Reusability:**
+   - **New Code:**
+     - Utilized `StatContainer` for displaying statistics (`TclStats`). This promotes reuse across different parts of the application.
+     - Employed `ListTable` to display a list of TCL products (`ProductList`) with customizable headers (`HeaderList`).
+
+4. **Improved Readability and Maintainability:**
+   - **New Code:**
+     - Enhanced readability by organizing JSX structure within components (`Body`, `StatContainer`, `ListTable`).
+     - Reduced complexity in `TclPage.js` by delegating responsibilities to specialized components (`StatContainer` and `ListTable`).
+
+5. **Code Simplification:**
+   - **New Code:**
+     - Removed unnecessary CSS classes and streamlined JSX rendering in `TclPage.js`.
+     - Each component (`StatContainer`, `ListTable`) focuses on a specific responsibility, adhering to the single responsibility principle.
+
+
+#### New `TclData` Component
+
+```javascript
+import {
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
+export const TclStats = [
+  {
+    id: 1,
+    name: "Total Borrowers in All groups",
+    stat: "71,897",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Avg. Lending / Day",
+    stat: "$58.16M",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Avg. Loans Closed / Day",
+    stat: "24.57",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
+];
+
+export const HeaderList = [
+  "Name",
+  "Created On",
+  "Open Loans",
+  "Total Disbursed Principal",
+  "Status",
+];
+
+export const ProductList = [
+  {
+    name: "TCL 1",
+    created: "07/06/2021",
+    openLoans: "2367",
+    disbursedPrincipal: "$234M",
+    status: "Active",
+    href: "/tcl/1",
+  },
+  {
+    name: "TCL 2",
+    created: "14/09/2022",
+    openLoans: "1490",
+    disbursedPrincipal: "$750M",
+    status: "Active",
+    href: "/tcl/2",
+  },
+  {
+    name: "TCL 3",
+    created: "19/09/2022",
+    openLoans: "185",
+    disbursedPrincipal: "$90M",
+    status: "Inactive",
+    href: "/tcl/3",
+  },
+];
+```
+
+
+## Summary
+
+- **Modularity:** Splitting logic into smaller, focused components (`StatContainer`, `ListTable`) improves code organization and reusability.
+  
+- **Data Separation:** Centralizing data (`TclStats`, `HeaderList`, `ProductList`) in `TclData.js` enhances maintainability and facilitates easier updates.
+
+- **Component Reuse:** Leveraging `StatContainer` and `ListTable` promotes reuse across different pages or components within the application.
+
+- **Readability and Maintainability:** By reducing the complexity of `TclPage.js` and distributing responsibilities among components, the code becomes easier to understand and maintain.
+
+These optimizations collectively enhance the scalability and maintainability of your React application, aligning with best practices for modern frontend development.
+
+---
+
+&emsp;
+
+# RAC.jsx -> RacPage.jsx Optimizations Overview
+
+Here's a summary of the optimizations made in transitioning from the old code (`` and `RacTable.js`) to the new code (``, `StatContainer.js`, `StatCard.js`, and `ListTable.js`):
+
+### Optimizations Made:
+
+1. **Modular Structure:**
+   - **Old Code (RAC.js and RacTable.js):**
+     - The logic and JSX were combined within a single component (`RAC` and `RacTable`).
+   - **New Code (RacPage.js, StatContainer.js, StatCard.js, and ListTable.js):**
+     - Introduced a modular structure by extracting logic into separate components (`Body`, `StatContainer`, `StatCard`, `ListTable`).
+     - `StatContainer` and `StatCard` components handle the rendering of statistics (`RacStats`).
+     - `ListTable` component is responsible for rendering a table (`ProductList`) with dynamic headers (`HeaderList`).
+
+2. **Data Separation:**
+   - **Old Code:**
+     - Stats (`stats`) and table data were hardcoded within the component file (`RAC.js` and `RacTable.js`).
+   - **New Code:**
+     - Moved stats data (`RacStats`) and table data (`HeaderList`, `ProductList`) to a separate file (`RacData.js`).
+     - This separation enhances maintainability as data can be updated independently from component logic.
+
+3. **Component Reusability:**
+   - **New Code:**
+     - Utilized `StatContainer` for displaying statistics (`RacStats`). This promotes reuse across different parts of the application.
+     - Employed `ListTable` to display a list of RAC products (`ProductList`) with customizable headers (`HeaderList`).
+
+4. **Improved Readability and Maintainability:**
+   - **New Code:**
+     - Enhanced readability by organizing JSX structure within components (`Body`, `StatContainer`, `StatCard`, `ListTable`).
+     - Reduced complexity in `RacPage.js` by delegating responsibilities to specialized components (`StatContainer`, `ListTable`, `StatCard`).
+
+5. **Code Simplification:**
+   - **New Code:**
+     - Removed unnecessary CSS classes and streamlined JSX rendering in `StatContainer.js`, `StatCard.js`, and `ListTable.js`.
+     - Each component (`StatContainer`, `ListTable`, `StatCard`) focuses on a specific responsibility, adhering to the single responsibility principle.
+
+
+#### New `RacData` Component
+
+```javascript
+import {
+    ClipboardDocumentListIcon,
+    CurrencyRupeeIcon,
+    UsersIcon,
+  } from "@heroicons/react/24/outline";
+  
+export const RacStats = [
+    {
+        id: 1,
+        name: "Avg. Approval Daily",
+        stat: "723",
+        icon: UsersIcon,
+        change: "122",
+        changeType: "increase",
+      },
+      {
+        id: 2,
+        name: "Active RAC",
+        stat: "2 / 3",
+        icon: CurrencyRupeeIcon,
+        change: "5.4%",
+        changeType: "increase",
+      },
+      {
+        id: 3,
+        name: "Avg. Rejection / Day",
+        stat: "24.57",
+        icon: ClipboardDocumentListIcon,
+        change: "3.2%",
+        changeType: "decrease",
+      },
+  ];
+  
+  export const HeaderList = [
+    "Name",
+    "Created On",
+    "% Approved",
+    "Total Processed",
+    "Status",
+  ];
+  
+  export const ProductList = [
+    {
+        name: "Cash Product RAC",
+        created: "07/06/2021",
+        approved: "40%",
+        processed: "2367",
+        status: "Active",
+        href: "/rac/cash-loan/rmc",
+      },
+      {
+        name: "BNPL Product RAC",
+        created: "14/09/2022",
+        approved: "20%",
+        processed: "750",
+        status: "Active",
+        href: "/rac/cash-loan/rmc",
+      },
+      {
+        name: "Overdraft Product RAC",
+        created: "19/09/2022",
+        approved: "85%",
+        processed: "901",
+        status: "Inactive",
+        href: "/rac/cash-loan/rmc",
+      },
+  ];
+```
+
+
+
+
+## Summary
+
+- **Modularity:** Splitting logic into smaller, focused components (`StatContainer`, `StatCard`, `ListTable`) improves code organization and reusability.
+  
+- **Data Separation:** Centralizing data (`RacStats`, `HeaderList`, `ProductList`) in `RacData.js` enhances maintainability and facilitates easier updates.
+
+- **Component Reuse:** Leveraging `StatContainer`, `StatCard`, and `ListTable` promotes reuse across different pages or components within the application.
+
+- **Readability and Maintainability:** By reducing the complexity of `RacPage.js` and distributing responsibilities among components (`StatContainer`, `StatCard`, `ListTable`), the code becomes easier to understand and maintain.
+
+These optimizations collectively enhance the scalability and maintainability of your React application, aligning with best practices for modern frontend development. Each component now encapsulates a specific part of the UI or functionality, making the codebase more modular and easier to extend or modify in the future.
+
+---
+
+
+&emsp;
+
+
+# ProjectPage.jsx optimization Breakpoints
+
+In the optimization process from the old code to the new code, several improvements and restructuring have been implemented:
+
+1. **Modularization and Componentization**:
+   - **Body Component**: Introduced a `Body` component to encapsulate common layout elements, improving code organization and maintainability.
+   - **StatContainer Component**: Abstracted out the statistics rendering into a reusable `StatContainer` component, which accepts `stats` as props and iterates over them to display statistical information. This enhances reusability and separates concerns.
+   - **ListTable Component**: Created a `ListTable` component to handle the rendering of tabular data. This component abstracts away the table structure and rendering logic from the main page component (`ProjectPage`), making the code more modular and easier to maintain.
+
+2. **Data Separation**:
+   - Moved static data (`RacStats`, `HeaderList`, `ProductList`) into separate data files (`RacData.js` and `ProjectData.js`). This separation of concerns ensures that data is cleanly separated from presentation logic, promoting easier updates and maintenance.
+
+3. **Improvements in Layout and Styling**:
+   - **CSS Improvements**: Enhanced CSS classes and layouts to achieve a more consistent and visually appealing design. This includes better use of spacing (`mt-5`, `mb-5`) and grid layouts (`grid-cols-1`, `grid-cols-2`, `grid-cols-3`).
+   - **Responsive Design**: Ensured that the layout adapts gracefully across different screen sizes (`sm:grid-cols-2`, `lg:grid-cols-3`), improving usability across devices.
+
+4. **Code Simplification and Readability**:
+   - **Reduction of Redundancy**: Eliminated redundant or unnecessary code blocks, such as inline styles or hardcoded values.
+   - **Consolidation of Components**: Consolidated similar components (`StatCard` for statistics and `ListTable` for tabular data) into reusable and focused components, reducing duplication and improving code clarity.
+
+5. **Integration with Routing and React Features**:
+   - Leveraged React Router (`Link` from `react-router-dom`) for navigation within the application, ensuring a seamless user experience when navigating between different pages or sections.
+   - **React Hooks**: Utilized React Hooks (`useState`, `useEffect`) to manage state and side effects within components, enhancing the functional approach to component logic.
+
+#### New `ProjectData` Component
+
+```javascript
+import {
+    ClipboardDocumentListIcon,
+    CurrencyRupeeIcon,
+    UsersIcon,
+  } from "@heroicons/react/24/outline";
+  
+export const ProjectStats = [
+    {
+        id: 1,
+        name: "Total Borrowers",
+        stat: "71,897",
+        icon: UsersIcon,
+        change: "122",
+        changeType: "increase",
+      },
+      {
+        id: 2,
+        name: "Avg. Lending / Day",
+        stat: "$58.16M",
+        icon: CurrencyRupeeIcon,
+        change: "5.4%",
+        changeType: "increase",
+      },
+      {
+        id: 3,
+        name: "Avg. Loans Closed / Day",
+        stat: "24.57",
+        icon: ClipboardDocumentListIcon,
+        change: "3.2%",
+        changeType: "decrease",
+      },
+];
+
+export const HeaderList = [
+  "Name",
+  "Created On",
+  "Open Loans",
+  "Total Disbursed Principal",
+  "Status",
+];
+
+export const ProductList = [
+    {
+        name: "Cash Loan",
+        created: "07/06/2021",
+        openLoans: "2367",
+        disbursedPrincipal: "$234M",
+        status: "Active",
+        href: "/product/cash-loan/loan-product-config",
+      },
+      {
+        name: "BNPL",
+        created: "14/09/2022",
+        openLoans: "1490",
+        disbursedPrincipal: "$750M",
+        status: "Active",
+      },
+      {
+        name: "Overdraft",
+        created: "19/09/2022",
+        openLoans: "185",
+        disbursedPrincipal: "$90M",
+        status: "Inactive",
+      },
+];
+
+```
+
+## Summary
+Overall, these optimizations aim to enhance code maintainability, readability, and performance while adhering to best practices in React development. The modular and component-based structure allows for easier scaling and adaptation as the application grows or requirements change.
+
+---
+
+&emsp;
+
+
+
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
 &emsp;
