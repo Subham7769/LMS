@@ -2,8 +2,6 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-const Group = lazy(() => import("./components/Group/Group"));
-const Product = lazy(() => import("./components/Product"));
 const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
 const SlideNav = lazy(() => import("./components/SlideNav"));
@@ -18,9 +16,7 @@ const GlobalConfig = lazy(() =>
 const GcCreditPolicy = lazy(() =>
   import("./components/GlobalConfig/GcCreditPolicy")
 );
-const CustomerCare = lazy(() =>
-  import("./components/CustomerCare/CustomerCare")
-);
+
 const SubscriberInfo = lazy(() =>
   import("./components/CustomerCare/SubscriberInfo")
 );
@@ -79,7 +75,6 @@ const BpmnComponent3 = lazy(() =>
 const NewProjectPage = lazy(() =>
   import("./components/Project/NewProjectPage")
 );
-const UserPage = lazy(() => import("./components/NewUser/UserPage"));
 const UserInfoTabs = lazy(() => import("./components/NewUser/UserInfoTabs"));
 const UserInfo = lazy(() => import("./components/NewUser/UserInfo"));
 const Disbursement = lazy(() => import("./components/NewUser/Disbursement"));
@@ -99,16 +94,18 @@ const TclComponent1 = lazy(() => import("./components/Tcl/TclComponent1"));
 const TclComponent2 = lazy(() => import("./components/Tcl/TclComponent2"));
 const TclComponent3 = lazy(() => import("./components/Tcl/TclComponent3"));
 const Ledger = lazy(() => import("./components/Ledger/Ledger"));
-const TestComponent = lazy(() =>
-  import("./components/TestComponent/TestComponent")
-);
-const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 
+const TestComponent = lazy(() => import("./components/TestComponent/TestComponent"));
+const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 const LoadingState = lazy(() => import("./components/LoadingState"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const TclPage = lazy(() => import("./pages/TclPage"));
 const RacPage = lazy(() => import("./pages/RacPage"));
 const ProjectPage = lazy(() => import("./pages/ProjectPage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const GroupPage = lazy(() => import("./pages/GroupPage"));
+const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
+const NewUserPage = lazy(() => import("./pages/NewUserPage"));
 
 const routes = [
   {
@@ -121,19 +118,19 @@ const routes = [
       { path: "/tcl/1", element: <TclComponent1 /> },
       { path: "/tcl/2", element: <TclComponent2 /> },
       { path: "/tcl/3", element: <TclComponent3 /> },
-      { path: "/group", element: <Group /> },
+      { path: "/project/loan-form", element: <ProjectPage /> },
+      { path: "/product", element: <ProductPage /> },
+      { path: "/business-rule/1", element: <BpmnComponent /> },
+      { path: "/business-rule/2", element: <BpmnComponent2 /> },
+      { path: "/business-rule/3", element: <BpmnComponent3 /> },
+      { path: "/group", element: <GroupPage /> },
       { path: "group/1", element: <GroupComponent /> },
       { path: "group/2", element: <GroupComponent2 /> },
       { path: "group/3", element: <GroupComponent3 /> },
       { path: "/project/:projectId", element: <LoanForm /> },
-      { path: "/project/loan-form", element: <ProjectPage /> },
       { path: "/project/newProject", element: <NewProjectPage /> },
-      { path: "/business-rule/1", element: <BpmnComponent /> },
-      { path: "/business-rule/2", element: <BpmnComponent2 /> },
-      { path: "/business-rule/3", element: <BpmnComponent3 /> },
       { path: "/create-rac", element: <CreateRac /> },
       { path: "/newrac/:racID", element: <NewCreatedRAC /> },
-      { path: "/product", element: <Product /> },
       { path: "/create-product", element: <CreateProduct /> },
       {
         path: "/product/:productType",
@@ -175,7 +172,7 @@ const routes = [
       },
       { path: "/scheme", element: <Scheme /> },
       { path: "/notification", element: <Notifications /> },
-      { path: "/customer-care", element: <CustomerCare /> },
+      { path: "/customer-care", element: <CustomerCarePage /> },
       {
         path: "/borrower/:subID",
         element: <BorrowerInfoTabs />,
@@ -188,7 +185,7 @@ const routes = [
           { path: "credit-bureau-details", element: <CreditBureauDetails /> },
         ],
       },
-      { path: "/user", element: <UserPage /> },
+      { path: "/user", element: <NewUserPage /> },
       {
         path: "/user/:userID",
         element: <UserInfoTabs />,

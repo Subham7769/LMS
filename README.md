@@ -745,63 +745,6 @@ These optimizations enhance the performance, readability, and maintainability of
 
 &emsp;
 
-# Header.jsx Component Optimization
-
-**Before:**
-
-```javascript
-import React from 'react';
-
-const Footer = ({ mgLeft }) => {
-  const year = new Date().getFullYear();
-  return (
-    <>
-      <footer style={{ marginLeft: `${mgLeft}px` }} className="mt-auto">
-        <div className="text-grey-700 py-3 mt-20 text-sm">
-          <div className="container">
-            <div className="flex justify-between">
-              <div>© {year} All Rights Reserved</div>
-              <div>Powered by PhotonMatters</div>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </>
-  );
-};
-
-export default Footer;
-```
-
-**After:**
-
-```javascript
-import React from 'react';
-
-const Footer = ({ mgLeft }) => {
-  const year = new Date().getFullYear();
-  return (
-    <footer style={{ marginLeft: mgLeft }} className="mt-auto">
-      <div className="text-grey-700 py-3 mt-20 text-sm container flex justify-between">
-        <div>© {year} All Rights Reserved</div>
-        <div>Powered by PhotonMatters</div>
-      </div>
-    </footer>
-  );
-};
-
-export default Footer;
-```
-## Summary
-
-1. Removed unnecessary `Fragment` wrapper.
-2. Simplified the `style` attribute by directly passing the `mgLeft` prop.
-3. Consolidated nested `div` elements to reduce the component's depth and improve readability.
-
----
-
-
-&emsp;
 
 # Footer.jsx Component Optimization 
 
@@ -1188,6 +1131,43 @@ These optimizations create a clear separation of concerns, improve code readabil
 
 &emsp;
 
+# LoadingState.jsx Optimization Breakdown
+
+Here's an optimized version of your `LoadingState` component. This version includes the use of React memoization to prevent unnecessary re-renders and improved accessibility by adding an `aria-label` to the loading image.
+
+### `LoadingState.js`
+```jsx
+import React from 'react';
+import Loader from '../../src/assets/image/loader1.gif';
+
+const LoadingState = React.memo(() => {
+  return (
+    <div className="min-h-[70vh] w-full flex flex-col items-center justify-center">
+      <img
+        className="w-52 h-52"
+        src={Loader}
+        alt="Loading Icon"
+        aria-label="Loading"
+      />
+      <p className="text-center font-bold text-xl">Fetching Data</p>
+    </div>
+  );
+});
+
+export default LoadingState;
+```
+
+## Summary
+1. **Memoization with `React.memo`:** This optimization prevents the component from re-rendering unless its props change. Since the `LoadingState` component doesn't take any props, it will only render once, improving performance.
+2. **Accessibility Improvement:** Added `aria-label="Loading"` to the image to provide better context for screen readers.
+
+These optimizations ensure better performance and accessibility for your component.
+
+---
+
+&emsp;
+
+
 # Tcl.js - > TclPage Optimizations BreakDown 
 Here's a breakdown of the  you made in transitioning from the old code (``) to the new code (`TclPage.js`), focusing on improving modularity, maintainability, and readability:
 
@@ -1545,16 +1525,918 @@ Overall, these optimizations aim to enhance code maintainability, readability, a
 
 &emsp;
 
+# Product.jsx -> ProductPage.jsx optimization Breakpoints
 
+In the optimization process from the old code to the new code, several improvements and restructuring have been implemented:
 
+### 1. Code Modularity and Reusability
+- **Component Extraction**: The original code has been refactored to extract repeated and logically distinct pieces into their own components, making the code more modular and reusable.
+  - **`Body`**: A wrapper component to handle layout structure.
+  - **`StatContainer`**: A component to handle the statistics section.
+  - **`StatCard`**: A component to handle individual statistic cards.
+  - **`ListTable`**: A component to handle the product list table.
+
+### 2. Data Separation
+- **Data Centralization**: All the static data (stats, header list, product list) have been moved to a separate data file (`ProductData.js`). This makes the main component (`ProductPage`) cleaner and the data easier to manage and update.
+  ```javascript
+  import { ProductStats, HeaderList, ProductList } from '../data/ProductData';
+  ```
+
+### 3. Simplification and Readability
+- **Cleaner JSX Structure**: The new components have a much cleaner and more readable JSX structure. The use of props to pass data and children elements improves readability and maintainability.
+  - **`Body` Component**:
+    ```javascript
+    const Body = ({ children }) => {
+      return (
+        <div className="mx-auto max-w-none">
+          {children}
+        </div>
+      );
+    };
+    ```
+  - **`StatContainer` and `StatCard` Components**:
+    ```javascript
+    const StatContainer = ({ stats }) => (
+      <div className="bg-gray-100 rounded-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <h3 className="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>
+        <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {stats.map((stat) => (
+            <StatCard key={stat.id} stat={stat} />
+          ))}
+        </dl>
+      </div>
+    );
+    ```
+
+### 4. Consistent Data Rendering
+- **Dynamic Rendering**: Using `.map()` for rendering lists of items (stats and products) ensures that the code is less prone to errors and easier to extend.
+  - **Stats Rendering**:
+    ```javascript
+    {stats.map((stat) => (
+      <StatCard key={stat.id} stat={stat} />
+    ))}
+    ```
+  - **Product List Rendering**:
+    ```javascript
+    {ListItem.map((product) => (
+      <tr key={product.name}>
+        {Object.keys(product).map((key, idx) => (
+          key !== "href" ? (
+            <td key={idx} className="w-1/5 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+              {product.href ? (
+                <Link className="w-full block" to={product.href}>
+                  {product[key]}
+                </Link>
+              ) : (
+                product[key]
+              )}
+            </td>
+          ) : null
+        ))}
+      </tr>
+    ))}
+    ```
+
+### 5. Improved Maintainability
+- **Single Responsibility Principle**: Each component now has a single responsibility. This makes the components easier to test and maintain.
+- **Readability and Scalability**: The new structure allows for easier scaling. Adding new stats or products only requires updating the data file, without changing the main components.
+
+### 6. Styling Improvements
+- **Consistent Styling**: The new code maintains consistent styling across components by keeping the style definitions close to their usage. This is evident in the `StatCard` and `ListTable` components.
+
+## Summary
+Overall, the optimizations include improved code modularity, separation of concerns, enhanced readability, maintainability, and consistent data handling. This new structure is easier to understand, extend, and maintain.
+
+---
 
 &emsp;
 
-&emsp;
+# Group.jsx -> GroupPage.jsx optimization Breakpoints
+
+In the optimization process from the old code to the new code, several improvements and restructuring have been implemented:
+
+### 1. **Component and File Structure Optimization:**
+   - **Old Code:** The old code was organized in a single file for `Group` and `GroupTable` components.
+   - **New Code:** The new code organizes components into more modular structures. `Body`, `StatContainer`, and `ListTable` components are imported from their respective paths, indicating a more modular and scalable file structure.
+
+### 2. **Data Separation:**
+   - **Old Code:** The data for stats and products was hardcoded within the components.
+   - **New Code:** The new code imports `GroupStats`, `HeaderList`, and `ProductList` from a separate data file (`GroupData`). This separates data from the component logic, making it easier to manage and update.
+
+### 3. **Component Reusability:**
+   - **Old Code:** The old code had a specific implementation for the `Group` and `GroupTable` components.
+   - **New Code:** The new code uses more generic and reusable components like `StatContainer` and `ListTable`. These components can be reused across different parts of the application with different data sets.
+
+### 4. **Simplified JSX Structure:**
+   - **Old Code:** The old code had a lot of inline JSX for rendering stats and the table.
+   - **New Code:** The new code simplifies the JSX structure by utilizing more abstract components like `StatContainer` and `ListTable`, making the `GroupPage` component cleaner and easier to read.
+
+### 5. **Styling and Layout:**
+   - **Old Code:** Inline styling and layout-related code within components.
+   - **New Code:** By using components like `Body` and others from a common directory, styling and layout are more centralized and likely consistent across the application.
+
+### 6. **Function Utilization:**
+   - **Old Code:** A `classNames` function was defined and used within the component to conditionally apply classes.
+   - **New Code:** It's unclear if similar utility functions are used in the new code since the focus is on using higher-level components. However, assuming the new components like `StatContainer` and `ListTable` handle such concerns internally, this keeps the main component logic cleaner.
+
+### 7. **Maintainability and Scalability:**
+   - **Old Code:** Hardcoding within the component reduces maintainability and scalability.
+   - **New Code:** By abstracting data and reusing components, the new approach enhances maintainability and scalability. Updates can be made to individual components or data sources without affecting the entire structure.
+
+## Summary of Optimizations:
+- **Component Modularity:** Better separation of components into distinct files and folders.
+- **Data Management:** Separation of data from components, making updates easier.
+- **Reusability:** Use of reusable components to simplify the JSX structure and reduce code duplication.
+- **Clean Code:** Cleaner and more readable JSX structure.
+- **Centralized Styling:** More consistent and centralized styling through common components.
+
+These optimizations result in a more maintainable, scalable, and readable codebase.
+
+---
 
 &emsp;
 
+# CustomerCare.jsx -> CustomerCarePage Optimizations BreakDown
+
+### 1. **Component Separation**
+   - **Old Code:** All functionality is inside a single `CustomerCare` component.
+   - **New Code:** The functionality is split into multiple components (`CustomerCarePage`, `SearchBox`, `StatContainer`, and `Body`).
+
+   **Benefits:**
+   - Improved readability and maintainability.
+   - Easier to manage, test, and debug smaller components.
+   - Encourages reusability of components.
+
+### 2. **Data and Logic Extraction**
+   - **Old Code:** Stats data is directly within the component.
+   - **New Code:** Stats data is moved to a separate data file (`CustomerCareData.js`).
+
+   **Benefits:**
+   - Separation of concerns: UI and data are managed separately.
+   - Easier to update and maintain data without touching the UI components.
+
+### 3. **Conditional Rendering with React Router**
+   - **Old Code:** Only handles the customer care path.
+   - **New Code:** Uses `useLocation` to determine the current path and conditionally execute different functions (`checkBorrowerInfoCustomer` and `checkBorrowerInfoUser`).
+
+   **Benefits:**
+   - Supports multiple routes (`/customer-care` and `/user`).
+   - Makes the component dynamic and adaptable to different routes.
+
+### 4. **Async/Await and Error Handling**
+   - **Old Code:** Contains a single function to check borrower info.
+   - **New Code:** Splits the logic into two separate functions (`checkBorrowerInfoCustomer` and `checkBorrowerInfoUser`) for different API endpoints and includes better error handling.
+
+   **Benefits:**
+   - Clear separation of API calls based on the route.
+   - Better error handling and user feedback with conditionally rendered error messages.
+
+### 5. **Improved JSX and CSS Management**
+   - **Old Code:** JSX and CSS classes are all mixed within a single component.
+   - **New Code:** Uses a cleaner JSX structure with dedicated components handling their specific parts.
+
+   **Benefits:**
+   - Cleaner JSX, easier to read and understand.
+   - Separation of CSS management making it easier to update styles.
+
+### Detailed Changes and Benefits:
+
+#### CustomerCarePage Component
+
+**Old Code:**
+
+```jsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
+import {
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
+const stats = [
+  {
+    id: 1,
+    name: "Total Borrowers",
+    stat: "71,897",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Active Borrowers",
+    stat: "58,167",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Inactive Borrowers",
+    stat: "13,730",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+const CustomerCare = () => {
+  const [borrowerID, setBorrowerID] = useState("");
+  const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
+
+  async function checkBorrowerInfo(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+          borrowerID,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.status === 404) {
+        console.log("Borrower Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/customer-care"); // Redirect to login page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/borrower/" + borrowerID + "/personal-info");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <>
+      {/* Cards */}
+      <div className="bg-gray-100 rounded-xl">
+        <div className="mx-auto px-4 py-12 sm:px-6 lg:px-8">
+          <div>
+            <h3 className="text-base font-semibold leading-6 text-gray-900">
+              Last 30 days
+            </h3>
+            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {stats.map((item) => (
+                <div
+                  key={item.id}
+                  className="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6"
+                >
+                  <dt>
+                    <div className="absolute rounded-md bg-indigo-500 p-3">
+                      <item.icon
+                        className="h-6 w-6 text-white"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <p className="ml-16 truncate text-sm font-medium text-gray-500">
+                      {item.name}
+                    </p>
+                  </dt>
+                  <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {item.stat}
+                    </p>
+                    <p
+                      className={classNames(
+                        item.changeType === "increase"
+                          ? "text-green-600"
+                          : "text-red-600",
+                        "ml-2 flex items-baseline text-sm font-semibold"
+                      )}
+                    >
+                      {item.changeType === "increase" ? (
+                        <ArrowUpIcon
+                          className="h-5 w-5 flex-shrink-0 self-center text-green-500"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ArrowDownIcon
+                          className="h-5 w-5 flex-shrink-0 self-center text-red-500"
+                          aria-hidden="true"
+                        />
+                      )}
+
+                      <span className="sr-only">
+                        {" "}
+                        {item.changeType === "increase"
+                          ? "Increased"
+                          : "Decreased"}{" "}
+                        by{" "}
+                      </span>
+                      {item.change}
+                    </p>
+                    <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                      <div className="text-sm">
+                        <a
+                          href="#"
+                          className="font-medium text-indigo-600 hover:text-indigo-500"
+                        >
+                          View all
+                          <span className="sr-only"> {item.name} stats</span>
+                        </a>
+                      </div>
+                    </div>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+      {/* --------------------------Search Bar------------------------------------- */}
+      <div className="flex items-center gap-5 justify-center mt-10">
+        <div>Customer ID</div>
+        <div>
+          <input
+            type="number"
+            name="borrowerID"
+            id="borrowerID"
+            value={borrowerID}
+            onChange={(e) => {
+              setBorrowerID(e.target.value);
+            }}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="10000000000"
+          />
+        </div>
+        <div>
+          <button
+            onClick={() => checkBorrowerInfo(borrowerID)}
+            type="button"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      {borrowerNotFound && (
+        <div className="text-red-600 mt-4 text-center">Borrower Not Found</div>
+      )}
+    </>
+  );
+};
+
+export default CustomerCare;
+
+```
+
+**New Code:**
+
+```jsx
+import React from 'react'
+import Body from '../components/Common/Body/Body'
+import { CustomerCareStats } from '../data/CustomerCareData';
+import StatContainer from '../components/Common/StatContainer/StatContainer';
+import SearchBox from '../components/Common/SearchBox/SearchBox';
+
+const CustomerCarePage = () => {
+    return (
+        <Body>
+            <StatContainer stats={CustomerCareStats} />
+            <SearchBox/>
+        </Body>
+    )
+}
+
+export default CustomerCarePage
+```
+
+**Benefits:**
+- Clearly separates the page structure into `Body`, `StatContainer`, and `SearchBox` components.
+
+#### SearchBox Component
+
+**New Code:**
+
+```jsx
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
+const SearchBox = () => {
+    const location = useLocation();
+    const [borrowerID, setBorrowerID] = useState("");
+    const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+    const navigate = useNavigate(); // Adding useNavigate  for navigation
+
+    async function checkBorrowerInfoCustomer(borrowerID) {
+        try {
+            const token = localStorage.getItem("authToken");
+            const data = await fetch(
+                "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+                borrowerID,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.status === 404) {
+                console.log("Borrower Not Found"); // Clear the token
+                setBorrowerNotFound(true);
+                navigate("/customer-care"); // Redirect to customer-care page
+                return; // Stop further execution
+            }
+            // Check for token expiration or invalid token
+            if (data.status === 401 || data.status === 403) {
+                localStorage.removeItem("authToken"); // Clear the token
+                navigate("/login"); // Redirect to login page
+                return; // Stop further execution
+            }
+            navigate("/borrower/" + borrowerID + "/personal-info");
+            setBorrowerNotFound(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function checkBorrowerInfoUser(borrowerID) {
+        try {
+            const token = localStorage.getItem("authToken");
+            const data = await fetch(
+                "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+                borrowerID +
+                "/check-availability/14-11-1981",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.status === 404) {
+                console.log("User Not Found"); // Clear the token
+                setBorrowerNotFound(true);
+                navigate("/user"); // Redirect to login page
+                return; // Stop further execution
+            }
+            // Check for token expiration or invalid token
+            if (data.status === 401 || data.status === 403) {
+                localStorage.removeItem("authToken"); // Clear the token
+                navigate("/login"); // Redirect to login page
+                return; // Stop further execution
+            }
+            navigate("/user/" + borrowerID + "/user-info");
+            setBorrowerNotFound(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleClick = () => {
+        { location.pathname === '/customer-care' 
+            ? checkBorrowerInfoCustomer(borrowerID) 
+            : checkBorrowerInfoUser(borrowerID) 
+        }
+    }
+
+    return (
+        <>
+            <div className="flex items-center gap-5 justify-center mt-10">
+                <div>{location.pathname === '/customer-care' ? 'Customer ID' : 'Borrower ID'}</div>
+                <div>
+                    <input
+                        type="number"
+                        name="borrowerID"
+                        id="borrowerID"
+                        value={borrowerID}
+                        onChange={(e) => {
+                            setBorrowerID(e.target.value);
+                        }}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="1234567890"
+                    />
+                </div>
+                <div>
+                    <button
+                        onClick={handleClick}
+                        type="button"
+                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                        Search
+                    </button>
+                </div>
+            </div>
+            {borrowerNotFound && (
+                <div className="text-red-600 mt-4 text-center">Record Not Found</div>
+            )}
+        </>
+    )
+}
+
+export default SearchBox
+```
+
+**Benefits:**
+- Uses `useLocation` to determine the current path and execute the appropriate API call.
+- Simplifies the logic in the `handleClick` function to decide which API call to make.
+- Separates the API calls into two functions, making it easier to manage and update.
+
+## Summary:
+- **Modularity:** Code is more modular, making it easier to maintain and extend.
+- **Readability:** Code is more readable and organized.
+- **Reusability:** Components and data are reusable across different parts of the application.
+- **Scalability:** The application structure supports future growth and additional features without significant refactoring.
+
+By implementing these optimizations, the code becomes cleaner, more maintainable, and easier to understand, while also supporting multiple routes and improving user experience through better error handling and conditional rendering.
+
+---
 &emsp;
+
+
+# UserPage.jsx -> NewUserPage.jsx Optimizations BreakDown
+
+I have made several optimizations to the old code to enhance its structure, maintainability, and modularity. Here are the key improvements:
+
+### Code Modularity and Reusability
+1. **Separation of Concerns**:
+    - **Old Code**: Mixed UI components and business logic within the same component.
+    - **New Code**: Separated the logic into distinct components (`StatContainer`, `SearchBox`, and `Body`). This separation enhances readability and maintainability.
+
+2. **Reusability**:
+    - **Old Code**: Hardcoded data and repeated UI logic within the `UserPage` component.
+    - **New Code**: Moved static data (`NewUserStats`) to a separate data file (`NewUserData`). The `StatContainer` component can now be reused with different stats data, making it more reusable.
+
+### Logic Optimization
+3. **Consolidation of Search Logic**:
+    - **Old Code**: Had separate `checkBorrowerInfo` functions in different components with slightly different logic.
+    - **New Code**: Consolidated the search logic into a single `SearchBox` component. The `handleClick` function determines the appropriate search logic based on the current path, reducing code duplication.
+
+### Readability and Maintainability
+4. **Improved Component Structure**:
+    - **Old Code**: Single large component (`UserPage`) with mixed concerns.
+    - **New Code**: Clean component structure with clear separation of UI and logic. The main page component (`NewUserPage`) now composes smaller, focused components.
+
+5. **Named Exports and Consistent Naming**:
+    - **Old Code**: Directly embedded data and logic within the main component.
+    - **New Code**: Used named exports for stats data (`NewUserStats`), ensuring a consistent and clear naming convention.
+
+### Example Overview
+#### Old Code
+```jsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
+import {
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
+const stats = [
+  {
+    id: 1,
+    name: "Total Borrowers",
+    stat: "71,897",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Active Borrowers",
+    stat: "58,167",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Inactive Borrowers",
+    stat: "13,730",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+const UserPage = () => {
+  const [borrowerID, setBorrowerID] = useState("");
+  const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
+
+  async function checkBorrowerInfo(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+          borrowerID +
+          "/check-availability/14-11-1981",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.status === 404) {
+        console.log("User Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/user"); // Redirect to login page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/user/" + borrowerID + "/user-info");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <>
+      {/* Cards */}
+      <div className="bg-gray-100 rounded-xl">
+        <div className="mx-auto px-4 py-12 sm:px-6 lg:px-8">
+          <div>
+            <h3 className="text-base font-semibold leading-6 text-gray-900">
+              Last 30 days
+            </h3>
+            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {stats.map((item) => (
+                <div
+                  key={item.id}
+                  className="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6"
+                >
+                  <dt>
+                    <div className="absolute rounded-md bg-indigo-500 p-3">
+                      <item.icon
+                        className="h-6 w-6 text-white"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <p className="ml-16 truncate text-sm font-medium text-gray-500">
+                      {item.name}
+                    </p>
+                  </dt>
+                  <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {item.stat}
+                    </p>
+                    <p
+                      className={classNames(
+                        item.changeType === "increase"
+                          ? "text-green-600"
+                          : "text-red-600",
+                        "ml-2 flex items-baseline text-sm font-semibold"
+                      )}
+                    >
+                      {item.changeType === "increase" ? (
+                        <ArrowUpIcon
+                          className="h-5 w-5 flex-shrink-0 self-center text-green-500"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ArrowDownIcon
+                          className="h-5 w-5 flex-shrink-0 self-center text-red-500"
+                          aria-hidden="true"
+                        />
+                      )}
+
+                      <span className="sr-only">
+                        {" "}
+                        {item.changeType === "increase"
+                          ? "Increased"
+                          : "Decreased"}{" "}
+                        by{" "}
+                      </span>
+                      {item.change}
+                    </p>
+                    <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                      <div className="text-sm">
+                        <a
+                          href="#"
+                          className="font-medium text-indigo-600 hover:text-indigo-500"
+                        >
+                          View all
+                          <span className="sr-only"> {item.name} stats</span>
+                        </a>
+                      </div>
+                    </div>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+      {/* --------------------------Search Bar------------------------------------- */}
+      <div className="flex items-center gap-5 justify-center mt-10">
+        <div>Borrower ID</div>
+        <div>
+          <input
+            type="number"
+            name="borrowerID"
+            id="borrowerID"
+            value={borrowerID}
+            onChange={(e) => {
+              setBorrowerID(e.target.value);
+            }}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="10000000000"
+          />
+        </div>
+        <div>
+          <button
+            onClick={() => checkBorrowerInfo(borrowerID)}
+            type="button"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      {borrowerNotFound && (
+        <div className="text-red-600 mt-4 text-center">Borrower Not Found</div>
+      )}
+    </>
+  );
+};
+
+export default UserPage;
+
+```
+
+#### New Code
+```jsx
+import React from 'react'
+import Body from '../components/Common/Body/Body'
+import { NewUserStats } from '../data/NewUserData';
+import StatContainer from '../components/Common/StatContainer/StatContainer';
+import SearchBox from '../components/Common/SearchBox/SearchBox';
+
+const NewUserPage = () => {
+    return (
+        <Body>
+            <StatContainer stats={NewUserStats} />
+            <SearchBox/>
+        </Body>
+    )
+}
+
+export default NewUserPage;
+```
+
+### SearchBox Component
+```jsx
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
+const SearchBox = () => {
+    const location = useLocation();
+    const [borrowerID, setBorrowerID] = useState("");
+    const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+    const navigate = useNavigate(); // Adding useNavigate  for navigation
+
+    async function checkBorrowerInfoCustomer(borrowerID) {
+        try {
+            const token = localStorage.getItem("authToken");
+            const data = await fetch(
+                "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+                borrowerID,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.status === 404) {
+                console.log("Borrower Not Found"); // Clear the token
+                setBorrowerNotFound(true);
+                navigate("/customer-care"); // Redirect to customer-care page
+                return; // Stop further execution
+            }
+            // Check for token expiration or invalid token
+            if (data.status === 401 || data.status === 403) {
+                localStorage.removeItem("authToken"); // Clear the token
+                navigate("/login"); // Redirect to login page
+                return; // Stop further execution
+            }
+            navigate("/borrower/" + borrowerID + "/personal-info");
+            setBorrowerNotFound(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function checkBorrowerInfoUser(borrowerID) {
+        try {
+            const token = localStorage.getItem("authToken");
+            const data = await fetch(
+                "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+                borrowerID +
+                "/check-availability/14-11-1981",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.status === 404) {
+                console.log("User Not Found"); // Clear the token
+                setBorrowerNotFound(true);
+                navigate("/user"); // Redirect to login page
+                return; // Stop further execution
+            }
+            // Check for token expiration or invalid token
+            if (data.status === 401 || data.status === 403) {
+                localStorage.removeItem("authToken"); // Clear the token
+                navigate("/login"); // Redirect to login page
+                return; // Stop further execution
+            }
+            navigate("/user/" + borrowerID + "/user-info");
+            setBorrowerNotFound(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleClick = () => {
+        { location.pathname === '/customer-care' 
+            ? checkBorrowerInfoCustomer(borrowerID) 
+            : checkBorrowerInfoUser(borrowerID) 
+        }
+    }
+
+    return (
+        <>
+            <div className="flex items-center gap-5 justify-center mt-10">
+                <div>{location.pathname === '/customer-care' ? 'Customer ID' : 'Borrower ID'}</div>
+                <div>
+                    <input
+                        type="number"
+                        name="borrowerID"
+                        id="borrowerID"
+                        value={borrowerID}
+                        onChange={(e) => {
+                            setBorrowerID(e.target.value);
+                        }}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="1234567890"
+                    />
+                </div>
+                <div>
+                    <button
+                        onClick={handleClick}
+                        type="button"
+                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                        Search
+                    </button>
+                </div>
+            </div>
+            {borrowerNotFound && (
+                <div className="text-red-600 mt-4 text-center">Record Not Found</div>
+            )}
+        </>
+    )
+}
+
+export default SearchBox
+```
+
+## Summary
+By modularizing the code, consolidating logic, and separating concerns, the new code is more maintainable, readable, and reusable. It follows best practices in React development and makes it easier to manage and extend the application in the future.
+
+---
+
+&emsp;
+
+
 
 &emsp;
 

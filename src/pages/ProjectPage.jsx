@@ -9,7 +9,7 @@ const ProjectPage = () => {
     return (
         <Body>
             <StatContainer stats={ProjectStats} />
-            <ListTable ListName={"Product List"} ListHeader={HeaderList} ListItem={ProductList}/>
+            <ListTable ListName={"Project List"} ListHeader={HeaderList} ListItem={ProductList}/>
         </Body>
     )
 }
