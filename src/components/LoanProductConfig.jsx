@@ -832,7 +832,7 @@ const LoanProductConfig = () => {
               )}
             </tbody>
           </table>
-          <div className="mt-4 w-[60%] flex justify-center gap-5 items-center">
+          <div className="mt-4 w-full flex justify-center gap-5 items-center">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}

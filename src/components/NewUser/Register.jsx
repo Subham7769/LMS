@@ -408,7 +408,7 @@ const Register = () => {
       <tbody className="divide-y divide-gray-200 bg-white">
         {registrationResultsData.registrationResults.projects.map(
           (register, index) => {
-            const isAlreadyRegistered = register.alreadyRegistered;
+            const isAlreadyRegistered = register.isRegister;
             return (
               <tr
                 key={index}

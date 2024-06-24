@@ -115,13 +115,10 @@ const LoanConfigDD = () => {
 
   useEffect(() => {
     if (registrationResultsData.length === 0) return;
-    // const eligibleProjects = registrationResultsData.registrationResults.filter(
-    //   (result) => result.eligibleStatus === "ELIGIBLE"
-    // );
 
     const eligibleProjects =
       registrationResultsData.registrationResults.projects.filter(
-        (result) => result.alreadyRegistered === true
+        (project) => project.isRegister === true
       );
 
     const formattedRACData = eligibleProjects.map(({ projectName }) => ({
@@ -130,6 +127,7 @@ const LoanConfigDD = () => {
     }));
 
     setloanTypeOptions(formattedRACData);
+    console.log(registrationResultsData);
   }, [registrationResultsData]);
 
   const handleSave = async () => {
@@ -193,7 +191,7 @@ const LoanConfigDD = () => {
             isSearchable={false}
           />
         </div>
-        {loanType.value === "DIGITAL-INSTALLMENT" ? (
+        {loanType.value === "CASH" || loanType.value === "BNPL" ? (
           <div className="relative">
             <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
               Amount
