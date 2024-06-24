@@ -189,7 +189,7 @@ const LoanConfigDD = () => {
             isSearchable={false}
           />
         </div>
-        {loanType.value === "BNPL" ? (
+        {loanType.value === "BNPL" || loanType.value === "Cash loan" ? (
           <div className="relative">
             <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
               Amount
