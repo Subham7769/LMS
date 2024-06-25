@@ -55,6 +55,12 @@ const tclOptionsInitial = [
   { value: "T3", label: "TCL 3" },
 ];
 
+const recoveryOptions = [
+  { value: "R1", label: "Recovery 1" },
+  { value: "R2", label: "Recovery 2" },
+  { value: "R3", label: "Recovery 3" },
+];
+
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
@@ -510,14 +516,14 @@ const LoanProductConfig = () => {
           <div className="flex gap-5 items-end">
             <div className="relative">
               <label htmlFor="fee" className=" px-1 text-xs text-gray-900">
-                <div className="absolute -top-2">Processing Fee</div>
+                Processing Fee
               </label>
               <input
                 type="text"
                 name="fee"
                 value={fee}
                 onChange={(e) => setFee(e.target.value)}
-                className="block w-16 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="1%"
               />
             </div>
@@ -526,14 +532,14 @@ const LoanProductConfig = () => {
                 htmlFor={`managementFeeVat`}
                 className=" px-1 text-xs text-gray-900"
               >
-                <div className="absolute -top-2">Management Fee Vat</div>
+                Management Fee Vat
               </label>
               <input
                 type="text"
                 name="managementFeeVat"
                 value={managementFee}
                 onChange={(e) => setManagementFee(e.target.value)}
-                className="block w-20 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="15%"
               />
             </div>
@@ -551,8 +557,27 @@ const LoanProductConfig = () => {
                 name="numberOfEmisForEarlySettlement"
                 value={noOfEmis}
                 onChange={(e) => setNoOfEmis(e.target.value)}
-                className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="3"
+              />
+            </div>
+            <div className="relative mt-1">
+              <label
+                htmlFor="recoveryType"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                Recovery Type
+              </label>
+              <Select
+                className="w-[170px]"
+                options={recoveryOptions}
+                name="recoveryType"
+                defaultValue={recoveryOptions[1]}
+                // value={eligibleCustomerType}
+                // onChange={(eligibleCustomerType) => {
+                //   setEligibleCustomerType(eligibleCustomerType);
+                // }}
+                isSearchable={false}
               />
             </div>
             <div className="relative mt-1">
@@ -595,12 +620,12 @@ const LoanProductConfig = () => {
             </div>
           </div>
         </div>
-        {notice && (
+        {/* {notice && (
           <p className="text-red-500 font-bold text-sm text-start mt-2">
             Please Note that changing the PER/Tenure Type will change it for all
             loans
           </p>
-        )}
+        )} */}
         <div className="flex gap-5 items-end mt-5 border-b pb-5">
           <div className="relative">
             <label

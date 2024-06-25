@@ -1,4 +1,4 @@
-import { BeakerIcon } from "@heroicons/react/20/solid";
+import { BeakerIcon, RectangleGroupIcon } from "@heroicons/react/20/solid";
 import {
   AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
@@ -24,6 +24,19 @@ export const MenusInitial = [
     current: false,
     submenu: true,
     submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Recovery",
+    href: "/recovery",
+    icon: RectangleGroupIcon,
+    current: false,
+    submenu: true,
+    submenuItems: [
+      { name: "Recovery 1", href: "/recovery/1" },
+      { name: "Recovery 2", href: "/recovery/2" },
+      { name: "Recovery 3", href: "/recovery/3" },
+    ],
     isOpen: false,
   },
   {
