@@ -18,7 +18,7 @@ const AppLayout = () => {
 
     const resizeObserver = new ResizeObserver((entries) => {
       const newWidth = entries[0].contentRect.width;
-      setSideBarWidth(newWidth + 50); // Update state with padding
+      setSideBarWidth(newWidth + 30); // Update state with padding
     });
 
     if (SideBarElement) {

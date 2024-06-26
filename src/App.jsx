@@ -97,7 +97,6 @@ const CreateProduct = lazy(() => import("./components/CreateProduct"));
 const TclComponent1 = lazy(() => import("./components/Tcl/TclComponent1"));
 const TclComponent2 = lazy(() => import("./components/Tcl/TclComponent2"));
 const TclComponent3 = lazy(() => import("./components/Tcl/TclComponent3"));
-const Ledger = lazy(() => import("./components/Ledger/Ledger"));
 
 const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
@@ -109,9 +108,11 @@ const TclPage = lazy(() => import("./pages/TclPage"));
 const RacPage = lazy(() => import("./pages/RacPage"));
 const ProjectPage = lazy(() => import("./pages/ProjectPage"));
 const ProductPage = lazy(() => import("./pages/ProductPage"));
-const GroupPage = lazy(() => import("./pages/GroupPage"));
+const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
 const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
 const NewUserPage = lazy(() => import("./pages/NewUserPage"));
+const LedgerPage = lazy(() => import("./pages/LedgerPage"));
+const CreateNew = lazy(() => import("./components/Common/CreateNew/CreateNew"));
 
 const routes = [
   {
@@ -133,7 +134,7 @@ const routes = [
       { path: "/business-rule/1", element: <BpmnComponent /> },
       { path: "/business-rule/2", element: <BpmnComponent2 /> },
       { path: "/business-rule/3", element: <BpmnComponent3 /> },
-      { path: "/group", element: <GroupPage /> },
+      { path: "/product_group", element: <ProductGroupPage /> },
       { path: "group/1", element: <GroupComponent /> },
       { path: "group/2", element: <GroupComponent2 /> },
       { path: "group/3", element: <GroupComponent3 /> },
@@ -213,9 +214,9 @@ const routes = [
           { path: "employment-details", element: <EmploymentDetails /> },
         ],
       },
-      { path: "/ledger", element: <Ledger /> },
+      { path: "/ledger", element: <LedgerPage /> },
       { path: "/slidenav", element: <SlideNav /> },
-      { path: "/test", element: <TestComponent /> },
+      { path: "/test", element: <CreateNew /> },
     ],
   },
   { path: "/login", element: <Login /> },

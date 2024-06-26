@@ -1,5 +1,10 @@
-import { BeakerIcon, RectangleGroupIcon } from "@heroicons/react/20/solid";
 import {
+  BeakerIcon,
+  RectangleGroupIcon,
+  ArrowPathRoundedSquareIcon,
+  ChartPieIcon,
+  CubeIcon,
+  CurrencyRupeeIcon,
   AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
   ClipboardDocumentCheckIcon,
@@ -7,6 +12,7 @@ import {
   UsersIcon,
   CircleStackIcon,
   BookOpenIcon,
+  HeartIcon,
 } from "@heroicons/react/24/outline";
 
 export const MenusInitial = [
@@ -23,13 +29,15 @@ export const MenusInitial = [
     icon: ClipboardDocumentCheckIcon,
     current: false,
     submenu: true,
+    createButton: true,
+    placeholder: "Enter RAC Name",
     submenuItems: [],
     isOpen: false,
   },
   {
     title: "Recovery",
     href: "/recovery",
-    icon: RectangleGroupIcon,
+    icon: ArrowPathRoundedSquareIcon,
     current: false,
     submenu: true,
     submenuItems: [
@@ -42,7 +50,7 @@ export const MenusInitial = [
   {
     title: "TCL",
     href: "/tcl",
-    icon: ClipboardDocumentCheckIcon,
+    icon: CurrencyRupeeIcon,
     current: false,
     submenu: true,
     submenuItems: [
@@ -55,7 +63,7 @@ export const MenusInitial = [
   {
     title: "Project",
     href: "/project/loan-form",
-    icon: CircleStackIcon,
+    icon: ChartPieIcon,
     current: false,
     submenu: true,
     submenuItems: [],
@@ -64,16 +72,16 @@ export const MenusInitial = [
   {
     title: "Product",
     href: "/product",
-    icon: AdjustmentsHorizontalIcon,
+    icon: CubeIcon,
     current: false,
     submenu: true,
     submenuItems: [],
     isOpen: false,
   },
   {
-    title: "Group",
-    href: "/group",
-    icon: UsersIcon,
+    title: "Product Group",
+    href: "/product_group",
+    icon: RectangleGroupIcon,
     current: false,
     submenu: true,
     submenuItems: [
@@ -86,7 +94,7 @@ export const MenusInitial = [
   {
     title: "Business Rule",
     href: "/business-rule/1",
-    icon: UsersIcon,
+    icon: AdjustmentsHorizontalIcon,
     current: false,
     submenu: true,
     submenuItems: [
@@ -110,7 +118,7 @@ export const MenusInitial = [
         current: false,
       },
       {
-        name: "Risk Grading",
+        name: "Risk Grading Matrix",
         href: "/global-config/risk-grade-cal",
         current: false,
       },
@@ -130,10 +138,15 @@ export const MenusInitial = [
   {
     title: "Customer Care",
     href: "/customer-care",
+    icon: HeartIcon,
+    current: false,
+  },
+  {
+    title: "User Product Testing",
+    href: "/user",
     icon: UsersIcon,
     current: false,
   },
-  { title: "New User", href: "/user", icon: UsersIcon, current: false },
   {
     title: "General Ledger",
     href: "/ledger",

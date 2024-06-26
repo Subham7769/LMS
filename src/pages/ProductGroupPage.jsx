@@ -5,13 +5,13 @@ import { GroupStats, HeaderList, ProductList } from '../data/GroupData';
 import StatContainer from '../components/Common/StatContainer/StatContainer';
 
 
-const GroupPage = () => {
+const ProductGroupPage = () => {
     return (
         <Body>
             <StatContainer stats={GroupStats} />
-            <ListTable ListName={"Group List"} ListHeader={HeaderList} ListItem={ProductList}/>
+            <ListTable ListName={"Product Group List"} ListHeader={HeaderList} ListItem={ProductList}/>
         </Body>
     )
 }
 
-export default GroupPage
+export default ProductGroupPage

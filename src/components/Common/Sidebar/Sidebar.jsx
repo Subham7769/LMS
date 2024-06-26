@@ -5,12 +5,12 @@ import useRACInfo from "../../../utils/useRACInfo";
 import useAllProjectInfo from "../../../utils/useAllProjectInfo";
 import useProductInfo from "../../../utils/useProductInfo";
 import { MenusInitial } from '../../../data/MenuData'
+import CreateNew from "../CreateNew/CreateNew";
 
 
 const SideBar = () => {
   const [open, setOpen] = useState(true);
   const [Menus, setMenus] = useState(MenusInitial);
-
   const RACDataInfo = useRACInfo();
   const ProjectDataInfo = useAllProjectInfo();
   const ProductDataInfo = useProductInfo();
@@ -49,9 +49,10 @@ const SideBar = () => {
   return (
     <div
       id="SideBarId"
-      className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-4 transform duration-1000 ease-in-out ${open ? "w-64" : "w-16"
+      className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-2 transform duration-1000 ease-in-out ${open ? "w-56" : "w-14"
         }`}
     >
+      {/* logo */}
       <div className="flex h-16 shrink-0 items-center">
         <img
           className={`h-8 ${open ? "w-auto" : "w-10 h-auto"}`}
@@ -60,6 +61,7 @@ const SideBar = () => {
         />
       </div>
 
+      {/* Collapse Button */}
       <button onClick={toggleSidebar} className="flex justify-end">
         <div className="-right-3 absolute top-60">
           <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
@@ -81,31 +83,43 @@ const SideBar = () => {
         </div>
       </button>
 
-      <ul className="pt-2 pr-3 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white scrollbar-track-white">
+      <ul className="pt-2 pr-2 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white scrollbar-track-white">
+        {/* Main Menu */}
         {Menus.map((menu, index) => (
           <div key={menu.title}>
             <NavLink to={menu.href} className="text-gray-500">
-              <li className="text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+              <li className="text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600">
                 <span className="text-2xl block float-left">
-                  <menu.icon className="h-6 w-6 shrink-0" />
+                  <menu.icon className="h-5 w-5 shrink-0" />
                 </span>
-                <span className={`text-base font-medium flex-1 duration-200 ${!open && "hidden"}`}>
+                <span className={`text-base text-sm flex-1 duration-200 ${!open && "hidden"}`}>
                   {menu.title}
                 </span>
                 {menu.submenu && open && (
                   <ChevronRightIcon
-                    className={`text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""}`}
+                    className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""}`}
                     onClick={() => toggleSubmenu(index)}
                   />
                 )}
               </li>
             </NavLink>
+            {/* SubMenu */}
             {menu.submenu && submenuStates[index]?.isOpen && open && (
               <ul>
+                {
+                  menu.createButton ? (
+                    <div>
+                      <li className="p-2 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                        <CreateNew placeholder={menu.placeholder} />
+                      </li>
+                    </div>
+                  ) 
+                  : null
+                  }
                 {menu.submenuItems.map((submenuItem) => (
                   <div key={submenuItem.name}>
                     <NavLink to={submenuItem.href} className="text-gray-500">
-                      <li className="text-sm flex items-center gap-x-4 cursor-pointer p-2 px-12 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                      <li className="text-sm flex items-center gap-x-4 cursor-pointer p-2 px-8 rounded-md hover:bg-gray-100 hover:text-indigo-600">
                         {submenuItem.name}
                       </li>
                     </NavLink>

@@ -2436,9 +2436,730 @@ By modularizing the code, consolidating logic, and separating concerns, the new 
 
 &emsp;
 
+# Ledger.jsx -> LedgerPage.jsx Optimizations BreakDown
 
+1. **Component Structure**:
+   - The old code had a single `Ledger` component, while the new code splits functionality into separate components: `CustomerCarePage`, `LedgerListTable`, and `Body`.
+   - This improves code organization and reusability.
+
+2. **Data Import**:
+   - The old code had the `ledgerarr` data defined within the component. The new code imports `ledgerArr` and `HeaderList` from a separate data file (`LedgerData`).
+   - This separation of concerns makes the component cleaner and data management easier.
+
+3. **Use of Custom Components**:
+   - The new code uses a `LedgerListTable` component to handle the ledger table rendering, making the `CustomerCarePage` component more readable.
+
+4. **CSS Classes and Styles**:
+   - The new code consistently uses Tailwind CSS classes for styling, making the styling more standardized and easier to read.
+
+5. **Data Filtering and Pagination**:
+   - The new code retains the filtering and pagination logic but organizes it within the `LedgerListTable` component.
+   - It simplifies the filtering by removing the unused entry ID filter and keeps only the borrower ID filter.
+
+6. **Event Handlers and Select Options**:
+   - The new code improves the `handlePageSizeChange` and input change handlers by keeping them within the `LedgerListTable` component.
+   - Custom styles for the `Select` component are defined using `customSelectStyles`.
+
+7. **Table Rendering**:
+   - The new code simplifies the table rendering by mapping through `ListItem` and `account` entries within the `LedgerListTable` component.
+   - It uses conditional rendering to handle the case when there is no data available.
+
+8. **Reusable Common Components**:
+   - The new code uses a `Body` component for wrapping the main content, which could be reused across different pages or sections.
+
+### Old Code
+```jsx
+import React, { useState, useEffect, useRef } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import Select from "react-select";
+
+// const ledgerarr = Array.from({ length: 100 }, (_, index) => {
+//   const getRandomInt = (min, max) =>
+//     Math.floor(Math.random() * (max - min + 1)) + min;
+//   const randomDate = (start, end) => {
+//     const date = new Date(
+//       start.getTime() + Math.random() * (end.getTime() - start.getTime())
+//     );
+//     return `${date.getDate()} ${date.toLocaleString("default", {
+//       month: "short",
+//     })} ${date.getFullYear()}`;
+//   };
+
+//   const randomId = () => Math.random().toString(36).substr(2, 16);
+//   const randomLoanId = () =>
+//     `${randomId()}-eb55-44cb-be73-0403883e${getRandomInt(1000, 9999)}`;
+//   const randomTransactionId = () => (Math.random() > 0.5 ? randomId() : null);
+//   const randomAccount = () => {
+//     const accountNames = [
+//       "CASH_IN_BANK",
+//       "DAYS_PAST_DUE",
+//       "EARNED_INTEREST",
+//       "EARNED_PRINCIPAL",
+//     ];
+//     const accountCodes = ["1002", "1004", "1003"];
+//     const accountName = accountNames[getRandomInt(0, accountNames.length - 1)];
+//     const accountCode = accountCodes[getRandomInt(0, accountCodes.length - 1)];
+//     const debitValue = Math.random() > 0.5 ? getRandomInt(0, 5000) : 0;
+//     const creditValue = debitValue === 0 ? getRandomInt(0, 5000) : 0;
+
+//     return {
+//       accountName,
+//       accountCode,
+//       debitValue,
+//       creditValue,
+//     };
+//   };
+
+//   return {
+//     id: randomId(),
+//     userId: getRandomInt(1000000000, 1999999999).toString(),
+//     loanId: randomLoanId(),
+//     transactionId: randomTransactionId(),
+//     transactionDate: randomTransactionId()
+//       ? randomDate(new Date(2023, 0, 1), new Date(2024, 5, 30))
+//       : null,
+//     date: randomDate(new Date(2024, 0, 1), new Date(2024, 5, 30)),
+//     account: Array.from({ length: getRandomInt(1, 3) }, randomAccount),
+//   };
+// });
+
+const ledgerarr = [
+  {
+    id: "666c7ca699ba1348a3e1c029",
+    userId: "1055533324",
+    loanId: "59562361-eb55-44cb-be73-0403883e8536",
+    transactionId: null,
+    transactionDate: null,
+    date: "14 Jun 2024",
+    account: [
+      {
+        accountName: "CASH_IN_BANK",
+        accountCode: "1002",
+        debitValue: 4944.5,
+        creditValue: 0,
+      },
+      {
+        accountName: "DPD_PRINCIPAL",
+        accountCode: "1004",
+        debitValue: 0,
+        creditValue: 4000,
+      },
+      {
+        accountName: "DPD_INTEREST",
+        accountCode: "1005",
+        debitValue: 0,
+        creditValue: 944.5,
+      },
+    ],
+  },
+  {
+    id: "666c7ca699ba1348a3e1c029",
+    userId: "1055533325",
+    loanId: "59562361-eb55-44cb-be73-0403883e8537",
+    transactionId: null,
+    transactionDate: null,
+    date: "15 Jun 2024",
+    account: [
+      {
+        accountName: "DPD_PRINCIPAL",
+        accountCode: "1004",
+        debitValue: 1000,
+        creditValue: 0,
+      },
+      {
+        accountName: "DPD_INTEREST",
+        accountCode: "1005",
+        debitValue: 100,
+        creditValue: 0,
+      },
+      {
+        accountName: "Accrued Financing Principal	",
+        accountCode: "1011",
+        debitValue: 0,
+        creditValue: 1000,
+      },
+      {
+        accountName: "Accrued Financing Interest",
+        accountCode: "1012",
+        debitValue: 0,
+        creditValue: 100,
+      },
+    ],
+  },
+];
+
+const Ledger = () => {
+  const tableRef = useRef(null);
+  const paginationRef = useRef(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [filteredData, setFilteredData] = useState(ledgerarr);
+  const [entryIdQuery, setEntryIdQuery] = useState("");
+  const [borrowerIdQuery, setBorrowerIdQuery] = useState("");
+
+  useEffect(() => {
+    const adjustPaginationWidth = () => {
+      if (tableRef.current && paginationRef.current) {
+        const tableWidth = tableRef.current.offsetWidth;
+        paginationRef.current.style.width = `${tableWidth}px`;
+      }
+    };
+
+    adjustPaginationWidth();
+    window.addEventListener("resize", adjustPaginationWidth);
+
+    return () => {
+      window.removeEventListener("resize", adjustPaginationWidth);
+    };
+  }, []);
+
+  // Filter by Entry ID
+  useEffect(() => {
+    const result = ledgerarr.filter((entry) =>
+      entry.account.some((acc) => acc.accountCode.includes(entryIdQuery))
+    );
+    setFilteredData(result);
+  }, [entryIdQuery]);
+
+  // Filter by Borrower ID
+  useEffect(() => {
+    const result = ledgerarr.filter((entry) =>
+      entry.userId.toString().includes(borrowerIdQuery)
+    );
+    setFilteredData(result);
+  }, [borrowerIdQuery]);
+
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentData = filteredData.slice(startIndex, startIndex + pageSize);
+
+  const handlePageSizeChange = (selectedOption) => {
+    setPageSize(selectedOption.value);
+    setCurrentPage(1);
+  };
+
+  // Handle entry ID search change
+  const handleEntryIdChange = (event) => {
+    setEntryIdQuery(event.target.value);
+    setCurrentPage(1);
+  };
+
+  // Handle borrower ID search change
+  const handleBorrowerIdChange = (event) => {
+    setBorrowerIdQuery(event.target.value);
+    setCurrentPage(1);
+  };
+
+  return (
+    <>
+      <div className="flex justify-start gap-5 items-center mb-4">
+        {/* <div className="flex flex-col">
+          <label htmlFor="entryId" className="mb-1 text-gray-700">
+            Search by Entry ID
+          </label>
+          <input
+            id="entryId"
+            type="text"
+            placeholder="Enter Entry ID"
+            value={entryIdQuery}
+            onChange={handleEntryIdChange}
+            className="block rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div> */}
+        <div className="flex flex-col">
+          <label htmlFor="borrowerId" className="mb-1 text-gray-700">
+            Search by Borrower ID
+          </label>
+          <input
+            id="borrowerId"
+            type="text"
+            placeholder="Enter Borrower ID"
+            value={borrowerIdQuery}
+            onChange={handleBorrowerIdChange}
+            className="block rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="entriesSelect" className="mb-1 text-gray-700">
+            Entries Per Page
+          </label>
+          <Select
+            id="entriesSelect"
+            options={[
+              { value: 5, label: "5 entries" },
+              { value: 10, label: "10 entries" },
+              { value: 20, label: "20 entries" },
+              { value: 50, label: "50 entries" },
+              { value: 100, label: "100 entries" },
+            ]}
+            defaultValue={{ value: 10, label: "10 entries" }}
+            onChange={handlePageSizeChange}
+            className="w-40"
+            isSearchable={false}
+            isMulti={false}
+          />
+        </div>
+      </div>
+      <table ref={tableRef} className="divide-y divide-gray-300">
+        <thead>
+          <tr className="divide-x divide-gray-200">
+            <th className="py-3.5 px-4 text-center">Date</th>
+            <th className="py-3.5 px-4 text-center">Entry ID</th>
+            <th className="py-3.5 px-4 text-center text-gray-900">
+              Entry Name
+            </th>
+            <th className="py-3.5 px-4 text-center text-gray-900">
+              Borrower ID
+            </th>
+            <th className="py-3.5 px-4 text-center text-gray-900">Loan ID</th>
+            <th className="py-3.5 px-4 text-center text-gray-900">
+              Debit Amount
+            </th>
+            <th className="py-3.5 px-4 text-center text-gray-900">
+              Credit Amount
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {currentData.length === 0 ? (
+            <tr className="divide-x divide-gray-200 text-center w-full">
+              <td colSpan="8" className="text-center py-4">
+                No data available
+              </td>
+            </tr>
+          ) : (
+            currentData.map((entry, index) => (
+              <React.Fragment key={index}>
+                {entry.account
+                  .sort((a, b) => (a.debitValue !== 0 ? -1 : 1))
+                  .map((acc, subIndex) => (
+                    <tr
+                      key={subIndex}
+                      className="divide-x divide-gray-200 text-center w-full"
+                    >
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {entry.date}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {acc.accountCode}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {acc.accountName.replace(/_/g, " ")}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {entry.userId}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {entry.loanId}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {acc.debitValue !== 0
+                            ? acc.debitValue.toFixed(2)
+                            : "-"}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                        <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
+                          {acc.creditValue !== 0
+                            ? acc.creditValue.toFixed(2)
+                            : "-"}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </React.Fragment>
+            ))
+          )}
+        </tbody>
+      </table>
+      <div
+        ref={paginationRef}
+        className="mt-4 flex justify-center gap-5 items-center"
+      >
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`flex items-center px-4 py-2 rounded-md ${
+            currentPage === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-indigo-500 text-white cursor-pointer"
+          }`}
+        >
+          <ChevronLeftIcon className="w-5 h-5" />
+        </button>
+        <span className="text-sm text-gray-700">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`flex items-center px-4 py-2 rounded-md ${
+            currentPage === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-indigo-500 text-white cursor-pointer"
+          }`}
+        >
+          <ChevronRightIcon className="w-5 h-5" />
+        </button>
+      </div>
+    </>
+  );
+};
+
+export default Ledger;
+
+```
+
+### New Code
+
+```jsx
+import React from 'react'
+import Body from '../components/Common/Body/Body'
+import { ledgerArr, HeaderList } from '../data/LedgerData';
+import LedgerListTable from '../components/LedgerListTable/LedgerListTable';
+
+
+const CustomerCarePage = () => {
+    return (
+        <Body>
+            <LedgerListTable ListName={"Ledger List"} ListHeader={HeaderList} ListItem={ledgerArr}/>
+        </Body>
+    )
+}
+
+export default CustomerCarePage
+
+```
+
+### LedgerListTable Component
+
+```jsx
+import React, { useState, useEffect, useRef } from "react";
+import { MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import Select from "react-select";
+
+const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
+  const tableRef = useRef(null);
+  const paginationRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [filteredData, setFilteredData] = useState(ListItem);
+  const [borrowerIdQuery, setBorrowerIdQuery] = useState("");
+
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const currentData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const selectOptions = [
+    { value: 5, label: "5 entries" },
+    { value: 10, label: "10 entries" },
+    { value: 20, label: "20 entries" },
+    { value: 50, label: "50 entries" },
+    { value: 100, label: "100 entries" },
+  ];
+
+  useEffect(() => {
+    const adjustPaginationWidth = () => {
+      if (tableRef.current && paginationRef.current) {
+        paginationRef.current.style.width = `${tableRef.current.offsetWidth}px`;
+      }
+    };
+
+    adjustPaginationWidth();
+    window.addEventListener("resize", adjustPaginationWidth);
+    return () => window.removeEventListener("resize", adjustPaginationWidth);
+  }, []);
+
+  useEffect(() => {
+    setFilteredData(
+      ListItem.filter((entry) => entry.userId.toString().includes(borrowerIdQuery))
+    );
+    setCurrentPage(1);
+  }, [borrowerIdQuery]);
+
+  const handlePageSizeChange = (selectedOption) => {
+    setPageSize(selectedOption.value);
+    setCurrentPage(1);
+  };
+
+  // Custom Styling
+  const customSelectStyles = {
+    control: (provided) => ({
+      ...provided,
+      minHeight: '48px',
+      borderRadius: '0.375rem',
+      borderColor: '#D1D5DB',
+      boxShadow: 'none',
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '0 0.75rem',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      height: '48px',
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      padding: '0 8px',
+    }),
+    clearIndicator: (provided) => ({
+      ...provided,
+      padding: '0 8px',
+    }),
+  };
+
+  return (
+    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+      <div className="px-4 sm:px-6 lg:px-8">
+
+        {/* Search */}
+        <div className="flex gap-4 mb-5">
+          <div className="w-2/4">
+            <label htmlFor="search" className="sr-only">
+              Search by Borrower ID
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </div>
+              <input
+                id="search"
+                type="search"
+                name="search"
+                className="block w-full rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                placeholder="Enter Borrower ID"
+                value={borrowerIdQuery}
+                onChange={(e) => setBorrowerIdQuery(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="w-2/4">
+            <label htmlFor="entriesSelect" className="sr-only">
+              Entries Per Page
+            </label>
+            <Select
+              id="entriesSelect"
+              options={selectOptions}
+              defaultValue={{ value: 10, label: "10 entries" }}
+              onChange={handlePageSizeChange}
+              className="block w-full"
+              styles={customSelectStyles}
+              isSearchable={false}
+              isMulti={false}
+            />
+          </div>
+        </div>
+
+        {/* Table Name */}
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="mt-4 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-300" ref={tableRef}>
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {ListHeader.map((header, index) => (
+                        <th
+                          key={index}
+                          scope="col"
+                          className="px-3 py-3.5 w-1/6 text-center text-sm font-medium text-gray-900"
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {currentData.length !== 0 ? (
+                      currentData.map((item) => (
+                        <React.Fragment key={item.id}>
+                          {item.account.map((accountItem, idx) => (
+                            <tr key={`${item.id}-${idx}`}>
+                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                                {item.transactionDate}
+                              </td>
+                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                                {accountItem.entryId}
+                              </td>
+                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                                {accountItem.entryName}
+                              </td>
+                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                                {item.userId}
+                              </td>
+                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                                {accountItem.debitValue === 0 ? '-' : accountItem.debitValue}
+                              </td>
+                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                                {accountItem.creditValue === 0 ? '-' : accountItem.creditValue}
+                              </td>
+                            </tr>
+                          ))}
+                        </React.Fragment>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={ListHeader.length}
+                          className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500"
+                        >
+                          No Data Found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      {
+        currentData.length !== 0
+          ? (
+            <div ref={paginationRef} className="mt-4 flex justify-center gap-5 items-center">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
+                  }`}
+              >
+                <ChevronLeftIcon className="w-5 h-5" />
+              </button>
+              <span className="text-sm text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
+                  }`}
+              >
+                <ChevronRightIcon className="w-5 h-5" />
+              </button>
+            </div>
+          )
+          : null
+      }
+
+
+    </div>
+  );
+};
+
+export default LedgerListTable;
+
+
+```
+
+### LedgerData.js
+
+```jsx
+export const ledgerArr = [
+  {
+    id: "666c7ca699ba1348a3e1c029",
+    userId: "1055533324",
+    loanId: "59562361-eb55-44cb6",
+    transactionId: null,
+    transactionDate: "14 Jun 2024",
+    account: [
+      {
+        entryName: "CASH_IN_BANK", 
+        entryId: "1002", 
+        debitValue: 4944.5,
+        creditValue: 0,
+      },
+      {
+        entryName: "DPD_PRINCIPAL",
+        entryId: "1004",
+        debitValue: 0,
+        creditValue: 4000,
+      },
+      {
+        entryName: "DPD_INTEREST",
+        entryId: "1005",
+        debitValue: 0,
+        creditValue: 944.5,
+      },
+    ],
+  },
+  {
+    id: "666c7ca699ba1348a3e1c029",
+    userId: "1055533325",
+    loanId: "59562361-eb55-44cb7",
+    transactionId: null,
+    transactionDate: "15 Jun 2024",
+    account: [
+      {
+        entryName: "DPD_PRINCIPAL",
+        entryId: "1004",
+        debitValue: 1000,
+        creditValue: 0,
+      },
+      {
+        entryName: "DPD_INTEREST",
+        entryId: "1005",
+        debitValue: 100,
+        creditValue: 0,
+      },
+      {
+        entryName: "Accrued Financing Principal",
+        entryId: "1011",
+        debitValue: 0,
+        creditValue: 1000,
+      },
+      {
+        entryName: "Accrued Financing Interest",
+        entryId: "1012",
+        debitValue: 0,
+        creditValue: 100,
+      },
+    ],
+  },
+];
+
+export const HeaderList = [
+  "Date",
+  "Entry ID",
+  "Entry Name",
+  "Borrower ID",
+  "Debit Amount",
+  "Credit Amount",
+];
+
+
+```
+
+## Summary
+
+Overall, these changes improve the code by enhancing readability, maintainability, and reusability while maintaining the core functionality of displaying and paginating ledger entries.
+
+---
 
 &emsp;
+
+
 
 &emsp;
 

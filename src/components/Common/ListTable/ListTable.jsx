@@ -6,7 +6,7 @@
       <div className="bg-gray-100 py-10 rounded-xl mt-8">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Search bar */}
-          <div className="mb-5 w-96">
+          <div className="mb-5 w-full">
             <label htmlFor="search" className="sr-only">Search</label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
