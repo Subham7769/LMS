@@ -9,7 +9,13 @@ const TclPage = () => {
     return (
         <Body>
             <StatContainer stats={TclStats} />
-            <ListTable  ListName={"TCL List"} ListHeader={HeaderList} ListItem={ProductList}/>
+            <ListTable 
+            ListName={"TCL List"} 
+            ListHeader={HeaderList} 
+            ListItem={ProductList}
+            HandleAction={null}
+            Searchable={true}
+            />
         </Body>
     )
 }

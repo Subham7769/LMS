@@ -9,7 +9,13 @@ const ProjectPage = () => {
     return (
         <Body>
             <StatContainer stats={ProjectStats} />
-            <ListTable ListName={"Project List"} ListHeader={HeaderList} ListItem={ProductList}/>
+            <ListTable 
+            ListName={"Project List"} 
+            ListHeader={HeaderList} 
+            ListItem={ProductList}
+            HandleAction={null}
+            Searchable={true}
+            />
         </Body>
     )
 }

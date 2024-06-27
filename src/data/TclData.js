@@ -65,3 +65,46 @@ export const ProductList = [
     href: "/tcl/3",
   },
 ];
+
+export const TclViewListData = [
+  {
+    name: "Cash Loan TCL",
+    minTCL: "100",
+    avgTCL: "150",
+    maxTCL: "200",
+    totalUser: "10",
+    uploadedDate: "1 Aug 2023",
+    totalRows: 10,
+  },
+  {
+    name: "BNPL TCL",
+    minTCL: "300",
+    avgTCL: "350",
+    maxTCL: "400",
+    totalUser: "20",
+    uploadedDate: "1 Sept 2023",
+    totalRows: 20,
+  },
+  {
+    name: "Overdraft TCL",
+    minTCL: "500",
+    avgTCL: "550",
+    maxTCL: "600",
+    totalUser: "30",
+    uploadedDate: "1 Oct 2023",
+    totalRows: 30,
+  },
+];
+
+export const TclViewListHeaderList = [
+  "File Name",
+  "Min TCL",
+  "Avg TCL",
+  "Max TCL",
+  "Total User",
+  "Uploaded Date",
+  "Total Rows",
+  "Actions",
+];
+
+

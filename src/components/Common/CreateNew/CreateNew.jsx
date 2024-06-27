@@ -60,7 +60,7 @@ const CreateNew = ({ placeholder }) => {
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    className="placeholder:text-xs placeholder:text-gray-400 text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-0.5"
+                    className="placeholder:text-xs text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-0.5"
                     placeholder={placeholder}
                 />
             </div>

@@ -248,44 +248,6 @@ This workflow ensures that code is progressively tested and integrated, reducing
 
 &emsp;
 
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
-&emsp;
-
 
 # 5 - Component Optimizations
 # App.jsx optimizations
@@ -1035,35 +997,61 @@ export const ProductList = [
 #### New `ListTable` Component
 
 ```javascript
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import React, { useState } from 'react';
+import { MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 
-const ListTable = ({ ListName, ListHeader, ListItem }) => {
+const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable }) => {
+  const HeaderCellWidth = ListHeader.length + 1; // Calculate cell width based on header length
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(ListItem);
+
+  // Function to handle search input change
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    const filtered = ListItem.filter(item =>
+      item.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
+  // Use filteredData instead of ListItem for rendering
+  const dataToRender = searchTerm ? filteredData : ListItem;
+
   return (
     <div className="bg-gray-100 py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
-        {/* Search bar */}
-        <div className="mb-5 w-96">
-          <label htmlFor="search" className="sr-only">Search</label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+        {/* Search bar if Searchable prop is true */}
+        {Searchable && (
+          <div className="mb-5 w-full">
+            <label htmlFor="search" className="sr-only">Search</label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </div>
+              <input
+                id="search"
+                name="search"
+                className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                placeholder="Search"
+                type="search"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
             </div>
-            <input
-              id="search"
-              name="search"
-              className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-              placeholder="Search"
-              type="search"
-            />
           </div>
-        </div>
+        )}
+
         {/* Table title */}
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
           </div>
         </div>
+
         {/* Table */}
         <div className="mt-4 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -1076,7 +1064,7 @@ const ListTable = ({ ListName, ListHeader, ListItem }) => {
                         <th
                           key={index}
                           scope="col"
-                          className="px-3 py-3.5 w-1/5 text-center text-sm font-medium text-gray-900"
+                          className={`px-3 py-3.5 w-1/${HeaderCellWidth} text-center text-sm font-medium text-gray-900`}
                         >
                           {header}
                         </th>
@@ -1084,21 +1072,36 @@ const ListTable = ({ ListName, ListHeader, ListItem }) => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {ListItem.map((product) => (
-                      <tr key={product.name}>
+                    {dataToRender.map((product, index) => (
+                      <tr key={index}>
                         {Object.keys(product).map((key, idx) => (
+                          // Do not create cell for href key in the object of array
                           key !== "href" ? (
-                            <td key={idx} className="w-1/5 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                            <td key={idx} className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}>
                               {product.href ? (
+                                // If product has a href attribute then create a clickable Link 
                                 <Link className="w-full block" to={product.href}>
                                   {product[key]}
                                 </Link>
                               ) : (
+                                // Else create a simple text
                                 product[key]
                               )}
                             </td>
                           ) : null
                         ))}
+                        {/* Add Actions column if present */}
+                        {ListHeader.includes('Actions') && (
+                          <td className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}>
+                            <button
+                              onClick={() => HandleAction(index)}
+                              type="button"
+                              className="w-8 h-8 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                            >
+                              <TrashIcon className="h-4 w-4" aria-hidden="true" />
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -1113,6 +1116,7 @@ const ListTable = ({ ListName, ListHeader, ListItem }) => {
 };
 
 export default ListTable;
+
 
 ```
 
@@ -3160,6 +3164,634 @@ Overall, these changes improve the code by enhancing readability, maintainabilit
 &emsp;
 
 
+# SelectAndAdd Component
+
+This component handles the selection of a file and adding it to the list.
+
+```jsx
+import React from 'react';
+import Select from 'react-select';
+import { PlusIcon } from '@heroicons/react/20/solid';
+
+// Custom Styling
+const customSelectStyles = {
+  control: (provided) => ({
+    ...provided,
+    minHeight: '48px',
+    borderRadius: '0.375rem',
+    borderColor: '#D1D5DB',
+    boxShadow: 'none',
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    padding: '0 0.75rem',
+  }),
+  indicatorsContainer: (provided) => ({
+    ...provided,
+    height: '48px',
+  }),
+  dropdownIndicator: (provided) => ({
+    ...provided,
+    padding: '0 8px',
+  }),
+  clearIndicator: (provided) => ({
+    ...provided,
+    padding: '0 8px',
+  }),
+};
+
+const SelectAndAdd = ({ listName, selectOptions, selectedOption, handleChange, buttonName, onClick }) => {
+  return (
+    <div className="flex gap-4 bg-gray-100 p-10 rounded-xl">
+      <div className="w-2/4">
+        <label htmlFor="entriesSelect" className="sr-only">
+          {listName}
+        </label>
+        <Select
+          className="block w-full"
+          options={selectOptions}
+          value={selectedOption}
+          onChange={handleChange}
+          isMulti={false}
+          isSearchable={false}
+          styles={customSelectStyles}
+        />
+      </div>
+      <div className="flex justify-center items-center">
+        <button
+          onClick={onClick}
+          type="button"
+          className="flex justify-center items-center gap-x-1 w-48 rounded-md bg-green-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+        >
+          <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+          {buttonName}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default SelectAndAdd;
+```
+
+# TclComponent.jsx -> TCLViewList Component
+This component manages the main functionality of selecting a file and adding it to the list.
+
+```jsx
+
+import React, { useState } from 'react';
+import { TclViewListData, TclViewListHeaderList } from '../../data/TclData';
+import Body from '../Common/Body/Body';
+import ListTable from '../Common/ListTable/ListTable';
+import SelectAndAdd from '../Common/SelectAndAdd/SelectAndAdd';
+
+const selectOptions = [
+  { value: 'Cash Loan TCL', label: 'Cash Loan TCL' },
+  { value: 'BNPL TCL', label: 'BNPL TCL' },
+  { value: 'Overdraft TCL', label: 'Overdraft TCL' },
+];
+
+const TCLViewList = () => {
+  const [fileSelectedOption, setFileSelectedOption] = useState(null);
+  const [tableData, setTableData] = useState([]);
+  const [message, setMessage] = useState('');
+
+  const handleChange = (selectedOption) => {
+    setFileSelectedOption(selectedOption);
+    setMessage(''); // Reset message on selection change
+  };
+
+  const addData = () => {
+    if (!fileSelectedOption) {
+      setMessage('Please select a file first.');
+      return;
+    }
+
+    const selectedFileData = TclViewListData.find(
+      (item) => item.name === fileSelectedOption.value
+    );
+
+    if (selectedFileData) {
+      const alreadyExists = tableData.some(
+        (item) => item.name === selectedFileData.name
+      );
+
+      if (alreadyExists) {
+        setMessage('The selected file is already added to the table.');
+      } else {
+        setTableData((prevData) => [selectedFileData, ...prevData]);
+        setMessage(''); // Clear message if data is successfully added
+      }
+    }
+  };
+
+  const handleDelete = (index) => {
+    setTableData((prevData) => prevData.filter((_, i) => i !== index));
+  };
+
+  return (
+    <Body>
+      {/* Select & Add to List */}
+      <SelectAndAdd
+        listName="Select TCL List"
+        selectOptions={selectOptions}
+        selectedOption={fileSelectedOption}
+        handleChange={handleChange}
+        buttonName="Add to List"
+        onClick={addData}
+      />
+
+      {/* Message */}
+      {message && <div className="mb-4 text-red-500">{message}</div>}
+
+      {/* List */}
+      <ListTable
+        listName="TCL List"
+        listHeader={TclViewListHeaderList}
+        listItem={tableData}
+        handleAction={handleDelete}
+        searchable={false}
+      />
+    </Body>
+  );
+};
+
+export default TCLViewList;
+```
+
+# ListTable Component
+This component handles displaying the table with optional search functionality.
+
+```jsx
+
+import React, { useState } from 'react';
+import { MagnifyingGlassIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { Link } from 'react-router-dom';
+
+const ListTable = ({ listName, listHeader, listItem, handleAction, searchable }) => {
+  const headerCellWidth = listHeader.length + 1; // Calculate cell width based on header length
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(listItem);
+
+  // Function to handle search input change
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    const filtered = listItem.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
+  // Use filteredData instead of listItem for rendering
+  const dataToRender = searchTerm ? filteredData : listItem;
+
+  return (
+    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+      <div className="px-4 sm:px-6 lg:px-8">
+        {/* Search bar if searchable prop is true */}
+        {searchable && (
+          <div className="mb-5 w-full">
+            <label htmlFor="search" className="sr-only">
+              Search
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </div>
+              <input
+                id="search"
+                name="search"
+                className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                placeholder="Search"
+                type="search"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Table title */}
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">{listName}</h1>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="mt-4 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {listHeader.map((header, index) => (
+                        <th
+                          key={index}
+                          scope="col"
+                          className={`px-3 py-3.5 w-1/${headerCellWidth} text-center text-sm font-medium text-gray-900`}
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {dataToRender.map((product, index) => (
+                      <tr key={index}>
+                        {Object.keys(product).map(
+                          (key, idx) =>
+                            key !== 'href' && (
+                              <td
+                                key={idx}
+                                className={`w-1/${headerCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
+                              >
+                                {product.href ? (
+                                  <Link className="w-full block" to={product.href}>
+                                    {product[key]}
+                                  </Link>
+                                ) : (
+                                  product[key]
+                                )}
+                              </td>
+                            )
+                        )}
+                        {listHeader.includes('Actions') && (
+                          <td
+                            className={`w-1/${headerCellWidth} whitespace-nowrap py-4 text-center text-sm font-medium`}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleAction(index)}
+                              className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            >
+                              <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                              Delete
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ListTable;
+```
+
+# Data File (TclData.js)
+This file contains the data and header information used by the components.
+
+```javascript
+import {
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
+export const TclStats = [
+  {
+    id: 1,
+    name: "Total Borrowers in All groups",
+    stat: "71,897",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Avg. Lending / Day",
+    stat: "$58.16M",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Avg. Loans Closed / Day",
+    stat: "24.57",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
+];
+
+export const HeaderList = [
+  "Name",
+  "Created On",
+  "Open Loans",
+  "Total Disbursed Principal",
+  "Status",
+];
+
+export const ProductList = [
+  {
+    name: "TCL 1",
+    created: "07/06/2021",
+    openLoans: "2367",
+    disbursedPrincipal: "$234M",
+    status: "Active",
+    href: "/tcl/1",
+  },
+  {
+    name: "TCL 2",
+    created: "14/09/2022",
+    openLoans: "1490",
+    disbursedPrincipal: "$750M",
+    status: "Active",
+    href: "/tcl/2",
+  },
+  {
+    name: "TCL 3",
+    created: "19/09/2022",
+    openLoans: "185",
+    disbursedPrincipal: "$90M",
+    status: "Inactive",
+    href: "/tcl/3",
+  },
+];
+
+export const TclViewListData = [
+  {
+    name: "Cash Loan TCL",
+    minTCL: "100",
+    avgTCL: "150",
+    maxTCL: "200",
+    totalUser: "10",
+    uploadedDate: "1 Aug 2023",
+    totalRows: 10,
+  },
+  {
+    name: "BNPL TCL",
+    minTCL: "300",
+    avgTCL: "350",
+    maxTCL: "400",
+    totalUser: "20",
+    uploadedDate: "1 Sept 2023",
+    totalRows: 20,
+  },
+  {
+    name: "Overdraft TCL",
+    minTCL: "500",
+    avgTCL: "550",
+    maxTCL: "600",
+    totalUser: "30",
+    uploadedDate: "1 Oct 2023",
+    totalRows: 30,
+  },
+];
+
+export const TclViewListHeaderList = [
+  "File Name",
+  "Min TCL",
+  "Avg TCL",
+  "Max TCL",
+  "Total User",
+  "Uploaded Date",
+  "Total Rows",
+  "Actions",
+];
+
+
+
+```
+## Summary
+    - Component: Provides a UI for selecting a file and adding it to the list.
+    -TCLViewList Component: Manages the main functionality and maintains the state of the list and selection.
+    -ListTable Component: Displays the list in a table format with optional search functionality.
+    -Custom Styling: Custom styles for the Select component for a better UI.
+    -Data Handling: Data is moved to a separate file for better organization and maintainability.
+    -Reusable Components: The components are now modular and reusable in other parts of the application.
+
+These changes make the codebase more organized, maintainable, and user-friendly.
+
+---
+
+&emsp;
+
+The `CreateNew` component is a React component that allows users to create a new RAC (presumably some kind of resource or item) by entering a name and submitting it. Here’s a breakdown of how it works:
+
+### Overview
+- **State Management**: Uses `useState` to manage the input value (`racName`) and the editing state (`isEditing`).
+- **Routing**: Utilizes `useNavigate` from `react-router-dom` to navigate to a different page upon successful creation.
+- **Conditional Rendering**: Displays an input field when in editing mode and a button when not.
+- **API Interaction**: Sends a POST request to create a new RAC and handles authentication issues.
+
+### Component Breakdown
+
+1. **Imports**:
+   - `useState` for state management.
+   - `PlusIcon` from Heroicons for the add icon.
+   - `useNavigate` from `react-router-dom` for navigation.
+
+2. **State Variables**:
+   - `racName`: Stores the name of the RAC being created.
+   - `isEditing`: Tracks whether the component is in editing mode or not.
+
+3. **Event Handlers**:
+   - `handleChange`: Updates `racName` as the user types.
+   - `handleKeyDown`: Creates a new RAC if the "Enter" key is pressed.
+   - `handleBlur`: Resets the input and toggles editing mode when the input loses focus.
+
+4. **API Call**:
+   - `createNewRac`: Makes a POST request to create a new RAC and handles possible authentication errors by redirecting to the login page if the user is not authorized.
+
+5. **Conditional Rendering**:
+   - When `isEditing` is `true`, an input field is displayed.
+   - When `isEditing` is `false`, a button with a "Create RAC" label and a plus icon is displayed.
+
+### Code Explanation
+
+```jsx
+import React, { useState } from 'react';
+import { PlusIcon } from "@heroicons/react/20/solid";
+import { useNavigate } from 'react-router-dom';
+
+const CreateNew = ({ placeholder }) => {
+    const [racName, setRacName] = useState("");
+    const [isEditing, setEditing] = useState(false);
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setRacName(e.target.value);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            createNewRac(racName);
+        }
+    };
+
+    const handleBlur = () => {
+        setRacName('');
+        setEditing(!isEditing);
+    };
+
+    async function createNewRac(racName) {
+        try {
+            const token = localStorage.getItem("authToken");
+            const response = await fetch(
+                "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" + racName,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("authToken");
+                navigate("/login");
+                return;
+            }
+            const racDetails = await response.json();
+            console.log(racDetails);
+            navigate("/newrac/" + racDetails.racId);
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    return (
+        isEditing ? (
+            <div className='pl-6 w-full flex justify-between '>
+                <input
+                    type="text"
+                    name="racName"
+                    id="racName"
+                    value={racName}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleBlur}
+                    className="placeholder:text-xs text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-0.5"
+                    placeholder={placeholder}
+                />
+            </div>
+
+        ) : (
+            <div className='text-gray-500 pl-6 w-full text-sm flex items-center justify-between cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600' onClick={() => setEditing(!isEditing)}>
+                <p>Create RAC</p>
+                <div>
+                    <PlusIcon className="h-6 w-6 shrink-0" />
+                </div>
+            </div>
+        )
+    );
+};
+
+export default CreateNew;
+```
+
+### Usage
+To use this component, you would import it and include it in your JSX, providing a `placeholder` prop if desired.
+
+```jsx
+import CreateNew from './path/to/CreateNew';
+
+const SomeComponent = () => {
+  return (
+    <div>
+      <CreateNew placeholder="Enter RAC name" />
+    </div>
+  );
+};
+```
+
+### Summary
+This component provides an interface for creating a new RAC by toggling between a button and an input field, managing the input state, and making an API request to create the RAC, handling any authentication issues that arise.
+
+---
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
+
+&emsp;
 
 &emsp;
 

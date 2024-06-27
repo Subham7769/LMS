@@ -9,7 +9,13 @@ const RacPage = () => {
     return (
         <Body>
             <StatContainer stats={RacStats} />
-            <ListTable ListName={"RAC List"} ListHeader={HeaderList} ListItem={ProductList}/>
+            <ListTable 
+            ListName={"RAC List"} 
+            ListHeader={HeaderList} 
+            ListItem={ProductList}
+            HandleAction={null}
+            Searchable={true}
+            />
         </Body>
     )
 }

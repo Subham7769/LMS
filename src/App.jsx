@@ -94,9 +94,9 @@ const EmploymentDetails = lazy(() =>
   import("./components/NewUser/EmploymentDetails")
 );
 const CreateProduct = lazy(() => import("./components/CreateProduct"));
-const TclComponent1 = lazy(() => import("./components/Tcl/TclComponent1"));
-const TclComponent2 = lazy(() => import("./components/Tcl/TclComponent2"));
-const TclComponent3 = lazy(() => import("./components/Tcl/TclComponent3"));
+const TclComponent1 = lazy(() => import("./components/TclComponent/TclComponent1"));
+const TclComponent2 = lazy(() => import("./components/TclComponent/TclComponent2"));
+const TclComponent3 = lazy(() => import("./components/TclComponent/TclComponent3"));
 
 const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
@@ -110,9 +110,10 @@ const ProjectPage = lazy(() => import("./pages/ProjectPage"));
 const ProductPage = lazy(() => import("./pages/ProductPage"));
 const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
 const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
-const NewUserPage = lazy(() => import("./pages/NewUserPage"));
+const NewUserPage = lazy(() => import("./pages/UserProductTestingPage"));
 const LedgerPage = lazy(() => import("./pages/LedgerPage"));
 const CreateNew = lazy(() => import("./components/Common/CreateNew/CreateNew"));
+const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList")); 
 
 const routes = [
   {
@@ -126,9 +127,9 @@ const routes = [
       { path: "/recovery/2", element: <Recovery2 /> },
       { path: "/recovery/3", element: <Recovery3 /> },
       { path: "/tcl", element: <TclPage /> },
-      { path: "/tcl/1", element: <TclComponent1 /> },
-      { path: "/tcl/2", element: <TclComponent2 /> },
-      { path: "/tcl/3", element: <TclComponent3 /> },
+      { path: "/tcl/1", element: <TCLViewList /> },
+      { path: "/tcl/2", element: <TCLViewList /> },
+      { path: "/tcl/3", element: <TCLViewList /> },
       { path: "/project/loan-form", element: <ProjectPage /> },
       { path: "/product", element: <ProductPage /> },
       { path: "/business-rule/1", element: <BpmnComponent /> },
