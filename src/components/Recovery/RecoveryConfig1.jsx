@@ -4,6 +4,7 @@ import { Passed } from "../Toasts";
 
 const Recovery1 = () => {
   const [recoveryOption, setRecoveryOption] = useState("daily");
+  const [edit, setEdit] = useState(false);
   const [tenure, setTenure] = useState("");
   const [wallet, setWallet] = useState("");
   const [due, setDue] = useState("");
@@ -11,7 +12,6 @@ const Recovery1 = () => {
   const [deductionEquation, setDeductionEquation] = useState(
     "(recovery < 1000) * (1000 - recovery) + (recovery > 1000) * (1000 * 0.5)"
   );
-  const [edit, setEdit] = useState(false);
 
   return (
     <>

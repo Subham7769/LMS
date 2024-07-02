@@ -76,9 +76,7 @@ const BpmnComponent2 = lazy(() =>
 const BpmnComponent3 = lazy(() =>
   import("./components/BusinessRule/BpmnComponent3")
 );
-const NewProjectPage = lazy(() =>
-  import("./components/Project/NewProjectPage")
-);
+
 const UserInfoTabs = lazy(() => import("./components/NewUser/UserInfoTabs"));
 const UserInfo = lazy(() => import("./components/NewUser/UserInfo"));
 const Disbursement = lazy(() => import("./components/NewUser/Disbursement"));
@@ -94,10 +92,6 @@ const EmploymentDetails = lazy(() =>
   import("./components/NewUser/EmploymentDetails")
 );
 const CreateProduct = lazy(() => import("./components/CreateProduct"));
-const TclComponent1 = lazy(() => import("./components/TclComponent/TclComponent1"));
-const TclComponent2 = lazy(() => import("./components/TclComponent/TclComponent2"));
-const TclComponent3 = lazy(() => import("./components/TclComponent/TclComponent3"));
-
 const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
 );
@@ -114,6 +108,8 @@ const NewUserPage = lazy(() => import("./pages/UserProductTestingPage"));
 const LedgerPage = lazy(() => import("./pages/LedgerPage"));
 const CreateNew = lazy(() => import("./components/Common/CreateNew/CreateNew"));
 const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList")); 
+// const NewProjectPage = lazy(() => import("./components/Project/NewProjectPage"));
+import NewProjectPage from './components/Project/NewProjectPage'
 
 const routes = [
   {

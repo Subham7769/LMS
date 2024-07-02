@@ -107,10 +107,11 @@ const SideBar = () => {
             {menu.submenu && submenuStates[index]?.isOpen && open && (
               <ul>
                 {
+                  //if create from Side bar Using input box
                   menu.createButton ? (
                     <div>
-                      <li className="p-2 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                        <CreateNew placeholder={menu.placeholder} />
+                      <li className="px-2 py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                        <CreateNew placeholder={menu.placeholder} buttonName={menu.buttonName}/>
                       </li>
                     </div>
                   ) 

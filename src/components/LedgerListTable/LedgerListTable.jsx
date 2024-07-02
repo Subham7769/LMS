@@ -194,7 +194,7 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
+                className={`flex items-center px-2 py-2 rounded-md ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
                   }`}
               >
                 <ChevronLeftIcon className="w-5 h-5" />
@@ -205,7 +205,7 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
+                className={`flex items-center px-2 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
                   }`}
               >
                 <ChevronRightIcon className="w-5 h-5" />

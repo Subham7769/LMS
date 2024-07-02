@@ -1469,6 +1469,7 @@ const RacMatrixConfig = () => {
       <div className="flex gap-5">
         <div className="flex flex-col max-w-[660px] flex-auto gap-y-5">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="">
               <label htmlFor="nationality" className="block">
                 Nationality
@@ -1502,6 +1503,7 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+            
             <div className="mt-3">
               <label htmlFor="gender" className="block">
                 Gender
@@ -1535,6 +1537,7 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+            
             <div className="mt-3">
               <label htmlFor="maritalStatus" className="block">
                 Marital Status
@@ -1568,6 +1571,7 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+            
             <div className="mt-3">
               <label htmlFor="residantialStatus" className="block">
                 Residential Status
@@ -1601,8 +1605,11 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+
           </div>
+          
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div>
               <label htmlFor="blockedOccupation" className="block">
                 Blocked Occupation
@@ -1637,6 +1644,7 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+
             <div className="mt-3">
               <label htmlFor="blockedRegion" className="block">
                 Blocked Region
@@ -1671,6 +1679,7 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+
             <div className="mt-3">
               <label htmlFor="blockedSector" className="block">
                 Blocked Sector
@@ -1705,9 +1714,13 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
+
           </div>
+
           <DeliquencyEq />
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+           
             <div>
               <label htmlFor="nationality" className="block">
                 Applicants Basic Salary Percentage From Gross:
@@ -1728,6 +1741,7 @@ const RacMatrixConfig = () => {
                 <div>*gross salary</div>
               </div>
             </div>
+
             <div className="mt-5">
               <label htmlFor="nationality" className="block">
                 Resident Basic Salary Percentage From Gross:
@@ -1748,6 +1762,7 @@ const RacMatrixConfig = () => {
                 <div>*gross salary</div>
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -1761,10 +1776,13 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
         </div>
+
         <div className="flex flex-col flex-auto gap-y-5 ">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Minimum Write Off
@@ -1790,6 +1808,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Maximum Write Off
@@ -1815,6 +1834,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Minimum Write Off
@@ -1840,6 +1860,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Maximum Write Off
@@ -1865,6 +1886,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+            
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -1878,8 +1900,11 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants gross salary
@@ -1902,6 +1927,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident gross salary
@@ -1924,6 +1950,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -1937,8 +1964,11 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Credit Bureau Score
@@ -1961,6 +1991,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Credit Bureau Score
@@ -1983,6 +2014,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -1996,8 +2028,11 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Minimum Active Rule
@@ -2022,6 +2057,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Maximum Active Rule
@@ -2046,6 +2082,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -2059,10 +2096,14 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
+
         </div>
+        
         <div className="flex flex-col flex-auto gap-y-5">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Minimum Age
@@ -2087,6 +2128,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Maximum Age
@@ -2111,6 +2153,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Minimum Age
@@ -2135,6 +2178,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Maximum Age
@@ -2159,6 +2203,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 onClick={handleAddAge}
@@ -2172,8 +2217,11 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Number Of Working Months
@@ -2196,6 +2244,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Number Of Working Months
@@ -2218,6 +2267,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -2231,8 +2281,10 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
+            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Disposableincome
@@ -2255,6 +2307,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Disposableincome
@@ -2277,6 +2330,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -2290,11 +2344,13 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
             <label htmlFor="number" className="block">
               Dependents
             </label>
+            
             <div className="flex items-center gap-4 justify-between">
               <div className="flex gap-4">
                 <Select
@@ -2314,6 +2370,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 onClick={handleAddDependents}
@@ -2327,11 +2384,14 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
             <label htmlFor="number" className="block">
               Credit Score
             </label>
+            
             <div className="flex items-center gap-4 justify-between">
               <div className="flex gap-4">
                 <Select
@@ -2351,6 +2411,7 @@ const RacMatrixConfig = () => {
                 />
               </div>
             </div>
+
             <div className="text-right mt-5">
               <button
                 onClick={handleAddCscore}
@@ -2364,6 +2425,7 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
+
           </div>
         </div>
       </div>

@@ -3611,38 +3611,38 @@ The `CreateNew` component is a React component that allows users to create a new
    - When `isEditing` is `true`, an input field is displayed.
    - When `isEditing` is `false`, a button with a "Create RAC" label and a plus icon is displayed.
 
-### Code Explanation
+### CreateNew.jsx Component
 
 ```jsx
 import React, { useState } from 'react';
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from 'react-router-dom';
 
-const CreateNew = ({ placeholder }) => {
-    const [racName, setRacName] = useState("");
+const CreateNew = ({ placeholder, buttonName }) => {
+    const [Name, setName] = useState("");
     const [isEditing, setEditing] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setRacName(e.target.value);
+        setName(e.target.value);
     };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            createNewRac(racName);
+            createNewRac(Name);
         }
     };
 
     const handleBlur = () => {
-        setRacName('');
+        setName('');
         setEditing(!isEditing);
     };
 
-    async function createNewRac(racName) {
+    async function createNewRac(Name) {
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(
-                "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" + racName,
+                "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" + Name,
                 {
                     method: "POST",
                     headers: {
@@ -3670,22 +3670,23 @@ const CreateNew = ({ placeholder }) => {
             <div className='pl-6 w-full flex justify-between '>
                 <input
                     type="text"
-                    name="racName"
-                    id="racName"
-                    value={racName}
+                    name="Name"
+                    id="Name"
+                    value={Name}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    className="placeholder:text-xs text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-0.5"
+                    className="placeholder:text-xs text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1"
                     placeholder={placeholder}
                 />
             </div>
 
         ) : (
             <div className='text-gray-500 pl-6 w-full text-sm flex items-center justify-between cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600' onClick={() => setEditing(!isEditing)}>
-                <p>Create RAC</p>
+                <p>{buttonName}</p>
                 <div>
-                    <PlusIcon className="h-6 w-6 shrink-0" />
+
+                <PlusIcon className="h-6 w-6 shrink-0" />
                 </div>
             </div>
         )
@@ -3693,6 +3694,7 @@ const CreateNew = ({ placeholder }) => {
 };
 
 export default CreateNew;
+
 ```
 
 ### Usage
@@ -3704,7 +3706,7 @@ import CreateNew from './path/to/CreateNew';
 const SomeComponent = () => {
   return (
     <div>
-      <CreateNew placeholder="Enter RAC name" />
+      <CreateNew placeholder="Enter RAC name" buttonName={"Create RAC"}/>
     </div>
   );
 };
@@ -3716,6 +3718,8 @@ This component provides an interface for creating a new RAC by toggling between 
 ---
 
 &emsp;
+
+
 
 &emsp;
 

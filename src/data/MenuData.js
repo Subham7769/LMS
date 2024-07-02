@@ -29,8 +29,9 @@ export const MenusInitial = [
     icon: ClipboardDocumentCheckIcon,
     current: false,
     submenu: true,
-    createButton: true,
-    placeholder: "Enter RAC Name",
+    createButton: true,//if create RAC from Side bar Using input box
+    buttonName: "Create RAC",//Create button text
+    placeholder: "Enter RAC Name",//required placeholder for inputbox
     submenuItems: [],
     isOpen: false,
   },
