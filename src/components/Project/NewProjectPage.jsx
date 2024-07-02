@@ -16,28 +16,27 @@ const NewProjectPage = () => {
   const navigate = useNavigate();
   const startDate = getFormattedDate(new Date());
 
-  const formattedDate = (date) => {
-    return date.substring(0, 10);
-  };
-
   function getFormattedDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+    const milliseconds = String(date.getUTCMilliseconds()).padStart(3, "0");
 
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+}
+
+  const [filteredLocations,setFilteredLocations] = useState([]);
+  
   const [formData, setFormData] = useState({
     name: "",
     projectDescription: "",
     country: null,
     location: null,
-    locationFlag: false,
-    filteredLocations: [],
     currencyName: null,
     loanType: null,
-    minLoanAmt: "",
-    maxLoanAmt: "",
     flatInterestRate: 0,
     interestRatePeriod: 0,
     interestPeriodUnit: null,
@@ -48,18 +47,21 @@ const NewProjectPage = () => {
     rollOverPenaltyFactor: 0,//rollOverF
     rollOverPenaltyFee: 0,
     rollOverInterestRate: 0,//rollOverIR
-    lateEmiPenaltyFactor: 0,//lateEMIPenalty
+    lateEmiPenaltyFactor: "",//lateEMIPenalty
     maxPaymetAttemps: 0,//maxPaymentAttempt  
-    rollOverEquation: "",
+    rollOverEquation: {
+      "equation": "",
+      "variables": []
+  },
     startDate: startDate,
     endDate: "",
-    lateRepaymentPenalty: 0,
+    lateRepaymentPenalty: "",
     tclAmount: 0,
     minLoanOperator: "",
     minLoanAmount: 0,
     maxLoanOperator: "",
     maxLoanAmount: 0,
-    earlyRepaymentDiscount: "",
+    earlyRepaymentDiscount: 0,
     tclOperator: "",
     minInstallmentsOperator: "",
     minInstallmentsAmount: 0,
@@ -70,13 +72,16 @@ const NewProjectPage = () => {
     hasEarlyLateRepayment: false,//earlyPay
     hasDownPayment: true,//hasDownPayPer
     managementFee: "",
+    tclRef: "",
     tclIncludeFee: true,//tclFee
     tclIncludeInterest: true,//tclInterest
     openLoanOperator: "",
     openLoanAmount: 0,
     vatFee: "",
-    client: "DarwinClient",
+    clientIds: [],
   });
+
+  const [clientIdsString, setClientIdsString] = useState("Darwinclient")
 
   const loanTypeOptions = [
     { value: "asset", label: "Asset" },
@@ -146,15 +151,7 @@ const NewProjectPage = () => {
 
 
   useEffect(() => {
-    if (formData.country) {
-      setFormData(prevState => ({
-        ...prevState,
-        filteredLocations: locationOptions[formData.country] || [],
-        location: prevState.locationFlag ? null : prevState.location
-      }));
-    } else {
-      setFormData(prevState => ({ ...prevState, filteredLocations: [] }));
-    }
+    setFilteredLocations(locationOptions[formData.country] || []);
   }, [formData.country]);
 
   const handleChange = (e) => {
@@ -180,8 +177,13 @@ const NewProjectPage = () => {
     }
   };
 
+  const handleClientIds = () => {
+    setFormData(prevState => ({ ...prevState, clientIds: clientIdsString.split(',') }));
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    handleClientIds();
     const formattedStartDate = `${startDate} 00:00:00`;
     const formattedEndDate = `${formData.endDate} 00:00:00`;
 
@@ -224,7 +226,6 @@ const NewProjectPage = () => {
       "emiRepaymentGracePeriod",
       "loanGracePeriod",
       "rollOverGracePeriod",
-      "rollOverPenaltyFee",
       "rollOverPenaltyFee",
       "lateEmiPenaltyFactor",
       "name",
@@ -343,7 +344,7 @@ const NewProjectPage = () => {
 
             {/* Location */}
             <div className="col-span-1">
-              <InputSelect labelName={"Location"} inputName={"location"} inputOptions={formData.filteredLocations} inputValue={formData.location} onChange={handleChange} />
+              <InputSelect labelName={"Location"} inputName={"location"} inputOptions={filteredLocations} inputValue={formData.location} onChange={handleChange} />
             </div>
 
             {/* Loan Scheme Currency */}
@@ -398,12 +399,12 @@ const NewProjectPage = () => {
 
             {/* Roll Over Interest Rate */}
             <div className="col-span-1">
-              <InputText labelName={"Roll Over Interest Rate"} inputName={"rollOverInterestRate"} inputValue={formData.rollOverInterestRate} onChange={handleChange} placeHolder={"6"} />
+              <InputNumber labelName={"Roll Over Interest Rate"} inputName={"rollOverInterestRate"} inputValue={formData.rollOverInterestRate} onChange={handleChange} placeHolder={"6"} />
             </div>
 
             {/* Late EMI Penalty */}
             <div className="col-span-1">
-              <InputNumber labelName={"Late EMI Penalty"} inputName={"lateEmiPenaltyFactor"} inputValue={formData.lateEmiPenaltyFactor} onChange={handleChange} placeHolder={"6"} />
+              <InputText labelName={"Late EMI Penalty"} inputName={"lateEmiPenaltyFactor"} inputValue={formData.lateEmiPenaltyFactor} onChange={handleChange} placeHolder={"6"} />
             </div>
 
             {/* Max. Payment Attempt */}
@@ -428,7 +429,7 @@ const NewProjectPage = () => {
 
             {/* Late Repayment Penalty */}
             <div className="col-span-1">
-              <InputNumber labelName={"Late Repayment Penalty"} inputName={"lateRepaymentPenalty"} inputValue={formData.lateRepaymentPenalty} onChange={handleChange} placeHolder={"10%"} />
+              <InputText labelName={"Late Repayment Penalty"} inputName={"lateRepaymentPenalty"} inputValue={formData.lateRepaymentPenalty} onChange={handleChange} placeHolder={"10%"} />
             </div>
 
             {/* Early Repayment Discount */}
@@ -448,7 +449,7 @@ const NewProjectPage = () => {
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
 
-            <div className="flex items-center space-x-2">
+            <div className="col-span-1 flex items-center space-x-2">
               <InputSelect labelName={"Loan Amount"} inputName={"minLoanOperator"} inputOptions={signsOptions} inputValue={formData.minLoanOperator} onChange={handleChange} defaultValue={signsOptions[0]} />
 
               <InputNumber inputName={"minLoanAmount"} inputValue={formData.minLoanAmount} onChange={handleChange} placeHolder={"Min"} />
@@ -461,7 +462,7 @@ const NewProjectPage = () => {
 
             {/* Number of Installments */}
 
-            <div className="flex items-center space-x-2">
+            <div className="col-span-1 flex items-center space-x-2">
               <InputSelect labelName={"Number of Installments"} inputName={"minInstallmentsOperator"} inputOptions={signsOptions} inputValue={formData.minInstallmentsOperator} onChange={handleChange} defaultValue={signsOptions[0]} />
 
               <InputNumber inputName={"minInstallmentsAmount"} inputValue={formData.minInstallmentsAmount} onChange={handleChange} placeHolder={"Min"} />
@@ -508,7 +509,7 @@ const NewProjectPage = () => {
         <div className="w-full mx-auto bg-white shadow-md rounded-xl border border-red-600 p-6 mt-8">
           <div className="gap-5">
             <div>
-              <InputTextArea labelName={"Client"} inputName={"client"} rowCount={3} inputValue={formData.client} onChange={handleChange} placeHolder={"DarwinClient"} />
+              <InputTextArea labelName={"Client Ids"} inputName={"clientIds"} rowCount={3} inputValue={clientIdsString} onChange={(e) => setClientIdsString(e.target.value)} placeHolder={"Darwinclient"} />
             </div>
             <div className="flex space-x-4 items-center justify-between mt-2">
               <InputCheckbox labelName={"Has Early Late Payment"} inputName={"hasEarlyLateRepayment"} inputValue={"earlyLatePayment"} inputChecked={formData.hasEarlyLateRepayment} onChange={handleChange} />

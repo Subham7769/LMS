@@ -7,7 +7,7 @@ const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange,
     };
 
     return (
-        <>
+        <div className='flex flex-col'>
             {labelName && (
                 <label
                     className="block text-gray-700 px-1 text-[14px]"
@@ -24,8 +24,9 @@ const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange,
                 onChange={handleChange}
                 isSearchable={true}
                 placeholder={placeHolder}
+                
             />
-        </>
+        </div>
     );
 };
 
