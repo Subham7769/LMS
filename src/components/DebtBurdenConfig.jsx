@@ -102,7 +102,7 @@ const DebtBurdenConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
         {
           method: "GET",
           headers: {
@@ -148,7 +148,7 @@ const DebtBurdenConfig = () => {
 
     try {
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
         {
           method: "POST",
           headers: {
@@ -197,7 +197,7 @@ const DebtBurdenConfig = () => {
     const ruleToDelete = rules[index];
     try {
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling/" +
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling/" +
           ruleToDelete.ruleName,
         {
           method: "DELETE",
@@ -239,7 +239,7 @@ const DebtBurdenConfig = () => {
     // Make a PUT request to update the data
     try {
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/debit-burden-cab-celling",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
         {
           method: "PUT",
           headers: {

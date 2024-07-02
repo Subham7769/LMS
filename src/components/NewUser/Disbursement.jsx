@@ -24,7 +24,7 @@ const Disbursement = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-payment-service/xcbe/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-payment-service/lmscarbon/api/v1/borrowers/" +
           userID +
           "/disbursement-status",
         {
@@ -68,7 +68,7 @@ const Disbursement = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/xcbe/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
           userID +
           "/disbursement",
         {

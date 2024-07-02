@@ -66,7 +66,7 @@ const SystemConfig = () => {
       };
 
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/project-system-configs",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/project-system-configs",
         {
           method: "PUT",
           headers: {

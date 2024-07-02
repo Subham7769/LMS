@@ -21,8 +21,8 @@ function EmploymentDetails() {
   const { userID } = useParams();
   const token = localStorage.getItem("authToken");
   const url =
-    "https://api-test.lmscarbon.com/carbon-product-service/xcbe/api/v1/borrowers/";
-  const url2 = `https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1//borrowers/emp-test-info/${userID}`;
+    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/";
+  const url2 = `https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1//borrowers/emp-test-info/${userID}`;
 
   const fetchData = async () => {
     try {

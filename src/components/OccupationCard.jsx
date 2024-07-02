@@ -42,7 +42,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
 
       try {
         const postResponse = await fetch(
-          "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/employment-sector-point-rule",
+          "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/employment-sector-point-rule",
           {
             method: "POST",
             headers: {
@@ -95,7 +95,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/employment-sector-point-rule/${value.ruleName}`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/rules/employment-sector-point-rule/${value.ruleName}`,
         {
           method: "DELETE",
           headers: {

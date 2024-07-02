@@ -153,7 +153,7 @@ const CreateProduct = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/loan-products",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products",
         {
           method: "POST",
           headers: {

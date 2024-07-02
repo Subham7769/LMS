@@ -14,7 +14,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/block-employers-rule",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/block-employers-rule",
         {
           method: "GET",
           headers: {
@@ -39,7 +39,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/${ruleName}/block-employers-rule/${name}`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/rules/${ruleName}/block-employers-rule/${name}`,
         {
           method: "DELETE",
           headers: {
@@ -87,7 +87,7 @@ const BlockedEmployer = () => {
       }
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xtracash/rules/block-employers-rule`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/rules/block-employers-rule`,
         {
           method: "PUT",
           headers: {

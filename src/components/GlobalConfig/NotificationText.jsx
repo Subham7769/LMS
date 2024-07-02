@@ -64,7 +64,7 @@ const NotificationText = () => {
 
       try {
         const response = await fetch(
-          `https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/notifications-data/${id}`,
+          `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/notifications-data/${id}`,
           {
             method: "PUT",
             headers: {

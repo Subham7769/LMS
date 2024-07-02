@@ -12,15 +12,15 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+              "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
             );
             if (data.status === 404) {
                 console.log("Borrower Not Found"); // Clear the token
@@ -45,16 +45,16 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+              "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID +
                 "/check-availability/14-11-1981",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
             );
             if (data.status === 404) {
                 console.log("User Not Found"); // Clear the token

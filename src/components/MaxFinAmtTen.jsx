@@ -71,7 +71,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const handleDelete = (index) => {
     const ruleToDelete = inputList[index];
     fetch(
-      `http://10.10.10.70:32014/carbon-product-service/xtracash/rules/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
+      `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
       {
         method: "DELETE",
         headers: {
@@ -120,7 +120,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     };
 
     fetch(
-      `http://10.10.10.70:32014/carbon-product-service/xtracash/rules/finance-amount-with-tenure-rule`,
+      `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/finance-amount-with-tenure-rule`,
       {
         method: "PUT",
         headers: {
@@ -171,7 +171,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     };
 
     fetch(
-      "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/finance-amount-with-tenure-rule",
+      "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/finance-amount-with-tenure-rule",
       {
         method: "POST",
         headers: {

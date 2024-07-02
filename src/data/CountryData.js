@@ -2763,3 +2763,22 @@ export const currencyOptions = [
   { value: "VEB", label: "Venezuela Bolivar" },
   { value: "ZMK", label: "Zambia Kwacha" },
 ];
+
+export const loanTypeOptions = [
+  { value: "asset", label: "Asset" },
+  { value: "cash", label: "cash" },
+];
+
+export const interestPeriodOptions = [
+  { value: "Monthly", label: "Monthly" },
+  { value: "Weekly", label: "Weekly" },
+  { value: "Forthnightly", label: "Forthnightly" },
+];
+
+export const signsOptions = [
+  { value: "==", label: "==" },
+  { value: "<", label: "<" },
+  { value: ">", label: ">" },
+  { value: "<=", label: "<=" },
+  { value: ">=", label: ">=" },
+];

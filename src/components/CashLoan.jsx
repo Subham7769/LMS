@@ -71,7 +71,7 @@ const CashLoan = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/loan-products/${deleteURL}`,
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${deleteURL}`,
         {
           method: "DELETE",
           headers: {

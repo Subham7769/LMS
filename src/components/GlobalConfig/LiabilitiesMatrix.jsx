@@ -70,7 +70,7 @@ const LiabilitiesMatrix = () => {
 
     try {
       const postResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "POST",
           headers: {
@@ -95,7 +95,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -144,7 +144,7 @@ const LiabilitiesMatrix = () => {
 
     try {
       const putResponse = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities/${simahDescriptionCode}`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/simah-liabilities/${simahDescriptionCode}`,
         {
           method: "PUT",
           headers: {
@@ -169,7 +169,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -244,7 +244,7 @@ const LiabilitiesMatrix = () => {
 
     try {
       const putResponse = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities/${simahDescriptionCode}`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/simah-liabilities/${simahDescriptionCode}`,
         {
           method: "PUT",
           headers: {
@@ -269,7 +269,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -311,7 +311,7 @@ const LiabilitiesMatrix = () => {
 
     try {
       const putResponse = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities/${simahDescriptionCode}`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/simah-liabilities/${simahDescriptionCode}`,
         {
           method: "PUT",
           headers: {
@@ -336,7 +336,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -362,7 +362,7 @@ const LiabilitiesMatrix = () => {
     try {
       const token = localStorage.getItem("authToken");
       const deleteResponse = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/xcbe/api/v1/configs/simah-liabilities/${deleteURL}`,
+        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/simah-liabilities/${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -386,7 +386,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/configs/simah-liabilities",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {

@@ -1758,7 +1758,7 @@ const CustomerCare = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/borrowers/" +
           borrowerID,
         {
           method: "GET",
@@ -1944,7 +1944,7 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+                "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID,
                 {
                     method: "GET",
@@ -1977,7 +1977,7 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+                "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID +
                 "/check-availability/14-11-1981",
                 {
@@ -2146,7 +2146,7 @@ const UserPage = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
           borrowerID +
           "/check-availability/14-11-1981",
         {
@@ -2326,7 +2326,7 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/" +
+                "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID,
                 {
                     method: "GET",
@@ -2359,7 +2359,7 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-registration-service/xcbe/api/v1/borrowers/" +
+                "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID +
                 "/check-availability/14-11-1981",
                 {
@@ -3642,7 +3642,7 @@ const CreateNew = ({ placeholder, buttonName }) => {
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(
-                "http://10.10.10.70:32014/carbon-product-service/xtracash/rules/rac/" + Name,
+                "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rac/" + Name,
                 {
                     method: "POST",
                     headers: {

@@ -108,7 +108,7 @@ const LoanHistoryComp = ({ loanHistoryData }) => {
     try {
       const token = localStorage.getItem("authToken");
       const url =
-        "http://10.10.10.70:32014/carbon-product-service/xcbe/api/v1/borrowers/clearance-letter/" +
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/borrowers/clearance-letter/" +
         subID +
         "/" +
         filteredLoansarr.loanId;
