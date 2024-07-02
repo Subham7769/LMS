@@ -14,9 +14,31 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 const NewProjectPage = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const loanTypeOptions = [
+    { value: "asset", label: "Asset" },
+    { value: "cash", label: "Cash" },
+  ];
+  const interestPeriodOptions = [
+    { value: "Monthly", label: "Monthly" },
+    { value: "Weekly", label: "Weekly" },
+    { value: "Fortnightly", label: "Fortnightly" },
+  ];
+  const signsOptions = [
+    { value: "==", label: "==" },
+    { value: "<", label: "<" },
+    { value: ">", label: ">" },
+    { value: "<=", label: "<=" },
+    { value: ">=", label: ">=" },
+  ];
   const startDate = getFormattedDate(new Date());
+  const [clientIdsString, setClientIdsString] = useState("Darwinclient")
+  const [filteredLocations, setFilteredLocations] = useState([]);
 
   function getFormattedDate(date) {
+    if (!(date instanceof Date)) {
+      throw new TypeError('Expected a Date object');
+    }
+  
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const day = String(date.getUTCDate()).padStart(2, "0");
@@ -24,12 +46,10 @@ const NewProjectPage = () => {
     const minutes = String(date.getUTCMinutes()).padStart(2, "0");
     const seconds = String(date.getUTCSeconds()).padStart(2, "0");
     const milliseconds = String(date.getUTCMilliseconds()).padStart(3, "0");
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-}
-
-  const [filteredLocations,setFilteredLocations] = useState([]);
   
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+  }
+
   const [formData, setFormData] = useState({
     name: "",
     projectDescription: "",
@@ -52,7 +72,7 @@ const NewProjectPage = () => {
     rollOverEquation: {
       "equation": "",
       "variables": []
-  },
+    },
     startDate: startDate,
     endDate: "",
     lateRepaymentPenalty: "",
@@ -70,7 +90,9 @@ const NewProjectPage = () => {
     serviceFee: 0,
     calculateInterest: false,//calInterest
     hasEarlyLateRepayment: false,//earlyPay
+    downPaymentOperator: "",//add in API
     hasDownPayment: true,//hasDownPayPer
+    downPayment:0,
     managementFee: "",
     tclRef: "",
     tclIncludeFee: true,//tclFee
@@ -80,27 +102,6 @@ const NewProjectPage = () => {
     vatFee: "",
     clientIds: [],
   });
-
-  const [clientIdsString, setClientIdsString] = useState("Darwinclient")
-
-  const loanTypeOptions = [
-    { value: "asset", label: "Asset" },
-    { value: "cash", label: "Cash" },
-  ];
-
-  const interestPeriodOptions = [
-    { value: "Monthly", label: "Monthly" },
-    { value: "Weekly", label: "Weekly" },
-    { value: "Fortnightly", label: "Fortnightly" },
-  ];
-
-  const signsOptions = [
-    { value: "==", label: "==" },
-    { value: "<", label: "<" },
-    { value: ">", label: ">" },
-    { value: "<=", label: "<=" },
-    { value: ">=", label: ">=" },
-  ];
 
   useEffect(() => {
     const pattern = /([a-zA-Z]+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
@@ -184,8 +185,8 @@ const NewProjectPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleClientIds();
-    const formattedStartDate = `${startDate} 00:00:00`;
-    const formattedEndDate = `${formData.endDate} 00:00:00`;
+    const formattedStartDate = startDate;
+    const formattedEndDate = getFormattedDate(formData.endDate);
 
     const startDateObj = new Date(formattedStartDate);
     const endDateObj = new Date(formattedEndDate);
@@ -230,6 +231,7 @@ const NewProjectPage = () => {
       "lateEmiPenaltyFactor",
       "name",
       "managementFee",
+      "downPaymentOperator",
       "vatFee"
     ];
 
@@ -487,9 +489,10 @@ const NewProjectPage = () => {
 
             </div>
             <div>
-              <InputSelect labelName={"Down Payment (Fixed or Percent)"} inputName={"sign5"} inputOptions={signsOptions} inputValue={""} onChange={""} defaultValue={signsOptions[0]} />
+              <InputSelect labelName={"Down Payment (Fixed or Percent)"} inputName={"downPaymentOperator"} inputOptions={signsOptions} inputValue={formData.downPaymentOperator} onChange={handleChange} defaultValue={signsOptions[0]} disabled={formData.hasDownPayment}/>
+              <InputCheckbox labelName={"Down Payment"} inputName={"hasDownPayment"} inputValue={"hasDownPayment"} inputChecked={formData.hasDownPayment} onChange={handleChange} />
 
-              <InputNumber inputName={"hasDownPayment"} inputValue={formData.hasDownPayment} onChange={handleChange} placeHolder={"Down Payment"} />
+
             </div>
             <div>
               <InputNumber labelName={"Service Fee"} inputName={"serviceFee"} inputValue={formData.serviceFee} onChange={handleChange} placeHolder={"Service Fee"} />
@@ -512,7 +515,7 @@ const NewProjectPage = () => {
               <InputTextArea labelName={"Client Ids"} inputName={"clientIds"} rowCount={3} inputValue={clientIdsString} onChange={(e) => setClientIdsString(e.target.value)} placeHolder={"Darwinclient"} />
             </div>
             <div className="flex space-x-4 items-center justify-between mt-2">
-              <InputCheckbox labelName={"Has Early Late Payment"} inputName={"hasEarlyLateRepayment"} inputValue={"earlyLatePayment"} inputChecked={formData.hasEarlyLateRepayment} onChange={handleChange} />
+              <InputCheckbox labelName={"Has Early Late Payment"} inputName={"hasEarlyLateRepayment"} inputValue={"hasEarlyLateRepayment"} inputChecked={formData.hasEarlyLateRepayment} onChange={handleChange} />
               <InputCheckbox labelName={"Calculate Interest"} inputName={"calculateInterest"} inputValue={"calculateInterest"} inputChecked={formData.calculateInterest} onChange={handleChange} />
               <InputCheckbox labelName={"TCL Include Fee"} inputName={"tclIncludeFee"} inputValue={"tclIncludeFee"} inputChecked={formData.tclIncludeFee} onChange={handleChange} />
               <InputCheckbox labelName={"TCL Include Interest"} inputName={"tclIncludeInterest"} inputValue={"tclIncludeInterest"} inputChecked={formData.tclIncludeInterest} onChange={handleChange} />

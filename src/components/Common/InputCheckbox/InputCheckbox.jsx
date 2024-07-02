@@ -13,7 +13,7 @@ const InputCheckbox = ({ labelName, inputName, inputValue, inputChecked, onChang
                 value={inputValue}
                 checked={inputChecked}
                 onChange={handleChange}
-                className="form-checkbox rounded-md"
+                className="form-checkbox rounded-md my-3"
             />
             <span>{labelName}</span>
         </label>

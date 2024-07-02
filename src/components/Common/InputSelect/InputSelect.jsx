@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from "react-select";
 
-const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange, placeHolder }) => {
+const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange, placeHolder, disabled=false }) => {
     const handleChange = (selectedOption) => {
         onChange({ target: { name: inputName, value: selectedOption ? selectedOption.value : '' } });
     };
@@ -24,6 +24,7 @@ const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange,
                 onChange={handleChange}
                 isSearchable={true}
                 placeholder={placeHolder}
+                disabled={disabled}
                 
             />
         </div>

@@ -56,9 +56,8 @@ const [formData, setFormData] = useState({
 const abc = {
     "name": "Subham Jain",
     "projectDescription": "jain",
-    "country": "United Kingdom",
-    "location": "London",
-    "locationFlag": false,
+    "country": "United States",
+    "location": "Alabama",
     "currencyName": "USD",
     "loanType": "asset",
     "flatInterestRate": 10,
@@ -71,12 +70,15 @@ const abc = {
     "rollOverPenaltyFactor": 10,
     "rollOverPenaltyFee": 10,
     "rollOverInterestRate": 10,
-    "lateEmiPenaltyFactor": 10,
+    "lateEmiPenaltyFactor": "10",
     "maxPaymetAttemps": 10,
-    "rollOverEquation": "",
-    "startDate": "2024-07-02 00:00:00",
-    "endDate": "2024-08-01 00:00:00",
-    "lateRepaymentPenalty": 10,
+    "rollOverEquation": {
+        "equation": "",
+        "variables": []
+    },
+    "startDate": "2024-07-02T12:33:19.902Z 00:00:00",
+    "endDate": "2024-07-02 00:00:00",
+    "lateRepaymentPenalty": "10",
     "tclAmount": 10,
     "minLoanOperator": "==",
     "minLoanAmount": 10,
@@ -90,8 +92,8 @@ const abc = {
     "maxInstallmentsAmount": 10,
     "serviceFee": 10,
     "calculateInterest": false,
-    "hasEarlyLateRepayment": false,
-    "hasDownPayment": true,
+    "downPaymentOperator": "==",
+    "hasDownPayment": 10,
     "managementFee": 10,
     "tclRef": "",
     "tclIncludeFee": true,
@@ -112,4 +114,3 @@ const abc = {
     ],
     "criteria": "tcl undefined 10 and loanAmount undefined 10 and loanAmount undefined 10 and numberOfInstallments undefined 10 and numberOfInstallments undefined 10 and freqCap undefined 10"
 }
-
