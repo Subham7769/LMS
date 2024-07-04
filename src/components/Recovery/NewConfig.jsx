@@ -3,13 +3,8 @@ import toast, { Toaster } from "react-hot-toast";
 import Select from "react-select";
 import { Passed } from "../Toasts";
 import { FaInfoCircle } from "react-icons/fa";
-import {
-  CheckCircleIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon,
-  XCircleIcon,
-} from "@heroicons/react/20/solid";
+import { PlusIcon } from "@heroicons/react/20/solid";
+import DynamicName from "../Common/DynamicName/DynamicName";
 
 const options = [
   { value: "Days", label: "Days" },
@@ -26,21 +21,10 @@ const RecoveryNew = () => {
   const [deductionEquation, setDeductionEquation] = useState("");
   const [edit, setEdit] = useState(false);
   const [notify, setNotify] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("Recovery Config");
-  const [tempName, setTempName] = useState(name);
-  const toggleEdit = () => {
-    setEdit((prevEdit) => !prevEdit);
-  };
 
-  const handleSave = () => {
-    setName(tempName);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setTempName(name);
-    setIsEditing(false);
+  const handleNameUpdate = (newName) => {
+    setName(newName);
   };
 
   const saveSettings = () => {
@@ -77,51 +61,20 @@ const RecoveryNew = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-lg border bg-white shadow-md border-red-600">
-        <div className="p-6">
-          <div className="flex items-center justify-between">
-            {isEditing ? (
-              <div className="flex items-center space-x-2 mb-4">
-                <input
-                  type="text"
-                  value={tempName}
-                  onChange={(e) => setTempName(e.target.value)}
-                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
-                />
-                <button
-                  onClick={handleSave}
-                  className="text-green-600 hover:text-green-800"
-                >
-                  <CheckCircleIcon className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={handleCancel}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <XCircleIcon className="h-6 w-6" />
-                </button>
-              </div>
-            ) : (
-              <h3
-                className="text-xl mb-4 font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 hover:rounded-md cursor-pointer"
-                onClick={() => setIsEditing(true)}
-              >
-                {name}
-              </h3>
-            )}
+        <div className="pr-6 py-6">
+          <div className="flex items-center justify-between pl-4 mb-4">
+            <DynamicName initialName={name} onSave={handleNameUpdate} />
             <div className="flex relative gap-3 h-10 items-center justify-center">
               <button
                 type="button"
                 onClick={tenure !== "" && saveSettings}
                 className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                <PlusIcon
-                  className="-ml-0.5 h-5 w-5"
-                  aria-hidden="true"
-                />
+                <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
               </button>
             </div>
           </div>
-          <div className="mt-2 mb-4 flex space-x-5">
+          <div className="mt-2 mb-4 flex space-x-5 pl-6">
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Tenure
@@ -145,7 +98,7 @@ const RecoveryNew = () => {
               />
             </div>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 pl-6">
             <div className="flex-1">
               <label className="text-sm font-medium flex items-center gap-3 text-gray-700 mb-1">
                 Deduction Equation

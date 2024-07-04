@@ -430,8 +430,8 @@ const LoanForm = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <form className="">
-        <h2 className="mb-5">
-          Name: <b>{ProjectData.name}</b>
+        <h2 className="mb-4 pl-4 text-xl hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer">
+          <b>{ProjectData.name}</b>
         </h2>
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">

@@ -1,26 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RacMatrixConfig from "./RacMatrixConfig";
-import {
-  TrashIcon,
-  PencilIcon,
-  XCircleIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
+import { TrashIcon } from "@heroicons/react/20/solid";
 import LoadingState from "../LoadingState";
+import DynamicName from "../Common/DynamicName/DynamicName";
 const NewCreatedRAC = () => {
   const [RACData, setRACData] = useState([]);
   const [cloneRAC, setCloneRAC] = useState(false);
-  const [updateRACFlag, setUpdateRACFlag] = useState(false);
   const [cloneRACName, setCloneRACName] = useState("");
-  const [isEditingRAC, setIsEditingRAC] = useState(false);
-  const [updateRACName, setUpdateRACName] = useState(RACData.name);
-
-  // When starting to edit, initialize `updateRACName` with the current name.
-  const handleEditRAC = () => {
-    setUpdateRACName(RACData.name);
-    setIsEditingRAC(true);
-  };
 
   const { racID } = useParams();
   const navigate = useNavigate();
@@ -91,11 +78,6 @@ const NewCreatedRAC = () => {
     setCloneRAC(true);
   };
 
-  const handleSaveRAC = () => {
-    handleUpdateRAC(updateRACName); // Update RACData with the new name
-    setIsEditingRAC(false);
-  };
-
   const createCloneRac = async (cloneRACName) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -157,49 +139,11 @@ const NewCreatedRAC = () => {
     }
   };
 
-  const handleCancelRAC = () => {
-    setIsEditingRAC(false);
-    setUpdateRACName(RACData.name); // Reset the input value on cancel
-  };
-
   return (
     <div className="mt-4">
       <div className="flex justify-between items-baseline">
         <div className="flex mb-5 items-baseline gap-5">
-          <div className="flex items-center justify-between">
-            {isEditingRAC ? (
-              <div className="flex items-center space-x-2 mb-4">
-                <input
-                  type="text"
-                  name="rac_name"
-                  value={updateRACName}
-                  onChange={(e) => setUpdateRACName(e.target.value)}
-                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
-                />
-                <button
-                  onClick={handleSaveRAC}
-                  className="text-green-600 hover:text-green-800"
-                >
-                  <CheckCircleIcon className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={handleCancelRAC}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <XCircleIcon className="h-6 w-6" />
-                </button>
-              </div>
-            ) : (
-              <h2 onClick={handleEditRAC}>
-                <b
-                  title="Edit Name"
-                  className="mb-4 text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
-                >
-                  {RACData.name}
-                </b>
-              </h2>
-            )}
-          </div>
+          <DynamicName initialName={RACData.name} onSave={handleUpdateRAC} />
         </div>
         <div className="flex items-center justify-between gap-6">
           <button

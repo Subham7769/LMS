@@ -9,6 +9,7 @@ import {
   TrashIcon,
   XCircleIcon,
 } from "@heroicons/react/20/solid";
+import DynamicName from "../Common/DynamicName/DynamicName";
 
 const options = [
   { value: "Days", label: "Days" },
@@ -75,43 +76,17 @@ const Recovery2 = () => {
     }
   };
 
+  const handleNameUpdate = (newName) => {
+    setName(newName);
+  };
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-lg border bg-white shadow-md border-red-600">
-        <div className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="mb-4">
-              {isEditing ? (
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={tempName}
-                    onChange={(e) => setTempName(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
-                  />
-                  <button
-                    onClick={handleSave}
-                    className="text-green-600 hover:text-green-800"
-                  >
-                    <CheckCircleIcon className="h-6 w-6" />
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <XCircleIcon className="h-6 w-6" />
-                  </button>
-                </div>
-              ) : (
-                <h3
-                  className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 hover:rounded-md cursor-pointer"
-                  onClick={() => setIsEditing(true)}
-                >
-                  {name}
-                </h3>
-              )}
-            </div>
+        <div className="pr-6 py-6">
+          <div className="flex items-center justify-between pl-4 mb-4">
+            <DynamicName initialName={name} onSave={handleNameUpdate} />
             <div className="flex relative gap-3 h-10 items-center justify-center">
               <button
                 className="inline-flex w-20 items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -139,7 +114,7 @@ const Recovery2 = () => {
               </button>
             </div>
           </div>
-          <div className="mt-2 mb-4 flex space-x-5">
+          <div className="mt-2 mb-4 flex space-x-5 pl-6">
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Tenure
@@ -164,7 +139,7 @@ const Recovery2 = () => {
               />
             </div>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 pl-6">
             <div className="flex-1">
               <label className="text-sm font-medium flex items-center gap-3 text-gray-700 mb-1">
                 Deduction Equation
