@@ -1,23 +1,31 @@
-import React, { useMemo } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
-import { BellIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
-import UserImg from '../../../assets/image/user.png';
+import React, { useMemo } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { BellIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+import UserImg from "../../../assets/image/user.png";
 
 const Header = () => {
-  const userNavigation = useMemo(() => [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '/login', action: () => localStorage.clear() },
-  ], []);
+  const userNavigation = useMemo(
+    () => [
+      { name: "Your Profile", href: "#" },
+      { name: "Settings", href: "#" },
+      { name: "Sign out", href: "/login", action: () => localStorage.clear() },
+    ],
+    []
+  );
 
   return (
-    <header className="shadow-md bg-white z-50 w-full fixed top-0 left-0 flex items-center justify-between" id="navBarId">
+    <header
+      className="shadow-md bg-white z-50 w-full fixed top-0 left-0 flex items-center justify-between"
+      id="navBarId"
+    >
       <div className="w-1/3">&nbsp;</div>
       <div className="flex justify-center w-1/3">
         <div>
-          <label htmlFor="search" className="sr-only">Search</label>
+          <label htmlFor="search" className="sr-only">
+            Search
+          </label>
           {/* Uncomment and customize the search input if needed */}
           {/* <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -63,7 +71,9 @@ const UserMenu = ({ userNavigation }) => (
         <span className="sr-only">Open user menu</span>
         <img className="h-8 w-8 rounded-full" src={UserImg} alt="User" />
       </Menu.Button>
-      <div className="text-gray-500">Hello, {localStorage.getItem('username')}</div>
+      <div className="text-gray-500">
+        Hello, {localStorage.getItem("username")}
+      </div>
     </div>
     <Transition
       enter="transition ease-out duration-100"
@@ -74,12 +84,14 @@ const UserMenu = ({ userNavigation }) => (
       leaveTo="transform opacity-0 scale-95"
     >
       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        {userNavigation.map(item => (
+        {userNavigation.map((item) => (
           <Menu.Item key={item.name}>
             {({ active }) => (
               <Link
                 to={item.href}
-                className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-700' : 'text-gray-700'}`}
+                className={`block px-4 py-2 text-sm ${
+                  active ? "bg-gray-100 text-gray-700" : "text-gray-700"
+                }`}
                 onClick={item.action}
               >
                 {item.name}
@@ -108,17 +120,21 @@ const CreateMenu = () => (
       <Menu.Items className="absolute right-2 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
         <div className="py-1">
           {[
-            { to: '/create-rac', text: 'RAC' },
-            { to: '/project/newProject', text: 'Project' },
-            { to: '/create-product', text: 'Product' },
-            { to: '/group/1', text: 'Group' },
-            { to: '/business-rule/1', text: 'Business Rule' },
-          ].map(item => (
+            { to: "/create-rac", text: "RAC" },
+            { to: "/recovery/new", text: "Recovery" },
+            { to: "/tcl/1", text: "TCL" },
+            { to: "/project/newProject", text: "Project" },
+            { to: "/create-product", text: "Product" },
+            { to: "/group/1", text: "Group" },
+            { to: "/business-rule/1", text: "Business Rule" },
+          ].map((item) => (
             <Menu.Item key={item.to}>
               {({ active }) => (
                 <Link
                   to={item.to}
-                  className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                  className={`block px-4 py-2 text-sm ${
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  }`}
                 >
                   {item.text}
                 </Link>

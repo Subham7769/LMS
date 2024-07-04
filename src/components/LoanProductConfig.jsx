@@ -435,7 +435,7 @@ const LoanProductConfig = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="border-b border-gray-300 pb-5">
-          <div className="flex gap-5 items-end pb-7">
+          <div className="flex gap-5 items-end pb-2">
             <div className="relative">
               <label
                 htmlFor="eligibleCustomerType"
@@ -497,7 +497,7 @@ const LoanProductConfig = () => {
                 TCL
               </label>
               <Select
-                className="w-[180px]"
+                className="w-[170px]"
                 options={tclOptions}
                 name="project"
                 value={tclType}
@@ -505,6 +505,7 @@ const LoanProductConfig = () => {
                 isSearchable={false}
               />
             </div>
+
             <button
               type="button"
               onClick={handleBoth}
@@ -512,6 +513,27 @@ const LoanProductConfig = () => {
             >
               <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
             </button>
+          </div>
+          <div className="flex gap-5 items-end mb-4">
+            <div className="relative mt-1">
+              <label
+                htmlFor="recoveryType"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                Recovery Type
+              </label>
+              <Select
+                className="w-[170px]"
+                options={recoveryOptions}
+                name="recoveryType"
+                defaultValue={recoveryOptions[1]}
+                // value={eligibleCustomerType}
+                // onChange={(eligibleCustomerType) => {
+                //   setEligibleCustomerType(eligibleCustomerType);
+                // }}
+                isSearchable={false}
+              />
+            </div>
           </div>
           <div className="flex gap-5 items-end">
             <div className="relative">
@@ -561,25 +583,7 @@ const LoanProductConfig = () => {
                 placeholder="3"
               />
             </div>
-            <div className="relative mt-1">
-              <label
-                htmlFor="recoveryType"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Recovery Type
-              </label>
-              <Select
-                className="w-[170px]"
-                options={recoveryOptions}
-                name="recoveryType"
-                defaultValue={recoveryOptions[1]}
-                // value={eligibleCustomerType}
-                // onChange={(eligibleCustomerType) => {
-                //   setEligibleCustomerType(eligibleCustomerType);
-                // }}
-                isSearchable={false}
-              />
-            </div>
+
             <div className="relative mt-1">
               <label
                 htmlFor={`refinaceWith`}

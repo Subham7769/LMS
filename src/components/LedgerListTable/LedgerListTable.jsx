@@ -77,8 +77,8 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
       <div className="px-4 sm:px-6 lg:px-8">
 
         {/* Search */}
-        <div className="flex gap-4 mb-5">
-          <div className="w-2/4">
+        <div className="flex gap-4 mb-5 w-1/2">
+          <div className="">
             <label htmlFor="search" className="sr-only">
               Search by Borrower ID
             </label>
@@ -90,14 +90,14 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
                 id="search"
                 type="search"
                 name="search"
-                className="block w-full rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                className="block w-full h-[50px] rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 placeholder="Enter Borrower ID"
                 value={borrowerIdQuery}
                 onChange={(e) => setBorrowerIdQuery(e.target.value)}
               />
             </div>
           </div>
-          <div className="w-2/4">
+          <div className="w-40">
             <label htmlFor="entriesSelect" className="sr-only">
               Entries Per Page
             </label>
@@ -190,7 +190,7 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
       {
         currentData.length !== 0
           ? (
-            <div ref={paginationRef} className="mt-2 flex justify-center gap-5 items-center">
+            <div ref={paginationRef} className="mt-6 flex justify-center gap-5 items-center">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}

@@ -3,7 +3,13 @@ import toast, { Toaster } from "react-hot-toast";
 import Select from "react-select";
 import { Passed } from "../Toasts";
 import { FaInfoCircle } from "react-icons/fa";
-import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
+import {
+  CheckCircleIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+  XCircleIcon,
+} from "@heroicons/react/20/solid";
 
 const options = [
   { value: "Days", label: "Days" },
@@ -17,18 +23,29 @@ const RecoveryNew = () => {
   const [due, setDue] = useState("");
   const [dpd, setDpd] = useState("");
   const [deductionAmount, setDeductionAmount] = useState("");
-  const [deductionEquation, setDeductionEquation] = useState(
-    "( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
-  );
+  const [deductionEquation, setDeductionEquation] = useState("");
   const [edit, setEdit] = useState(false);
   const [notify, setNotify] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState("Recovery Config");
+  const [tempName, setTempName] = useState(name);
   const toggleEdit = () => {
     setEdit((prevEdit) => !prevEdit);
   };
 
+  const handleSave = () => {
+    setName(tempName);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempName(name);
+    setIsEditing(false);
+  };
+
   const saveSettings = () => {
     // Logic to save the settings
-    toast.success("Settings saved successfully!");
+    toast.success("Recovery saved successfully!");
   };
 
   const deleteSettings = () => {
@@ -61,7 +78,49 @@ const RecoveryNew = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-lg border bg-white shadow-md border-red-600">
         <div className="p-6">
-          <h3 className="text-xl font-semibold mb-4">Recovery Configuration</h3>
+          <div className="flex items-center justify-between">
+            {isEditing ? (
+              <div className="flex items-center space-x-2 mb-4">
+                <input
+                  type="text"
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+                />
+                <button
+                  onClick={handleSave}
+                  className="text-green-600 hover:text-green-800"
+                >
+                  <CheckCircleIcon className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  <XCircleIcon className="h-6 w-6" />
+                </button>
+              </div>
+            ) : (
+              <h3
+                className="text-xl mb-4 font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 hover:rounded-md cursor-pointer"
+                onClick={() => setIsEditing(true)}
+              >
+                {name}
+              </h3>
+            )}
+            <div className="flex relative gap-3 h-10 items-center justify-center">
+              <button
+                type="button"
+                onClick={tenure !== "" && saveSettings}
+                className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <PlusIcon
+                  className="-ml-0.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+          </div>
           <div className="mt-2 mb-4 flex space-x-5">
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -69,7 +128,7 @@ const RecoveryNew = () => {
               </label>
               <input
                 type="number"
-                className="form-input w-full h-10 rounded-md border-gray-300 bg-gray-100 text-sm focus:border-primary focus:ring focus:ring-primary/50"
+                className="form-input w-[100px] h-9 rounded-md border-gray-300  text-sm focus:border-primary focus:ring focus:ring-primary/50"
                 value={tenure}
                 placeholder="31"
                 onChange={(e) => setTenure(Number(e.target.value))}
@@ -81,29 +140,9 @@ const RecoveryNew = () => {
               </label>
               <Select
                 options={options}
-                defaultValue={options[0]}
                 isSearchable={false}
-                className="w-full h-10 rounded-md border-gray-300 bg-gray-100 text-sm focus:border-primary focus:ring focus:ring-primary/50"
+                className="w-full rounded-md border-gray-300 bg-gray-100 text-sm focus:border-primary focus:ring focus:ring-primary/50"
               />
-            </div>
-            <div className="flex relative gap-3 h-10 items-center justify-center">
-              <button
-                type="button"
-                // onClick={toggleEdit}
-                className="inline-flex mt-12 items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <CheckCircleIcon
-                  className="-ml-0.5 h-5 w-5"
-                  aria-hidden="true"
-                />
-                Save
-              </button>
-              <button
-                type="button"
-                className="w-9 h-9 rounded-full mt-12 bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-              >
-                <TrashIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
             </div>
           </div>
           <div className="flex space-x-4">
@@ -118,45 +157,23 @@ d is Days Past Due.`}
                 />
               </label>
               <div className="flex items-center space-x-2 2xl:w-[50%] w-[70%]">
-                {edit ? (
-                  deductionEquation.length > 100 ? (
-                    <textarea
-                      rows="3"
-                      className="form-input w-full rounded-md border-gray-300 bg-gray-100 text-sm p-2"
-                      value={deductionEquation}
-                      onChange={handleEquationChange}
-                      placeholder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
-                      onBlur={() => setEdit(false)}
-                      onMouseEnter={() => setNotify(true)}
-                      onMouseLeave={() => setNotify(false)}
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      className="form-input w-full h-10 rounded-md border-gray-300 bg-gray-100 text-sm p-2"
-                      value={deductionEquation}
-                      onChange={handleEquationChange}
-                      placeholder="0"
-                      onPointerCancel={() => setEdit(false)}
-                      onMouseEnter={() => setNotify(true)}
-                      onMouseLeave={() => setNotify(false)}
-                    />
-                  )
+                {deductionEquation.length > 100 ? (
+                  <textarea
+                    rows="3"
+                    className="form-input w-full rounded-md border-gray-300 text-sm p-2"
+                    value={deductionEquation}
+                    onChange={handleEquationChange}
+                    placeholder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
+                  />
                 ) : (
-                  <p
-                    className={`${
-                      deductionEquation.length > 80 ? "h-16" : "h-12"
-                    } w-full rounded-md bg-gray-100 text-sm text-center p-2`}
-                  >
-                    {deductionEquation}
-                  </p>
+                  <input
+                    type="text"
+                    className="form-input w-full h-10 rounded-md border-gray-300 text-sm p-2"
+                    value={deductionEquation}
+                    onChange={handleEquationChange}
+                    placeholder="( w > r ) * r + ( w < r ) * w * 0.5..."
+                  />
                 )}
-                <button
-                  className="bg-indigo-600 text-white rounded-md px-3 py-2 text-sm hover:bg-indigo-500 focus:outline-none focus:ring focus:ring-primary/50"
-                  onClick={toggleEdit}
-                >
-                  {edit ? "Save" : "Edit"}
-                </button>
               </div>
               {notify && (
                 <p className="text-red-500 text-sm">

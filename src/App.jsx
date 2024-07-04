@@ -107,9 +107,12 @@ const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
 const NewUserPage = lazy(() => import("./pages/UserProductTestingPage"));
 const LedgerPage = lazy(() => import("./pages/LedgerPage"));
 const CreateNew = lazy(() => import("./components/Common/CreateNew/CreateNew"));
-const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList")); 
+const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
 // const NewProjectPage = lazy(() => import("./components/Project/NewProjectPage"));
-import NewProjectPage from './components/Project/NewProjectPage'
+const NewProjectPage = lazy(() =>
+  import("./components/Project/NewProjectPage")
+);
+const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
 
 const routes = [
   {
@@ -118,10 +121,11 @@ const routes = [
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/rac", element: <RacPage /> },
-      { path: "/recovery", element: <RecoveryNew /> },
+      { path: "/recovery", element: <RecoveryPage /> },
       { path: "/recovery/1", element: <Recovery1 /> },
       { path: "/recovery/2", element: <Recovery2 /> },
       { path: "/recovery/3", element: <Recovery3 /> },
+      { path: "/recovery/new", element: <RecoveryNew /> },
       { path: "/tcl", element: <TclPage /> },
       { path: "/tcl/1", element: <TCLViewList /> },
       { path: "/tcl/2", element: <TCLViewList /> },
