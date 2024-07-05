@@ -412,7 +412,7 @@ const LoanForm = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
-      navigate("/project/loan-form");
+      navigate("/project/projectPage");
       // Refresh the page after navigation
       window.location.reload();
 

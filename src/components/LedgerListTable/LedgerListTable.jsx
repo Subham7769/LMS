@@ -11,9 +11,12 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   const [borrowerIdQuery, setBorrowerIdQuery] = useState("");
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
-  const currentData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentData = filteredData.slice(startIndex, endIndex);
 
   const selectOptions = [
+    { value: 1, label: "1 entry" },
     { value: 5, label: "5 entries" },
     { value: 10, label: "10 entries" },
     { value: 20, label: "20 entries" },
@@ -38,11 +41,11 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
       ListItem.filter((entry) => entry.userId.toString().includes(borrowerIdQuery))
     );
     setCurrentPage(1);
-  }, [borrowerIdQuery]);
+  }, [borrowerIdQuery, ListItem]);
 
   const handlePageSizeChange = (selectedOption) => {
     setPageSize(selectedOption.value);
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset to first page when page size changes
   };
 
   // Custom Styling
@@ -73,8 +76,8 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   };
 
   return (
-    <div className="bg-gray-100 py-10 rounded-xl flex flex-col">
-      <div className="px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-100 py-10 rounded-xl flex flex-col items-center w-full">
+      <div className="px-4 sm:px-6 lg:px-8 w-full">
 
         {/* Search */}
         <div className="flex gap-4 mb-5 w-1/2">

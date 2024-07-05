@@ -130,7 +130,7 @@ const routes = [
       { path: "/tcl/1", element: <TCLViewList /> },
       { path: "/tcl/2", element: <TCLViewList /> },
       { path: "/tcl/3", element: <TCLViewList /> },
-      { path: "/project/loan-form", element: <ProjectPage /> },
+      { path: "/project/projectPage", element: <ProjectPage /> },
       { path: "/product", element: <ProductPage /> },
       { path: "/business-rule/1", element: <BpmnComponent /> },
       { path: "/business-rule/2", element: <BpmnComponent2 /> },

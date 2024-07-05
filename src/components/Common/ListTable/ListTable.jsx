@@ -23,7 +23,7 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
   const dataToRender = searchTerm ? filteredData : ListItem;
 
   return (
-    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+    <div className="bg-gray-100 py-6 rounded-xl mt-4">
       <div className="px-4 sm:px-6 lg:px-8">
         {/* Search bar if Searchable prop is true */}
         {Searchable && (
@@ -65,7 +65,7 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
                         <th
                           key={index}
                           scope="col"
-                          className={`px-3 py-3.5 w-1/${HeaderCellWidth} text-center text-sm font-medium text-gray-900`}
+                          className={`px-3 py-3 w-1/${HeaderCellWidth} text-center text-sm font-medium text-gray-900`}
                         >
                           {header}
                         </th>
@@ -78,7 +78,7 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
                         {Object.keys(product).map((key, idx) => (
                           // Do not create cell for href key in the object of array
                           key !== "href" ? (
-                            <td key={idx} className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}>
+                            <td key={idx} className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-3 px-3 text-sm text-gray-500`}>
                               {product.href ? (
                                 // If product has a href attribute then create a clickable Link 
                                 <Link className="w-full block" to={product.href}>

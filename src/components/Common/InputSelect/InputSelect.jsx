@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from "react-select";
 
-const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange, placeHolder, disabled=false }) => {
+const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange, placeHolder, disabled=false , hidden=false }) => {
     const handleChange = (selectedOption) => {
         onChange({ target: { name: inputName, value: selectedOption ? selectedOption.value : '' } });
     };
@@ -18,14 +18,14 @@ const InputSelect = ({ labelName, inputName, inputValue, inputOptions, onChange,
             )}
             <Select
                 name={inputName}
-                className="focus:ring focus:ring-blue-600 pb-2"
+                className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm "
                 options={inputOptions}
                 value={inputOptions.find(option => option.value === inputValue)}
                 onChange={handleChange}
                 isSearchable={true}
                 placeholder={placeHolder}
-                disabled={disabled}
-                
+                isDisabled={disabled}
+                isHidden={hidden}
             />
         </div>
     );

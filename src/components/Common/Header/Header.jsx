@@ -44,7 +44,6 @@ const Header = () => {
       <div className="px-8 py-3 relative flex justify-end items-end gap-8 w-1/3">
         <NotificationButton />
         <UserMenu userNavigation={userNavigation} />
-        <CreateMenu />
       </div>
     </header>
   );
@@ -104,47 +103,5 @@ const UserMenu = ({ userNavigation }) => (
   </Menu>
 );
 
-const CreateMenu = () => (
-  <Menu as="div" className="relative">
-    <Menu.Button className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-      <PlusIcon className="h-5 w-5" aria-hidden="true" />
-    </Menu.Button>
-    <Transition
-      enter="transition ease-out duration-100"
-      enterFrom="transform opacity-0 scale-95"
-      enterTo="transform opacity-100 scale-100"
-      leave="transition ease-in duration-75"
-      leaveFrom="transform opacity-100 scale-100"
-      leaveTo="transform opacity-0 scale-95"
-    >
-      <Menu.Items className="absolute right-2 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        <div className="py-1">
-          {[
-            { to: "/create-rac", text: "RAC" },
-            { to: "/recovery/new", text: "Recovery" },
-            { to: "/tcl/1", text: "TCL" },
-            { to: "/project/newProject", text: "Project" },
-            { to: "/create-product", text: "Product" },
-            { to: "/group/1", text: "Group" },
-            { to: "/business-rule/1", text: "Business Rule" },
-          ].map((item) => (
-            <Menu.Item key={item.to}>
-              {({ active }) => (
-                <Link
-                  to={item.to}
-                  className={`block px-4 py-2 text-sm ${
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                  }`}
-                >
-                  {item.text}
-                </Link>
-              )}
-            </Menu.Item>
-          ))}
-        </div>
-      </Menu.Items>
-    </Transition>
-  </Menu>
-);
 
 export default Header;

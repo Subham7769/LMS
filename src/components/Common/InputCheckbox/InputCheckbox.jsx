@@ -1,23 +1,30 @@
 import React from 'react';
 
-const InputCheckbox = ({ labelName, inputName, inputValue, inputChecked, onChange }) => {
+const InputCheckbox = ({ labelName, inputName, inputChecked, onChange }) => {
     const handleChange = (e) => {
-        onChange({target:{name:e.target.name, checked:e.target.checked}});
+        onChange({
+            target: {
+                name: e.target.name,
+                checked: e.target.checked,
+                type: 'checkbox'
+            }
+        });
     };
 
     return (
-        <label className="flex items-center space-x-2">
+        <label className="flex items-center space-x-4 mt-3 w-full">
             <input
                 type="checkbox"
                 name={inputName}
-                value={inputValue}
-                checked={inputChecked}
+                checked={inputChecked || false}
                 onChange={handleChange}
-                className="form-checkbox rounded-md my-3"
+                className="form-checkbox rounded-md p-2"
             />
-            <span>{labelName}</span>
+            <span className='text-xs w-full'>{labelName}</span>
         </label>
     );
 };
 
 export default InputCheckbox;
+
+

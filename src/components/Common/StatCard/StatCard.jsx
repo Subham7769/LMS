@@ -8,7 +8,7 @@ const StatCard = ({ stat }) => {
     const iconColorClass = isIncrease ? "text-green-500" : "text-red-500";
 
     return (
-        <div className="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
+        <div className="relative overflow-hidden rounded-lg bg-white px-4 pb-10 pt-5 shadow sm:px-6 sm:pt-6">
             <dt>
                 <div className="absolute rounded-md bg-indigo-500 p-3">
                     <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
@@ -24,7 +24,7 @@ const StatCard = ({ stat }) => {
                     </span>
                     {stat.change}
                 </p>
-                <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-3 sm:px-6">
                     <div className="text-sm">
                         <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                             View all<span className="sr-only"> {stat.name} stats</span>

@@ -15,6 +15,7 @@ const SideBar = () => {
   const ProjectDataInfo = useAllProjectInfo();
   const ProductDataInfo = useProductInfo();
 
+
   useEffect(() => {
     setMenus((prevMenus) =>
       prevMenus.map((menu) => {
@@ -88,11 +89,11 @@ const SideBar = () => {
         {Menus.map((menu, index) => (
           <div key={menu.title}>
             <NavLink to={menu.href} className="text-gray-500">
-              <li className="text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+              <li onClick={() => toggleSubmenu(index)} className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600">
                 <span className="text-2xl block float-left">
                   <menu.icon className="h-5 w-5 shrink-0" />
                 </span>
-                <span className={`text-base text-sm flex-1 duration-200 ${!open && "hidden"}`}>
+                <span className={`text-sm flex-1 duration-200 ${!open && "hidden"}`}>
                   {menu.title}
                 </span>
                 {menu.submenu && open && (
@@ -111,7 +112,14 @@ const SideBar = () => {
                   menu.createButton ? (
                     <div>
                       <li className="px-2 py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                        <CreateNew placeholder={menu.placeholder} buttonName={menu.buttonName}/>
+                        <CreateNew 
+                        placeholder={menu.placeholder} 
+                        buttonName={menu.buttonName}
+                        createFunction={menu.createFunction} 
+                        editable={menu.editable} 
+                        navigateSuccess={menu.navigateSuccess} 
+                        navigateFail={menu.navigateFail}
+                        />
                       </li>
                     </div>
                   ) 
@@ -120,7 +128,7 @@ const SideBar = () => {
                 {menu.submenuItems.map((submenuItem) => (
                   <div key={submenuItem.name}>
                     <NavLink to={submenuItem.href} className="text-gray-500">
-                      <li className="text-sm flex items-center gap-x-4 cursor-pointer p-2 px-8 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                      <li className="text-xs flex items-center gap-x-4 cursor-pointer p-2 px-8 rounded-md hover:bg-gray-100 hover:text-indigo-600">
                         {submenuItem.name}
                       </li>
                     </NavLink>

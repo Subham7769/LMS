@@ -14,6 +14,8 @@ import {
   BookOpenIcon,
   HeartIcon,
 } from "@heroicons/react/24/outline";
+import { createNewRac } from "../utils/createNewRac";
+
 
 export const MenusInitial = [
   {
@@ -30,8 +32,12 @@ export const MenusInitial = [
     current: false,
     submenu: true,
     createButton: true,//if create RAC from Side bar Using input box
+    editable: true,//if Button takes input string 
+    createFunction:createNewRac,//Create function
     buttonName: "Create RAC",//Create button text
-    placeholder: "Enter RAC Name",//required placeholder for inputbox
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/newrac/", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [],
     isOpen: false,
   },
@@ -41,6 +47,13 @@ export const MenusInitial = [
     icon: ArrowPathRoundedSquareIcon,
     current: false,
     submenu: true,
+    createButton: true,//if create recovery from Side bar Using input box
+    editable: false,//if Button takes input string 
+    createFunction:null,//Create function
+    buttonName: "Create Recovery",//Create button text
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/recovery/new", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [
       { name: "Recovery 1", href: "/recovery/1" },
       { name: "Recovery 2", href: "/recovery/2" },
@@ -54,6 +67,13 @@ export const MenusInitial = [
     icon: CurrencyRupeeIcon,
     current: false,
     submenu: true,
+    createButton: true,//if create TCL from Side bar Using input box
+    editable: false,//if Button takes input string 
+    createFunction:null,//Create function
+    buttonName: "Create TCL",//Create button text
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/tcl/1", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [
       { name: "TCL 1", href: "/tcl/1" },
       { name: "TCL 2", href: "/tcl/2" },
@@ -63,10 +83,17 @@ export const MenusInitial = [
   },
   {
     title: "Project",
-    href: "/project/loan-form",
+    href: "/project/projectPage",//previous -> "/project/loan-form"
     icon: ChartPieIcon,
     current: false,
     submenu: true,
+    createButton: true,//if create project from Side bar Using input box
+    editable: false,//if Button takes input string 
+    createFunction:null,//Create function
+    buttonName: "Create Project",//Create button text
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/project/newProject", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [],
     isOpen: false,
   },
@@ -76,6 +103,13 @@ export const MenusInitial = [
     icon: CubeIcon,
     current: false,
     submenu: true,
+    createButton: true,//if create product from Side bar Using input box
+    editable: false,//if Button takes input string 
+    createFunction:null,//Create function
+    buttonName: "Create Product",//Create button text
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/create-product", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [],
     isOpen: false,
   },
@@ -85,6 +119,13 @@ export const MenusInitial = [
     icon: RectangleGroupIcon,
     current: false,
     submenu: true,
+    createButton: true,//if create product from Side bar Using input box
+    editable: false,//if Button takes input string 
+    createFunction:null,//Create function
+    buttonName: "Create Group",//Create button text
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/group/1", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [
       { name: "Group 1", href: "/group/1" },
       { name: "Group 2", href: "/group/2" },
@@ -98,6 +139,13 @@ export const MenusInitial = [
     icon: AdjustmentsHorizontalIcon,
     current: false,
     submenu: true,
+    createButton: true,//if create product from Side bar Using input box
+    editable: false,//if Button takes input string 
+    createFunction:null,//Create function
+    buttonName: "Create Business Rule",//Create button text
+    placeholder: "Enter Name",//required placeholder for input box
+    navigateSuccess:"/business-rule/1", // navigation 
+    navigateFail:"/login", // navigation 
     submenuItems: [
       { name: "Business Rule 1", href: "/business-rule/1" },
       { name: "Business Rule 2", href: "/business-rule/2" },
