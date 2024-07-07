@@ -3719,7 +3719,96 @@ This component provides an interface for creating a new RAC by toggling between 
 
 &emsp;
 
+# InputCheckbox
 
+### Description
+InputCheckbox is a React component designed to render a labeled checkbox input. This component allows users to select or deselect an option, which is often used in forms and settings interfaces.
+
+### Purpose
+The primary purpose of InputCheckbox is to provide a customizable checkbox input with a label. It aims to simplify the implementation of checkbox inputs by handling state changes and enabling easy integration into forms.
+
+### Features
+- **Customizable Label:** Allows you to specify a label for the checkbox.
+- **State Management:** Handles the state of the checkbox input, including checked and unchecked states.
+- **Disabled State:** Supports disabling the checkbox to prevent user interaction.
+- **Event Handling:** Provides a callback function to handle changes in the checkbox state.
+
+### Usage
+To use the InputCheckbox component, follow the example below:
+
+```jsx
+import InputCheckbox from './Components/InputCheckbox';
+
+// Usage within a parent component
+function ParentComponent() {
+  const [isChecked, setIsChecked] = React.useState(false);
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  return (
+    <div>
+      <Header />
+      <InputCheckbox
+        labelName="Accept Terms and Conditions"
+        inputName="terms"
+        inputChecked={isChecked}
+        onChange={handleCheckboxChange}
+      />
+      <Footer />
+    </div>
+  );
+}
+```
+
+### Props
+The InputCheckbox component accepts the following props:
+
+| Prop Name     | Type      | Description                                                      | Default Value |
+|---------------|-----------|------------------------------------------------------------------|---------------|
+| `labelName`   | `string`  | The text label displayed next to the checkbox.                   | `''`          |
+| `inputName`   | `string`  | The name attribute for the checkbox input.                       | `''`          |
+| `inputChecked`| `boolean` | The checked state of the checkbox.                               | `false`       |
+| `onChange`    | `function`| Callback function to handle changes in the checkbox state.       | `null`        |
+| `disabled`    | `boolean` | Whether the checkbox is disabled and non-interactive.            | `false`       |
+
+### Example
+Here is a more detailed example of how to implement InputCheckbox:
+
+```jsx
+import React, { useState } from 'react';
+import InputCheckbox from './Components/InputCheckbox';
+
+function ExampleComponent() {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  return (
+    <div>
+      <InputCheckbox
+        labelName="Subscribe to Newsletter"
+        inputName="newsletter"
+        inputChecked={isChecked}
+        onChange={handleCheckboxChange}
+        disabled={false}
+      />
+    </div>
+  );
+}
+
+export default ExampleComponent;
+```
+
+### Additional Notes
+- Ensure that the `onChange` prop is provided to handle checkbox state changes.
+- The `inputChecked` prop should be controlled by the parent component's state.
+- The component supports Tailwind CSS classes for styling.
+
+---
 
 &emsp;
 

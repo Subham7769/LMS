@@ -25,7 +25,7 @@ const NewProjectPage = () => {
     // const hours = String(date.getUTCHours()).padStart(2, "0");
     // const minutes = String(date.getUTCMinutes()).padStart(2, "0");
     // const seconds = String(date.getUTCSeconds()).padStart(2, "0");
- console.log(`${year}-${month}-${day} 00:00:00`)
+    console.log(`${year}-${month}-${day} 00:00:00`)
     return `${year}-${month}-${day} 00:00:00`;
   }
 
@@ -36,19 +36,19 @@ const NewProjectPage = () => {
     location: "",
     currencyName: "",
     loanType: "",
-    flatInterestRate: null,
-    interestRatePeriod: null,
+    flatInterestRate: "",
+    interestRatePeriod: "",
     interestPeriodUnit: "",
-    downRepaymentGracePeriod: null,
-    emiRepaymentGracePeriod: null,
-    loanGracePeriod: null,
-    rollOverGracePeriod: null,
+    downRepaymentGracePeriod: "",
+    emiRepaymentGracePeriod: "",
+    loanGracePeriod: "",
+    rollOverGracePeriod: "",
     rollOverPenaltyFactor: "",
     rollOverPenaltyFee: "",
-    rollOverInterestRate: null,
+    rollOverInterestRate: "",
     lateEmiPenaltyFactor: "",
-    maxPaymetAttemps: null,
-    startDate: getFormattedDate(new Date()),
+    maxPaymetAttemps: "",
+    startDate: new Date().toISOString().slice(0, 10),
     endDate: "",
     lateRepaymentPenalty: "",
     earlyRepaymentDiscount: "",
@@ -62,21 +62,21 @@ const NewProjectPage = () => {
     tclRef: "",
     vatFee: "",
     clientIds: [],
-    tclAmount: null,//not in API
+    tclAmount: "",//not in API
     minLoanOperator: "",//not in API
-    minLoanAmount: null,//not in API
+    minLoanAmount: "",//not in API
     maxLoanOperator: "",//not in API
-    maxLoanAmount: null,//not in API
+    maxLoanAmount: "",//not in API
     tclOperator: "",//not in API
     minInstallmentsOperator: "",//not in API
-    minInstallmentsAmount: null,//not in API
+    minInstallmentsAmount: "",//not in API
     maxInstallmentsOperator: "",//not in API
-    maxInstallmentsAmount: null,//not in API
+    maxInstallmentsAmount: "",//not in API
     downPaymentOperator: "",//not in API
     downPaymentWay: "",//not in API
-    downPaymentAmount: "",//not in API
+    downPaymentPercentage: "",//not in API
     openLoanOperator: "",//not in API
-    openLoanAmount: null,//not in API
+    openLoanAmount: "",//not in API
   });
 
   console.log(formData)
@@ -158,8 +158,8 @@ const NewProjectPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formattedStartDate = getFormattedDate(new Date(formData.startDate));
-    const formattedEndDate = getFormattedDate(new Date(formData.endDate));
+    const formattedStartDate = new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
+    const formattedEndDate = new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const startDateObj = new Date(formattedStartDate);
     const endDateObj = new Date(formattedEndDate);
 
@@ -217,7 +217,7 @@ const NewProjectPage = () => {
     const {
       tclAmount, minLoanOperator, minLoanAmount, maxLoanOperator, maxLoanAmount,
       tclOperator, minInstallmentsOperator, minInstallmentsAmount, maxInstallmentsOperator,
-      maxInstallmentsAmount, downPaymentOperator, downPaymentWay, openLoanOperator, downPaymentAmount, openLoanAmount, ...filteredFormData
+      maxInstallmentsAmount, downPaymentOperator, downPaymentWay, openLoanOperator, downPaymentPercentage, openLoanAmount, ...filteredFormData
     } = formData;
 
     const postData = {
@@ -228,7 +228,7 @@ const NewProjectPage = () => {
       projectTimeZone: "GMT-180",
       paymentOption: ["mobile wallet", "top up", "credit card"],
       bearers: ["SMS", "USSD"],
-      criteria: `tcl ${formData.tclOperator} ${formData.tclAmount} and loanAmount ${formData.minLoanOperator} ${formData.minLoanAmount} and loanAmount ${formData.maxLoanOperator} ${formData.maxLoanAmount} and numberOfInstallments ${formData.minInstallmentsOperator} ${formData.minInstallmentsAmount} and numberOfInstallments ${formData.maxInstallmentsOperator} ${formData.maxInstallmentsAmount} and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}`
+      criteria: `tcl ${formData.tclOperator} ${formData.tclAmount} and loanAmount ${formData.minLoanOperator} ${formData.minLoanAmount} and loanAmount ${formData.maxLoanOperator} ${formData.maxLoanAmount} and numberOfInstallments ${formData.minInstallmentsOperator} ${formData.minInstallmentsAmount} and numberOfInstallments ${formData.maxInstallmentsOperator} ${formData.maxInstallmentsAmount} and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${formData.loanType === "asset" ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`:""}`,
     };
 
     try {
@@ -296,6 +296,13 @@ const NewProjectPage = () => {
   const itemStyle = {
     gridColumn: 'span 1',
   };
+  const divStyle = {
+    gridColumn: 'span 1',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '0.5rem',
+  };
 
   return (
     <>
@@ -304,74 +311,74 @@ const NewProjectPage = () => {
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Name */}
-              <InputText style={itemStyle} labelName={"Name"} inputName={"name"} inputValue={formData.name} onChange={handleChange} placeHolder={'Project Name'} />
+            <InputText style={itemStyle} labelName={"Name"} inputName={"name"} inputValue={formData.name} onChange={handleChange} placeHolder={'Project Name'} />
 
             {/* Description */}
-              <InputText style={itemStyle}  labelName={"Description"} inputName={"projectDescription"} inputValue={formData.projectDescription} onChange={handleChange} placeHolder={"Description"} />
+            <InputText style={itemStyle} labelName={"Description"} inputName={"projectDescription"} inputValue={formData.projectDescription} onChange={handleChange} placeHolder={"Description"} />
 
             {/* Country */}
-              <InputSelect  style={itemStyle}  labelName={"Country"} inputName={"country"} inputOptions={countryOptions} inputValue={formData.country} onChange={handleChange} />
+            <InputSelect style={itemStyle} labelName={"Country"} inputName={"country"} inputOptions={countryOptions} inputValue={formData.country} onChange={handleChange} />
 
             {/* Location */}
-              <InputSelect  style={itemStyle}  labelName={"Location"} inputName={"location"} inputOptions={filteredLocations} inputValue={formData.location} onChange={handleChange} />
+            <InputSelect style={itemStyle} labelName={"Location"} inputName={"location"} inputOptions={filteredLocations} inputValue={formData.location} onChange={handleChange} />
 
             {/* Loan Scheme Currency */}
-              <InputSelect  style={itemStyle}  labelName={"Loan Scheme Currency"} inputName={"currencyName"} inputOptions={currencyOptions} inputValue={formData.currencyName} onChange={handleChange} />
+            <InputSelect style={itemStyle} labelName={"Loan Scheme Currency"} inputName={"currencyName"} inputOptions={currencyOptions} inputValue={formData.currencyName} onChange={handleChange} />
 
             {/* Loan Scheme Type */}
-              <InputSelect  style={itemStyle}  labelName={"Loan Scheme Type"} inputName={"loanType"} inputOptions={loanTypeOptions} inputValue={formData.loanType} onChange={handleChange} />
+            <InputSelect style={itemStyle} labelName={"Loan Scheme Type"} inputName={"loanType"} inputOptions={loanTypeOptions} inputValue={formData.loanType} onChange={handleChange} />
 
             {/* Flat Interest Rate */}
-              <InputNumber  style={itemStyle}  labelName={"Flat Interest Rate"} inputName={"flatInterestRate"} inputValue={formData.flatInterestRate} onChange={handleChange} placeHolder={"6"} />
+            <InputNumber style={itemStyle} labelName={"Flat Interest Rate"} inputName={"flatInterestRate"} inputValue={formData.flatInterestRate} onChange={handleChange} placeHolder={"6"} />
 
             {/* Interest Period Unit */}
-              <InputSelect  style={itemStyle}  labelName={"Interest Period Unit"} inputName={"interestPeriodUnit"} inputOptions={interestPeriodOptions} inputValue={formData.interestPeriodUnit} onChange={handleChange} />
+            <InputSelect style={itemStyle} labelName={"Interest Period Unit"} inputName={"interestPeriodUnit"} inputOptions={interestPeriodOptions} inputValue={formData.interestPeriodUnit} onChange={handleChange} />
 
             {/* Interest Rate Period */}
-              <InputNumber  style={itemStyle}  labelName={"Interest Rate Period"} inputName={"interestRatePeriod"} inputValue={formData.interestRatePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber style={itemStyle} labelName={"Interest Rate Period"} inputName={"interestRatePeriod"} inputValue={formData.interestRatePeriod} onChange={handleChange} placeHolder={"30"} />
 
             {/* Grace Period For Down Payment (Days) */}
-              <InputNumber  style={itemStyle}  labelName={"Down Payment Grace Period (Days)"} inputName={"downRepaymentGracePeriod"} inputValue={formData.downRepaymentGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber style={itemStyle} labelName={"Down Payment Grace Period (Days)"} inputName={"downRepaymentGracePeriod"} inputValue={formData.downRepaymentGracePeriod} onChange={handleChange} placeHolder={"30"} />
 
             {/* Grace Period For EMIs (Days) */}
-              <InputNumber  style={itemStyle}   labelName={"EMIs Grace Period (Days)"} inputName={"emiRepaymentGracePeriod"} inputValue={formData.emiRepaymentGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber style={itemStyle} labelName={"EMIs Grace Period (Days)"} inputName={"emiRepaymentGracePeriod"} inputValue={formData.emiRepaymentGracePeriod} onChange={handleChange} placeHolder={"30"} />
 
             {/* Loan Grace Period (Days) */}
-              <InputNumber  style={itemStyle}  labelName={"Loan Grace Period (Days)"} inputName={"loanGracePeriod"} inputValue={formData.loanGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber style={itemStyle} labelName={"Loan Grace Period (Days)"} inputName={"loanGracePeriod"} inputValue={formData.loanGracePeriod} onChange={handleChange} placeHolder={"30"} />
 
             {/* Roll Over Period (Days) */}
-              <InputNumber  style={itemStyle}  labelName={"Roll Over Period (Days)"} inputName={"rollOverGracePeriod"} inputValue={formData.rollOverGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber style={itemStyle} labelName={"Roll Over Period (Days)"} inputName={"rollOverGracePeriod"} inputValue={formData.rollOverGracePeriod} onChange={handleChange} placeHolder={"30"} />
 
             {/* Roll Over Fees */}
-              <InputText style={itemStyle}  labelName={"Roll Over Fees"} inputName={"rollOverPenaltyFee"} inputValue={formData.rollOverPenaltyFee} onChange={handleChange} placeHolder={"xxxx /-"} />
+            <InputText style={itemStyle} labelName={"Roll Over Fees"} inputName={"rollOverPenaltyFee"} inputValue={formData.rollOverPenaltyFee} onChange={handleChange} placeHolder={"xxxx /-"} />
 
             {/* Roll Over Interest Rate */}
-              <InputNumber  style={itemStyle}  labelName={"Roll Over Interest Rate"} inputName={"rollOverInterestRate"} inputValue={formData.rollOverInterestRate} onChange={handleChange} placeHolder={"6"} />
+            <InputNumber style={itemStyle} labelName={"Roll Over Interest Rate"} inputName={"rollOverInterestRate"} inputValue={formData.rollOverInterestRate} onChange={handleChange} placeHolder={"6"} />
 
             {/* Late EMI Penalty */}
-              <InputText style={itemStyle}  labelName={"Late EMI Penalty"} inputName={"lateEmiPenaltyFactor"} inputValue={formData.lateEmiPenaltyFactor} onChange={handleChange} placeHolder={"6"} />
+            <InputText style={itemStyle} labelName={"Late EMI Penalty"} inputName={"lateEmiPenaltyFactor"} inputValue={formData.lateEmiPenaltyFactor} onChange={handleChange} placeHolder={"6"} />
 
             {/* Max. Payment Attempt */}
-              <InputNumber  style={itemStyle}  labelName={"Max. Payment Attempt"} inputName={"maxPaymetAttemps"} inputValue={formData.maxPaymetAttemps} onChange={handleChange} placeHolder={"2"} />
+            <InputNumber style={itemStyle} labelName={"Max. Payment Attempt"} inputName={"maxPaymetAttemps"} inputValue={formData.maxPaymetAttemps} onChange={handleChange} placeHolder={"2"} />
 
             {/* Start Date */}
             <div className="col-span-1" onClick={addNoEditToast}>
-              <InputDate style={itemStyle}  labelName={"Start Date"} inputName={"startDate"} inputValue={formData.startDate} onChange={handleChange} />
+              <InputDate labelName={"Start Date"} inputName={"startDate"} inputValue={formData.startDate} onChange={handleChange} />
             </div>
 
             {/* End Date */}
             <div className="col-span-1">
-              <InputDate style={itemStyle}  labelName={"End Date"} inputName={"endDate"} inputValue={formData.endDate} onChange={handleChange} />
+              <InputDate labelName={"End Date"} inputName={"endDate"} inputValue={formData.endDate} onChange={handleChange} />
             </div>
 
             {/* Late Repayment Penalty */}
-              <InputText style={itemStyle}  labelName={"Late Repayment Penalty"} inputName={"lateRepaymentPenalty"} inputValue={formData.lateRepaymentPenalty} onChange={handleChange} placeHolder={"10%"} />
+            <InputText style={itemStyle} labelName={"Late Repayment Penalty"} inputName={"lateRepaymentPenalty"} inputValue={formData.lateRepaymentPenalty} onChange={handleChange} placeHolder={"10%"} />
 
             {/* Early Repayment Discount */}
-              <InputText style={itemStyle}  labelName={"Early Repayment Discount"} inputName={"earlyRepaymentDiscount"} inputValue={formData.earlyRepaymentDiscount} onChange={handleChange} placeHolder={"0"} />
+            <InputText style={itemStyle} labelName={"Early Repayment Discount"} inputName={"earlyRepaymentDiscount"} inputValue={formData.earlyRepaymentDiscount} onChange={handleChange} placeHolder={"0"} />
 
             {/* RollOver Penalty Factor */}
-              <InputText style={itemStyle}  labelName={"RollOver Penalty Factor"} inputName={"rollOverPenaltyFactor"} inputValue={formData.rollOverPenaltyFactor} onChange={handleChange} placeHolder={"0"} />
+            <InputText style={itemStyle} labelName={"RollOver Penalty Factor"} inputName={"rollOverPenaltyFactor"} inputValue={formData.rollOverPenaltyFactor} onChange={handleChange} placeHolder={"0"} />
           </div>
         </div>
 
@@ -379,7 +386,7 @@ const NewProjectPage = () => {
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
-            <div className="col-span-1 space-x-2 flex items-center justify-between gap-2">
+            <div style={divStyle}>
 
               <SelectAndNumber
                 labelName={"Loan Amount"}
@@ -411,7 +418,7 @@ const NewProjectPage = () => {
             </div>
 
             {/* Number of Installments */}
-            <div className="col-span-1 space-x-2 flex items-center justify-between gap-2">
+            <div style={divStyle}>
               <SelectAndNumber
                 labelName={"No. of Installments"}
 
@@ -444,49 +451,51 @@ const NewProjectPage = () => {
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Scheme TCL */}
             <div className="col-span-1 space-x-2 flex items-center justify-between">
-              <div>
-                <SelectAndNumber
-                  labelName={"Loan Scheme TCL"}
 
-                  inputSelectName={"tclOperator"}
-                  inputSelectOptions={signsOptions}
-                  inputSelectValue={formData.tclOperator}
-                  onChangeSelect={handleChange}
-                  disabledSelect={false}
-                  hiddenSelect={false}
-                  inputNumberName={"tclAmount"}
-                  inputNumberValue={formData.tclAmount}
-                  onChangeNumber={handleChange}
-                  placeHolderNumber={"TCL"}
-                />
-              </div>
-              <div>
-                <SelectAndNumber
-                  labelName={"Total Open Loans"}
+              <SelectAndNumber
+                labelName={"Loan Scheme TCL"}
 
-                  inputSelectName={"openLoanOperator"}
-                  inputSelectOptions={signsOptions}
-                  inputSelectValue={formData.openLoanOperator}
-                  onChangeSelect={handleChange}
-                  disabledSelect={false}
-                  hiddenSelect={false}
-                  inputNumberName={"openLoanAmount"}
-                  inputNumberValue={formData.openLoanAmount}
-                  onChangeNumber={handleChange}
-                  placeHolderNumber={"Total Open Loans"}
-                />
-              </div>
+                inputSelectName={"tclOperator"}
+                inputSelectOptions={signsOptions}
+                inputSelectValue={formData.tclOperator}
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"tclAmount"}
+                inputNumberValue={formData.tclAmount}
+                onChangeNumber={handleChange}
+                placeHolderNumber={"TCL"}
+              />
+
+
+              <SelectAndNumber
+                labelName={"Total Open Loans"}
+
+                inputSelectName={"openLoanOperator"}
+                inputSelectOptions={signsOptions}
+                inputSelectValue={formData.openLoanOperator}
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"openLoanAmount"}
+                inputNumberValue={formData.openLoanAmount}
+                onChangeNumber={handleChange}
+                placeHolderNumber={"Total Open Loans"}
+              />
+
             </div>
 
             {/* Down Payment */}
-            <div className="col-span-1 space-x-2 flex items-center justify-between gap-2">
+            <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
-                <div className="flex-1 w-full">
+                <div className={`flex-1 w-full ${formData.loanType === "cash" && "hidden"}`}>
                   <InputCheckbox
                     labelName={"Down Payment"}
                     inputName={"hasDownPayment"}
                     inputChecked={formData.hasDownPayment}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    disabled={formData.loanType === "asset" ? false : true}
+                  />
                 </div>
                 {/* <div className="flex-1">
                   {formData.hasDownPayment &&
@@ -505,19 +514,19 @@ const NewProjectPage = () => {
               </div>
 
               <div className="flex items-center justify-center gap-2 w-full">
-              {formData.hasDownPayment &&
-              <SelectAndNumber
-                  inputSelectName={"downPaymentOperator"}
-                  inputSelectOptions={signsOptions}
-                  inputSelectValue={formData.downPaymentOperator}
-                  onChangeSelect={handleChange}
-                  disabledSelect={false}
-                  hiddenSelect={false}
-                  inputNumberName={"downPaymentAmount"}
-                  inputNumberValue={formData.downPaymentAmount}
-                  onChangeNumber={handleChange}
-                  placeHolderNumber={"Amount"}
-                />}
+                {formData.hasDownPayment &&
+                  <SelectAndNumber
+                    inputSelectName={"downPaymentOperator"}
+                    inputSelectOptions={signsOptions}
+                    inputSelectValue={formData.downPaymentOperator}
+                    onChangeSelect={handleChange}
+                    disabledSelect={false}
+                    hiddenSelect={false}
+                    inputNumberName={"downPaymentPercentage"}
+                    inputNumberValue={formData.downPaymentPercentage}
+                    onChangeNumber={handleChange}
+                    placeHolderNumber={"Amount"}
+                  />}
               </div>
             </div>
 
@@ -527,13 +536,13 @@ const NewProjectPage = () => {
           {/* Row 3 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Service Fee */}
-            <div className="col-span-1 space-x-2 flex items-center justify-between gap-2">
+            <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <InputText labelName={"Service Fee"} inputName={"serviceFee"} inputValue={formData.serviceFee} onChange={handleChange} placeHolder={"Service Fee"} />
                 <InputText labelName={"Management Fee"} inputName={"managementFee"} inputValue={formData.managementFee} onChange={handleChange} placeHolder={"14%"} />
               </div>
             </div>
-            <div className="col-span-1 space-x-2 flex items-center justify-between gap-2">
+            <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-2/4">
                 <InputText labelName={"Vat Fee"} inputName={"vatFee"} inputValue={formData.vatFee} onChange={handleChange} placeHolder={"15%"} />
               </div>

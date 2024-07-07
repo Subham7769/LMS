@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputCheckbox = ({ labelName, inputName, inputChecked, onChange }) => {
+const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled = false }) => {
     const handleChange = (e) => {
         onChange({
             target: {
@@ -19,6 +19,7 @@ const InputCheckbox = ({ labelName, inputName, inputChecked, onChange }) => {
                 checked={inputChecked || false}
                 onChange={handleChange}
                 className="form-checkbox rounded-md p-2"
+                disabled={disabled}
             />
             <span className='text-xs w-full'>{labelName}</span>
         </label>

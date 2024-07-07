@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Select from "react-select";
+import { convertDate } from "../../utils/convertDate";
 
 const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   const tableRef = useRef(null);
@@ -17,6 +18,7 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
 
   const selectOptions = [
     { value: 1, label: "1 entry" },
+    { value: 2, label: "2 entry" },
     { value: 5, label: "5 entries" },
     { value: 10, label: "10 entries" },
     { value: 20, label: "20 entries" },
@@ -147,10 +149,10 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
                     {currentData.length !== 0 ? (
                       currentData.map((item) => (
                         <React.Fragment key={item.id}>
-                          {item.account.map((accountItem, idx) => (
+                          {item.accounts.map((accountItem, idx) => (
                             <tr key={`${item.id}-${idx}`}>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {item.transactionDate}
+                                {convertDate(accountItem.transactionDate)}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
                                 {accountItem.entryId}
