@@ -40,12 +40,13 @@ const projectOptionsInitial = [
 
 const CreateProduct = () => {
   const navigate = useNavigate();
+  const { productName } = useParams();
   const [eligibleCustomerType, setEligibleCustomerType] = useState([]);
   const [interestPeriodType, setInterestPeriodType] = useState([]);
   const [tenureType, setTenureType] = useState([]);
   const [racType, setRacType] = useState("");
   const [fee, setFee] = useState("");
-  const [productTypeName, setProductTypeName] = useState("");
+  const [productTypeName, setProductTypeName] = useState(productName);
   const [racOptions, setRacOptions] = useState(racOptionsInitial);
   const RACDataInfo = useRACInfo();
   const [projectType, setProjectType] = useState("");

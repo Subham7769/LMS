@@ -239,7 +239,7 @@ const BareMinimumExp = () => {
           </button>
         </div>
         <div className="flex gap-4 items-end mt-5 border-b border-gray-300 pb-5">
-          <div className="relative">
+          <div className="relative w-1/5">
             <label
               htmlFor="expensesName"
               className=" bg-white px-1 text-xs text-gray-900"
@@ -252,11 +252,11 @@ const BareMinimumExp = () => {
               // id={`expense_${item.id}`}
               value={expensesName}
               onChange={(e) => setExpensesName(e.target.value)}
-              className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="Food and Living"
             />
           </div>
-          <div className="relative">
+          <div className="relative w-1/5">
             <label
               htmlFor="dependantType"
               className=" bg-white px-1 text-xs text-gray-900"
@@ -264,7 +264,7 @@ const BareMinimumExp = () => {
               Type
             </label>
             <Select
-              className="w-64"
+              className=""
               options={typeOptions}
               // id={`type_${item.id}`}
               name="dependantType"
@@ -273,7 +273,7 @@ const BareMinimumExp = () => {
               isSearchable={false}
             />
           </div>
-          <div className="relative">
+          <div className="relative w-1/5">
             <label
               htmlFor="expensesFrequency"
               className=" bg-white px-1 text-xs text-gray-900"
@@ -281,7 +281,7 @@ const BareMinimumExp = () => {
               Expenses Frequency
             </label>
             <Select
-              className="w-64"
+              className=""
               options={frequencyOptions}
               // id={`frequency_${item.id}`}
               name="expensesFrequency"
@@ -292,12 +292,12 @@ const BareMinimumExp = () => {
               isSearchable={false}
             />
           </div>
-          <div className="relative">
+          <div className="relative w-1/5">
             <label
               htmlFor="bareMinimum"
               className=" bg-white px-1 text-xs text-gray-900"
             >
-              Bare Minimum Expense Per Person
+              Bare Min Expense Per Person
             </label>
             <input
               type="text"
@@ -305,7 +305,7 @@ const BareMinimumExp = () => {
               // id={`minExpense_${item.id}`}
               value={bareMinimum}
               onChange={(e) => setBareMinimum(e.target.value)}
-              className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="200"
             />
           </div>
@@ -315,7 +315,7 @@ const BareMinimumExp = () => {
           : ExpenseDataNew
         ).map((expdata) => (
           <div key={expdata.id} className="flex gap-4 items-end mt-5">
-            <div className="relative">
+            <div className="relative w-1/5">
               <label
                 htmlFor={`expense_${expdata.id}`}
                 className=" bg-white px-1 text-xs text-gray-900"
@@ -328,11 +328,11 @@ const BareMinimumExp = () => {
                 id={`expense_${expdata.id}`}
                 value={expdata.expensesName}
                 onChange={(e) => handleChange(e, expdata.id)}
-                className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="Food and Living"
               />
             </div>
-            <div className="relative">
+            <div className="relative w-1/5">
               <label
                 htmlFor={`type_${expdata.id}`}
                 className=" bg-white px-1 text-xs text-gray-900"
@@ -340,7 +340,7 @@ const BareMinimumExp = () => {
                 Type
               </label>
               <Select
-                className="w-64"
+                className=""
                 options={typeOptions}
                 id={`type_${expdata.id}`}
                 name="dependantType"
@@ -353,7 +353,7 @@ const BareMinimumExp = () => {
                 isSearchable={false}
               />
             </div>
-            <div className="relative">
+            <div className="relative w-1/5">
               <label
                 htmlFor={`frequency_${expdata.id}`}
                 className=" bg-white px-1 text-xs text-gray-900"
@@ -361,7 +361,7 @@ const BareMinimumExp = () => {
                 Expenses Frequency
               </label>
               <Select
-                className="w-64"
+                className=""
                 options={frequencyOptions}
                 id={`frequency_${expdata.id}`}
                 name="expensesFrequency"
@@ -378,12 +378,12 @@ const BareMinimumExp = () => {
                 isSearchable={false}
               />
             </div>
-            <div className="relative">
+            <div className="relative w-1/5">
               <label
                 htmlFor={`minExpense_${expdata.id}`}
                 className=" bg-white px-1 text-xs text-gray-900"
               >
-                Bare Minimum Expense Per Person
+                Bare Min Expense Per Person
               </label>
               <input
                 type="text"
@@ -391,7 +391,7 @@ const BareMinimumExp = () => {
                 id={`minExpense_${expdata.id}`}
                 value={expdata.bareMinimum}
                 onChange={(e) => handleChange(e, expdata.id)}
-                className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="200"
               />
             </div>

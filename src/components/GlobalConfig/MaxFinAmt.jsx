@@ -80,7 +80,7 @@ const MaxFinAmt = () => {
               </label>
               <div className="flex gap-4">
                 <Select
-                  className="min-w-20"
+                  className="w-20"
                   //   defaultValue={firstGrossSalaryOperator[3]}
                   options={firstGrossSalaryOperatorOptions}
                   value={firstGrossSalaryOperator}
@@ -93,7 +93,7 @@ const MaxFinAmt = () => {
                   type="number"
                   name="number"
                   // id="number"
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
@@ -104,7 +104,7 @@ const MaxFinAmt = () => {
               </label>
               <div className="flex gap-4">
                 <Select
-                  className="min-w-20"
+                  className="w-20"
                   //   defaultValue={options[3]}
                   options={secondGrossSalaryOperatorOptions}
                   value={secondGrossSalaryOperator}
@@ -117,7 +117,7 @@ const MaxFinAmt = () => {
                   type="number"
                   name="number"
                   // id="number"
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
@@ -146,7 +146,7 @@ const MaxFinAmt = () => {
                 id={`saudi_${item.id}`}
                 value={item.saudi}
                 onChange={(e) => handleChange(e, item.id)}
-                className="block w-52 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="Add Max Amount"
               />
             </div>

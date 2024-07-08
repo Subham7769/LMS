@@ -13,8 +13,8 @@ const labelProp2 = {
   cardTitle: "Credit Score",
   label1: "Minimum Credit Score:",
   label2: "Maximum Credit Score:",
-  placeholder1: "Add Minimum Credit Score",
-  placeholder2: "Add Maximum Credit Score",
+  placeholder1: "0.1",
+  placeholder2: "2",
 };
 
 const GcCreditPolicy = () => {

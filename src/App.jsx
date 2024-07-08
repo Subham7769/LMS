@@ -140,10 +140,10 @@ const routes = [
       { path: "group/2", element: <GroupComponent2 /> },
       { path: "group/3", element: <GroupComponent3 /> },
       { path: "/project/:projectId", element: <LoanForm /> },
-      { path: "/project/newProject", element: <NewProjectPage /> },
+      { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
       { path: "/create-rac", element: <CreateRac /> },
       { path: "/newrac/:racID", element: <NewCreatedRAC /> },
-      { path: "/create-product", element: <CreateProduct /> },
+      { path: "/create-product/:productName", element: <CreateProduct /> },
       {
         path: "/product/:productType",
         element: <CashLoan />,

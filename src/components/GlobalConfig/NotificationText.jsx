@@ -117,7 +117,7 @@ const NotificationText = () => {
             className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
           >
             <div className="flex gap-8">
-              <div className="relative">
+              <div className="relative w-[27%]">
                 <label
                   htmlFor={`notificationType_${notdata.id}`}
                   className=" bg-white px-1 text-xs text-gray-900"
@@ -130,11 +130,11 @@ const NotificationText = () => {
                   id={`notificationType_${notdata.id}`}
                   value={notdata.notificationType}
                   disabled
-                  className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
                   placeholder="REMINDER_EMI"
                 />
               </div>
-              <div className="relative">
+              <div className="relative w-[27%]">
                 <label
                   htmlFor={`notificationDisplayName_${notdata.id}`}
                   className=" bg-white px-1 text-xs text-gray-900"
@@ -147,11 +147,11 @@ const NotificationText = () => {
                   id={`notificationDisplayName_${notdata.id}`}
                   value={notdata.notificationDisplayName}
                   disabled
-                  className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="Installment reminder"
                 />
               </div>
-              <div className="relative">
+              <div className="relative w-[27%]">
                 <label
                   htmlFor={`notificationChannel_${notdata.id}`}
                   className=" bg-white px-1 text-xs text-gray-900"
@@ -159,7 +159,7 @@ const NotificationText = () => {
                   Notification Channel
                 </label>
                 <Select
-                  className="w-80"
+                  className=""
                   options={notiChannelOptions}
                   id={`notificationChannel_${notdata.id}`}
                   name="notificationChannel"
@@ -178,7 +178,7 @@ const NotificationText = () => {
               </div>
             </div>
             <div className="flex gap-8">
-              <div className="relative">
+              <div className="relative w-[27%]">
                 <label
                   htmlFor={`notificationMessageEn_${notdata.id}`}
                   className=" bg-white px-1 text-xs text-gray-900"
@@ -192,11 +192,11 @@ const NotificationText = () => {
                   id={`notificationMessageEn_${notdata.id}`}
                   value={notdata.notificationMessageEn}
                   onChange={(e) => handleChange(e, notdata.id)}
-                  className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="This is the emi reminder message, last payment amount is"
                 />
               </div>
-              <div className="relative">
+              <div className="relative w-[27%]">
                 <label
                   htmlFor={`notificationMessageAr_${notdata.id}`}
                   className=" bg-white px-1 text-xs text-gray-900"
@@ -210,11 +210,11 @@ const NotificationText = () => {
                   id={`notificationMessageAr_${notdata.id}`}
                   value={notdata.notificationMessageAr}
                   onChange={(e) => handleChange(e, notdata.id)}
-                  className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="This is the emi reminder message, last payment amount is"
                 />
               </div>
-              <div className="relative">
+              <div className="relative w-[27%]">
                 <label
                   htmlFor={`notificationDescription_${notdata.id}`}
                   className=" bg-white px-1 text-xs text-gray-900"
@@ -228,7 +228,7 @@ const NotificationText = () => {
                   id={`notificationDescription_${notdata.id}`}
                   value={notdata.notificationDescription}
                   disabled
-                  className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="2 days before the upcoming installment"
                 />
               </div>

@@ -3,8 +3,16 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
-import { countryOptions, locationOptions, currencyOptions } from '../../data/CountryData'
-import { loanTypeOptions, interestPeriodOptions, signsOptions } from "../../data/OptionsData";
+import {
+  countryOptions,
+  locationOptions,
+  currencyOptions,
+} from "../../data/CountryData";
+import {
+  loanTypeOptions,
+  interestPeriodOptions,
+  signsOptions,
+} from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputNumber from "../Common/InputNumber/InputNumber";
@@ -15,7 +23,8 @@ import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 
 const NewProjectPage = () => {
   const navigate = useNavigate();
-  const [clientIdsString, setClientIdsString] = useState("DarwinClient")
+  const { projectName } = useParams();
+  const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
 
   function getFormattedDate(date) {
@@ -25,12 +34,12 @@ const NewProjectPage = () => {
     // const hours = String(date.getUTCHours()).padStart(2, "0");
     // const minutes = String(date.getUTCMinutes()).padStart(2, "0");
     // const seconds = String(date.getUTCSeconds()).padStart(2, "0");
-    console.log(`${year}-${month}-${day} 00:00:00`)
+    console.log(`${year}-${month}-${day} 00:00:00`);
     return `${year}-${month}-${day} 00:00:00`;
   }
 
   const [formData, setFormData] = useState({
-    name: "",
+    name: projectName,
     projectDescription: "",
     country: "",
     location: "",
@@ -62,24 +71,24 @@ const NewProjectPage = () => {
     tclRef: "",
     vatFee: "",
     clientIds: [],
-    tclAmount: "",//not in API
-    minLoanOperator: "",//not in API
-    minLoanAmount: "",//not in API
-    maxLoanOperator: "",//not in API
-    maxLoanAmount: "",//not in API
-    tclOperator: "",//not in API
-    minInstallmentsOperator: "",//not in API
-    minInstallmentsAmount: "",//not in API
-    maxInstallmentsOperator: "",//not in API
-    maxInstallmentsAmount: "",//not in API
-    downPaymentOperator: "",//not in API
-    downPaymentWay: "",//not in API
-    downPaymentPercentage: "",//not in API
-    openLoanOperator: "",//not in API
-    openLoanAmount: "",//not in API
+    tclAmount: "", //not in API
+    minLoanOperator: "", //not in API
+    minLoanAmount: "", //not in API
+    maxLoanOperator: "", //not in API
+    maxLoanAmount: "", //not in API
+    tclOperator: "", //not in API
+    minInstallmentsOperator: "", //not in API
+    minInstallmentsAmount: "", //not in API
+    maxInstallmentsOperator: "", //not in API
+    maxInstallmentsAmount: "", //not in API
+    downPaymentOperator: "", //not in API
+    downPaymentWay: "", //not in API
+    downPaymentPercentage: "", //not in API
+    openLoanOperator: "", //not in API
+    openLoanAmount: "", //not in API
   });
 
-  console.log(formData)
+  console.log(formData);
   useEffect(() => {
     const pattern = /([a-zA-Z]+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
     let match;
@@ -88,45 +97,81 @@ const NewProjectPage = () => {
       const parsedValue = parseInt(value);
 
       if (isNaN(parsedValue)) {
-        console.error(`Failed to parse value ${value} for variable ${variable}`);
+        console.error(
+          `Failed to parse value ${value} for variable ${variable}`
+        );
         continue;
       }
 
-      const updateOperatorAndValue = (operatorField, valueField, operator, parsedValue) => {
-        setFormData(prevState => ({
+      const updateOperatorAndValue = (
+        operatorField,
+        valueField,
+        operator,
+        parsedValue
+      ) => {
+        setFormData((prevState) => ({
           ...prevState,
           [operatorField]: { value: operator, label: operator },
-          [valueField]: parsedValue
+          [valueField]: parsedValue,
         }));
       };
 
       switch (variable) {
         case "loanAmount":
           if (operator === ">=" || operator === ">") {
-            updateOperatorAndValue('minLoanOperator', 'minLoanAmount', operator, parsedValue);
+            updateOperatorAndValue(
+              "minLoanOperator",
+              "minLoanAmount",
+              operator,
+              parsedValue
+            );
           } else if (operator === "<=" || operator === "<") {
-            updateOperatorAndValue('maxLoanOperator', 'maxLoanAmount', operator, parsedValue);
+            updateOperatorAndValue(
+              "maxLoanOperator",
+              "maxLoanAmount",
+              operator,
+              parsedValue
+            );
           }
           break;
         case "tcl":
-          updateOperatorAndValue('tclOperator', 'tclAmount', operator, parsedValue);
+          updateOperatorAndValue(
+            "tclOperator",
+            "tclAmount",
+            operator,
+            parsedValue
+          );
           break;
         case "numberOfInstallments":
           if (operator === ">=" || operator === ">") {
-            updateOperatorAndValue('minInstallmentsOperator', 'minInstallmentsAmount', operator, parsedValue);
+            updateOperatorAndValue(
+              "minInstallmentsOperator",
+              "minInstallmentsAmount",
+              operator,
+              parsedValue
+            );
           } else if (operator === "<=" || operator === "<") {
-            updateOperatorAndValue('maxInstallmentsOperator', 'maxInstallmentsAmount', operator, parsedValue);
+            updateOperatorAndValue(
+              "maxInstallmentsOperator",
+              "maxInstallmentsAmount",
+              operator,
+              parsedValue
+            );
           }
           break;
         case "freqCap":
-          updateOperatorAndValue('openLoanOperator', 'openLoanAmount', operator, parsedValue);
+          updateOperatorAndValue(
+            "openLoanOperator",
+            "openLoanAmount",
+            operator,
+            parsedValue
+          );
           break;
         default:
           break;
       }
     }
   }, [formData.criteria]);
-
 
   useEffect(() => {
     setFilteredLocations(locationOptions[formData.country] || []);
@@ -139,11 +184,11 @@ const NewProjectPage = () => {
       "downRepaymentGracePeriod",
       "gracePeriodEMIs",
       "loanGracePeriod",
-      "rollOverPeriod"
+      "rollOverPeriod",
     ];
 
-    if (type === 'checkbox') {
-      setFormData(prevState => ({ ...prevState, [name]: checked }));
+    if (type === "checkbox") {
+      setFormData((prevState) => ({ ...prevState, [name]: checked }));
     } else {
       if (positiveIntegerFields.includes(name)) {
         if (!/^[1-9]\d*$/.test(value)) {
@@ -151,20 +196,22 @@ const NewProjectPage = () => {
           return;
         }
       }
-      setFormData(prevState => ({ ...prevState, [name]: value }));
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formattedStartDate = new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
-    const formattedEndDate = new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
+    const formattedStartDate =
+      new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
+    const formattedEndDate =
+      new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const startDateObj = new Date(formattedStartDate);
     const endDateObj = new Date(formattedEndDate);
 
     if (endDateObj < startDateObj) {
-      toast.custom(t => (
+      toast.custom((t) => (
         <Failed
           t={t}
           toast={toast}
@@ -197,17 +244,19 @@ const NewProjectPage = () => {
       "lateEmiPenaltyFactor",
       "name",
       "managementFee",
-      "vatFee"
+      "vatFee",
     ];
 
     for (const field of requiredFields) {
       if (!formData[field]) {
-        toast.custom(t => (
+        toast.custom((t) => (
           <Failed
             t={t}
             toast={toast}
             title={"Validation Error"}
-            message={`Please fill in ${field.replace(/([A-Z])/g, ' $1').trim()}.`}
+            message={`Please fill in ${field
+              .replace(/([A-Z])/g, " $1")
+              .trim()}.`}
           />
         ));
         return;
@@ -215,41 +264,74 @@ const NewProjectPage = () => {
     }
 
     const {
-      tclAmount, minLoanOperator, minLoanAmount, maxLoanOperator, maxLoanAmount,
-      tclOperator, minInstallmentsOperator, minInstallmentsAmount, maxInstallmentsOperator,
-      maxInstallmentsAmount, downPaymentOperator, downPaymentWay, openLoanOperator, downPaymentPercentage, openLoanAmount, ...filteredFormData
+      tclAmount,
+      minLoanOperator,
+      minLoanAmount,
+      maxLoanOperator,
+      maxLoanAmount,
+      tclOperator,
+      minInstallmentsOperator,
+      minInstallmentsAmount,
+      maxInstallmentsOperator,
+      maxInstallmentsAmount,
+      downPaymentOperator,
+      downPaymentWay,
+      openLoanOperator,
+      downPaymentPercentage,
+      openLoanAmount,
+      ...filteredFormData
     } = formData;
 
     const postData = {
       ...filteredFormData,
-      clientIds: clientIdsString.split(','),
+      clientIds: clientIdsString.split(","),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       projectTimeZone: "GMT-180",
       paymentOption: ["mobile wallet", "top up", "credit card"],
       bearers: ["SMS", "USSD"],
-      criteria: `tcl ${formData.tclOperator} ${formData.tclAmount} and loanAmount ${formData.minLoanOperator} ${formData.minLoanAmount} and loanAmount ${formData.maxLoanOperator} ${formData.maxLoanAmount} and numberOfInstallments ${formData.minInstallmentsOperator} ${formData.minInstallmentsAmount} and numberOfInstallments ${formData.maxInstallmentsOperator} ${formData.maxInstallmentsAmount} and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${formData.loanType === "asset" ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`:""}`,
+      criteria: `tcl ${formData.tclOperator} ${
+        formData.tclAmount
+      } and loanAmount ${formData.minLoanOperator} ${
+        formData.minLoanAmount
+      } and loanAmount ${formData.maxLoanOperator} ${
+        formData.maxLoanAmount
+      } and numberOfInstallments ${formData.minInstallmentsOperator} ${
+        formData.minInstallmentsAmount
+      } and numberOfInstallments ${formData.maxInstallmentsOperator} ${
+        formData.maxInstallmentsAmount
+      } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${
+        formData.loanType === "asset"
+          ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
+          : ""
+      }`,
     };
 
     try {
       const projectToken = localStorage.getItem("projectToken");
-      console.log(projectToken)
-      const response = await fetch("https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${projectToken}`
-        },
-        body: JSON.stringify(postData)
-      });
+      console.log(projectToken);
+      const response = await fetch(
+        "https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${projectToken}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
       if (!response.ok) {
         const errorMessage = await response.text();
-        toast.custom(t => (
+        toast.custom((t) => (
           <Failed
             t={t}
             toast={toast}
             title={"Error"}
-            message={errorMessage || "Failed to create project. Please try again later."}
+            message={
+              errorMessage ||
+              "Failed to create project. Please try again later."
+            }
           />
         ));
         return;
@@ -257,7 +339,7 @@ const NewProjectPage = () => {
 
       const data = await response.json();
 
-      toast.custom(t => (
+      toast.custom((t) => (
         <Passed
           t={t}
           toast={toast}
@@ -268,10 +350,9 @@ const NewProjectPage = () => {
 
       // Redirect to the project details page or any other appropriate page
       navigate(`/project/${data.projectId}`);
-
     } catch (error) {
       console.error("Error creating project:", error);
-      toast.custom(t => (
+      toast.custom((t) => (
         <Failed
           t={t}
           toast={toast}
@@ -294,14 +375,14 @@ const NewProjectPage = () => {
   };
 
   const itemStyle = {
-    gridColumn: 'span 1',
+    gridColumn: "span 1",
   };
   const divStyle = {
-    gridColumn: 'span 1',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '0.5rem',
+    gridColumn: "span 1",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "0.5rem",
   };
 
   return (
@@ -311,74 +392,224 @@ const NewProjectPage = () => {
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Name */}
-            <InputText style={itemStyle} labelName={"Name"} inputName={"name"} inputValue={formData.name} onChange={handleChange} placeHolder={'Project Name'} />
+            <InputText
+              style={itemStyle}
+              labelName={"Name"}
+              inputName={"name"}
+              inputValue={formData.name}
+              onChange={handleChange}
+              placeHolder={"Project Name"}
+            />
 
             {/* Description */}
-            <InputText style={itemStyle} labelName={"Description"} inputName={"projectDescription"} inputValue={formData.projectDescription} onChange={handleChange} placeHolder={"Description"} />
+            <InputText
+              style={itemStyle}
+              labelName={"Description"}
+              inputName={"projectDescription"}
+              inputValue={formData.projectDescription}
+              onChange={handleChange}
+              placeHolder={"Description"}
+            />
 
             {/* Country */}
-            <InputSelect style={itemStyle} labelName={"Country"} inputName={"country"} inputOptions={countryOptions} inputValue={formData.country} onChange={handleChange} />
+            <InputSelect
+              style={itemStyle}
+              labelName={"Country"}
+              inputName={"country"}
+              inputOptions={countryOptions}
+              inputValue={formData.country}
+              onChange={handleChange}
+            />
 
             {/* Location */}
-            <InputSelect style={itemStyle} labelName={"Location"} inputName={"location"} inputOptions={filteredLocations} inputValue={formData.location} onChange={handleChange} />
+            <InputSelect
+              style={itemStyle}
+              labelName={"Location"}
+              inputName={"location"}
+              inputOptions={filteredLocations}
+              inputValue={formData.location}
+              onChange={handleChange}
+            />
 
             {/* Loan Scheme Currency */}
-            <InputSelect style={itemStyle} labelName={"Loan Scheme Currency"} inputName={"currencyName"} inputOptions={currencyOptions} inputValue={formData.currencyName} onChange={handleChange} />
+            <InputSelect
+              style={itemStyle}
+              labelName={"Loan Scheme Currency"}
+              inputName={"currencyName"}
+              inputOptions={currencyOptions}
+              inputValue={formData.currencyName}
+              onChange={handleChange}
+            />
 
             {/* Loan Scheme Type */}
-            <InputSelect style={itemStyle} labelName={"Loan Scheme Type"} inputName={"loanType"} inputOptions={loanTypeOptions} inputValue={formData.loanType} onChange={handleChange} />
+            <InputSelect
+              style={itemStyle}
+              labelName={"Loan Scheme Type"}
+              inputName={"loanType"}
+              inputOptions={loanTypeOptions}
+              inputValue={formData.loanType}
+              onChange={handleChange}
+            />
 
             {/* Flat Interest Rate */}
-            <InputNumber style={itemStyle} labelName={"Flat Interest Rate"} inputName={"flatInterestRate"} inputValue={formData.flatInterestRate} onChange={handleChange} placeHolder={"6"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Flat Interest Rate"}
+              inputName={"flatInterestRate"}
+              inputValue={formData.flatInterestRate}
+              onChange={handleChange}
+              placeHolder={"6"}
+            />
 
             {/* Interest Period Unit */}
-            <InputSelect style={itemStyle} labelName={"Interest Period Unit"} inputName={"interestPeriodUnit"} inputOptions={interestPeriodOptions} inputValue={formData.interestPeriodUnit} onChange={handleChange} />
+            <InputSelect
+              style={itemStyle}
+              labelName={"Interest Period Unit"}
+              inputName={"interestPeriodUnit"}
+              inputOptions={interestPeriodOptions}
+              inputValue={formData.interestPeriodUnit}
+              onChange={handleChange}
+            />
 
             {/* Interest Rate Period */}
-            <InputNumber style={itemStyle} labelName={"Interest Rate Period"} inputName={"interestRatePeriod"} inputValue={formData.interestRatePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Interest Rate Period"}
+              inputName={"interestRatePeriod"}
+              inputValue={formData.interestRatePeriod}
+              onChange={handleChange}
+              placeHolder={"30"}
+            />
 
             {/* Grace Period For Down Payment (Days) */}
-            <InputNumber style={itemStyle} labelName={"Down Payment Grace Period (Days)"} inputName={"downRepaymentGracePeriod"} inputValue={formData.downRepaymentGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Down Payment Grace Period (Days)"}
+              inputName={"downRepaymentGracePeriod"}
+              inputValue={formData.downRepaymentGracePeriod}
+              onChange={handleChange}
+              placeHolder={"30"}
+            />
 
             {/* Grace Period For EMIs (Days) */}
-            <InputNumber style={itemStyle} labelName={"EMIs Grace Period (Days)"} inputName={"emiRepaymentGracePeriod"} inputValue={formData.emiRepaymentGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"EMIs Grace Period (Days)"}
+              inputName={"emiRepaymentGracePeriod"}
+              inputValue={formData.emiRepaymentGracePeriod}
+              onChange={handleChange}
+              placeHolder={"30"}
+            />
 
             {/* Loan Grace Period (Days) */}
-            <InputNumber style={itemStyle} labelName={"Loan Grace Period (Days)"} inputName={"loanGracePeriod"} inputValue={formData.loanGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Loan Grace Period (Days)"}
+              inputName={"loanGracePeriod"}
+              inputValue={formData.loanGracePeriod}
+              onChange={handleChange}
+              placeHolder={"30"}
+            />
 
             {/* Roll Over Period (Days) */}
-            <InputNumber style={itemStyle} labelName={"Roll Over Period (Days)"} inputName={"rollOverGracePeriod"} inputValue={formData.rollOverGracePeriod} onChange={handleChange} placeHolder={"30"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Roll Over Period (Days)"}
+              inputName={"rollOverGracePeriod"}
+              inputValue={formData.rollOverGracePeriod}
+              onChange={handleChange}
+              placeHolder={"30"}
+            />
 
             {/* Roll Over Fees */}
-            <InputText style={itemStyle} labelName={"Roll Over Fees"} inputName={"rollOverPenaltyFee"} inputValue={formData.rollOverPenaltyFee} onChange={handleChange} placeHolder={"xxxx /-"} />
+            <InputText
+              style={itemStyle}
+              labelName={"Roll Over Fees"}
+              inputName={"rollOverPenaltyFee"}
+              inputValue={formData.rollOverPenaltyFee}
+              onChange={handleChange}
+              placeHolder={"xxxx /-"}
+            />
 
             {/* Roll Over Interest Rate */}
-            <InputNumber style={itemStyle} labelName={"Roll Over Interest Rate"} inputName={"rollOverInterestRate"} inputValue={formData.rollOverInterestRate} onChange={handleChange} placeHolder={"6"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Roll Over Interest Rate"}
+              inputName={"rollOverInterestRate"}
+              inputValue={formData.rollOverInterestRate}
+              onChange={handleChange}
+              placeHolder={"6"}
+            />
 
             {/* Late EMI Penalty */}
-            <InputText style={itemStyle} labelName={"Late EMI Penalty"} inputName={"lateEmiPenaltyFactor"} inputValue={formData.lateEmiPenaltyFactor} onChange={handleChange} placeHolder={"6"} />
+            <InputText
+              style={itemStyle}
+              labelName={"Late EMI Penalty"}
+              inputName={"lateEmiPenaltyFactor"}
+              inputValue={formData.lateEmiPenaltyFactor}
+              onChange={handleChange}
+              placeHolder={"6"}
+            />
 
             {/* Max. Payment Attempt */}
-            <InputNumber style={itemStyle} labelName={"Max. Payment Attempt"} inputName={"maxPaymetAttemps"} inputValue={formData.maxPaymetAttemps} onChange={handleChange} placeHolder={"2"} />
+            <InputNumber
+              style={itemStyle}
+              labelName={"Max. Payment Attempt"}
+              inputName={"maxPaymetAttemps"}
+              inputValue={formData.maxPaymetAttemps}
+              onChange={handleChange}
+              placeHolder={"2"}
+            />
 
             {/* Start Date */}
             <div className="col-span-1" onClick={addNoEditToast}>
-              <InputDate labelName={"Start Date"} inputName={"startDate"} inputValue={formData.startDate} onChange={handleChange} />
+              <InputDate
+                labelName={"Start Date"}
+                inputName={"startDate"}
+                inputValue={formData.startDate}
+                onChange={handleChange}
+              />
             </div>
 
             {/* End Date */}
             <div className="col-span-1">
-              <InputDate labelName={"End Date"} inputName={"endDate"} inputValue={formData.endDate} onChange={handleChange} />
+              <InputDate
+                labelName={"End Date"}
+                inputName={"endDate"}
+                inputValue={formData.endDate}
+                onChange={handleChange}
+              />
             </div>
 
             {/* Late Repayment Penalty */}
-            <InputText style={itemStyle} labelName={"Late Repayment Penalty"} inputName={"lateRepaymentPenalty"} inputValue={formData.lateRepaymentPenalty} onChange={handleChange} placeHolder={"10%"} />
+            <InputText
+              style={itemStyle}
+              labelName={"Late Repayment Penalty"}
+              inputName={"lateRepaymentPenalty"}
+              inputValue={formData.lateRepaymentPenalty}
+              onChange={handleChange}
+              placeHolder={"10%"}
+            />
 
             {/* Early Repayment Discount */}
-            <InputText style={itemStyle} labelName={"Early Repayment Discount"} inputName={"earlyRepaymentDiscount"} inputValue={formData.earlyRepaymentDiscount} onChange={handleChange} placeHolder={"0"} />
+            <InputText
+              style={itemStyle}
+              labelName={"Early Repayment Discount"}
+              inputName={"earlyRepaymentDiscount"}
+              inputValue={formData.earlyRepaymentDiscount}
+              onChange={handleChange}
+              placeHolder={"0"}
+            />
 
             {/* RollOver Penalty Factor */}
-            <InputText style={itemStyle} labelName={"RollOver Penalty Factor"} inputName={"rollOverPenaltyFactor"} inputValue={formData.rollOverPenaltyFactor} onChange={handleChange} placeHolder={"0"} />
+            <InputText
+              style={itemStyle}
+              labelName={"RollOver Penalty Factor"}
+              inputName={"rollOverPenaltyFactor"}
+              inputValue={formData.rollOverPenaltyFactor}
+              onChange={handleChange}
+              placeHolder={"0"}
+            />
           </div>
         </div>
 
@@ -387,10 +618,8 @@ const NewProjectPage = () => {
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
             <div style={divStyle}>
-
               <SelectAndNumber
                 labelName={"Loan Amount"}
-
                 inputSelectName={"minLoanOperator"}
                 inputSelectOptions={signsOptions}
                 inputSelectValue={formData.minLoanOperator}
@@ -401,7 +630,6 @@ const NewProjectPage = () => {
                 inputNumberValue={formData.minLoanAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Min"}
-
                 inputSelect2Name={"maxLoanOperator"}
                 inputSelect2Options={signsOptions}
                 inputSelect2Value={formData.maxLoanOperator}
@@ -413,15 +641,12 @@ const NewProjectPage = () => {
                 onChangeNumber2={handleChange}
                 placeHolderNumber2={"Max"}
               />
-
-
             </div>
 
             {/* Number of Installments */}
             <div style={divStyle}>
               <SelectAndNumber
                 labelName={"No. of Installments"}
-
                 inputSelectName={"minInstallmentsOperator"}
                 inputSelectOptions={signsOptions}
                 inputSelectValue={formData.minInstallmentsOperator}
@@ -432,7 +657,6 @@ const NewProjectPage = () => {
                 inputNumberValue={formData.minInstallmentsAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Min"}
-
                 inputSelect2Name={"maxInstallmentsOperator"}
                 inputSelect2Options={signsOptions}
                 inputSelect2Value={formData.maxInstallmentsOperator}
@@ -451,10 +675,8 @@ const NewProjectPage = () => {
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Scheme TCL */}
             <div className="col-span-1 space-x-2 flex items-center justify-between">
-
               <SelectAndNumber
                 labelName={"Loan Scheme TCL"}
-
                 inputSelectName={"tclOperator"}
                 inputSelectOptions={signsOptions}
                 inputSelectValue={formData.tclOperator}
@@ -467,10 +689,8 @@ const NewProjectPage = () => {
                 placeHolderNumber={"TCL"}
               />
 
-
               <SelectAndNumber
                 labelName={"Total Open Loans"}
-
                 inputSelectName={"openLoanOperator"}
                 inputSelectOptions={signsOptions}
                 inputSelectValue={formData.openLoanOperator}
@@ -482,13 +702,16 @@ const NewProjectPage = () => {
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Total Open Loans"}
               />
-
             </div>
 
             {/* Down Payment */}
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
-                <div className={`flex-1 w-full ${formData.loanType === "cash" && "hidden"}`}>
+                <div
+                  className={`flex-1 w-full ${
+                    formData.loanType === "cash" && "hidden"
+                  }`}
+                >
                   <InputCheckbox
                     labelName={"Down Payment"}
                     inputName={"hasDownPayment"}
@@ -514,7 +737,7 @@ const NewProjectPage = () => {
               </div>
 
               <div className="flex items-center justify-center gap-2 w-full">
-                {formData.hasDownPayment &&
+                {formData.hasDownPayment && (
                   <SelectAndNumber
                     inputSelectName={"downPaymentOperator"}
                     inputSelectOptions={signsOptions}
@@ -526,34 +749,58 @@ const NewProjectPage = () => {
                     inputNumberValue={formData.downPaymentPercentage}
                     onChangeNumber={handleChange}
                     placeHolderNumber={"Amount"}
-                  />}
+                  />
+                )}
               </div>
             </div>
-
           </div>
-
 
           {/* Row 3 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Service Fee */}
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
-                <InputText labelName={"Service Fee"} inputName={"serviceFee"} inputValue={formData.serviceFee} onChange={handleChange} placeHolder={"Service Fee"} />
-                <InputText labelName={"Management Fee"} inputName={"managementFee"} inputValue={formData.managementFee} onChange={handleChange} placeHolder={"14%"} />
+                <InputText
+                  labelName={"Service Fee"}
+                  inputName={"serviceFee"}
+                  inputValue={formData.serviceFee}
+                  onChange={handleChange}
+                  placeHolder={"Service Fee"}
+                />
+                <InputText
+                  labelName={"Management Fee"}
+                  inputName={"managementFee"}
+                  inputValue={formData.managementFee}
+                  onChange={handleChange}
+                  placeHolder={"14%"}
+                />
               </div>
             </div>
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-2/4">
-                <InputText labelName={"Vat Fee"} inputName={"vatFee"} inputValue={formData.vatFee} onChange={handleChange} placeHolder={"15%"} />
+                <InputText
+                  labelName={"Vat Fee"}
+                  inputName={"vatFee"}
+                  inputValue={formData.vatFee}
+                  onChange={handleChange}
+                  placeHolder={"15%"}
+                />
               </div>
             </div>
-          </div >
-        </div >
+          </div>
+        </div>
 
         <div className="w-full mx-auto bg-white shadow-md rounded-xl border border-red-600 p-6 mt-8">
           <div className="gap-5">
             <div>
-              <InputTextArea labelName={"Client Ids"} inputName={"clientIds"} rowCount={3} inputValue={clientIdsString} onChange={(e) => setClientIdsString(e.target.value)} placeHolder={"Darwinclient"} />
+              <InputTextArea
+                labelName={"Client Ids"}
+                inputName={"clientIds"}
+                rowCount={3}
+                inputValue={clientIdsString}
+                onChange={(e) => setClientIdsString(e.target.value)}
+                placeHolder={"Darwinclient"}
+              />
             </div>
             <div className="flex space-x-4 items-center justify-between mt-2">
               <InputCheckbox
@@ -595,7 +842,7 @@ const NewProjectPage = () => {
             Create
           </button>
         </div>
-      </form >
+      </form>
     </>
   );
 };
