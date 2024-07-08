@@ -3,14 +3,12 @@ import DeliquencyEq from "../DeliquencyEq";
 import ToggleSwitch from "../ToggleSwitch";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
 import { useParams } from "react-router-dom";
 import useRacRules from "../../utils/useRACRules";
 import toast, { Toaster } from "react-hot-toast";
 import { RowChanged } from "../Toasts";
-
-const animatedComponents = makeAnimated();
+import SelectInput from "../Common/DynamicSelect/DynamicSelect";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const options = [
   { value: "Indian", label: "Indian" },
@@ -20,10 +18,12 @@ const options = [
   { value: "Japanese", label: "Japanese" },
   { value: "Chinise", label: "Chinise" },
 ];
+
 const gender = [
   { value: "Male", label: "Male" },
   { value: "Female", label: "Female" },
 ];
+
 const maritalStatus = [
   { value: "Single", label: "Single" },
   { value: "Married", label: "Married" },
@@ -32,10 +32,12 @@ const maritalStatus = [
   { value: "Separated", label: "Separated" },
   { value: "Unknown", label: "Unknown" },
 ];
+
 const residantialStatus = [
   { value: "Rent", label: "Rent" },
   { value: "Own", label: "Own" },
 ];
+
 const operatorOptions = [
   { value: "==", label: "==" },
   { value: "<", label: "<" },
@@ -1469,20 +1471,18 @@ const RacMatrixConfig = () => {
       <div className="flex gap-5">
         <div className="flex flex-col max-w-[660px] flex-auto gap-y-5">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="">
               <label htmlFor="nationality" className="block">
                 Nationality
               </label>
               <div className="flex items-center justify-between">
-                <Select
-                  className="w-[230px]"
-                  options={options}
-                  components={animatedComponents}
-                  value={selectedOption}
+                <SelectInput
+                  inputOptions={options}
+                  inputValue={selectedOption}
                   onChange={(selectedOption) => {
                     setSelctedOption(selectedOption);
                   }}
+                  className="w-[230px]"
                   isMulti={true}
                 />
                 <ToggleSwitch
@@ -1503,17 +1503,16 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-3">
               <label htmlFor="gender" className="block">
                 Gender
               </label>
               <div className="flex items-center justify-between">
-                <Select
+                <SelectInput
                   className="w-[230px]"
-                  options={gender}
-                  components={animatedComponents}
-                  value={GEselectedOption}
+                  inputOptions={gender}
+                  inputValue={GEselectedOption}
                   onChange={(GEselectedOption) => {
                     setGESelctedOption(GEselectedOption);
                   }}
@@ -1537,17 +1536,16 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-3">
               <label htmlFor="maritalStatus" className="block">
                 Marital Status
               </label>
               <div className="flex items-center justify-between">
-                <Select
+                <SelectInput
                   className="w-[230px]"
-                  options={maritalStatus}
-                  components={animatedComponents}
-                  value={MSselectedOption}
+                  inputOptions={maritalStatus}
+                  inputValue={MSselectedOption}
                   onChange={(MSselectedOption) => {
                     setMSSelctedOption(MSselectedOption);
                   }}
@@ -1571,17 +1569,16 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-3">
               <label htmlFor="residantialStatus" className="block">
                 Residential Status
               </label>
               <div className="flex items-center justify-between">
-                <Select
+                <SelectInput
                   className="w-[230px]"
-                  options={residantialStatus}
-                  components={animatedComponents}
-                  value={RSselectedOption}
+                  inputOptions={residantialStatus}
+                  inputValue={RSselectedOption}
                   onChange={(RSselectedOption) => {
                     setRSSelctedOption(RSselectedOption);
                   }}
@@ -1605,21 +1602,18 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
-
           </div>
-          
+
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div>
               <label htmlFor="blockedOccupation" className="block">
                 Blocked Occupation
               </label>
               <div className="flex items-center justify-between">
-                <Select
+                <SelectInput
                   className="w-[230px]"
-                  options={options}
-                  components={animatedComponents}
-                  value={selectedOccupation}
+                  inputOptions={options}
+                  inputValue={selectedOccupation}
                   onChange={(selectedOccupation) => {
                     setSelectedOccupation(selectedOccupation);
                   }}
@@ -1650,11 +1644,10 @@ const RacMatrixConfig = () => {
                 Blocked Region
               </label>
               <div className="flex items-center justify-between">
-                <Select
+                <SelectInput
                   className="w-[230px]"
-                  options={options}
-                  components={animatedComponents}
-                  value={selectedRegion}
+                  inputOptions={options}
+                  inputValue={selectedRegion}
                   onChange={(selectedRegion) => {
                     setSelectedRegion(selectedRegion);
                   }}
@@ -1685,11 +1678,10 @@ const RacMatrixConfig = () => {
                 Blocked Sector
               </label>
               <div className="flex items-center justify-between">
-                <Select
+                <SelectInput
                   className="w-[230px]"
-                  options={options}
-                  components={animatedComponents}
-                  value={selectedSector}
+                  inputOptions={options}
+                  inputValue={selectedSector}
                   onChange={(selectedSector) => {
                     setSelectedSector(selectedSector);
                   }}
@@ -1714,13 +1706,11 @@ const RacMatrixConfig = () => {
                 </div>
               </div>
             </div>
-
           </div>
 
           <DeliquencyEq />
 
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-           
             <div>
               <label htmlFor="nationality" className="block">
                 Applicants Basic Salary Percentage From Gross:
@@ -1728,16 +1718,12 @@ const RacMatrixConfig = () => {
               <div className="flex gap-5 items-center mt-2">
                 <div>basic wage</div>
                 <div>{">"}=</div>
-                <div>
-                  <input
-                    type="number"
-                    name="appBaseSalary"
-                    value={appBaseSalary}
-                    onChange={(e) => setAppBaseSalary(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
-                  />
-                </div>
+                <InputNumber
+                  inputName="periodInMonths"
+                  inputValue={appBaseSalary}
+                  onChange={(e) => setAppBaseSalary(e.target.value)}
+                  placeholder="0.54"
+                />
                 <div>*gross salary</div>
               </div>
             </div>
@@ -1749,16 +1735,12 @@ const RacMatrixConfig = () => {
               <div className="flex gap-3 items-center mt-2">
                 <div>basic wage</div>
                 <div>{">"}=</div>
-                <div>
-                  <input
-                    type="number"
-                    name="number"
-                    value={resBaseSalary}
-                    onChange={(e) => setResBaseSalary(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
-                  />
-                </div>
+                <InputNumber
+                  inputName="periodInMonths"
+                  inputValue={resBaseSalary}
+                  onChange={(e) => setResBaseSalary(e.target.value)}
+                  placeholder="0.54"
+                />
                 <div>*gross salary</div>
               </div>
             </div>
@@ -1776,117 +1758,104 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
         </div>
 
         <div className="flex flex-col flex-auto gap-y-5 ">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Minimum Write Off
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
                   defaultValue={operatorOptions[3]}
-                  options={operatorOptions}
-                  value={firstWriteOffOperatorOption}
+                  inputOptions={operatorOptions}
+                  inputValue={firstWriteOffOperatorOption}
                   isSearchable={false}
                   onChange={(firstWriteOffOperatorOption) => {
                     setfirstWriteOffOperatorOption(firstWriteOffOperatorOption);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={appFirstWriteOff}
+                <InputNumber
+                  inputName="number"
+                  inputValue={appFirstWriteOff}
                   onChange={(e) => setAppFirstWriteOff(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Maximum Write Off
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  // defaultValue={operatorOptions[3]}
-                  options={operatorOptions}
-                  value={secondWriteOffOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={secondWriteOffOperator}
                   isSearchable={false}
                   onChange={(secondWriteOffOperator) => {
                     setSecondWriteOffOperator(secondWriteOffOperator);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={appSecondWriteOff}
+                <InputNumber
+                  inputName="number"
+                  inputValue={appSecondWriteOff}
                   onChange={(e) => setAppSecondWriteOff(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Minimum Write Off
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  // defaultValue={operatorOptions[3]}
-                  options={operatorOptions}
-                  value={firstWriteOffOperatorOption}
+                  inputOptions={operatorOptions}
+                  inputValue={firstWriteOffOperatorOption}
                   isSearchable={false}
                   onChange={(firstWriteOffOperatorOption) => {
                     setfirstWriteOffOperatorOption(firstWriteOffOperatorOption);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={resFirstWriteOff}
+                <InputNumber
+                  inputName="number"
+                  inputValue={resFirstWriteOff}
                   onChange={(e) => setResFirstWriteOff(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Resident Maximum Write Off
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  // defaultValue={operatorOptions[3]}
-                  options={operatorOptions}
-                  value={secondWriteOffOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={secondWriteOffOperator}
                   isSearchable={false}
                   onChange={(secondWriteOffOperator) => {
                     setSecondWriteOffOperator(secondWriteOffOperator);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={resSecondWriteOff}
+                <InputNumber
+                  inputName="number"
+                  inputValue={resSecondWriteOff}
                   onChange={(e) => setResSecondWriteOff(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
             </div>
-            
+
             <div className="text-right mt-5">
               <button
                 type="button"
@@ -1900,30 +1869,26 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
 
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants gross salary
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={GSoperator}
+                  inputOptions={operatorOptions}
+                  inputValue={GSoperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setGSoperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={appGrossSalary}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={appGrossSalary}
                   onChange={(e) => setAppGrossSalary(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -1933,20 +1898,18 @@ const RacMatrixConfig = () => {
                 Resident gross salary
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={GSoperator}
+                  inputOptions={operatorOptions}
+                  inputValue={GSoperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setGSoperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={resGrossSalary}
+                <InputNumber
+                  inputName="gsnumber2"
+                  inputValue={resGrossSalary}
                   onChange={(e) => setResGrossSalary(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -1964,30 +1927,26 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
 
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Credit Bureau Score
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={SSoperator}
+                  inputOptions={operatorOptions}
+                  inputValue={SSoperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setSSoperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={appSimahScore}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={appSimahScore}
                   onChange={(e) => setAppSimahScore(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -1997,20 +1956,18 @@ const RacMatrixConfig = () => {
                 Resident Credit Bureau Score
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={SSoperator}
+                  inputOptions={operatorOptions}
+                  inputValue={SSoperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setSSoperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={resSimahScore}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={resSimahScore}
                   onChange={(e) => setResSimahScore(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2028,32 +1985,28 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
 
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Minimum Active Rule
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={minActiveOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={minActiveOperator}
                   isSearchable={false}
                   onChange={(selectedOption) =>
                     setMinActiveOperator(selectedOption)
                   }
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={minActive}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={minActive}
                   onChange={(e) => setMinActive(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2063,22 +2016,20 @@ const RacMatrixConfig = () => {
                 Maximum Active Rule
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={maxActiveOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={maxActiveOperator}
                   isSearchable={false}
                   onChange={(selectedOption) =>
                     setMaxActiveOperator(selectedOption)
                   }
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={maxActive}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={maxActive}
                   onChange={(e) => setMaxActive(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2096,59 +2047,52 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
-
         </div>
-        
+
         <div className="flex flex-col flex-auto gap-y-5">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Minimum Age
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={firstAgeOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={firstAgeOperator}
                   isSearchable={false}
                   onChange={(firstAgeOperator) => {
                     setfirstAgeOperator(firstAgeOperator);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={appFirstAge}
+                <InputNumber
+                  inputName="number"
+                  inputValue={appFirstAge}
                   onChange={(e) => setAppFirstAge(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="40"
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Maximum Age
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={secondAgeOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={secondAgeOperator}
                   isSearchable={false}
                   onChange={(secondAgeOperator) => {
                     setSecondAgeOperator(secondAgeOperator);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={appSecondAge}
+                <InputNumber
+                  inputName="number"
+                  inputValue={appSecondAge}
                   onChange={(e) => setAppSecondAge(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="40"
                 />
               </div>
@@ -2159,21 +2103,19 @@ const RacMatrixConfig = () => {
                 Resident Minimum Age
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={firstAgeOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={firstAgeOperator}
                   isSearchable={false}
                   onChange={(firstAgeOperator) => {
                     setfirstAgeOperator(firstAgeOperator);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={resFirstAge}
+                <InputNumber
+                  inputName="number"
+                  inputValue={resFirstAge}
                   onChange={(e) => setResFirstAge(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
@@ -2184,21 +2126,19 @@ const RacMatrixConfig = () => {
                 Resident Maximum Age
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={secondAgeOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={secondAgeOperator}
                   isSearchable={false}
                   onChange={(secondAgeOperator) => {
                     setSecondAgeOperator(secondAgeOperator);
                   }}
                 />
-                <input
-                  type="number"
-                  name="number"
-                  value={resSecondAge}
+                <InputNumber
+                  inputName="number"
+                  inputValue={resSecondAge}
                   onChange={(e) => setResSecondAge(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="4000"
                 />
               </div>
@@ -2217,30 +2157,26 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
 
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Number Of Working Months
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={losOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={losOperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setLosOperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={appLos}
+                <InputNumber
+                  inputName="number"
+                  inputValue={appLos}
                   onChange={(e) => setAppLos(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2250,20 +2186,18 @@ const RacMatrixConfig = () => {
                 Resident Number Of Working Months
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={losOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={losOperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setLosOperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={resLos}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={resLos}
                   onChange={(e) => setResLos(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2281,29 +2215,25 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
-            
             <div className="mb-3">
               <label htmlFor="number" className="block">
                 Applicants Disposableincome
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={dispOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={dispOperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setDispOperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={appDisp}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={appDisp}
                   onChange={(e) => setAppDisp(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2313,20 +2243,18 @@ const RacMatrixConfig = () => {
                 Resident Disposableincome
               </label>
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={dispOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={dispOperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setDispOperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={resDisp}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={resDisp}
                   onChange={(e) => setResDisp(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2344,29 +2272,26 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
             <label htmlFor="number" className="block">
               Dependents
             </label>
-            
+
             <div className="flex items-center gap-4 justify-between">
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={depOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={depOperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setDepOperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={dependents}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={dependents}
                   onChange={(e) => setDependents(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2384,30 +2309,27 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
 
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">
             <label htmlFor="number" className="block">
               Credit Score
             </label>
-            
+
             <div className="flex items-center gap-4 justify-between">
               <div className="flex gap-4">
-                <Select
+                <SelectInput
                   className="min-w-20"
-                  options={operatorOptions}
-                  value={csOperator}
+                  inputOptions={operatorOptions}
+                  inputValue={csOperator}
                   isSearchable={false}
                   onChange={(selectedOption) => setCSOperator(selectedOption)}
                 />
-                <input
-                  type="number"
-                  name="gsnumber1"
-                  value={cScore}
+                <InputNumber
+                  inputName="gsnumber1"
+                  inputValue={cScore}
                   onChange={(e) => setCScore(e.target.value)}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder={"4000"}
+                  placeholder="4000"
                 />
               </div>
             </div>
@@ -2425,7 +2347,6 @@ const RacMatrixConfig = () => {
                 Save
               </button>
             </div>
-
           </div>
         </div>
       </div>

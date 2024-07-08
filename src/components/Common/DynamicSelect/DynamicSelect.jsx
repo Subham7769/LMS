@@ -11,6 +11,8 @@ const SelectInput = ({
   className,
   isDisabled,
   isSearchable,
+  isMulti,
+  defaultValue
 }) => {
   return (
     <>
@@ -24,13 +26,15 @@ const SelectInput = ({
       )}
       <Select
         name={inputName}
-        className={`${className} focus:ring focus:ring-blue-600 pb-2`}
+        className={`${className} focus:ring focus:ring-blue-600`}
         options={inputOptions}
         isSearchable={isSearchable}
         isDisabled={isDisabled}
         value={inputValue}
         onChange={onChange}
         placeholder={placeHolder}
+        isMulti={isMulti}
+        defaultValue={defaultValue}
       />
     </>
   );

@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import useRacRules from "../utils/useRACRules";
 import toast from "react-hot-toast";
 import { RowChanged } from "./Toasts";
+import InputNumber from "./Common/InputNumber/InputNumber";
 
 const DeliquencyEq = () => {
   const { racID } = useParams();
@@ -97,53 +98,29 @@ const DeliquencyEq = () => {
       {inputList.map((item, index) => (
         <div className="flex gap-2 items-end mt-5">
           <div className="relative">
-            <label
-              htmlFor="noOfLateMonths"
-              className="inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              No. of late months From
-            </label>
-            <input
-              type="number"
-              name="noOfLateMonths"
-              id="noOfLateMonths"
-              value={item.noOfLateMonths}
+            <InputNumber
+              labelName="No. of late months From"
+              inputName="noOfLateMonths"
+              inputValue={item.noOfLateMonths}
               onChange={(e) => handleChange(e, index)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="2"
             />
           </div>
           <div className="relative">
-            <label
-              htmlFor="noOfLateTimes"
-              className="inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              To
-            </label>
-            <input
-              type="number"
-              name="noOfLateTimes"
-              id="noOfLateTimes"
-              value={item.noOfLateTimes}
+            <InputNumber
+              labelName="To"
+              inputName="noOfLateTimes"
+              inputValue={item.noOfLateTimes}
               onChange={(e) => handleChange(e, index)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="3"
+              placeholder="2"
             />
           </div>
           <div className="relative">
-            <label
-              htmlFor="periodInMonths"
-              className="inline-block bg-white px-1 text-xs text-gray-900"
-            >
-              Period in months
-            </label>
-            <input
-              type="number"
-              name="periodInMonths"
-              id="periodInMonths"
-              value={item.periodInMonths}
+            <InputNumber
+              labelName="To"
+              inputName="periodInMonths"
+              inputValue={item.periodInMonths}
               onChange={(e) => handleChange(e, index)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="3"
             />
           </div>
