@@ -23,9 +23,12 @@ const secondGrossSalaryOperatorOptions = [
 ];
 const MaxFinAmt = () => {
   //   const { labelProp } = props;
-  const [firstGrossSalaryOperator, setFirstGrossSalaryOperator] = useState("");
-  const [secondGrossSalaryOperator, setSecondGrossSalaryOperator] =
-    useState("");
+  const [firstGrossSalaryOperator, setFirstGrossSalaryOperator] = useState(
+    firstGrossSalaryOperatorOptions[3]
+  );
+  const [secondGrossSalaryOperator, setSecondGrossSalaryOperator] = useState(
+    secondGrossSalaryOperatorOptions[3]
+  );
   //   const { cardTitle, label1, label2, placeholder1, placeholder2 } = labelProp;
   const [inputList, setInputList] = useState([
     {
