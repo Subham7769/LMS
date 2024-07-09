@@ -3,9 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 const RecoveryNew = lazy(() => import("./components/Recovery/NewConfig"));
-const Recovery1 = lazy(() => import("./components/Recovery/RecoveryConfig1"));
-const Recovery2 = lazy(() => import("./components/Recovery/RecoveryConfig2"));
-const Recovery3 = lazy(() => import("./components/Recovery/RecoveryConfig3"));
+const RecoveryConfig = lazy(() => import("./components/Recovery/RecoveryConfig"));
 const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
 const SlideNav = lazy(() => import("./components/SlideNav"));
@@ -122,9 +120,9 @@ const routes = [
       { path: "/", element: <HomePage /> },
       { path: "/rac", element: <RacPage /> },
       { path: "/recovery", element: <RecoveryPage /> },
-      { path: "/recovery/1", element: <Recovery1 /> },
-      { path: "/recovery/2", element: <Recovery2 /> },
-      { path: "/recovery/3", element: <Recovery3 /> },
+      { path: "/recovery/1", element: <RecoveryConfig /> },
+      { path: "/recovery/2", element: <RecoveryConfig /> },
+      { path: "/recovery/3", element: <RecoveryConfig /> },
       { path: "/recovery/new", element: <RecoveryNew /> },
       { path: "/tcl", element: <TclPage /> },
       { path: "/tcl/1", element: <TCLViewList /> },

@@ -20,7 +20,7 @@ const NewCreatedRAC = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rac/id/" +
-          racID,
+        racID,
         {
           method: "GET",
           headers: {
@@ -83,9 +83,9 @@ const NewCreatedRAC = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rac/" +
-          racID +
-          "/clone/" +
-          cloneRACName,
+        racID +
+        "/clone/" +
+        cloneRACName,
         {
           method: "POST",
           headers: {
@@ -113,9 +113,9 @@ const NewCreatedRAC = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rac/" +
-          racID +
-          "/name/" +
-          updateRACName,
+        racID +
+        "/name/" +
+        updateRACName,
         {
           method: "PUT",
           headers: {
@@ -140,11 +140,9 @@ const NewCreatedRAC = () => {
   };
 
   return (
-    <div className="mt-4">
-      <div className="flex justify-between items-baseline">
-        <div className="flex mb-5 items-baseline gap-5">
-          <DynamicName initialName={RACData.name} onSave={handleUpdateRAC} />
-        </div>
+    <>
+      <div className="flex justify-between items-baseline ">
+        <DynamicName initialName={RACData.name} onSave={handleUpdateRAC} />
         <div className="flex items-center justify-between gap-6">
           <button
             type="button"
@@ -162,7 +160,7 @@ const NewCreatedRAC = () => {
           </button>
         </div>
       </div>
-      <div className="">
+      <div className="mt-4">
         {cloneRAC ? (
           <>
             <div>Create Clone RAC</div>
@@ -193,7 +191,7 @@ const NewCreatedRAC = () => {
           <RacMatrixConfig />
         )}
       </div>
-    </div>
+    </>
   );
 };
 

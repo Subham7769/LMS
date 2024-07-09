@@ -20,7 +20,7 @@ const CreateNew = ({ placeholder, buttonName, createFunction, editable, navigate
     };
 
     const handleBlur = () => {
-        setEditing(!isEditing);
+        setEditing(false);
         setName('');
     };
 
@@ -38,6 +38,7 @@ const CreateNew = ({ placeholder, buttonName, createFunction, editable, navigate
                     onKeyDown={handleKeyDown}
                     className="placeholder:text-xs text-xs block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1"
                     placeholder={placeholder}
+                    autoFocus
                 />
             </div>
         ) : (

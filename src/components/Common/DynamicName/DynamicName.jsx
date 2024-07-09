@@ -23,12 +23,12 @@ const DynamicName = ({ initialName, onSave }) => {
   return (
     <div className="flex items-center justify-between">
       {isEditing ? (
-        <div className="flex items-center space-x-2 mb-4">
+        <div className="flex items-center space-x-2">
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+            className="p-1 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
           />
           <button
             onClick={handleSave}
