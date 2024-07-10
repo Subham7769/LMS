@@ -6,6 +6,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputText from "../Common/InputText/InputText";
+import { useParams } from "react-router-dom";
 
 const options = [
   { value: "Days", label: "Days" },
@@ -13,9 +14,10 @@ const options = [
   { value: "Months", label: "Months" },
 ];
 
-const RecoveryConfig = () => {
+const NewRecoveryConfig = () => {
+  const { recoveryName } = useParams();
   const [formData, setFormData] = useState({
-    name: "Recovery Config",
+    name: recoveryName,
     tenure: "",
     wallet: "",
     due: "",
@@ -113,4 +115,4 @@ const RecoveryConfig = () => {
   );
 };
 
-export default RecoveryConfig;
+export default NewRecoveryConfig;

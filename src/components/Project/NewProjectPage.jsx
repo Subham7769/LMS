@@ -374,9 +374,6 @@ const NewProjectPage = () => {
     ));
   };
 
-  const itemStyle = {
-    gridColumn: "span 1",
-  };
   const divStyle = {
     gridColumn: "span 1",
     display: "flex",
@@ -393,7 +390,6 @@ const NewProjectPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Name */}
             <InputText
-              style={itemStyle}
               labelName={"Name"}
               inputName={"name"}
               inputValue={formData.name}
@@ -403,7 +399,6 @@ const NewProjectPage = () => {
 
             {/* Description */}
             <InputText
-              style={itemStyle}
               labelName={"Description"}
               inputName={"projectDescription"}
               inputValue={formData.projectDescription}
@@ -413,7 +408,6 @@ const NewProjectPage = () => {
 
             {/* Country */}
             <InputSelect
-              style={itemStyle}
               labelName={"Country"}
               inputName={"country"}
               inputOptions={countryOptions}
@@ -423,7 +417,6 @@ const NewProjectPage = () => {
 
             {/* Location */}
             <InputSelect
-              style={itemStyle}
               labelName={"Location"}
               inputName={"location"}
               inputOptions={filteredLocations}
@@ -433,7 +426,6 @@ const NewProjectPage = () => {
 
             {/* Loan Scheme Currency */}
             <InputSelect
-              style={itemStyle}
               labelName={"Loan Scheme Currency"}
               inputName={"currencyName"}
               inputOptions={currencyOptions}
@@ -443,7 +435,6 @@ const NewProjectPage = () => {
 
             {/* Loan Scheme Type */}
             <InputSelect
-              style={itemStyle}
               labelName={"Loan Scheme Type"}
               inputName={"loanType"}
               inputOptions={loanTypeOptions}
@@ -453,7 +444,6 @@ const NewProjectPage = () => {
 
             {/* Flat Interest Rate */}
             <InputNumber
-              style={itemStyle}
               labelName={"Flat Interest Rate"}
               inputName={"flatInterestRate"}
               inputValue={formData.flatInterestRate}
@@ -463,7 +453,6 @@ const NewProjectPage = () => {
 
             {/* Interest Period Unit */}
             <InputSelect
-              style={itemStyle}
               labelName={"Interest Period Unit"}
               inputName={"interestPeriodUnit"}
               inputOptions={interestPeriodOptions}
@@ -473,7 +462,6 @@ const NewProjectPage = () => {
 
             {/* Interest Rate Period */}
             <InputNumber
-              style={itemStyle}
               labelName={"Interest Rate Period"}
               inputName={"interestRatePeriod"}
               inputValue={formData.interestRatePeriod}
@@ -483,7 +471,6 @@ const NewProjectPage = () => {
 
             {/* Grace Period For Down Payment (Days) */}
             <InputNumber
-              style={itemStyle}
               labelName={"Down Payment Grace Period (Days)"}
               inputName={"downRepaymentGracePeriod"}
               inputValue={formData.downRepaymentGracePeriod}
@@ -493,7 +480,6 @@ const NewProjectPage = () => {
 
             {/* Grace Period For EMIs (Days) */}
             <InputNumber
-              style={itemStyle}
               labelName={"EMIs Grace Period (Days)"}
               inputName={"emiRepaymentGracePeriod"}
               inputValue={formData.emiRepaymentGracePeriod}
@@ -503,7 +489,6 @@ const NewProjectPage = () => {
 
             {/* Loan Grace Period (Days) */}
             <InputNumber
-              style={itemStyle}
               labelName={"Loan Grace Period (Days)"}
               inputName={"loanGracePeriod"}
               inputValue={formData.loanGracePeriod}
@@ -513,7 +498,6 @@ const NewProjectPage = () => {
 
             {/* Roll Over Period (Days) */}
             <InputNumber
-              style={itemStyle}
               labelName={"Roll Over Period (Days)"}
               inputName={"rollOverGracePeriod"}
               inputValue={formData.rollOverGracePeriod}
@@ -523,7 +507,6 @@ const NewProjectPage = () => {
 
             {/* Roll Over Fees */}
             <InputText
-              style={itemStyle}
               labelName={"Roll Over Fees"}
               inputName={"rollOverPenaltyFee"}
               inputValue={formData.rollOverPenaltyFee}
@@ -533,7 +516,6 @@ const NewProjectPage = () => {
 
             {/* Roll Over Interest Rate */}
             <InputNumber
-              style={itemStyle}
               labelName={"Roll Over Interest Rate"}
               inputName={"rollOverInterestRate"}
               inputValue={formData.rollOverInterestRate}
@@ -543,7 +525,6 @@ const NewProjectPage = () => {
 
             {/* Late EMI Penalty */}
             <InputText
-              style={itemStyle}
               labelName={"Late EMI Penalty"}
               inputName={"lateEmiPenaltyFactor"}
               inputValue={formData.lateEmiPenaltyFactor}
@@ -553,7 +534,6 @@ const NewProjectPage = () => {
 
             {/* Max. Payment Attempt */}
             <InputNumber
-              style={itemStyle}
               labelName={"Max. Payment Attempt"}
               inputName={"maxPaymetAttemps"}
               inputValue={formData.maxPaymetAttemps}
@@ -583,7 +563,6 @@ const NewProjectPage = () => {
 
             {/* Late Repayment Penalty */}
             <InputText
-              style={itemStyle}
               labelName={"Late Repayment Penalty"}
               inputName={"lateRepaymentPenalty"}
               inputValue={formData.lateRepaymentPenalty}
@@ -593,7 +572,6 @@ const NewProjectPage = () => {
 
             {/* Early Repayment Discount */}
             <InputText
-              style={itemStyle}
               labelName={"Early Repayment Discount"}
               inputName={"earlyRepaymentDiscount"}
               inputValue={formData.earlyRepaymentDiscount}
@@ -603,7 +581,6 @@ const NewProjectPage = () => {
 
             {/* RollOver Penalty Factor */}
             <InputText
-              style={itemStyle}
               labelName={"RollOver Penalty Factor"}
               inputName={"rollOverPenaltyFactor"}
               inputValue={formData.rollOverPenaltyFactor}

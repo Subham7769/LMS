@@ -16,6 +16,8 @@ const CreateNew = ({ placeholder, buttonName, createFunction, editable, navigate
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             createFunction(Name, navigate, navigateSuccess, navigateFail);
+            setEditing(false);
+            setName('');
         }
     };
 

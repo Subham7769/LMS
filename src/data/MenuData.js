@@ -16,6 +16,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { createNewRac } from "../utils/createNewRac";
 import { createNewProduct } from "../utils/createNewProduct";
+import { createNewRecovery } from "../utils/createNewRecovery";
+import { createNewProductGroup } from "../utils/createNewProductGroup";
 
 export const MenusInitial = [
   {
@@ -48,11 +50,11 @@ export const MenusInitial = [
     current: false,
     submenu: true,
     createButton: true, //if create recovery from Side bar Using input box
-    editable: false, //if Button takes input string
-    createFunction: null, //Create function
+    editable: true, //if Button takes input string
+    createFunction: createNewRecovery, //Create function
     buttonName: "Create Recovery", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/recovery/new", // navigation
+    navigateSuccess: "/recovery/new/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [
       { name: "Recovery 1", href: "/recovery/1" },
@@ -120,16 +122,16 @@ export const MenusInitial = [
     current: false,
     submenu: true,
     createButton: true, //if create product from Side bar Using input box
-    editable: false, //if Button takes input string
-    createFunction: null, //Create function
+    editable: true, //if Button takes input string
+    createFunction: createNewProductGroup, //Create function
     buttonName: "Create Group", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/group/1", // navigation
+    navigateSuccess: "group/newGroup", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [
-      { name: "Group 1", href: "/group/1" },
-      { name: "Group 2", href: "/group/2" },
-      { name: "Group 3", href: "/group/3" },
+      { name: "Group 1", href: "/group/Group 1" },
+      { name: "Group 2", href: "/group/Group 2" },
+      { name: "Group 3", href: "/group/Group 3" },
     ],
     isOpen: false,
   },
@@ -142,7 +144,7 @@ export const MenusInitial = [
     createButton: true, //if create product from Side bar Using input box
     editable: false, //if Button takes input string
     createFunction: null, //Create function
-    buttonName: "Create Business Rule", //Create button text
+    buttonName: "Create Rule", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/business-rule/1", // navigation
     navigateFail: "/login", // navigation

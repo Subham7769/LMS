@@ -14,3 +14,8 @@ export const signsOptions = [
   { value: "<=", label: "<=" },
   { value: ">=", label: ">=" },
 ];
+export const productTypeOptions = [
+  { value: "Cash Loan", label: "Cash Loan" },
+  { value: "BNPL", label: "BNPL" },
+  { value: "Overdraft", label: "Overdraft" },
+];

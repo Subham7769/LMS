@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-const RecoveryNew = lazy(() => import("./components/Recovery/NewConfig"));
+const NewRecoveryConfig = lazy(() => import("./components/Recovery/NewRecoveryConfig"));
 const RecoveryConfig = lazy(() => import("./components/Recovery/RecoveryConfig"));
 const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
@@ -37,13 +37,8 @@ const NotificationText = lazy(() =>
 const SystemConfig = lazy(() =>
   import("./components/GlobalConfig/SystemConfig")
 );
-const GroupComponent = lazy(() => import("./components/Group/GroupComponent"));
-const GroupComponent2 = lazy(() =>
-  import("./components/Group/GroupComponent2")
-);
-const GroupComponent3 = lazy(() =>
-  import("./components/Group/GroupComponent3")
-);
+const ProductGroup = lazy(() => import("./components/ProductGroup/ProductGroup"));
+
 const BorrowerInfoTabs = lazy(() =>
   import("./components/CustomerCare/BorrowerInfoTabs")
 );
@@ -119,11 +114,13 @@ const routes = [
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/rac", element: <RacPage /> },
+      { path: "/create-rac", element: <CreateRac /> },
+      { path: "/newrac/:racID", element: <NewCreatedRAC /> },
       { path: "/recovery", element: <RecoveryPage /> },
       { path: "/recovery/1", element: <RecoveryConfig /> },
       { path: "/recovery/2", element: <RecoveryConfig /> },
       { path: "/recovery/3", element: <RecoveryConfig /> },
-      { path: "/recovery/new", element: <RecoveryNew /> },
+      { path: "/recovery/new/:recoveryName", element: <NewRecoveryConfig /> },
       { path: "/tcl", element: <TclPage /> },
       { path: "/tcl/1", element: <TCLViewList /> },
       { path: "/tcl/2", element: <TCLViewList /> },
@@ -134,13 +131,10 @@ const routes = [
       { path: "/business-rule/2", element: <BpmnComponent2 /> },
       { path: "/business-rule/3", element: <BpmnComponent3 /> },
       { path: "/product_group", element: <ProductGroupPage /> },
-      { path: "group/1", element: <GroupComponent /> },
-      { path: "group/2", element: <GroupComponent2 /> },
-      { path: "group/3", element: <GroupComponent3 /> },
+      // { path: "group/newGroup", element: <ProductGroup /> },
+      { path: "group/:groupName", element: <ProductGroup /> },
       { path: "/project/:projectId", element: <LoanForm /> },
       { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
-      { path: "/create-rac", element: <CreateRac /> },
-      { path: "/newrac/:racID", element: <NewCreatedRAC /> },
       { path: "/create-product/:productName", element: <CreateProduct /> },
       {
         path: "/product/:productType",
