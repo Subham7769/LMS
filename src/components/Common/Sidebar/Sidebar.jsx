@@ -8,6 +8,8 @@ import { MenusInitial } from "../../../data/MenuData";
 import CreateNew from "../CreateNew/CreateNew";
 import useDBInfo from "../../../utils/useDBInfo";
 import useBEInfo from "../../../utils/useBEInfo";
+import useCreditScoreEq from "../../../utils/useCreditScoreEq";
+import useRulePolicy from "../../../utils/useRulePolicy";
 
 const SideBar = () => {
   const [open, setOpen] = useState(true);
@@ -17,6 +19,8 @@ const SideBar = () => {
   const ProductDataInfo = useProductInfo();
   const DBCData = useDBInfo();
   const BEData = useBEInfo();
+  const CreditScoreEqInfo = useCreditScoreEq();
+  const RulePolicyInfo = useRulePolicy();
 
   useEffect(() => {
     setMenus((prevMenus) =>
@@ -36,10 +40,24 @@ const SideBar = () => {
         if (menu.title === "Product") {
           return { ...menu, submenuItems: ProductDataInfo };
         }
+        if (menu.title === "Credit Score") {
+          return { ...menu, submenuItems: CreditScoreEqInfo };
+        }
+        if (menu.title === "Rule Policy") {
+          return { ...menu, submenuItems: RulePolicyInfo };
+        }
         return menu;
       })
     );
-  }, [RACDataInfo, DBCData, ProjectDataInfo, ProductDataInfo, BEData]);
+  }, [
+    RACDataInfo,
+    DBCData,
+    ProjectDataInfo,
+    ProductDataInfo,
+    BEData,
+    CreditScoreEqInfo,
+    RulePolicyInfo,
+  ]);
 
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
