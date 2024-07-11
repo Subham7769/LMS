@@ -2,8 +2,10 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-const RulePolicyPage = lazy(() => "./pages/RulePolicyPage");
-const NewCreditPolicy = lazy(() => "./components/RulePolicy/NewCreditPolicy");
+const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
+const NewCreditPolicy = lazy(() =>
+  import("./components/RulePolicy/NewCreditPolicy")
+);
 const NewCreatedCreditScore = lazy(() =>
   import("./components/CreditScore/NewCreatedCreditScore")
 );
