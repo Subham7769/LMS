@@ -24,46 +24,6 @@ const CashLoan = () => {
         loanProId,
       label: "Product Config",
     },
-    {
-      path:
-        "/product/" +
-        productType +
-        "/credit-score/" +
-        projectId +
-        "/" +
-        loanProId,
-      label: "Credit Score",
-    },
-    {
-      path:
-        "/product/" +
-        productType +
-        "/debt-burden-config/" +
-        projectId +
-        "/" +
-        loanProId,
-      label: "Debt Burden Config",
-    },
-    {
-      path:
-        "/product/" +
-        productType +
-        "/credit-policy/" +
-        projectId +
-        "/" +
-        loanProId,
-      label: "Credit Policy",
-    },
-    {
-      path:
-        "/product/" +
-        productType +
-        "/blocked-employer/" +
-        projectId +
-        "/" +
-        loanProId,
-      label: "Blocked Employer",
-    },
   ];
 
   const handleDelete = async (deleteURL) => {

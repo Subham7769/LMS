@@ -14,6 +14,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed, RowChanged, Warning } from "./Toasts";
 import LoadingState from "./LoadingState";
 import useGlobalConfig from "../utils/useGlobalConfig";
+import useDBInfo from "../utils/useDBInfo";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import useAllProjectInfo from "../utils/useAllProjectInfo";
 
@@ -72,6 +73,7 @@ const LoanProductConfig = () => {
   const [fee, setFee] = useState("");
   const [racOptions, setRacOptions] = useState(racOptionsInitial);
   const RACDataInfo = useRACInfo();
+  const DBRConfigInfo = useDBInfo();
   const [notice, setNotice] = useState(false);
   const [initialTenureType, setInitialTenureType] = useState([]);
   const [initialInterestPeriodType, setInitialInterestPeriodType] = useState(
@@ -430,6 +432,7 @@ const LoanProductConfig = () => {
   if (productConfigData?.length === 0) {
     return <LoadingState />;
   }
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -534,6 +537,56 @@ const LoanProductConfig = () => {
                 isSearchable={false}
               />
             </div>
+            <div className="relative">
+              <label
+                htmlFor="rac"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                DBR Config
+              </label>
+              <Select
+                className="w-[230px]"
+                options={racOptions}
+                name="rac"
+                // value={racType}
+                // onChange={(racselectedOption) => setRacType(racselectedOption)}
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor="project"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                Blocked Employer
+              </label>
+              <Select
+                className="w-[200px]"
+                options={projectOptions}
+                name="project"
+                // value={projectType}
+                // onChange={(projectSelectedOption) =>
+                //   setProjectType(projectSelectedOption)
+                // }
+                isSearchable={false}
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor="project"
+                className=" bg-white px-1 text-xs text-gray-900"
+              >
+                Credit Policy
+              </label>
+              <Select
+                className="w-[170px]"
+                options={tclOptions}
+                name="project"
+                // value={tclType}
+                // onChange={(tclSelectedOption) => setTclType(tclSelectedOption)}
+                isSearchable={false}
+              />
+            </div>
           </div>
           <div className="flex gap-5 items-end">
             <div className="relative">
@@ -624,12 +677,6 @@ const LoanProductConfig = () => {
             </div>
           </div>
         </div>
-        {/* {notice && (
-          <p className="text-red-500 font-bold text-sm text-start mt-2">
-            Please Note that changing the PER/Tenure Type will change it for all
-            loans
-          </p>
-        )} */}
         <div className="flex gap-5 items-end mt-5 border-b pb-5">
           <div className="relative">
             <label

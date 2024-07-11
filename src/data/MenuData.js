@@ -1,5 +1,4 @@
 import {
-  BeakerIcon,
   RectangleGroupIcon,
   ArrowPathRoundedSquareIcon,
   ChartPieIcon,
@@ -10,14 +9,19 @@ import {
   ClipboardDocumentCheckIcon,
   HomeIcon,
   UsersIcon,
-  CircleStackIcon,
   BookOpenIcon,
   HeartIcon,
+  CalculatorIcon,
 } from "@heroicons/react/24/outline";
 import { createNewRac } from "../utils/createNewRac";
 import { createNewProduct } from "../utils/createNewProduct";
 import { createNewRecovery } from "../utils/createNewRecovery";
 import { createNewProductGroup } from "../utils/createNewProductGroup";
+import { CreditCardIcon, NoSymbolIcon } from "@heroicons/react/20/solid";
+import { createNewDBC } from "../utils/createNewDBC";
+import { createNewBE } from "../utils/createNewBE";
+import { createNewCreditScoreEq } from "../utils/createNewCreditScoreEq";
+import { createNewRulePolicy } from "../utils/createNewRulePolicy";
 
 export const MenusInitial = [
   {
@@ -111,6 +115,70 @@ export const MenusInitial = [
     buttonName: "Create Product", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/create-product/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "DBR Config",
+    href: "/dbc",
+    icon: CreditCardIcon,
+    current: false,
+    submenu: true,
+    createButton: true, //if create RAC from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: createNewDBC, //Create function
+    buttonName: "Create DBR", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/newdbc/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Blocked Employer",
+    href: "/blocked-employer",
+    icon: NoSymbolIcon,
+    current: false,
+    submenu: true,
+    createButton: true, //if create RAC from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: createNewBE, //Create function
+    buttonName: "Create BE", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/blocked-employer/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Credit Score",
+    href: "/credit-score",
+    icon: CalculatorIcon,
+    current: false,
+    submenu: true,
+    createButton: true, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: createNewCreditScoreEq, //Create function
+    buttonName: "Create Credit Score", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/credit-score/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Rule Policy",
+    href: "/rule-policy",
+    icon: CalculatorIcon,
+    current: false,
+    submenu: true,
+    createButton: true, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: createNewRulePolicy, //Create function
+    buttonName: "Create Rule Policy", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/rule-policy/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,

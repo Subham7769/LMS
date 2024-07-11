@@ -2,15 +2,28 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-const NewRecoveryConfig = lazy(() => import("./components/Recovery/NewRecoveryConfig"));
-const RecoveryConfig = lazy(() => import("./components/Recovery/RecoveryConfig"));
+const RulePolicyPage = lazy(() => "./pages/RulePolicyPage");
+const NewCreditPolicy = lazy(() => "./components/RulePolicy/NewCreditPolicy");
+const NewCreatedCreditScore = lazy(() =>
+  import("./components/CreditScore/NewCreatedCreditScore")
+);
+const CreditScoreEqPage = lazy(() => import("./pages/CreditScoreEqPage"));
+
+const NewRecoveryConfig = lazy(() =>
+  import("./components/Recovery/NewRecoveryConfig")
+);
+const RecoveryConfig = lazy(() =>
+  import("./components/Recovery/RecoveryConfig")
+);
 const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
 const SlideNav = lazy(() => import("./components/SlideNav"));
 const CashLoan = lazy(() => import("./components/CashLoan"));
 const CreditScore = lazy(() => import("./components/CreditScore"));
 const LoanProductConfig = lazy(() => import("./components/LoanProductConfig"));
-const DebtBurdenConfig = lazy(() => import("./components/DebtBurdenConfig"));
+const DebtBurdenConfig = lazy(() =>
+  import("./components/DebtBurdenConfig/DebtBurdenConfig")
+);
 const CreditPolicy = lazy(() => import("./components/CreditPolicy"));
 const GlobalConfig = lazy(() =>
   import("./components/GlobalConfig/GlobalConfig")
@@ -37,7 +50,9 @@ const NotificationText = lazy(() =>
 const SystemConfig = lazy(() =>
   import("./components/GlobalConfig/SystemConfig")
 );
-const ProductGroup = lazy(() => import("./components/ProductGroup/ProductGroup"));
+const ProductGroup = lazy(() =>
+  import("./components/ProductGroup/ProductGroup")
+);
 
 const BorrowerInfoTabs = lazy(() =>
   import("./components/CustomerCare/BorrowerInfoTabs")
@@ -78,7 +93,9 @@ const InstallmentInfoComp = lazy(() =>
   import("./components/NewUser/InstallmentInfoComp")
 );
 const LoanConfigDD = lazy(() => import("./components/NewUser/LoanConfigDD"));
-const BlockedEmployer = lazy(() => import("./components/BlockedEmployer"));
+const BlockedEmployer = lazy(() =>
+  import("./components/BlockedEmployer/BlockedEmployer")
+);
 const Repayment = lazy(() => import("./components/NewUser/Repayments"));
 const FamilyDetails = lazy(() => import("./components/NewUser/FamilyDetails"));
 const EmploymentDetails = lazy(() =>
@@ -106,6 +123,8 @@ const NewProjectPage = lazy(() =>
   import("./components/Project/NewProjectPage")
 );
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
+const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
+const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
 
 const routes = [
   {
@@ -116,6 +135,8 @@ const routes = [
       { path: "/rac", element: <RacPage /> },
       { path: "/create-rac", element: <CreateRac /> },
       { path: "/newrac/:racID", element: <NewCreatedRAC /> },
+      { path: "/dbc", element: <DebtBurdenPage /> },
+      { path: "/blocked-employer", element: <BlockedEmployerPage /> },
       { path: "/recovery", element: <RecoveryPage /> },
       { path: "/recovery/1", element: <RecoveryConfig /> },
       { path: "/recovery/2", element: <RecoveryConfig /> },
@@ -136,6 +157,11 @@ const routes = [
       { path: "/project/:projectId", element: <LoanForm /> },
       { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
       { path: "/create-product/:productName", element: <CreateProduct /> },
+      { path: "/newdbc/:dbcTempId", element: <DebtBurdenConfig /> },
+      {
+        path: "/blocked-employer/:blockEmployersTempId",
+        element: <BlockedEmployer />,
+      },
       {
         path: "/product/:productType",
         element: <CashLoan />,
@@ -149,18 +175,26 @@ const routes = [
             element: <LoanProductConfig />,
           },
           {
-            path: "debt-burden-config/:projectId/:loanProId",
-            element: <DebtBurdenConfig />,
-          },
-          {
             path: "credit-policy/:projectId/:loanProId",
             element: <CreditPolicy />,
           },
-          {
-            path: "blocked-employer/:projectId/:loanProId",
-            element: <BlockedEmployer />,
-          },
         ],
+      },
+      {
+        path: "/credit-score",
+        element: <CreditScoreEqPage />,
+      },
+      {
+        path: "/credit-score/:creditScoreId",
+        element: <NewCreatedCreditScore />,
+      },
+      {
+        path: "/rule-policy",
+        element: <RulePolicyPage />,
+      },
+      {
+        path: "/rule-policy/:rulePolicyId",
+        element: <NewCreditPolicy />,
       },
       {
         path: "/global-config",
