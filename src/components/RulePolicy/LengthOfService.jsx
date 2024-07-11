@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import InequalityNumber from "./InequalityNumber";
+import InequalityNumber from "../InequalityNumber";
 import {
   PlusIcon,
   TrashIcon,
@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed, Warning } from "./Toasts";
+import { Passed, Warning } from "../Toasts";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const LengthofService = ({
@@ -18,7 +18,7 @@ const LengthofService = ({
   operatorOptions,
   LOSOperators,
   fetchData,
-  projectId,
+  rulePolicyId,
 }) => {
   const [firstLengthOfServiceOperator, setfirstLengthOfServiceOperator] =
     useState([]);
@@ -76,9 +76,6 @@ const LengthofService = ({
     }
   }, [LOSData]);
 
-  const token = localStorage.getItem("authToken");
-  const API_URL =
-    "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/length-of-service-point-rule";
   const handleAddFields = async () => {
     const token = localStorage.getItem("authToken");
     const postData = {
@@ -91,7 +88,7 @@ const LengthofService = ({
           firstLengthOfService: firstLengthOfService,
           secondLengthOfService: secondLengthOfService,
           point: point,
-          projectId: projectId,
+          rulePolicyTempId: rulePolicyId,
           ruleName: "0",
           fieldType: "Employer",
         },
@@ -131,21 +128,27 @@ const LengthofService = ({
       console.error("Failed to update data:", error);
     }
   };
+
   const handleChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...LOSInputList];
     list[index][name] = value;
     setLOSInputList(list);
   };
+
   const handleDelete = async (ruleName) => {
     try {
-      const response = await fetch(`${API_URL}/${ruleName}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/length-of-service-point-rule/${ruleName}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Delete request failed");
       } else if (response.ok) {

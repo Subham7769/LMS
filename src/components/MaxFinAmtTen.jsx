@@ -17,6 +17,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const [newAmount, setNewAmount] = useState("");
   const [newTenure, setNewTenure] = useState("");
   const { projectId } = useParams();
+  const { rulePolicyId } = useParams();
   const authToken = localStorage.getItem("authToken");
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,7 +72,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const handleDelete = (index) => {
     const ruleToDelete = inputList[index];
     fetch(
-      `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
+      `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
       {
         method: "DELETE",
         headers: {
@@ -113,7 +114,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
       financeAmountWithTenureRules: inputList.map((item, idx) => ({
         ruleName: inputList[idx].ruleName,
         fieldType: "Employer",
-        projectId: inputList[index].projectId,
+        rulePolicyTempId: rulePolicyId,
         financeAmount: item.financeAmount,
         tenure: item.tenure,
       })),
@@ -163,7 +164,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
         {
           ruleName: "0",
           fieldType: "Employer",
-          projectId: projectId,
+          rulePolicyTempId: rulePolicyId,
           financeAmount: newAmount,
           tenure: newTenure,
         },
@@ -396,7 +397,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.financeAmount}
+                          {item.tenure}
                         </span>
                       )}
                     </td>

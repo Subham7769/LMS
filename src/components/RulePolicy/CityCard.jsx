@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { PlusIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
-import { Passed } from "./Toasts";
+import { Passed } from "../Toasts";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 const CityCard = ({ cityData, fetchData }) => {
-  const { projectId } = useParams();
+  const { rulePolicyId } = useParams();
   const [tagValue, setTagValue] = useState([
     {
       city: "",
       points: "",
       ruleName: "0",
-      projectId: projectId,
+      rulePolicyTempId: rulePolicyId,
       fieldType: "Employer",
     },
   ]);
@@ -23,7 +23,7 @@ const CityCard = ({ cityData, fetchData }) => {
         city: "",
         points: "",
         ruleName: "0",
-        projectId: projectId,
+        rulePolicyTempId: rulePolicyId,
         fieldType: "Employer",
       });
       console.log(tagValue.city);
@@ -34,7 +34,7 @@ const CityCard = ({ cityData, fetchData }) => {
           {
             ruleName: "0",
             fieldType: "Employer",
-            projectId: projectId,
+            rulePolicyTempId: rulePolicyId,
             cityName: tagValue.city,
             point: tagValue.points,
           },
@@ -77,17 +77,17 @@ const CityCard = ({ cityData, fetchData }) => {
     if (cityData) {
       setTags(
         cityData
-          .filter((data) => data.projectId === projectId)
+          .filter((data) => data.rulePolicyTempId === rulePolicyId)
           .map((data) => ({
             city: data.cityName,
             points: data.point,
             ruleName: data.ruleName,
-            projectId: data.projectId,
+            rulePolicyTempId: data.rulePolicyTempId,
             fieldType: data.fieldType,
           }))
       );
     }
-  }, [cityData, projectId]);
+  }, [cityData, rulePolicyId]);
 
   const deleteTag = async (value) => {
     console.log(value);
@@ -96,7 +96,7 @@ const CityCard = ({ cityData, fetchData }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/rules/city-point-rule/${value.ruleName}`,
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/city-point-rule/${value.ruleName}`,
         {
           method: "DELETE",
           headers: {

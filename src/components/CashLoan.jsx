@@ -28,16 +28,6 @@ const CashLoan = () => {
       path:
         "/product/" +
         productType +
-        "/credit-score/" +
-        projectId +
-        "/" +
-        loanProId,
-      label: "Credit Score",
-    },
-    {
-      path:
-        "/product/" +
-        productType +
         "/debt-burden-config/" +
         projectId +
         "/" +

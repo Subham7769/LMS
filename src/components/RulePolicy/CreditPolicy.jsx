@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import InequalityNumber from "./InequalityNumber";
-import MaxFinAmtTen from "./MaxFinAmtTen";
+import InequalityNumber from "../InequalityNumber";
+import MaxFinAmtTen from "../MaxFinAmtTen";
 import {
   PlusIcon,
   TrashIcon,
@@ -12,12 +12,12 @@ import {
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import LengthofService from "./LengthOfService";
-import TagsComp from "./TagsComp";
+import TagsComp from "../TagsComp";
 import CityCard from "./CityCard";
 import OccupationCard from "./OccupationCard";
-import { Passed, Warning } from "./Toasts";
+import { Passed, Warning } from "../Toasts";
 import toast, { Toaster } from "react-hot-toast";
-import LoadingState from "./LoadingState";
+import LoadingState from "../LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const options = [
@@ -37,6 +37,7 @@ const operatorOptions = [
 
 const CreditPolicy = () => {
   const { projectId } = useParams();
+  const { rulePolicyId } = useParams();
   // Equation
   const [RBPInputList, setRBPInputList] = useState([]);
   const [data, setData] = useState([]);
@@ -60,6 +61,11 @@ const CreditPolicy = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+  const [loading, setLoading] = useState(false);
+  const [a_Weight, setA_Weight] = useState("");
+  const [b_Weight, setB_Weight] = useState("");
+  const [c_Weight, setC_Weight] = useState("");
+  const [d_Weight, setD_Weight] = useState("");
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -113,19 +119,27 @@ const CreditPolicy = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [rulePolicyId]);
 
   async function fetchData() {
+    setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/all-rule-policy",
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/all-rule-policy/by-temp-id/" +
+          rulePolicyId,
         {
+          method: "GET",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (response.status === 200) {
+        setLoading(false);
+        console.log("Loading false");
+      }
       const data = await response.json();
 
       setAllRuleData(data);
@@ -193,7 +207,7 @@ const CreditPolicy = () => {
     }
   }, [allRuleData]);
 
-  const handleAddFields = async () => {
+  const handleAddFieldsRBP = async () => {
     const token = localStorage.getItem("authToken");
     const postData = {
       operators: {
@@ -208,6 +222,7 @@ const CreditPolicy = () => {
           interestPeriodType: selectedPeriodType.value,
           projectId: projectId,
           ruleName: "0",
+          rulePolicyTempId: rulePolicyId,
           fieldType: "Employer",
         },
       ],
@@ -248,11 +263,93 @@ const CreditPolicy = () => {
     }
   };
 
-  const handleDelete = async (ruleName) => {
+  const handleAddRBPE = async () => {
+    const token = localStorage.getItem("authToken");
+    const postData = {
+      riskBasedPricingEquationRules: [
+        {
+          a_Weight: a_Weight,
+          b_Weight: b_Weight,
+          c_Weight: c_Weight,
+          d_Weight: d_Weight,
+          fieldType: "Employer",
+          ruleName: "0",
+          rulePolicyTempId: rulePolicyId,
+        },
+      ],
+    };
+
+    try {
+      const postResponse = await fetch(
+        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/risk-based-pricing-equation-rule",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
+
+      if (!postResponse.ok) {
+        throw new Error(`HTTP error! Status: ${postResponse.status}`);
+      } else if (postResponse.ok) {
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Added Successfully"}
+            message={"The item has been added successfully"}
+          />
+        ));
+        fetchData();
+        setA_Weight("");
+        setB_Weight("");
+        setC_Weight("");
+        setD_Weight("");
+      }
+    } catch (error) {
+      console.error("Failed to update data:", error);
+    }
+  };
+
+  const handleDeleteRBPE = async (ruleName) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/rules/risk-based-pricing-rule/${ruleName}`,
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/risk-based-pricing-equation-rule/${ruleName}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Delete request failed");
+      } else if (response.ok) {
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Delete Successful"}
+            message={"The item was deleted successfully"}
+          />
+        ));
+      }
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteRBP = async (ruleName) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/risk-based-pricing-rule/${ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -349,7 +446,7 @@ const CreditPolicy = () => {
     setData(newData);
   };
 
-  const handleUpdate = async (index) => {
+  const handleUpdateRBPE = async (index) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -428,7 +525,10 @@ const CreditPolicy = () => {
   // Determine total number of pages
   const totalPages = Math.ceil(inputList.length / itemsPerPage);
 
-  if (allRuleData.length === 0) {
+  // if (allRuleData.length === 0) {
+  //   return <LoadingState />;
+  // }
+  if (loading) {
     return <LoadingState />;
   }
   return (
@@ -454,79 +554,139 @@ const CreditPolicy = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {data.map((item, index) => (
-                <>
-                  <tr
-                    key={item.ruleName || index}
-                    className="divide-x divide-gray-200 text-center"
+              <tr className="divide-x divide-gray-200 text-center">
+                <td className="whitespace-nowrap py-4 px-2 text-gray-900">
+                  <input
+                    type="number"
+                    name="a_Weight"
+                    id="a_Weight"
+                    value={a_Weight}
+                    onChange={(e) => setA_Weight(e.target.value)}
+                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    placeholder="0.54"
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <input
+                    type="number"
+                    name="b_Weight"
+                    id="b_Weight"
+                    value={b_Weight}
+                    onChange={(e) => setB_Weight(e.target.value)}
+                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                    placeholder="0.54"
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <input
+                    type="number"
+                    name="c_Weight"
+                    id="c_Weight"
+                    value={c_Weight}
+                    onChange={(e) => setC_Weight(e.target.value)}
+                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                    placeholder="0.54"
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                  <input
+                    type="number"
+                    name="d_Weight"
+                    id="d_Weight"
+                    value={d_Weight}
+                    onChange={(e) => setD_Weight(e.target.value)}
+                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                    placeholder="0.54"
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={handleAddRBPE}
+                    className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                      <input
-                        type="number"
-                        name="a_Weight"
-                        id="a_Weight"
-                        value={item.a_Weight}
-                        onChange={(e) =>
-                          handleInputChange(index, "a_Weight", e.target.value)
-                        }
-                        className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="0.54"
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <input
-                        type="number"
-                        name="b_Weight"
-                        id="b_Weight"
-                        value={item.b_Weight}
-                        onChange={(e) =>
-                          handleInputChange(index, "b_Weight", e.target.value)
-                        }
-                        className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                        placeholder="0.54"
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <input
-                        type="number"
-                        name="c_Weight"
-                        id="c_Weight"
-                        value={item.c_Weight}
-                        onChange={(e) =>
-                          handleInputChange(index, "c_Weight", e.target.value)
-                        }
-                        className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                        placeholder="0.54"
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                      <input
-                        type="number"
-                        name="d_Weight"
-                        id="d_Weight"
-                        value={item.d_Weight}
-                        onChange={(e) =>
-                          handleInputChange(index, "d_Weight", e.target.value)
-                        }
-                        className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                        placeholder="0.54"
-                      />
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        onClick={() => handleUpdate(index)}
-                        className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      >
-                        <CheckCircleIcon
-                          className="-ml-0.5 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                        Save
-                      </button>
-                    </td>
-                  </tr>
-                </>
+                    <CheckCircleIcon
+                      className="-ml-0.5 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                    Add
+                  </button>
+                </td>
+              </tr>
+              {data.map((item, index) => (
+                <tr
+                  key={item.ruleName || index}
+                  className="divide-x divide-gray-200 text-center"
+                >
+                  <td className="whitespace-nowrap py-4 px-2 text-gray-900">
+                    <input
+                      type="number"
+                      name="a_Weight"
+                      id="a_Weight"
+                      value={item.a_Weight}
+                      onChange={(e) =>
+                        handleInputChange(index, "a_Weight", e.target.value)
+                      }
+                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      placeholder="0.54"
+                    />
+                  </td>
+                  <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                    <input
+                      type="number"
+                      name="b_Weight"
+                      id="b_Weight"
+                      value={item.b_Weight}
+                      onChange={(e) =>
+                        handleInputChange(index, "b_Weight", e.target.value)
+                      }
+                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                      placeholder="0.54"
+                    />
+                  </td>
+                  <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                    <input
+                      type="number"
+                      name="c_Weight"
+                      id="c_Weight"
+                      value={item.c_Weight}
+                      onChange={(e) =>
+                        handleInputChange(index, "c_Weight", e.target.value)
+                      }
+                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                      placeholder="0.54"
+                    />
+                  </td>
+                  <td className="whitespace-nowrap py-4 px-2 text-gray-500">
+                    <input
+                      type="number"
+                      name="d_Weight"
+                      id="d_Weight"
+                      value={item.d_Weight}
+                      onChange={(e) =>
+                        handleInputChange(index, "d_Weight", e.target.value)
+                      }
+                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                      placeholder="0.54"
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => handleUpdateRBPE(index)}
+                      className="w-9 h-9 mr-5 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
+                    >
+                      <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteRBPE(item.ruleName)}
+                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    >
+                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
@@ -618,7 +778,7 @@ const CreditPolicy = () => {
             />
           </div>
           <button
-            onClick={handleAddFields}
+            onClick={handleAddFieldsRBP}
             type="button"
             className="rounded-full mb-3 bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
@@ -658,7 +818,7 @@ const CreditPolicy = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.length < 1 ? (
+              {currentItems.length === 0 ? (
                 <tr>
                   <td
                     colSpan="5"
@@ -803,7 +963,7 @@ const CreditPolicy = () => {
                         )}
                       </button>
                       <button
-                        onClick={() => handleDelete(item.ruleName)}
+                        onClick={() => handleDeleteRBP(item.ruleName)}
                         type="button"
                         className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                       >
@@ -832,7 +992,7 @@ const CreditPolicy = () => {
             </span>
             <button
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || currentItems.length < 1}
+              disabled={currentPage === totalPages || currentItems.length === 0}
               className={`flex items-center px-4 py-2 rounded-md ${
                 currentPage === totalPages
                   ? "bg-gray-300 cursor-not-allowed"
@@ -859,7 +1019,7 @@ const CreditPolicy = () => {
         operatorOptions={operatorOptions}
         LOSOperators={LOSOperators}
         fetchData={fetchData}
-        projectId={projectId}
+        rulePolicyId={rulePolicyId}
       />
       <div className="flex gap-10">
         <CityCard cityData={cityData} fetchData={fetchData} />

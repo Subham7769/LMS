@@ -4,9 +4,10 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import useRACInfo from "../../../utils/useRACInfo";
 import useAllProjectInfo from "../../../utils/useAllProjectInfo";
 import useProductInfo from "../../../utils/useProductInfo";
-import { MenusInitial } from '../../../data/MenuData'
+import { MenusInitial } from "../../../data/MenuData";
 import CreateNew from "../CreateNew/CreateNew";
-
+import useCreditScoreEq from "../../../utils/useCreditScoreEq";
+import useRulePolicy from "../../../utils/useRulePolicy";
 
 const SideBar = () => {
   const [open, setOpen] = useState(true);
@@ -14,7 +15,8 @@ const SideBar = () => {
   const RACDataInfo = useRACInfo();
   const ProjectDataInfo = useAllProjectInfo();
   const ProductDataInfo = useProductInfo();
-
+  const CreditScoreEqInfo = useCreditScoreEq();
+  const RulePolicyInfo = useRulePolicy();
 
   useEffect(() => {
     setMenus((prevMenus) =>
@@ -28,10 +30,22 @@ const SideBar = () => {
         if (menu.title === "Product") {
           return { ...menu, submenuItems: ProductDataInfo };
         }
+        if (menu.title === "Credit Score") {
+          return { ...menu, submenuItems: CreditScoreEqInfo };
+        }
+        if (menu.title === "Rule Policy") {
+          return { ...menu, submenuItems: RulePolicyInfo };
+        }
         return menu;
       })
     );
-  }, [RACDataInfo, ProjectDataInfo, ProductDataInfo]);
+  }, [
+    RACDataInfo,
+    ProjectDataInfo,
+    ProductDataInfo,
+    CreditScoreEqInfo,
+    RulePolicyInfo,
+  ]);
 
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
@@ -50,8 +64,9 @@ const SideBar = () => {
   return (
     <div
       id="SideBarId"
-      className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-2 transform duration-1000 ease-in-out ${open ? "w-56" : "w-14"
-        }`}
+      className={`z-[4] fixed bg-white h-full top-0 left-0 border-r border-gray-200 text-left flex flex-col pl-2 transform duration-1000 ease-in-out ${
+        open ? "w-56" : "w-14"
+      }`}
     >
       {/* logo */}
       <div className="flex h-16 shrink-0 items-center">
@@ -68,7 +83,9 @@ const SideBar = () => {
           <div className="bg-indigo-600 h-6 w-6 rounded-full p-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-4 w-4 text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-white transition-transform duration-300 ${
+                open ? "rotate-180" : ""
+              }`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -89,16 +106,23 @@ const SideBar = () => {
         {Menus.map((menu, index) => (
           <div key={menu.title}>
             <NavLink to={menu.href} className="text-gray-500">
-              <li onClick={() => toggleSubmenu(index)} className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+              <li
+                onClick={() => toggleSubmenu(index)}
+                className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600"
+              >
                 <span className="text-2xl block float-left">
                   <menu.icon className="h-5 w-5 shrink-0" />
                 </span>
-                <span className={`text-sm flex-1 duration-200 ${!open && "hidden"}`}>
+                <span
+                  className={`text-sm flex-1 duration-200 ${!open && "hidden"}`}
+                >
                   {menu.title}
                 </span>
                 {menu.submenu && open && (
                   <ChevronRightIcon
-                    className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""}`}
+                    className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${
+                      submenuStates[index]?.isOpen ? "rotate-90" : ""
+                    }`}
                     onClick={() => toggleSubmenu(index)}
                   />
                 )}
@@ -112,19 +136,18 @@ const SideBar = () => {
                   menu.createButton ? (
                     <div>
                       <li className="px-2 py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                        <CreateNew 
-                        placeholder={menu.placeholder} 
-                        buttonName={menu.buttonName}
-                        createFunction={menu.createFunction} 
-                        editable={menu.editable} 
-                        navigateSuccess={menu.navigateSuccess} 
-                        navigateFail={menu.navigateFail}
+                        <CreateNew
+                          placeholder={menu.placeholder}
+                          buttonName={menu.buttonName}
+                          createFunction={menu.createFunction}
+                          editable={menu.editable}
+                          navigateSuccess={menu.navigateSuccess}
+                          navigateFail={menu.navigateFail}
                         />
                       </li>
                     </div>
-                  ) 
-                  : null
-                  }
+                  ) : null
+                }
                 {menu.submenuItems.map((submenuItem) => (
                   <div key={submenuItem.name}>
                     <NavLink to={submenuItem.href} className="text-gray-500">
