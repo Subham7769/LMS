@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
-import { RowChanged } from "./Toasts";
-import LoadingState from "./LoadingState";
+import { RowChanged } from "../Toasts";
+import LoadingState from "../LoadingState";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const options = [
   { value: "==", label: "==" },
@@ -15,16 +16,24 @@ const options = [
 ];
 
 const CreditScore = () => {
-  const { projectId } = useParams();
+  const { creditScoreId } = useParams();
   const navigate = useNavigate();
   const [creditScoreData, setCreditScoreData] = useState([]);
+  const [formData, setFormData] = useState({
+    aWeightage: "",
+    bWeightage: "",
+    cWeightage: "",
+    dWeightage: "",
+    eWeightage: "",
+    fWeightage: "",
+  });
   const [aWeightage, setaWeightage] = useState("");
   const [bWeightage, setbWeightage] = useState("");
   const [cWeightage, setcWeightage] = useState("");
   const [dWeightage, setdWeightage] = useState("");
   const [eWeightage, seteWeightage] = useState("");
   const [fWeightage, setfWeightage] = useState("");
-  const [saudisCreditScore, setsaudisCreditScore] = useState("");
+  const [residentsCreditScore, setresidentsCreditScore] = useState("");
   const [expatriatesCreditScore, setexpatriatesCreditScore] = useState("");
   const [rentStatusScore, setrentStatusScore] = useState("");
   const [ownStatusScore, setownStatusScore] = useState("");
@@ -48,19 +57,27 @@ const CreditScore = () => {
   const [secondDependentsOperator, setsecondDependentsOperator] = useState(
     options[3]
   );
-  const [ruleName, setruleName] = useState("");
-  const [ruleName1, setruleName1] = useState("");
-  const [ruleName2, setruleName2] = useState("");
+  const [ruleName, setruleName] = useState("0");
+  const [ruleName1, setruleName1] = useState("1");
+  const [ruleName2, setruleName2] = useState("2");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   useEffect(() => {
     getProductInfo();
-  }, [projectId]);
+  }, [creditScoreId]);
+
   async function getProductInfo() {
+    setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
-          projectId,
+          creditScoreId,
         {
           method: "GET",
           headers: {
@@ -74,6 +91,8 @@ const CreditScore = () => {
         localStorage.removeItem("authToken"); // Clear the token
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
+      } else if (data.ok) {
+        setLoading(false);
       }
       const creditScoreDetails = await data.json();
       // console.log(racDetails);
@@ -88,13 +107,13 @@ const CreditScore = () => {
       console.log("Fetching data");
     } else {
       console.log(creditScoreData);
-      setaWeightage(creditScoreData.aWeightage);
-      setbWeightage(creditScoreData.bWeightage);
-      setcWeightage(creditScoreData.cWeightage);
-      setdWeightage(creditScoreData.dWeightage);
-      seteWeightage(creditScoreData.eWeightage);
-      setfWeightage(creditScoreData.fWeightage);
-      setsaudisCreditScore(creditScoreData.saudisCreditScore);
+      setaWeightage(creditScoreData.aweightage);
+      setbWeightage(creditScoreData.bweightage);
+      setcWeightage(creditScoreData.cweightage);
+      setdWeightage(creditScoreData.dweightage);
+      seteWeightage(creditScoreData.eweightage);
+      setfWeightage(creditScoreData.fweightage);
+      setresidentsCreditScore(creditScoreData.residentsCreditScore);
       setexpatriatesCreditScore(creditScoreData.expatriatesCreditScore);
       setrentStatusScore(creditScoreData.rentStatusScore);
       setownStatusScore(creditScoreData.ownStatusScore);
@@ -147,13 +166,13 @@ const CreditScore = () => {
 
     // Define the data to be sent with the POST request
     const postData = {
-      aWeightage: aWeightage,
-      bWeightage: bWeightage,
-      cWeightage: cWeightage,
-      dWeightage: dWeightage,
-      eWeightage: eWeightage,
-      fWeightage: fWeightage,
-      saudisCreditScore: saudisCreditScore,
+      aweightage: aWeightage,
+      bweightage: bWeightage,
+      cweightage: cWeightage,
+      dweightage: dWeightage,
+      eweightage: eWeightage,
+      fweightage: fWeightage,
+      residentsCreditScore: residentsCreditScore,
       expatriatesCreditScore: expatriatesCreditScore,
       marriedStatusScore: marriedStatusScore,
       singleStatusScore: singleStatusScore,
@@ -172,7 +191,7 @@ const CreditScore = () => {
           {
             ruleName: ruleName,
             fieldType: "Employer",
-            projectId: projectId,
+            creditScoreEqTempId: creditScoreId,
             firstDependent: firstDependent,
             secondDependent: secondDependent,
             value: value,
@@ -180,7 +199,7 @@ const CreditScore = () => {
           {
             ruleName: ruleName1,
             fieldType: "Employer",
-            projectId: projectId,
+            creditScoreEqTempId: creditScoreId,
             firstDependent: thirdDependent,
             secondDependent: fourthDependent,
             value: value1,
@@ -188,7 +207,7 @@ const CreditScore = () => {
           {
             ruleName: ruleName2,
             fieldType: "Employer",
-            projectId: projectId,
+            creditScoreEqTempId: creditScoreId,
             firstDependent: fifthDependent,
             secondDependent: " ",
             value: value2,
@@ -201,7 +220,7 @@ const CreditScore = () => {
       // POST request to add new fields
       const postResponse = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
-          projectId,
+          creditScoreId,
         {
           method: "PUT",
           headers: {
@@ -222,7 +241,7 @@ const CreditScore = () => {
     }
   };
 
-  if (creditScoreData.length === 0) {
+  if (loading) {
     return <LoadingState />;
   }
   return (
@@ -231,8 +250,14 @@ const CreditScore = () => {
       <div className="border-b border-gray-300 pb-8 mt-10 mb-8">
         <h2 className="text-xl text-center">Credit Score</h2>
         <div className=" text-center mt-5 mb-4">
-          ((creditBureauScore-300)*A/550) + (nationality*B) + (netIncome*C) +
-          (dependents*D) + (maritalStatus*E) + (residentialStatus*F)
+          {creditScoreData.equation ? (
+            creditScoreData.equation
+          ) : (
+            <div>
+              ((simahScore-300)*A/550) + (nationality*B) + (netIncome*C) +
+              (dependents*D) + (maritalStatus*E) + (residentialStatus*F)
+            </div>
+          )}
         </div>
         <div className="flex justify-center">
           <table className="divide-y divide-gray-300 w-5/6">
@@ -257,6 +282,12 @@ const CreditScore = () => {
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     placeholder="0.54"
                   />
+                  {/* <InputNumber
+                    inputName={"aWeightage"}
+                    inputValue={formData.aWeightage}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                  /> */}
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <input
@@ -266,6 +297,12 @@ const CreditScore = () => {
                     onChange={(e) => setbWeightage(e.target.value)}
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder="0.54"
+                  />
+                  <InputNumber
+                    inputName={"bWeightage"}
+                    inputValue={formData.bWeightage}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
@@ -277,6 +314,12 @@ const CreditScore = () => {
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder="0.54"
                   />
+                  {/* <InputNumber
+                    inputName={"cWeightage"}
+                    inputValue={formData.cWeightage}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                  /> */}
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <input
@@ -287,6 +330,12 @@ const CreditScore = () => {
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder="0.54"
                   />
+                  {/* <InputNumber
+                    inputName={"dWeightage"}
+                    inputValue={formData.dWeightage}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                  /> */}
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <input
@@ -297,6 +346,12 @@ const CreditScore = () => {
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder="0.54"
                   />
+                  {/* <InputNumber
+                    inputName={"eWeightage"}
+                    inputValue={formData.eWeightage}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                  /> */}
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <input
@@ -307,6 +362,12 @@ const CreditScore = () => {
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     placeholder="0.54"
                   />
+                  {/* <InputNumber
+                    inputName={"fWeightage"}
+                    inputValue={formData.fWeightage}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                  /> */}
                 </td>
               </tr>
             </tbody>
@@ -332,9 +393,9 @@ const CreditScore = () => {
                 <td className="whitespace-nowrap py-4 px-2 text-gray-900">
                   <input
                     type="number"
-                    name="saudisCreditScore"
-                    value={saudisCreditScore}
-                    onChange={(e) => setsaudisCreditScore(e.target.value)}
+                    name="residentsCreditScore"
+                    value={residentsCreditScore}
+                    onChange={(e) => setresidentsCreditScore(e.target.value)}
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     placeholder="0.54"
                   />

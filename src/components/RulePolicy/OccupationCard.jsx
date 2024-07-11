@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { PlusIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "./Toasts";
+import { Passed } from "../Toasts";
 
 const OccupationCard = ({ occupationData, fetchData }) => {
-  const { projectId } = useParams();
+  const { rulePolicyId } = useParams();
   const [tagValue, setTagValue] = useState([
     {
       occupation: "",
       points: "",
       ruleName: "0",
-      projectId: projectId,
+      rulePolicyTempId: rulePolicyId,
       fieldType: "Employer",
     },
   ]);
@@ -24,7 +24,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
         occupation: "",
         points: "",
         ruleName: "0",
-        projectId: projectId,
+        rulePolicyTempId: rulePolicyId,
         fieldType: "Employer",
       });
       const token = localStorage.getItem("authToken");
@@ -33,7 +33,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
           {
             ruleName: "0",
             fieldType: "Employer",
-            projectId: projectId,
+            rulePolicyTempId: rulePolicyId,
             employmentSectorName: tagValue.occupation,
             point: tagValue.points,
           },
@@ -76,17 +76,17 @@ const OccupationCard = ({ occupationData, fetchData }) => {
     if (occupationData) {
       setTags(
         occupationData
-          .filter((data) => data.projectId === projectId)
+          .filter((data) => data.rulePolicyTempId === rulePolicyId)
           .map((data) => ({
             occupation: data.employmentSectorName,
             points: data.point,
             ruleName: data.ruleName,
-            projectId: data.projectId,
+            rulePolicyTempId: data.rulePolicyTempId,
             fieldType: data.fieldType,
           }))
       );
     }
-  }, [occupationData, projectId]);
+  }, [occupationData, rulePolicyId]);
 
   const deleteTag = async (value) => {
     console.log(value);
@@ -95,7 +95,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/rules/employment-sector-point-rule/${value.ruleName}`,
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/employment-sector-point-rule/${value.ruleName}`,
         {
           method: "DELETE",
           headers: {
