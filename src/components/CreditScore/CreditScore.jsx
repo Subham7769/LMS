@@ -298,12 +298,12 @@ const CreditScore = () => {
                     className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder="0.54"
                   />
-                  <InputNumber
+                  {/* <InputNumber
                     inputName={"bWeightage"}
                     inputValue={formData.bWeightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  />
+                  /> */}
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                   <input
