@@ -19,12 +19,10 @@ const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
 const SlideNav = lazy(() => import("./components/SlideNav"));
 const CashLoan = lazy(() => import("./components/CashLoan"));
-const CreditScore = lazy(() => import("./components/CreditScore"));
 const LoanProductConfig = lazy(() => import("./components/LoanProductConfig"));
 const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
-const CreditPolicy = lazy(() => import("./components/CreditPolicy"));
 const GlobalConfig = lazy(() =>
   import("./components/GlobalConfig/GlobalConfig")
 );
@@ -167,16 +165,8 @@ const routes = [
         element: <CashLoan />,
         children: [
           {
-            path: "credit-score/:projectId/:loanProId",
-            element: <CreditScore />,
-          },
-          {
             path: "loan-product-config/:projectId/:loanProId",
             element: <LoanProductConfig />,
-          },
-          {
-            path: "credit-policy/:projectId/:loanProId",
-            element: <CreditPolicy />,
           },
         ],
       },
