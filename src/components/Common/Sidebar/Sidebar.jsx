@@ -6,8 +6,8 @@ import useAllProjectInfo from "../../../utils/useAllProjectInfo";
 import useProductInfo from "../../../utils/useProductInfo";
 import { MenusInitial } from "../../../data/MenuData";
 import CreateNew from "../CreateNew/CreateNew";
-import useCreditScoreEq from "../../../utils/useCreditScoreEq";
-import useRulePolicy from "../../../utils/useRulePolicy";
+import useDBInfo from "../../../utils/useDBInfo";
+import useBEInfo from "../../../utils/useBEInfo";
 
 const SideBar = () => {
   const [open, setOpen] = useState(true);
@@ -15,14 +15,20 @@ const SideBar = () => {
   const RACDataInfo = useRACInfo();
   const ProjectDataInfo = useAllProjectInfo();
   const ProductDataInfo = useProductInfo();
-  const CreditScoreEqInfo = useCreditScoreEq();
-  const RulePolicyInfo = useRulePolicy();
+  const DBCData = useDBInfo();
+  const BEData = useBEInfo();
 
   useEffect(() => {
     setMenus((prevMenus) =>
       prevMenus.map((menu) => {
         if (menu.title === "RAC") {
           return { ...menu, submenuItems: RACDataInfo };
+        }
+        if (menu.title === "DBR Config") {
+          return { ...menu, submenuItems: DBCData };
+        }
+        if (menu.title === "Blocked Employer") {
+          return { ...menu, submenuItems: BEData };
         }
         if (menu.title === "Project") {
           return { ...menu, submenuItems: ProjectDataInfo };
@@ -39,13 +45,7 @@ const SideBar = () => {
         return menu;
       })
     );
-  }, [
-    RACDataInfo,
-    ProjectDataInfo,
-    ProductDataInfo,
-    CreditScoreEqInfo,
-    RulePolicyInfo,
-  ]);
+  }, [RACDataInfo, DBCData, ProjectDataInfo, ProductDataInfo, BEData]);
 
   const [submenuStates, setSubmenuStates] = useState(
     Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
