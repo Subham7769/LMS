@@ -474,7 +474,7 @@ const LoanProductConfig = () => {
             </div>
           </div>
           <div className="grid grid-cols-5 gap-5 items-end">
-            <div className="relative">
+            <div className="relative mt-4">
               <InputText
                 labelName="Processing Fee"
                 inputName="fee"
@@ -483,7 +483,7 @@ const LoanProductConfig = () => {
                 placeHolder="1%"
               />
             </div>
-            <div className="relative">
+            <div className="relative mt-4">
               <InputText
                 labelName="Management Fee Vat"
                 inputName="managementFeeVat"
@@ -492,7 +492,7 @@ const LoanProductConfig = () => {
                 placeHolder="15%"
               />
             </div>
-            <div className="relative">
+            <div className="relative mt-4">
               <InputText
                 labelName="No. of Installments For Early Settlement"
                 inputName="numberOfEmisForEarlySettlement"
@@ -502,7 +502,7 @@ const LoanProductConfig = () => {
               />
             </div>
 
-            <div className="relative">
+            <div className="relative mb-2">
               <InputCheckbox
                 labelName="Refinanced With"
                 inputChecked={formData.refinancedWith}
@@ -510,7 +510,7 @@ const LoanProductConfig = () => {
                 inputName="refinancedWith"
               />
             </div>
-            <div className="relative">
+            <div className="relative mb-2">
               <InputCheckbox
                 labelName="Disable RAC"
                 inputChecked={formData.disableRac}
