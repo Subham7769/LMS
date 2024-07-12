@@ -23,7 +23,6 @@ import InputText from "./Common/InputText/InputText";
 import InputCheckbox from "./Common/InputCheckbox/InputCheckbox";
 import InputNumber from "./Common/InputNumber/InputNumber";
 import {
-  projectOptionsInitial,
   tenureOptions,
   tenureTypeOptions,
   options,
@@ -34,6 +33,7 @@ import {
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
+  // Initial Data
   const [productConfigData, setProductConfigData] = useState([]);
 
   // Custom Hooks
@@ -49,14 +49,17 @@ const LoanProductConfig = () => {
   const [rpOptions, setRpOptions] = useState([]);
   const [csOptions, setCsOptions] = useState([]);
   const [racOptions, setRacOptions] = useState([]);
+  const [projectOptions, setProjectOptions] = useState([]);
 
+  // New Data States
   const [newInterest, setNewInterest] = useState("");
   const [newTenure, setNewTenure] = useState("");
+
+  // Sort & Pagination
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const [projectOptions, setProjectOptions] = useState(projectOptionsInitial);
   const ProjectDataInfo = useAllProjectInfo();
   const [loading, setLoading] = useState(false);
 
@@ -149,7 +152,7 @@ const LoanProductConfig = () => {
 
   useEffect(() => {
     getProductInfo();
-  }, [productType]);
+  }, [productType, projectId]);
 
   async function getProductInfo() {
     setProductConfigData([]);
@@ -379,7 +382,11 @@ const LoanProductConfig = () => {
                 labelName="Eligible Customer Type"
                 inputOptions={tenureOptions}
                 inputName="eligibleCustomerType"
-                inputValue={formData.eligibleCustomerType}
+                inputValue={
+                  formData.eligibleCustomerType
+                    ? formData.eligibleCustomerType
+                    : ""
+                }
                 onChange={handleInputChange}
                 isSearchable={false}
               />
