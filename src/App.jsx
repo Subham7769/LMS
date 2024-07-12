@@ -118,7 +118,6 @@ const NewUserPage = lazy(() => import("./pages/UserProductTestingPage"));
 const LedgerPage = lazy(() => import("./pages/LedgerPage"));
 const CreateNew = lazy(() => import("./components/Common/CreateNew/CreateNew"));
 const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
-// const NewProjectPage = lazy(() => import("./components/Project/NewProjectPage"));
 const NewProjectPage = lazy(() =>
   import("./components/Project/NewProjectPage")
 );
@@ -152,12 +151,12 @@ const routes = [
       { path: "/business-rule/2", element: <BpmnComponent2 /> },
       { path: "/business-rule/3", element: <BpmnComponent3 /> },
       { path: "/product_group", element: <ProductGroupPage /> },
-      // { path: "group/newGroup", element: <ProductGroup /> },
       { path: "group/:groupName", element: <ProductGroup /> },
       { path: "/project/:projectId", element: <LoanForm /> },
       { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
       { path: "/create-product/:productName", element: <CreateProduct /> },
       { path: "/newdbc/:dbcTempId", element: <DebtBurdenConfig /> },
+      { path: "/test", element: <TestComponent /> },
       {
         path: "/blocked-employer/:blockEmployersTempId",
         element: <BlockedEmployer />,
