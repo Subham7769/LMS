@@ -8,99 +8,119 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
-import Select from "react-select";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed, RowChanged, Warning } from "./Toasts";
+import { RowChanged, Warning } from "./Toasts";
 import LoadingState from "./LoadingState";
-import useGlobalConfig from "../utils/useGlobalConfig";
 import useDBInfo from "../utils/useDBInfo";
+import useBEInfo from "../utils/useBEInfo";
+import useCreditScoreEq from "../utils/useCreditScoreEq";
+import useRulePolicy from "../utils/useRulePolicy";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import useAllProjectInfo from "../utils/useAllProjectInfo";
-
-const options = [
-  { value: "DAILY", label: "DAILY" },
-  { value: "WEEKLY", label: "WEEKLY" },
-  { value: "MONTHLY", label: "MONTHLY" },
-  { value: "YEARLY", label: "YEARLY" },
-];
-
-const tenureTypeOptions = [
-  { value: "DAY", label: "DAY" },
-  { value: "WEEK", label: "WEEK" },
-  { value: "MONTH", label: "MONTH" },
-  { value: "YEAR", label: "YEAR" },
-];
-
-const tenureOptions = [
-  { value: "CORPORATE", label: "CORPORATE" },
-  { value: "E_COMMERCE", label: "E_COMMERCE" },
-  { value: "CONSUMER", label: "CONSUMER" },
-];
-
-const racOptionsInitial = [
-  { value: "r1", label: "Cash Product RAC" },
-  { value: "r2", label: "BNPL Product RAC" },
-  { value: "r3", label: "Overdraft Product RAC" },
-];
-
-const projectOptionsInitial = [
-  { value: "p1", label: "Cash Project" },
-  { value: "p2", label: "BNPL Project" },
-  { value: "p3", label: "Overdraft Project" },
-];
-
-const tclOptionsInitial = [
-  { value: "T1", label: "TCL 1" },
-  { value: "T2", label: "TCL 2" },
-  { value: "T3", label: "TCL 3" },
-];
-
-const recoveryOptions = [
-  { value: "R1", label: "Recovery 1" },
-  { value: "R2", label: "Recovery 2" },
-  { value: "R3", label: "Recovery 3" },
-];
+import InputSelect from "./Common/InputSelect/InputSelect";
+import InputText from "./Common/InputText/InputText";
+import InputCheckbox from "./Common/InputCheckbox/InputCheckbox";
+import InputNumber from "./Common/InputNumber/InputNumber";
+import {
+  projectOptionsInitial,
+  tenureOptions,
+  tenureTypeOptions,
+  options,
+  tclOptionsInitial,
+  recoveryOptions,
+} from "../data/OptionsData";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
   const [productConfigData, setProductConfigData] = useState([]);
-  const [eligibleCustomerType, setEligibleCustomerType] = useState([]);
-  const [interestPeriodType, setInterestPeriodType] = useState([]);
-  const [tenureType, setTenureType] = useState([]);
-  const [racType, setRacType] = useState("");
-  const [fee, setFee] = useState("");
-  const [racOptions, setRacOptions] = useState(racOptionsInitial);
+
+  // Custom Hooks
   const RACDataInfo = useRACInfo();
   const DBRConfigInfo = useDBInfo();
-  const [notice, setNotice] = useState(false);
-  const [initialTenureType, setInitialTenureType] = useState([]);
-  const [initialInterestPeriodType, setInitialInterestPeriodType] = useState(
-    []
-  );
+  const BEDataInfo = useBEInfo();
+  const RPDataInfo = useRulePolicy();
+  const CSDataInfo = useCreditScoreEq();
+
+  // Options
+  const [dbrOptions, setDbrOptions] = useState([]);
+  const [beOptions, setBeOptions] = useState([]);
+  const [rpOptions, setRpOptions] = useState([]);
+  const [csOptions, setCsOptions] = useState([]);
+  const [racOptions, setRacOptions] = useState([]);
+
   const [newInterest, setNewInterest] = useState("");
   const [newTenure, setNewTenure] = useState("");
-  const [managementFee, setManagementFee] = useState("");
-  const [noOfEmis, setNoOfEmis] = useState("");
-  const [refinanced, setRefinanced] = useState(null);
-  const url = "project-system-configs";
-  const [systemData, setSystemData] = useState([]);
-  const systemConfigData = useGlobalConfig(url);
-  const [projectId2, setProjectId2] = useState("");
-  const [projectName, setProjectName] = useState("");
-  const [triggerValue, setTriggerValue] = useState("");
-  const [disabledRAC, setDisabledRAC] = useState(false);
-  const [bnplBoolean, setBNPL] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const [projectType, setProjectType] = useState("");
   const [projectOptions, setProjectOptions] = useState(projectOptionsInitial);
   const ProjectDataInfo = useAllProjectInfo();
-  const [tclType, setTclType] = useState(tclOptionsInitial[0]);
-  const [tclOptions, setTclOptions] = useState(tclOptionsInitial);
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    loanProductId: "",
+    blockEmployersTempId: "",
+    creditScoreEqTempId: "",
+    creditScoreEtTempId: "",
+    dbcTempId: "",
+    disableRac: null,
+    eligibleCustomerType: "",
+    fee: "",
+    interestEligibleTenure: [{ interestRate: "", tenure: "" }],
+    interestPeriodType: "",
+    managementFeeVat: "",
+    numberOfEmisForEarlySettlement: "",
+    productType: "",
+    projectId: "",
+    racId: "",
+    refinancedWith: null,
+    rulePolicyTempId: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    if (type === "checkbox") {
+      setFormData((prevState) => ({ ...prevState, [name]: checked }));
+    } else {
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
+    }
+  };
+
+  useEffect(() => {
+    if (productConfigData.length === 0) {
+      console.log("Fetching Product Config Data");
+    } else {
+      const assignedData = {
+        loanProductId: productConfigData.loanProductId,
+        blockEmployersTempId: productConfigData.blockEmployersTempId,
+        creditScoreEqTempId: productConfigData.creditScoreEqTempId,
+        creditScoreEtTempId: productConfigData.creditScoreEtTempId,
+        dbcTempId: productConfigData.dbcTempId,
+        disableRac: productConfigData.disableRac,
+        eligibleCustomerType: productConfigData.eligibleCustomerType,
+        fee: productConfigData.fee,
+        interestEligibleTenure: productConfigData.interestEligibleTenure.map(
+          (tenure) => ({
+            interestRate: tenure.interestRate || "",
+            tenure: tenure.tenure || "",
+          })
+        ),
+        interestPeriodType: productConfigData.interestPeriodType,
+        managementFeeVat: productConfigData.managementFeeVat,
+        numberOfEmisForEarlySettlement:
+          productConfigData.numberOfEmisForEarlySettlement,
+        productType: productConfigData.productType,
+        projectId: productConfigData.projectId,
+        racId: productConfigData.racId,
+        refinancedWith: productConfigData.refinancedWith,
+        rulePolicyTempId: productConfigData.rulePolicyTempId,
+      };
+      setFormData(assignedData);
+    }
+  }, [productConfigData]);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -128,34 +148,12 @@ const LoanProductConfig = () => {
   };
 
   useEffect(() => {
-    if (systemConfigData.length > 0) {
-      const matchedData = systemConfigData.filter(
-        (data) => data.projectId === projectId
-      );
-
-      if (matchedData.length > 0) {
-        setSystemData(matchedData);
-      }
-    }
-  }, [systemConfigData, projectId]);
-
-  useEffect(() => {
-    if (systemData.length > 0) {
-      setManagementFee(systemData[0].managementFeeVat);
-      setNoOfEmis(systemData[0].numberOfEmisForEarlySettlement);
-      setRefinanced(systemData[0].refinancedWith);
-      setProjectId2(systemData[0].projectId);
-      setProjectName(systemData[0].projectName);
-      setTriggerValue(systemData[0].triggerValue);
-      setBNPL(systemData[0].bnpl);
-    }
-  }, [systemData]);
-
-  useEffect(() => {
     getProductInfo();
   }, [productType]);
 
   async function getProductInfo() {
+    setProductConfigData([]);
+    setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
@@ -178,90 +176,64 @@ const LoanProductConfig = () => {
       const productConfigDetails = await data.json();
       // console.log(racDetails);
       setProductConfigData(productConfigDetails);
+      setLoading(false);
       //   window.location.reload();
     } catch (error) {
       console.error(error);
     }
   }
-  useEffect(() => {
-    if (productConfigData.length === 0) {
-      console.log("Fetching data");
-    } else {
-      setFee(productConfigData.fee);
-      const formattedCustomerType = {
-        value: productConfigData.eligibleCustomerType,
-        label: productConfigData.eligibleCustomerType,
-      };
-      const formattedPER = {
-        value: productConfigData.interestPeriodType,
-        label: productConfigData.interestPeriodType,
-      };
-      setEligibleCustomerType(formattedCustomerType);
-      setInterestPeriodType(formattedPER);
-      setInitialInterestPeriodType(formattedPER);
-      const formattedTenureType = {
-        value: productConfigData.tenureType,
-        label: productConfigData.tenureType,
-      };
-      // setTenureType(formattedTenureType);
-      setTenureType(tenureTypeOptions[2]);
-      setInitialTenureType(formattedTenureType);
-      setDisabledRAC(productConfigData.disableRac);
-      setRacType(
-        racOptions.find((option) => option.value === productConfigData.racId)
-      );
-      setProjectType(
-        projectOptions.find(
-          (option) => option.value === productConfigData.projectId
-        )
-      );
-      setInputList(productConfigData.interestEligibleTenure);
-    }
-  }, [productConfigData]);
 
   useEffect(() => {
     const formattedRACData = RACDataInfo.map(({ name, href }) => ({
       value: href.replace("/newrac/", ""),
       label: name,
     }));
-    setRacOptions(formattedRACData);
-  }, [RACDataInfo]);
-
-  useEffect(() => {
+    const formattedCSData = CSDataInfo.map(({ name, href }) => ({
+      value: href.replace("/credit-score/", ""),
+      label: name,
+    }));
+    const finalData = DBRConfigInfo.map(({ name, href }) => ({
+      value: href.replace("/newdbc/", ""),
+      label: name,
+    }));
     const formattedProjectData = ProjectDataInfo.map(({ name, href }) => ({
       value: href.replace("/project/", ""),
       label: name,
     }));
+    const formattedBEData = BEDataInfo.map(({ name, href }) => ({
+      value: href.replace("/blocked-employer/", ""),
+      label: name,
+    }));
+    const rpData = RPDataInfo.map(({ name, href }) => ({
+      value: href.replace("/rule-policy/", ""),
+      label: name,
+    }));
+
+    setRacOptions(formattedRACData);
+    setDbrOptions(finalData);
     setProjectOptions(formattedProjectData);
-  }, [ProjectDataInfo]);
-
-  // For Tracking if the user is changing PER or Tenure Type
-  useEffect(() => {
-    if (
-      JSON.stringify(tenureType) === JSON.stringify(initialTenureType) &&
-      JSON.stringify(interestPeriodType) ===
-        JSON.stringify(initialInterestPeriodType)
-    ) {
-      setNotice(false);
-    } else {
-      setNotice(true);
-    }
-  }, [tenureType, interestPeriodType]);
-
-  const [inputList, setInputList] = useState([
-    {
-      interestRate: "",
-      tenure: "",
-    },
+    setBeOptions(formattedBEData);
+    setRpOptions(rpData);
+    setCsOptions(formattedCSData);
+  }, [
+    RACDataInfo,
+    DBRConfigInfo,
+    ProjectDataInfo,
+    BEDataInfo,
+    RPDataInfo,
+    CSDataInfo,
   ]);
+
   const handleAddFields = () => {
-    setInputList([
-      {
-        interestRate: newInterest,
-        tenure: newTenure,
-      },
-      ...inputList,
-    ]);
+    setFormData({
+      interestEligibleTenure: [
+        {
+          interestRate: newInterest,
+          tenure: newTenure,
+        },
+      ],
+      ...formData.interestEligibleTenure,
+    });
     setNewTenure("");
     setNewInterest("");
     toast.custom((t) => (
@@ -274,17 +246,24 @@ const LoanProductConfig = () => {
     ));
   };
 
-  const handleChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setInputList(list);
+  const handleInterestChange = (index, field, value) => {
+    const updatedInterestTenure = formData.interestEligibleTenure.map(
+      (item, idx) => {
+        if (index === idx) {
+          return { ...item, [field]: value };
+        }
+        return item;
+      }
+    );
+    setFormData((prevState) => ({
+      ...prevState,
+      interestEligibleTenure: updatedInterestTenure,
+    }));
   };
   const handleDelete = (index) => {
-    const deleteList = [...inputList];
+    const deleteList = [...formData.interestEligibleTenure];
     deleteList.splice(index, 1);
-    setInputList(deleteList);
-    setNotice(false);
+    setFormData(deleteList);
     toast.custom((t) => (
       <Warning
         t={t}
@@ -296,25 +275,28 @@ const LoanProductConfig = () => {
   };
   const handleSave = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-    // if (newInterest && newTenure) {
-    //   handleAddFields();
-    // }
 
     // Define the data to be sent with the POST request
     const postData = {
-      eligibleCustomerType: eligibleCustomerType.value,
-      fee: fee,
-      interestEligibleTenure: inputList,
-      interestPeriodType: interestPeriodType.value,
-      tenureType: tenureType.value,
-      productType: productConfigData.productType,
-      racId: racType.value,
-      isDisableRac: disabledRAC,
-      projectId: projectType.value,
+      blockEmployersTempId: formData.blockEmployersTempId,
+      creditScoreEqTempId: formData.creditScoreEqTempId,
+      creditScoreEtTempId: formData.creditScoreEtTempId,
+      dbcTempId: formData.dbcTempId,
+      eligibleCustomerType: formData.eligibleCustomerType.value,
+      fee: formData.fee,
+      interestEligibleTenure: formData.interestEligibleTenure,
+      interestPeriodType: formData.interestPeriodType.value,
+      isDisableRac: formData.disableRac,
+      managementFeeVat: formData.managementFeeVat,
+      numberOfEmisForEarlySettlement: formData.numberOfEmisForEarlySettlement,
+      productType: formData.productType,
+      projectId: formData.projectId,
+      racId: formData.racId,
+      refinancedWith: formData.refinancedWith,
+      rulePolicyTempId: formData.rulePolicyTempId,
     };
 
     try {
-      // POST request to add new fields
       const postResponse = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
           loanProId,
@@ -332,60 +314,11 @@ const LoanProductConfig = () => {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
         toast.custom((t) => <RowChanged t={t} toast={toast} />);
-        setNotice(false);
       }
     } catch (error) {
       console.error("Failed to update data:", error);
     }
   };
-
-  async function handleBoth() {
-    await handleSystemChanges();
-    await handleSave();
-  }
-
-  async function handleSystemChanges() {
-    const token = localStorage.getItem("authToken");
-    const targetData = {
-      projectId: projectId2,
-      projectName: projectName,
-      managementFeeVat: managementFee,
-      numberOfEmisForEarlySettlement: noOfEmis,
-      refinancedWith: refinanced,
-      triggerValue: triggerValue,
-      isBnpl: bnplBoolean,
-    };
-    console.log(targetData);
-    try {
-      const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/project-system-configs",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(targetData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else {
-        console.log(`Data for ${projectName} saved successfully`);
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Saved Successfully"}
-            message={`The item ${projectName} has been updated`}
-          />
-        ));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   // Handle page change
   const handlePageChange = (newPage) => {
@@ -400,7 +333,7 @@ const LoanProductConfig = () => {
     ));
   };
 
-  const sortedItems = [...inputList].sort((a, b) => {
+  const sortedItems = [...formData.interestEligibleTenure].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -416,7 +349,9 @@ const LoanProductConfig = () => {
   const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
 
   // Determine total number of pages
-  const totalPages = Math.ceil(inputList.length / itemsPerPage);
+  const totalPages = Math.ceil(
+    formData.interestEligibleTenure.length / itemsPerPage
+  );
 
   function informUser() {
     toast.custom((t) => (
@@ -429,7 +364,7 @@ const LoanProductConfig = () => {
     ));
   }
 
-  if (productConfigData?.length === 0) {
+  if (loading) {
     return <LoadingState />;
   }
 
@@ -438,311 +373,188 @@ const LoanProductConfig = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="border-b border-gray-300 pb-5">
-          <div className="flex gap-5 items-end pb-2">
+          <div className="grid grid-cols-5 gap-5 items-end pb-2">
             <div className="relative">
-              <label
-                htmlFor="eligibleCustomerType"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Eligible Customer Type
-              </label>
-              <Select
-                className="w-[170px]"
-                options={tenureOptions}
-                // id={`tenureType_${item.id}`}
-                name="eligibleCustomerType"
-                value={eligibleCustomerType}
-                onChange={(eligibleCustomerType) => {
-                  setEligibleCustomerType(eligibleCustomerType);
-                }}
+              <InputSelect
+                labelName="Eligible Customer Type"
+                inputOptions={tenureOptions}
+                inputName="eligibleCustomerType"
+                inputValue={formData.eligibleCustomerType}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor="rac"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                RAC
-              </label>
-              <Select
-                className="w-[230px]"
-                options={racOptions}
-                name="rac"
-                value={racType}
-                onChange={(racselectedOption) => setRacType(racselectedOption)}
+              <InputSelect
+                labelName="RAC"
+                inputOptions={racOptions}
+                inputName="racId"
+                inputValue={formData.racId}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor="project"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Project
-              </label>
-              <Select
-                className="w-[200px]"
-                options={projectOptions}
-                name="project"
-                value={projectType}
-                onChange={(projectSelectedOption) =>
-                  setProjectType(projectSelectedOption)
-                }
+              <InputSelect
+                labelName="Project"
+                inputOptions={projectOptions}
+                inputName="projectId"
+                inputValue={formData.projectId}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor="project"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                TCL
-              </label>
-              <Select
-                className="w-[170px]"
-                options={tclOptions}
-                name="project"
-                value={tclType}
-                onChange={(tclSelectedOption) => setTclType(tclSelectedOption)}
+              <InputSelect
+                labelName="TCL"
+                inputOptions={tclOptionsInitial}
+                inputName="project"
                 isSearchable={false}
               />
             </div>
 
             <button
               type="button"
-              onClick={handleBoth}
+              onClick={handleSave}
               className="w-9 h-9 rounded-md bg-indigo-600 p-2 ml-4 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             >
               <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
-          <div className="flex gap-5 items-end mb-4">
+          <div className="grid grid-cols-5 gap-5 items-end mb-4">
             <div className="relative mt-1">
-              <label
-                htmlFor="recoveryType"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Recovery Type
-              </label>
-              <Select
-                className="w-[170px]"
-                options={recoveryOptions}
-                name="recoveryType"
-                defaultValue={recoveryOptions[1]}
-                // value={eligibleCustomerType}
-                // onChange={(eligibleCustomerType) => {
-                //   setEligibleCustomerType(eligibleCustomerType);
-                // }}
+              <InputSelect
+                inputOptions={recoveryOptions}
+                labelName="Recovery Type"
+                inputName="recoveryType"
                 isSearchable={false}
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor="rac"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                DBR Config
-              </label>
-              <Select
-                className="w-[230px]"
-                options={racOptions}
-                name="rac"
-                // value={racType}
-                // onChange={(racselectedOption) => setRacType(racselectedOption)}
+              <InputSelect
+                labelName="DBR Config"
+                inputOptions={dbrOptions}
+                inputName="dbcTempId"
+                inputValue={formData.dbcTempId}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor="project"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Blocked Employer
-              </label>
-              <Select
-                className="w-[200px]"
-                options={projectOptions}
-                name="project"
-                // value={projectType}
-                // onChange={(projectSelectedOption) =>
-                //   setProjectType(projectSelectedOption)
-                // }
+              <InputSelect
+                labelName="Blocked Employer"
+                inputOptions={beOptions}
+                inputName="blockEmployersTempId"
+                inputValue={formData.blockEmployersTempId}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor="project"
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Credit Policy
-              </label>
-              <Select
-                className="w-[170px]"
-                options={tclOptions}
-                name="project"
-                // value={tclType}
-                // onChange={(tclSelectedOption) => setTclType(tclSelectedOption)}
+              <InputSelect
+                labelName="Rule Policy"
+                inputOptions={rpOptions}
+                inputName="rulePolicy"
+                inputValue={formData.rulePolicyTempId}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>
           </div>
-          <div className="flex gap-5 items-end">
+          <div className="grid grid-cols-5 gap-5 items-end">
             <div className="relative">
-              <label htmlFor="fee" className=" px-1 text-xs text-gray-900">
-                Processing Fee
-              </label>
-              <input
-                type="text"
-                name="fee"
-                value={fee}
-                onChange={(e) => setFee(e.target.value)}
-                className="block w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="1%"
+              <InputSelect
+                labelName="Credit Score Rule"
+                inputOptions={csOptions}
+                inputName="rulePolicy"
+                inputValue={formData.creditScoreEqTempId}
+                onChange={handleInputChange}
+                isSearchable={false}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-5 gap-5 items-end">
+            <div className="relative">
+              <InputText
+                labelName="Processing Fee"
+                inputName="fee"
+                inputValue={formData.fee}
+                onChange={handleInputChange}
+                placeHolder="1%"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`managementFeeVat`}
-                className=" px-1 text-xs text-gray-900"
-              >
-                Management Fee Vat
-              </label>
-              <input
-                type="text"
-                name="managementFeeVat"
-                value={managementFee}
-                onChange={(e) => setManagementFee(e.target.value)}
-                className="block w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="15%"
+              <InputText
+                labelName="Management Fee Vat"
+                inputName="managementFeeVat"
+                inputValue={formData.managementFeeVat}
+                onChange={handleInputChange}
+                placeHolder="15%"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`numberOfEmisForEarlySettlement`}
-                className=" px-1 text-xs text-gray-900"
-              >
-                <div className="absolute -top-2">
-                  No. of Installments For Early Settlement
-                </div>
-              </label>
-              <input
-                type="number"
-                name="numberOfEmisForEarlySettlement"
-                value={noOfEmis}
-                onChange={(e) => setNoOfEmis(e.target.value)}
-                className="block w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="3"
+              <InputText
+                labelName="No. of Installments For Early Settlement"
+                inputName="numberOfEmisForEarlySettlement"
+                inputValue={formData.numberOfEmisForEarlySettlement}
+                onChange={handleInputChange}
+                placeHolder="3"
               />
             </div>
 
-            <div className="relative mt-1">
-              <label
-                htmlFor={`refinaceWith`}
-                className=" text-gray-900 block text-xs text-center w-16 mb-2"
-              >
-                <div className="absolute -top-8">Refinanced With</div>
-              </label>
-              <div className="flex h-6 justify-center">
-                <input
-                  id={`refinancedWith`}
-                  value={refinanced}
-                  checked={refinanced}
-                  onChange={(e) => setRefinanced(e.target.checked)}
-                  name="refinancedWith"
-                  type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                />
-              </div>
+            <div className="relative">
+              <InputCheckbox
+                labelName="Refinanced With"
+                inputChecked={formData.refinancedWith}
+                onChange={handleInputChange}
+                inputName="refinancedWith"
+              />
             </div>
-            <div className="relative mt-1">
-              <label
-                htmlFor={`isDisableRac`}
-                className=" text-gray-900 block text-xs text-center w-16 mb-2"
-              >
-                <div className="absolute -top-8">Disable RAC</div>
-              </label>
-              <div className="flex h-6 justify-center">
-                <input
-                  id={`isDisableRac`}
-                  value={disabledRAC}
-                  checked={disabledRAC}
-                  onChange={(e) => setDisabledRAC(e.target.checked)}
-                  name="isDisableRac"
-                  type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                />
-              </div>
+            <div className="relative">
+              <InputCheckbox
+                labelName="Disable RAC"
+                inputChecked={formData.disableRac}
+                onChange={handleInputChange}
+                inputName="disableRac"
+              />
             </div>
           </div>
         </div>
-        <div className="flex gap-5 items-end mt-5 border-b pb-5">
+        <div className="grid grid-cols-5 gap-5 items-end mt-5 border-b pb-5">
           <div className="relative">
-            <label
-              htmlFor="interestRate"
-              className="px-1 text-xs text-gray-900"
-            >
-              Simple Interest
-            </label>
-            <input
-              type="text"
-              name="interestRate"
-              value={newInterest}
+            <InputText
+              labelName="Simple Interest"
+              inputName="interestRate"
+              inputValue={newInterest}
               onChange={(e) => setNewInterest(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="2%"
+              placeHolder="2%"
             />
           </div>
           <div className="relative">
-            <label
-              htmlFor="interestPeriodType"
-              className=" bg-white px-1 text-xs text-gray-900 gray-"
-            >
-              PER
-            </label>
-            <Select
-              className="w-36"
-              options={options}
-              // id={`per_${item.id}`}
-              name="interestPeriodType"
-              value={interestPeriodType}
-              onChange={(interestPeriodType) => {
-                setInterestPeriodType(interestPeriodType);
-              }}
-              isSearchable={false}
+            <InputSelect
+              labelName="PER"
+              inputOptions={options}
+              inputName="interestPeriodType"
+              inputValue={formData.interestPeriodType}
+              onChange={handleInputChange}
             />
           </div>
           <div className="relative">
             <label htmlFor="tenure" className=" px-1 text-xs text-gray-900">
               Tenure
             </label>
-            <input
-              type="number"
-              name="tenure"
-              value={newTenure}
+            <InputNumber
+              inputName="tenure"
+              inputValue={newTenure}
               onChange={(e) => setNewTenure(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="3"
+              placeHolder="3"
             />
           </div>
           <div className="relative">
-            <label
-              htmlFor="tenureType"
-              className=" bg-white px-1 text-xs text-gray-900 gray-"
-            >
-              Tenure Type
-            </label>
-            <Select
-              className="w-36"
-              options={tenureTypeOptions}
-              // id={`per_${item.id}`}
-              name="tenureType"
-              defaultValue={tenureTypeOptions[0]}
-              value={tenureType}
-              onChange={(tenureType) => {
-                setTenureType(tenureType);
-              }}
+            <InputSelect
+              labelName="Tenure Type"
+              inputOptions={tenureTypeOptions}
+              inputName="tenureType"
               isSearchable={false}
             />
           </div>
@@ -806,13 +618,17 @@ const LoanProductConfig = () => {
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
-                        <input
-                          type="text"
-                          name="interestRate"
-                          value={item.interestRate}
-                          onChange={(e) => handleChange(e, index)}
-                          className="block w-full max-w-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          placeholder="2%"
+                        <InputText
+                          inputName={`interestRate-${index}`}
+                          inputValue={item.interestRate}
+                          onChange={(e) =>
+                            handleInterestChange(
+                              index,
+                              "interestRate",
+                              e.target.value
+                            )
+                          }
+                          placeHolder="2%"
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -822,33 +638,33 @@ const LoanProductConfig = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
-                        <Select
-                          className="w-[150px]"
-                          options={options}
-                          name="interestPeriodType"
-                          value={interestPeriodType}
-                          onChange={(interestPeriodType) => {
-                            setInterestPeriodType(interestPeriodType);
-                          }}
-                          isSearchable={false}
+                        <InputSelect
+                          inputOptions={options}
+                          inputName="interestPeriodType"
+                          inputValue={formData.interestPeriodType}
+                          onChange={handleInputChange}
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {interestPeriodType
-                            ? interestPeriodType.label
-                            : "Select"}
+                          {formData.interestPeriodType
+                            ? formData.interestPeriodType
+                            : ""}
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
-                        <input
-                          type="number"
-                          name="tenure"
-                          value={item.tenure}
-                          onChange={(e) => handleChange(e, index)}
-                          className="block w-[100px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          placeholder="3"
+                        <InputNumber
+                          inputName={`tenure-${index}`}
+                          inputValue={item.tenure}
+                          onChange={(e) =>
+                            handleInterestChange(
+                              index,
+                              "tenure",
+                              e.target.value
+                            )
+                          }
+                          placeHolder="3"
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -858,19 +674,14 @@ const LoanProductConfig = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
-                        <Select
-                          className="w-[150px]"
-                          options={tenureTypeOptions}
-                          name="tenureType"
-                          value={tenureType}
-                          onChange={(tenureType) => {
-                            setTenureType(tenureType);
-                          }}
+                        <InputSelect
+                          inputOptions={tenureTypeOptions}
+                          inputName="tenureType"
                           isSearchable={false}
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {tenureType ? tenureType.label : "Select"}
+                          {""}
                         </span>
                       )}
                     </td>
