@@ -3,6 +3,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
+const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
+
 const NewCreditPolicy = lazy(() =>
   import("./components/RulePolicy/NewCreditPolicy")
 );
@@ -157,6 +159,7 @@ const routes = [
       { path: "/create-product/:productName", element: <CreateProduct /> },
       { path: "/newdbc/:dbcTempId", element: <DebtBurdenConfig /> },
       { path: "/test", element: <TestComponent /> },
+      { path: "/settings", element: <UploadLogo /> },
       {
         path: "/blocked-employer/:blockEmployersTempId",
         element: <BlockedEmployer />,

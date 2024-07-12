@@ -120,7 +120,7 @@ const SideBar = () => {
             <NavLink to={menu.href} className="text-gray-500">
               <li
                 onClick={() => toggleSubmenu(index)}
-                className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 hover:text-indigo-600"
+                className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-gray-100 hover:text-indigo-600"
               >
                 <span className="text-2xl block float-left">
                   <menu.icon className="h-5 w-5 shrink-0" />

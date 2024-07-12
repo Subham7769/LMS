@@ -12,6 +12,8 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
+  BeakerIcon,
+  ClipboardDocumentListIcon
 } from "@heroicons/react/24/outline";
 import { createNewRac } from "../utils/createNewRac";
 import { createNewProduct } from "../utils/createNewProduct";
@@ -170,7 +172,7 @@ export const MenusInitial = [
   {
     title: "Rule Policy",
     href: "/rule-policy",
-    icon: CalculatorIcon,
+    icon: ClipboardDocumentListIcon,
     current: false,
     submenu: true,
     createButton: true, //if create product from Side bar Using input box
@@ -272,5 +274,5 @@ export const MenusInitial = [
     icon: BookOpenIcon,
     current: false,
   },
-  { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
+  // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
 ];
