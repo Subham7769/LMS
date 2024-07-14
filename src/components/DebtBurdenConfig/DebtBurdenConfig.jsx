@@ -282,6 +282,17 @@ const DebtBurdenConfig = () => {
             message={"The item was added successfully"}
           />
         ));
+        setNewForm({
+          ruleName: "0",
+          dbcTempId: dbcTempId,
+          employerRetired: "",
+          startNetIncomeBracketInSARule: "",
+          endNetIncomeBracketInSARule: "",
+          productLevel: "",
+          consumerDBR: "",
+          gdbrWithoutMTG: "",
+          gdbrWithMTG: "",
+        });
       } else if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         navigate("/login"); // Redirect to login page
