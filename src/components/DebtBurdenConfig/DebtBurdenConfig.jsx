@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import {
   PlusIcon,
   TrashIcon,
-  CheckCircleIcon,
   PencilIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/20/solid";
-import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState";
@@ -16,19 +14,10 @@ import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import Table from "./Table";
-
-const empOptions = [
-  { value: "true", label: "true" },
-  { value: "false", label: "false" },
-];
-
-const operatorOptions = [
-  { value: "==", label: "==" },
-  { value: "<", label: "<" },
-  { value: ">", label: ">" },
-  { value: "<=", label: "<=" },
-  { value: ">=", label: ">=" },
-];
+import { operatorOptions, empOptions } from "../../data/OptionsData";
+import InputText from "../Common/InputText/InputText";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -36,8 +25,6 @@ const DebtBurdenConfig = () => {
   const [rules, setRules] = useState([]);
   const [debtBurdenData, setDebtBurdenData] = useState([]);
   const [operators, setOperators] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [convertedSelection, setConvertedSelection] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -46,6 +33,18 @@ const DebtBurdenConfig = () => {
   const [loading, setLoading] = useState(false);
   const [cloneDBC, setCloneDBC] = useState(false);
   const [cloneDBCName, setCloneDBCName] = useState("");
+
+  const [newForm, setNewForm] = useState({
+    ruleName: "0",
+    dbcTempId: dbcTempId,
+    employerRetired: "",
+    startNetIncomeBracketInSARule: "",
+    endNetIncomeBracketInSARule: "",
+    productLevel: "",
+    consumerDBR: "",
+    gdbrWithoutMTG: "",
+    gdbrWithMTG: "",
+  });
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -85,11 +84,13 @@ const DebtBurdenConfig = () => {
     setEditingIndex(editingIndex === index ? null : index);
   };
 
-  const handleSelectChange = (selectedOption) => {
-    setSelectedOption(selectedOption);
-    const isEmployerRetired =
-      selectedOption.value.toLowerCase() === "true" ? true : false;
-    setConvertedSelection(isEmployerRetired);
+  const handleNewFormChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    if (type === "checkbox") {
+      setNewForm((prevState) => ({ ...prevState, [name]: checked }));
+    } else {
+      setNewForm((prevState) => ({ ...prevState, [name]: value }));
+    }
   };
 
   useEffect(() => {
@@ -255,23 +256,7 @@ const DebtBurdenConfig = () => {
       duration: 1000,
       position: "bottom-center",
     });
-    const newRules = [
-      {
-        ruleName: "0",
-        dbcTempId: dbcTempId,
-        employerRetired: convertedSelection,
-        startNetIncomeBracketInSARule:
-          document.getElementById("startincome").value,
-        endNetIncomeBracketInSARule: document.getElementById("endincome").value,
-        productLevel: document.getElementById("productLevel").value,
-        consumerDBR: document.getElementById("consumerDBR").value,
-        gdbrWithoutMTG: document.getElementById("gdbrWOmtg").value,
-        gdbrWithMTG: document.getElementById("gdbrWmtg").value,
-      },
-    ];
-
     const authToken = localStorage.getItem("authToken");
-
     try {
       const response = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
@@ -281,7 +266,7 @@ const DebtBurdenConfig = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-          body: JSON.stringify({ operators, dbrRules: newRules }),
+          body: JSON.stringify({ operators, dbrRules: [newForm] }),
         }
       );
 
@@ -297,13 +282,6 @@ const DebtBurdenConfig = () => {
             message={"The item was added successfully"}
           />
         ));
-        document.getElementById("startincome").value = "";
-        document.getElementById("endincome").value = "";
-        document.getElementById("productLevel").value = "";
-        document.getElementById("consumerDBR").value = "";
-        document.getElementById("gdbrWOmtg").value = "";
-        document.getElementById("gdbrWmtg").value = "";
-        setSelectedOption(null);
       } else if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         navigate("/login"); // Redirect to login page
@@ -472,17 +450,14 @@ const DebtBurdenConfig = () => {
       {cloneDBC ? (
         <>
           <div>Create {name} clone</div>
-          <div className="my-5">
-            <input
-              type="text"
-              name="dbcName"
-              id="dbcName"
-              value={cloneDBCName}
+          <div className="my-5 w-1/4">
+            <InputText
+              inputName="dbcName"
+              inputValue={cloneDBCName}
               onChange={(e) => {
                 setCloneDBCName(e.target.value);
               }}
-              className="block w-1/4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Enter Name of Clone"
+              placeHolder="Enter Name of Clone"
             />
           </div>
           <div>
@@ -498,172 +473,108 @@ const DebtBurdenConfig = () => {
       ) : (
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
           <div className="flex items-center gap-2">
-            <div className="relative">
-              <label
-                htmlFor={`firstNetIncomeBracketInSARuleOperator`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                Rule 1
-              </label>
-              <Select
-                className="w-24"
-                value={operatorOptions.find(
-                  (option) =>
-                    option.value ===
-                    operators.firstNetIncomeBracketInSARuleOperator
-                )}
-                options={operatorOptions}
+            <div className="relative w-24">
+              <InputSelect
+                labelName={"Rule 1"}
+                inputValue={operators.firstNetIncomeBracketInSARuleOperator}
+                inputOptions={operatorOptions}
                 onChange={(selected) =>
                   setOperators({
                     ...operators,
                     firstNetIncomeBracketInSARuleOperator: selected.value,
                   })
                 }
-                name="firstNetIncomeBracketInSARuleOperator"
-                isSearchable={false}
+                inputName="firstNetIncomeBracketInSARuleOperator"
               />
             </div>
-            <div className="relative">
-              <label
-                htmlFor={`secondNetIncomeBracketInSARuleOperator`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                Rule 2
-              </label>
-              <Select
-                className="w-24"
-                value={operatorOptions.find(
-                  (option) =>
-                    option.value ===
-                    operators.secondNetIncomeBracketInSARuleOperator
-                )}
-                options={operatorOptions}
+            <div className="relative w-24">
+              <InputSelect
+                labelName="Rule 2"
+                inputValue={operators.secondNetIncomeBracketInSARuleOperator}
+                inputOptions={operatorOptions}
                 onChange={(selected) =>
                   setOperators({
                     ...operators,
                     secondNetIncomeBracketInSARuleOperator: selected.value,
                   })
                 }
-                name="secondNetIncomeBracketInSARuleOperator"
-                isSearchable={false}
+                inputName="secondNetIncomeBracketInSARuleOperator"
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-2 items-end mt-2 border-b pb-5 mb-2">
+          <div className="grid grid-cols-8 gap-2 items-end mt-2 border-b pb-5 mb-2">
             <div className="relative">
-              <label
-                htmlFor={`startincome`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                Start Net Income Bracket In SA Rule
-              </label>
-              <input
-                type="number"
-                name={`startincome`}
-                id={`startincome`}
-                className="block w-full sm:w-56 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="10000"
+              <InputNumber
+                labelName="Start Net"
+                inputName={`startNetIncomeBracketInSARule`}
+                inputValue={newForm.startNetIncomeBracketInSARule}
+                onChange={handleNewFormChange}
+                placeHolder="10000"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`endincome`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                End Net Income Bracket In SA Rule
-              </label>
-              <input
-                type="number"
-                name={`endincome`}
-                id={`endincome`}
-                className="block w-full sm:w-56 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="20000"
+              <InputNumber
+                labelName="End Net"
+                inputName={`endNetIncomeBracketInSARule`}
+                inputValue={newForm.endNetIncomeBracketInSARule}
+                onChange={handleNewFormChange}
+                placeHolder="20000"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`productLevel`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                Product Level
-              </label>
-              <input
-                type="text"
-                name={`productLevel`}
-                id={`productLevel`}
-                className="block w-full sm:w-28 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="33%"
+              <InputText
+                labelName="Product Level"
+                inputName={`productLevel`}
+                inputValue={newForm.productLevel}
+                onChange={handleNewFormChange}
+                placeHolder="33%"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`consumerDBR`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                Consumer DBR
-              </label>
-              <input
-                type="text"
-                name={`consumerDBR`}
-                id={`consumerDBR`}
-                className="block w-full sm:w-28 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="65%"
+              <InputText
+                labelName="Consumer DBR"
+                inputName={`consumerDBR`}
+                inputValue={newForm.consumerDBR}
+                onChange={handleNewFormChange}
+                placeHolder="65%"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`gdbrWOmtg`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                GDBR (Without MTG)
-              </label>
-              <input
-                type="text"
-                name={`gdbrWOmtg`}
-                id={`gdbrWOmtg`}
-                className="block w-full sm:w-40 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="65%"
-              />
-            </div>
-            <div className="relative w-full sm:w-auto">
-              <label
-                htmlFor={`empRtr`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                Employer Retired
-              </label>
-              <Select
-                className="w-full sm:w-28"
-                id={`empRtr`}
-                name={`empRtr`}
-                value={selectedOption}
-                onChange={handleSelectChange}
-                options={empOptions}
-                isSearchable={false}
+              <InputText
+                labelName="GDBR (Without MTG)"
+                inputName={`gdbrWithoutMTG`}
+                inputValue={newForm.gdbrWithoutMTG}
+                onChange={handleNewFormChange}
+                placeHolder="65%"
               />
             </div>
             <div className="relative">
-              <label
-                htmlFor={`gdbrWmtg`}
-                className="bg-white px-1 text-xs text-gray-900"
-              >
-                GDBR (including MTG)
-              </label>
-              <input
-                type="text"
-                name={`gdbrWmtg`}
-                id={`gdbrWmtg`}
-                className="block w-full sm:w-40 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="65%"
+              <InputSelect
+                labelName="Employer Retired"
+                inputName={`employerRetired`}
+                inputValue={newForm.employerRetired}
+                onChange={handleNewFormChange}
+                inputOptions={empOptions}
               />
             </div>
-            <button
-              type="button"
-              onClick={handleAddRule}
-              className="mt-4 sm:mt-0 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
+            <div className="relative">
+              <InputText
+                labelName="GDBR (including MTG)"
+                inputName={`gdbrWithMTG`}
+                inputValue={newForm.gdbrWithMTG}
+                onChange={handleNewFormChange}
+                placeHolder="65%"
+              />
+            </div>
+            <div className="w-8">
+              <button
+                type="button"
+                onClick={handleAddRule}
+                className="mt-4 sm:mt-0 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <PlusIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           <div>

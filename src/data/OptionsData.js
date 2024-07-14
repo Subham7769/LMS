@@ -57,3 +57,16 @@ export const options = [
   { value: "MONTHLY", label: "MONTHLY" },
   { value: "YEARLY", label: "YEARLY" },
 ];
+
+export const empOptions = [
+  { value: "true", label: "true" },
+  { value: "false", label: "false" },
+];
+
+export const operatorOptions = [
+  { value: "==", label: "==" },
+  { value: "<", label: "<" },
+  { value: ">", label: ">" },
+  { value: "<=", label: "<=" },
+  { value: ">=", label: ">=" },
+];

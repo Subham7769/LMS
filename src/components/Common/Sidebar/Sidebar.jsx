@@ -12,7 +12,9 @@ import useCreditScoreEq from "../../../utils/useCreditScoreEq";
 import useRulePolicy from "../../../utils/useRulePolicy";
 
 const SideBar = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(
+    JSON.parse(localStorage.getItem("sidebarOpen")) ?? true
+  );
   const [Menus, setMenus] = useState(MenusInitial);
   const RACDataInfo = useRACInfo();
   const ProjectDataInfo = useAllProjectInfo();
@@ -21,6 +23,11 @@ const SideBar = () => {
   const BEData = useBEInfo();
   const CreditScoreEqInfo = useCreditScoreEq();
   const RulePolicyInfo = useRulePolicy();
+
+  const [submenuStates, setSubmenuStates] = useState(
+    JSON.parse(localStorage.getItem("submenuStates")) ??
+      Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
+  );
 
   useEffect(() => {
     setMenus((prevMenus) =>
@@ -59,9 +66,13 @@ const SideBar = () => {
     RulePolicyInfo,
   ]);
 
-  const [submenuStates, setSubmenuStates] = useState(
-    Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
-  );
+  useEffect(() => {
+    localStorage.setItem("sidebarOpen", JSON.stringify(open));
+  }, [open]);
+
+  useEffect(() => {
+    localStorage.setItem("submenuStates", JSON.stringify(submenuStates));
+  }, [submenuStates]);
 
   const toggleSidebar = () => setOpen(!open);
 
