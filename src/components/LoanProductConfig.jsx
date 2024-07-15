@@ -87,8 +87,10 @@ const LoanProductConfig = () => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
+      console.log(formData);
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
+      console.log(formData);
     }
   };
 
@@ -228,15 +230,16 @@ const LoanProductConfig = () => {
   ]);
 
   const handleAddFields = () => {
-    setFormData({
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       interestEligibleTenure: [
+        ...prevFormData.interestEligibleTenure,
         {
           interestRate: newInterest,
           tenure: newTenure,
         },
       ],
-      ...formData.interestEligibleTenure,
-    });
+    }));
     setNewTenure("");
     setNewInterest("");
     toast.custom((t) => (
@@ -285,10 +288,10 @@ const LoanProductConfig = () => {
       creditScoreEqTempId: formData.creditScoreEqTempId,
       creditScoreEtTempId: formData.creditScoreEtTempId,
       dbcTempId: formData.dbcTempId,
-      eligibleCustomerType: formData.eligibleCustomerType.value,
+      eligibleCustomerType: formData.eligibleCustomerType,
       fee: formData.fee,
       interestEligibleTenure: formData.interestEligibleTenure,
-      interestPeriodType: formData.interestPeriodType.value,
+      interestPeriodType: formData.interestPeriodType,
       isDisableRac: formData.disableRac,
       managementFeeVat: formData.managementFeeVat,
       numberOfEmisForEarlySettlement: formData.numberOfEmisForEarlySettlement,
