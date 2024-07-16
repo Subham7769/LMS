@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { RowChanged } from "../Toasts";
 import LoadingState from "../LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 
 const options = [
   { value: "==", label: "==" },
@@ -20,202 +21,142 @@ const CreditScore = () => {
   const navigate = useNavigate();
   const [creditScoreData, setCreditScoreData] = useState([]);
   const [formData, setFormData] = useState({
-    aWeightage: "",
-    bWeightage: "",
-    cWeightage: "",
-    dWeightage: "",
-    eWeightage: "",
-    fWeightage: "",
+    aweightage: "",
+    bweightage: "",
+    cweightage: "",
+    dweightage: "",
+    eweightage: "",
+    fweightage: "",
+    residentsCreditScore: "",
+    expatriatesCreditScore: "",
+    rentStatusScore: "",
+    ownStatusScore: "",
+    marriedStatusScore: "",
+    singleStatusScore: "",
+    divorcedStatusScore: "",
+    widowedStatusScore: "",
+    separatedStatusScore: "",
+    unknownStatusScore: "",
+    dependentsRules: {
+      operators: {
+        firstDependentsOperator: "",
+        secondDependentsOperator: "",
+      },
+      rules: [
+        {
+          ruleName: "1",
+          fieldType: "Employer",
+          creditScoreEqTempId: "",
+          firstDependent: "",
+          secondDependent: "",
+          value: "",
+        },
+        {
+          ruleName: "2",
+          fieldType: "Employer",
+          creditScoreEqTempId: "",
+          firstDependent: "",
+          secondDependent: "",
+          value: "",
+        },
+        {
+          ruleName: "3",
+          fieldType: "Employer",
+          creditScoreEqTempId: "",
+          firstDependent: "",
+          secondDependent: "",
+          value: "",
+        },
+      ],
+    },
   });
-  const [aWeightage, setaWeightage] = useState("");
-  const [bWeightage, setbWeightage] = useState("");
-  const [cWeightage, setcWeightage] = useState("");
-  const [dWeightage, setdWeightage] = useState("");
-  const [eWeightage, seteWeightage] = useState("");
-  const [fWeightage, setfWeightage] = useState("");
-  const [residentsCreditScore, setresidentsCreditScore] = useState("");
-  const [expatriatesCreditScore, setexpatriatesCreditScore] = useState("");
-  const [rentStatusScore, setrentStatusScore] = useState("");
-  const [ownStatusScore, setownStatusScore] = useState("");
-  const [marriedStatusScore, setmarriedStatusScore] = useState("");
-  const [singleStatusScore, setsingleStatusScore] = useState("");
-  const [divorcedStatusScore, setdivorcedStatusScore] = useState("");
-  const [widowedStatusScore, setwidowedStatusScore] = useState("");
-  const [separatedStatusScore, setseparatedStatusScore] = useState("");
-  const [unknownStatusScore, setunknownStatusScore] = useState("");
-  const [firstDependent, setfirstDependent] = useState("");
-  const [secondDependent, setsecondDependent] = useState("");
-  const [thirdDependent, setthirdDependent] = useState("");
-  const [fourthDependent, setfourthDependent] = useState("");
-  const [fifthDependent, setfifthDependent] = useState("");
-  const [value, setvalue] = useState("");
-  const [value1, setvalue1] = useState("");
-  const [value2, setvalue2] = useState("");
-  const [firstDependentsOperator, setfirstDependentsOperator] = useState(
-    options[3]
-  );
-  const [secondDependentsOperator, setsecondDependentsOperator] = useState(
-    options[3]
-  );
-  const [ruleName, setruleName] = useState("0");
-  const [ruleName1, setruleName1] = useState("1");
-  const [ruleName2, setruleName2] = useState("2");
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    const { name, value, id } = e.target;
+
+    setFormData((prevState) => {
+      const isOperator =
+        prevState.dependentsRules.operators.hasOwnProperty(name);
+      const isRuleField = prevState.dependentsRules.rules.some(
+        (rule) => rule.ruleName === id && rule.hasOwnProperty(name)
+      );
+
+      if (isOperator) {
+        // Update an operator
+        return {
+          ...prevState,
+          dependentsRules: {
+            ...prevState.dependentsRules,
+            operators: {
+              ...prevState.dependentsRules.operators,
+              [name]: value,
+            },
+          },
+        };
+      } else if (isRuleField) {
+        // Update a rule
+        return {
+          ...prevState,
+          dependentsRules: {
+            ...prevState.dependentsRules,
+            rules: prevState.dependentsRules.rules.map((rule) =>
+              rule.ruleName === id ? { ...rule, [name]: value } : rule
+            ),
+          },
+        };
+      } else {
+        // Update a field directly in formData
+        return {
+          ...prevState,
+          [name]: value,
+        };
+      }
+    });
   };
 
+  console.log(formData);
+
   useEffect(() => {
+    async function getProductInfo() {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("authToken");
+        const data = await fetch(
+          "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
+            creditScoreId,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Check for token expiration or invalid token
+        if (data.status === 401 || data.status === 403) {
+          localStorage.removeItem("authToken"); // Clear the token
+          navigate("/login"); // Redirect to login page
+          return; // Stop further execution
+        } else if (data.ok) {
+          setLoading(false);
+        }
+        const creditScoreDetails = await data.json();
+        setCreditScoreData(creditScoreDetails);
+        setFormData((prevState) => ({ ...prevState, ...creditScoreDetails }));
+        // console.log(formData);
+        //   window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     getProductInfo();
   }, [creditScoreId]);
 
-  async function getProductInfo() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
-          creditScoreId,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (data.ok) {
-        setLoading(false);
-      }
-      const creditScoreDetails = await data.json();
-      // console.log(racDetails);
-      setCreditScoreData(creditScoreDetails);
-      //   window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  useEffect(() => {
-    if (creditScoreData.length === 0) {
-      console.log("Fetching data");
-    } else {
-      console.log(creditScoreData);
-      setaWeightage(creditScoreData.aweightage);
-      setbWeightage(creditScoreData.bweightage);
-      setcWeightage(creditScoreData.cweightage);
-      setdWeightage(creditScoreData.dweightage);
-      seteWeightage(creditScoreData.eweightage);
-      setfWeightage(creditScoreData.fweightage);
-      setresidentsCreditScore(creditScoreData.residentsCreditScore);
-      setexpatriatesCreditScore(creditScoreData.expatriatesCreditScore);
-      setrentStatusScore(creditScoreData.rentStatusScore);
-      setownStatusScore(creditScoreData.ownStatusScore);
-      setmarriedStatusScore(creditScoreData.marriedStatusScore);
-      setsingleStatusScore(creditScoreData.singleStatusScore);
-      setdivorcedStatusScore(creditScoreData.divorcedStatusScore);
-      setwidowedStatusScore(creditScoreData.widowedStatusScore);
-      setseparatedStatusScore(creditScoreData.separatedStatusScore);
-      setunknownStatusScore(creditScoreData.unknownStatusScore);
-      setfirstDependent(
-        creditScoreData.dependentsRules.rules[0].firstDependent
-      );
-      setsecondDependent(
-        creditScoreData.dependentsRules.rules[0].secondDependent
-      );
-      setthirdDependent(
-        creditScoreData.dependentsRules.rules[1].firstDependent
-      );
-      setfourthDependent(
-        creditScoreData.dependentsRules.rules[1].secondDependent
-      );
-      setfifthDependent(
-        creditScoreData.dependentsRules.rules[2].firstDependent
-      );
-      setvalue(creditScoreData.dependentsRules.rules[0].value);
-      setvalue1(creditScoreData.dependentsRules.rules[1].value);
-      setvalue2(creditScoreData.dependentsRules.rules[2].value);
-      setruleName(creditScoreData.dependentsRules.rules[0].ruleName);
-      setruleName1(creditScoreData.dependentsRules.rules[1].ruleName);
-      setruleName2(creditScoreData.dependentsRules.rules[2].ruleName);
-      const formattedfirstDependentsOperator = {
-        value:
-          creditScoreData.dependentsRules.operators.firstDependentsOperator,
-        label:
-          creditScoreData.dependentsRules.operators.firstDependentsOperator,
-      };
-      const formattedsecondDependentsOperator = {
-        value:
-          creditScoreData.dependentsRules.operators.secondDependentsOperator,
-        label:
-          creditScoreData.dependentsRules.operators.secondDependentsOperator,
-      };
-      setfirstDependentsOperator(formattedfirstDependentsOperator);
-      setsecondDependentsOperator(formattedsecondDependentsOperator);
-    }
-  }, [creditScoreData]);
-
   const handleAddFields = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-
-    // Define the data to be sent with the POST request
-    const postData = {
-      aweightage: aWeightage,
-      bweightage: bWeightage,
-      cweightage: cWeightage,
-      dweightage: dWeightage,
-      eweightage: eWeightage,
-      fweightage: fWeightage,
-      residentsCreditScore: residentsCreditScore,
-      expatriatesCreditScore: expatriatesCreditScore,
-      marriedStatusScore: marriedStatusScore,
-      singleStatusScore: singleStatusScore,
-      divorcedStatusScore: divorcedStatusScore,
-      widowedStatusScore: widowedStatusScore,
-      separatedStatusScore: separatedStatusScore,
-      unknownStatusScore: unknownStatusScore,
-      rentStatusScore: rentStatusScore,
-      ownStatusScore: ownStatusScore,
-      dependentsRules: {
-        operators: {
-          firstDependentsOperator: firstDependentsOperator.value,
-          secondDependentsOperator: secondDependentsOperator.value,
-        },
-        rules: [
-          {
-            ruleName: ruleName,
-            fieldType: "Employer",
-            creditScoreEqTempId: creditScoreId,
-            firstDependent: firstDependent,
-            secondDependent: secondDependent,
-            value: value,
-          },
-          {
-            ruleName: ruleName1,
-            fieldType: "Employer",
-            creditScoreEqTempId: creditScoreId,
-            firstDependent: thirdDependent,
-            secondDependent: fourthDependent,
-            value: value1,
-          },
-          {
-            ruleName: ruleName2,
-            fieldType: "Employer",
-            creditScoreEqTempId: creditScoreId,
-            firstDependent: fifthDependent,
-            secondDependent: " ",
-            value: value2,
-          },
-        ],
-      },
-    };
-
     try {
       // POST request to add new fields
       const postResponse = await fetch(
@@ -227,7 +168,7 @@ const CreditScore = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(postData),
+          body: JSON.stringify(formData),
         }
       );
 
@@ -273,101 +214,53 @@ const CreditScore = () => {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <input
-                    type="number"
-                    name="aWeightage"
-                    value={aWeightage}
-                    onChange={(e) => setaWeightage(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
-                  />
-                  {/* <InputNumber
-                    inputName={"aWeightage"}
-                    inputValue={formData.aWeightage}
+                <td className="whitespace-nowrap py-4 px-5 text-gray-900">
+                  <InputNumber
+                    inputName={"aweightage"}
+                    inputValue={formData.aweightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  /> */}
+                  />
                 </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="bWeightage"
-                    value={bWeightage}
-                    onChange={(e) => setbWeightage(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                  {/* <InputNumber
-                    inputName={"bWeightage"}
-                    inputValue={formData.bWeightage}
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"bweightage"}
+                    inputValue={formData.bweightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  /> */}
+                  />
                 </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="cWeightage"
-                    value={cWeightage}
-                    onChange={(e) => setcWeightage(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                  {/* <InputNumber
-                    inputName={"cWeightage"}
-                    inputValue={formData.cWeightage}
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"cweightage"}
+                    inputValue={formData.cweightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  /> */}
+                  />
                 </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="dWeightage"
-                    value={dWeightage}
-                    onChange={(e) => setdWeightage(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                  {/* <InputNumber
-                    inputName={"dWeightage"}
-                    inputValue={formData.dWeightage}
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"dweightage"}
+                    inputValue={formData.dweightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  /> */}
+                  />
                 </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="eWeightage"
-                    value={eWeightage}
-                    onChange={(e) => seteWeightage(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                  {/* <InputNumber
-                    inputName={"eWeightage"}
-                    inputValue={formData.eWeightage}
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"eweightage"}
+                    inputValue={formData.eweightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  /> */}
+                  />
                 </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="fWeightage"
-                    value={fWeightage}
-                    onChange={(e) => setfWeightage(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
-                  />
-                  {/* <InputNumber
-                    inputName={"fWeightage"}
-                    inputValue={formData.fWeightage}
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"fweightage"}
+                    inputValue={formData.fweightage}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                  /> */}
+                  />
                 </td>
               </tr>
             </tbody>
@@ -391,22 +284,19 @@ const CreditScore = () => {
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className="divide-x divide-gray-200 text-center">
                 <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <input
-                    type="number"
-                    name="residentsCreditScore"
-                    value={residentsCreditScore}
-                    onChange={(e) => setresidentsCreditScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"residentsCreditScore"}
+                    inputValue={formData.residentsCreditScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={expatriatesCreditScore}
-                    onChange={(e) => setexpatriatesCreditScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"expatriatesCreditScore"}
+                    inputValue={formData.expatriatesCreditScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
               </tr>
@@ -430,21 +320,19 @@ const CreditScore = () => {
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className="divide-x divide-gray-200 text-center">
                 <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <input
-                    type="number"
-                    value={rentStatusScore}
-                    onChange={(e) => setrentStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"rentStatusScore"}
+                    inputValue={formData.rentStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={ownStatusScore}
-                    onChange={(e) => setownStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"ownStatusScore"}
+                    inputValue={formData.ownStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
               </tr>
@@ -481,57 +369,51 @@ const CreditScore = () => {
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className="divide-x divide-gray-200 text-center">
                 <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <input
-                    type="number"
-                    value={marriedStatusScore}
-                    onChange={(e) => setmarriedStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"marriedStatusScore"}
+                    inputValue={formData.marriedStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={singleStatusScore}
-                    onChange={(e) => setsingleStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"singleStatusScore"}
+                    inputValue={formData.singleStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={divorcedStatusScore}
-                    onChange={(e) => setdivorcedStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"divorcedStatusScore"}
+                    inputValue={formData.divorcedStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={widowedStatusScore}
-                    onChange={(e) => setwidowedStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"widowedStatusScore"}
+                    inputValue={formData.widowedStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={separatedStatusScore}
-                    onChange={(e) => setseparatedStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"separatedStatusScore"}
+                    inputValue={formData.separatedStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    value={unknownStatusScore}
-                    onChange={(e) => setunknownStatusScore(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
+                  <InputNumber
+                    inputName={"unknownStatusScore"}
+                    inputValue={formData.unknownStatusScore}
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
                   />
                 </td>
               </tr>
@@ -543,116 +425,101 @@ const CreditScore = () => {
         <h2 className="text-xl mb-5 text-center">Dependents Rules</h2>
         <div className="flex justify-center gap-12">
           <div>
-            <div className="flex gap-4 mb-3">
-              <Select
-                className="min-w-20"
-                defaultValue={options[3]}
-                options={options}
-                value={firstDependentsOperator}
-                isSearchable={false}
-                onChange={(firstDependentsOperator) => {
-                  setfirstDependentsOperator(firstDependentsOperator);
-                }}
-              />
-              <input
-                type="number"
-                name="firstDependent"
-                value={firstDependent}
-                onChange={(e) => {
-                  setfirstDependent(e.target.value);
-                }}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="4"
+            <div className="mb-3">
+              <SelectAndNumber
+                inputSelectName={"firstDependentsOperator"}
+                inputSelectOptions={options}
+                inputSelectValue={
+                  formData?.dependentsRules?.operators?.firstDependentsOperator
+                }
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"firstDependent"}
+                inputNumberid={formData?.dependentsRules?.rules[0]?.ruleName}
+                inputNumberValue={
+                  formData.dependentsRules?.rules[0]?.firstDependent
+                }
+                onChangeNumber={handleChange}
+                placeHolderNumber={"4"}
               />
             </div>
             <div className="flex gap-4 mb-3">
-              <Select
-                className="min-w-20"
-                defaultValue={options[3]}
-                options={options}
-                value={firstDependentsOperator}
-                isSearchable={false}
-                onChange={(firstDependentsOperator) => {
-                  setfirstDependentsOperator(firstDependentsOperator);
-                }}
-              />
-              <input
-                type="number"
-                name="firstDependent"
-                value={thirdDependent}
-                onChange={(e) => {
-                  setthirdDependent(e.target.value);
-                }}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="4"
+              <SelectAndNumber
+                inputSelectName={"firstDependentsOperator"}
+                inputSelectOptions={options}
+                inputSelectValue={
+                  formData?.dependentsRules?.operators?.firstDependentsOperator
+                }
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"firstDependent"}
+                inputNumberValue={
+                  formData.dependentsRules?.rules[1]?.firstDependent
+                }
+                inputNumberid={formData?.dependentsRules?.rules[1]?.ruleName}
+                onChangeNumber={handleChange}
+                placeHolderNumber={"4"}
               />
             </div>
             <div className="flex gap-4 mb-3">
-              <Select
-                className="min-w-20"
-                defaultValue={options[3]}
-                options={options}
-                value={firstDependentsOperator}
-                isSearchable={false}
-                onChange={(firstDependentsOperator) => {
-                  setfirstDependentsOperator(firstDependentsOperator);
-                }}
-              />
-              <input
-                type="number"
-                name="firstDependent"
-                value={fifthDependent}
-                onChange={(e) => {
-                  setfifthDependent(e.target.value);
-                }}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="4"
+              <SelectAndNumber
+                inputSelectName={"firstDependentsOperator"}
+                inputSelectOptions={options}
+                inputSelectValue={
+                  formData?.dependentsRules?.operators?.firstDependentsOperator
+                }
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"firstDependent"}
+                inputNumberValue={
+                  formData.dependentsRules?.rules[2]?.firstDependent
+                }
+                inputNumberid={formData?.dependentsRules?.rules[2]?.ruleName}
+                onChangeNumber={handleChange}
+                placeHolderNumber={"4"}
               />
             </div>
           </div>
           <div>
             <div className="flex gap-4 mb-3">
-              <Select
-                className="min-w-20"
-                defaultValue={options[3]}
-                options={options}
-                value={secondDependentsOperator}
-                isSearchable={false}
-                onChange={(secondDependentsOperator) => {
-                  setsecondDependentsOperator(secondDependentsOperator);
-                }}
-              />
-              <input
-                type="number"
-                name="secondDependent"
-                value={secondDependent}
-                onChange={(e) => {
-                  setsecondDependent(e.target.value);
-                }}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="4"
+              <SelectAndNumber
+                inputSelectName={"secondDependentsOperator"}
+                inputSelectOptions={options}
+                inputSelectValue={
+                  formData?.dependentsRules?.operators?.secondDependentsOperator
+                }
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"secondDependent"}
+                inputNumberValue={
+                  formData.dependentsRules?.rules[0]?.secondDependent
+                }
+                inputNumberid={formData?.dependentsRules?.rules[0]?.ruleName}
+                onChangeNumber={handleChange}
+                placeHolderNumber={"4"}
               />
             </div>
             <div className="flex gap-4 mb-3">
-              <Select
-                className="min-w-20"
-                defaultValue={options[3]}
-                options={options}
-                value={secondDependentsOperator}
-                isSearchable={false}
-                onChange={(secondDependentsOperator) => {
-                  setsecondDependentsOperator(secondDependentsOperator);
-                }}
-              />
-              <input
-                type="number"
-                name="secondDependent"
-                value={fourthDependent}
-                onChange={(e) => {
-                  setfourthDependent(e.target.value);
-                }}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="4"
+              <SelectAndNumber
+                inputSelectName={"secondDependentsOperator"}
+                inputSelectOptions={options}
+                inputSelectValue={
+                  formData?.dependentsRules?.operators?.secondDependentsOperator
+                }
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"secondDependent"}
+                inputNumberValue={
+                  formData.dependentsRules?.rules[1]?.secondDependent
+                }
+                inputNumberid={formData?.dependentsRules?.rules[1]?.ruleName}
+                onChangeNumber={handleChange}
+                placeHolderNumber={"4"}
               />
             </div>
           </div>
@@ -660,45 +527,36 @@ const CreditScore = () => {
             <div className="flex items-center gap-4 mb-3">
               <div>Value: </div>
               <div>
-                <input
-                  type="number"
-                  name="value"
-                  value={value}
-                  onChange={(e) => {
-                    setvalue(e.target.value);
-                  }}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="4000"
+                <InputNumber
+                  inputName={"value"}
+                  inputId={formData?.dependentsRules?.rules[0]?.ruleName}
+                  inputValue={formData?.dependentsRules?.rules[0]?.value}
+                  onChange={handleChange}
+                  placeHolder={"0.54"}
                 />
               </div>
             </div>
             <div className="flex items-center gap-4 mb-3">
               <div>Value: </div>
               <div>
-                <input
-                  type="number"
-                  name="value"
-                  value={value1}
-                  onChange={(e) => {
-                    setvalue1(e.target.value);
-                  }}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="4000"
+                <InputNumber
+                  inputName={"value"}
+                  inputId={formData?.dependentsRules?.rules[1]?.ruleName}
+                  inputValue={formData?.dependentsRules?.rules[1]?.value}
+                  onChange={handleChange}
+                  placeHolder={"0.54"}
                 />
               </div>
             </div>
             <div className="flex items-center gap-4 mb-3">
               <div>Value: </div>
               <div>
-                <input
-                  type="number"
-                  name="value"
-                  value={value2}
-                  onChange={(e) => {
-                    setvalue2(e.target.value);
-                  }}
-                  className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="4000"
+                <InputNumber
+                  inputName={"value"}
+                  inputId={formData?.dependentsRules?.rules[2]?.ruleName}
+                  inputValue={formData?.dependentsRules?.rules[2]?.value}
+                  onChange={handleChange}
+                  placeHolder={"0.54"}
                 />
               </div>
             </div>
