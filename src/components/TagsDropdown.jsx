@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import InputSelect from "./Common/InputSelect/InputSelect";
 
 const animatedComponents = makeAnimated();
 
@@ -9,16 +9,16 @@ const TagsDropdown = ({ options }) => {
   const handleChange = (selectedOption) => {
     setSelctedOption(selectedOption);
   };
-  // console.log(selectedOption);
   return (
-    <Select
-      className="w-[350px]"
-      options={options}
-      components={animatedComponents}
-      value={selectedOption}
-      onChange={handleChange}
-      isMulti={true}
-    />
+    <div className="w-[350px]">
+      <InputSelect
+        inputOptions={options}
+        components={animatedComponents}
+        inputValue={selectedOption}
+        onChange={handleChange}
+        isMulti={true}
+      />
+    </div>
   );
 };
 

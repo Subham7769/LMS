@@ -70,3 +70,14 @@ export const operatorOptions = [
   { value: "<=", label: "<=" },
   { value: ">=", label: ">=" },
 ];
+
+export const maritalOptions = [
+  { value: "Single", label: "Single" },
+  { value: "Married", label: "Married" },
+  { value: "Divorced", label: "Divorced" },
+];
+
+export const booleanOptions = [
+  { value: true, label: "true" },
+  { value: false, label: "false" },
+];
