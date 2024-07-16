@@ -1,3 +1,8 @@
+import {
+  CheckCircleIcon,
+} from "@heroicons/react/20/solid";
+import Select from "react-select";
+
 export default function Table({
   informUser,
   informUser1,

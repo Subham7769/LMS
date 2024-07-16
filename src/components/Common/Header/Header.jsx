@@ -9,7 +9,7 @@ const Header = () => {
   const userNavigation = useMemo(
     () => [
       { name: "Your Profile", href: "#" },
-      { name: "Settings", href: "#" },
+      { name: "Settings", href: "/settings" },
       { name: "Sign out", href: "/login", action: () => localStorage.clear() },
     ],
     []

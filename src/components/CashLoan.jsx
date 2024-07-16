@@ -58,8 +58,13 @@ const CashLoan = () => {
   return (
     <div className="mt-4">
       <div className="flex justify-between items-baseline">
-        <h2 className="mb-5">
-          Name: <b>{productType.replace(/_/g, " ")}</b>
+        <h2 className="mb-4">
+          <b
+            title={productType.replace(/_/g, " ")}
+            className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+          >
+            {productType.replace(/_/g, " ")}
+          </b>
         </h2>
         <button
           onClick={() => handleDelete(loanProId)}

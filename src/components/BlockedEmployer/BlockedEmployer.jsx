@@ -5,6 +5,7 @@ import { Failed, Passed } from "../Toasts";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
+import InputText from "../Common/InputText/InputText";
 
 const BlockedEmployer = () => {
   const [name, setName] = useState("");
@@ -126,7 +127,6 @@ const BlockedEmployer = () => {
             message={"The name was updated successfully"}
           />
         ));
-        // fetchName();
         window.location.reload();
       }
     } catch (error) {
@@ -156,11 +156,8 @@ const BlockedEmployer = () => {
         // Refresh the page after navigation
         window.location.reload();
       }
-
-      // After deletion, fetch the updated data list
     } catch (error) {
       console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
     }
   };
 
@@ -279,17 +276,14 @@ const BlockedEmployer = () => {
       {cloneBE ? (
         <>
           <div>Create {itemName} clone</div>
-          <div className="my-5">
-            <input
-              type="text"
-              name="dbcName"
-              id="dbcName"
-              value={cloneBEName}
+          <div className="my-5 w-1/4">
+            <InputText
+              inputName="dbcName"
+              inputValue={cloneBEName}
               onChange={(e) => {
                 setCloneBEName(e.target.value);
               }}
-              className="block w-1/4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Enter Name of Clone"
+              placeHolder="Enter Name of Clone"
             />
           </div>
           <div>
@@ -306,17 +300,13 @@ const BlockedEmployer = () => {
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
           <div className="flex items-center justify-between "></div>
           <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
-            <div className="relative">
-              <label htmlFor="name" className=" px-1 text-xs text-gray-900">
-                Add Blocked Employer
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={name}
+            <div className="relative w-1/4">
+              <InputText
+                labelName="Add Blocked Employer"
+                inputName="name"
+                inputValue={name}
                 onChange={(e) => setName(e.target.value)}
-                className="block w-[450px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Blocked Employer"
+                placeHolder="Blocked Employer"
               />
             </div>
             <button
@@ -330,12 +320,8 @@ const BlockedEmployer = () => {
           {data.map((item, index) => {
             return item.blockEmployersName.map((name, i) => (
               <div key={`${index}-${i}`} className="flex gap-5 items-end mt-5">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={name}
-                    className="block w-[450px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
+                <div className="relative w-1/4">
+                  <InputText inputValue={name} />
                 </div>
                 <button
                   type="button"
