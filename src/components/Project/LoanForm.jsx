@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
+import { Failed, Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState";
 import {
   countryOptions,
@@ -24,6 +24,7 @@ const LoanForm = () => {
   const [ProjectData, setProjectData] = useState([]);
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
+  const [editing, setEditing] = useState(false);
   const { projectId } = useParams();
   const navigate = useNavigate();
   const formattedDate = (date) => {
@@ -392,6 +393,18 @@ const LoanForm = () => {
     ));
   };
 
+  const notifyUser = () => {
+    setEditing(false);
+    toast.custom((t) => (
+      <Warning
+        t={t}
+        toast={toast}
+        title={"Not Updated Yet"}
+        message={"To confirm the name change click Update button"}
+      />
+    ));
+  };
+
   if (ProjectData.length === 0) {
     return <LoadingState />;
   }
@@ -399,20 +412,43 @@ const LoanForm = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <form className="">
-        <h2 className="mb-4 pl-4 text-xl hover:bg-gray-200 transition duration-500 p-2 rounded-md cursor-pointer">
-          <b>{ProjectData.name}</b>
-        </h2>
+        <div className="mb-4">
+          {editing ? (
+            <div className="flex items-center space-x-2">
+              <div className="min-w-40 max-w-60">
+                <InputText
+                  inputName={"name"}
+                  inputValue={formData.name}
+                  onChange={handleChange}
+                  placeHolder={"Project Name"}
+                />
+              </div>
+              <button
+                onClick={notifyUser}
+                className="text-green-600 hover:text-green-800"
+              >
+                <CheckCircleIcon className="h-6 w-6" />
+              </button>
+              <button
+                onClick={() => setEditing(false)}
+                className="text-red-600 hover:text-red-800"
+              >
+                <XCircleIcon className="h-6 w-6" />
+              </button>
+            </div>
+          ) : (
+            <h2 onClick={() => setEditing(true)}>
+              <b
+                title="Edit Name"
+                className="text-xl min-w-40 max-w-60 font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+              >
+                {formData.name}
+              </b>
+            </h2>
+          )}
+        </div>
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-            {/* Name */}
-            <InputText
-              labelName={"Name"}
-              inputName={"name"}
-              inputValue={formData.name}
-              onChange={handleChange}
-              placeHolder={"Project Name"}
-            />
-
             {/* Description */}
             <InputText
               labelName={"Description"}
