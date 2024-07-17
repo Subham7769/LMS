@@ -1,35 +1,75 @@
-import React from 'react';
-import { PlusIcon, XCircleIcon } from '@heroicons/react/20/solid';
-import Button from '../Common/Button/Button';
-import InputSelect from '../Common/InputSelect/InputSelect';
-import InputNumber from '../Common/InputNumber/InputNumber';
+import React from "react";
+import { PlusIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import Button from "../Common/Button/Button";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import InputText from "../Common/InputText/InputText";
 
-const TagInput = ({ formData, handleChange, addTag, deleteTag, productTypeOptions }) => (
+const TagInput = ({
+  inputSelectName,
+  inputTextName,
+  inputNumberName,
+  inputSelectLabel,
+  inputTextLabel,
+  inputNumberLabel,
+  inputTextPlaceholder,
+  formData,
+  handleChange,
+  addTag,
+  deleteTag,
+  productTypeOptions,
+}) => (
   <>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <InputSelect
-        labelName={"Add Products"}
-        inputName={"product"}
-        inputOptions={productTypeOptions}
-        inputValue={formData.selectedOption}
-        onChange={handleChange}
-      />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
+      {inputSelectName && (
+        <InputSelect
+          labelName={inputSelectLabel}
+          inputName={inputSelectName}
+          inputOptions={productTypeOptions}
+          inputValue={formData[inputSelectName]}
+          onChange={handleChange}
+        />
+      )}
+      {inputTextName && (
+        <InputText
+          labelName={inputTextLabel}
+          inputName={inputTextName}
+          inputValue={formData[inputTextName]}
+          onChange={handleChange}
+          placeHolder={inputTextPlaceholder}
+        />
+      )}
       <InputNumber
-        labelName={"Max Product Limit"}
-        inputName={"limit"}
-        inputValue={formData.limit}
+        labelName={inputNumberLabel}
+        inputName={inputNumberName}
+        inputValue={formData[inputNumberName]}
         onChange={handleChange}
         placeHolder={"2"}
       />
-      <div className="flex justify-center md:justify-start items-center">
+      <div className="">
         <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
       </div>
     </div>
-    <div className="flex flex-wrap">
+    <div
+      className={`grid grid-cols-2 ${
+        inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
+      } md:grid-cols-3 gap-3 mt-3`}
+    >
       {formData.tags.map((tag, index) => (
-        <div key={index} className="bg-yellow-400 m-2 p-2 rounded-md flex items-center gap-2">
-          <button className="mr-1 cursor-auto">{tag.product} | {tag.limit}</button>
-          <XCircleIcon onClick={() => deleteTag(tag)} className="block h-5 w-5 cursor-pointer" aria-hidden="true" />
+        <div
+          key={index}
+          className="bg-yellow-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto"
+        >
+          <div>{tag[inputSelectName ? inputSelectName : inputTextName]}</div>
+          <div>|</div>
+          <div>{tag[inputNumberName]}</div>
+          <div>
+            <XCircleIcon
+              onClick={() => deleteTag(tag)}
+              className="block h-5 w-5 cursor-pointer "
+              aria-hidden="true"
+            />
+          </div>
         </div>
       ))}
     </div>

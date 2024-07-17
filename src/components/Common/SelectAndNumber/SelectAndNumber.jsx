@@ -28,21 +28,43 @@ const SelectAndNumber = ({
   placeHolderNumber2,
 }) => {
   const handleSelectChange = (selectedOption) => {
-    onChangeSelect({ target: { name: inputSelectName, value: selectedOption ? selectedOption.value : "" } });
+    onChangeSelect({
+      target: {
+        name: inputSelectName,
+        value: selectedOption ? selectedOption.value : "",
+      },
+    });
   };
 
   const handleSelect2Change = (selectedOption) => {
-    onChangeSelect2({ target: { name: inputSelect2Name, value: selectedOption ? selectedOption.value : ""  }});
+    onChangeSelect2({
+      target: {
+        name: inputSelect2Name,
+        value: selectedOption ? selectedOption.value : "",
+      },
+    });
   };
 
   const handleNumberChange = (e) => {
     const { value, id } = e.target;
-    onChangeNumber({ target: { name: inputNumberName, value: value === "" ? "" : Number(value), id: id }});
+    onChangeNumber({
+      target: {
+        name: inputNumberName,
+        value: value === "" ? "" : Number(value),
+        id: id,
+      },
+    });
   };
 
   const handleNumber2Change = (e) => {
     const { value, id } = e.target;
-    onChangeNumber2({ target: { name: inputNumber2Name, value: value === "" ? "" : Number(value), id: id } });
+    onChangeNumber2({
+      target: {
+        name: inputNumber2Name,
+        value: value === "" ? "" : Number(value),
+        id: id,
+      },
+    });
   };
 
   return (

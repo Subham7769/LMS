@@ -120,14 +120,14 @@ const LoanConfigDD = () => {
       registrationResultsData.registrationResults.projects.filter(
         (project) => project.isRegister === true
       );
-
-    const formattedRACData = eligibleProjects.map(({ projectName }) => ({
-      value: projectName,
-      label: projectName,
+    console.log(eligibleProjects);
+    const formattedRACData = eligibleProjects.map(({ loanProducts }) => ({
+      value: loanProducts[0].productName,
+      label: loanProducts[0].productName.replace(/_/g, " "),
     }));
 
     setloanTypeOptions(formattedRACData);
-    console.log(registrationResultsData);
+    // console.log(registrationResultsData);
   }, [registrationResultsData]);
 
   const handleSave = async () => {
@@ -191,7 +191,7 @@ const LoanConfigDD = () => {
             isSearchable={false}
           />
         </div>
-        {loanType.value === "CASH" || loanType.value === "BNPL" ? (
+        {loanType.value === "CASH_LOAN_V1" || loanType.value === "BNPL_LOAN" ? (
           <div className="relative">
             <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
               Amount

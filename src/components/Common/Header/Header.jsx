@@ -8,8 +8,8 @@ import UserImg from "../../../assets/image/user.png";
 const Header = () => {
   const userNavigation = useMemo(
     () => [
-      { name: "Your Profile", href: "#" },
-      { name: "Settings", href: "/settings" },
+      // { name: "Your Profile", href: "#" },
+      // { name: "Settings", href: "#" },
       { name: "Sign out", href: "/login", action: () => localStorage.clear() },
     ],
     []
@@ -102,6 +102,5 @@ const UserMenu = ({ userNavigation }) => (
     </Transition>
   </Menu>
 );
-
 
 export default Header;
