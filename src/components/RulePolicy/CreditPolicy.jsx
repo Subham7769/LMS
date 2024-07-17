@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import InequalityNumber from "../InequalityNumber";
 import MaxFinAmtTen from "../MaxFinAmtTen";
 import {
   PlusIcon,
@@ -12,13 +11,13 @@ import {
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import LengthofService from "./LengthOfService";
-import TagsComp from "../TagsComp";
 import CityCard from "./CityCard";
 import OccupationCard from "./OccupationCard";
 import { Passed, Warning } from "../Toasts";
 import toast, { Toaster } from "react-hot-toast";
 import LoadingState from "../LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -36,13 +35,8 @@ const operatorOptions = [
 ];
 
 const CreditPolicy = () => {
-  const { projectId } = useParams();
   const { rulePolicyId } = useParams();
   // Equation
-  const [RBPInputList, setRBPInputList] = useState([]);
-  const [data, setData] = useState([]);
-  const [RBPData, setRBPData] = useState([]);
-  const [RBPOperators, setRBPOperators] = useState([]);
   const [LOSData, setLOSData] = useState([]);
   const [LOSOperators, setLOSOperators] = useState([]);
   const [cityData, setCityData] = useState([]);
@@ -62,10 +56,177 @@ const CreditPolicy = () => {
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [loading, setLoading] = useState(false);
-  const [a_Weight, setA_Weight] = useState("");
-  const [b_Weight, setB_Weight] = useState("");
-  const [c_Weight, setC_Weight] = useState("");
-  const [d_Weight, setD_Weight] = useState("");
+  const [formData, setFormData] = useState([
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "city",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          cityName: "",
+          point: "",
+        },
+      ],
+      operators: null,
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "creditScore",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          firstCreditScore: "",
+          secondCreditScore: "",
+          maxLoanAmount: "",
+          residentMaxLoanAmount: "",
+        },
+      ],
+      operators: {
+        firstCreditScoreOperator: "",
+        secondCreditScoreOperator: "",
+      },
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "employmentSector",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          employmentSectorName: "",
+          point: "",
+        },
+      ],
+      operators: null,
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "maxFinanceAmount",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "",
+          rulePolicyTempId: rulePolicyId,
+          firstGrossSalary: "",
+          secondGrossSalary: "",
+          maxLoanAmount: "",
+          residentMaxLoanAmount: "",
+        },
+      ],
+      operators: {
+        firstGrossSalaryOperator: "",
+        secondGrossSalaryOperator: "",
+      },
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "financeAmountWithTenure",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          financeAmount: "",
+          tenure: "",
+        },
+      ],
+      operators: null,
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "lengthOfService",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "",
+          rulePolicyTempId: rulePolicyId,
+          firstLengthOfService: "",
+          secondLengthOfService: "",
+          point: "",
+        },
+      ],
+      operators: {
+        firstLengthOfServiceOperator: "",
+        secondLengthOfServiceOperator: "",
+      },
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "riskBasedPricing",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          firstRiskBasedPricing: "",
+          secondRiskBasedPricing: "",
+          interestPeriodType: "",
+          interestRate: "",
+        },
+      ],
+      operators: {
+        firstRiskBasedPricingOperator: "",
+        secondRiskBasedPricingOperator: "",
+      },
+    },
+    {
+      id: "",
+      rulePolicyTempId: rulePolicyId,
+      name: "riskBasedPricingEquation",
+      rules: [
+        {
+          ruleName: "",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          a_Weight: "",
+          b_Weight: "",
+          c_Weight: "",
+          d_Weight: "",
+        },
+      ],
+      operators: null,
+    },
+  ]);
+  const [riskBasedPricing, setRiskBasedPricing] = useState({});
+  const [riskBasedPricingEquation, setRiskBasedPricingEquation] = useState({});
+  const [rules, setRules] = useState({
+    ruleName: "0",
+    fieldType: "Employer",
+    rulePolicyTempId: rulePolicyId,
+    a_Weight: "",
+    b_Weight: "",
+    c_Weight: "",
+    d_Weight: "",
+  });
+  const [riskBasedPricingRules, setRiskBasedPricingRules] = useState({
+    operators: {
+      firstRiskBasedPricingOperator: "",
+      secondRiskBasedPricingOperator: "",
+    },
+    riskBasedPricingRules: [
+      {
+        firstRiskBasedPricing: "",
+        secondRiskBasedPricing: "",
+        interestRate: "",
+        interestPeriodType: "",
+        ruleName: "0",
+        rulePolicyTempId: rulePolicyId,
+        fieldType: "Employer",
+      },
+    ],
+  });
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -98,17 +259,30 @@ const CreditPolicy = () => {
       secondRiskBasedPricing: "",
       interestRate: "",
       interestPeriodType: "",
-      projectId: projectId,
+      rulePolicyTempId: rulePolicyId,
       ruleName: "0",
       fieldType: "Employer",
     },
   ]);
 
-  const handleChange = (e, index) => {
+  const handleChangeRBP = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
     list[index][name] = value;
     setInputList(list);
+  };
+
+  const handleChange = (e) => {
+    const { name, value, id } = e.target;
+
+    setRiskBasedPricingEquation((prevState) => {
+      return {
+        ...prevState,
+        rules: prevState.rules.map((rule) =>
+          rule.ruleName === id ? { ...rule, [name]: value } : rule
+        ),
+      };
+    });
   };
 
   const handleSelectChange = (propName, index, selectedOption) => {
@@ -143,26 +317,15 @@ const CreditPolicy = () => {
       const data = await response.json();
 
       setAllRuleData(data);
+      setFormData(data);
 
       // Find the required rules from the fetched data
-      const riskBasedPricingEquation = data.find(
-        (rule) => rule.name === "riskBasedPricingEquation"
-      );
+      setRiskBasedPricingEquation({
+        ...data.find((rule) => rule.name === "riskBasedPricingEquation"),
+      });
+
       const city = data.find((rule) => rule.name === "city");
       const occupation = data.find((rule) => rule.name === "employmentSector");
-      const financeRules = data.find(
-        (rule) => rule.name === "financeAmountWithTenure"
-      );
-
-      // Update state for riskBasedPricingEquation
-      const filteredData = riskBasedPricingEquation?.rules.filter(
-        (item) => item.projectId === projectId
-      );
-      setRBPInputList(filteredData || []);
-      setData(filteredData || []);
-
-      // Update state for lengthOfService
-      setFAWTData(financeRules?.rules || []);
 
       setCityData(city?.rules || []);
       setOccupationData(occupation?.rules || []);
@@ -175,14 +338,17 @@ const CreditPolicy = () => {
     if (allRuleData.length === 0) {
       console.log("Fetching data");
     } else {
-      console.log(allRuleData);
+      const financeRules = allRuleData.find(
+        (rule) => rule.name === "financeAmountWithTenure"
+      );
       const riskBasedPricing = allRuleData.find(
         (rule) => rule.name === "riskBasedPricing"
       );
       // setRBPData(riskBasedPricing?.rules || []);
       const filteredData = riskBasedPricing?.rules.filter(
-        (item) => item.projectId === projectId
+        (item) => item.rulePolicyTempId === rulePolicyId
       );
+      setFAWTData(financeRules?.rules || []);
       setInputList(filteredData || []);
       const formattedfirstRiskBasedPricingOperator = {
         value: riskBasedPricing?.operators.firstRiskBasedPricingOperator,
@@ -200,7 +366,7 @@ const CreditPolicy = () => {
         (rule) => rule.name === "lengthOfService"
       );
       const filteredLOSData = lengthOfService?.rules.filter(
-        (item) => item.projectId === projectId
+        (item) => item.rulePolicyTempId === rulePolicyId
       );
       setLOSData(filteredLOSData || []);
       setLOSOperators(lengthOfService?.operators);
@@ -220,7 +386,6 @@ const CreditPolicy = () => {
           secondRiskBasedPricing: secondRiskBasedPricing,
           interestRate: interestRate,
           interestPeriodType: selectedPeriodType.value,
-          projectId: projectId,
           ruleName: "0",
           rulePolicyTempId: rulePolicyId,
           fieldType: "Employer",
@@ -268,13 +433,7 @@ const CreditPolicy = () => {
     const postData = {
       riskBasedPricingEquationRules: [
         {
-          a_Weight: a_Weight,
-          b_Weight: b_Weight,
-          c_Weight: c_Weight,
-          d_Weight: d_Weight,
-          fieldType: "Employer",
-          ruleName: "0",
-          rulePolicyTempId: rulePolicyId,
+          ...rules,
         },
       ],
     };
@@ -304,10 +463,15 @@ const CreditPolicy = () => {
           />
         ));
         fetchData();
-        setA_Weight("");
-        setB_Weight("");
-        setC_Weight("");
-        setD_Weight("");
+        setRules({
+          ruleName: "0",
+          fieldType: "Employer",
+          rulePolicyTempId: rulePolicyId,
+          a_Weight: "",
+          b_Weight: "",
+          c_Weight: "",
+          d_Weight: "",
+        });
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -376,28 +540,6 @@ const CreditPolicy = () => {
     }
   };
 
-  const handlePost = async (newEntry) => {
-    try {
-      const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/risk-based-pricing-rule",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newEntry),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Post request failed");
-      }
-      // Refresh the data after a successful post
-      fetchData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleUpdateRBP = async () => {
     const token = localStorage.getItem("authToken");
 
@@ -439,13 +581,6 @@ const CreditPolicy = () => {
     }
   };
 
-  // Equation
-  const handleInputChange = (index, fieldName, value) => {
-    const newData = [...data];
-    newData[index] = { ...newData[index], [fieldName]: value };
-    setData(newData);
-  };
-
   const handleUpdateRBPE = async (index) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -458,7 +593,9 @@ const CreditPolicy = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            riskBasedPricingEquationRules: [data[index]],
+            riskBasedPricingEquationRules: [
+              riskBasedPricingEquation.rules[index],
+            ],
           }),
         }
       );
@@ -528,6 +665,14 @@ const CreditPolicy = () => {
   // if (allRuleData.length === 0) {
   //   return <LoadingState />;
   // }
+
+  const handleRuleChange = (e) => {
+    const { name, value } = e.target;
+    setRules((prevState) => {
+      return { ...prevState, [name]: value };
+    });
+  };
+
   if (loading) {
     return <LoadingState />;
   }
@@ -535,163 +680,137 @@ const CreditPolicy = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <MaxFinAmtTen FAWTData={FAWTData} fetchData={fetchData} />
-      <div className="border-b border-gray-300 pb-8 my-8">
-        <div className=" text-center my-4 text-lg">
-          Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
-          (*Length of Service*C%) + (*Cities*D%)]
-        </div>
-        <div className="flex justify-center">
-          <table className="divide-y divide-gray-300 w-5/6">
-            <thead>
-              <tr className="divide-x divide-gray-200">
-                <th className="py-3.5 px-2 text-center text-gray-900">A</th>
-                <th className="py-3.5 px-2 text-center text-gray-900">B</th>
-                <th className="py-3.5 px-2 text-center text-gray-900">C</th>
-                <th className="py-3.5 px-2 text-center text-gray-900">D</th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              <tr className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <input
-                    type="number"
-                    name="a_Weight"
-                    id="a_Weight"
-                    value={a_Weight}
-                    onChange={(e) => setA_Weight(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0.54"
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="b_Weight"
-                    id="b_Weight"
-                    value={b_Weight}
-                    onChange={(e) => setB_Weight(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="c_Weight"
-                    id="c_Weight"
-                    value={c_Weight}
-                    onChange={(e) => setC_Weight(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <input
-                    type="number"
-                    name="d_Weight"
-                    id="d_Weight"
-                    value={d_Weight}
-                    onChange={(e) => setD_Weight(e.target.value)}
-                    className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                    placeholder="0.54"
-                  />
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    onClick={handleAddRBPE}
-                    className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    <CheckCircleIcon
-                      className="-ml-0.5 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    Add
-                  </button>
-                </td>
-              </tr>
-              {data.map((item, index) => (
-                <tr
-                  key={item.ruleName || index}
-                  className="divide-x divide-gray-200 text-center"
-                >
-                  <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                    <input
-                      type="number"
-                      name="a_Weight"
-                      id="a_Weight"
-                      value={item.a_Weight}
-                      onChange={(e) =>
-                        handleInputChange(index, "a_Weight", e.target.value)
-                      }
-                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      placeholder="0.54"
+      {riskBasedPricingEquation ? (
+        <div className="border-b border-gray-300 pb-8 my-8">
+          <div className=" text-center my-4 text-lg">
+            Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
+            (*Length of Service*C%) + (*Cities*D%)]
+          </div>
+          <div className="flex justify-center">
+            <table className="divide-y divide-gray-300 w-5/6">
+              <thead>
+                <tr className="divide-x divide-gray-200">
+                  <th className="py-3.5 px-2 text-center text-gray-900">A</th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">B</th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">C</th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">D</th>
+                  <th className="py-3.5 px-2 text-center text-gray-900">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                <tr className="divide-x divide-gray-200 text-center">
+                  <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                    <InputNumber
+                      inputName={"a_Weight"}
+                      inputValue={rules.a_Weight}
+                      onChange={handleRuleChange}
+                      placeHolder={"0.54"}
                     />
                   </td>
-                  <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                    <input
-                      type="number"
-                      name="b_Weight"
-                      id="b_Weight"
-                      value={item.b_Weight}
-                      onChange={(e) =>
-                        handleInputChange(index, "b_Weight", e.target.value)
-                      }
-                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                      placeholder="0.54"
+                  <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                    <InputNumber
+                      inputName={"b_Weight"}
+                      inputValue={rules.b_Weight}
+                      onChange={handleRuleChange}
+                      placeHolder={"0.54"}
                     />
                   </td>
-                  <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                    <input
-                      type="number"
-                      name="c_Weight"
-                      id="c_Weight"
-                      value={item.c_Weight}
-                      onChange={(e) =>
-                        handleInputChange(index, "c_Weight", e.target.value)
-                      }
-                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                      placeholder="0.54"
+                  <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                    <InputNumber
+                      inputName={"c_Weight"}
+                      inputValue={rules.c_Weight}
+                      onChange={handleRuleChange}
+                      placeHolder={"0.54"}
                     />
                   </td>
-                  <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                    <input
-                      type="number"
-                      name="d_Weight"
-                      id="d_Weight"
-                      value={item.d_Weight}
-                      onChange={(e) =>
-                        handleInputChange(index, "d_Weight", e.target.value)
-                      }
-                      className="w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                      placeholder="0.54"
+                  <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                    <InputNumber
+                      inputName={"d_Weight"}
+                      inputValue={rules.d_Weight}
+                      onChange={handleRuleChange}
+                      placeHolder={"0.54"}
                     />
                   </td>
                   <td>
                     <button
                       type="button"
-                      onClick={() => handleUpdateRBPE(index)}
-                      className="w-9 h-9 mr-5 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
+                      onClick={handleAddRBPE}
+                      className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                      <PencilIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteRBPE(item.ruleName)}
-                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                    >
-                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                      <CheckCircleIcon
+                        className="-ml-0.5 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                      Add
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                {riskBasedPricingEquation?.rules?.map((item, index) => (
+                  <tr
+                    key={item.ruleName || index}
+                    className="divide-x divide-gray-200 text-center"
+                  >
+                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                      <InputNumber
+                        inputName={"a_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.a_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                      />
+                    </td>
+                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                      <InputNumber
+                        inputName={"b_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.b_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                      />
+                    </td>
+                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                      <InputNumber
+                        inputName={"c_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.c_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                      />
+                    </td>
+                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                      <InputNumber
+                        inputName={"d_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.d_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                      />
+                    </td>
+                    <td className="py-4 flex gap-2 px-4">
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateRBPE(index)}
+                        className="block w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
+                      >
+                        <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteRBPE(item.ruleName)}
+                        className="block w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      >
+                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      ) : null}
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-center justify-between">
           <div className="text-lg">Risk Based Pricing</div>
@@ -721,6 +840,24 @@ const CreditPolicy = () => {
                 placeholder={"0.5"}
                 className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+              {/* <SelectAndNumber
+                labelName={"Minimum Risk Based Pricing"}
+                inputSelectName={"firstRiskBasedPricingOperator"}
+                inputSelectOptions={operatorOptions}
+                inputSelectValue={
+                  riskBasedPricingRules?.operators?.firstRiskBasedPricingOperator
+                }
+                onChangeSelect={handleChange}
+                disabledSelect={false}
+                hiddenSelect={false}
+                inputNumberName={"firstRiskBasedPricing"}
+                // inputNumberid={formData?.dependentsRules?.rules[0]?.ruleName}
+                inputNumberValue={
+                  riskBasedPricingRules?.riskBasedPricingRules?.firstRiskBasedPricing
+                }
+                onChangeNumber={handleChange}
+                placeHolderNumber={"4"}
+              /> */}
             </div>
           </div>
           <div className="mb-3">
@@ -882,7 +1019,7 @@ const CreditPolicy = () => {
                             type="number"
                             name="secondRiskBasedPricing"
                             value={item.secondRiskBasedPricing}
-                            onChange={(e) => handleChange(e, index)}
+                            onChange={(e) => handleChangeRBP(e, index)}
                             placeholder={"2"}
                             className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
@@ -904,7 +1041,7 @@ const CreditPolicy = () => {
                           type="number"
                           name="interestRate"
                           value={item.interestRate}
-                          onChange={(e) => handleChange(e, index)}
+                          onChange={(e) => handleChangeRBP(e, index)}
                           className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           placeholder="4000"
                         />

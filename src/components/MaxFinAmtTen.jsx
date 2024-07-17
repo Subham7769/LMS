@@ -11,18 +11,25 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed, Warning } from "./Toasts";
 import { useParams } from "react-router-dom";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import InputNumber from "./Common/InputNumber/InputNumber";
 
 const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const [inputList, setInputList] = useState([]);
   const [newAmount, setNewAmount] = useState("");
   const [newTenure, setNewTenure] = useState("");
-  const { projectId } = useParams();
   const { rulePolicyId } = useParams();
   const authToken = localStorage.getItem("authToken");
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+  const [maxFinAmtRules, setMaxFinAmtRules] = useState({
+    ruleName: "0",
+    fieldType: "Employer",
+    rulePolicyTempId: rulePolicyId,
+    financeAmount: "",
+    tenure: "",
+  });
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -51,10 +58,17 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
 
   useEffect(() => {
     const filteredData = FAWTData.filter(
-      (item) => item.projectId === projectId
+      (item) => item.rulePolicyTempId === rulePolicyId
     );
     setInputList(filteredData);
   }, [FAWTData]);
+
+  const handleRuleChange = (e) => {
+    const { name, value } = e.target;
+    setMaxFinAmtRules((prevState) => {
+      return { ...prevState, [name]: value };
+    });
+  };
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;
@@ -162,11 +176,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     const payload = {
       financeAmountWithTenureRules: [
         {
-          ruleName: "0",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          financeAmount: newAmount,
-          tenure: newTenure,
+          ...maxFinAmtRules,
         },
       ],
     };
@@ -291,7 +301,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
         </div>
         <div className="flex gap-5 items-end mt-5">
           <div className="relative">
-            <label
+            {/* <label
               htmlFor={`amount`}
               className="bg-white px-1 text-xs text-gray-900"
             >
@@ -305,10 +315,17 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
               onChange={(e) => setNewAmount(e.target.value)}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="999"
+            /> */}
+            <InputNumber
+              labelName={"Amount"}
+              inputName={"financeAmount"}
+              inputValue={maxFinAmtRules.financeAmount}
+              onChange={handleRuleChange}
+              placeHolder={"999"}
             />
           </div>
           <div className="relative">
-            <label
+            {/* <label
               htmlFor={`tenure`}
               className="bg-white px-1 text-xs text-gray-900"
             >
@@ -322,6 +339,13 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
               onChange={(e) => setNewTenure(e.target.value)}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="6"
+            /> */}
+            <InputNumber
+              labelName={"Tenure"}
+              inputName={"tenure"}
+              inputValue={maxFinAmtRules.tenure}
+              onChange={handleRuleChange}
+              placeHolder={"6"}
             />
           </div>
           <button

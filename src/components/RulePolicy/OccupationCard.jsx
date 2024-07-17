@@ -3,18 +3,11 @@ import { PlusIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import useOccupationFormState from "../../utils/useOccupationFormState";
+import TagInput from "../TagInput/TagInput";
 
 const OccupationCard = ({ occupationData, fetchData }) => {
   const { rulePolicyId } = useParams();
-  const [tagValue, setTagValue] = useState([
-    {
-      occupation: "",
-      points: "",
-      ruleName: "0",
-      rulePolicyTempId: rulePolicyId,
-      fieldType: "Employer",
-    },
-  ]);
   const [tags, setTags] = useState([]);
 
   const addTags = async () => {
@@ -88,7 +81,33 @@ const OccupationCard = ({ occupationData, fetchData }) => {
     }
   }, [occupationData, rulePolicyId]);
 
-  const deleteTag = async (value) => {
+  const {
+    formData,
+    handleChange,
+    addTag,
+    deleteTag,
+    setFormData,
+  } = useOccupationFormState(
+    {
+      name: "",
+      occupation: "",
+      points: "",
+      ruleName: "0",
+      rulePolicyTempId: rulePolicyId,
+      fieldType: "Employer",
+      tags: [],
+    },
+    "Occupation",
+    fetchData
+  );
+
+  useEffect(() => {
+    if (tags.length > 0) {
+      setFormData((prevState) => ({ ...prevState, tags: tags }));
+    }
+  }, [tags, setFormData]);
+
+  const deleteTags = async (value) => {
     console.log(value);
     const remainTags = tags.filter((t) => t !== value);
     setTags(remainTags);
@@ -127,94 +146,16 @@ const OccupationCard = ({ occupationData, fetchData }) => {
         <div className="flex items-center justify-between mb-3">
           <div className="text-lg">Occupation</div>
         </div>
-        <div className="flex gap-10">
-          <div className="mb-3">
-            <label htmlFor="occupation" className="block">
-              Add Occupation
-            </label>
-            <input
-              type="text"
-              name="occupation"
-              id="occupation"
-              value={tagValue.occupation}
-              onChange={(e) =>
-                setTagValue({ ...tagValue, occupation: e.target.value })
-              }
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Occupation"
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="occupationPoints" className="block">
-              Add Occupation Point
-            </label>
-            <input
-              type="number"
-              name="occupationPoints"
-              id="occupationPoints"
-              value={tagValue.points}
-              onChange={(e) =>
-                setTagValue({ ...tagValue, points: e.target.value })
-              }
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="0.75"
-            />
-          </div>
-          <div className="relative mt-6">
-            <button
-              onClick={addTags}
-              type="button"
-              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-wrap">
-          {tags.map((item, index) => {
-            return (
-              <>
-                <div className="bg-yellow-400 m-2 p-2 w-[40%] rounded-md flex items-center justify-between gap-2">
-                  <div className="flex-grow flex items-center justify-between gap-2">
-                    <div className="flex w-[80%] items-start justify-start">
-                      <button
-                        key={index}
-                        className="mr-1 cursor-auto flex-grow text-left"
-                      >
-                        <span className="w-full">{item.occupation}</span>
-                      </button>
-                    </div>
-                    <p>|</p>
-                    <div className="flex w-[20%] justify-end">
-                      <span className="w-[70%] mr-2 text-center">
-                        {parseFloat(item.points).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => deleteTag(item)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </>
-            );
-          })}
-        </div>
+        <TagInput
+          formData={formData}
+          handleChange={handleChange}
+          inputTextName={"occupation"}
+          inputTextLabel={"Add Occupation"}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          inputNumberName={"points"}
+          inputNumberLabel={"Add Points"}
+        />
         {/* <div className="text-right mt-5">
           <button
             type="button"
