@@ -1,32 +1,14 @@
-import {
-  ClipboardDocumentIcon,
-  ClipboardIcon,
-} from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
-
-const loanStatusOptions = [
-  { value: 0, label: "All" },
-  { value: 1, label: "Pending Approval" },
-  { value: 2, label: "Activated" },
-  { value: 3, label: "Closed" },
-  { value: 4, label: "Frozen" },
-  { value: 5, label: "Roll Overed" },
-  { value: 6, label: "Cancelled" },
-  { value: 7, label: "Late" },
-  { value: 8, label: "Returned" },
-  { value: 9, label: "Defaulted" },
-];
+import { loanStatusOptions } from "../../data/OptionsData";
 
 const LoanInfoModal = ({ visible, onClose, loanDetails, mgLeft }) => {
   const [loansarrModal, setLoansarrModal] = useState([]);
-  const [copySuccess, setCopySuccess] = useState("");
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(loanDetails.loanId);
-      setCopySuccess("Copied!");
       toast.custom((t) => (
         <Passed
           t={t}
@@ -36,7 +18,6 @@ const LoanInfoModal = ({ visible, onClose, loanDetails, mgLeft }) => {
         />
       ));
     } catch (err) {
-      setCopySuccess("Failed to copy!");
       toast.custom((t) => (
         <Failed
           t={t}
@@ -145,22 +126,20 @@ const LoanInfoModal = ({ visible, onClose, loanDetails, mgLeft }) => {
             <table className="divide-y divide-gray-300 w-full">
               <thead className="bg-white sticky top-0">
                 <tr className="divide-x divide-gray-200">
-                  <th className="py-3.5 px-2 text-center text-gray-900">No.</th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">
-                    Date
-                  </th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">
-                    Amount
-                  </th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">
-                    Status
-                  </th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">
-                    Interest Value
-                  </th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">
-                    Principal Value
-                  </th>
+                  {[
+                    "No.",
+                    "Date",
+                    "Status",
+                    "Interest Value",
+                    "Principal Value",
+                  ].map((item, index) => (
+                    <th
+                      key={index}
+                      className="py-3.5 px-2 text-center text-gray-900"
+                    >
+                      {item}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">

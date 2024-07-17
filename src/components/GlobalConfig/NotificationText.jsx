@@ -104,9 +104,17 @@ const NotificationText = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
+      <h2 className="mb-6">
+        <b
+          title="Notification Text"
+          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+        >
+          Notification Text
+        </b>
+      </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-start justify-between ">
-          <div className="mb-10 text-lg">Notification Text</div>
+          <div></div>
         </div>
         {(notificationsDataNew.length === 0
           ? notificationsData

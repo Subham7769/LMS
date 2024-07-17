@@ -4,7 +4,7 @@ import InputNumber from "./Common/InputNumber/InputNumber";
 import { operatorOptions } from "../data/OptionsData";
 
 const InequalityNumber = ({ labelText, placeholder }) => {
-  const [selectedOption, setSelctedOption] = useState(options[3]);
+  const [selectedOption, setSelctedOption] = useState(operatorOptions[3]);
   return (
     <div className="mb-3">
       <div className="grid grid-cols-2 gap-4">

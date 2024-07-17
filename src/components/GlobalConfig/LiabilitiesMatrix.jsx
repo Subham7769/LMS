@@ -417,10 +417,16 @@ const LiabilitiesMatrix = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-
+      <h2 className="mb-6">
+        <b
+          title="Credit Bureau Liabilities Matrix"
+          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+        >
+          Credit Bureau Liabilities Matrix
+        </b>
+      </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
         <div className="flex items-center justify-between ">
-          <div className="text-lg">Credit Bureau Liabilities Matrix</div>
           <button
             onClick={handleAddFields}
             type="button"

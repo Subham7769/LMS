@@ -81,3 +81,16 @@ export const booleanOptions = [
   { value: true, label: "true" },
   { value: false, label: "false" },
 ];
+
+export const loanStatusOptions = [
+  { value: 0, label: "All" },
+  { value: 1, label: "Pending Approval" },
+  { value: 2, label: "Activated" },
+  { value: 3, label: "Closed" },
+  { value: 4, label: "Frozen" },
+  { value: 5, label: "Roll Overed" },
+  { value: 6, label: "Cancelled" },
+  { value: 7, label: "Late" },
+  { value: 8, label: "Returned" },
+  { value: 9, label: "Defaulted" },
+];

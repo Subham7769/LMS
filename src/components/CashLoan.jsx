@@ -6,6 +6,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/20/solid";
+import DynamicName from "./Common/DynamicName/DynamicName";
+import toast from "react-hot-toast";
 
 const CashLoan = () => {
   const location = useLocation();
@@ -25,6 +27,68 @@ const CashLoan = () => {
       label: "Product Config",
     },
   ];
+
+  async function getProductInfo(newName) {
+    toast.loading("Updating name, please wait...", { duration: 3000 });
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${productType}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Check for token expiration or invalid token
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+
+      const productConfigDetails = await response.json();
+
+      // Replace the data of the field
+      productConfigDetails.productType = newName;
+
+      // Rename disableRac to isDisableRac and keep its value
+      productConfigDetails.isDisableRac = productConfigDetails.disableRac;
+      delete productConfigDetails.disableRac;
+
+      // Submit the updated data back using PUT request
+      const updateResponse = await fetch(
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${loanProId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(productConfigDetails),
+        }
+      );
+
+      // Check if the update was successful
+      if (updateResponse.ok) {
+        toast.success("Name Updated, redirecting...");
+        navigate(
+          `/product/${newName}/loan-product-config/${projectId}/${loanProId}`
+        );
+        window.location.reload();
+      } else {
+        console.error(
+          "Failed to update product info",
+          await updateResponse.text()
+        );
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  }
 
   const handleDelete = async (deleteURL) => {
     try {
@@ -58,14 +122,9 @@ const CashLoan = () => {
   return (
     <div className="mt-4">
       <div className="flex justify-between items-baseline">
-        <h2 className="mb-4">
-          <b
-            title={productType.replace(/_/g, " ")}
-            className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
-          >
-            {productType.replace(/_/g, " ")}
-          </b>
-        </h2>
+        <div className="mb-4">
+          <DynamicName initialName={productType} onSave={getProductInfo} />
+        </div>
         <button
           onClick={() => handleDelete(loanProId)}
           type="button"

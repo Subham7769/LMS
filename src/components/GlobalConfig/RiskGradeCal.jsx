@@ -193,9 +193,17 @@ const RiskGradeCal = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
+      <h2 className="mb-6">
+        <b
+          title="Risk Grading Calculation"
+          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+        >
+          Risk Grading Calculation
+        </b>
+      </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 my-7">
         <div className="flex items-center justify-between ">
-          <div className="text-lg mb-5">Risk Grading Calculation</div>
+          <div></div>
           <button
             onClick={handleAddFields}
             type="button"

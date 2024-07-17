@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import InputText from "../InputText/InputText";
 
 const DynamicName = ({ initialName, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,11 +25,9 @@ const DynamicName = ({ initialName, onSave }) => {
     <div className="flex items-center justify-between">
       {isEditing ? (
         <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={name}
+          <InputText
+            inputValue={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-1 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
           />
           <button
             onClick={handleSave}

@@ -227,9 +227,17 @@ const BareMinimumExp = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
+      <h2 className="mb-6">
+        <b
+          title="Bare Minimum Expenses"
+          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+        >
+          Bare Minimum Expenses
+        </b>
+      </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-center justify-between ">
-          <div className="text-lg">Bare Minimum Expenses</div>
+          <div></div>
           <button
             onClick={handleAddFields}
             type="button"
