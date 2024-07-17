@@ -30,9 +30,6 @@ const DebtBurdenConfig = lazy(() =>
 const GlobalConfig = lazy(() =>
   import("./components/GlobalConfig/GlobalConfig")
 );
-const GcCreditPolicy = lazy(() =>
-  import("./components/GlobalConfig/GcCreditPolicy")
-);
 
 const SubscriberInfo = lazy(() =>
   import("./components/CustomerCare/SubscriberInfo")
@@ -194,7 +191,6 @@ const routes = [
         path: "/global-config",
         element: <GlobalConfig />,
         children: [
-          { path: "cp", element: <GcCreditPolicy /> },
           { path: "liability-matrix", element: <LiabilitiesMatrix /> },
           { path: "risk-grade-cal", element: <RiskGradeCal /> },
           { path: "bare-min-exp", element: <BareMinimumExp /> },

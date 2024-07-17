@@ -12,7 +12,6 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
-  BeakerIcon,
   ClipboardDocumentListIcon
 } from "@heroicons/react/24/outline";
 import { createNewRac } from "../utils/createNewRac";
@@ -227,12 +226,11 @@ export const MenusInitial = [
   },
   {
     title: "Global Config",
-    href: "/global-config/cp",
+    href: "/global-config",
     icon: Cog6ToothIcon,
     current: false,
     submenu: true,
     submenuItems: [
-      { name: "Credit Policy", href: "/global-config/cp", current: false },
       {
         name: "Liabilities Matrix",
         href: "/global-config/liability-matrix",
