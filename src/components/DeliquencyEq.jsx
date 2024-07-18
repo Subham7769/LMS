@@ -1,52 +1,41 @@
 import { useEffect, useState } from "react";
-import { PlusIcon } from "@heroicons/react/20/solid";
-import { TrashIcon } from "@heroicons/react/20/solid";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { PlusIcon, TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import useRacRules from "../utils/useRACRules";
 import toast from "react-hot-toast";
 import { RowChanged } from "./Toasts";
 import InputNumber from "./Common/InputNumber/InputNumber";
+import Button from "./Common/Button/Button";
 
 const DeliquencyEq = () => {
   const { racID } = useParams();
-  const deURL1 = "/delinquency-rule/";
-  const deURL2 = "delinquency";
-  const deliquencyEqData = useRacRules(deURL1, deURL2);
+  const deliquencyEqData = useRacRules("/delinquency-rule/", "delinquency");
 
   const [inputList, setInputList] = useState([
     { periodInMonths: "", noOfLateMonths: "", noOfLateTimes: "" },
   ]);
 
   useEffect(() => {
-    if (deliquencyEqData.rules && deliquencyEqData.rules.length > 0) {
+    if (deliquencyEqData.rules?.length > 0) {
       const availableDeliquency = deliquencyEqData.rules[0].delinquencyRules;
-      if (availableDeliquency && availableDeliquency.length > 0) {
+      if (availableDeliquency?.length > 0) {
         setInputList(availableDeliquency);
       }
     }
   }, [deliquencyEqData]);
 
   const handleAddAllFields = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
+    const token = localStorage.getItem("authToken");
 
-    // Define the data to be sent with the POST request
     const postData = {
       delinquencies: inputList,
       racId: racID,
-      ruleUsage: [
-        {
-          racId: racID,
-          ruleUsage: "USED",
-        },
-      ],
+      ruleUsage: [{ racId: racID, ruleUsage: "USED" }],
     };
 
     try {
-      // POST request to add new fields
-      const postResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/delinquency-rule/" +
-          racID,
+      const response = await fetch(
+        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/delinquency-rule/${racID}`,
         {
           method: "PUT",
           headers: {
@@ -57,91 +46,70 @@ const DeliquencyEq = () => {
         }
       );
 
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
-      }
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+      toast.custom((t) => <RowChanged t={t} toast={toast} />);
     } catch (error) {
       console.error("Failed to update data:", error);
     }
   };
+
   const handleAddFields = () => {
-    setInputList([
-      ...inputList,
-      { periodInMonths: "", noOfLateMonths: "", noOfLateTimes: "" },
-    ]);
+    setInputList([...inputList, { periodInMonths: "", noOfLateMonths: "", noOfLateTimes: "" }]);
   };
+
   const handleChange = (e, index) => {
     const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setInputList(list);
+    setInputList((prevList) => {
+      const newList = [...prevList];
+      newList[index][name] = value;
+      return newList;
+    });
   };
+
   const handleDelete = (index) => {
-    const deleteList = [...inputList];
-    deleteList.splice(index, 1);
-    setInputList(deleteList);
+    setInputList((prevList) => prevList.filter((_, i) => i !== index));
   };
+
   return (
-    <div className="shadow-md rounded-xl pb-8 pt-6 px-5 max-w-[660px] border border-red-600">
-      <div className="flex items-center justify-between ">
-        <div className="">Deliquency Equation : </div>
-        <button
-          onClick={handleAddFields}
-          type="button"
-          className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <PlusIcon className="h-5 w-5" aria-hidden="true" />
-        </button>
+    <div className="shadow-md rounded-xl p-3 max-w-[660px] border border-red-600">
+      <div className="flex items-center justify-between">
+        <div>Deliquency Equation:</div>
+        <Button buttonIcon={PlusIcon} onClick={handleAddFields} circle={true} />
       </div>
       {inputList.map((item, index) => (
-        <div className="flex gap-2 items-end mt-5">
-          <div className="relative">
-            <InputNumber
-              labelName="No. of late months From"
-              inputName="noOfLateMonths"
-              inputValue={item.noOfLateMonths}
-              onChange={(e) => handleChange(e, index)}
-              placeholder="2"
-            />
-          </div>
-          <div className="relative">
-            <InputNumber
-              labelName="To"
-              inputName="noOfLateTimes"
-              inputValue={item.noOfLateTimes}
-              onChange={(e) => handleChange(e, index)}
-              placeholder="2"
-            />
-          </div>
-          <div className="relative">
-            <InputNumber
-              labelName="To"
-              inputName="periodInMonths"
-              inputValue={item.periodInMonths}
-              onChange={(e) => handleChange(e, index)}
-              placeholder="3"
-            />
-          </div>
-          <button
+        <div className="flex gap-2 items-end mt-5" key={index}>
+          <InputNumber
+            labelName="No. of Late Months From"
+            inputName="noOfLateMonths"
+            inputValue={item.noOfLateMonths}
+            onChange={(e) => handleChange(e, index)}
+            placeholder="2"
+          />
+          <InputNumber
+            labelName="To"
+            inputName="noOfLateTimes"
+            inputValue={item.noOfLateTimes}
+            onChange={(e) => handleChange(e, index)}
+            placeholder="2"
+          />
+          <InputNumber
+            labelName="Period in Months"
+            inputName="periodInMonths"
+            inputValue={item.periodInMonths}
+            onChange={(e) => handleChange(e, index)}
+            placeholder="3"
+          />
+          <Button
+            buttonIcon={TrashIcon}
             onClick={() => handleDelete(index)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+            circle={true}
+            className="bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+          />
         </div>
       ))}
       <div className="text-right mt-5">
-        <button
-          type="button"
-          onClick={handleAddAllFields}
-          className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-          Save
-        </button>
+        <Button buttonIcon={CheckCircleIcon} buttonName="Save" onClick={handleAddAllFields} rectangle={true} />
       </div>
     </div>
   );

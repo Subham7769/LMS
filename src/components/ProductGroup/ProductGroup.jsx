@@ -15,7 +15,6 @@ const ProductGroup = () => {
   console.log("isNewGroup ->" + isNewGroup);
   console.log("groupName ->" + groupName);
   console.log("location.state?.Name ->" + location.state?.Name);
-
   const {
     formData,
     handleChange,
@@ -31,6 +30,14 @@ const ProductGroup = () => {
     selectedOption: null,
   });
 
+  useEffect(() => {
+    if (isNewGroup) {
+      setFormData((prevState) => ({ ...prevState, name: newGroupName }));
+    } else {
+      setFormData((prevState) => ({ ...prevState, name: groupName }));
+    }
+  }, [groupName, isNewGroup, newGroupName, setFormData]);
+
   const handleSave = useCallback(
     (newName) => {
       setFormData((prevFormData) => ({
@@ -40,39 +47,33 @@ const ProductGroup = () => {
     },
     [setFormData]
   );
-
-  useEffect(() => {
-    if (isNewGroup) {
-      setFormData((prevState) => ({ ...prevState, name: newGroupName }));
-    } else {
-      setFormData((prevState) => ({ ...prevState, name: groupName }));
-    }
-  }, [groupName, isNewGroup, newGroupName, setFormData]);
-
   return (
     <>
-      <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between">
         <DynamicName initialName={formData.name} onSave={handleSave} />
       </div>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full mt-5">
-        <TagInput
-          formData={formData}
-          handleChange={handleChange}
-          handleSelectChange={handleSelectChange}
-          addTag={addTag}
-          deleteTag={deleteTag}
-          productTypeOptions={productTypeOptions}
+    <div className="shadow-md rounded-xl p-5 border border-red-600 w-full mt-5">
+      <TagInput
+        formData={formData}
+        handleChange={handleChange}
+        inputSelectName={"product"}
+        inputSelectLabel={"Add Products"}
+        handleSelectChange={handleSelectChange}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        productTypeOptions={productTypeOptions}
+        inputNumberName={"limit"}
+        inputNumberLabel={"Max Product Limit"}
+      />
+      <div className="text-center md:text-right mt-5">
+        <Button
+          buttonIcon={CheckCircleIcon}
+          buttonName="Save"
+          rectangle={true}
         />
-        <div className="text-center md:text-right mt-5">
-          <Button
-            buttonIcon={CheckCircleIcon}
-            buttonName="Save"
-            rectangle={true}
-          />
-        </div>
       </div>
+    </div>
     </>
   );
 };
-
 export default ProductGroup;

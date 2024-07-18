@@ -4,48 +4,47 @@ import RacMatrixConfig from "./RacMatrixConfig";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import LoadingState from "../LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
+import Button from "../Common/Button/Button";
+import InputText from "../Common/InputText/InputText";
+
 const NewCreatedRAC = () => {
   const [RACData, setRACData] = useState([]);
   const [cloneRAC, setCloneRAC] = useState(false);
   const [cloneRACName, setCloneRACName] = useState("");
-
   const { racID } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
+    async function getRACInfo() {
+      try {
+        const token = localStorage.getItem("authToken");
+        const data = await fetch(
+          "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rac/id/" +
+          racID,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Check for token expiration or invalid token
+        if (data.status === 401 || data.status === 403) {
+          localStorage.removeItem("authToken"); // Clear the token
+          navigate("/login"); // Redirect to login page
+          return; // Stop further execution
+        }
+        const racDetails = await data.json();
+        // console.log(racDetails);
+        setRACData(racDetails);
+        //   window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    }
     getRACInfo();
   }, [racID]);
 
-  async function getRACInfo() {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rac/id/" +
-        racID,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const racDetails = await data.json();
-      // console.log(racDetails);
-      setRACData(racDetails);
-      //   window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  if (RACData.length === 0) {
-    return <LoadingState />;
-  }
   const handleDelete = async (deleteURL) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -77,7 +76,6 @@ const NewCreatedRAC = () => {
   const handleClone = () => {
     setCloneRAC(true);
   };
-
   const createCloneRac = async (cloneRACName) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -138,55 +136,34 @@ const NewCreatedRAC = () => {
       console.error(error);
     }
   };
-
+  if (RACData.length === 0) {
+    return <LoadingState />;
+  }
   return (
     <>
       <div className="flex justify-between items-baseline ">
         <DynamicName initialName={RACData.name} onSave={handleUpdateRAC} />
         <div className="flex items-center justify-between gap-6">
-          <button
-            type="button"
-            onClick={handleClone}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
-            onClick={() => handleDelete(racID)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(racID)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
         </div>
       </div>
       <div className="mt-4">
         {cloneRAC ? (
-          <>
-            <div>Create Clone RAC</div>
-            <div className="my-5">
-              <input
-                type="text"
-                name="racName"
-                id="racName"
-                value={cloneRACName}
-                onChange={(e) => {
-                  setCloneRACName(e.target.value);
-                }}
-                className="block w-1/4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Enter Clonned RAC Name"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+            <InputText
+              labelName={"Create Clone RAC"}
+              inputName={"racName"}
+              inputValue={cloneRACName}
+              onChange={(e) => {
+                setCloneRACName(e.target.value);
+              }}
+              placeHolder={"Enter Clone RAC Name"}
+            />
+            <div className="flex justify-center items-end">
+              <Button buttonName={"Create Clone"} onClick={() => createCloneRac(cloneRACName)} rectangle={true} />
             </div>
-            <div>
-              <button
-                onClick={() => createCloneRac(cloneRACName)}
-                type="button"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Create Clone
-              </button>
-            </div>
-          </>
+          </div>
         ) : (
           <RacMatrixConfig />
         )}

@@ -2,11 +2,13 @@ export const loanTypeOptions = [
   { value: "asset", label: "Asset" },
   { value: "cash", label: "Cash" },
 ];
+
 export const interestPeriodOptions = [
   { value: "Monthly", label: "Monthly" },
   { value: "Weekly", label: "Weekly" },
   { value: "Fortnightly", label: "Fortnightly" },
 ];
+
 export const signsOptions = [
   { value: "==", label: "==" },
   { value: "<", label: "<" },
@@ -14,6 +16,7 @@ export const signsOptions = [
   { value: "<=", label: "<=" },
   { value: ">=", label: ">=" },
 ];
+
 export const productTypeOptions = [
   { value: "Cash Loan", label: "Cash Loan" },
   { value: "BNPL", label: "BNPL" },
@@ -93,4 +96,32 @@ export const loanStatusOptions = [
   { value: 7, label: "Late" },
   { value: 8, label: "Returned" },
   { value: 9, label: "Defaulted" },
+];
+
+export const nationalityOptions = [
+  { value: "Indian", label: "Indian" },
+  { value: "American", label: "American" },
+  { value: "Russian", label: "Russian" },
+  { value: "African", label: "African" },
+  { value: "Japanese", label: "Japanese" },
+  { value: "Chinese", label: "Chinese" },
+];
+
+export const genderOptions = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+];
+
+export const maritalStatusOptions = [
+  { value: "Single", label: "Single" },
+  { value: "Married", label: "Married" },
+  { value: "Divorced", label: "Divorced" },
+  { value: "Widowed", label: "Widowed" },
+  { value: "Separated", label: "Separated" },
+  { value: "Unknown", label: "Unknown" },
+];
+
+export const residantialStatusOptions = [
+  { value: "Rent", label: "Rent" },
+  { value: "Own", label: "Own" },
 ];

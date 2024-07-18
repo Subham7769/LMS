@@ -7,8 +7,8 @@ function classNames(...classes) {
 const ToggleSwitch = ({ enabled, setEnabled }) => {
   return (
     <>
-      <div className="flex">
-        <div className={`${enabled ? "text-gray-400" : "text-indigo-600"}`}>
+      <div className="flex items-center justify-between">
+        <div className={`${enabled ? "text-gray-400" : "text-indigo-600"} text-[14px]`}>
           Not used
         </div>
         <Switch
@@ -16,14 +16,14 @@ const ToggleSwitch = ({ enabled, setEnabled }) => {
           onChange={setEnabled}
           className={classNames(
             enabled ? "bg-indigo-600" : "bg-gray-200",
-            "mx-2 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+            "items-center mx-1 relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
           )}
         >
           <span className="sr-only">Use setting</span>
           <span
             className={classNames(
               enabled ? "translate-x-5" : "translate-x-0",
-              "pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+              "pointer-events-none relative inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
             )}
           >
             <span
@@ -68,7 +68,7 @@ const ToggleSwitch = ({ enabled, setEnabled }) => {
             </span>
           </span>
         </Switch>
-        <div className={`${enabled ? "text-indigo-600" : "text-gray-400"}`}>
+        <div className={`${enabled ? "text-indigo-600" : "text-gray-400"} text-[14px]`}>
           Used
         </div>
       </div>

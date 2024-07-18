@@ -9,10 +9,10 @@ const Button = ({ buttonIcon: ButtonIcon, buttonName, onClick, rectangle = false
       type="button"
       onClick={onClick}
       className={`
-        ${className}
         ${rectangle ? rectangleClass : ''}
         ${circle ? circleClass : ''}
-        shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 text-white bg-indigo-600
+        shadow-sm hover:bg-indigo-500 focus-visible:outline-indigo-600 bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white 
+        ${className}
       `}
     >
       {ButtonIcon && <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
