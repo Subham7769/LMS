@@ -53,7 +53,7 @@ const TagInput = ({
     <div
       className={`grid grid-cols-2 ${
         inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
-      } md:grid-cols-3 gap-3 mt-3`}
+      } gap-3 mt-3`}
     >
       {formData.tags.map((tag, index) => (
         <div

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 const CustomerAddress = React.lazy(() => import("./CustomerAddress"));
 const CreditInstrument = React.lazy(() => import("./CreditInstrument"));
 const DefaultDetails = React.lazy(() => import("./DefaultDetails"));

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { PlusIcon, TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
+import {
+  PlusIcon,
+  TrashIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
-import useRacRules from "../utils/useRACRules";
+import useRacRules from "../../utils/useRACRules";
 import toast from "react-hot-toast";
-import { RowChanged } from "./Toasts";
-import InputNumber from "./Common/InputNumber/InputNumber";
-import Button from "./Common/Button/Button";
+import { RowChanged } from "../Toasts";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const DeliquencyEq = () => {
   const { racID } = useParams();
@@ -46,7 +50,8 @@ const DeliquencyEq = () => {
         }
       );
 
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
 
       toast.custom((t) => <RowChanged t={t} toast={toast} />);
     } catch (error) {
@@ -55,7 +60,10 @@ const DeliquencyEq = () => {
   };
 
   const handleAddFields = () => {
-    setInputList([...inputList, { periodInMonths: "", noOfLateMonths: "", noOfLateTimes: "" }]);
+    setInputList([
+      ...inputList,
+      { periodInMonths: "", noOfLateMonths: "", noOfLateTimes: "" },
+    ]);
   };
 
   const handleChange = (e, index) => {
@@ -109,7 +117,12 @@ const DeliquencyEq = () => {
         </div>
       ))}
       <div className="text-right mt-5">
-        <Button buttonIcon={CheckCircleIcon} buttonName="Save" onClick={handleAddAllFields} rectangle={true} />
+        <Button
+          buttonIcon={CheckCircleIcon}
+          buttonName="Save"
+          onClick={handleAddAllFields}
+          rectangle={true}
+        />
       </div>
     </div>
   );

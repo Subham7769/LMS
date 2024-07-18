@@ -1,6 +1,6 @@
-import DeliquencyEq from "../DeliquencyEq";
+import DeliquencyEq from "../DeliquencyEq/DeliquencyEq";
 // import TagsDropdown from "../TagsDropdown";
-import ToggleSwitch from "../ToggleSwitch";
+import ToggleSwitch from "../Common/ToggleSwitch/ToggleSwitch";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

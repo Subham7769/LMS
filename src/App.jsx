@@ -19,9 +19,7 @@ const NewRecoveryConfig = lazy(() =>
 const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
 );
-const Scheme = lazy(() => import("./components/Scheme"));
 const Notifications = lazy(() => import("./components/Notifications"));
-const SlideNav = lazy(() => import("./components/SlideNav"));
 const CashLoan = lazy(() => import("./components/CashLoan"));
 const LoanProductConfig = lazy(() => import("./components/LoanProductConfig"));
 const DebtBurdenConfig = lazy(() =>
@@ -45,9 +43,6 @@ const BareMinimumExp = lazy(() =>
 );
 const NotificationText = lazy(() =>
   import("./components/GlobalConfig/NotificationText")
-);
-const SystemConfig = lazy(() =>
-  import("./components/GlobalConfig/SystemConfig")
 );
 const ProductGroup = lazy(() =>
   import("./components/ProductGroup/ProductGroup")
@@ -195,10 +190,8 @@ const routes = [
           { path: "risk-grade-cal", element: <RiskGradeCal /> },
           { path: "bare-min-exp", element: <BareMinimumExp /> },
           { path: "notification-text", element: <NotificationText /> },
-          { path: "system-config", element: <SystemConfig /> },
         ],
       },
-      { path: "/scheme", element: <Scheme /> },
       { path: "/notification", element: <Notifications /> },
       { path: "/customer-care", element: <CustomerCarePage /> },
       {
@@ -232,7 +225,6 @@ const routes = [
         ],
       },
       { path: "/ledger", element: <LedgerPage /> },
-      { path: "/slidenav", element: <SlideNav /> },
       { path: "/test", element: <CreateNew /> },
     ],
   },
