@@ -34,7 +34,7 @@ const Login = () => {
     };
 
     fetch(
-      "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/users/login",
+      "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/login",
       requestOptions
     )
       .then((response) => {

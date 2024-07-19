@@ -90,10 +90,12 @@ const LoanProductConfig = () => {
 
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
-      console.log(formData);
+      
     }
   };
+
   console.log(formData);
+
   useEffect(() => {
     if (productConfigData.length === 0) {
       console.log("Fetching Product Config Data");
@@ -162,8 +164,8 @@ const LoanProductConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
-        productType,
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
+          productType,
         {
           method: "GET",
           headers: {
@@ -304,8 +306,8 @@ const LoanProductConfig = () => {
 
     try {
       const postResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
-        loanProId,
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
+          loanProId,
         {
           method: "PUT",
           headers: {

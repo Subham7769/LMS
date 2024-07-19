@@ -39,7 +39,7 @@ const DeliquencyEq = () => {
 
     try {
       const response = await fetch(
-        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/delinquency-rule/${racID}`,
+        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/delinquency-rule/${racID}`,
         {
           method: "PUT",
           headers: {

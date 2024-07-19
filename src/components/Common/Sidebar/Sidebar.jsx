@@ -10,6 +10,7 @@ import useDBInfo from "../../../utils/useDBInfo";
 import useBEInfo from "../../../utils/useBEInfo";
 import useCreditScoreEq from "../../../utils/useCreditScoreEq";
 import useRulePolicy from "../../../utils/useRulePolicy";
+import useTCLInfo from "../../../utils/useTCLInfo";
 
 const SideBar = () => {
   const [open, setOpen] = useState(
@@ -23,6 +24,7 @@ const SideBar = () => {
   const BEData = useBEInfo();
   const CreditScoreEqInfo = useCreditScoreEq();
   const RulePolicyInfo = useRulePolicy();
+  const TCLInfo = useTCLInfo();
 
   const [submenuStates, setSubmenuStates] = useState(
     JSON.parse(localStorage.getItem("submenuStates")) ??
@@ -53,6 +55,9 @@ const SideBar = () => {
         if (menu.title === "Rule Policy") {
           return { ...menu, submenuItems: RulePolicyInfo };
         }
+        if (menu.title === "TCL") {
+          return { ...menu, submenuItems: TCLInfo };
+        }
         return menu;
       })
     );
@@ -64,6 +69,7 @@ const SideBar = () => {
     BEData,
     CreditScoreEqInfo,
     RulePolicyInfo,
+    TCLInfo
   ]);
 
   useEffect(() => {

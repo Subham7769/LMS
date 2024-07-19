@@ -12,7 +12,7 @@ const useRulePolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp",
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp",
         {
           method: "GET",
           headers: {

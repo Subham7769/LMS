@@ -61,7 +61,7 @@ const useOccupationFormState = (initialState, Occupation, fetchData) => {
 
       try {
         const postResponse = await fetch(
-          "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/employment-sector-point-rule",
+          "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/employment-sector-point-rule",
           {
             method: "POST",
             headers: {
@@ -107,7 +107,7 @@ const useOccupationFormState = (initialState, Occupation, fetchData) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyTempId}/employment-sector-point-rule/${tagToDelete.ruleName}`,
+        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyTempId}/employment-sector-point-rule/${tagToDelete.ruleName}`,
         {
           method: "DELETE",
           headers: {

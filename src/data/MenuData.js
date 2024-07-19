@@ -79,12 +79,9 @@ export const MenusInitial = [
     createFunction: null, //Create function
     buttonName: "Create TCL", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/tcl/1", // navigation
+    navigateSuccess: "/tcl/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [
-      { name: "TCL 1", href: "/tcl/1" },
-      { name: "TCL 2", href: "/tcl/2" },
-      { name: "TCL 3", href: "/tcl/3" },
     ],
     isOpen: false,
   },

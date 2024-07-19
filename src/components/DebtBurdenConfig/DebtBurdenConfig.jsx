@@ -102,7 +102,7 @@ const DebtBurdenConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/dbc-temp/" +
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/" +
           dbcTempId +
           "/clone/" +
           cloneDBCName,
@@ -134,7 +134,7 @@ const DebtBurdenConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling/" +
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling/" +
           dbcTempId,
         {
           method: "GET",
@@ -163,7 +163,7 @@ const DebtBurdenConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/dbc-temp/id/" +
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/id/" +
           dbcTempId,
         {
           method: "GET",
@@ -191,7 +191,7 @@ const DebtBurdenConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/dbc-temp/${dbcTempId}/name/${newName}`,
+        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/${dbcTempId}/name/${newName}`,
         {
           method: "PUT",
           headers: {
@@ -227,7 +227,7 @@ const DebtBurdenConfig = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/dbc-temp/${deleteURL}`,
+        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -259,7 +259,7 @@ const DebtBurdenConfig = () => {
     const authToken = localStorage.getItem("authToken");
     try {
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
         {
           method: "POST",
           headers: {
@@ -312,7 +312,7 @@ const DebtBurdenConfig = () => {
     const ruleToDelete = rules[index];
     try {
       const response = await fetch(
-        `http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling/${dbcTempId}/${ruleToDelete.ruleName}`,
+        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling/${dbcTempId}/${ruleToDelete.ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -353,7 +353,7 @@ const DebtBurdenConfig = () => {
     // Make a PUT request to update the data
     try {
       const response = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling",
         {
           method: "PUT",
           headers: {

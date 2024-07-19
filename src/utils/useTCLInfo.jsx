@@ -1,20 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const useGlobalConfig = (url) => {
-  const [globalInfo, setGlobalInfo] = useState([]);
-  const navigate = useNavigate(); // Adding useNavigate  for navigation
-
+const useTCLInfo = () => {
+  const [TCLInfoData, setTCLInfoData] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
-    getGlobalConfigInfo();
+    getTCLInfo();
   }, []);
 
-  async function getGlobalConfigInfo() {
+  async function getTCLInfo() {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/" +
-          url,
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-tcl",
         {
           method: "GET",
           headers: {
@@ -29,15 +27,23 @@ const useGlobalConfig = (url) => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      const json = await data.json();
-      // console.log(json);
-      setGlobalInfo(json);
+      const TCLDetails = await data.json();
+
+      // Transform the Product data to the desired format
+      const formattedTCLInfoData = TCLDetails.map(
+        ({ tclId, tclName }) => ({
+          name: tclName.replace(/_/g, " "),
+          href: "/tcl/" + tclId,
+        })
+      );
+
+      setTCLInfoData(formattedTCLInfoData);
+      // console.log(TCLInfoData);
     } catch (error) {
       console.error(error);
     }
   }
-  // console.log(subscriberListNew);
-  return globalInfo;
+  return TCLInfoData;
 };
 
-export default useGlobalConfig;
+export default useTCLInfo;

@@ -59,7 +59,7 @@ const BareMinimumExp = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/expenses/add",
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses/add",
         {
           method: "PUT",
           headers: {
@@ -85,7 +85,7 @@ const BareMinimumExp = () => {
 
       // If the POST was successful, make a GET request to fetch the updated data
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/expenses",
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses",
         {
           method: "GET",
           headers: {
@@ -202,7 +202,7 @@ const BareMinimumExp = () => {
 
       // After deletion, fetch the updated data list
       const getResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/expenses",
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses",
         {
           method: "GET",
           headers: {

@@ -7,7 +7,7 @@ export async function createNewRulePolicy(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "http://10.10.10.70:32014/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
+      "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
         Name,
       {
         method: "POST",

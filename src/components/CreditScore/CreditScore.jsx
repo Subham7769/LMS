@@ -124,7 +124,7 @@ const CreditScore = () => {
       try {
         const token = localStorage.getItem("authToken");
         const data = await fetch(
-          "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
+          "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
             creditScoreId,
           {
             method: "GET",
@@ -160,7 +160,7 @@ const CreditScore = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
+        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
           creditScoreId,
         {
           method: "PUT",
