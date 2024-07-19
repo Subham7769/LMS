@@ -87,13 +87,13 @@ const LoanProductConfig = () => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
-      console.log(formData);
+
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
       console.log(formData);
     }
   };
-
+  console.log(formData);
   useEffect(() => {
     if (productConfigData.length === 0) {
       console.log("Fetching Product Config Data");
@@ -163,7 +163,7 @@ const LoanProductConfig = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
-          productType,
+        productType,
         {
           method: "GET",
           headers: {
@@ -269,7 +269,7 @@ const LoanProductConfig = () => {
   const handleDelete = (index) => {
     const deleteList = [...formData.interestEligibleTenure];
     deleteList.splice(index, 1);
-    setFormData(deleteList);
+    setFormData((prevState) => ({ ...prevState, interestEligibleTenure: deleteList }));
     toast.custom((t) => (
       <Warning
         t={t}
@@ -305,7 +305,7 @@ const LoanProductConfig = () => {
     try {
       const postResponse = await fetch(
         "http://10.10.10.70:32014/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
-          loanProId,
+        loanProId,
         {
           method: "PUT",
           headers: {
@@ -464,7 +464,7 @@ const LoanProductConfig = () => {
               <InputSelect
                 labelName="Rule Policy"
                 inputOptions={rpOptions}
-                inputName="rulePolicy"
+                inputName="rulePolicyTempId"
                 inputValue={formData.rulePolicyTempId}
                 onChange={handleInputChange}
                 isSearchable={false}
@@ -476,7 +476,7 @@ const LoanProductConfig = () => {
               <InputSelect
                 labelName="Credit Score Rule"
                 inputOptions={csOptions}
-                inputName="rulePolicy"
+                inputName="creditScoreEqTempId"
                 inputValue={formData.creditScoreEqTempId}
                 onChange={handleInputChange}
                 isSearchable={false}
@@ -733,11 +733,10 @@ const LoanProductConfig = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
+              className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
+                }`}
             >
               <ChevronLeftIcon className="w-5 h-5" />
             </button>
@@ -747,11 +746,10 @@ const LoanProductConfig = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
+              className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
+                }`}
             >
               <ChevronRightIcon className="w-5 h-5" />
             </button>
