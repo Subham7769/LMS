@@ -905,7 +905,7 @@ const RacMatrixConfig = () => {
         {
           basicWageToGrossSalary: appBaseSalary,
           fieldType: "Employer",
-          isSaudi: 0,
+          isResident: 0,
           racId: racID,
           result: 1,
           ruleName: ABSruleNameID,
@@ -914,7 +914,7 @@ const RacMatrixConfig = () => {
         {
           basicWageToGrossSalary: resBaseSalary,
           fieldType: "Employer",
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 1,
           ruleName: RBSruleNameID,
@@ -974,7 +974,7 @@ const RacMatrixConfig = () => {
         {
           fieldType: "Employer",
           firstWriteOff: appFirstWriteOff,
-          isSaudi: 0,
+          isResident: 0,
           racId: racID,
           result: 1,
           ruleName: AWOruleNameID,
@@ -984,7 +984,7 @@ const RacMatrixConfig = () => {
         {
           fieldType: "Employer",
           firstWriteOff: resFirstWriteOff,
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 1,
           ruleName: RWOruleNameID,
@@ -1026,7 +1026,7 @@ const RacMatrixConfig = () => {
         {
           fieldType: "Employer",
           firstAge: appFirstAge,
-          isSaudi: 0,
+          isResident: 0,
           racId: racID,
           result: 1,
           ruleName: AAgeruleNameID,
@@ -1036,7 +1036,7 @@ const RacMatrixConfig = () => {
         {
           fieldType: "Employer",
           firstAge: resFirstAge,
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 1,
           ruleName: RAgeruleNameID,
@@ -1088,7 +1088,7 @@ const RacMatrixConfig = () => {
         {
           fieldType: "Employer",
           grossSalary: appGrossSalary,
-          isSaudi: 0,
+          isResident: 0,
           racId: racID,
           result: 1,
           ruleName: appGrossRuleNameID,
@@ -1097,7 +1097,7 @@ const RacMatrixConfig = () => {
         {
           fieldType: "Employer",
           grossSalary: resGrossSalary,
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 1,
           ruleName: resGrossRuleNameID,
@@ -1155,7 +1155,7 @@ const RacMatrixConfig = () => {
       simahScoreRules: [
         {
           fieldType: "Employer",
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 0,
           ruleName: appSimahRuleNameID,
@@ -1164,7 +1164,7 @@ const RacMatrixConfig = () => {
         },
         {
           fieldType: "Employer",
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 1,
           ruleName: resSimahRuleNameID,
@@ -1256,7 +1256,7 @@ const RacMatrixConfig = () => {
       losRules: [
         {
           fieldType: "Employer",
-          isSaudi: 0,
+          isResident: 0,
           lengthOfService: appLos,
           racId: racID,
           result: 1,
@@ -1265,7 +1265,7 @@ const RacMatrixConfig = () => {
         },
         {
           fieldType: "Employer",
-          isSaudi: 1,
+          isResident: 1,
           lengthOfService: resLos,
           racId: racID,
           result: 1,
@@ -1316,7 +1316,7 @@ const RacMatrixConfig = () => {
         {
           disposableIncome: appDisp,
           fieldType: "Employer",
-          isSaudi: 0,
+          isResident: 0,
           racId: racID,
           result: 1,
           ruleName: appDispRuleNameID,
@@ -1325,7 +1325,7 @@ const RacMatrixConfig = () => {
         {
           disposableIncome: resDisp,
           fieldType: "Employer",
-          isSaudi: 1,
+          isResident: 1,
           racId: racID,
           result: 1,
           ruleName: resDispRuleNameID,
