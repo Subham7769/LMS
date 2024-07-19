@@ -108,7 +108,7 @@ const LoanHistoryComp = ({ loanHistoryData }) => {
     try {
       const token = localStorage.getItem("authToken");
       const url =
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/clearance-letter/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/clearance-letter/" +
         subID +
         "/" +
         filteredLoansarr.loanId;

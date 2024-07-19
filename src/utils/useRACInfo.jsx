@@ -12,7 +12,7 @@ const useRACInfo = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/",
         {
           method: "GET",
           headers: {

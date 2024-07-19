@@ -7,7 +7,7 @@ export async function createNewBE(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/" +
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/" +
         Name,
       {
         method: "POST",

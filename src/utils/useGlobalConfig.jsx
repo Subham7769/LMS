@@ -13,7 +13,7 @@ const useGlobalConfig = (url) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/" +
           url,
         {
           method: "GET",

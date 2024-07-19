@@ -12,7 +12,7 @@ const useCreditScoreEq = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp",
         {
           method: "GET",
           headers: {

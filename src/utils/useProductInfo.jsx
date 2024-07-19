@@ -12,7 +12,7 @@ const useProductInfo = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products",
         {
           method: "GET",
           headers: {

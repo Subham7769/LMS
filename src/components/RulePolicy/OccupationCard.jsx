@@ -35,7 +35,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
 
       try {
         const postResponse = await fetch(
-          "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/employment-sector-point-rule",
+          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/employment-sector-point-rule",
           {
             method: "POST",
             headers: {
@@ -114,7 +114,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/employment-sector-point-rule/${value.ruleName}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/employment-sector-point-rule/${value.ruleName}`,
         {
           method: "DELETE",
           headers: {

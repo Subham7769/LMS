@@ -70,7 +70,7 @@ const LiabilitiesMatrix = () => {
 
     try {
       const postResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "POST",
           headers: {
@@ -95,7 +95,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -169,7 +169,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -269,7 +269,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -336,7 +336,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {
@@ -386,7 +386,7 @@ const LiabilitiesMatrix = () => {
       }
 
       const getResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
         {
           method: "GET",
           headers: {

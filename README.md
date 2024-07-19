@@ -1758,7 +1758,7 @@ const CustomerCare = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
           borrowerID,
         {
           method: "GET",
@@ -1944,7 +1944,7 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+                "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID,
                 {
                     method: "GET",
@@ -2326,7 +2326,7 @@ const SearchBox = () => {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
-                "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+                "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
                 borrowerID,
                 {
                     method: "GET",
@@ -3642,7 +3642,7 @@ const CreateNew = ({ placeholder, buttonName }) => {
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(
-                "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" + Name,
+                "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" + Name,
                 {
                     method: "POST",
                     headers: {

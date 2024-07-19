@@ -12,7 +12,7 @@ const useTCLInfo = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-tcl",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-tcl",
         {
           method: "GET",
           headers: {

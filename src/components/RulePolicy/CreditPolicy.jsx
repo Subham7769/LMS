@@ -300,7 +300,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/all-rule-policy/by-temp-id/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/all-rule-policy/by-temp-id/" +
           rulePolicyId,
         {
           method: "GET",
@@ -395,7 +395,7 @@ const CreditPolicy = () => {
 
     try {
       const postResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-rule",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-rule",
         {
           method: "POST",
           headers: {
@@ -440,7 +440,7 @@ const CreditPolicy = () => {
 
     try {
       const postResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-equation-rule",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-equation-rule",
         {
           method: "POST",
           headers: {
@@ -482,7 +482,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/risk-based-pricing-equation-rule/${ruleName}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/risk-based-pricing-equation-rule/${ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -513,7 +513,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/risk-based-pricing-rule/${ruleName}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/risk-based-pricing-rule/${ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -553,7 +553,7 @@ const CreditPolicy = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-rule",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-rule",
         {
           method: "PUT",
           headers: {
@@ -585,7 +585,7 @@ const CreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-equation-rule",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-equation-rule",
         {
           method: "PUT",
           headers: {

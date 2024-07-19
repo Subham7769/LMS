@@ -61,7 +61,7 @@ const useCityFormState = (initialState, City, fetchData) => {
 
       try {
         const postResponse = await fetch(
-          "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/city-point-rule",
+          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/city-point-rule",
           {
             method: "POST",
             headers: {
@@ -107,7 +107,7 @@ const useCityFormState = (initialState, City, fetchData) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyTempId}/city-point-rule/${tagToDelete.ruleName}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyTempId}/city-point-rule/${tagToDelete.ruleName}`,
         {
           method: "DELETE",
           headers: {

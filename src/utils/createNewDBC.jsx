@@ -7,7 +7,7 @@ export async function createNewDBC(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/" +
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/" +
         Name,
       {
         method: "POST",

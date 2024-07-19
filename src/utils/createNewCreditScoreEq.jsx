@@ -7,7 +7,7 @@ export async function createNewCreditScoreEq(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
         Name,
       {
         method: "POST",

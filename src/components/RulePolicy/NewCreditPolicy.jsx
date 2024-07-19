@@ -19,7 +19,7 @@ const NewCreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/id/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/id/" +
           rulePolicyId,
         {
           method: "GET",
@@ -51,7 +51,7 @@ const NewCreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
           rulePolicyId +
           "/clone/" +
           cloneRPName,
@@ -82,7 +82,7 @@ const NewCreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
           rulePolicyId +
           "/name/" +
           updateCpName,
@@ -114,7 +114,7 @@ const NewCreditPolicy = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${deleteURL}`,
         {
           method: "DELETE",
           headers: {

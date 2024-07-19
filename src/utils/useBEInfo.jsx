@@ -12,7 +12,7 @@ const useBEInfo = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/",
         {
           method: "GET",
           headers: {

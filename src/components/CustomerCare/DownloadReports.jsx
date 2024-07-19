@@ -7,7 +7,7 @@ const DownloadReports = () => {
     try {
       const token = localStorage.getItem("authToken");
       const url =
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
         subID +
         "/simah-report-CSV";
       const response = await fetch(url, {
@@ -42,7 +42,7 @@ const DownloadReports = () => {
     try {
       const token = localStorage.getItem("authToken");
       const url =
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
         subID +
         "/simahReport-To-PDF";
       const response = await fetch(url, {

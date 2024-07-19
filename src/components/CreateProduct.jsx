@@ -161,7 +161,7 @@ const CreateProduct = () => {
 
       // POST request to add new fields
       const postResponse = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products",
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products",
         {
           method: "POST",
           headers: {

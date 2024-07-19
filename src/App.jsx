@@ -136,7 +136,7 @@ const routes = [
       { path: "/recovery/3", element: <RecoveryConfig /> },
       { path: "/recovery/new/:recoveryName", element: <NewRecoveryConfig /> },
       { path: "/tcl", element: <TclPage /> },
-      { path: "/tcl/:tclFileId", element: <TCLViewList /> },
+      { path: "/tcl/:tclId", element: <TCLViewList /> },
       { path: "/project/projectPage", element: <ProjectPage /> },
       { path: "/product", element: <ProductPage /> },
       { path: "/business-rule/1", element: <BpmnComponent /> },

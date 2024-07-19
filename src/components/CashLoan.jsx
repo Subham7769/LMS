@@ -33,7 +33,7 @@ const CashLoan = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${productType}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${productType}`,
         {
           method: "GET",
           headers: {
@@ -61,7 +61,7 @@ const CashLoan = () => {
 
       // Submit the updated data back using PUT request
       const updateResponse = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${loanProId}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${loanProId}`,
         {
           method: "PUT",
           headers: {
@@ -95,7 +95,7 @@ const CashLoan = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${deleteURL}`,
         {
           method: "DELETE",
           headers: {

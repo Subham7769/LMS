@@ -14,7 +14,7 @@ const useBorrowerInfo = (url) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "http://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
           subID +
           url,
         {
