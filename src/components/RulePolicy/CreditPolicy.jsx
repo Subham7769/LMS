@@ -794,7 +794,7 @@ const CreditPolicy = () => {
                         onClick={() => handleUpdateRBPE(index)}
                         className="block w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
                       >
-                        <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
                       </button>
                       <button
                         type="button"
@@ -838,26 +838,8 @@ const CreditPolicy = () => {
                 value={firstRiskBasedPricing}
                 onChange={(e) => setfirstRiskBasedPricing(e.target.value)}
                 placeholder={"0.5"}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
-              {/* <SelectAndNumber
-                labelName={"Minimum Risk Based Pricing"}
-                inputSelectName={"firstRiskBasedPricingOperator"}
-                inputSelectOptions={operatorOptions}
-                inputSelectValue={
-                  riskBasedPricingRules?.operators?.firstRiskBasedPricingOperator
-                }
-                onChangeSelect={handleChange}
-                disabledSelect={false}
-                hiddenSelect={false}
-                inputNumberName={"firstRiskBasedPricing"}
-                // inputNumberid={formData?.dependentsRules?.rules[0]?.ruleName}
-                inputNumberValue={
-                  riskBasedPricingRules?.riskBasedPricingRules?.firstRiskBasedPricing
-                }
-                onChangeNumber={handleChange}
-                placeHolderNumber={"4"}
-              /> */}
             </div>
           </div>
           <div className="mb-3">
@@ -882,7 +864,7 @@ const CreditPolicy = () => {
                 value={secondRiskBasedPricing}
                 onChange={(e) => setsecondRiskBasedPricing(e.target.value)}
                 placeholder={"2"}
-                className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
@@ -895,7 +877,7 @@ const CreditPolicy = () => {
               name="interestRate"
               value={interestRate}
               onChange={(e) => setinterestRate(e.target.value)}
-              className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="4000"
             />
           </div>
@@ -967,7 +949,7 @@ const CreditPolicy = () => {
               ) : (
                 currentItems.map((item, index) => (
                   <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="p-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <div className="flex gap-4">
                           <Select
@@ -987,7 +969,7 @@ const CreditPolicy = () => {
                             value={item.firstRiskBasedPricing}
                             onChange={(e) => handleChange(e, index)}
                             placeholder={"0.5"}
-                            className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
                       ) : (
@@ -1001,7 +983,7 @@ const CreditPolicy = () => {
                         </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="p-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <div className="flex gap-4">
                           <Select
@@ -1021,7 +1003,7 @@ const CreditPolicy = () => {
                             value={item.secondRiskBasedPricing}
                             onChange={(e) => handleChangeRBP(e, index)}
                             placeholder={"2"}
-                            className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
                         </div>
                       ) : (
@@ -1035,14 +1017,14 @@ const CreditPolicy = () => {
                         </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="p-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <input
                           type="number"
                           name="interestRate"
                           value={item.interestRate}
                           onChange={(e) => handleChangeRBP(e, index)}
-                          className="block w-44 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           placeholder="4000"
                         />
                       ) : (
@@ -1051,10 +1033,10 @@ const CreditPolicy = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="p-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <Select
-                          className="w-36"
+                          className="w-32"
                           options={options}
                           name="interestPeriodType"
                           value={[
@@ -1078,7 +1060,7 @@ const CreditPolicy = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                    <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                       <button onClick={() => toggleEdit(index)} type="button">
                         {editingIndex === index ? (
                           <div

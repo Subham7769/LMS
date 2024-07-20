@@ -6,6 +6,7 @@ import SelectAndAdd from '../Common/SelectAndAdd/SelectAndAdd';
 import { useNavigate, useParams } from "react-router-dom";
 import DynamicName from '../Common/DynamicName/DynamicName';
 import { TrashIcon } from "@heroicons/react/20/solid";
+import { convertDate } from '../../utils/convertDate';
 
 // const selectOptions = [
 //     { value: "Cash Loan TCL", label: "Cash Loan TCL" },
@@ -54,6 +55,7 @@ const TCLViewList = () => {
       }
       const TCLDetails = await data.json();
 
+      
       // Transform the Product data to the desired format
       const formattedTCLInfoData = {
         name: TCLDetails.fileName,
@@ -61,7 +63,7 @@ const TCLViewList = () => {
         avgTCL: TCLDetails.avgTcl,
         maxTCL: TCLDetails.maxTcl,
         totalUser: TCLDetails.totalUser,
-        uploadedDate: TCLDetails.createTime,
+        uploadedDate: convertDate(TCLDetails.createTime),
         totalRows: TCLDetails.totalRows,
       };
 
@@ -204,7 +206,7 @@ const TCLViewList = () => {
       }
       navigate("/tcl");
       // Refresh the page after navigation
-      // window.location.reload();
+      window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {

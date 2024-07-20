@@ -45,7 +45,7 @@ const Repayment = () => {
           body: JSON.stringify(postData),
         }
       );
-      if (data.status === 400) {
+      if (data.status === 400 || data.status === 404) {
         const errorData = await data.json();
         console.log(errorData.message);
         return; // Stop further execution
@@ -93,6 +93,11 @@ const Repayment = () => {
         localStorage.removeItem("authToken"); // Clear the token
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
+      }
+      if ( data.status === 404) {
+        const errorData = await data.json();
+        console.log(errorData.message);
+        return <div>{errorData.message}</div>; // Stop further execution
       }
       const json = await data.json();
       setrepaymentData(json);

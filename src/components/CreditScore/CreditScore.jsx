@@ -23,6 +23,7 @@ const CreditScore = () => {
   const [formData, setFormData] = useState({
     aweightage: "",
     bweightage: "",
+    creditScoreEqTempId: creditScoreId,
     cweightage: "",
     dweightage: "",
     eweightage: "",
@@ -46,7 +47,7 @@ const CreditScore = () => {
         {
           ruleName: "1",
           fieldType: "Employer",
-          creditScoreEqTempId: "",
+          creditScoreEqTempId: creditScoreId,
           firstDependent: "",
           secondDependent: "",
           value: "",
@@ -54,7 +55,7 @@ const CreditScore = () => {
         {
           ruleName: "2",
           fieldType: "Employer",
-          creditScoreEqTempId: "",
+          creditScoreEqTempId: creditScoreId,
           firstDependent: "",
           secondDependent: "",
           value: "",
@@ -62,7 +63,7 @@ const CreditScore = () => {
         {
           ruleName: "3",
           fieldType: "Employer",
-          creditScoreEqTempId: "",
+          creditScoreEqTempId: creditScoreId,
           firstDependent: "",
           secondDependent: "",
           value: "",
@@ -267,7 +268,7 @@ const CreditScore = () => {
           </table>
         </div>
       </div>
-      <div className="flex justify-center gap-24 border-b border-gray-300 pb-8 mb-8">
+      <div className="flex justify-center gap-10 border-b border-gray-300 pb-8 mb-8">
         <div>
           <h2 className="text-xl mb-5 text-center">Nationality Score</h2>
           <table className="divide-y divide-gray-300">
@@ -436,9 +437,9 @@ const CreditScore = () => {
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
-                inputNumberid={formData?.dependentsRules?.rules[0]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules[0]?.ruleName}
                 inputNumberValue={
-                  formData.dependentsRules?.rules[0]?.firstDependent
+                  formData?.dependentsRules?.rules[0]?.firstDependent
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
@@ -456,9 +457,9 @@ const CreditScore = () => {
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
                 inputNumberValue={
-                  formData.dependentsRules?.rules[1]?.firstDependent
+                  formData?.dependentsRules?.rules[1]?.firstDependent
                 }
-                inputNumberid={formData?.dependentsRules?.rules[1]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules[1]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -475,9 +476,9 @@ const CreditScore = () => {
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
                 inputNumberValue={
-                  formData.dependentsRules?.rules[2]?.firstDependent
+                  formData?.dependentsRules?.rules[2]?.firstDependent
                 }
-                inputNumberid={formData?.dependentsRules?.rules[2]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules[2]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -498,7 +499,7 @@ const CreditScore = () => {
                 inputNumberValue={
                   formData.dependentsRules?.rules[0]?.secondDependent
                 }
-                inputNumberid={formData?.dependentsRules?.rules[0]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules[0]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -517,7 +518,7 @@ const CreditScore = () => {
                 inputNumberValue={
                   formData.dependentsRules?.rules[1]?.secondDependent
                 }
-                inputNumberid={formData?.dependentsRules?.rules[1]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules[1]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
