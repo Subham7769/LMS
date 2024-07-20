@@ -53,10 +53,6 @@ const LoanProductConfig = () => {
   const [projectOptions, setProjectOptions] = useState([]);
   const [TCLOptions, setTCLOptions] = useState([]);
 
-  // New Data States
-  const [newInterest, setNewInterest] = useState("");
-  const [newTenure, setNewTenure] = useState("");
-
   // Sort & Pagination
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -86,14 +82,30 @@ const LoanProductConfig = () => {
     tclFileId: "",
   });
 
+  const [newForm, setNewForm] = useState({
+    interestRate: "",
+    interestPeriodType: "",
+    loanTenure: "",
+    loanTenureType: "",
+    repaymentTenure: "",
+    repaymentTenureType: "",
+  });
+
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
-
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
-      
+    }
+  };
+
+  const handleNewInputChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    if (type === "checkbox") {
+      setNewForm((prevState) => ({ ...prevState, [name]: checked }));
+    } else {
+      setNewForm((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
@@ -114,8 +126,12 @@ const LoanProductConfig = () => {
         fee: productConfigData.fee,
         interestEligibleTenure: productConfigData.interestEligibleTenure.map(
           (tenure) => ({
-            interestRate: tenure.interestRate || "",
-            tenure: tenure.tenure || "",
+            interestRate: tenure.interestRate,
+            interestPeriodType: tenure.interestPeriodType,
+            loanTenure: tenure.loanTenure,
+            loanTenureType: tenure.loanTenureType,
+            repaymentTenure: tenure.repaymentTenure,
+            repaymentTenureType: tenure.repaymentTenureType,
           })
         ),
         interestPeriodType: productConfigData.interestPeriodType,
@@ -128,7 +144,6 @@ const LoanProductConfig = () => {
         refinancedWith: productConfigData.refinancedWith,
         rulePolicyTempId: productConfigData.rulePolicyTempId,
         tclFileId: productConfigData.tclFileId,
-
       };
       setFormData(assignedData);
     }
@@ -231,7 +246,7 @@ const LoanProductConfig = () => {
     setBeOptions(formattedBEData);
     setRpOptions(rpData);
     setCsOptions(formattedCSData);
-    setTCLOptions(formattedTCLData)
+    setTCLOptions(formattedTCLData);
   }, [
     RACDataInfo,
     DBRConfigInfo,
@@ -239,7 +254,7 @@ const LoanProductConfig = () => {
     BEDataInfo,
     RPDataInfo,
     CSDataInfo,
-    TCLDataInfo
+    TCLDataInfo,
   ]);
 
   const handleAddFields = () => {
@@ -248,13 +263,23 @@ const LoanProductConfig = () => {
       interestEligibleTenure: [
         ...prevFormData.interestEligibleTenure,
         {
-          interestRate: newInterest,
-          tenure: newTenure,
+          interestRate: newForm.interestRate,
+          interestPeriodType: newForm.interestPeriodType,
+          loanTenure: newForm.loanTenure,
+          loanTenureType: newForm.loanTenureType,
+          repaymentTenure: newForm.repaymentTenure,
+          repaymentTenureType: newForm.repaymentTenureType,
         },
       ],
     }));
-    setNewTenure("");
-    setNewInterest("");
+    setNewForm({
+      interestRate: "",
+      interestPeriodType: "",
+      loanTenure: "",
+      loanTenureType: "",
+      repaymentTenure: "",
+      repaymentTenureType: "",
+    });
     toast.custom((t) => (
       <Warning
         t={t}
@@ -265,7 +290,13 @@ const LoanProductConfig = () => {
     ));
   };
 
-  const handleInterestChange = (index, field, value) => {
+  const handleInterestChange = (index, field, eventOrValue) => {
+    // Determine if the input is an event object or a value
+    const value =
+      eventOrValue && eventOrValue.target
+        ? eventOrValue.target.value
+        : eventOrValue.value || eventOrValue;
+
     const updatedInterestTenure = formData.interestEligibleTenure.map(
       (item, idx) => {
         if (index === idx) {
@@ -274,15 +305,21 @@ const LoanProductConfig = () => {
         return item;
       }
     );
+
     setFormData((prevState) => ({
       ...prevState,
       interestEligibleTenure: updatedInterestTenure,
     }));
   };
-  const handleDelete = (index) => {
+
+  const handleDelete = (indexInPage) => {
+    const absoluteIndex = indexOfFirstItem + indexInPage;
     const deleteList = [...formData.interestEligibleTenure];
-    deleteList.splice(index, 1);
-    setFormData((prevState) => ({ ...prevState, interestEligibleTenure: deleteList }));
+    deleteList.splice(absoluteIndex, 1);
+    setFormData((prevState) => ({
+      ...prevState,
+      interestEligibleTenure: deleteList,
+    }));
     toast.custom((t) => (
       <Warning
         t={t}
@@ -292,6 +329,7 @@ const LoanProductConfig = () => {
       />
     ));
   };
+
   const handleSave = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
@@ -353,6 +391,7 @@ const LoanProductConfig = () => {
     ));
   };
 
+  // Sort the items based on sortConfig
   const sortedItems = [...formData.interestEligibleTenure].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
@@ -363,15 +402,13 @@ const LoanProductConfig = () => {
     return 0;
   });
 
-  // Calculate the current items to display
+  // Calculate the indices for current items to display
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
 
   // Determine total number of pages
-  const totalPages = Math.ceil(
-    formData.interestEligibleTenure.length / itemsPerPage
-  );
+  const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
 
   function informUser() {
     toast.custom((t) => (
@@ -551,8 +588,8 @@ const LoanProductConfig = () => {
             <InputText
               labelName="Simple Interest"
               inputName="interestRate"
-              inputValue={newInterest}
-              onChange={(e) => setNewInterest(e.target.value)}
+              inputValue={newForm.interestRate}
+              onChange={handleNewInputChange}
               placeHolder="2%"
             />
           </div>
@@ -561,27 +598,26 @@ const LoanProductConfig = () => {
               labelName="PER"
               inputOptions={options}
               inputName="interestPeriodType"
-              inputValue={formData.interestPeriodType}
-              onChange={handleInputChange}
+              inputValue={newForm.interestPeriodType}
+              onChange={handleNewInputChange}
             />
           </div>
           <div className="relative">
-            <label htmlFor="tenure" className=" px-1 text-xs text-gray-900">
-              Tenure
-            </label>
             <InputNumber
-              inputName="tenure"
-              inputValue={newTenure}
-              onChange={(e) => setNewTenure(e.target.value)}
-              placeHolder="3"
+              labelName="Loan Tenure"
+              inputName="loanTenure"
+              inputValue={newForm.loanTenure}
+              onChange={handleNewInputChange}
+              placeHolder="0"
             />
           </div>
           <div className="relative">
             <InputSelect
-              labelName="Tenure Type"
+              labelName="Loan Tenure Type"
+              inputName="loanTenureType"
               inputOptions={tenureTypeOptions}
-              inputName="tenureType"
-              isSearchable={false}
+              inputValue={newForm.loanTenureType}
+              onChange={handleNewInputChange}
             />
           </div>
           <div className="relative mt-6">
@@ -593,13 +629,31 @@ const LoanProductConfig = () => {
               <PlusIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
+          <div className="relative">
+            <InputNumber
+              labelName="Repayment Tenure"
+              inputName="repaymentTenure"
+              inputValue={newForm.repaymentTenure}
+              onChange={handleNewInputChange}
+              placeHolder="0"
+            />
+          </div>
+          <div className="relative">
+            <InputSelect
+              labelName="Repayment Tenure Type"
+              inputName="repaymentTenureType"
+              inputOptions={tenureTypeOptions}
+              inputValue={newForm.repaymentTenureType}
+              onChange={handleNewInputChange}
+            />
+          </div>
         </div>
         <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th scope="col" onClick={() => handleSort("interestRate")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
                     Simple Interest {getSortIcon("interestRate")}
                   </div>
                 </th>
@@ -607,23 +661,37 @@ const LoanProductConfig = () => {
                   scope="col"
                   onClick={() => handleSort("interestPeriodType")}
                 >
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
                     PER {getSortIcon("interestPeriodType")}
                   </div>
                 </th>
-                <th scope="col" onClick={() => handleSort("tenure")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Tenure {getSortIcon("tenure")}
+                <th scope="col" onClick={() => handleSort("LoanTenure")}>
+                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                    Loan Tenure {getSortIcon("LoanTenure")}
                   </div>
                 </th>
                 <th scope="col" onClick={() => handleSort("tenureType")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Tenure Type {getSortIcon("tenureType")}
+                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                    Loan Tenure Type {getSortIcon("tenureType")}
+                  </div>
+                </th>
+
+                <th scope="col" onClick={() => handleSort("RepaymentTenure")}>
+                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                    Repayment Tenure {getSortIcon("RepaymentTenure")}
                   </div>
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  onClick={() => handleSort("RepaymentTenureType")}
+                >
+                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                    Repayment Tenure Type {getSortIcon("RepaymentTenureType")}
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Actions
                 </th>
@@ -666,14 +734,20 @@ const LoanProductConfig = () => {
                       {editingIndex === index ? (
                         <InputSelect
                           inputOptions={options}
-                          inputName="interestPeriodType"
-                          inputValue={formData.interestPeriodType}
-                          onChange={handleInputChange}
+                          inputName={`interestPeriodType-${index}`}
+                          inputValue={item.interestPeriodType}
+                          onChange={(selectedOption) =>
+                            handleInterestChange(
+                              index,
+                              "interestPeriodType",
+                              selectedOption
+                            )
+                          }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {formData.interestPeriodType
-                            ? formData.interestPeriodType
+                          {item.interestPeriodType
+                            ? item.interestPeriodType
                             : ""}
                         </span>
                       )}
@@ -681,12 +755,12 @@ const LoanProductConfig = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <InputNumber
-                          inputName={`tenure-${index}`}
-                          inputValue={item.tenure}
+                          inputName={`loanTenure-${index}`}
+                          inputValue={item.loanTenure}
                           onChange={(e) =>
                             handleInterestChange(
                               index,
-                              "tenure",
+                              "loanTenure",
                               e.target.value
                             )
                           }
@@ -694,7 +768,7 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.tenure}
+                          {item.loanTenure}
                         </span>
                       )}
                     </td>
@@ -702,12 +776,61 @@ const LoanProductConfig = () => {
                       {editingIndex === index ? (
                         <InputSelect
                           inputOptions={tenureTypeOptions}
-                          inputName="tenureType"
-                          isSearchable={false}
+                          inputName={`loanTenureType-${index}`}
+                          inputValue={item.loanTenureType}
+                          onChange={(selectedOption) =>
+                            handleInterestChange(
+                              index,
+                              "loanTenureType",
+                              selectedOption
+                            )
+                          }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {""}
+                          {item.loanTenureType ? item.loanTenureType : ""}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {editingIndex === index ? (
+                        <InputNumber
+                          inputName={`repaymentTenure-${index}`}
+                          inputValue={item.repaymentTenure}
+                          onChange={(e) =>
+                            handleInterestChange(
+                              index,
+                              "repaymentTenure",
+                              e.target.value
+                            )
+                          }
+                          placeHolder="3"
+                        />
+                      ) : (
+                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {item.repaymentTenure}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {editingIndex === index ? (
+                        <InputSelect
+                          inputOptions={tenureTypeOptions}
+                          inputName={`repaymentTenureType-${index}`}
+                          inputValue={item.repaymentTenureType}
+                          onChange={(selectedOption) =>
+                            handleInterestChange(
+                              index,
+                              "repaymentTenureType",
+                              selectedOption
+                            )
+                          }
+                        />
+                      ) : (
+                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {item.repaymentTenureType
+                            ? item.repaymentTenureType
+                            : ""}
                         </span>
                       )}
                     </td>
@@ -749,10 +872,11 @@ const LoanProductConfig = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1
+              className={`flex items-center px-4 py-2 rounded-md ${
+                currentPage === 1
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-indigo-600 text-white hover:bg-indigo-500"
-                }`}
+              }`}
             >
               <ChevronLeftIcon className="w-5 h-5" />
             </button>
@@ -762,10 +886,11 @@ const LoanProductConfig = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages
+              className={`flex items-center px-4 py-2 rounded-md ${
+                currentPage === totalPages
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-indigo-600 text-white hover:bg-indigo-500"
-                }`}
+              }`}
             >
               <ChevronRightIcon className="w-5 h-5" />
             </button>
