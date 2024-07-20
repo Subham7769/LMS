@@ -16,6 +16,7 @@ import useDBInfo from "../utils/useDBInfo";
 import useBEInfo from "../utils/useBEInfo";
 import useCreditScoreEq from "../utils/useCreditScoreEq";
 import useRulePolicy from "../utils/useRulePolicy";
+import useTCLInfo from "../utils/useTCLInfo";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import useAllProjectInfo from "../utils/useAllProjectInfo";
 import InputSelect from "./Common/InputSelect/InputSelect";
@@ -26,7 +27,6 @@ import {
   tenureOptions,
   tenureTypeOptions,
   options,
-  tclOptionsInitial,
   recoveryOptions,
 } from "../data/OptionsData";
 
@@ -42,6 +42,7 @@ const LoanProductConfig = () => {
   const BEDataInfo = useBEInfo();
   const RPDataInfo = useRulePolicy();
   const CSDataInfo = useCreditScoreEq();
+  const TCLDataInfo = useTCLInfo();
 
   // Options
   const [dbrOptions, setDbrOptions] = useState([]);
@@ -50,6 +51,7 @@ const LoanProductConfig = () => {
   const [csOptions, setCsOptions] = useState([]);
   const [racOptions, setRacOptions] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
+  const [TCLOptions, setTCLOptions] = useState([]);
 
   // New Data States
   const [newInterest, setNewInterest] = useState("");
@@ -81,6 +83,7 @@ const LoanProductConfig = () => {
     racId: "",
     refinancedWith: null,
     rulePolicyTempId: "",
+    tclFileId: "",
   });
 
   const handleInputChange = (e) => {
@@ -124,6 +127,8 @@ const LoanProductConfig = () => {
         racId: productConfigData.racId,
         refinancedWith: productConfigData.refinancedWith,
         rulePolicyTempId: productConfigData.rulePolicyTempId,
+        tclFileId: productConfigData.tclFileId,
+
       };
       setFormData(assignedData);
     }
@@ -215,6 +220,10 @@ const LoanProductConfig = () => {
       value: href.replace("/rule-policy/", ""),
       label: name,
     }));
+    const formattedTCLData = TCLDataInfo.map(({ name, href }) => ({
+      value: href.replace("/tcl/", ""),
+      label: name,
+    }));
 
     setRacOptions(formattedRACData);
     setDbrOptions(finalData);
@@ -222,6 +231,7 @@ const LoanProductConfig = () => {
     setBeOptions(formattedBEData);
     setRpOptions(rpData);
     setCsOptions(formattedCSData);
+    setTCLOptions(formattedTCLData)
   }, [
     RACDataInfo,
     DBRConfigInfo,
@@ -229,6 +239,7 @@ const LoanProductConfig = () => {
     BEDataInfo,
     RPDataInfo,
     CSDataInfo,
+    TCLDataInfo
   ]);
 
   const handleAddFields = () => {
@@ -302,6 +313,7 @@ const LoanProductConfig = () => {
       racId: formData.racId,
       refinancedWith: formData.refinancedWith,
       rulePolicyTempId: formData.rulePolicyTempId,
+      tclFileId: formData.tclFileId,
     };
 
     try {
@@ -419,8 +431,10 @@ const LoanProductConfig = () => {
             <div className="relative">
               <InputSelect
                 labelName="TCL"
-                inputOptions={tclOptionsInitial}
-                inputName="project"
+                inputOptions={TCLOptions}
+                inputName="tclFileId"
+                inputValue={formData.tclFileId}
+                onChange={handleInputChange}
                 isSearchable={false}
               />
             </div>

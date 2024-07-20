@@ -23,6 +23,7 @@ import { createNewDBC } from "../utils/createNewDBC";
 import { createNewBE } from "../utils/createNewBE";
 import { createNewCreditScoreEq } from "../utils/createNewCreditScoreEq";
 import { createNewRulePolicy } from "../utils/createNewRulePolicy";
+import { createNewTCL } from "../utils/createNewTCL";
 
 export const MenusInitial = [
   {
@@ -75,8 +76,8 @@ export const MenusInitial = [
     current: false,
     submenu: true,
     createButton: true, //if create TCL from Side bar Using input box
-    editable: false, //if Button takes input string
-    createFunction: null, //Create function
+    editable: true, //if Button takes input string
+    createFunction: createNewTCL, //Create function
     buttonName: "Create TCL", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/tcl/", // navigation
