@@ -182,16 +182,17 @@ const NewProjectPage = () => {
     const positiveIntegerFields = [
       "interestRatePeriod",
       "downRepaymentGracePeriod",
-      "gracePeriodEMIs",
+      "emiRepaymentGracePeriod",
       "loanGracePeriod",
-      "rollOverPeriod",
+      "rollOverGracePeriod",
     ];
-
+  
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
     } else {
       if (positiveIntegerFields.includes(name)) {
-        if (!/^[1-9]\d*$/.test(value)) {
+        // Allow empty string for the purpose of clearing the input
+        if (value !== "" && !/^[0-9]\d*$/.test(value)) {
           alert("Please enter a positive integer.");
           return;
         }
