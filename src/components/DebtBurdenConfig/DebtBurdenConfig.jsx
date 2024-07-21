@@ -24,7 +24,10 @@ const DebtBurdenConfig = () => {
   const { dbcTempId } = useParams();
   const [rules, setRules] = useState([]);
   const [debtBurdenData, setDebtBurdenData] = useState([]);
-  const [operators, setOperators] = useState([]);
+  const [operators, setOperators] = useState({
+    firstNetIncomeBracketInSARuleOperator: "",
+    secondNetIncomeBracketInSARuleOperator: ""
+  });
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -45,6 +48,8 @@ const DebtBurdenConfig = () => {
     gdbrWithoutMTG: "",
     gdbrWithMTG: "",
   });
+
+  console.log(newForm);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -96,6 +101,17 @@ const DebtBurdenConfig = () => {
   useEffect(() => {
     fetchRules();
     fetchName();
+    setNewForm({
+      ruleName: "0",
+      dbcTempId: dbcTempId,
+      employerRetired: "",
+      startNetIncomeBracketInSARule: "",
+      endNetIncomeBracketInSARule: "",
+      productLevel: "",
+      consumerDBR: "",
+      gdbrWithoutMTG: "",
+      gdbrWithMTG: "",
+    })
   }, [dbcTempId]);
 
   const createCloneDBC = async (cloneDBCName) => {
@@ -266,7 +282,7 @@ const DebtBurdenConfig = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-          body: JSON.stringify({ operators, dbrRules: [newForm] }),
+          body: JSON.stringify({ operators: operators, dbrRules: [newForm] }),
         }
       );
 
@@ -309,7 +325,8 @@ const DebtBurdenConfig = () => {
       position: "bottom-center",
     });
     const authToken = localStorage.getItem("authToken");
-    const ruleToDelete = rules[index];
+    const ruleToDelete = rules[indexOfFirstItem + index];
+    console.log(ruleToDelete.ruleName);
     try {
       const response = await fetch(
         `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/debit-burden-cab-celling/${dbcTempId}/${ruleToDelete.ruleName}`,
@@ -330,6 +347,9 @@ const DebtBurdenConfig = () => {
             message={"The item was deleted successfully"}
           />
         ));
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000)
       } else if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         navigate("/login"); // Redirect to login page
@@ -436,6 +456,7 @@ const DebtBurdenConfig = () => {
   if (loading) {
     return <LoadingState />;
   }
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -483,8 +504,8 @@ const DebtBurdenConfig = () => {
         </>
       ) : (
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-          <div className="flex items-center gap-2">
-            <div className="relative w-24">
+          <div className="grid grid-cols-8 gap-2">
+            <div className="relative">
               <InputSelect
                 labelName={"Rule 1"}
                 inputValue={operators.firstNetIncomeBracketInSARuleOperator}
@@ -492,13 +513,13 @@ const DebtBurdenConfig = () => {
                 onChange={(selected) =>
                   setOperators({
                     ...operators,
-                    firstNetIncomeBracketInSARuleOperator: selected.value,
+                    firstNetIncomeBracketInSARuleOperator: selected.target.value,
                   })
                 }
                 inputName="firstNetIncomeBracketInSARuleOperator"
               />
             </div>
-            <div className="relative w-24">
+            <div className="relative">
               <InputSelect
                 labelName="Rule 2"
                 inputValue={operators.secondNetIncomeBracketInSARuleOperator}
@@ -506,7 +527,7 @@ const DebtBurdenConfig = () => {
                 onChange={(selected) =>
                   setOperators({
                     ...operators,
-                    secondNetIncomeBracketInSARuleOperator: selected.value,
+                    secondNetIncomeBracketInSARuleOperator: selected.target.value,
                   })
                 }
                 inputName="secondNetIncomeBracketInSARuleOperator"
@@ -587,7 +608,6 @@ const DebtBurdenConfig = () => {
               </button>
             </div>
           </div>
-
           <div>
             <div className="w-full">
               <Table
