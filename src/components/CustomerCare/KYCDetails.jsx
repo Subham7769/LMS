@@ -27,8 +27,9 @@ const KYCDetails = () => {
   return (
     <>
       <div className="shadow-md rounded-xl py-4 px-5 border border-red-600">
-        <div className="flex py-3">
-          <div className="py-2 flex flex-col border-r border-gray-300">
+        <div className="grid grid-cols-2 xl:grid-cols-4 py-3">
+          <div className="pl-4 xl:pl-0 py-2 flex flex-col border-r border-gray-300">
+            
             <div className="flex gap-2 py-2">
               <div className="w-36">Full Name : </div>
               <div className="w-44">{fullName}</div>
@@ -42,7 +43,7 @@ const KYCDetails = () => {
               <div className="w-44">{employerName}</div>
             </div>
           </div>
-          <div className="px-4 py-2 flex flex-col border-r border-gray-300">
+          <div className="pl-4 py-2 flex flex-col border-r border-gray-300">
             <div className="flex gap-2 py-2">
               <div className="w-48">Other Allowance : </div>
               <div className="w-28">{otherAllowance}</div>
@@ -56,7 +57,7 @@ const KYCDetails = () => {
               <div className="w-28">{establishmentActivity}</div>
             </div>
           </div>
-          <div className="px-4 py-2 flex flex-col border-r border-gray-300">
+          <div className="pl-4 py-2 flex flex-col border-r border-gray-300">
             <div className="flex gap-2 py-2">
               <div className="w-40">Housing Allowance : </div>
               <div>{housingAllowance}</div>
@@ -66,7 +67,7 @@ const KYCDetails = () => {
               <div>{employmentStatus}</div>
             </div>
           </div>
-          <div className="px-4 py-2 flex flex-col">
+          <div className="pl-4 py-2 flex flex-col">
             <div className="flex gap-2 py-2">
               <div className="w-36">Basic Wage : </div>
               <div>{basicWage}</div>

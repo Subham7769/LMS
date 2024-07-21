@@ -11,6 +11,10 @@ const LoanHistory = () => {
         <LoadingState />
       </>
     );
+  }else if(loanHistoryData.status === 500){
+    return (
+      <div>{loanHistoryData.error}</div>
+    )
   }
 
   return (

@@ -36,6 +36,7 @@ const useBorrowerInfo = (url) => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
+
       const json = await data.json();
       // console.log(json);
       setSubscriberList(json);
@@ -43,7 +44,7 @@ const useBorrowerInfo = (url) => {
       console.error(error);
     }
   }
-  // console.log(subscriberListNew);
+  console.log(subscriberListNew);
   return subscriberListNew;
 };
 
