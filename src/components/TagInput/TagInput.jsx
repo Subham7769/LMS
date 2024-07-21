@@ -58,7 +58,7 @@ const TagInput = ({
       {formData.tags.map((tag, index) => (
         <div
           key={index}
-          className="bg-yellow-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
+          className="bg-gray-300 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
         >
           <div>{tag[inputSelectName ? inputSelectName : inputTextName]}</div>
           <div>|</div>
