@@ -80,6 +80,7 @@ const LoanForm = () => {
     openLoanOperator: "",
     openLoanAmount: "",
   });
+  // console.log(formData);
 
   useEffect(() => {
     getProjectInfo();
@@ -187,6 +188,7 @@ const LoanForm = () => {
         tclIncludeInterest: ProjectData.tclIncludeInterest,
         lateRepaymentPenalty: ProjectData.lateRepaymentPenalty,
         earlyRepaymentDiscount: ProjectData.earlyRepaymentDiscount,
+        hasDownPayment:ProjectData.hasDownPayment,
         managementFee: ProjectData.managementFee,
         vatFee: ProjectData.vatFee,
         // Criteria fields initialized as empty, will be updated by parseCriteriaAndSetFormData
