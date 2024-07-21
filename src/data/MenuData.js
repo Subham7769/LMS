@@ -224,7 +224,7 @@ export const MenusInitial = [
   },
   {
     title: "Global Config",
-    href: "/global-config",
+    href: "/global-config/liability-matrix",
     icon: Cog6ToothIcon,
     current: false,
     submenu: true,

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { productTypeOptions } from "../../data/OptionsData";
+// import { productTypeOptions } from "../../data/OptionsData";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
 import useGroupFormState from "../../utils/useGroupFormState";
@@ -16,6 +16,7 @@ const ProductGroup = () => {
   const isNewGroup = groupName === "newGroup";
   const newGroupName = location.state?.Name || "New Group";
   const [loading, setLoading] = useState(false);
+  const [productTypeOptions, setProductTypeOptions] = useState([]);
 
   const {
     formData,
@@ -69,6 +70,13 @@ const ProductGroup = () => {
         hardLimit: data.financeHardLimit.hardLimit,
         overduePercentage: data.overDuePercentage.percentageFromEmi,
       };
+
+      const formattedProductTypeOptions = data.activeLoansCount.map((item) => ({
+        value: item.productType,
+        label: item.productType
+      }))
+
+      setProductTypeOptions(formattedProductTypeOptions)
 
       setFormData(formattedData);
       setLoading(false);

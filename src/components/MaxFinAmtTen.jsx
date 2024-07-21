@@ -83,8 +83,9 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     setInputList(list);
   };
 
-  const handleDelete = (index) => {
-    const ruleToDelete = inputList[index];
+  const handleDelete = (indexInPage) => {
+    const absoluteIndex = indexOfFirstItem + indexInPage;
+    const ruleToDelete = inputList[absoluteIndex];
     fetch(
       `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
       {
@@ -108,7 +109,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
           console.log("Empty response");
         }
         const list = [...inputList];
-        list.splice(index, 1);
+        list.splice(absoluteIndex, 1);
         setInputList(list);
         fetchData();
         toast.custom((t) => (
