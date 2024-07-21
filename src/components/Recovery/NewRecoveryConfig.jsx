@@ -5,7 +5,6 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
-import InputText from "../Common/InputText/InputText";
 import { useParams } from "react-router-dom";
 
 const options = [

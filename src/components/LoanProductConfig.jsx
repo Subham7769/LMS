@@ -91,7 +91,7 @@ const LoanProductConfig = () => {
     repaymentTenureType: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
@@ -258,19 +258,7 @@ const LoanProductConfig = () => {
   ]);
 
   const handleAddFields = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      interestEligibleTenure: [
-        ...prevFormData.interestEligibleTenure,
-        {
-          interestRate: newForm.interestRate,
-          interestPeriodType: newForm.interestPeriodType,
-          loanTenure: newForm.loanTenure,
-          loanTenureType: newForm.loanTenureType,
-          repaymentTenure: newForm.repaymentTenure,
-          repaymentTenureType: newForm.repaymentTenureType,
-        },
-      ],
+    setFormData((prevFormData) => ({ ...prevFormData, interestEligibleTenure: [ ...prevFormData.interestEligibleTenure, newForm, ],
     }));
     setNewForm({
       interestRate: "",
@@ -441,7 +429,7 @@ const LoanProductConfig = () => {
                     ? formData.eligibleCustomerType
                     : ""
                 }
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -451,7 +439,7 @@ const LoanProductConfig = () => {
                 inputOptions={racOptions}
                 inputName="racId"
                 inputValue={formData.racId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -461,7 +449,7 @@ const LoanProductConfig = () => {
                 inputOptions={projectOptions}
                 inputName="projectId"
                 inputValue={formData.projectId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -471,7 +459,7 @@ const LoanProductConfig = () => {
                 inputOptions={TCLOptions}
                 inputName="tclFileId"
                 inputValue={formData.tclFileId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -499,7 +487,7 @@ const LoanProductConfig = () => {
                 inputOptions={dbrOptions}
                 inputName="dbcTempId"
                 inputValue={formData.dbcTempId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -509,7 +497,7 @@ const LoanProductConfig = () => {
                 inputOptions={beOptions}
                 inputName="blockEmployersTempId"
                 inputValue={formData.blockEmployersTempId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -519,7 +507,7 @@ const LoanProductConfig = () => {
                 inputOptions={rpOptions}
                 inputName="rulePolicyTempId"
                 inputValue={formData.rulePolicyTempId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -531,7 +519,7 @@ const LoanProductConfig = () => {
                 inputOptions={csOptions}
                 inputName="creditScoreEqTempId"
                 inputValue={formData.creditScoreEqTempId}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 isSearchable={false}
               />
             </div>
@@ -542,7 +530,7 @@ const LoanProductConfig = () => {
                 labelName="Processing Fee"
                 inputName="fee"
                 inputValue={formData.fee}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 placeHolder="1%"
               />
             </div>
@@ -551,7 +539,7 @@ const LoanProductConfig = () => {
                 labelName="Management Fee Vat"
                 inputName="managementFeeVat"
                 inputValue={formData.managementFeeVat}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 placeHolder="15%"
               />
             </div>
@@ -560,7 +548,7 @@ const LoanProductConfig = () => {
                 labelName="No. of Installments For Early Settlement"
                 inputName="numberOfEmisForEarlySettlement"
                 inputValue={formData.numberOfEmisForEarlySettlement}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 placeHolder="3"
               />
             </div>
@@ -569,7 +557,7 @@ const LoanProductConfig = () => {
               <InputCheckbox
                 labelName="Refinanced With"
                 inputChecked={formData.refinancedWith}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 inputName="refinancedWith"
               />
             </div>
@@ -577,7 +565,7 @@ const LoanProductConfig = () => {
               <InputCheckbox
                 labelName="Disable RAC"
                 inputChecked={formData.disableRac}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 inputName="disableRac"
               />
             </div>

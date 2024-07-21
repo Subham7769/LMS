@@ -37,7 +37,7 @@ const DebtBurdenConfig = () => {
   const [cloneDBC, setCloneDBC] = useState(false);
   const [cloneDBCName, setCloneDBCName] = useState("");
 
-  const [newForm, setNewForm] = useState({
+  const [formData, setFormData] = useState({
     ruleName: "0",
     dbcTempId: dbcTempId,
     employerRetired: "",
@@ -49,7 +49,7 @@ const DebtBurdenConfig = () => {
     gdbrWithMTG: "",
   });
 
-  console.log(newForm);
+  console.log(formData);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -89,19 +89,19 @@ const DebtBurdenConfig = () => {
     setEditingIndex(editingIndex === index ? null : index);
   };
 
-  const handleNewFormChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
-      setNewForm((prevState) => ({ ...prevState, [name]: checked }));
+      setFormData((prevState) => ({ ...prevState, [name]: checked }));
     } else {
-      setNewForm((prevState) => ({ ...prevState, [name]: value }));
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
   useEffect(() => {
     fetchRules();
     fetchName();
-    setNewForm({
+    setFormData({
       ruleName: "0",
       dbcTempId: dbcTempId,
       employerRetired: "",
@@ -282,7 +282,7 @@ const DebtBurdenConfig = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-          body: JSON.stringify({ operators: operators, dbrRules: [newForm] }),
+          body: JSON.stringify({ operators: operators, dbrRules: [formData] }),
         }
       );
 
@@ -298,7 +298,7 @@ const DebtBurdenConfig = () => {
             message={"The item was added successfully"}
           />
         ));
-        setNewForm({
+        setFormData({
           ruleName: "0",
           dbcTempId: dbcTempId,
           employerRetired: "",
@@ -360,7 +360,7 @@ const DebtBurdenConfig = () => {
     }
   };
 
-  const handleChange = async (index, field, value) => {
+  const handleTableChange = async (index, field, value) => {
     toast.loading("Updating...", {
       duration: 1000,
       position: "bottom-center",
@@ -539,8 +539,8 @@ const DebtBurdenConfig = () => {
               <InputNumber
                 labelName="Start Net"
                 inputName={`startNetIncomeBracketInSARule`}
-                inputValue={newForm.startNetIncomeBracketInSARule}
-                onChange={handleNewFormChange}
+                inputValue={formData.startNetIncomeBracketInSARule}
+                onChange={handleChange}
                 placeHolder="10000"
               />
             </div>
@@ -548,8 +548,8 @@ const DebtBurdenConfig = () => {
               <InputNumber
                 labelName="End Net"
                 inputName={`endNetIncomeBracketInSARule`}
-                inputValue={newForm.endNetIncomeBracketInSARule}
-                onChange={handleNewFormChange}
+                inputValue={formData.endNetIncomeBracketInSARule}
+                onChange={handleChange}
                 placeHolder="20000"
               />
             </div>
@@ -557,8 +557,8 @@ const DebtBurdenConfig = () => {
               <InputText
                 labelName="Product Level"
                 inputName={`productLevel`}
-                inputValue={newForm.productLevel}
-                onChange={handleNewFormChange}
+                inputValue={formData.productLevel}
+                onChange={handleChange}
                 placeHolder="33%"
               />
             </div>
@@ -566,8 +566,8 @@ const DebtBurdenConfig = () => {
               <InputText
                 labelName="Consumer DBR"
                 inputName={`consumerDBR`}
-                inputValue={newForm.consumerDBR}
-                onChange={handleNewFormChange}
+                inputValue={formData.consumerDBR}
+                onChange={handleChange}
                 placeHolder="65%"
               />
             </div>
@@ -575,8 +575,8 @@ const DebtBurdenConfig = () => {
               <InputText
                 labelName="GDBR (Without MTG)"
                 inputName={`gdbrWithoutMTG`}
-                inputValue={newForm.gdbrWithoutMTG}
-                onChange={handleNewFormChange}
+                inputValue={formData.gdbrWithoutMTG}
+                onChange={handleChange}
                 placeHolder="65%"
               />
             </div>
@@ -584,8 +584,8 @@ const DebtBurdenConfig = () => {
               <InputSelect
                 labelName="Employer Retired"
                 inputName={`employerRetired`}
-                inputValue={newForm.employerRetired}
-                onChange={handleNewFormChange}
+                inputValue={formData.employerRetired}
+                onChange={handleChange}
                 inputOptions={empOptions}
               />
             </div>
@@ -593,8 +593,8 @@ const DebtBurdenConfig = () => {
               <InputText
                 labelName="GDBR (including MTG)"
                 inputName={`gdbrWithMTG`}
-                inputValue={newForm.gdbrWithMTG}
-                onChange={handleNewFormChange}
+                inputValue={formData.gdbrWithMTG}
+                onChange={handleChange}
                 placeHolder="65%"
               />
             </div>
@@ -611,7 +611,7 @@ const DebtBurdenConfig = () => {
           <div>
             <div className="w-full">
               <Table
-                handleChange={handleChange}
+                handleChange={handleTableChange}
                 handleDelete={handleDelete}
                 handleSort={handleSort}
                 toggleEdit={toggleEdit}

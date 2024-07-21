@@ -8,14 +8,24 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import InputText from "../Common/InputText/InputText";
 
 const BlockedEmployer = () => {
-  const [name, setName] = useState("");
   const [itemName, setItemName] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [cloneBE, setCloneBE] = useState(false);
-  const [cloneBEName, setCloneBEName] = useState("");
   const { blockEmployersTempId } = useParams();
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    blockEmployersTempId: blockEmployersTempId,
+    name: "",
+    cloneBEName: "",
+    fieldType: "Employer",
+    result: 1,
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   async function fetchData() {
     setLoading(true);
@@ -23,7 +33,7 @@ const BlockedEmployer = () => {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/block-employers-rule/" +
-          blockEmployersTempId,
+        blockEmployersTempId,
         {
           method: "GET",
           headers: {
@@ -77,7 +87,7 @@ const BlockedEmployer = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/id/" +
-          blockEmployersTempId,
+        blockEmployersTempId,
         {
           method: "GET",
           headers: {
@@ -165,14 +175,14 @@ const BlockedEmployer = () => {
     e.preventDefault();
     // setLoading(true)
     const payload = {
-      blockEmployerName: name,
-      blockEmployersTempId: blockEmployersTempId,
-      fieldType: "Employer",
-      result: 1,
+      blockEmployerName: formData.name,
+      blockEmployersTempId: formData.blockEmployersTempId,
+      fieldType: formData.fieldType,
+      result: formData.result,
       ruleName: data && data[0] && data[0].ruleName ? data[0].ruleName : "0",
     };
     try {
-      if (name === "") {
+      if (formData.name === "") {
         toast.custom((t) => (
           <Failed
             t={t}
@@ -205,7 +215,13 @@ const BlockedEmployer = () => {
           />
         ));
         fetchData();
-        setName("");
+        setFormData({
+          blockEmployersTempId: blockEmployersTempId,
+          name: "",
+          cloneBEName: "",
+          fieldType: "Employer",
+          result: 1,
+        })
       }
     } catch (error) {
       console.log(error.message);
@@ -217,9 +233,9 @@ const BlockedEmployer = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/" +
-          blockEmployersTempId +
-          "/clone/" +
-          cloneBEName,
+        blockEmployersTempId +
+        "/clone/" +
+        cloneBEName,
         {
           method: "POST",
           headers: {
@@ -247,6 +263,8 @@ const BlockedEmployer = () => {
     fetchData();
     fetchName();
   }, [blockEmployersTempId]);
+
+
 
   if (loading) {
     return <LoadingState />;
@@ -278,17 +296,15 @@ const BlockedEmployer = () => {
           <div>Create {itemName} clone</div>
           <div className="my-5 w-1/4">
             <InputText
-              inputName="dbcName"
-              inputValue={cloneBEName}
-              onChange={(e) => {
-                setCloneBEName(e.target.value);
-              }}
+              inputName="cloneBEName"
+              inputValue={formData.cloneBEName}
+              onChange={handleChange}
               placeHolder="Enter Name of Clone"
             />
           </div>
           <div>
             <button
-              onClick={() => createCloneBE(cloneBEName)}
+              onClick={() => createCloneBE(formData.cloneBEName)}
               type="button"
               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
@@ -304,8 +320,8 @@ const BlockedEmployer = () => {
               <InputText
                 labelName="Add Blocked Employer"
                 inputName="name"
-                inputValue={name}
-                onChange={(e) => setName(e.target.value)}
+                inputValue={formData.name}
+                onChange={handleChange}
                 placeHolder="Blocked Employer"
               />
             </div>
@@ -321,7 +337,7 @@ const BlockedEmployer = () => {
             return item.blockEmployersName.map((name, i) => (
               <div key={`${index}-${i}`} className="flex gap-5 items-end mt-5">
                 <div className="relative w-1/4">
-                  <InputText inputValue={name} />
+                  <InputText inputValue={name} disabled={true} />
                 </div>
                 <button
                   type="button"
