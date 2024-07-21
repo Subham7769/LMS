@@ -19,12 +19,12 @@ import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
+import DynamicName from "../Common/DynamicName/DynamicName";
 
 const LoanForm = () => {
   const [ProjectData, setProjectData] = useState([]);
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
-  const [editing, setEditing] = useState(false);
   const { projectId } = useParams();
   const navigate = useNavigate();
   const formattedDate = (date) => {
@@ -217,29 +217,41 @@ const LoanForm = () => {
   }, [formData.country]);
 
   const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    const positiveIntegerFields = [
-      "interestRatePeriod",
-      "downRepaymentGracePeriod",
-      "emiRepaymentGracePeriod",
-      "loanGracePeriod",
-      "rollOverGracePeriod",
-    ];
-  
-    if (type === "checkbox") {
-      setFormData((prevState) => ({ ...prevState, [name]: checked }));
+    // Check if e is an event or a string
+    if (typeof e === "string") {
+      setFormData((prevState) => ({ ...prevState, name: e }));
+      toast.custom((t) => (
+        <Warning
+          t={t}
+          toast={toast}
+          title={"Not Updated Yet"}
+          message={"To confirm the name change click Update button"}
+        />
+      ));
     } else {
-      if (positiveIntegerFields.includes(name)) {
-        // Allow empty string for the purpose of clearing the input
-        if (value !== "" && !/^[0-9]\d*$/.test(value)) {
-          alert("Please enter a positive integer.");
-          return;
+      const { name, value, checked, type } = e.target;
+      const positiveIntegerFields = [
+        "interestRatePeriod",
+        "downRepaymentGracePeriod",
+        "emiRepaymentGracePeriod",
+        "loanGracePeriod",
+        "rollOverGracePeriod",
+      ];
+
+      if (type === "checkbox") {
+        setFormData((prevState) => ({ ...prevState, [name]: checked }));
+      } else {
+        if (positiveIntegerFields.includes(name)) {
+          // Allow empty string for the purpose of clearing the input
+          if (value !== "" && !/^[0-9]\d*$/.test(value)) {
+            alert("Please enter a positive integer.");
+            return;
+          }
         }
+        setFormData((prevState) => ({ ...prevState, [name]: value }));
       }
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
-  
 
   const handleSubmit = async () => {
     const formattedStartDate =
@@ -395,60 +407,16 @@ const LoanForm = () => {
     ));
   };
 
-  const notifyUser = () => {
-    setEditing(false);
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Not Updated Yet"}
-        message={"To confirm the name change click Update button"}
-      />
-    ));
-  };
-
   if (ProjectData.length === 0) {
     return <LoadingState />;
   }
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
+      <div className="mb-4">
+        <DynamicName initialName={formData.name} onSave={handleChange} />
+      </div>
       <form className="">
-        <div className="mb-4">
-          {editing ? (
-            <div className="flex items-center space-x-2">
-              <div className="min-w-40 max-w-60">
-                <InputText
-                  inputName={"name"}
-                  inputValue={formData.name}
-                  onChange={handleChange}
-                  placeHolder={"Project Name"}
-                />
-              </div>
-              <button
-                onClick={notifyUser}
-                className="text-green-600 hover:text-green-800"
-              >
-                <CheckCircleIcon className="h-6 w-6" />
-              </button>
-              <button
-                onClick={() => setEditing(false)}
-                className="text-red-600 hover:text-red-800"
-              >
-                <XCircleIcon className="h-6 w-6" />
-              </button>
-            </div>
-          ) : (
-            <h2 onClick={() => setEditing(true)}>
-              <b
-                title="Edit Name"
-                className="text-xl min-w-40 max-w-60 font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
-              >
-                {formData.name}
-              </b>
-            </h2>
-          )}
-        </div>
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Description */}
