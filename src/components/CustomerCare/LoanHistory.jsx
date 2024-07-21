@@ -13,7 +13,7 @@ const LoanHistory = () => {
     );
   }else if(loanHistoryData.status === 500){
     return (
-      <div>{loanHistoryData.error}</div>
+      <div>No data for the request</div>
     )
   }
 
