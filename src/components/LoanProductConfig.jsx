@@ -331,7 +331,7 @@ const LoanProductConfig = () => {
       fee: formData.fee,
       interestEligibleTenure: formData.interestEligibleTenure,
       interestPeriodType: formData.interestPeriodType,
-      isDisableRac: formData.disableRac,
+      disableRac: formData.disableRac,
       managementFeeVat: formData.managementFeeVat,
       numberOfEmisForEarlySettlement: formData.numberOfEmisForEarlySettlement,
       productType: formData.productType,
