@@ -20,7 +20,6 @@ const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
 );
 const Notifications = lazy(() => import("./components/Notifications/Notifications"));
-const CashLoan = lazy(() => import("./components/Product/CashLoan"));
 const LoanProductConfig = lazy(() => import("./components/Product/LoanProductConfig"));
 const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
@@ -155,14 +154,8 @@ const routes = [
         element: <BlockedEmployer />,
       },
       {
-        path: "/product/:productType",
-        element: <CashLoan />,
-        children: [
-          {
-            path: "loan-product-config/:projectId/:loanProId",
-            element: <LoanProductConfig />,
-          },
-        ],
+        path: "/product/:productType/loan-product-config/:projectId/:loanProId",
+        element: <LoanProductConfig />,
       },
       {
         path: "/credit-score",
