@@ -44,7 +44,7 @@ const CreateProduct = () => {
     id:"0",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
-    creditScoreEtTempId: "",
+    creditScoreEtTempId: "663c8ec2-33fd-4388-8c46-695098bdbd74",
     dbcTempId: "",
     disableRac: false,
     eligibleCustomerType: "",
