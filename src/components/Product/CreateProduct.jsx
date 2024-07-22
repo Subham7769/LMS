@@ -1,4 +1,4 @@
-import useRACInfo from "../utils/useRACInfo";
+import useRACInfo from "../../utils/useRACInfo";
 import { useEffect, useState } from "react";
 import {
   PlusIcon,
@@ -7,25 +7,25 @@ import {
 } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "./Toasts";
-import useAllProjectInfo from "../utils/useAllProjectInfo";
-import useDBInfo from "../utils/useDBInfo";
-import useBEInfo from "../utils/useBEInfo";
-import useCreditScoreEq from "../utils/useCreditScoreEq";
-import useRulePolicy from "../utils/useRulePolicy";
-import InputSelect from "./Common/InputSelect/InputSelect";
-import InputText from "./Common/InputText/InputText";
-import InputCheckbox from "./Common/InputCheckbox/InputCheckbox";
-import InputNumber from "./Common/InputNumber/InputNumber";
-import useTCLInfo from "../utils/useTCLInfo";
-import Button from "./Common/Button/Button";
+import { Passed } from "../Toasts";
+import useAllProjectInfo from "../../utils/useAllProjectInfo";
+import useDBInfo from "../../utils/useDBInfo";
+import useBEInfo from "../../utils/useBEInfo";
+import useCreditScoreEq from "../../utils/useCreditScoreEq";
+import useRulePolicy from "../../utils/useRulePolicy";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import useTCLInfo from "../../utils/useTCLInfo";
+import Button from "../Common/Button/Button";
 
 import {
   options,
   tenureOptions,
   recoveryOptions,
   tenureTypeOptions,
-} from "../data/OptionsData";
+} from "../../data/OptionsData";
 
 const CreateProduct = () => {
   const navigate = useNavigate();

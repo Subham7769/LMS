@@ -1,4 +1,4 @@
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
 // import { useEffect, useState } from "react";
 

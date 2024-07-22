@@ -1,6 +1,6 @@
 import LoanHistoryComp from "./LoanHistoryComp";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 
 const LoanHistory = () => {
   const url = "/loans";

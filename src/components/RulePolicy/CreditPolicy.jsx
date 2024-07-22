@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import MaxFinAmtTen from "../MaxFinAmtTen";
+import MaxFinAmtTen from "./MaxFinAmtTen";
 import {
   PlusIcon,
   TrashIcon,
@@ -15,7 +15,7 @@ import CityCard from "./CityCard";
 import OccupationCard from "./OccupationCard";
 import { Passed, Warning } from "../Toasts";
 import toast, { Toaster } from "react-hot-toast";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputNumber from "../Common/InputNumber/InputNumber";
 

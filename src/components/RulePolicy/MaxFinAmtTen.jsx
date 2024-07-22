@@ -8,10 +8,10 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed, Warning } from "./Toasts";
+import { Passed, Warning } from "../Toasts";
 import { useParams } from "react-router-dom";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import InputNumber from "./Common/InputNumber/InputNumber";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const [inputList, setInputList] = useState([]);

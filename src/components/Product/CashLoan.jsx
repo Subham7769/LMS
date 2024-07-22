@@ -4,9 +4,9 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import DynamicName from "./Common/DynamicName/DynamicName";
+import DynamicName from "../Common/DynamicName/DynamicName";
 import toast from "react-hot-toast";
-import Button from "./Common/Button/Button";
+import Button from "../Common/Button/Button";
 
 const CashLoan = () => {
   const { productType, projectId, loanProId } = useParams();

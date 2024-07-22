@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import InputText from "../Common/InputText/InputText";
 

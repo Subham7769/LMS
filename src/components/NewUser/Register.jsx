@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";

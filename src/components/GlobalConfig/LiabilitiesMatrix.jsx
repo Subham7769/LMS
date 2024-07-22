@@ -9,7 +9,7 @@ import _ from "lodash";
 import useGlobalConfig from "../../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 
 const productOptions = [
   { value: "Consumer", label: "Consumer" },

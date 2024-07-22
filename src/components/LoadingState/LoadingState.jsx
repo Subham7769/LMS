@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from '../../src/assets/image/loader1.gif';
+import Loader from '../../assets/image/loader1.gif';
 
 const LoadingState = React.memo(() => {
   return (

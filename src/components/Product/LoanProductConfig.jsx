@@ -1,4 +1,4 @@
-import useRACInfo from "../utils/useRACInfo";
+import useRACInfo from "../../utils/useRACInfo";
 import { useEffect, useState } from "react";
 import {
   PlusIcon,
@@ -10,25 +10,25 @@ import {
 } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { RowChanged, Warning } from "./Toasts";
-import LoadingState from "./LoadingState";
-import useDBInfo from "../utils/useDBInfo";
-import useBEInfo from "../utils/useBEInfo";
-import useCreditScoreEq from "../utils/useCreditScoreEq";
-import useRulePolicy from "../utils/useRulePolicy";
-import useTCLInfo from "../utils/useTCLInfo";
+import { RowChanged, Warning } from "../Toasts";
+import LoadingState from "../LoadingState/LoadingState";
+import useDBInfo from "../../utils/useDBInfo";
+import useBEInfo from "../../utils/useBEInfo";
+import useCreditScoreEq from "../../utils/useCreditScoreEq";
+import useRulePolicy from "../../utils/useRulePolicy";
+import useTCLInfo from "../../utils/useTCLInfo";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import useAllProjectInfo from "../utils/useAllProjectInfo";
-import InputSelect from "./Common/InputSelect/InputSelect";
-import InputText from "./Common/InputText/InputText";
-import InputCheckbox from "./Common/InputCheckbox/InputCheckbox";
-import InputNumber from "./Common/InputNumber/InputNumber";
+import useAllProjectInfo from "../../utils/useAllProjectInfo";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
+import InputNumber from "../Common/InputNumber/InputNumber";
 import {
   tenureOptions,
   tenureTypeOptions,
   options,
   recoveryOptions,
-} from "../data/OptionsData";
+} from "../../data/OptionsData";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
