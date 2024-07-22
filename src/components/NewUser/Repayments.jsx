@@ -77,7 +77,7 @@ const Repayment = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
+        "https://api-dev.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
           userID +
           "/loans/closure",
         {
