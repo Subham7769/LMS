@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;

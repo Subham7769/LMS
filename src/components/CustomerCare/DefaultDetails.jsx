@@ -1,6 +1,6 @@
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 
 const DefaultDetails = () => {
   const url = "/simah-recent-response";

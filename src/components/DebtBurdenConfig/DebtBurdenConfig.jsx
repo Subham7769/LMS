@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed, Warning } from "../Toasts";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import DynamicName from "../Common/DynamicName/DynamicName";

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 
-import BG from "../assets/image/1.webp";
-import BG1 from "../assets/image/2.webp";
-import BG2 from "../assets/image/3.webp";
-import BG3 from "../assets/image/4.webp";
-import BG4 from "../assets/image/5.webp";
-import BG5 from "../assets/image/6.jpg";
+import BG from "../../assets/image/1.webp";
+import BG1 from "../../assets/image/2.webp";
+import BG2 from "../../assets/image/3.webp";
+import BG3 from "../../assets/image/4.webp";
+import BG4 from "../../assets/image/5.webp";
+import BG5 from "../../assets/image/6.jpg";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);

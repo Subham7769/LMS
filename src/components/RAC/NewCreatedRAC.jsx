@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RacMatrixConfig from "./RacMatrixConfig";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";

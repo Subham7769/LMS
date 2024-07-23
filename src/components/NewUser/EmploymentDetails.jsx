@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { Passed } from "../Toasts";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 

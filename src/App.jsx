@@ -19,9 +19,8 @@ const NewRecoveryConfig = lazy(() =>
 const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
 );
-const Notifications = lazy(() => import("./components/Notifications"));
-const CashLoan = lazy(() => import("./components/CashLoan"));
-const LoanProductConfig = lazy(() => import("./components/LoanProductConfig"));
+const Notifications = lazy(() => import("./components/Notifications/Notifications"));
+const LoanProductConfig = lazy(() => import("./components/Product/LoanProductConfig"));
 const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
@@ -64,7 +63,7 @@ const RejectionHistory = lazy(() =>
 const CreditBureauDetails = lazy(() =>
   import("./components/CustomerCare/CreditBureauDetails")
 );
-const Login = lazy(() => import("./components/Login"));
+const Login = lazy(() => import("./components/Login/Login"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const LoanForm = lazy(() => import("./components/Project/LoanForm"));
 const CreateRac = lazy(() => import("./components/RAC/CreateRac"));
@@ -95,12 +94,12 @@ const FamilyDetails = lazy(() => import("./components/NewUser/FamilyDetails"));
 const EmploymentDetails = lazy(() =>
   import("./components/NewUser/EmploymentDetails")
 );
-const CreateProduct = lazy(() => import("./components/CreateProduct"));
+const CreateProduct = lazy(() => import("./components/Product/CreateProduct"));
 const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
 );
 const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
-const LoadingState = lazy(() => import("./components/LoadingState"));
+const LoadingState = lazy(() => import("./components/LoadingState/LoadingState"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const TclPage = lazy(() => import("./pages/TclPage"));
 const RacPage = lazy(() => import("./pages/RacPage"));
@@ -165,14 +164,8 @@ const routes = [
         element: <BlockedEmployer />,
       },
       {
-        path: "/product/:productType",
-        element: <CashLoan />,
-        children: [
-          {
-            path: "loan-product-config/:projectId/:loanProId",
-            element: <LoanProductConfig />,
-          },
-        ],
+        path: "/product/:productType/loan-product-config/:projectId/:loanProId",
+        element: <LoanProductConfig />,
       },
       {
         path: "/credit-score",

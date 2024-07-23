@@ -8,7 +8,7 @@ import Select from "react-select";
 import useGlobalConfig from "../../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 
 const typeOptions = [
   { value: "LOAN", label: "Loan" },

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 import { RowChanged } from "../Toasts";
-import LoadingState from "../LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 
