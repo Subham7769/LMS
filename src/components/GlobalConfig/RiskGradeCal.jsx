@@ -120,7 +120,7 @@ const RiskGradeCal = () => {
     try {
       // PUT request to update the data
       const response = await fetch(
-        `https://lmscarbon.com/carbon-product-service /lmscarbon/api/v1/configs/risk-gradings/${id}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings/${id}`,
         {
           method: "PUT",
           headers: {
@@ -152,7 +152,7 @@ const RiskGradeCal = () => {
   const handleDelete = async (deleteURL) => {
     try {
       const deleteResponse = await fetch(
-        `https://lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings/${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings/${deleteURL}`,
         {
           method: "DELETE",
           headers: {
