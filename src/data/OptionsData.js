@@ -125,3 +125,30 @@ export const residantialStatusOptions = [
   { value: "Rent", label: "Rent" },
   { value: "Own", label: "Own" },
 ];
+
+export const productOptions = [
+  { value: "Consumer", label: "Consumer" },
+  { value: "Non-Consumer", label: "Non-Consumer" },
+];
+
+export const issuerOptions = [
+  { value: "Bank", label: "Bank" },
+  { value: "Other", label: "Other" },
+  { value: "Bank,Other", label: "Bank, Other" },
+];
+
+export const gdbrWoMortageOptions = [
+  { value: "YES", label: "Yes" },
+  { value: "NO", label: "N/A" },
+  { value: "BANK", label: "Yes if issuer is bank" },
+];
+
+export const gdbrWMortageOptions = [
+  { value: "YES", label: "Yes" },
+  { value: "NO", label: "N/A" },
+];
+
+export const defaultScoreOptions = [
+  { value: "YES", label: "Yes" },
+  { value: "NO", label: "N/A" },
+];
