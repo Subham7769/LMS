@@ -23,6 +23,8 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import DynamicName from "../Common/DynamicName/DynamicName";
+import Button from "../Common/Button/Button";
 import {
   tenureOptions,
   tenureTypeOptions,
@@ -366,6 +368,97 @@ const LoanProductConfig = () => {
     }
   };
 
+  async function handleProductNameChange(newName) {
+    toast.loading("Updating name, please wait...", { duration: 3000 });
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${productType}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Check for token expiration or invalid token
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+
+      const productConfigDetails = await response.json();
+
+      // Replace the data of the field
+      productConfigDetails.productType = newName;
+
+      // Rename disableRac to isDisableRac and keep its value
+      // productConfigDetails.isDisableRac = productConfigDetails.disableRac;
+      // delete productConfigDetails.disableRac;
+
+      // Submit the updated data back using PUT request
+      const updateResponse = await fetch(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${loanProId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(productConfigDetails),
+        }
+      );
+
+      // Check if the update was successful
+      if (updateResponse.ok) {
+        toast.success("Name Updated, redirecting...");
+        navigate(
+          `/product/${newName}/loan-product-config/${projectId}/${loanProId}`
+        );
+        window.location.reload();
+      } else {
+        console.error(
+          "Failed to update product info",
+          await updateResponse.text()
+        );
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  }
+
+  const handleDeleteLoanProduct = async (deleteURL) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      // First, send a DELETE request
+      const deleteResponse = await fetch(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${deleteURL}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!deleteResponse.ok) {
+        throw new Error("Failed to delete the item");
+      }
+      navigate("/product");
+      // Refresh the page after navigation
+      window.location.reload();
+
+      // After deletion, fetch the updated data list
+    } catch (error) {
+      console.error(error);
+      // Optionally, handle the error in the UI, such as showing an error message
+    }
+  };
+
   // Handle page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -416,6 +509,10 @@ const LoanProductConfig = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
+      <div className="flex justify-between items-center mb-5">
+          <DynamicName initialName={productType} onSave={handleProductNameChange} />
+          <Button buttonIcon={TrashIcon} onClick={() => handleDeleteLoanProduct(loanProId)} circle={true} className={'bg-red-600 hover:bg-red-500 focus-visible:outline-red-600'} />
+      </div>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="border-b border-gray-300 pb-5">
           <div className="grid grid-cols-5 gap-5 items-end pb-2">

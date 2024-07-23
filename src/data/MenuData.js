@@ -12,7 +12,7 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
-  ClipboardDocumentListIcon
+  ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 import { createNewRac } from "../utils/createNewRac";
 import { createNewProduct } from "../utils/createNewProduct";
@@ -82,8 +82,7 @@ export const MenusInitial = [
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/tcl/", // navigation
     navigateFail: "/login", // navigation
-    submenuItems: [
-    ],
+    submenuItems: [],
     isOpen: false,
   },
   {
@@ -193,13 +192,9 @@ export const MenusInitial = [
     createFunction: createNewProductGroup, //Create function
     buttonName: "Create Group", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "group/newGroup", // navigation
+    navigateSuccess: "/product_group/new/", // navigation
     navigateFail: "/login", // navigation
-    submenuItems: [
-      { name: "Group 1", href: "/group/Group 1" },
-      { name: "Group 2", href: "/group/Group 2" },
-      { name: "Group 3", href: "/group/Group 3" },
-    ],
+    submenuItems: [],
     isOpen: false,
   },
   {

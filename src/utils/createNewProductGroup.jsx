@@ -5,7 +5,7 @@ export async function createNewProductGroup(
   navigateFail
 ) {
   try {
-    navigate(navigateSuccess, { state: { Name: Name } });
+    navigate(navigateSuccess + Name);
   } catch (error) {
     console.error(error);
   }
