@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import useCreditScoreEq from "../../utils/useCreditScoreEq";
 import { useNavigate, useParams } from "react-router-dom";
 import CreditScore from "./CreditScore";
 import Button from "../Common/Button/Button";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const NewCreatedCreditScore = () => {
   const [creditScoreName, setCreditScoreName] = useState("");
-  const [cloneCSE, setCloneCSE] = useState(false);
-  const [cloneCSEName, setCloneCSEName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
 
@@ -46,7 +45,11 @@ const NewCreatedCreditScore = () => {
   }
 
   const handleClone = () => {
-    setCloneCSE(true);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const createCloneCSE = async (cloneCSEName) => {
@@ -149,29 +152,8 @@ const NewCreatedCreditScore = () => {
         </div>
       </div>
       <div className="mt-4">
-        {cloneCSE ? (
-          <>
-            <div>Create Clone Credit Score Equation</div>
-            <div className="my-5">
-              <input
-                type="text"
-                name="cseName"
-                id="cseName"
-                value={cloneCSEName}
-                onChange={(e) => {
-                  setCloneCSEName(e.target.value);
-                }}
-                className="block w-1/4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Enter Clonned  Name"
-              />
-            </div>
-            <div>
-              <Button buttonName={"Create Clone"} onClick={() => createCloneCSE(cloneCSEName)} rectangle={true} />
-            </div>
-          </>
-        ) : (
-          <CreditScore />
-        )}
+        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneCSE} initialName={creditScoreName}/>
+        <CreditScore />
       </div>
     </>
   );

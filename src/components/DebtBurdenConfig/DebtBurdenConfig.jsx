@@ -19,6 +19,7 @@ import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -35,8 +36,7 @@ const DebtBurdenConfig = () => {
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [name, setName] = useState("Fetching Name...");
   const [loading, setLoading] = useState(false);
-  const [cloneDBC, setCloneDBC] = useState(false);
-  const [cloneDBCName, setCloneDBCName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     ruleName: "0",
@@ -114,6 +114,13 @@ const DebtBurdenConfig = () => {
       gdbrWithMTG: "",
     })
   }, [dbcTempId]);
+
+  const handleClone = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const createCloneDBC = async (cloneDBCName) => {
     try {
@@ -464,28 +471,11 @@ const DebtBurdenConfig = () => {
       <div className="mb-4 flex items-center justify-between">
         <DynamicName initialName={name} onSave={updateName} />
         <div className="flex gap-4">
-          <Button buttonName={"Clone"} onClick={() => setCloneDBC(true)} rectangle={true} />
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button buttonIcon={TrashIcon} onClick={() => deleteDBC(dbcTempId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
         </div>
       </div>
-      {cloneDBC ? (
-        <>
-          <div>Create {name} clone</div>
-          <div className="my-5 w-1/4">
-            <InputText
-              inputName="dbcName"
-              inputValue={cloneDBCName}
-              onChange={(e) => {
-                setCloneDBCName(e.target.value);
-              }}
-              placeHolder="Enter Name of Clone"
-            />
-          </div>
-          <div>
-            <Button buttonName={"Create Clone"} onClick={() => createCloneDBC(cloneDBCName)} rectangle={true} />
-          </div>
-        </>
-      ) : (
+        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneDBC} initialName={name}/>
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
           <div className="grid grid-cols-8 gap-2">
             <div className="relative">
@@ -632,7 +622,6 @@ const DebtBurdenConfig = () => {
             </div>
           </div>
         </div>
-      )}
     </>
   );
 };

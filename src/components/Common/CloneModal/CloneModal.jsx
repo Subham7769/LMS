@@ -1,0 +1,35 @@
+import { useState } from 'react';
+import Button from '../Button/Button';
+import InputText from '../InputText/InputText';
+
+const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
+  const [cloneName, setCloneName] = useState('');
+
+  const handleChange = (e) => {
+    setCloneName(e.target.value);
+  }
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <div className="mb-5">
+          <h2 className="text-xl font-semibold">Create Clone of {initialName} </h2>
+        </div>
+        <div className="my-5">
+            <InputText inputName={"clonnedName"} inputValue={cloneName} onChange={handleChange} placeHolder={"Enter Cloned Name"}/>
+        </div>
+        <div className="flex gap-3 justify-end"> 
+          <Button buttonName={"Cancel"} onClick={() => {onClose(); setCloneName("");}} className={" bg-gray-600 text-white hover:bg-gray-500"} rectangle={true}/>
+          <Button buttonName={"Create Clone"} onClick={() => {
+              onCreateClone(cloneName);
+              onClose();
+            }} rectangle={true}/>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CloneModal;
