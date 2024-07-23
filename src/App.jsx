@@ -118,6 +118,9 @@ const NewProjectPage = lazy(() =>
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
 const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
 const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
+const CreateProdGroup = lazy(() =>
+  import("./components/ProductGroup/CreateProdGroup")
+);
 
 const routes = [
   {
@@ -142,8 +145,15 @@ const routes = [
       { path: "/business-rule/1", element: <BpmnComponent /> },
       { path: "/business-rule/2", element: <BpmnComponent2 /> },
       { path: "/business-rule/3", element: <BpmnComponent3 /> },
-      { path: "/product_group", element: <ProductGroupPage /> },
-      { path: "group/:groupName", element: <ProductGroup /> },
+      {
+        path: "/product_group",
+        element: <ProductGroupPage />,
+      },
+      {
+        path: "/product_group/:configId",
+        element: <ProductGroup />,
+      },
+      { path: "/product_group/new/:configId", element: <CreateProdGroup /> },
       { path: "/project/:projectId", element: <LoanForm /> },
       { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
       { path: "/create-product/:productName", element: <CreateProduct /> },
