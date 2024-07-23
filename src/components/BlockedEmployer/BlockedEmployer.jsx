@@ -6,12 +6,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import InputText from "../Common/InputText/InputText";
+import Button from "../Common/Button/Button";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const BlockedEmployer = () => {
   const [itemName, setItemName] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [cloneBE, setCloneBE] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { blockEmployersTempId } = useParams();
   const navigate = useNavigate();
 
@@ -259,60 +261,33 @@ const BlockedEmployer = () => {
     }
   };
 
+  const handleClone = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     fetchData();
     fetchName();
   }, [blockEmployersTempId]);
 
-
-
   if (loading) {
     return <LoadingState />;
   }
+  console.log("test");
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
         <DynamicName initialName={itemName} onSave={updateName} />
         <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={() => setCloneBE(true)}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
-            onClick={() => deleteBE()}
-            type="button"
-            className="w-9 h-9 mr-2 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+          <Button buttonIcon={TrashIcon} onClick={() => deleteBE()} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
         </div>
       </div>
-      {cloneBE ? (
-        <>
-          <div>Create {itemName} clone</div>
-          <div className="my-5 w-1/4">
-            <InputText
-              inputName="cloneBEName"
-              inputValue={formData.cloneBEName}
-              onChange={handleChange}
-              placeHolder="Enter Name of Clone"
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => createCloneBE(formData.cloneBEName)}
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Create Clone
-            </button>
-          </div>
-        </>
-      ) : (
+        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneBE} initialName={itemName}/>
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
           <div className="flex items-center justify-between "></div>
           <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
@@ -325,13 +300,7 @@ const BlockedEmployer = () => {
                 placeHolder="Blocked Employer"
               />
             </div>
-            <button
-              type="button"
-              onClick={postItem}
-              className="rounded-full bg-indigo-600 p-2 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
+            <Button buttonIcon={PlusIcon} onClick={postItem} circle={true}/> 
           </div>
           {data.map((item, index) => {
             return item.blockEmployersName.map((name, i) => (
@@ -339,18 +308,11 @@ const BlockedEmployer = () => {
                 <div className="relative w-1/4">
                   <InputText inputValue={name} disabled={true} />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => deleteItem(name, item.ruleName)}
-                  className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                >
-                  <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                </button>
+                <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
               </div>
             ));
           })}
         </div>
-      )}
     </>
   );
 };

@@ -7,12 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import DynamicName from '../Common/DynamicName/DynamicName';
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { convertDate } from '../../utils/convertDate';
-
-// const selectOptions = [
-//     { value: "Cash Loan TCL", label: "Cash Loan TCL" },
-//     { value: "BNPL TCL", label: "BNPL TCL" },
-//     { value: "Overdraft TCL", label: "Overdraft TCL" },
-// ];
+import Button from '../Common/Button/Button';
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
@@ -218,15 +213,9 @@ const TCLViewList = () => {
   return (
     <Body>
       {/* Select & Add to List */}
-      <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
+      <div className="flex justify-between items-center mb-3">
         <DynamicName initialName={TCLName} onSave={handleUpdateTCL} />
-          <button
-            onClick={() => handleDeleteTCL(tclId)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+        <Button buttonIcon={TrashIcon} onClick={() => handleDeleteTCL(tclId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
       </div>
       <SelectAndAdd
         ListName={'Select TCL List'}

@@ -2,6 +2,7 @@ import React from "react";
 import Select from "react-select";
 import Body from "../Body/Body";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import Button from "../Button/Button";
 
 // Custom Styling
 const customSelectStyles = {
@@ -57,18 +58,7 @@ const SelectAndAdd = ({
             />
           </div>
           <div className="w-2/4">
-            <label htmlFor="search" className="sr-only">
-              {ButtonName}
-            </label>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={onClick}
-                className="rounded-full mt-1 bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <PlusIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
+              <Button buttonIcon={PlusIcon} onClick={onClick} circle={true} />
           </div>
         </div>
       </div>

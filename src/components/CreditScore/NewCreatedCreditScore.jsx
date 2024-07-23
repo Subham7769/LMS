@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import useCreditScoreEq from "../../utils/useCreditScoreEq";
 import { useNavigate, useParams } from "react-router-dom";
 import CreditScore from "./CreditScore";
+import Button from "../Common/Button/Button";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const NewCreatedCreditScore = () => {
   const [creditScoreName, setCreditScoreName] = useState("");
-  const [cloneCSE, setCloneCSE] = useState(false);
-  const [cloneCSEName, setCloneCSEName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/id/" +
-          creditScoreId,
+        creditScoreId,
         {
           method: "GET",
           headers: {
@@ -45,7 +45,11 @@ const NewCreatedCreditScore = () => {
   }
 
   const handleClone = () => {
-    setCloneCSE(true);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const createCloneCSE = async (cloneCSEName) => {
@@ -53,9 +57,9 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-          creditScoreId +
-          "/clone/" +
-          cloneCSEName,
+        creditScoreId +
+        "/clone/" +
+        cloneCSEName,
         {
           method: "POST",
           headers: {
@@ -84,9 +88,9 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-          creditScoreId +
-          "/name/" +
-          updatecseName,
+        creditScoreId +
+        "/name/" +
+        updatecseName,
         {
           method: "PUT",
           headers: {
@@ -143,52 +147,13 @@ const NewCreatedCreditScore = () => {
       <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
         <DynamicName initialName={creditScoreName} onSave={handleUpdateCSE} />
         <div className="flex items-center justify-between gap-6">
-          <button
-            type="button"
-            onClick={handleClone}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
-            onClick={() => handleDelete(creditScoreId)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(creditScoreId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
         </div>
       </div>
       <div className="mt-4">
-        {cloneCSE ? (
-          <>
-            <div>Create Clone Credit Score Equation</div>
-            <div className="my-5">
-              <input
-                type="text"
-                name="cseName"
-                id="cseName"
-                value={cloneCSEName}
-                onChange={(e) => {
-                  setCloneCSEName(e.target.value);
-                }}
-                className="block w-1/4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Enter Clonned  Name"
-              />
-            </div>
-            <div>
-              <button
-                onClick={() => createCloneCSE(cloneCSEName)}
-                type="button"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Create Clone
-              </button>
-            </div>
-          </>
-        ) : (
-          <CreditScore />
-        )}
+        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneCSE} initialName={creditScoreName}/>
+        <CreditScore />
       </div>
     </>
   );

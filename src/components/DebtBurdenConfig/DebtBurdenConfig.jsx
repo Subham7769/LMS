@@ -18,6 +18,8 @@ import { operatorOptions, empOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -34,8 +36,7 @@ const DebtBurdenConfig = () => {
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [name, setName] = useState("Fetching Name...");
   const [loading, setLoading] = useState(false);
-  const [cloneDBC, setCloneDBC] = useState(false);
-  const [cloneDBCName, setCloneDBCName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     ruleName: "0",
@@ -113,6 +114,13 @@ const DebtBurdenConfig = () => {
       gdbrWithMTG: "",
     })
   }, [dbcTempId]);
+
+  const handleClone = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const createCloneDBC = async (cloneDBCName) => {
     try {
@@ -463,46 +471,11 @@ const DebtBurdenConfig = () => {
       <div className="mb-4 flex items-center justify-between">
         <DynamicName initialName={name} onSave={updateName} />
         <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={() => setCloneDBC(true)}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
-            onClick={() => deleteDBC(dbcTempId)}
-            type="button"
-            className="w-9 h-9 mr-2 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+          <Button buttonIcon={TrashIcon} onClick={() => deleteDBC(dbcTempId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
         </div>
       </div>
-      {cloneDBC ? (
-        <>
-          <div>Create {name} clone</div>
-          <div className="my-5 w-1/4">
-            <InputText
-              inputName="dbcName"
-              inputValue={cloneDBCName}
-              onChange={(e) => {
-                setCloneDBCName(e.target.value);
-              }}
-              placeHolder="Enter Name of Clone"
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => createCloneDBC(cloneDBCName)}
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Create Clone
-            </button>
-          </div>
-        </>
-      ) : (
+        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneDBC} initialName={name}/>
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
           <div className="grid grid-cols-8 gap-2">
             <div className="relative">
@@ -599,13 +572,7 @@ const DebtBurdenConfig = () => {
               />
             </div>
             <div className="w-8">
-              <button
-                type="button"
-                onClick={handleAddRule}
-                className="mt-4 sm:mt-0 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <PlusIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+              <Button buttonIcon={PlusIcon} onClick={handleAddRule} circle={true} />
             </div>
           </div>
           <div>
@@ -655,7 +622,6 @@ const DebtBurdenConfig = () => {
             </div>
           </div>
         </div>
-      )}
     </>
   );
 };

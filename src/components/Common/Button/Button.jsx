@@ -20,5 +20,5 @@ const Button = ({ buttonIcon: ButtonIcon, buttonName, onClick, rectangle = false
     </button>
   );
 }
-
+{/* <Button buttonIcon={} buttonName={""} onClick={} rectangle={true} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/> */}
 export default Button;

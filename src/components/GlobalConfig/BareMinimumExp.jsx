@@ -9,6 +9,7 @@ import useGlobalConfig from "../../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
+import Button from "../Common/Button/Button";
 
 const typeOptions = [
   { value: "LOAN", label: "Loan" },
@@ -238,13 +239,7 @@ const BareMinimumExp = () => {
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="flex items-center justify-between ">
           <div></div>
-          <button
-            onClick={handleAddFields}
-            type="button"
-            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonIcon={PlusIcon} onClick={handleAddFields} circle={true} />
         </div>
         <div className="flex gap-4 items-end mt-5 border-b border-gray-300 pb-5">
           <div className="relative w-1/5">
@@ -403,20 +398,8 @@ const BareMinimumExp = () => {
                 placeholder="200"
               />
             </div>
-            <button
-              onClick={() => handleSave(expdata.id)}
-              type="button"
-              className="w-9 h-9 rounded-md bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-            >
-              <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            <button
-              onClick={() => handleDelete(expdata.id)}
-              type="button"
-              className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            >
-              <TrashIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
+            <Button buttonIcon={CheckCircleIcon} onClick={() => handleSave(expdata.id)} circle={true} />
+            <Button buttonIcon={TrashIcon} onClick={() => handleDelete(expdata.id)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
           </div>
         ))}
       </div>

@@ -7,6 +7,7 @@ import { RowChanged } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
+import Button from "../Common/Button/Button";
 
 const options = [
   { value: "==", label: "==" },
@@ -565,14 +566,7 @@ const CreditScore = () => {
         </div>
       </div>
       <div className="text-right mt-8 mr-12">
-        <button
-          type="button"
-          onClick={handleAddFields}
-          className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-          Update
-        </button>
+        <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={handleAddFields} rectangle={true} />
       </div>
     </>
   );

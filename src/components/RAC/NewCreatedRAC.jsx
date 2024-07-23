@@ -5,12 +5,11 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import LoadingState from "../LoadingState/LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import Button from "../Common/Button/Button";
-import InputText from "../Common/InputText/InputText";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const NewCreatedRAC = () => {
   const [RACData, setRACData] = useState([]);
-  const [cloneRAC, setCloneRAC] = useState(false);
-  const [cloneRACName, setCloneRACName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { racID } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
@@ -74,7 +73,10 @@ const NewCreatedRAC = () => {
     }
   };
   const handleClone = () => {
-    setCloneRAC(true);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   const createCloneRac = async (cloneRACName) => {
     try {
@@ -149,24 +151,8 @@ const NewCreatedRAC = () => {
         </div>
       </div>
       <div className="mt-4">
-        {cloneRAC ? (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-            <InputText
-              labelName={"Create Clone RAC"}
-              inputName={"racName"}
-              inputValue={cloneRACName}
-              onChange={(e) => {
-                setCloneRACName(e.target.value);
-              }}
-              placeHolder={"Enter Clone RAC Name"}
-            />
-            <div className="flex justify-center items-end">
-              <Button buttonName={"Create Clone"} onClick={() => createCloneRac(cloneRACName)} rectangle={true} />
-            </div>
-          </div>
-        ) : (
+          <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneRac} initialName={RACData.name}/>
           <RacMatrixConfig />
-        )}
       </div>
     </>
   );

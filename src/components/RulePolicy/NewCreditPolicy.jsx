@@ -3,11 +3,11 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams } from "react-router-dom";
 import CreditPolicy from "./CreditPolicy";
+import CloneModal from "../Common/CloneModal/CloneModal";
 
 const NewCreditPolicy = () => {
   const [creditPolicyName, setCreditPolicyName] = useState("");
-  const [cloneRP, setCloneRP] = useState(false);
-  const [cloneRPName, setCloneRPName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { rulePolicyId } = useParams();
   const navigate = useNavigate();
 
@@ -44,7 +44,11 @@ const NewCreditPolicy = () => {
   }
 
   const handleClone = () => {
-    setCloneRP(true);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const createCloneRP = async (cloneRPName) => {
@@ -159,35 +163,8 @@ const NewCreditPolicy = () => {
         </div>
       </div>
       <div className="mt-4">
-        {cloneRP ? (
-          <>
-            <div>Create Clone Rule Policy</div>
-            <div className="my-5">
-              <input
-                type="text"
-                name="cseName"
-                id="cseName"
-                value={cloneRPName}
-                onChange={(e) => {
-                  setCloneRPName(e.target.value);
-                }}
-                className="block w-1/4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Enter Clonned  Name"
-              />
-            </div>
-            <div>
-              <button
-                onClick={() => createCloneRP(cloneRPName)}
-                type="button"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Create Clone
-              </button>
-            </div>
-          </>
-        ) : (
+          <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneRP} initialName={creditPolicyName}/>
           <CreditPolicy />
-        )}
       </div>
     </>
   );

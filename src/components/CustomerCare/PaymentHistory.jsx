@@ -9,9 +9,7 @@ const PaymentHistory = () => {
     return <LoadingState />;
   }
   return (
-    <>
-      <PaymentHistoryComp repaymentsData={repaymentsData} />
-    </>
+    <PaymentHistoryComp repaymentsData={repaymentsData} />
   );
 };
 export default PaymentHistory;

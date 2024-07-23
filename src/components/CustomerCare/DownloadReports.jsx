@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import Button from "../Common/Button/Button";
 
 const DownloadReports = () => {
   const { subID } = useParams();
@@ -76,22 +77,8 @@ const DownloadReports = () => {
   return (
     <>
       <div className="flex gap-10">
-        <div onClick={handleDownloadCSV}>
-          <button
-            type="button"
-            className="cursor-pointer rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Export CSV File
-          </button>
-        </div>
-        <div onClick={handleDownloadPDF}>
-          <button
-            type="button"
-            className="cursor-pointer rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Export PDF File
-          </button>
-        </div>
+        <Button buttonName={"Export CSV File"} onClick={handleDownloadCSV} rectangle={true} />
+        <Button buttonName={"Export PDF File"} onClick={handleDownloadPDF} rectangle={true} />
       </div>
     </>
   );
