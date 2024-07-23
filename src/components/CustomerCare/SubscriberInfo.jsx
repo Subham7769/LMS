@@ -9,9 +9,7 @@ const SubscriberInfo = () => {
   const kycInfo = useBorrowerInfo(url);
   if (kycInfo.length === 0) {
     return (
-      <>
         <LoadingState />
-      </>
     );
   }
 

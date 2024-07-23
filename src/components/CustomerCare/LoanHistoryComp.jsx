@@ -4,6 +4,7 @@ import LoanInfoModal from "./LoanInfoModal";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import { useParams, useNavigate } from "react-router-dom";
+import Button from "../Common/Button/Button";
 
 const loanStatusOptions = [
   { value: 0, label: "All" },
@@ -261,9 +262,7 @@ const LoanHistoryComp = ({ loanHistoryData }) => {
                   </td>
                   <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                     <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                      <button onClick={() => handleViewDetails(loan)}>
-                        View Details
-                      </button>
+                      <Button buttonName={"View Details"} onClick={() => handleViewDetails(loan)} rectangle={true} />
                     </div>
                     <LoanInfoModal
                       onClose={() => setShowModal(false)}
@@ -299,15 +298,8 @@ const LoanHistoryComp = ({ loanHistoryData }) => {
                   </td>
                   <td className="whitespace-nowrap py-4 px-2 text-gray-500">
                     <div
-                      className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis"
-                      onClick={handleDownloadPdf}
-                    >
-                      <button
-                        type="button"
-                        className="cursor-pointer rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      >
-                        PDF
-                      </button>
+                      className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis" >
+                      <Button buttonName={"PDF"} onClick={handleDownloadPdf} rectangle={true} />
                     </div>
                   </td>
                 </tr>

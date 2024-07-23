@@ -18,6 +18,7 @@ import { operatorOptions, empOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -463,20 +464,8 @@ const DebtBurdenConfig = () => {
       <div className="mb-4 flex items-center justify-between">
         <DynamicName initialName={name} onSave={updateName} />
         <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={() => setCloneDBC(true)}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
-            onClick={() => deleteDBC(dbcTempId)}
-            type="button"
-            className="w-9 h-9 mr-2 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonName={"Clone"} onClick={() => setCloneDBC(true)} rectangle={true} />
+          <Button buttonIcon={TrashIcon} onClick={() => deleteDBC(dbcTempId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
         </div>
       </div>
       {cloneDBC ? (
@@ -493,13 +482,7 @@ const DebtBurdenConfig = () => {
             />
           </div>
           <div>
-            <button
-              onClick={() => createCloneDBC(cloneDBCName)}
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Create Clone
-            </button>
+            <Button buttonName={"Create Clone"} onClick={() => createCloneDBC(cloneDBCName)} rectangle={true} />
           </div>
         </>
       ) : (
@@ -599,13 +582,7 @@ const DebtBurdenConfig = () => {
               />
             </div>
             <div className="w-8">
-              <button
-                type="button"
-                onClick={handleAddRule}
-                className="mt-4 sm:mt-0 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <PlusIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+              <Button buttonIcon={PlusIcon} onClick={handleAddRule} circle={true} />
             </div>
           </div>
           <div>

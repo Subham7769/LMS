@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import InputText from "../Common/InputText/InputText";
+import Button from "../Common/Button/Button";
 
 const BlockedEmployer = () => {
   const [itemName, setItemName] = useState("");
@@ -303,13 +304,7 @@ const BlockedEmployer = () => {
             />
           </div>
           <div>
-            <button
-              onClick={() => createCloneBE(formData.cloneBEName)}
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Create Clone
-            </button>
+            <Button buttonName={"Create Clone"} onClick={() => createCloneBE(formData.cloneBEName)} rectangle={true} />
           </div>
         </>
       ) : (
@@ -325,13 +320,7 @@ const BlockedEmployer = () => {
                 placeHolder="Blocked Employer"
               />
             </div>
-            <button
-              type="button"
-              onClick={postItem}
-              className="rounded-full bg-indigo-600 p-2 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
+            <Button buttonIcon={PlusIcon} onClick={postItem} circle={true}/> 
           </div>
           {data.map((item, index) => {
             return item.blockEmployersName.map((name, i) => (
@@ -339,13 +328,7 @@ const BlockedEmployer = () => {
                 <div className="relative w-1/4">
                   <InputText inputValue={name} disabled={true} />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => deleteItem(name, item.ruleName)}
-                  className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                >
-                  <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                </button>
+                <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
               </div>
             ));
           })}

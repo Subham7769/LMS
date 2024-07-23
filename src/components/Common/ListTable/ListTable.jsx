@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
+import Button from '../Button/Button';
 
 const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable }) => {
   const HeaderCellWidth = ListHeader.length + 1; // Calculate cell width based on header length
@@ -94,13 +95,7 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
                         {/* Add Actions column if present */}
                         {ListHeader.includes('Actions') && (
                           <td className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}>
-                            <button
-                              onClick={() => HandleAction(index)}
-                              type="button"
-                              className="w-8 h-8 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                            >
-                              <TrashIcon className="h-4 w-4" aria-hidden="true" />
-                            </button>
+                            <Button buttonIcon={TrashIcon} onClick={() => HandleAction(index)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
                           </td>
                         )}
                       </tr>

@@ -117,12 +117,7 @@ const DeliquencyEq = () => {
         </div>
       ))}
       <div className="text-right mt-5">
-        <Button
-          buttonIcon={CheckCircleIcon}
-          buttonName="Save"
-          onClick={handleAddAllFields}
-          rectangle={true}
-        />
+        <Button buttonIcon={CheckCircleIcon} buttonName="Save" onClick={handleAddAllFields} rectangle={true} />
       </div>
     </div>
   );

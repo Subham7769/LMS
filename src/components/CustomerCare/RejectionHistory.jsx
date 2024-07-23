@@ -7,15 +7,11 @@ const RejectionHistory = () => {
   const rejectionHistoryData = useBorrowerInfo(url);
   if (rejectionHistoryData.length === 0) {
     return (
-      <>
         <LoadingState />
-      </>
     );
   }
   return (
-    <>
       <RejectionHistoryComp rejectionHistoryData={rejectionHistoryData} />
-    </>
   );
 };
 

@@ -10,6 +10,7 @@ import useGlobalConfig from "../../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
+import Button from "../Common/Button/Button";
 
 const productOptions = [
   { value: "Consumer", label: "Consumer" },
@@ -427,13 +428,7 @@ const LiabilitiesMatrix = () => {
       </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
         <div className="flex items-center justify-between ">
-          <button
-            onClick={handleAddFields}
-            type="button"
-            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonIcon={PlusIcon} onClick={handleAddFields} circle={true} />
         </div>
         <div className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6">
           <div className="flex gap-8 items-end">
@@ -674,13 +669,7 @@ const LiabilitiesMatrix = () => {
                   />
                 </div>
               </div>
-              <button
-                onClick={() => handleDeleteRow(lmdata.simahDescriptionCode)}
-                type="button"
-                className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-              >
-                <TrashIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+              <Button buttonIcon={TrashIcon} onClick={() => handleDeleteRow(lmdata.simahDescriptionCode)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
             </div>
             <div className="flex gap-8 items-end">
               <div className="relative">
@@ -760,13 +749,7 @@ const LiabilitiesMatrix = () => {
           </div>
         ))}
         <div className="text-right mt-5">
-          <button
-            type="button"
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Save
-          </button>
+          <Button buttonIcon={CheckCircleIcon} buttonName={"Save"} onClick={()=>{}} rectangle={true} />
         </div>
         <div className="absolute bottom-1 left-2 text-xs text-gray-500">
           *CB - Credit Bureau

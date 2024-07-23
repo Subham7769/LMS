@@ -5,6 +5,7 @@ import useGlobalConfig from "../../utils/useGlobalConfig";
 import { toast, Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
+import Button from "../Common/Button/Button";
 
 const notiChannelOptions = [
   { value: "PUSH", label: "Push" },
@@ -240,13 +241,9 @@ const NotificationText = () => {
                   placeholder="2 days before the upcoming installment"
                 />
               </div>
-              <button
-                onClick={() => handleSave(notdata.id)}
-                type="button"
-                className="w-9 h-9 mt-12 rounded-md bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-              >
-                <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+              <div>
+                <Button buttonIcon={CheckCircleIcon} buttonName={""} onClick={() => handleSave(notdata.id)} rectangle={true} />
+              </div>
             </div>
           </div>
         ))}

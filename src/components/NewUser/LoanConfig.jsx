@@ -4,7 +4,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import InstallmentInfoComp from "./InstallmentInfoComp";
 import LoadingState from "../LoadingState/LoadingState";
 
 function SampleNextArrow(props) {

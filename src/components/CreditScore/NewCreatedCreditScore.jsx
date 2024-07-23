@@ -4,6 +4,7 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import useCreditScoreEq from "../../utils/useCreditScoreEq";
 import { useNavigate, useParams } from "react-router-dom";
 import CreditScore from "./CreditScore";
+import Button from "../Common/Button/Button";
 
 const NewCreatedCreditScore = () => {
   const [creditScoreName, setCreditScoreName] = useState("");
@@ -21,7 +22,7 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/id/" +
-          creditScoreId,
+        creditScoreId,
         {
           method: "GET",
           headers: {
@@ -53,9 +54,9 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-          creditScoreId +
-          "/clone/" +
-          cloneCSEName,
+        creditScoreId +
+        "/clone/" +
+        cloneCSEName,
         {
           method: "POST",
           headers: {
@@ -84,9 +85,9 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-          creditScoreId +
-          "/name/" +
-          updatecseName,
+        creditScoreId +
+        "/name/" +
+        updatecseName,
         {
           method: "PUT",
           headers: {
@@ -143,20 +144,8 @@ const NewCreatedCreditScore = () => {
       <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
         <DynamicName initialName={creditScoreName} onSave={handleUpdateCSE} />
         <div className="flex items-center justify-between gap-6">
-          <button
-            type="button"
-            onClick={handleClone}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
-            onClick={() => handleDelete(creditScoreId)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(creditScoreId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
         </div>
       </div>
       <div className="mt-4">
@@ -177,13 +166,7 @@ const NewCreatedCreditScore = () => {
               />
             </div>
             <div>
-              <button
-                onClick={() => createCloneCSE(cloneCSEName)}
-                type="button"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Create Clone
-              </button>
+              <Button buttonName={"Create Clone"} onClick={() => createCloneCSE(cloneCSEName)} rectangle={true} />
             </div>
           </>
         ) : (
