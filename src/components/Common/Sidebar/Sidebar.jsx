@@ -12,6 +12,7 @@ import useCreditScoreEq from "../../../utils/useCreditScoreEq";
 import useRulePolicy from "../../../utils/useRulePolicy";
 import useTCLInfo from "../../../utils/useTCLInfo";
 import useProdGroupInfo from "../../../utils/useProdGroupInfo";
+import useRecoveryInfo from "../../../utils/useRecoveryInfo";
 
 const SideBar = () => {
   const [open, setOpen] = useState(
@@ -27,6 +28,7 @@ const SideBar = () => {
   const RulePolicyInfo = useRulePolicy();
   const TCLInfo = useTCLInfo();
   const ProdGroupInfo = useProdGroupInfo();
+  const RecoveryInfo = useRecoveryInfo();
 
   const [submenuStates, setSubmenuStates] = useState(
     JSON.parse(localStorage.getItem("submenuStates")) ??
@@ -63,6 +65,9 @@ const SideBar = () => {
         if (menu.title === "Product Group") {
           return { ...menu, submenuItems: ProdGroupInfo };
         }
+        if (menu.title === "Recovery") {
+          return { ...menu, submenuItems: RecoveryInfo };
+        }
         return menu;
       })
     );
@@ -76,6 +81,7 @@ const SideBar = () => {
     RulePolicyInfo,
     TCLInfo,
     ProdGroupInfo,
+    RecoveryInfo,
   ]);
 
   useEffect(() => {

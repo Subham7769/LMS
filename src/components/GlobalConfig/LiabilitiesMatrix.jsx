@@ -13,7 +13,7 @@ import {
 } from "../../data/OptionsData";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
-import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 
 const LiabilitiesMatrix = () => {
@@ -248,35 +248,31 @@ const LiabilitiesMatrix = () => {
       </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
         <div className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6">
-          <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-8 items-end">
-            <div className="relative ">
-              <InputSelect
-                labelName="Product"
-                inputOptions={productOptions}
-                inputName="product"
-                inputValue={newForm.product}
-                onChange={handleNewInputChange}
-              />
-            </div>
-            <div className="relative">
-              <InputText
-                labelName="CB Description (CODE)"
-                inputName="simahDescriptionCode"
-                placeHolder="TMTG"
-                inputValue={newForm.simahDescriptionCode}
-                onChange={handleNewInputChange}
-              />
-            </div>
-            <div className="relative ">
-              <InputSelect
-                labelName="Issuer"
-                inputOptions={issuerOptions}
-                inputName="issuer"
-                inputValue={newForm.issuer}
-                onChange={handleNewInputChange}
-              />
-            </div>
-            <div className="relative mb-2">
+          <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-8 items-center">
+            <InputSelect
+              labelName="Product"
+              inputOptions={productOptions}
+              inputName="product"
+              inputValue={newForm.product}
+              onChange={handleNewInputChange}
+            />
+            <InputText
+              labelName="CB Description (CODE)"
+              inputName="simahDescriptionCode"
+              placeHolder="TMTG"
+              inputValue={newForm.simahDescriptionCode}
+              onChange={handleNewInputChange}
+            />
+
+            <InputSelect
+              labelName="Issuer"
+              inputOptions={issuerOptions}
+              inputName="issuer"
+              inputValue={newForm.issuer}
+              onChange={handleNewInputChange}
+            />
+
+            <div className="mt-2">
               <InputCheckbox
                 labelName="Active Rule"
                 inputName="activeRule"
@@ -286,42 +282,31 @@ const LiabilitiesMatrix = () => {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-8 items-end">
-            <div className="relative">
-              <InputSelect
-                labelName="GDBR (Without Mortgage)"
-                inputOptions={gdbrWoMortageOptions}
-                inputName="applicabilityGDBR"
-                inputValue={newForm.applicabilityGDBR}
-                onChange={handleNewInputChange}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="GDBR (including Mortgage)"
-                inputOptions={gdbrWMortageOptions}
-                inputName="totalExposure"
-                inputValue={newForm.totalExposure}
-                onChange={handleNewInputChange}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Default considered in CB score"
-                inputOptions={defaultScoreOptions}
-                inputName="defaultConsideredInSIMAHscore"
-                inputValue={newForm.defaultConsideredInSIMAHscore}
-                onChange={handleNewInputChange}
-              />
-            </div>
-            <div className="relative">
-              <button
-                onClick={handleAdd}
-                type="button"
-                className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <PlusIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
+            <InputSelect
+              labelName="GDBR (Without Mortgage)"
+              inputOptions={gdbrWoMortageOptions}
+              inputName="applicabilityGDBR"
+              inputValue={newForm.applicabilityGDBR}
+              onChange={handleNewInputChange}
+            />
+
+            <InputSelect
+              labelName="GDBR (including Mortgage)"
+              inputOptions={gdbrWMortageOptions}
+              inputName="totalExposure"
+              inputValue={newForm.totalExposure}
+              onChange={handleNewInputChange}
+            />
+
+            <InputSelect
+              labelName="Default considered in CB score"
+              inputOptions={defaultScoreOptions}
+              inputName="defaultConsideredInSIMAHscore"
+              inputValue={newForm.defaultConsideredInSIMAHscore}
+              onChange={handleNewInputChange}
+            />
+
+            <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
           </div>
         </div>
         {allData.length > 0 ? (
@@ -368,42 +353,35 @@ const LiabilitiesMatrix = () => {
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-8 items-end">
-                <div className="relative">
-                  <InputSelect
-                    labelName="GDBR (Without Mortgage)"
-                    inputOptions={gdbrWoMortageOptions}
-                    inputName="applicabilityGDBR"
-                    inputValue={item.applicabilityGDBR}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                </div>
-                <div className="relative">
-                  <InputSelect
-                    labelName="GDBR (including Mortgage)"
-                    inputOptions={gdbrWMortageOptions}
-                    inputName="totalExposure"
-                    inputValue={item.totalExposure}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                </div>
-                <div className="relative">
-                  <InputSelect
-                    labelName="Default considered in CB score"
-                    inputOptions={defaultScoreOptions}
-                    inputName="defaultConsideredInSIMAHscore"
-                    inputValue={item.defaultConsideredInSIMAHscore}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                </div>
-                <div className="relative">
-                  <button
-                    onClick={() => handleDeleteRow(item.simahDescriptionCode)}
-                    type="button"
-                    className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                  >
-                    <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </div>
+                <InputSelect
+                  labelName="GDBR (Without Mortgage)"
+                  inputOptions={gdbrWoMortageOptions}
+                  inputName="applicabilityGDBR"
+                  inputValue={item.applicabilityGDBR}
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+                <InputSelect
+                  labelName="GDBR (including Mortgage)"
+                  inputOptions={gdbrWMortageOptions}
+                  inputName="totalExposure"
+                  inputValue={item.totalExposure}
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+                <InputSelect
+                  labelName="Default considered in CB score"
+                  inputOptions={defaultScoreOptions}
+                  inputName="defaultConsideredInSIMAHscore"
+                  inputValue={item.defaultConsideredInSIMAHscore}
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+                <Button
+                  buttonIcon={TrashIcon}
+                  onClick={() => handleDeleteRow(item.simahDescriptionCode)}
+                  circle={true}
+                  className={
+                    "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+                  }
+                />
               </div>
             </div>
           ))

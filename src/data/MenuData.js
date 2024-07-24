@@ -60,13 +60,9 @@ export const MenusInitial = [
     createFunction: createNewRecovery, //Create function
     buttonName: "Create Recovery", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/recovery/new/", // navigation
+    navigateSuccess: "/recovery/", // navigation
     navigateFail: "/login", // navigation
-    submenuItems: [
-      { name: "Recovery 1", href: "/recovery/1" },
-      { name: "Recovery 2", href: "/recovery/2" },
-      { name: "Recovery 3", href: "/recovery/3" },
-    ],
+    submenuItems: [],
     isOpen: false,
   },
   {

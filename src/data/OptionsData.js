@@ -152,3 +152,9 @@ export const defaultScoreOptions = [
   { value: "YES", label: "Yes" },
   { value: "NO", label: "N/A" },
 ];
+
+export const optionsTwo = [
+  { value: "Days", label: "Days" },
+  { value: "Weeks", label: "Weeks" },
+  { value: "Months", label: "Months" },
+];

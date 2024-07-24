@@ -13,14 +13,15 @@ const NewCreatedCreditScore = lazy(() =>
 );
 const CreditScoreEqPage = lazy(() => import("./pages/CreditScoreEqPage"));
 
-const NewRecoveryConfig = lazy(() =>
-  import("./components/Recovery/NewRecoveryConfig")
-);
 const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
 );
-const Notifications = lazy(() => import("./components/Notifications/Notifications"));
-const LoanProductConfig = lazy(() => import("./components/Product/LoanProductConfig"));
+const Notifications = lazy(() =>
+  import("./components/Notifications/Notifications")
+);
+const LoanProductConfig = lazy(() =>
+  import("./components/Product/LoanProductConfig")
+);
 const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
@@ -99,7 +100,9 @@ const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
 );
 const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
-const LoadingState = lazy(() => import("./components/LoadingState/LoadingState"));
+const LoadingState = lazy(() =>
+  import("./components/LoadingState/LoadingState")
+);
 const HomePage = lazy(() => import("./pages/HomePage"));
 const TclPage = lazy(() => import("./pages/TclPage"));
 const RacPage = lazy(() => import("./pages/RacPage"));
@@ -133,10 +136,10 @@ const routes = [
       { path: "/dbc", element: <DebtBurdenPage /> },
       { path: "/blocked-employer", element: <BlockedEmployerPage /> },
       { path: "/recovery", element: <RecoveryPage /> },
-      { path: "/recovery/1", element: <RecoveryConfig /> },
-      { path: "/recovery/2", element: <RecoveryConfig /> },
-      { path: "/recovery/3", element: <RecoveryConfig /> },
-      { path: "/recovery/new/:recoveryName", element: <NewRecoveryConfig /> },
+      {
+        path: "/recovery/:recoveryEquationTempId",
+        element: <RecoveryConfig />,
+      },
       { path: "/tcl", element: <TclPage /> },
       { path: "/tcl/:tclId", element: <TCLViewList /> },
       { path: "/project/projectPage", element: <ProjectPage /> },
