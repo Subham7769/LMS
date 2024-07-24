@@ -2,7 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
-import Select from "react-select";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const loanIdOptionsInitial = [{ value: "test", label: "test" }];
 
@@ -15,11 +16,11 @@ const Repayment = () => {
   const [loanIdOptions, setloanIdOptions] = useState(loanIdOptionsInitial);
 
   const handleRepayment = async () => {
-    const RtransID = "MANUAL_" + userloanID.value;
-    const RinstID = userloanID.value + "-1";
+    const RtransID = "MANUAL_" + userloanID.target.value;
+    const RinstID = userloanID.target.value + "-1";
     const postData = {
       requestId: null,
-      loanId: userloanID.value,
+      loanId: userloanID.target.value,
       transactionId: RtransID,
       installmentId: RinstID,
       processDate: "2024-04-09 10:00:13",
@@ -99,6 +100,9 @@ const Repayment = () => {
         console.log(errorData.message);
         return <div>{errorData.message}</div>; // Stop further execution
       }
+      if(data.status === 500){
+        return <div>No data found for this User Id</div>
+      }
       const json = await data.json();
       setrepaymentData(json);
     } catch (error) {
@@ -117,7 +121,7 @@ const Repayment = () => {
   const handleLoanIdChange = (selectedOption) => {
     setuserloanID(selectedOption);
     const selectedLoan = repaymentData.find(
-      (loan) => loan.loanId === selectedOption.value
+      (loan) => loan.loanId === selectedOption?.target?.value
     );
     console.log(selectedLoan);
     if (selectedLoan) {
@@ -134,40 +138,11 @@ const Repayment = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
         <div className="text-lg">Proceed for Repayments</div>
-        <div className="flex gap-4">
-          <div className="relative my-5">
-            <label htmlFor="userloanID" className=" px-1 text-xs text-gray-900">
-              Select Loan Id
-            </label>
-            <Select
-              className="w-96"
-              options={loanIdOptions}
-              name="userloanID"
-              value={userloanID}
-              onChange={handleLoanIdChange}
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative my-5">
-            <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
-              Enter Amount
-            </label>
-            <input
-              type="text"
-              name="amount"
-              value={amount}
-              onChange={(e) => setamount(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="5000"
-            />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+          <InputSelect labelName={"Select Loan Id"} inputName={"userloanID"} inputValue={userloanID} inputOptions={loanIdOptions} onChange={handleLoanIdChange} searchable={false}/>
+          <InputNumber labelName={"Enter Amount"} inputName={"amount"} inputValue={amount} onChange={(e) => setamount(e.target.value)} placeHolder={"5000"}/>
         </div>
-        <div
-          className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer w-fit"
-          onClick={handleRepayment}
-        >
-          Submit
-        </div>
+        <Button rectangle={true} buttonName={"Submit"} onClick={handleRepayment}/>
       </div>
     </>
   );

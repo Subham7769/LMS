@@ -122,7 +122,7 @@ const Disbursement = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
         <div className="text-lg">Proceed for disbursement</div>
-        <div className="grid grid-cols-6 gap-4 my-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
             <InputText labelName={"Loan Id"} inputName={"userloanID"} disabled={true} inputValue={formData.userloanID} onChange={handleChange}/>
             <InputNumber labelName={"Enter Amount"} inputName={"amount"} inputValue={formData.amount} onChange={handleChange} placeHolder={"5000"}/>
         </div>
