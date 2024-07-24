@@ -7,6 +7,7 @@ import LoadingState from "../LoadingState/LoadingState";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { maritalOptions, booleanOptions } from "../../data/OptionsData";
+import Button from "../Common/Button/Button";
 
 function FamilyDetails() {
   const [clientData, setClientData] = useState([]);
@@ -84,7 +85,7 @@ function FamilyDetails() {
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
@@ -101,7 +102,7 @@ function FamilyDetails() {
     if (clientData.length === 0) {
       console.log("Fetching data");
     } else {
-      const assignedValues = {
+      setFormData({
         maritalStatus: clientData.borrowerProfile.maritalDetails.maritalStatus,
         noOfDomesticWorkers:
           clientData.borrowerProfile.maritalDetails.noOfDomesticWorkers,
@@ -115,8 +116,7 @@ function FamilyDetails() {
           clientData.borrowerProfile.maritalDetails
             .noOfDependentsInPublicSchools,
         breadWinner: clientData.borrowerProfile.maritalDetails.breadWinner,
-      };
-      setFormData(assignedValues);
+      });
     }
   }, [clientData]);
 
@@ -127,106 +127,77 @@ function FamilyDetails() {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div>
-        <h2
-          className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md w-1/5 cursor-pointer"
-          title="Family Details"
-        >
-          <b>Family Details</b>
-        </h2>
-        <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
-          <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
-            {/* Marital Status */}
-            <div className="col-span-1">
-              <InputSelect
-                labelName="Marital Status"
-                inputName="maritalStatus"
-                className="focus:ring focus:ring-blue-600 pb-2"
-                inputOptions={maritalOptions}
-                inputValue={formData.maritalStatus}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* No. of Domestic Workers */}
-            <div className="col-span-1">
-              <InputNumber
-                labelName="No. of Domestic Workers"
-                inputName="noOfDomesticWorkers"
-                inputValue={formData.noOfDomesticWorkers}
-                onChange={handleInputChange}
-                placeHolder="1"
-                required
-              />
-            </div>
-
-            {/* No. of Children */}
-            <div className="col-span-1">
-              <InputNumber
-                labelName="No. of Children"
-                inputName="noOfChildren"
-                inputValue={formData.noOfChildren}
-                onChange={handleInputChange}
-                placeHolder="3"
-                required
-              />
-            </div>
-
-            {/* Total Dependents */}
-            <div className="col-span-1">
-              <InputNumber
-                labelName="Total Dependents"
-                inputName="totalDependent"
-                inputValue={formData.totalDependent}
-                onChange={handleInputChange}
-                placeHolder="4"
-                required
-              />
-            </div>
-
-            {/* Dependents in Private School */}
-            <div className="col-span-1">
-              <InputNumber
-                labelName="Dependents in Private School"
-                inputName="noOfDependentsInPrivateSchools"
-                inputValue={formData.noOfDependentsInPrivateSchools}
-                onChange={handleInputChange}
-                placeHolder="2"
-              />
-            </div>
-
-            {/* Dependents in Public School */}
-            <div className="col-span-1">
-              <InputNumber
-                labelName="Dependents in Public School"
-                name="noOfDependentsInPublicSchools"
-                value={formData.noOfDependentsInPublicSchools}
-                onChange={handleInputChange}
-                placeHolder="2"
-              />
-            </div>
-
-            {/* Bread Winner */}
-            <div className="col-span-1">
-              <InputSelect
-                labelName="Bread Winner"
-                inputName="breadWinner"
-                inputOptions={booleanOptions}
-                inputValue={formData.breadWinner}
-                onChange={handleInputChange}
-              />
-            </div>
-          </form>
-          <div className="flex items-center justify-end gap-4 mt-4">
-            <button
-              type="button"
-              onClick={updateData}
-              className="inline-flex items-center gap-x-1.5 mt-3 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-44 justify-center"
-            >
-              <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-              Update
-            </button>
-          </div>
+      <h2
+        className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md w-1/5 cursor-pointer"
+        title="Family Details"
+      >
+        <b>Family Details</b>
+      </h2>
+      <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
+        <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          {/* Marital Status */}
+            <InputSelect
+              labelName="Marital Status"
+              inputName="maritalStatus"
+              className="focus:ring focus:ring-blue-600 pb-2"
+              inputOptions={maritalOptions}
+              inputValue={formData.maritalStatus}
+              onChange={handleChange}
+            />
+          {/* No. of Domestic Workers */}
+            <InputNumber
+              labelName="No. of Domestic Workers"
+              inputName="noOfDomesticWorkers"
+              inputValue={formData.noOfDomesticWorkers}
+              onChange={handleChange}
+              placeHolder="1"
+              required
+            />
+          {/* No. of Children */}
+            <InputNumber
+              labelName="No. of Children"
+              inputName="noOfChildren"
+              inputValue={formData.noOfChildren}
+              onChange={handleChange}
+              placeHolder="3"
+              required
+            />
+          {/* Total Dependents */}
+            <InputNumber
+              labelName="Total Dependents"
+              inputName="totalDependent"
+              inputValue={formData.totalDependent}
+              onChange={handleChange}
+              placeHolder="4"
+              required
+            />
+          {/* Dependents in Private School */}
+            <InputNumber
+              labelName="Dependents in Private School"
+              inputName="noOfDependentsInPrivateSchools"
+              inputValue={formData.noOfDependentsInPrivateSchools}
+              onChange={handleChange}
+              placeHolder="2"
+            />
+          {/* Dependents in Public School */}
+            <InputNumber
+              labelName="Dependents in Public School"
+              name="noOfDependentsInPublicSchools"
+              value={formData.noOfDependentsInPublicSchools}
+              onChange={handleChange}
+              placeHolder="2"
+            />
+          {/* Bread Winner */}
+            <InputSelect
+              labelName="Bread Winner"
+              inputName="breadWinner"
+              inputOptions={booleanOptions}
+              inputValue={formData.breadWinner}
+              onChange={handleChange}
+            />
+        </form>
+        <div className="flex items-center justify-end gap-4 mt-4">
+          <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={updateData} rectangle={true}/>
         </div>
       </div>
     </>
