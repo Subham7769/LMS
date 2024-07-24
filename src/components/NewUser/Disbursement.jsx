@@ -2,23 +2,28 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import InputText from "../Common/InputText/InputText";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const Disbursement = () => {
   const [disbursementData, setdisbursementData] = useState([]);
-  const [amount, setamount] = useState("");
-  const [userloanID, setuserloanID] = useState("");
-  const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const [formData, setFormData] = useState({
+    amount: "",
+    userloanID: ""
+  });
+  const navigate = useNavigate(); // Adding useNavigate for navigation
   const { userID } = useParams();
 
   const handleDisbursement = async () => {
-    const transID = userloanID + "-reactivate";
+    const transID = formData.userloanID + "-reactivate";
     const postData = {
-      loanId: userloanID,
+      loanId: formData.userloanID,
       status: true,
       transactionId: transID,
       activationType: 2,
       processDate: "2024-05-09 15:18:00",
-      amount: amount,
+      amount: formData.amount,
       reconciliationMethod: "mobile wallet",
     };
     try {
@@ -94,9 +99,19 @@ const Disbursement = () => {
 
   useEffect(() => {
     console.log(disbursementData);
-    setuserloanID(disbursementData.loanId);
-    setamount(disbursementData.principleAmount);
+    setFormData({
+      userloanID: disbursementData.loanId,
+      amount: disbursementData.principleAmount
+    });
   }, [disbursementData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  }
 
   if (disbursementData.length === 0) {
     return <div>Fetching Data</div>;
@@ -107,40 +122,11 @@ const Disbursement = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
         <div className="text-lg">Proceed for disbursement</div>
-        <div className="flex gap-4">
-          <div className="relative my-5">
-            <label htmlFor="loanID" className=" px-1 text-xs text-gray-900">
-              Loan Id
-            </label>
-            <input
-              type="text"
-              name="loanID"
-              disabled
-              value={userloanID}
-              onChange={(e) => setuserloanID(e.target.value)}
-              className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="relative my-5">
-            <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
-              Enter Amount
-            </label>
-            <input
-              type="text"
-              name="amount"
-              value={amount}
-              onChange={(e) => setamount(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="5000"
-            />
-          </div>
+        <div className="grid grid-cols-6 gap-4 my-5">
+            <InputText labelName={"Loan Id"} inputName={"userloanID"} disabled={true} inputValue={formData.userloanID} onChange={handleChange}/>
+            <InputNumber labelName={"Enter Amount"} inputName={"amount"} inputValue={formData.amount} onChange={handleChange} placeHolder={"5000"}/>
         </div>
-        <div
-          className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer w-fit"
-          onClick={handleDisbursement}
-        >
-          Submit
-        </div>
+        <Button rectangle={true} buttonName={"Submit"} onClick={handleDisbursement}/>
       </div>
     </>
   );
