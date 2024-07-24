@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const loanIdOptionsInitial = [{ value: "test", label: "test" }];
 
