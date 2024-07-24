@@ -17,6 +17,7 @@ import useBEInfo from "../../utils/useBEInfo";
 import useCreditScoreEq from "../../utils/useCreditScoreEq";
 import useRulePolicy from "../../utils/useRulePolicy";
 import useTCLInfo from "../../utils/useTCLInfo";
+import useRecoveryInfo from "../../utils/useRecoveryInfo";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import useAllProjectInfo from "../../utils/useAllProjectInfo";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -29,7 +30,6 @@ import {
   tenureOptions,
   tenureTypeOptions,
   options,
-  recoveryOptions,
 } from "../../data/OptionsData";
 
 const LoanProductConfig = () => {
@@ -45,6 +45,7 @@ const LoanProductConfig = () => {
   const RPDataInfo = useRulePolicy();
   const CSDataInfo = useCreditScoreEq();
   const TCLDataInfo = useTCLInfo();
+  const RecoveryDataInfo = useRecoveryInfo();
 
   // Options
   const [dbrOptions, setDbrOptions] = useState([]);
@@ -54,6 +55,7 @@ const LoanProductConfig = () => {
   const [racOptions, setRacOptions] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
   const [TCLOptions, setTCLOptions] = useState([]);
+  const [recoveryOptions, setRecoveryOptions] = useState([]);
 
   // Sort & Pagination
   const [editingIndex, setEditingIndex] = useState(null);
@@ -82,6 +84,7 @@ const LoanProductConfig = () => {
     refinancedWith: null,
     rulePolicyTempId: "",
     tclFileId: "",
+    recoveryEquationTempId: "",
   });
 
   const [newForm, setNewForm] = useState({
@@ -146,6 +149,7 @@ const LoanProductConfig = () => {
         refinancedWith: productConfigData.refinancedWith,
         rulePolicyTempId: productConfigData.rulePolicyTempId,
         tclFileId: productConfigData.tclFileId,
+        recoveryEquationTempId: productConfigData.recoveryEquationTempId,
       };
       setFormData(assignedData);
     }
@@ -241,7 +245,12 @@ const LoanProductConfig = () => {
       value: href.replace("/tcl/", ""),
       label: name,
     }));
+    const RecoveryData = RecoveryDataInfo.map(({ name, href }) => ({
+      value: href.replace("/recovery/", ""),
+      label: name,
+    }));
 
+    setRecoveryOptions(RecoveryData);
     setRacOptions(formattedRACData);
     setDbrOptions(finalData);
     setProjectOptions(formattedProjectData);
@@ -257,10 +266,13 @@ const LoanProductConfig = () => {
     RPDataInfo,
     CSDataInfo,
     TCLDataInfo,
+    RecoveryDataInfo,
   ]);
 
   const handleAddFields = () => {
-    setFormData((prevFormData) => ({ ...prevFormData, interestEligibleTenure: [ ...prevFormData.interestEligibleTenure, newForm, ],
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      interestEligibleTenure: [...prevFormData.interestEligibleTenure, newForm],
     }));
     setNewForm({
       interestRate: "",
@@ -342,6 +354,7 @@ const LoanProductConfig = () => {
       refinancedWith: formData.refinancedWith,
       rulePolicyTempId: formData.rulePolicyTempId,
       tclFileId: formData.tclFileId,
+      recoveryEquationTempId: formData.recoveryEquationTempId,
     };
 
     try {
@@ -510,8 +523,18 @@ const LoanProductConfig = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center mb-5">
-          <DynamicName initialName={productType} onSave={handleProductNameChange} />
-          <Button buttonIcon={TrashIcon} onClick={() => handleDeleteLoanProduct(loanProId)} circle={true} className={'bg-red-600 hover:bg-red-500 focus-visible:outline-red-600'} />
+        <DynamicName
+          initialName={productType}
+          onSave={handleProductNameChange}
+        />
+        <Button
+          buttonIcon={TrashIcon}
+          onClick={() => handleDeleteLoanProduct(loanProId)}
+          circle={true}
+          className={
+            "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+          }
+        />
       </div>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <div className="border-b border-gray-300 pb-5">
@@ -574,8 +597,10 @@ const LoanProductConfig = () => {
               <InputSelect
                 inputOptions={recoveryOptions}
                 labelName="Recovery Type"
-                inputName="recoveryType"
+                inputName="recoveryEquationTempId"
                 isSearchable={false}
+                inputValue={formData.recoveryEquationTempId}
+                onChange={handleChange}
               />
             </div>
             <div className="relative">

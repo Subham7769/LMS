@@ -13,6 +13,7 @@ import useDBInfo from "../../utils/useDBInfo";
 import useBEInfo from "../../utils/useBEInfo";
 import useCreditScoreEq from "../../utils/useCreditScoreEq";
 import useRulePolicy from "../../utils/useRulePolicy";
+import useRecoveryInfo from "../../utils/useRecoveryInfo";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
@@ -23,7 +24,6 @@ import Button from "../Common/Button/Button";
 import {
   options,
   tenureOptions,
-  recoveryOptions,
   tenureTypeOptions,
 } from "../../data/OptionsData";
 
@@ -38,10 +38,10 @@ const CreateProduct = () => {
   const CSDataInfo = useCreditScoreEq();
   const ProjectDataInfo = useAllProjectInfo();
   const TCLDataInfo = useTCLInfo();
-
+  const RecoveryDataInfo = useRecoveryInfo();
 
   const [formData, setFormData] = useState({
-    id:"0",
+    id: "0",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
     creditScoreEtTempId: "663c8ec2-33fd-4388-8c46-695098bdbd74",
@@ -50,7 +50,7 @@ const CreateProduct = () => {
     eligibleCustomerType: "",
     fee: "",
     interestEligibleTenure: [],
-    loanProductId:"0",
+    loanProductId: "0",
     managementFeeVat: "",
     numberOfEmisForEarlySettlement: "",
     productType: productName,
@@ -59,6 +59,7 @@ const CreateProduct = () => {
     refinancedWith: false,
     rulePolicyTempId: "",
     tclFileId: "",
+    recoveryEquationTempId: "",
   });
 
   // Options
@@ -69,23 +70,22 @@ const CreateProduct = () => {
   const [racOptions, setRacOptions] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
   const [TCLOptions, setTCLOptions] = useState([]);
-
+  const [recoveryOptions, setRecoveryOptions] = useState([]);
 
   // Entries State
-  const [interestEligibleTenure, setInterestEligibleTenure] = useState(
-    {
-      interestRate: "",
-      interestPeriodType: "",
-      loanTenure: "",
-      loanTenureType: "",
-      repaymentTenure: "",
-      repaymentTenureType: ""
-    })
+  const [interestEligibleTenure, setInterestEligibleTenure] = useState({
+    interestRate: "",
+    interestPeriodType: "",
+    loanTenure: "",
+    loanTenureType: "",
+    repaymentTenure: "",
+    repaymentTenureType: "",
+  });
 
   const handleChangeInterestEligibleTenure = (e) => {
     const { name, value } = e.target;
     setInterestEligibleTenure((prevState) => ({ ...prevState, [name]: value }));
-  }
+  };
   useEffect(() => {
     const formattedRACData = RACDataInfo.map(({ name, href }) => ({
       value: href.replace("/newrac/", ""),
@@ -115,7 +115,12 @@ const CreateProduct = () => {
       value: href.replace("/tcl/", ""),
       label: name,
     }));
+    const RecoveryData = RecoveryDataInfo.map(({ name, href }) => ({
+      value: href.replace("/recovery/", ""),
+      label: name,
+    }));
 
+    setRecoveryOptions(RecoveryData);
     setRacOptions(formattedRACData);
     setDbrOptions(finalData);
     setProjectOptions(formattedProjectData);
@@ -123,7 +128,6 @@ const CreateProduct = () => {
     setRpOptions(rpData);
     setCsOptions(formattedCSData);
     setTCLOptions(formattedTCLData);
-
   }, [
     RACDataInfo,
     DBRConfigInfo,
@@ -132,6 +136,7 @@ const CreateProduct = () => {
     RPDataInfo,
     CSDataInfo,
     TCLDataInfo,
+    RecoveryDataInfo
   ]);
 
   const handleChange = (e) => {
@@ -148,17 +153,19 @@ const CreateProduct = () => {
   const handleAddFields = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      interestEligibleTenure: [...prevFormData.interestEligibleTenure, interestEligibleTenure],
+      interestEligibleTenure: [
+        ...prevFormData.interestEligibleTenure,
+        interestEligibleTenure,
+      ],
     }));
-    setInterestEligibleTenure(
-      {
-        interestRate: "",
-        interestPeriodType: "",
-        loanTenure: "",
-        loanTenureType: "",
-        repaymentTenure: "",
-        repaymentTenureType: ""
-      })
+    setInterestEligibleTenure({
+      interestRate: "",
+      interestPeriodType: "",
+      loanTenure: "",
+      loanTenureType: "",
+      repaymentTenure: "",
+      repaymentTenureType: "",
+    });
   };
 
   const handleDelete = (index) => {
@@ -177,14 +184,15 @@ const CreateProduct = () => {
       // Filter out objects with empty fields
       const filteredInterestEligibleTenure =
         formData.interestEligibleTenure.filter(
-          (item) => item.interestRate &&
+          (item) =>
+            item.interestRate &&
             item.interestPeriodType &&
             item.loanTenure &&
             item.loanTenureType &&
             item.repaymentTenure &&
             item.repaymentTenureType
         );
-      const { recoveryType, ...postData } = { ...formData }
+      const { recoveryType, ...postData } = { ...formData };
       // Create a copy of formData with filtered interestEligibleTenure
       const filteredFormData = {
         ...postData,
@@ -225,7 +233,7 @@ const CreateProduct = () => {
     }
   };
 
-  console.log(formData)
+  console.log(formData);
 
   return (
     <>
@@ -289,10 +297,10 @@ const CreateProduct = () => {
               <InputSelect
                 inputOptions={recoveryOptions}
                 labelName="Recovery Type"
-                inputName="recoveryType"
-                inputValue={formData.recoveryType}
-                onChange={handleChange}
+                inputName="recoveryEquationTempId"
                 isSearchable={false}
+                inputValue={formData.recoveryEquationTempId}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -429,9 +437,12 @@ const CreateProduct = () => {
             onChange={handleChangeInterestEligibleTenure}
           />
           <div className="flex justify-center align-middle">
-            <Button buttonIcon={PlusIcon} onClick={handleAddFields} circle={true} />
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={handleAddFields}
+              circle={true}
+            />
           </div>
-
         </div>
         <div>
           <table className="w-full divide-y divide-gray-200">
@@ -447,7 +458,9 @@ const CreateProduct = () => {
                   "Actions",
                 ].map((item, index) => (
                   <th scope="col" key={index}>
-                    <div className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}>
+                    <div
+                      className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}
+                    >
                       {item}
                     </div>
                   </th>
@@ -456,9 +469,15 @@ const CreateProduct = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {formData.interestEligibleTenure.length < 1 ||
-                formData.interestEligibleTenure.every(
-                  (item) => !item.interestRate && !item.interestPeriodType && !item.loanTenure && !item.loanTenureType && !item.repaymentTenure && !item.repaymentTenureType
-                ) ? (
+              formData.interestEligibleTenure.every(
+                (item) =>
+                  !item.interestRate &&
+                  !item.interestPeriodType &&
+                  !item.loanTenure &&
+                  !item.loanTenureType &&
+                  !item.repaymentTenure &&
+                  !item.repaymentTenureType
+              ) ? (
                 <tr>
                   <td
                     colSpan="7"
@@ -469,9 +488,20 @@ const CreateProduct = () => {
                 </tr>
               ) : (
                 formData.interestEligibleTenure
-                  .filter((item) => item.interestRate && item.interestPeriodType && item.loanTenure && item.loanTenureType && item.repaymentTenure && item.repaymentTenureType)
+                  .filter(
+                    (item) =>
+                      item.interestRate &&
+                      item.interestPeriodType &&
+                      item.loanTenure &&
+                      item.loanTenureType &&
+                      item.repaymentTenure &&
+                      item.repaymentTenureType
+                  )
                   .map((item, index) => (
-                    <tr key={index} className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center">
+                    <tr
+                      key={index}
+                      className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
+                    >
                       <td className="py-2 whitespace-nowrap">
                         {item.interestRate}
                       </td>
@@ -491,7 +521,14 @@ const CreateProduct = () => {
                         {item.repaymentTenureType}
                       </td>
                       <td className="py-2">
-                        <Button buttonIcon={TrashIcon} onClick={() => handleDelete(index)} circle={true} className={"bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"}/>
+                        <Button
+                          buttonIcon={TrashIcon}
+                          onClick={() => handleDelete(index)}
+                          circle={true}
+                          className={
+                            "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
+                          }
+                        />
                       </td>
                     </tr>
                   ))
@@ -500,9 +537,14 @@ const CreateProduct = () => {
           </table>
         </div>
         <div className="text-right mt-5">
-          <Button buttonIcon={CheckCircleIcon} buttonName={"Save"} onClick={handleSave} rectangle={true}  />
+          <Button
+            buttonIcon={CheckCircleIcon}
+            buttonName={"Save"}
+            onClick={handleSave}
+            rectangle={true}
+          />
         </div>
-      </div >
+      </div>
     </>
   );
 };
