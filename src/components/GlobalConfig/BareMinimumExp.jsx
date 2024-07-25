@@ -4,58 +4,43 @@ import {
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import Select from "react-select";
 import useGlobalConfig from "../../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
-
-const typeOptions = [
-  { value: "LOAN", label: "Loan" },
-  { value: "DEPENDENTS", label: "Dependents" },
-  { value: "CHILDREN", label: "Children" },
-  { value: "DOMESTIC_WORKERS", label: "Domestic Workers" },
-];
-
-const frequencyOptions = [
-  { value: "DAILY", label: "Daily" },
-  { value: "WEEKLY", label: "Weekly" },
-  { value: "MONTHLY", label: "Monthly" },
-  { value: "YEARLY", label: "Yearly" },
-];
+import { typeOptions, frequencyOptions } from "../../data/OptionsData";
+import InputText from "../Common/InputText/InputText";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import InputSelectNew from "../Common/DynamicSelect/InputSelect";
+import InputSelect from "../Common/InputSelect/InputSelect";
 
 const BareMinimumExp = () => {
   const [ExpenseDataNew, setExpenseDataNew] = useState([]);
-  const [expensesName, setExpensesName] = useState("");
-  const [expensesFrequency, setExpensesFrequency] = useState("");
-  const [bareMinimum, setBareMinimum] = useState("");
-  const [dependantType, setDependantType] = useState("");
+  const [formData, setFormData] = useState({
+    expensesName: "",
+    expensesFrequency: "",
+    bareMinimum: "",
+    dependantType: "",
+  });
 
   const url = "expenses";
   const ExpenseData = useGlobalConfig(url);
-  // console.log(ExpenseData.expenses);
 
-  if (ExpenseData.length === 0) {
-    return (
-      <>
-        <LoadingState />
-      </>
-    );
-  }
+  const handleInputChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    if (type === "checkbox") {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: checked,
+      }));
+    } else {
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
+    }
+  };
+
   const handleAddFields = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-
-    // Define the data to be sent with the POST request
-    const postData = {
-      // You need to define the structure of the data you are posting
-      // For example:
-      // id: Date.now(),
-      expensesName: expensesName,
-      expensesFrequency: expensesFrequency.value,
-      bareMinimum: bareMinimum,
-      dependantType: dependantType.value,
-    };
 
     try {
       // POST request to add new fields
@@ -67,7 +52,7 @@ const BareMinimumExp = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(postData),
+          body: JSON.stringify(formData),
         }
       );
 
@@ -103,16 +88,28 @@ const BareMinimumExp = () => {
       const updatedData = await getResponse.json(); // Assuming the server returns JSON
       // Update your state with the fetched data
       setExpenseDataNew(updatedData.expenses); // Replace 'setYourStateHere' with your actual state update function
-      setExpensesName("");
-      setExpensesFrequency("");
-      setBareMinimum("");
-      setDependantType("");
+      setFormData({
+        expensesName: "",
+        expensesFrequency: "",
+        bareMinimum: "",
+        dependantType: "",
+      });
     } catch (error) {
       console.error("Failed to update data:", error);
     }
   };
-  const handleChange = (e, id) => {
-    const { name, value } = e.target;
+  const handleChange = (e, id, propName = null, selectedOption = null) => {
+    let name, value;
+
+    if (e) {
+      // Handling input change
+      ({ name, value } = e.target);
+    } else if (propName && selectedOption) {
+      // Handling dropdown change
+      name = propName;
+      value = selectedOption.value;
+    }
+
     const newList =
       ExpenseDataNew.length === 0 ? ExpenseData.expenses : ExpenseDataNew;
     const updatedList = newList.map((item) => {
@@ -121,21 +118,10 @@ const BareMinimumExp = () => {
       }
       return item;
     });
+
     setExpenseDataNew(updatedList);
   };
 
-  const handleDDChange = (propName, selectedOption, id) => {
-    const name = propName;
-    const newList =
-      ExpenseDataNew.length === 0 ? ExpenseData.expenses : ExpenseDataNew;
-    const updatedList = newList.map((item) => {
-      if (item.id === id) {
-        return { ...item, [name]: selectedOption.value };
-      }
-      return item;
-    });
-    setExpenseDataNew(updatedList);
-  };
   const handleSave = async (id) => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
@@ -145,7 +131,7 @@ const BareMinimumExp = () => {
     try {
       // PUT request to update the data
       const response = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/expenses/${id}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses/${id}`,
         {
           method: "PUT",
           headers: {
@@ -178,7 +164,7 @@ const BareMinimumExp = () => {
 
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/expenses/${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses/${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -222,9 +208,15 @@ const BareMinimumExp = () => {
       setExpenseDataNew(updatedData.expenses); // Assuming you have a state or function like this to update your UI
     } catch (error) {
       console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
     }
   };
+  if (ExpenseData.length === 0) {
+    return (
+      <>
+        <LoadingState />
+      </>
+    );
+  }
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -237,169 +229,109 @@ const BareMinimumExp = () => {
         </b>
       </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="flex items-center justify-between ">
-          <div></div>
-          <Button buttonIcon={PlusIcon} onClick={handleAddFields} circle={true} />
-        </div>
-        <div className="flex gap-4 items-end mt-5 border-b border-gray-300 pb-5">
-          <div className="relative w-1/5">
-            <label
-              htmlFor="expensesName"
-              className=" bg-white px-1 text-xs text-gray-900"
-            >
-              Expenses
-            </label>
-            <input
-              type="text"
-              name="expensesName"
-              // id={`expense_${item.id}`}
-              value={expensesName}
-              onChange={(e) => setExpensesName(e.target.value)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Food and Living"
-            />
-          </div>
-          <div className="relative w-1/5">
-            <label
-              htmlFor="dependantType"
-              className=" bg-white px-1 text-xs text-gray-900"
-            >
-              Type
-            </label>
-            <Select
-              className=""
-              options={typeOptions}
-              // id={`type_${item.id}`}
-              name="dependantType"
-              value={dependantType}
-              onChange={(selectedOption) => setDependantType(selectedOption)}
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative w-1/5">
-            <label
-              htmlFor="expensesFrequency"
-              className=" bg-white px-1 text-xs text-gray-900"
-            >
-              Expenses Frequency
-            </label>
-            <Select
-              className=""
-              options={frequencyOptions}
-              // id={`frequency_${item.id}`}
-              name="expensesFrequency"
-              value={expensesFrequency}
-              onChange={(selectedOption) =>
-                setExpensesFrequency(selectedOption)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <div className="relative w-1/5">
-            <label
-              htmlFor="bareMinimum"
-              className=" bg-white px-1 text-xs text-gray-900"
-            >
-              Bare Min Expense Per Person
-            </label>
-            <input
-              type="text"
-              name="bareMinimum"
-              // id={`minExpense_${item.id}`}
-              value={bareMinimum}
-              onChange={(e) => setBareMinimum(e.target.value)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="200"
-            />
-          </div>
+        <div className="grid grid-cols-5 gap-4 items-end border-b border-gray-300 pb-5">
+          <InputText
+            labelName="Expenses"
+            inputName="expensesName"
+            inputValue={formData.expensesName}
+            onChange={handleInputChange}
+            placeHolder="Food and Living"
+          />
+          <InputSelect
+            labelName="Type"
+            inputOptions={typeOptions}
+            inputName="dependantType"
+            inputValue={formData.dependantType}
+            onChange={handleInputChange}
+            searchable={false}
+          />
+          <InputSelect
+            labelName="Expenses Frequency"
+            inputOptions={frequencyOptions}
+            inputName="expensesFrequency"
+            inputValue={formData.expensesFrequency}
+            onChange={handleInputChange}
+            searchable={false}
+          />
+          <InputNumber
+            labelName="Bare Min Expense Per Person"
+            inputName="bareMinimum"
+            inputValue={formData.bareMinimum}
+            onChange={handleInputChange}
+            placeHolder="200"
+          />
+          <Button
+            buttonIcon={PlusIcon}
+            onClick={handleAddFields}
+            circle={true}
+          />
         </div>
         {(ExpenseDataNew.length === 0
           ? ExpenseData.expenses
           : ExpenseDataNew
         ).map((expdata) => (
-          <div key={expdata.id} className="flex gap-4 items-end mt-5">
-            <div className="relative w-1/5">
-              <label
-                htmlFor={`expense_${expdata.id}`}
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Expenses
-              </label>
-              <input
-                type="text"
-                name="expensesName"
-                id={`expense_${expdata.id}`}
-                value={expdata.expensesName}
-                onChange={(e) => handleChange(e, expdata.id)}
-                className="block w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Food and Living"
+          <div
+            key={expdata.id}
+            className="grid grid-cols-5 gap-4 items-end mt-5"
+          >
+            <InputText
+              labelName="Expenses"
+              inputName="expensesName"
+              id={`expense_${expdata.id}`}
+              inputValue={expdata.expensesName}
+              onChange={(e) => handleChange(e, expdata.id)}
+              placeHolder="Food and Living"
+            />
+            <InputSelectNew
+              labelName="Type"
+              inputOptions={typeOptions}
+              id={`type_${expdata.id}`}
+              inputName="dependantType"
+              inputValue={expdata.dependantType}
+              onChange={(selectedOption) =>
+                handleChange(null, expdata.id, "dependantType", selectedOption)
+              }
+              searchable={false}
+            />
+            <InputSelectNew
+              labelName="Expenses Frequency"
+              inputOptions={frequencyOptions}
+              id={`frequency_${expdata.id}`}
+              inputName="expensesFrequency"
+              inputValue={expdata.expensesFrequency}
+              onChange={(selectedOption) =>
+                handleChange(
+                  null,
+                  expdata.id,
+                  "expensesFrequency",
+                  selectedOption
+                )
+              }
+              searchable={false}
+            />
+            <InputNumber
+              labelName="Bare Min Expense Per Person"
+              inputName="bareMinimum"
+              inputId={`minExpense_${expdata.id}`}
+              inputValue={expdata.bareMinimum}
+              onChange={(e) => handleChange(e, expdata.id)}
+              placeHolder="200"
+            />
+            <div className="flex items-center gap-4">
+              <Button
+                buttonIcon={CheckCircleIcon}
+                onClick={() => handleSave(expdata.id)}
+                circle={true}
               />
-            </div>
-            <div className="relative w-1/5">
-              <label
-                htmlFor={`type_${expdata.id}`}
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Type
-              </label>
-              <Select
-                className=""
-                options={typeOptions}
-                id={`type_${expdata.id}`}
-                name="dependantType"
-                value={typeOptions.find(
-                  (option) => option.value === expdata.dependantType
-                )}
-                onChange={(selectedOption) =>
-                  handleDDChange("dependantType", selectedOption, expdata.id)
+              <Button
+                buttonIcon={TrashIcon}
+                onClick={() => handleDelete(expdata.id)}
+                circle={true}
+                className={
+                  "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
                 }
-                isSearchable={false}
               />
             </div>
-            <div className="relative w-1/5">
-              <label
-                htmlFor={`frequency_${expdata.id}`}
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Expenses Frequency
-              </label>
-              <Select
-                className=""
-                options={frequencyOptions}
-                id={`frequency_${expdata.id}`}
-                name="expensesFrequency"
-                value={frequencyOptions.find(
-                  (option) => option.value === expdata.expensesFrequency
-                )}
-                onChange={(selectedOption) =>
-                  handleDDChange(
-                    "expensesFrequency",
-                    selectedOption,
-                    expdata.id
-                  )
-                }
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative w-1/5">
-              <label
-                htmlFor={`minExpense_${expdata.id}`}
-                className=" bg-white px-1 text-xs text-gray-900"
-              >
-                Bare Min Expense Per Person
-              </label>
-              <input
-                type="text"
-                name="bareMinimum"
-                id={`minExpense_${expdata.id}`}
-                value={expdata.bareMinimum}
-                onChange={(e) => handleChange(e, expdata.id)}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="200"
-              />
-            </div>
-            <Button buttonIcon={CheckCircleIcon} onClick={() => handleSave(expdata.id)} circle={true} />
-            <Button buttonIcon={TrashIcon} onClick={() => handleDelete(expdata.id)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
           </div>
         ))}
       </div>

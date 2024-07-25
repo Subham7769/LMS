@@ -6,15 +6,12 @@ import { toast, Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
-
-const notiChannelOptions = [
-  { value: "PUSH", label: "Push" },
-  { value: "SMS", label: "SMS" },
-  { value: "BOTH", label: "Both" },
-];
+import { notiChannelOptions } from "../../data/OptionsData";
+import InputText from "../Common/InputText/InputText";
+import InputTextarea from "../Common/InputTextArea/InputTextArea";
+import InputSelect from "../Common/InputSelect/InputSelect";
 
 const NotificationText = () => {
-  const [notificationsDataNew, setNotificationsDataNew] = useState([]);
   const [inputList, setInputList] = useState([]);
   const url = "notifications-data";
   const notificationsData = useGlobalConfig(url);
@@ -25,7 +22,6 @@ const NotificationText = () => {
     }
   }, [notificationsData]);
 
-  // console.log(notificationsData);
   if (notificationsData.length === 0) {
     return (
       <>
@@ -34,22 +30,13 @@ const NotificationText = () => {
     );
   }
 
-  const handleChange = (e, id) => {
-    const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value, id } = e.target;
     const list = [...inputList];
     const index = list.findIndex((item) => item.id === id);
     if (index !== -1) {
       list[index][name] = value;
       setInputList(list);
-    }
-  };
-  const handleDDChange = (propName, selectedOption, id) => {
-    const name = propName;
-    const list2 = [...inputList];
-    const index = list2.findIndex((item) => item.id === id);
-    if (index !== -1) {
-      list2[index][name] = selectedOption.value;
-      setInputList(list2);
     }
   };
 
@@ -65,7 +52,7 @@ const NotificationText = () => {
 
       try {
         const response = await fetch(
-          `https://lmscarbon.com/xc-tm-customer-care/lmscarbon/api/v1/configs/notifications-data/${id}`,
+          `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/notifications-data/${id}`,
           {
             method: "PUT",
             headers: {
@@ -114,135 +101,73 @@ const NotificationText = () => {
         </b>
       </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="flex items-start justify-between ">
-          <div></div>
-        </div>
-        {(notificationsDataNew.length === 0
-          ? notificationsData
-          : notificationsDataNew
-        ).map((notdata) => (
+        {inputList.map((notdata) => (
           <div
             key={notdata.id}
             className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
           >
-            <div className="flex gap-8">
-              <div className="relative w-[27%]">
-                <label
-                  htmlFor={`notificationType_${notdata.id}`}
-                  className=" bg-white px-1 text-xs text-gray-900"
-                >
-                  Notification Type
-                </label>
-                <input
-                  type="text"
-                  name="notificationType"
-                  id={`notificationType_${notdata.id}`}
-                  value={notdata.notificationType}
-                  disabled
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
-                  placeholder="REMINDER_EMI"
-                />
-              </div>
-              <div className="relative w-[27%]">
-                <label
-                  htmlFor={`notificationDisplayName_${notdata.id}`}
-                  className=" bg-white px-1 text-xs text-gray-900"
-                >
-                  Notification Display Name
-                </label>
-                <input
-                  type="text"
-                  name="notificationDisplayName"
-                  id={`notificationDisplayName_${notdata.id}`}
-                  value={notdata.notificationDisplayName}
-                  disabled
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="Installment reminder"
-                />
-              </div>
-              <div className="relative w-[27%]">
-                <label
-                  htmlFor={`notificationChannel_${notdata.id}`}
-                  className=" bg-white px-1 text-xs text-gray-900"
-                >
-                  Notification Channel
-                </label>
-                <Select
-                  className=""
-                  options={notiChannelOptions}
-                  id={`notificationChannel_${notdata.id}`}
-                  name="notificationChannel"
-                  value={notiChannelOptions.find(
-                    (option) => option.value === notdata.notificationChannel
-                  )}
-                  onChange={(selectedOption) =>
-                    handleDDChange(
-                      "notificationChannel",
-                      selectedOption,
-                      notdata.id
-                    )
-                  }
-                  isSearchable={false}
-                />
-              </div>
+            <div className="grid grid-cols-4 gap-8">
+              <InputText
+                labelName="Notification Type"
+                inputName="notificationType"
+                id={`notificationType_${notdata.id}`}
+                inputValue={notdata.notificationType}
+                disabled
+                placeHolder="REMINDER_EMI"
+              />
+              <InputText
+                labelName="Notification Display Name"
+                inputName="notificationDisplayName"
+                id={`notificationDisplayName_${notdata.id}`}
+                inputValue={notdata.notificationDisplayName}
+                disabled
+                placeHolder="Installment reminder"
+              />
+              <InputSelect
+                labelName="Notification Channel"
+                inputOptions={notiChannelOptions}
+                inputId={notdata.id}
+                inputName="notificationChannel"
+                inputValue={notdata.notificationChannel}
+                onChange={handleChange}
+                searchable={false}
+              />
             </div>
-            <div className="flex gap-8">
-              <div className="relative w-[27%]">
-                <label
-                  htmlFor={`notificationMessageEn_${notdata.id}`}
-                  className=" bg-white px-1 text-xs text-gray-900"
-                >
-                  Notification Message En
-                </label>
-                <textarea
-                  type="text"
-                  rows={2}
-                  name="notificationMessageEn"
-                  id={`notificationMessageEn_${notdata.id}`}
-                  value={notdata.notificationMessageEn}
-                  onChange={(e) => handleChange(e, notdata.id)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="This is the emi reminder message, last payment amount is"
-                />
-              </div>
-              <div className="relative w-[27%]">
-                <label
-                  htmlFor={`notificationMessageAr_${notdata.id}`}
-                  className=" bg-white px-1 text-xs text-gray-900"
-                >
-                  Notification Message Hi
-                </label>
-                <textarea
-                  type="text"
-                  rows={2}
-                  name="notificationMessageAr"
-                  id={`notificationMessageAr_${notdata.id}`}
-                  value={notdata.notificationMessageAr}
-                  onChange={(e) => handleChange(e, notdata.id)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="This is the emi reminder message, last payment amount is"
-                />
-              </div>
-              <div className="relative w-[27%]">
-                <label
-                  htmlFor={`notificationDescription_${notdata.id}`}
-                  className=" bg-white px-1 text-xs text-gray-900"
-                >
-                  Notification Description
-                </label>
-                <textarea
-                  type="text"
-                  rows={2}
-                  name="notificationDescription"
-                  id={`notificationDescription_${notdata.id}`}
-                  value={notdata.notificationDescription}
-                  disabled
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="2 days before the upcoming installment"
-                />
-              </div>
+            <div className="grid grid-cols-4 gap-8">
+              <InputTextarea
+                labelName="Notification Message En"
+                rowCount={2}
+                inputName="notificationMessageEn"
+                inputId={notdata.id}
+                inputValue={notdata.notificationMessageEn}
+                onChange={handleChange}
+                placeHolder="This is the emi reminder message, last payment amount is"
+              />
+              <InputTextarea
+                labelName="Notification Message Hi"
+                rowCount={2}
+                inputName="notificationMessageAr"
+                inputId={notdata.id}
+                inputValue={notdata.notificationMessageAr}
+                onChange={handleChange}
+                placeHolder="This is the emi reminder message, last payment amount is"
+              />
+              <InputTextarea
+                labelName="Notification Description"
+                rowCount={2}
+                inputName="notificationDescription"
+                inputId={`notificationDescription_${notdata.id}`}
+                inputValue={notdata.notificationDescription}
+                disabled
+                placeHolder="2 days before the upcoming installment"
+              />
               <div>
-                <Button buttonIcon={CheckCircleIcon} buttonName={""} onClick={() => handleSave(notdata.id)} rectangle={true} />
+                <Button
+                  buttonIcon={CheckCircleIcon}
+                  buttonName={""}
+                  onClick={() => handleSave(notdata.id)}
+                  rectangle={true}
+                />
               </div>
             </div>
           </div>

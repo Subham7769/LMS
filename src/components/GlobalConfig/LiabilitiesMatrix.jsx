@@ -316,34 +316,28 @@ const LiabilitiesMatrix = () => {
               className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
             >
               <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-8 items-end">
-                <div className="relative ">
-                  <InputSelect
-                    labelName="Product"
-                    inputOptions={productOptions}
-                    inputName="product"
-                    inputValue={item.product}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                </div>
-                <div className="relative">
-                  <InputText
-                    labelName="CB Description (CODE)"
-                    inputName="simahDescriptionCode"
-                    inputValue={item.simahDescriptionCode}
-                    placeHolder="TMTG"
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                </div>
-                <div className="relative ">
-                  <InputSelect
-                    labelName="Issuer"
-                    inputOptions={issuerOptions}
-                    inputName="issuer"
-                    inputValue={item.issuer}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                </div>
-                <div className="relative mb-2">
+                <InputSelect
+                  labelName="Product"
+                  inputOptions={productOptions}
+                  inputName="product"
+                  inputValue={item.product}
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+                <InputText
+                  labelName="CB Description (CODE)"
+                  inputName="simahDescriptionCode"
+                  inputValue={item.simahDescriptionCode}
+                  placeHolder="TMTG"
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+                <InputSelect
+                  labelName="Issuer"
+                  inputOptions={issuerOptions}
+                  inputName="issuer"
+                  inputValue={item.issuer}
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+                <div className="mb-2">
                   <InputCheckbox
                     labelName="Active Rule"
                     inputName="activeRule"

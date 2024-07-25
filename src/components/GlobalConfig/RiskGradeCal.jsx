@@ -9,6 +9,7 @@ import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const RiskGradeCal = () => {
   const token = localStorage.getItem("authToken");
@@ -199,41 +200,33 @@ const RiskGradeCal = () => {
         <div className="flex gap-10 mt-2 items-end border-b border-gray-300 pb-5">
           <div className="mb-3">
             <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-4">
-              <div className="relative">
-                <InputNumber
-                  labelName="From"
-                  inputName="from"
-                  inputValue={newForm.from}
-                  onChange={handleNewInputChange}
-                  placeHolder="10"
-                />
-              </div>
-              <div className="relative">
-                <InputNumber
-                  labelName="To"
-                  inputName="to"
-                  inputValue={newForm.to}
-                  onChange={handleNewInputChange}
-                  placeHolder="30"
-                />
-              </div>
-              <div className="relative">
-                <InputText
-                  labelName="Risk Grade"
-                  inputName="grade"
-                  inputValue={newForm.grade}
-                  onChange={handleNewInputChange}
-                  placeHolder="R1"
-                />
-              </div>
-              <div className="relative mt-5">
-                <button
+              <InputNumber
+                labelName="From"
+                inputName="from"
+                inputValue={newForm.from}
+                onChange={handleNewInputChange}
+                placeHolder="10"
+              />
+              <InputNumber
+                labelName="To"
+                inputName="to"
+                inputValue={newForm.to}
+                onChange={handleNewInputChange}
+                placeHolder="30"
+              />
+              <InputText
+                labelName="Risk Grade"
+                inputName="grade"
+                inputValue={newForm.grade}
+                onChange={handleNewInputChange}
+                placeHolder="R1"
+              />
+              <div className="mt-5">
+                <Button
                   onClick={handleAddFields}
-                  type="button"
-                  className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  <PlusIcon className="h-5 w-5" aria-hidden="true" />
-                </button>
+                  buttonIcon={PlusIcon}
+                  circle={true}
+                />
               </div>
             </div>
           </div>
@@ -242,45 +235,36 @@ const RiskGradeCal = () => {
           <div key={rgdata.id} className="flex gap-10 mt-2 items-end">
             <div className="mb-3">
               <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-4">
-                <div className="relative">
-                  <InputNumber
-                    labelName="From"
-                    inputName="from"
-                    inputValue={rgdata.from}
-                    onChange={(e) => handleChange(e, rgdata.id)}
-                  />
-                </div>
-                <div className="relative">
-                  <InputNumber
-                    labelName="To"
-                    inputName="to"
-                    inputValue={rgdata.to}
-                    onChange={(e) => handleChange(e, rgdata.id)}
-                  />
-                </div>
-                <div className="relative">
-                  <InputText
-                    labelName="Risk Grade"
-                    inputName="grade"
-                    inputValue={rgdata.grade}
-                    onChange={(e) => handleChange(e, rgdata.id)}
-                  />
-                </div>
-                <div className="relative flex items-center gap-4">
-                  <button
+                <InputNumber
+                  labelName="From"
+                  inputName="from"
+                  inputValue={rgdata.from}
+                  onChange={(e) => handleChange(e, rgdata.id)}
+                />
+                <InputNumber
+                  labelName="To"
+                  inputName="to"
+                  inputValue={rgdata.to}
+                  onChange={(e) => handleChange(e, rgdata.id)}
+                />
+                <InputText
+                  labelName="Risk Grade"
+                  inputName="grade"
+                  inputValue={rgdata.grade}
+                  onChange={(e) => handleChange(e, rgdata.id)}
+                />
+                <div className="flex items-center gap-4 mt-4">
+                  <Button
                     onClick={() => handleSave(rgdata.id)}
-                    type="button"
-                    className="mt-4 w-9 h-9 rounded-md bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                  >
-                    <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                  <button
+                    buttonIcon={CheckCircleIcon}
+                    circle={true}
+                  />
+                  <Button
                     onClick={() => handleDelete(rgdata.id)}
-                    type="button"
-                    className="mt-4 w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                  >
-                    <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
+                    buttonIcon={TrashIcon}
+                    circle={true}
+                    className="bg-red-600 hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  />
                 </div>
               </div>
             </div>

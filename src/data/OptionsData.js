@@ -158,3 +158,23 @@ export const optionsTwo = [
   { value: "Weeks", label: "Weeks" },
   { value: "Months", label: "Months" },
 ];
+
+export const typeOptions = [
+  { value: "LOAN", label: "Loan" },
+  { value: "DEPENDENTS", label: "Dependents" },
+  { value: "CHILDREN", label: "Children" },
+  { value: "DOMESTIC_WORKERS", label: "Domestic Workers" },
+];
+
+export const frequencyOptions = [
+  { value: "DAILY", label: "Daily" },
+  { value: "WEEKLY", label: "Weekly" },
+  { value: "MONTHLY", label: "Monthly" },
+  { value: "YEARLY", label: "Yearly" },
+];
+
+export const notiChannelOptions = [
+  { value: "PUSH", label: "Push" },
+  { value: "SMS", label: "SMS" },
+  { value: "BOTH", label: "Both" },
+];

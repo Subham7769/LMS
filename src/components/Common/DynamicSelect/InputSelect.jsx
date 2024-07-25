@@ -1,11 +1,10 @@
 import React from "react";
 import Select from "react-select";
 
-const InputSelect = ({
+const inputSelect = ({
   labelName,
   inputName,
   inputValue,
-  inputId,
   inputOptions,
   onChange,
   placeHolder,
@@ -15,13 +14,7 @@ const InputSelect = ({
   searchable = true,
 }) => {
   const handleChange = (selectedOption) => {
-    onChange({
-      target: {
-        name: inputName,
-        value: selectedOption ? selectedOption.value : "",
-        id: inputId,
-      },
-    });
+    onChange(selectedOption);
   };
 
   return (
@@ -43,7 +36,6 @@ const InputSelect = ({
             ? inputValue
             : inputOptions.find((option) => option.value === inputValue)
         }
-        inputId={inputId}
         onChange={handleChange}
         isSearchable={searchable}
         placeholder={placeHolder}
@@ -55,4 +47,4 @@ const InputSelect = ({
   );
 };
 
-export default InputSelect;
+export default inputSelect;

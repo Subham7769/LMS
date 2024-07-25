@@ -289,7 +289,6 @@ const BlockedEmployer = () => {
       </div>
         <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneBE} initialName={itemName}/>
         <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-          <div className="flex items-center justify-between "></div>
           <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
             <div className="relative w-1/4">
               <InputText
