@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
+// console.log(import.meta.env.VITE_BLOCKED_EMPLOYER_GET); // Outputs: link
 const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 
@@ -65,7 +67,6 @@ const CreditBureauDetails = lazy(() =>
   import("./components/CustomerCare/CreditBureauDetails")
 );
 const Login = lazy(() => import("./components/Login/Login"));
-const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const LoanForm = lazy(() => import("./components/Project/LoanForm"));
 const CreateRac = lazy(() => import("./components/RAC/CreateRac"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
@@ -233,7 +234,6 @@ const routes = [
     ],
   },
   { path: "/login", element: <Login /> },
-  { path: "/forgot-password", element: <ForgotPassword /> },
 ];
 const appRouter = createBrowserRouter(routes);
 function App() {

@@ -197,7 +197,7 @@ const BlockedEmployer = () => {
       }
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/block-employers-rule`,
+        `cREATE`,
         {
           method: data.length === 0 ? "POST" : "PUT",
           headers: {
