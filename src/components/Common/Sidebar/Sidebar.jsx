@@ -97,7 +97,7 @@ const SideBar = () => {
   const toggleSubmenu = (index) => {
     setSubmenuStates(
       submenuStates.map((state, i) =>
-        i === index ? { isOpen: !state.isOpen } : state
+        i === index && state ? { isOpen: !state.isOpen } : state
       )
     );
   };
