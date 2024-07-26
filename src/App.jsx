@@ -217,7 +217,7 @@ const routes = [
           { path: "register", element: <Register /> },
           { path: "loan-config", element: <LoanConfigDD /> },
           {
-            path: "loan-config/:installIndex/installment",
+            path: "loan-config/:installIndex/installment/:loanType/:amount",
             element: <InstallmentInfoComp />,
           },
           { path: "disbursement", element: <Disbursement /> },

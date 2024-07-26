@@ -10,7 +10,7 @@ const Disbursement = () => {
   const [disbursementData, setdisbursementData] = useState([]);
   const [formData, setFormData] = useState({
     amount: "",
-    userloanID: ""
+    userloanID: "",
   });
   const navigate = useNavigate(); // Adding useNavigate for navigation
   const { userID } = useParams();
@@ -101,7 +101,7 @@ const Disbursement = () => {
     console.log(disbursementData);
     setFormData({
       userloanID: disbursementData.loanId,
-      amount: disbursementData.principleAmount
+      amount: disbursementData.principleAmount,
     });
   }, [disbursementData]);
 
@@ -109,9 +109,9 @@ const Disbursement = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
   if (disbursementData.length === 0) {
     return <div>Fetching Data</div>;
@@ -123,10 +123,26 @@ const Disbursement = () => {
       <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
         <div className="text-lg">Proceed for disbursement</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
-            <InputText labelName={"Loan Id"} inputName={"userloanID"} disabled={true} inputValue={formData.userloanID} onChange={handleChange}/>
-            <InputNumber labelName={"Enter Amount"} inputName={"amount"} inputValue={formData.amount} onChange={handleChange} placeHolder={"5000"}/>
+          <InputText
+            labelName={"Loan Id"}
+            inputName={"userloanID"}
+            disabled={true}
+            inputValue={formData.userloanID}
+            onChange={handleChange}
+          />
+          <InputNumber
+            labelName={"Enter Amount"}
+            inputName={"amount"}
+            inputValue={formData.amount}
+            onChange={handleChange}
+            placeHolder={"5000"}
+          />
         </div>
-        <Button rectangle={true} buttonName={"Submit"} onClick={handleDisbursement}/>
+        <Button
+          rectangle={true}
+          buttonName={"Submit"}
+          onClick={handleDisbursement}
+        />
       </div>
     </>
   );

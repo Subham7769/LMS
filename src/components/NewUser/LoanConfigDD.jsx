@@ -1,8 +1,10 @@
 import LoanConfig from "./LoanConfig";
-import Select from "react-select";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const loanTypeOptionsInitital = [
   { value: "Cash loan", label: "Cash Loan" },
@@ -17,6 +19,7 @@ const LoanConfigDD = () => {
     loanTypeOptionsInitital
   );
   const [registrationResultsData, setregistrationResultsData] = useState([]);
+  const [loanConfigData, setLoanConfigData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlag, setErrorFlag] = useState(false);
   const { userID } = useParams();
@@ -132,7 +135,7 @@ const LoanConfigDD = () => {
 
   const handleSave = async () => {
     const postData = {
-      loan_type: loanType.value,
+      loan_type: loanType.target.value,
       customer_type: "CONSUMER",
       amount: amount,
     };
@@ -158,70 +161,44 @@ const LoanConfigDD = () => {
         setShowModal(false);
         return; // Stop further execution
       }
-      setShowModal(true);
-      setErrorFlag(false);
+      const json = await data.json();
+      setLoanConfigData(json);
+      
     } catch (error) {
       console.error(error);
     }
-    // setShowModal(true);
   };
-  // if (registrationResultsData.length === 0) {
-  //   return (
-  //     <>
-  //       <LoadingState />
-  //     </>
-  //   );
-  // }
+
+  useEffect(() => {
+    if (loanConfigData.length === 0) return;
+    console.log(loanConfigData);
+      setShowModal(true);
+      setErrorFlag(false);
+  },[loanConfigData])
+
+  useEffect(() => {
+    if (loanType?.target?.value !== "CASH_LOAN_V1" && loanType?.target?.value !== "BNPL_LOAN") {
+      setamount('');
+    }
+  }, [loanType]); // Depend on loanType changes
+
   return (
     <>
-      <div className="flex gap-4 items-end">
-        <div className="relative">
-          <label
-            htmlFor="loanType"
-            className=" bg-white px-1 text-xs text-gray-900"
-          >
-            Loan Type
-          </label>
-          <Select
-            className="w-44"
-            options={loanTypeOptions}
-            name="loanType"
-            value={loanType}
-            onChange={(loanselectedOption) => setloanType(loanselectedOption)}
-            isSearchable={false}
-          />
-        </div>
-        {loanType.value === "CASH_LOAN_V1" || loanType.value === "BNPL_LOAN" ? (
-          <div className="relative">
-            <label htmlFor="amount" className=" px-1 text-xs text-gray-900">
-              Amount
-            </label>
-            <input
-              type="text"
-              name="amount"
-              value={amount}
-              onChange={(e) => setamount(e.target.value)}
-              className="block w-36 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="5000"
-            />
-          </div>
+      <div className="grid grid-cols-5 gap-4 items-end">
+        <InputSelect labelName={"Loan Type"} inputName={"loanType"} inputOptions={loanTypeOptions} inputValue={loanType} onChange={(loanselectedOption) => setloanType(loanselectedOption)} searchable={false} />
+        {loanType?.target?.value === "CASH_LOAN_V1" || loanType?.target?.value === "BNPL_LOAN" ? (
+          <InputNumber labelName={"Amount"} inputName={"amount"} inputValue={amount} onChange={(e) => setamount(e.target.value)} placeHolder={"5000"}/>
         ) : (
-          ""
+          null
         )}
-        <div className="">
-          <button
-            type="button"
-            onClick={handleSave}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Submit
-          </button>
+        <div>
+          <Button buttonIcon={CheckCircleIcon} rectangle={true} buttonName={"Submit"} onClick={handleSave}/>
         </div>
       </div>
       {showModal ? (
         <LoanConfig
           visible={showModal}
+          loanConfigDataProp={loanConfigData}
           loanType={loanType.value}
           amount={amount}
         />
