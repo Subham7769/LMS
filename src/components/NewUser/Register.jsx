@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
-import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Sorry from "../../assets/image/sorry.png";
 
 const CommentsModal = ({ margin, closeModal, message }) => {
+  console.log(message);
   return (
     <div
       id="loanInfoContainer"
@@ -14,30 +15,25 @@ const CommentsModal = ({ margin, closeModal, message }) => {
     >
       <div className="bg-white border border-red-600 p-6 rounded-xl overflow-hidden w-[70%] md:w-2/4 h-[300px] relative shadow-lg transition-transform transform duration-500 ease-out scale-100">
         {/* Close Button */}
-        <button
+        <div
           onClick={closeModal}
-          className="absolute top-8 right-8 transition-colors duration-200"
-          aria-label="Close Modal"
+          className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-0 right-0 self-end"
         >
-          <XMarkIcon className="h-6 w-6 hover:text-red-500 transition duration-200 ease-in-out" />
-        </button>
-
+          <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)" />
+        </div>
         <div className="font-semibold text-center text-2xl text-gray-800 mb-5">
           Comments
         </div>
-
-        <div className="border-b border-gray-300 mb-5"></div>
-
-        <div className="comments-section overflow-y-auto h-[300px] px-4 space-y-4">
-          {" "}
-          <div className="p-3 bg-gray-100 rounded-md shadow-sm">
-            <div className="text-red-500 font-medium">
-              Customer is not eligible for this product
-            </div>
-          </div>
-          <div className="text-gray-600">
-            {message ? message : "No comments yet."}
-          </div>
+        <div className="overflow-y-auto h-[300px] px-4 space-y-4">
+          {Array.isArray(message) && message.length > 0 ? (
+            message.map((comment, index) => (
+              <div key={index} className="p-3 bg-gray-100 rounded-md shadow-sm">
+                <div className="text-red-500 font-medium">{comment}</div>
+              </div>
+            ))
+          ) : (
+            <div className="text-gray-600">No comments yet.</div>
+          )}
         </div>
       </div>
     </div>
@@ -49,6 +45,7 @@ const EligibilityResults = ({ eligibilityResults }) => {
   const [leftPanelWidth, setLeftPanelWidth] = useState(0);
   const leftPanelWidthRef = useRef(0);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState([]);
 
   useEffect(() => {
     const leftPanel = document.getElementById("SideBarId");
@@ -63,6 +60,11 @@ const EligibilityResults = ({ eligibilityResults }) => {
 
     return () => resizeObserver.disconnect();
   }, []);
+
+  const handleModalOpen = (message) => {
+    setModalMessage(message || []);
+    setModalOpen(true);
+  };
 
   return (
     <>
@@ -118,22 +120,17 @@ const EligibilityResults = ({ eligibilityResults }) => {
                         </div>
                       </td>
                     )}
-                    {product.comment ? (
+                    {product.inEligibilityReasons ? (
                       <td
                         className="px-4 py-2 text-[11px] text-center font-semibold underline cursor-pointer"
-                        onClick={() => setModalOpen(true)}
+                        onClick={() =>
+                          handleModalOpen(product.inEligibilityReasons)
+                        }
                       >
                         View
                       </td>
                     ) : (
                       <td className="px-4 py-2 text-[11px] text-center">N/A</td>
-                    )}
-                    {isModalOpen && (
-                      <CommentsModal
-                        margin={leftPanelWidth}
-                        closeModal={() => setModalOpen(false)}
-                        message={product.comment}
-                      />
                     )}
                   </tr>
                 ))}
@@ -142,6 +139,13 @@ const EligibilityResults = ({ eligibilityResults }) => {
           </div>
         ))}
       </div>
+      {isModalOpen && (
+        <CommentsModal
+          margin={leftPanelWidth}
+          closeModal={() => setModalOpen(false)}
+          message={modalMessage}
+        />
+      )}
     </>
   );
 };
@@ -288,159 +292,3 @@ const Register = () => {
 };
 
 export default Register;
-
-// import { useParams, useNavigate } from "react-router-dom";
-// import { useEffect, useState } from "react";
-
-// const Register = () => {
-//   const [registrationResultsData, setregistrationResultsData] = useState([]);
-//   const { userID } = useParams();
-//   const navigate = useNavigate(); // Adding useNavigate  for navigation
-
-//   useEffect(() => {
-//     getBorrowerInfo();
-//   }, []);
-
-//   async function getBorrowerInfo() {
-//     const postData = {
-//       msisdn: "966500666496",
-//       firstNameEn: "MOHAMMED",
-//       lastNameEn: "ABIDABRAHIM",
-//       middleNameEn: "MAHMOUD",
-//       firstNameAr: "محمد",
-//       lastNameAr: "عبيد ابراهيم",
-//       middleNameAr: "محمود",
-//       gender: "M",
-//       dateOfBirth: "1983-07-29",
-//       idType: "IQAMA ID",
-//       idNumber: userID,
-//       idExpiryDate: "2030-08-24",
-//       nationality: "لبنان",
-//       nationalityId: 122,
-//       occupation: "N/A",
-//       residenceDetails: {
-//         buildingNumber: "4083",
-//         streetName: "اغادير",
-//         city: "الرياض",
-//         cityId: 85,
-//         neighborhood: "الملك عبد العزيز",
-//         postOfficeBox: "12233",
-//         additionalNumbers: "7787",
-//         unitNumber: "1",
-//         rent: true,
-//         homeOwnership: 0,
-//         residentialType: "VILLA",
-//       },
-//       maritalDetails: {
-//         maritalStatus: "Married",
-//         noOfDomesticWorkers: 0,
-//         noOfChildren: 3,
-//         totalDependent: 5,
-//         breadWinner: true,
-//         noOfDependentsInPrivateSchools: "2",
-//         noOfDependentsInPublicSchools: "0",
-//       },
-//       totalMonthlyExpenses: 0.0,
-//       monthlyExpenses: {
-//         RE: 0.0,
-//         FLE: 0.0,
-//         TE: 0.0,
-//         CE: 0.0,
-//         UE: 0.0,
-//         EE: 0.0,
-//         HHE: 0.0,
-//         HCE: 0.0,
-//         IP: 0.0,
-//         EDT: 0.0,
-//         MR: 0.0,
-//         OMR: 0.0,
-//       },
-//     };
-//     try {
-//       const token = localStorage.getItem("authToken");
-//       const data = await fetch(
-//         "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
-//           userID,
-//         {
-//           method: "PUT",
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//           body: JSON.stringify(postData),
-//         }
-//       );
-//       if (data.status === 404) {
-//         console.log("User Not Found"); // Clear the token
-//         navigate("/user"); // Redirect to login page
-//         return; // Stop further execution
-//       }
-//       // Check for token expiration or invalid token
-//       if (data.status === 401 || data.status === 403) {
-//         localStorage.removeItem("authToken"); // Clear the token
-//         navigate("/login"); // Redirect to login page
-//         return; // Stop further execution
-//       }
-//       const json = await data.json();
-//       // console.log(json);
-//       setregistrationResultsData(json);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-//   if (registrationResultsData.length === 0) {
-//     return (
-//       <>
-//         <div>Fetching Data</div>
-//       </>
-//     );
-//   }
-//   return (
-//     <table className="divide-y divide-gray-300">
-//       <thead>
-//         <tr className="divide-x divide-gray-200">
-//           <th className="py-3.5 px-4 text-center">Project Name</th>
-//           {/* <th className="py-3.5 px-4 text-center ">Eligibility Status</th> */}
-//           <th className="py-3.5 px-4 text-center ">Register</th>
-//           {/* <th className="py-3.5 px-4 text-center ">Comments</th> */}
-//         </tr>
-//       </thead>
-//       <tbody className="divide-y divide-gray-200 bg-white">
-//         {registrationResultsData.registrationResults.projects.map(
-//           (register, index) => {
-//             const isAlreadyRegistered = register.isRegister;
-//             return (
-//               <tr
-//                 key={index}
-//                 className="divide-x divide-gray-200 text-center w-full"
-//               >
-//                 <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-//                   <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-//                     {register.projectName}
-//                   </div>
-//                 </td>
-//                 {/* <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-//                 <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-//                   {register.eligibleStatus.replace(/_/g, " ")}
-//                 </div>
-//               </td> */}
-//                 <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-//                   <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-//                     {isAlreadyRegistered ? "Yes" : "No"}
-//                   </div>
-//                 </td>
-//                 {/* <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-//                 <div className=" mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-//                   {register.inEligibilityReasons}
-//                 </div>
-//               </td> */}
-//               </tr>
-//             );
-//           }
-//         )}
-//       </tbody>
-//     </table>
-//   );
-// };
-
-// export default Register;

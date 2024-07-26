@@ -28,7 +28,7 @@ const DebtBurdenConfig = () => {
   const [debtBurdenData, setDebtBurdenData] = useState([]);
   const [operators, setOperators] = useState({
     firstNetIncomeBracketInSARuleOperator: "",
-    secondNetIncomeBracketInSARuleOperator: ""
+    secondNetIncomeBracketInSARuleOperator: "",
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +112,7 @@ const DebtBurdenConfig = () => {
       consumerDBR: "",
       gdbrWithoutMTG: "",
       gdbrWithMTG: "",
-    })
+    });
   }, [dbcTempId]);
 
   const handleClone = () => {
@@ -246,12 +246,12 @@ const DebtBurdenConfig = () => {
     }
   }
 
-  const deleteDBC = async (deleteURL) => {
+  const deleteDBC = async (dbcTempId) => {
     try {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/${dbcTempId}`,
         {
           method: "DELETE",
           headers: {
@@ -357,7 +357,7 @@ const DebtBurdenConfig = () => {
         ));
         setTimeout(() => {
           window.location.reload();
-        }, 1000)
+        }, 1000);
       } else if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         navigate("/login"); // Redirect to login page
@@ -472,156 +472,172 @@ const DebtBurdenConfig = () => {
         <DynamicName initialName={name} onSave={updateName} />
         <div className="flex gap-4">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => deleteDBC(dbcTempId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
+          <Button
+            buttonIcon={TrashIcon}
+            onClick={() => deleteDBC(dbcTempId)}
+            circle={true}
+            className={
+              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+            }
+          />
         </div>
       </div>
-        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneDBC} initialName={name}/>
-        <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-          <div className="grid grid-cols-8 gap-2">
-            <div className="relative">
-              <InputSelect
-                labelName={"Rule 1"}
-                inputValue={operators.firstNetIncomeBracketInSARuleOperator}
-                inputOptions={operatorOptions}
-                onChange={(selected) =>
-                  setOperators({
-                    ...operators,
-                    firstNetIncomeBracketInSARuleOperator: selected.target.value,
-                  })
-                }
-                inputName="firstNetIncomeBracketInSARuleOperator"
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Rule 2"
-                inputValue={operators.secondNetIncomeBracketInSARuleOperator}
-                inputOptions={operatorOptions}
-                onChange={(selected) =>
-                  setOperators({
-                    ...operators,
-                    secondNetIncomeBracketInSARuleOperator: selected.target.value,
-                  })
-                }
-                inputName="secondNetIncomeBracketInSARuleOperator"
-              />
-            </div>
+      <CloneModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onCreateClone={createCloneDBC}
+        initialName={name}
+      />
+      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+        <div className="grid grid-cols-8 gap-2">
+          <div className="relative">
+            <InputSelect
+              labelName={"Rule 1"}
+              inputValue={operators.firstNetIncomeBracketInSARuleOperator}
+              inputOptions={operatorOptions}
+              onChange={(selected) =>
+                setOperators({
+                  ...operators,
+                  firstNetIncomeBracketInSARuleOperator: selected.target.value,
+                })
+              }
+              inputName="firstNetIncomeBracketInSARuleOperator"
+            />
           </div>
-          <div className="grid grid-cols-8 gap-2 items-end mt-2 border-b pb-5 mb-2">
-            <div className="relative">
-              <InputNumber
-                labelName="Start Net"
-                inputName={`startNetIncomeBracketInSARule`}
-                inputValue={formData.startNetIncomeBracketInSARule}
-                onChange={handleChange}
-                placeHolder="10000"
-              />
-            </div>
-            <div className="relative">
-              <InputNumber
-                labelName="End Net"
-                inputName={`endNetIncomeBracketInSARule`}
-                inputValue={formData.endNetIncomeBracketInSARule}
-                onChange={handleChange}
-                placeHolder="20000"
-              />
-            </div>
-            <div className="relative">
-              <InputText
-                labelName="Product Level"
-                inputName={`productLevel`}
-                inputValue={formData.productLevel}
-                onChange={handleChange}
-                placeHolder="33%"
-              />
-            </div>
-            <div className="relative">
-              <InputText
-                labelName="Consumer DBR"
-                inputName={`consumerDBR`}
-                inputValue={formData.consumerDBR}
-                onChange={handleChange}
-                placeHolder="65%"
-              />
-            </div>
-            <div className="relative">
-              <InputText
-                labelName="GDBR (Without MTG)"
-                inputName={`gdbrWithoutMTG`}
-                inputValue={formData.gdbrWithoutMTG}
-                onChange={handleChange}
-                placeHolder="65%"
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Employer Retired"
-                inputName={`employerRetired`}
-                inputValue={formData.employerRetired}
-                onChange={handleChange}
-                inputOptions={empOptions}
-              />
-            </div>
-            <div className="relative">
-              <InputText
-                labelName="GDBR (including MTG)"
-                inputName={`gdbrWithMTG`}
-                inputValue={formData.gdbrWithMTG}
-                onChange={handleChange}
-                placeHolder="65%"
-              />
-            </div>
-            <div className="w-8">
-              <Button buttonIcon={PlusIcon} onClick={handleAddRule} circle={true} />
-            </div>
-          </div>
-          <div>
-            <div className="w-full">
-              <Table
-                handleChange={handleTableChange}
-                handleDelete={handleDelete}
-                handleSort={handleSort}
-                toggleEdit={toggleEdit}
-                editingIndex={editingIndex}
-                currentItems={currentItems}
-                getSortIcon={getSortIcon}
-                informUser={informUser}
-                informUser1={informUser1}
-                TrashIcon={TrashIcon}
-                PencilIcon={PencilIcon}
-                empOptions={empOptions}
-              />
-            </div>
-
-            <div className="mt-4 w-full flex justify-center gap-5 items-center">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`flex items-center px-4 py-2 rounded-md ${
-                  currentPage === 1
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-indigo-600 text-white hover:bg-indigo-500"
-                }`}
-              >
-                <ChevronLeftIcon className="w-5 h-5" />
-              </button>
-              <span className="text-sm text-gray-700">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages || currentItems.length < 1}
-                className={`flex items-center px-4 py-2 rounded-md ${
-                  currentPage === totalPages
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-indigo-600 text-white hover:bg-indigo-500"
-                }`}
-              >
-                <ChevronRightIcon className="w-5 h-5" />
-              </button>
-            </div>
+          <div className="relative">
+            <InputSelect
+              labelName="Rule 2"
+              inputValue={operators.secondNetIncomeBracketInSARuleOperator}
+              inputOptions={operatorOptions}
+              onChange={(selected) =>
+                setOperators({
+                  ...operators,
+                  secondNetIncomeBracketInSARuleOperator: selected.target.value,
+                })
+              }
+              inputName="secondNetIncomeBracketInSARuleOperator"
+            />
           </div>
         </div>
+        <div className="grid grid-cols-8 gap-2 items-end mt-2 border-b pb-5 mb-2">
+          <div className="relative">
+            <InputNumber
+              labelName="Start Net"
+              inputName={`startNetIncomeBracketInSARule`}
+              inputValue={formData.startNetIncomeBracketInSARule}
+              onChange={handleChange}
+              placeHolder="10000"
+            />
+          </div>
+          <div className="relative">
+            <InputNumber
+              labelName="End Net"
+              inputName={`endNetIncomeBracketInSARule`}
+              inputValue={formData.endNetIncomeBracketInSARule}
+              onChange={handleChange}
+              placeHolder="20000"
+            />
+          </div>
+          <div className="relative">
+            <InputText
+              labelName="Product Level"
+              inputName={`productLevel`}
+              inputValue={formData.productLevel}
+              onChange={handleChange}
+              placeHolder="33%"
+            />
+          </div>
+          <div className="relative">
+            <InputText
+              labelName="Consumer DBR"
+              inputName={`consumerDBR`}
+              inputValue={formData.consumerDBR}
+              onChange={handleChange}
+              placeHolder="65%"
+            />
+          </div>
+          <div className="relative">
+            <InputText
+              labelName="GDBR (Without MTG)"
+              inputName={`gdbrWithoutMTG`}
+              inputValue={formData.gdbrWithoutMTG}
+              onChange={handleChange}
+              placeHolder="65%"
+            />
+          </div>
+          <div className="relative">
+            <InputSelect
+              labelName="Employer Retired"
+              inputName={`employerRetired`}
+              inputValue={formData.employerRetired}
+              onChange={handleChange}
+              inputOptions={empOptions}
+            />
+          </div>
+          <div className="relative">
+            <InputText
+              labelName="GDBR (including MTG)"
+              inputName={`gdbrWithMTG`}
+              inputValue={formData.gdbrWithMTG}
+              onChange={handleChange}
+              placeHolder="65%"
+            />
+          </div>
+          <div className="w-8">
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={handleAddRule}
+              circle={true}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="w-full">
+            <Table
+              handleChange={handleTableChange}
+              handleDelete={handleDelete}
+              handleSort={handleSort}
+              toggleEdit={toggleEdit}
+              editingIndex={editingIndex}
+              currentItems={currentItems}
+              getSortIcon={getSortIcon}
+              informUser={informUser}
+              informUser1={informUser1}
+              TrashIcon={TrashIcon}
+              PencilIcon={PencilIcon}
+              empOptions={empOptions}
+            />
+          </div>
+
+          <div className="mt-4 w-full flex justify-center gap-5 items-center">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                currentPage === 1
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-indigo-600 text-white hover:bg-indigo-500"
+              }`}
+            >
+              <ChevronLeftIcon className="w-5 h-5" />
+            </button>
+            <span className="text-sm text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages || currentItems.length < 1}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                currentPage === totalPages
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-indigo-600 text-white hover:bg-indigo-500"
+              }`}
+            >
+              <ChevronRightIcon className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
