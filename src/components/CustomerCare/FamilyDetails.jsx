@@ -1,31 +1,40 @@
-import { subscriberList } from "../../config";
+import React from "react";
 
 const FamilyDetails = ({ info }) => {
-  const { maritalStatus, noOfDomesticWorkers, noOfChildren, totalDependent } =
-    info?.borrowerProfile?.maritalDetails;
+  const maritalDetails = info?.borrowerProfile?.maritalDetails;
 
-  console.log(info.borrowerProfile.maritalDetails);
+  if (!maritalDetails) {
+    console.warn("Marital details are missing in the provided info.");
+    return null;
+  }
+
+  const details = [
+    { label: "Marital Status", value: maritalDetails.maritalStatus },
+    { label: "No Of Children", value: maritalDetails.noOfChildren },
+    {
+      label: "No of Domestic Workers",
+      value: maritalDetails.noOfDomesticWorkers,
+    },
+    { label: "Total Dependent", value: maritalDetails.totalDependent },
+  ];
+
   return (
-    <>
-      <div className="mt-4">
-        <div className="text-xl mb-4">Family Details</div>
-        <div className="flex gap-10">
-          <div className="flex flex-col gap-y-3">
-            <div>Martial Status : </div>
-            <div>No Of Children : </div>
-            <div>No of domestic workers : </div>
-            <div>Total dependent : </div>
-          </div>
-          <div className="flex flex-col gap-y-3">
-            <div>{maritalStatus}</div>
-            <div>{noOfChildren}</div>
-            <div>{noOfDomesticWorkers}</div>
-            <div>{totalDependent}</div>
-          </div>
+    <div className="mt-4">
+      <div className="text-xl mb-4">Family Details</div>
+      <div className="flex gap-10">
+        <div className="flex flex-col gap-y-3">
+          {details.map((detail, index) => (
+            <div key={index}>{detail.label}:</div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-y-3">
+          {details.map((detail, index) => (
+            <div key={index}>{detail.value || "N/A"}</div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default FamilyDetails;
+export default React.memo(FamilyDetails);

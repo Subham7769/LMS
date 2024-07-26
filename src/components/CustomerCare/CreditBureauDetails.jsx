@@ -1,84 +1,62 @@
-import React,{ useState } from "react";
+import React, { useState, Suspense } from "react";
+import LoadingState from "../LoadingState/LoadingState";
 const CustomerAddress = React.lazy(() => import("./CustomerAddress"));
 const CreditInstrument = React.lazy(() => import("./CreditInstrument"));
 const DefaultDetails = React.lazy(() => import("./DefaultDetails"));
 const Score = React.lazy(() => import("./Score"));
 const DownloadReports = React.lazy(() => import("./DownloadReports"));
 
+const tabComponents = {
+  "customer-address": CustomerAddress,
+  "credit-instruments": CreditInstrument,
+  "default-details": DefaultDetails,
+  score: Score,
+  "download-reports": DownloadReports,
+};
+
+const tabs = [
+  { id: "customer-address", label: "Customer Addresses" },
+  { id: "credit-instruments", label: "Credit Instruments" },
+  { id: "default-details", label: "Default Details" },
+  { id: "score", label: "Score" },
+  { id: "download-reports", label: "Download Reports" },
+];
+
+const Tab = ({ id, label, activeTab, setActiveTab }) => (
+  <div className="border-r border-gray-400 px-2">
+    <div
+      className={`py-1 px-1.5 cursor-pointer ${
+        activeTab === id
+          ? "text-white bg-indigo-500 rounded"
+          : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+      }`}
+      onClick={() => setActiveTab(id)}
+    >
+      {label}
+    </div>
+  </div>
+);
+
 const CreditBureauDetails = () => {
   const [activeTab, setActiveTab] = useState("customer-address");
+  const ActiveComponent = tabComponents[activeTab];
 
   return (
     <div className="mt-4">
       <div className="flex mb-10">
-        <div className="border-r border-gray-400 px-2">
-          <div
-            className={`py-1 px-1.5 cursor-pointer ${
-              activeTab === "customer-address"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() => setActiveTab("customer-address")}
-          >
-            Customer Addresses
-          </div>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <div
-            className={`py-1 px-1.5 cursor-pointer ${
-              activeTab === "credit-instruments"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() => setActiveTab("credit-instruments")}
-          >
-            Credit Instruments
-          </div>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <div
-            className={`py-1 px-1.5 cursor-pointer ${
-              activeTab === "default-details"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() => setActiveTab("default-details")}
-          >
-            Default Details
-          </div>
-        </div>
-        <div className="border-r border-gray-400 px-2">
-          <div
-            className={`py-1 px-1.5 cursor-pointer ${
-              activeTab === "score"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() => setActiveTab("score")}
-          >
-            Score
-          </div>
-        </div>
-        <div className="px-2">
-          <div
-            className={`py-1 px-1.5 cursor-pointer ${
-              activeTab === "download-reports"
-                ? "text-white bg-indigo-500 rounded"
-                : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
-            }`}
-            onClick={() => setActiveTab("download-reports")}
-          >
-            Download Reports
-          </div>
-        </div>
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.id}
+            id={tab.id}
+            label={tab.label}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+        ))}
       </div>
-      <div className="">
-        {activeTab === "customer-address" && <CustomerAddress />}
-        {activeTab === "credit-instruments" && <CreditInstrument />}
-        {activeTab === "default-details" && <DefaultDetails />}
-        {activeTab === "score" && <Score />}
-        {activeTab === "download-reports" && <DownloadReports />}
-      </div>
+      <Suspense fallback={<LoadingState />}>
+        <ActiveComponent />
+      </Suspense>
     </div>
   );
 };

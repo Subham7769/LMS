@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 
 const BorrowerInfoTabs = () => {
@@ -57,7 +56,6 @@ const BorrowerInfoTabs = () => {
           </Link>
         </div>
       </div>
-
       <div>
         <Outlet />
       </div>
