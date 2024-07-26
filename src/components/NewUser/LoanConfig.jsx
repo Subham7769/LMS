@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingState from "../LoadingState/LoadingState";
+import InstallmentInfoComp from "./InstallmentInfoComp";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -54,23 +55,19 @@ function SamplePrevArrow(props) {
   );
 }
 
-const LoanConfig = ({ visible, loanType, amount }) => {
+const LoanConfig = ({ visible, loanConfigDataProp }) => {
   const [loanConfigData, setloanConfigData] = useState([]);
   const { userID } = useParams();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
-  const [productNotFound, setProductNotFound] = useState(false);
-
-  const [showModalIndex, setShowModalIndex] = useState(null); // State to track the index of the clicked button
-  const [selectedInstallment, setSelectedInstallment] = useState(null);
-
-  console.log(visible + "---" + loanType + "---" + amount);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
 
   useEffect(() => {
     if (!visible) return null;
-    getLoanConfigInfo();
+    setloanConfigData(loanConfigDataProp);
   }, []);
 
-  const handleViewDetails = async (transactionId, index) => {
+  const handleProceed = async (transactionId, index) => {
     const postData = {
       transactionId: transactionId,
       contractNumber: "test18monthTenure",
@@ -103,64 +100,6 @@ const LoanConfig = ({ visible, loanType, amount }) => {
     }
   };
 
-  const closeModal = () => {
-    setShowModalIndex(null); // Reset the state to close the modal
-  };
-
-  async function getLoanConfigInfo() {
-    const postData = {
-      loan_type: loanType,
-      customer_type: "CONSUMER",
-      amount: amount,
-    };
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
-          userID +
-          "/loans/configurations",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-      if (data.status === 404) {
-        console.log("User Not Found"); // Clear the token
-        navigate("/user"); // Redirect to login page
-        return; // Stop further execution
-      }
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      if (data.status === 500) {
-        setProductNotFound(true);
-        console.log("checking");
-        return;
-      }
-      const json = await data.json();
-      // console.log(json);
-      setloanConfigData(json);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  if (productNotFound) {
-    return (
-      <>
-        <div className="text-red-600 mt-4">
-          There is no loan product with this type
-        </div>
-      </>
-    );
-  }
   if (loanConfigData.length === 0) {
     return (
       <>
@@ -176,33 +115,51 @@ const LoanConfig = ({ visible, loanType, amount }) => {
     slidesToScroll: 2,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 2,
+        }
+      },
+    ]
   };
+
+  const handleInstallmentModal = (data) => {
+    setIsModalOpen(true);
+    setSelectedInstallmentData(data); // Set the selected installment data
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedInstallmentData(null); // Clear the data when closing the modal
+  };
+
+  const tableDividerStyle = "divide-x divide-gray-200 text-center w-full h-[58px]"
+  const tableSliderStyle = "whitespace-nowrap p-4 text-gray-500"
   return (
     <>
-      <div className="flex gap-5 items-baseline mb-8">
+      <div className="flex flex-col xl:flex-row xl:gap-5 items-baseline mb-8">
         <div>
           <div className="font-semibold mt-5 mb-2">Profile : </div>
           <div className="rounded-xl pt-6 pb-2 px-5 border border-red-600 w-fit">
-            <div>
-              <div className="flex gap-5 mb-5 border-b border-gray-300 pb-4">
-                <div className="flex gap-5 border-r border-gray-300 pr-5">
-                  <div>Cash Credit Score : </div>
-                  <div>{loanConfigData.profile.cashCreditScore}</div>
-                </div>
-                <div className="flex gap-5">
-                  <div>Cash TCL : </div>
-                  <div>{loanConfigData.profile.cashTCL}</div>
-                </div>
+            <div className="flex gap-5 mb-5 border-b border-gray-300 pb-4">
+              <div className="flex gap-5 border-r border-gray-300 pr-5">
+                <div>Cash Credit Score : </div>
+                <div>{loanConfigData.profile.cashCreditScore}</div>
+              </div>
+              <div className="flex gap-5">
+                <div>Cash TCL : </div>
+                <div>{loanConfigData.profile.cashTCL}</div>
               </div>
             </div>
-            <div>
               <div className="flex gap-10 mb-5">
                 <div className="flex gap-5">
                   <div>Net Cash TCL : </div>
                   <div>{loanConfigData.profile.netCashTCL}</div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
         <div>
@@ -219,7 +176,7 @@ const LoanConfig = ({ visible, loanType, amount }) => {
                   <div>{loanConfigData.cashLoanStats.minLoanAmount}</div>
                 </div>
               </div>
-              <div className=" pr-5 py-2 flex flex-col border-r border-gray-300">
+              <div className="pr-5 py-2 flex flex-col border-r border-gray-300">
                 <div className="flex gap-2 py-2">
                   <div className="w-52">Max Loan Duration Days : </div>
                   <div>{loanConfigData.cashLoanStats.maxLoanDuration}</div>
@@ -243,159 +200,162 @@ const LoanConfig = ({ visible, loanType, amount }) => {
           </div>
         </div>
       </div>
-      <div className="flex items-start">
-        <div className="w-[330px]">
+      <div className="flex items-start w-fit shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+        <div className="w-[330px] ">
           <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
-            <thead>
-              <tr className="divide-x divide-gray-200 h-[58px]">
+            <thead className="bg-gray-50">
+              <tr className={tableDividerStyle}>
                 <th className="py-3.5  text-center ">
-                  <div className="w-[320px]">Dynamic Cash Loan Offers</div>
+                  Dynamic Cash Loan Offers
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2 text-gray-500">
-                  <div className="w-[320px]">Transaction Id</div>
+                  Transaction Id
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Annual Flat Rate Percent</div>
+                  Annual Flat Rate Percent
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Annual Interest Rate Percent</div>
+                  Annual Interest Rate Percent
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">
                     Annual Interest Rate Percent Without Fee
-                  </div>
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">APR As Per Tenure Percent</div>
+                  APR As Per Tenure Percent
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">APR Per Month Percent</div>
+                  APR Per Month Percent
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">
+                  
                     APR Without Fee Per Month Percent
-                  </div>
+                  
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Avrage Number Of installment</div>
+                  Avrage Number Of installment
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Daily Interest Rate</div>
+                  Daily Interest Rate
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">
+                  
                     Daily Interest Rate Percent Without Fee
-                  </div>
+                  
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Duration</div>
+                  Duration
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Duration In Months</div>
+                  Duration In Months
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Tenure</div>
+                  Tenure
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Instalments Summary Response</div>
+                  Instalments Summary Response
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Loan Flat Rate</div>
+                  Loan Flat Rate
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Monthly Flat Rate Percent</div>
+                  Monthly Flat Rate Percent
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Monthly Interest Rate Percent</div>
+                  Monthly Interest Rate Percent
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="  text-gray-500">
-                  <div className="w-[320px]">
+                  
                     Monthly Interest Rate Percent Without Fee
-                  </div>
+                  
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Principal Amount</div>
+                  Principal Amount
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Schema</div>
+                  Schema
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Service Fee</div>
+                  Service Fee
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Service Fee Tax</div>
+                  Service Fee Tax
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Total Interest Amount</div>
+                  Total Interest Amount
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Total Loan Amount</div>
+                  Total Loan Amount
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Total Management Fee</div>
+                  Total Management Fee
                 </td>
               </tr>
-              <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
+              <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  <div className="w-[320px]">Total Management Vat Fee</div>
+                  Total Management Vat Fee
+                </td>
+              </tr>
+              <tr className={tableDividerStyle}>
+                <td className="py-2  text-gray-500">
+                  Action
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="w-[804px]">
+        <div className="w-[603px] xl:w-[804px] ">
           <Slider {...settings}>
             {loanConfigData.dynamicCashLoanOffers.map((ci, index) => {
               return (
@@ -403,14 +363,14 @@ const LoanConfig = ({ visible, loanType, amount }) => {
                   key={index}
                   className="divide-y divide-gray-300 border-r border-gray-300 w-full"
                 >
-                  <thead>
+                  <thead className="bg-gray-50">
                     <tr className="divide-x divide-gray-200 h-[58px]">
                       <th className="py-3.5 text-center">{index + 1}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         <div
                           title={ci.transactionId}
                           className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
@@ -424,43 +384,43 @@ const LoanConfig = ({ visible, loanType, amount }) => {
                         </div>
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.annualFlatRatePercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.annualInterestRatePercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.annualInterestRatePercentWithoutFee}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.aprAsPerTenorPercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.aprPerMonthPercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.aprWithoutFeePerMonthPercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.avrageNumberOfenstallment}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         <div
                           title={ci.dailyInterestRate}
                           className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
@@ -474,71 +434,60 @@ const LoanConfig = ({ visible, loanType, amount }) => {
                         </div>
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.dailyInterestRatePercentWithoutFee}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.duration}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.durationInMonths}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.instalmentsNumber}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                          <Link
-                            // onClick={() => handleViewDetails(ci, index)}
-                            to={
-                              "/user/" +
-                              userID +
-                              "/loan-config/" +
-                              index +
-                              "/installment"
-                            }
-                          >
-                            EMI Details
-                          </Link>
+                          <div className="cursor-pointer" onClick={() => handleInstallmentModal(ci.installmentSummaryResponse)}>EMI Details</div>
                         </div>
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.loanFlatRate}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.monthlyFlatRatePercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.monthlyInterestRatePercent}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.monthlyInterestRatePercentWithoutFee}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.principalAmount}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         <div
                           title={ci.schema}
                           className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
@@ -552,42 +501,42 @@ const LoanConfig = ({ visible, loanType, amount }) => {
                         </div>
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.serviceFee}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.serviceFeeTax}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.totalInterestAmount}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.totalLoanAmount}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.totalManagementFee}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         {ci.totalManagementVatFee}
                       </td>
                     </tr>
-                    <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-                      <td className="whitespace-nowrap py-4 px-4 text-gray-500">
+                    <tr className={tableDividerStyle}>
+                      <td className={tableSliderStyle}>
                         <div
                           className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
                           onClick={() =>
-                            handleViewDetails(ci.transactionId, index)
+                            handleProceed(ci.transactionId, index)
                           }
                         >
                           Proceed
@@ -600,6 +549,13 @@ const LoanConfig = ({ visible, loanType, amount }) => {
             })}
           </Slider>
         </div>
+        {isModalOpen && selectedInstallmentData   && (
+          <InstallmentInfoComp 
+            isOpen={isModalOpen} 
+            onClose={closeModal} 
+            installDataProp={selectedInstallmentData} 
+          />
+        )}
       </div>
     </>
   );
