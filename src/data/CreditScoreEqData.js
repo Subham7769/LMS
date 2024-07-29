@@ -63,3 +63,24 @@ export const CreditScoreEqList = [
     status: "Inactive",
   },
 ];
+
+export const NationalityScoreHeaderList = [
+  "Residents Credit Score",
+  "Expatriates Credit Score",
+];
+
+export const ResidentialScoreHeaderList = [
+  "Rent Status Score",
+  "Own Status Score",
+];
+
+export const MaritialScoreHeaderList = [
+  "Married Status Score",
+  "Single Status Score",
+  "Divorced Status Score",
+  "Widowed Status Score",
+  "Separated Status Score",
+  "Unknown Status Score",
+];
+
+export const CreditScoreHeaderList = ["A", "B", "C", "D", "E", "F"];

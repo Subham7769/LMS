@@ -8,6 +8,13 @@ import LoadingState from "../LoadingState/LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import Button from "../Common/Button/Button";
+import ListTable from "../Common/ListTable/ListTable";
+import {
+  CreditScoreHeaderList,
+  MaritialScoreHeaderList,
+  NationalityScoreHeaderList,
+  ResidentialScoreHeaderList,
+} from "../../data/CreditScoreEqData";
 
 const options = [
   { value: "==", label: "==" },
@@ -118,8 +125,6 @@ const CreditScore = () => {
     });
   };
 
-  console.log(formData);
-
   useEffect(() => {
     async function getProductInfo() {
       setLoading(true);
@@ -190,20 +195,29 @@ const CreditScore = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="border-b border-gray-300 pb-8 mt-10 mb-8">
-        <h2 className="text-xl text-center">Credit Score</h2>
-        <div className=" text-center mt-5 mb-4">
-          {creditScoreData.equation ? (
-            creditScoreData.equation
-          ) : (
-            <div>
-              ((simahScore-300)*A/550) + (nationality*B) + (netIncome*C) +
-              (dependents*D) + (maritalStatus*E) + (residentialStatus*F)
-            </div>
-          )}
-        </div>
+      <div className="my-5">
+        {/* <h2 className="text-xl text-center">Credit Score</h2> */}
         <div className="flex justify-center">
-          <table className="divide-y divide-gray-300 w-5/6">
+          <ListTable
+            ListName={creditScoreData.equation}
+            ListNameAlign={"center"}
+            ListHeader={CreditScoreHeaderList}
+            ListItem={[
+              {
+                aweightage: formData.aweightage,
+                bweightage: formData.bweightage,
+                cweightage: formData.cweightage,
+                dweightage: formData.dweightage,
+                eweightage: formData.eweightage,
+                fweightage: formData.fweightage,
+              },
+            ]}
+            Searchable={false}
+            Editable={true}
+            handleEditableFields={handleChange}
+            Divider={true}
+          />
+          {/* <table className="divide-y divide-gray-300 w-5/6">
             <thead>
               <tr className="divide-x divide-gray-200">
                 <th className="py-3.5 px-2 text-center text-gray-900">A</th>
@@ -266,166 +280,65 @@ const CreditScore = () => {
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
-      <div className="flex justify-center gap-10 border-b border-gray-300 pb-8 mb-8">
-        <div>
-          <h2 className="text-xl mb-5 text-center">Nationality Score</h2>
-          <table className="divide-y divide-gray-300">
-            <thead>
-              <tr className="divide-x divide-gray-200">
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Resident Credit Score
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Expatriates Credit Score
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              <tr className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <InputNumber
-                    inputName={"residentsCreditScore"}
-                    inputValue={formData.residentsCreditScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"expatriatesCreditScore"}
-                    inputValue={formData.expatriatesCreditScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="border border-gray-200"></div>
-        <div>
-          <h2 className="text-xl mb-5 text-center">Residential Status Score</h2>
-          <table className="divide-y divide-gray-300">
-            <thead>
-              <tr className="divide-x divide-gray-200">
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Rent Status Score
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Own Status Score
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              <tr className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <InputNumber
-                    inputName={"rentStatusScore"}
-                    inputValue={formData.rentStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"ownStatusScore"}
-                    inputValue={formData.ownStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <ListTable
+          ListName={"Nationality Score"}
+          ListNameAlign={"center"}
+          ListHeader={NationalityScoreHeaderList}
+          ListItem={[
+            {
+              residentsCreditScore: formData.residentsCreditScore,
+              expatriatesCreditScore: formData.expatriatesCreditScore,
+            },
+          ]}
+          Searchable={false}
+          Editable={true}
+          handleEditableFields={handleChange}
+          Divider={true}
+        />
+        <ListTable
+          ListName={"Residential Status Score"}
+          ListNameAlign={"center"}
+          ListHeader={ResidentialScoreHeaderList}
+          ListItem={[
+            {
+              rentStatusScore: formData.rentStatusScore,
+              ownStatusScore: formData.ownStatusScore,
+            },
+          ]}
+          Searchable={false}
+          Editable={true}
+          handleEditableFields={handleChange}
+          Divider={true}
+        />
       </div>
-      <div className="border-b border-gray-300 pb-8 mb-8">
-        <h2 className="text-xl mb-5 text-center">Maritial Status Score</h2>
-        <div className="flex justify-center">
-          <table className="divide-y divide-gray-300">
-            <thead>
-              <tr className="divide-x divide-gray-200">
-                <th className="py-3.5 px-2 text-center ">
-                  Married Status Score
-                </th>
-                <th className="py-3.5 px-2 text-center ">
-                  Single Status Score
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Divorced Status Score
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Widowed Status Score
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Separated Status Score
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Unknown Status Score
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              <tr className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-2 text-gray-900">
-                  <InputNumber
-                    inputName={"marriedStatusScore"}
-                    inputValue={formData.marriedStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"singleStatusScore"}
-                    inputValue={formData.singleStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"divorcedStatusScore"}
-                    inputValue={formData.divorcedStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"widowedStatusScore"}
-                    inputValue={formData.widowedStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"separatedStatusScore"}
-                    inputValue={formData.separatedStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <InputNumber
-                    inputName={"unknownStatusScore"}
-                    inputValue={formData.unknownStatusScore}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div className="mb-6">
+        <ListTable
+          ListName={"Maritial Status Score"}
+          ListNameAlign={"center"}
+          ListHeader={MaritialScoreHeaderList}
+          ListItem={[
+            {
+              marriedStatusScore: formData.marriedStatusScore,
+              singleStatusScore: formData.singleStatusScore,
+              divorcedStatusScore: formData.divorcedStatusScore,
+              widowedStatusScore: formData.widowedStatusScore,
+              separatedStatusScore: formData.separatedStatusScore,
+              unknownStatusScore: formData.unknownStatusScore,
+            },
+          ]}
+          Searchable={false}
+          Editable={true}
+          handleEditableFields={handleChange}
+          Divider={true}
+        />
       </div>
-      <div>
+      <div className="bg-gray-100 rounded-xl p-6">
         <h2 className="text-xl mb-5 text-center">Dependents Rules</h2>
-        <div className="flex justify-center gap-12">
+        <div className="grid grid-cols-3 gap-5 justify-between">
           <div>
             <div className="mb-3">
               <SelectAndNumber
@@ -446,7 +359,7 @@ const CreditScore = () => {
                 placeHolderNumber={"4"}
               />
             </div>
-            <div className="flex gap-4 mb-3">
+            <div className="mb-3">
               <SelectAndNumber
                 inputSelectName={"firstDependentsOperator"}
                 inputSelectOptions={options}
@@ -465,7 +378,7 @@ const CreditScore = () => {
                 placeHolderNumber={"4"}
               />
             </div>
-            <div className="flex gap-4 mb-3">
+            <div className="mb-3">
               <SelectAndNumber
                 inputSelectName={"firstDependentsOperator"}
                 inputSelectOptions={options}
@@ -486,7 +399,7 @@ const CreditScore = () => {
             </div>
           </div>
           <div>
-            <div className="flex gap-4 mb-3">
+            <div className="mb-3">
               <SelectAndNumber
                 inputSelectName={"secondDependentsOperator"}
                 inputSelectOptions={options}
@@ -505,7 +418,7 @@ const CreditScore = () => {
                 placeHolderNumber={"4"}
               />
             </div>
-            <div className="flex gap-4 mb-3">
+            <div className="mb-3">
               <SelectAndNumber
                 inputSelectName={"secondDependentsOperator"}
                 inputSelectOptions={options}
@@ -526,8 +439,10 @@ const CreditScore = () => {
             </div>
           </div>
           <div>
-            <div className="flex items-center gap-4 mb-3">
-              <div>Value: </div>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1">
+                Value:{" "}
+              </div>
               <div>
                 <InputNumber
                   inputName={"value"}
@@ -538,8 +453,10 @@ const CreditScore = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center gap-4 mb-3">
-              <div>Value: </div>
+            <div className="grid grid-cols-2  gap-2 mb-3">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1">
+                Value:{" "}
+              </div>
               <div>
                 <InputNumber
                   inputName={"value"}
@@ -550,8 +467,10 @@ const CreditScore = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center gap-4 mb-3">
-              <div>Value: </div>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1">
+                Value:{" "}
+              </div>
               <div>
                 <InputNumber
                   inputName={"value"}
@@ -566,7 +485,12 @@ const CreditScore = () => {
         </div>
       </div>
       <div className="text-right mt-8 mr-12">
-        <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={handleAddFields} rectangle={true} />
+        <Button
+          buttonIcon={CheckCircleIcon}
+          buttonName={"Update"}
+          onClick={handleAddFields}
+          rectangle={true}
+        />
       </div>
     </>
   );
