@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Button from '../Button/Button';
 import InputNumber from '../InputNumber/InputNumber';
 
-const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable, Divider = false, Sortable = false, Editable = false, handleEditableFields }) => {
+const ListTable = ({ ListName, ListNameCenter, ListHeader, ListItem, HandleAction, Searchable, Divider = false, Sortable = false, Editable = false, handleEditableFields }) => {
   const HeaderCellWidth = ListHeader.length + 1; // Calculate cell width based on header length
 
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
@@ -139,8 +139,8 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable, D
         )}
 
         <div className="sm:flex sm:items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
+          <div className={`sm:flex-auto ${ListNameCenter && "text-center"}`}>
+            <h1 className="font-semibold leading-6 text-gray-900">{ListName}</h1>
           </div>
         </div>
 
