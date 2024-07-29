@@ -10,6 +10,7 @@ const DebtBurdenPage = () => {
       <StatContainer stats={DebtBurdenStats} />
       <ListTable
         ListName={"Debt Burden List"}
+        ListNameAlign={""}
         ListHeader={HeaderList}
         ListItem={ProductList}
         HandleAction={null}
