@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import useUserInfo from "../../utils/useUserInfo";
 import LoadingState from "../LoadingState/LoadingState";
-import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
@@ -14,22 +14,16 @@ const CommentsModal = ({ margin, closeModal, message }) => {
     >
       <div className="bg-white border border-red-600 p-6 rounded-xl overflow-hidden w-[70%] md:w-2/4 h-[300px] relative shadow-lg transition-transform transform duration-500 ease-out scale-100">
         {/* Close Button */}
-        <button
+        <div
           onClick={closeModal}
-          className="absolute top-8 right-8 transition-colors duration-200"
-          aria-label="Close Modal"
+          className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-0 right-0 self-end"
         >
-          <XMarkIcon className="h-6 w-6 hover:text-red-500 transition duration-200 ease-in-out" />
-        </button>
-
+          <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)" />
+        </div>
         <div className="font-semibold text-center text-2xl text-gray-800 mb-5">
           Comments
         </div>
-
-        <div className="border-b border-gray-300 mb-5"></div>
-
-        <div className="comments-section overflow-y-auto h-[300px] px-4 space-y-4">
-          {" "}
+        <div className="overflow-y-auto h-[300px] px-4 space-y-4">
           <div className="p-3 bg-gray-100 rounded-md shadow-sm">
             <div className="text-red-500 font-medium">
               Customer is not eligible for this product
@@ -144,7 +138,7 @@ const UserInfo = () => {
   }
 
   return (
-    <div>
+    <>
       <div className="flex items-center gap-5 mb-5">
         <div>
           <img
@@ -156,7 +150,7 @@ const UserInfo = () => {
         <div className="text-xl">User Id : {userID}</div>
       </div>
       <EligibilityResults eligibilityResults={eligibilityData} />
-    </div>
+    </>
   );
 };
 

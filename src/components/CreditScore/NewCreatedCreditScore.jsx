@@ -21,7 +21,7 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/id/" +
-        creditScoreId,
+          creditScoreId,
         {
           method: "GET",
           headers: {
@@ -57,9 +57,9 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-        creditScoreId +
-        "/clone/" +
-        cloneCSEName,
+          creditScoreId +
+          "/clone/" +
+          cloneCSEName,
         {
           method: "POST",
           headers: {
@@ -88,9 +88,9 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-        creditScoreId +
-        "/name/" +
-        updatecseName,
+          creditScoreId +
+          "/name/" +
+          updatecseName,
         {
           method: "PUT",
           headers: {
@@ -114,12 +114,12 @@ const NewCreatedCreditScore = () => {
     }
   };
 
-  const handleDelete = async (deleteURL) => {
+  const handleDelete = async (creditScoreId) => {
     try {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/${creditScoreId}`,
         {
           method: "DELETE",
           headers: {
@@ -148,11 +148,23 @@ const NewCreatedCreditScore = () => {
         <DynamicName initialName={creditScoreName} onSave={handleUpdateCSE} />
         <div className="flex items-center justify-between gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(creditScoreId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
+          <Button
+            buttonIcon={TrashIcon}
+            onClick={() => handleDelete(creditScoreId)}
+            circle={true}
+            className={
+              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+            }
+          />
         </div>
       </div>
       <div className="mt-4">
-        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneCSE} initialName={creditScoreName}/>
+        <CloneModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onCreateClone={createCloneCSE}
+          initialName={creditScoreName}
+        />
         <CreditScore />
       </div>
     </>
