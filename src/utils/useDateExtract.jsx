@@ -1,27 +1,34 @@
 import { useEffect, useState } from "react";
 
 const useDateExtract = (date) => {
-  const [regDate, setRegDate] = useState(date);
+  const [regDate, setRegDate] = useState("");
+
   useEffect(() => {
-    handleExtractDate();
-  }, []);
-  async function handleExtractDate() {
-    const dateObj = new Date(regDate);
+    handleExtractDate(date);
+  }, [date]);
 
-    // Extract the year, month, and day components
+  const handleExtractDate = (date) => {
+    if (!date) {
+      setRegDate("Invalid Date");
+      return;
+    }
+
+    const dateObj = new Date(date);
+
+    if (isNaN(dateObj.getTime())) {
+      setRegDate("Invalid Date");
+      return;
+    }
+
     const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Add leading zero for single-digit months
-    const monthNameSubmit = new Date(year, month - 1).toLocaleString("en-US", {
-      month: "short",
-    });
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
     const day = String(dateObj.getDate()).padStart(2, "0");
+    const monthNameSubmit = dateObj.toLocaleString("en-US", { month: "short" });
 
-    // Format the date in YYYY-MM-DD
     const formattedDate = `${day} ${monthNameSubmit} ${year}`;
-
-    // Update the state with the formatted date
     setRegDate(formattedDate);
-  }
+  };
+
   return regDate;
 };
 
