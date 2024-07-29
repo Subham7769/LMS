@@ -44,7 +44,6 @@ const useBorrowerInfo = (url) => {
       console.error(error);
     }
   }
-  console.log(subscriberListNew);
   return subscriberListNew;
 };
 
