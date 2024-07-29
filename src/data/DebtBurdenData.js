@@ -28,34 +28,34 @@ export const DebtBurdenStats = [
   },
 ];
 
-export const DebtCaseHeaderList = [
+export const HeaderList = [
   "Case ID",
   "Opened On",
   "Debt Amount",
-  "Total Outstanding",
+  "Outstanding Amount",
   "Status",
 ];
 
-export const DebtPlanList = [
+export const ProductList = [
   {
-    name: "Debt Plan A",
-    opened: "01/02/2023",
+    caseId: "Debt Plan A",
+    openedOn: "01/02/2023",
     debtAmount: "$100M",
     outstandingAmount: "$50M",
     status: "Active",
     href: "/debt/1",
   },
   {
-    name: "Debt Plan B",
-    opened: "12/04/2023",
+    caseId: "Debt Plan B",
+    openedOn: "12/04/2023",
     debtAmount: "$150M",
     outstandingAmount: "$70M",
     status: "Active",
     href: "/debt/2",
   },
   {
-    name: "Debt Plan C",
-    opened: "25/07/2023",
+    caseId: "Debt Plan C",
+    openedOn: "25/07/2023",
     debtAmount: "$80M",
     outstandingAmount: "$30M",
     status: "Inactive",

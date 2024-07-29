@@ -1,4 +1,3 @@
-import useRACInfo from "../../utils/useRACInfo";
 import { useEffect, useState } from "react";
 import {
   PlusIcon,
@@ -12,17 +11,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { RowChanged, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
-import useDBInfo from "../../utils/useDBInfo";
-import useBEInfo from "../../utils/useBEInfo";
-import useCreditScoreEq from "../../utils/useCreditScoreEq";
-import useRulePolicy from "../../utils/useRulePolicy";
-import useTCLInfo from "../../utils/useTCLInfo";
-import useRecoveryInfo from "../../utils/useRecoveryInfo";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import useAllProjectInfo from "../../utils/useAllProjectInfo";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
-import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import Button from "../Common/Button/Button";
@@ -31,6 +22,7 @@ import {
   tenureTypeOptions,
   options,
 } from "../../data/OptionsData";
+import ProductInputFields from "./ProductInputFields";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -38,31 +30,11 @@ const LoanProductConfig = () => {
   // Initial Data
   const [productConfigData, setProductConfigData] = useState([]);
 
-  // Custom Hooks
-  const RACDataInfo = useRACInfo();
-  const DBRConfigInfo = useDBInfo();
-  const BEDataInfo = useBEInfo();
-  const RPDataInfo = useRulePolicy();
-  const CSDataInfo = useCreditScoreEq();
-  const TCLDataInfo = useTCLInfo();
-  const RecoveryDataInfo = useRecoveryInfo();
-
-  // Options
-  const [dbrOptions, setDbrOptions] = useState([]);
-  const [beOptions, setBeOptions] = useState([]);
-  const [rpOptions, setRpOptions] = useState([]);
-  const [csOptions, setCsOptions] = useState([]);
-  const [racOptions, setRacOptions] = useState([]);
-  const [projectOptions, setProjectOptions] = useState([]);
-  const [TCLOptions, setTCLOptions] = useState([]);
-  const [recoveryOptions, setRecoveryOptions] = useState([]);
-
   // Sort & Pagination
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const ProjectDataInfo = useAllProjectInfo();
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -87,30 +59,12 @@ const LoanProductConfig = () => {
     recoveryEquationTempId: "",
   });
 
-  const [newForm, setNewForm] = useState({
-    interestRate: "",
-    interestPeriodType: "",
-    loanTenure: "",
-    loanTenureType: "",
-    repaymentTenure: "",
-    repaymentTenureType: "",
-  });
-
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
       setFormData((prevState) => ({ ...prevState, [name]: checked }));
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
-    }
-  };
-
-  const handleNewInputChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setNewForm((prevState) => ({ ...prevState, [name]: checked }));
-    } else {
-      setNewForm((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
@@ -215,82 +169,6 @@ const LoanProductConfig = () => {
       console.error(error);
     }
   }
-
-  useEffect(() => {
-    const formattedRACData = RACDataInfo.map(({ name, href }) => ({
-      value: href.replace("/newrac/", ""),
-      label: name,
-    }));
-    const formattedCSData = CSDataInfo.map(({ name, href }) => ({
-      value: href.replace("/credit-score/", ""),
-      label: name,
-    }));
-    const finalData = DBRConfigInfo.map(({ name, href }) => ({
-      value: href.replace("/newdbc/", ""),
-      label: name,
-    }));
-    const formattedProjectData = ProjectDataInfo.map(({ name, href }) => ({
-      value: href.replace("/project/", ""),
-      label: name,
-    }));
-    const formattedBEData = BEDataInfo.map(({ name, href }) => ({
-      value: href.replace("/blocked-employer/", ""),
-      label: name,
-    }));
-    const rpData = RPDataInfo.map(({ name, href }) => ({
-      value: href.replace("/rule-policy/", ""),
-      label: name,
-    }));
-    const formattedTCLData = TCLDataInfo.map(({ name, href }) => ({
-      value: href.replace("/tcl/", ""),
-      label: name,
-    }));
-    const RecoveryData = RecoveryDataInfo.map(({ name, href }) => ({
-      value: href.replace("/recovery/", ""),
-      label: name,
-    }));
-
-    setRecoveryOptions(RecoveryData);
-    setRacOptions(formattedRACData);
-    setDbrOptions(finalData);
-    setProjectOptions(formattedProjectData);
-    setBeOptions(formattedBEData);
-    setRpOptions(rpData);
-    setCsOptions(formattedCSData);
-    setTCLOptions(formattedTCLData);
-  }, [
-    RACDataInfo,
-    DBRConfigInfo,
-    ProjectDataInfo,
-    BEDataInfo,
-    RPDataInfo,
-    CSDataInfo,
-    TCLDataInfo,
-    RecoveryDataInfo,
-  ]);
-
-  const handleAddFields = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      interestEligibleTenure: [...prevFormData.interestEligibleTenure, newForm],
-    }));
-    setNewForm({
-      interestRate: "",
-      interestPeriodType: "",
-      loanTenure: "",
-      loanTenureType: "",
-      repaymentTenure: "",
-      repaymentTenureType: "",
-    });
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Notice!"}
-        message={"Please click the save button to ensure your entry is saved"}
-      />
-    ));
-  };
 
   const handleInterestChange = (index, field, eventOrValue) => {
     // Determine if the input is an event object or a value
@@ -537,227 +415,7 @@ const LoanProductConfig = () => {
         />
       </div>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="border-b border-gray-300 pb-5">
-          <div className="grid grid-cols-5 gap-5 items-end pb-2">
-            <div className="relative">
-              <InputSelect
-                labelName="Eligible Customer Type"
-                inputOptions={tenureOptions}
-                inputName="eligibleCustomerType"
-                inputValue={
-                  formData.eligibleCustomerType
-                    ? formData.eligibleCustomerType
-                    : ""
-                }
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="RAC"
-                inputOptions={racOptions}
-                inputName="racId"
-                inputValue={formData.racId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Project"
-                inputOptions={projectOptions}
-                inputName="projectId"
-                inputValue={formData.projectId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="TCL"
-                inputOptions={TCLOptions}
-                inputName="tclFileId"
-                inputValue={formData.tclFileId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSave}
-              className="w-9 h-9 rounded-md bg-indigo-600 p-2 ml-4 mt-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            >
-              <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="grid grid-cols-5 gap-5 items-end mb-4">
-            <div className="relative mt-1">
-              <InputSelect
-                inputOptions={recoveryOptions}
-                labelName="Recovery Type"
-                inputName="recoveryEquationTempId"
-                isSearchable={false}
-                inputValue={formData.recoveryEquationTempId}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="DBR Config"
-                inputOptions={dbrOptions}
-                inputName="dbcTempId"
-                inputValue={formData.dbcTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Blocked Employer"
-                inputOptions={beOptions}
-                inputName="blockEmployersTempId"
-                inputValue={formData.blockEmployersTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Rule Policy"
-                inputOptions={rpOptions}
-                inputName="rulePolicyTempId"
-                inputValue={formData.rulePolicyTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-5 gap-5 items-end">
-            <div className="relative">
-              <InputSelect
-                labelName="Credit Score Rule"
-                inputOptions={csOptions}
-                inputName="creditScoreEqTempId"
-                inputValue={formData.creditScoreEqTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-5 gap-5 items-end">
-            <div className="relative mt-4">
-              <InputText
-                labelName="Processing Fee"
-                inputName="fee"
-                inputValue={formData.fee}
-                onChange={handleChange}
-                placeHolder="1%"
-              />
-            </div>
-            <div className="relative mt-4">
-              <InputText
-                labelName="Management Fee Vat"
-                inputName="managementFeeVat"
-                inputValue={formData.managementFeeVat}
-                onChange={handleChange}
-                placeHolder="15%"
-              />
-            </div>
-            <div className="relative mt-4">
-              <InputText
-                labelName="No. of Installments For Early Settlement"
-                inputName="numberOfEmisForEarlySettlement"
-                inputValue={formData.numberOfEmisForEarlySettlement}
-                onChange={handleChange}
-                placeHolder="3"
-              />
-            </div>
-
-            <div className="relative mb-2">
-              <InputCheckbox
-                labelName="Refinanced With"
-                inputChecked={formData.refinancedWith}
-                onChange={handleChange}
-                inputName="refinancedWith"
-              />
-            </div>
-            <div className="relative mb-2">
-              <InputCheckbox
-                labelName="Disable RAC"
-                inputChecked={formData.disableRac}
-                onChange={handleChange}
-                inputName="disableRac"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end mt-5 border-b pb-5">
-          <div className="relative">
-            <InputText
-              labelName="Simple Interest"
-              inputName="interestRate"
-              inputValue={newForm.interestRate}
-              onChange={handleNewInputChange}
-              placeHolder="2%"
-            />
-          </div>
-          <div className="relative">
-            <InputSelect
-              labelName="PER"
-              inputOptions={options}
-              inputName="interestPeriodType"
-              inputValue={newForm.interestPeriodType}
-              onChange={handleNewInputChange}
-            />
-          </div>
-          <div className="relative">
-            <InputNumber
-              labelName="Loan Tenure"
-              inputName="loanTenure"
-              inputValue={newForm.loanTenure}
-              onChange={handleNewInputChange}
-              placeHolder="0"
-            />
-          </div>
-          <div className="relative">
-            <InputSelect
-              labelName="Loan Tenure Type"
-              inputName="loanTenureType"
-              inputOptions={tenureTypeOptions}
-              inputValue={newForm.loanTenureType}
-              onChange={handleNewInputChange}
-            />
-          </div>
-          <div className="relative mt-6">
-            <button
-              onClick={handleAddFields}
-              type="button"
-              className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="relative">
-            <InputNumber
-              labelName="Repayment Tenure"
-              inputName="repaymentTenure"
-              inputValue={newForm.repaymentTenure}
-              onChange={handleNewInputChange}
-              placeHolder="0"
-            />
-          </div>
-          <div className="relative">
-            <InputSelect
-              labelName="Repayment Tenure Type"
-              inputName="repaymentTenureType"
-              inputOptions={tenureTypeOptions}
-              inputValue={newForm.repaymentTenureType}
-              onChange={handleNewInputChange}
-            />
-          </div>
-        </div>
+        <ProductInputFields formData={formData} handleChange={handleChange} setFormData={setFormData}/>
         <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">

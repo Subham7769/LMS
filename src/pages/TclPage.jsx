@@ -9,12 +9,14 @@ const TclPage = () => {
     return (
         <Body>
             <StatContainer stats={TclStats} />
-            <ListTable 
-            ListName={"TCL List"} 
-            ListHeader={HeaderList} 
-            ListItem={ProductList}
-            HandleAction={null}
-            Searchable={true}
+            <ListTable
+                ListName={"TCL List"}
+                ListHeader={HeaderList}
+                ListItem={ProductList}
+                HandleAction={null}
+                Searchable={true}
+                Sortable={true} // New prop to enable/disable sorting
+                Divider={false}
             />
         </Body>
     )

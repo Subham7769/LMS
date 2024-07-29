@@ -19,6 +19,8 @@ const CreditScoreEqPage = () => {
         ListItem={CreditScoreEqList}
         HandleAction={null}
         Searchable={true}
+        Sortable={true} // New prop to enable/disable sorting
+        Divider={false}
       />
     </Body>
   );

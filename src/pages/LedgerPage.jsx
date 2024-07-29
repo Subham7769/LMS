@@ -31,7 +31,6 @@ const CustomerCarePage = () => {
     return (
         <Body>
             {ledgerData ? <LedgerListTable ListName={"Ledger List"} ListHeader={HeaderList} ListItem={ledgerData} /> : <Loader />}
-
         </Body>
     )
 }

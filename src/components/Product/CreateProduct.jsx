@@ -1,5 +1,4 @@
-import useRACInfo from "../../utils/useRACInfo";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
   PlusIcon,
   CheckCircleIcon,
@@ -8,37 +7,12 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
-import useAllProjectInfo from "../../utils/useAllProjectInfo";
-import useDBInfo from "../../utils/useDBInfo";
-import useBEInfo from "../../utils/useBEInfo";
-import useCreditScoreEq from "../../utils/useCreditScoreEq";
-import useRulePolicy from "../../utils/useRulePolicy";
-import useRecoveryInfo from "../../utils/useRecoveryInfo";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputText from "../Common/InputText/InputText";
-import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import useTCLInfo from "../../utils/useTCLInfo";
 import Button from "../Common/Button/Button";
-
-import {
-  options,
-  tenureOptions,
-  tenureTypeOptions,
-} from "../../data/OptionsData";
+import ProductInputFields from "./ProductInputFields";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
-  // Custom Hooks
-  const RACDataInfo = useRACInfo();
-  const DBRConfigInfo = useDBInfo();
-  const BEDataInfo = useBEInfo();
-  const RPDataInfo = useRulePolicy();
-  const CSDataInfo = useCreditScoreEq();
-  const ProjectDataInfo = useAllProjectInfo();
-  const TCLDataInfo = useTCLInfo();
-  const RecoveryDataInfo = useRecoveryInfo();
 
   const [formData, setFormData] = useState({
     id: "0",
@@ -62,83 +36,6 @@ const CreateProduct = () => {
     recoveryEquationTempId: "",
   });
 
-  // Options
-  const [dbrOptions, setDbrOptions] = useState([]);
-  const [beOptions, setBeOptions] = useState([]);
-  const [rpOptions, setRpOptions] = useState([]);
-  const [csOptions, setCsOptions] = useState([]);
-  const [racOptions, setRacOptions] = useState([]);
-  const [projectOptions, setProjectOptions] = useState([]);
-  const [TCLOptions, setTCLOptions] = useState([]);
-  const [recoveryOptions, setRecoveryOptions] = useState([]);
-
-  // Entries State
-  const [interestEligibleTenure, setInterestEligibleTenure] = useState({
-    interestRate: "",
-    interestPeriodType: "",
-    loanTenure: "",
-    loanTenureType: "",
-    repaymentTenure: "",
-    repaymentTenureType: "",
-  });
-
-  const handleChangeInterestEligibleTenure = (e) => {
-    const { name, value } = e.target;
-    setInterestEligibleTenure((prevState) => ({ ...prevState, [name]: value }));
-  };
-  useEffect(() => {
-    const formattedRACData = RACDataInfo.map(({ name, href }) => ({
-      value: href.replace("/newrac/", ""),
-      label: name,
-    }));
-    const formattedCSData = CSDataInfo.map(({ name, href }) => ({
-      value: href.replace("/credit-score/", ""),
-      label: name,
-    }));
-    const finalData = DBRConfigInfo.map(({ name, href }) => ({
-      value: href.replace("/newdbc/", ""),
-      label: name,
-    }));
-    const formattedProjectData = ProjectDataInfo.map(({ name, href }) => ({
-      value: href.replace("/project/", ""),
-      label: name,
-    }));
-    const formattedBEData = BEDataInfo.map(({ name, href }) => ({
-      value: href.replace("/blocked-employer/", ""),
-      label: name,
-    }));
-    const rpData = RPDataInfo.map(({ name, href }) => ({
-      value: href.replace("/rule-policy/", ""),
-      label: name,
-    }));
-    const formattedTCLData = TCLDataInfo.map(({ name, href }) => ({
-      value: href.replace("/tcl/", ""),
-      label: name,
-    }));
-    const RecoveryData = RecoveryDataInfo.map(({ name, href }) => ({
-      value: href.replace("/recovery/", ""),
-      label: name,
-    }));
-
-    setRecoveryOptions(RecoveryData);
-    setRacOptions(formattedRACData);
-    setDbrOptions(finalData);
-    setProjectOptions(formattedProjectData);
-    setBeOptions(formattedBEData);
-    setRpOptions(rpData);
-    setCsOptions(formattedCSData);
-    setTCLOptions(formattedTCLData);
-  }, [
-    RACDataInfo,
-    DBRConfigInfo,
-    ProjectDataInfo,
-    BEDataInfo,
-    RPDataInfo,
-    CSDataInfo,
-    TCLDataInfo,
-    RecoveryDataInfo
-  ]);
-
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === "checkbox") {
@@ -148,24 +45,6 @@ const CreateProduct = () => {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
       console.log(formData);
     }
-  };
-
-  const handleAddFields = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      interestEligibleTenure: [
-        ...prevFormData.interestEligibleTenure,
-        interestEligibleTenure,
-      ],
-    }));
-    setInterestEligibleTenure({
-      interestRate: "",
-      interestPeriodType: "",
-      loanTenure: "",
-      loanTenureType: "",
-      repaymentTenure: "",
-      repaymentTenureType: "",
-    });
   };
 
   const handleDelete = (index) => {
@@ -247,203 +126,7 @@ const CreateProduct = () => {
         </b>
       </h2>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="border-b border-gray-300 pb-5">
-          <div className="grid grid-cols-5 gap-5 items-end pb-2">
-            <div className="relative">
-              <InputSelect
-                labelName="Eligible Customer Type"
-                inputOptions={tenureOptions}
-                inputName="eligibleCustomerType"
-                inputValue={
-                  formData.eligibleCustomerType
-                    ? formData.eligibleCustomerType
-                    : ""
-                }
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="RAC"
-                inputOptions={racOptions}
-                inputName="racId"
-                inputValue={formData.racId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Project"
-                inputOptions={projectOptions}
-                inputName="projectId"
-                inputValue={formData.projectId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="TCL"
-                inputOptions={TCLOptions}
-                inputName="tclFileId"
-                inputValue={formData.tclFileId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative mt-1">
-              <InputSelect
-                inputOptions={recoveryOptions}
-                labelName="Recovery Type"
-                inputName="recoveryEquationTempId"
-                isSearchable={false}
-                inputValue={formData.recoveryEquationTempId}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-5 gap-5 items-end mb-4">
-            <div className="relative">
-              <InputSelect
-                labelName="DBR Config"
-                inputOptions={dbrOptions}
-                inputName="dbcTempId"
-                inputValue={formData.dbcTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Blocked Employer"
-                inputOptions={beOptions}
-                inputName="blockEmployersTempId"
-                inputValue={formData.blockEmployersTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Rule Policy"
-                inputOptions={rpOptions}
-                inputName="rulePolicyTempId"
-                inputValue={formData.rulePolicyTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-            <div className="relative">
-              <InputSelect
-                labelName="Credit Score Rule"
-                inputOptions={csOptions}
-                inputName="creditScoreEqTempId"
-                inputValue={formData.creditScoreEqTempId}
-                onChange={handleChange}
-                isSearchable={false}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-5 gap-5 items-end">
-            <div className="relative mt-4">
-              <InputText
-                labelName="Processing Fee"
-                inputName="fee"
-                inputValue={formData.fee}
-                onChange={handleChange}
-                placeHolder="1%"
-              />
-            </div>
-            <div className="relative mt-4">
-              <InputText
-                labelName="Management Fee Vat"
-                inputName="managementFeeVat"
-                inputValue={formData.managementFeeVat}
-                onChange={handleChange}
-                placeHolder="15%"
-              />
-            </div>
-            <div className="relative mt-4">
-              <InputNumber
-                labelName="No. of Installments For Early Settlement"
-                inputName="numberOfEmisForEarlySettlement"
-                inputValue={formData.numberOfEmisForEarlySettlement}
-                onChange={handleChange}
-                placeHolder="3"
-              />
-            </div>
-
-            <div className="relative mb-2">
-              <InputCheckbox
-                labelName="Refinanced With"
-                inputChecked={formData.refinancedWith}
-                onChange={handleChange}
-                inputName="refinancedWith"
-              />
-            </div>
-            <div className="relative mb-2">
-              <InputCheckbox
-                labelName="Disable RAC"
-                inputChecked={formData.disableRac}
-                onChange={handleChange}
-                inputName="disableRac"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
-          <InputText
-            labelName="Simple Interest"
-            inputName="interestRate"
-            inputValue={interestEligibleTenure.interestRate}
-            onChange={handleChangeInterestEligibleTenure}
-            placeHolder="2%"
-          />
-          <InputSelect
-            labelName="Per"
-            inputOptions={options}
-            inputName="interestPeriodType"
-            inputValue={interestEligibleTenure.interestPeriodType}
-            onChange={handleChangeInterestEligibleTenure}
-          />
-          <InputNumber
-            labelName="Tenure"
-            inputName="loanTenure"
-            inputValue={interestEligibleTenure.loanTenure}
-            onChange={handleChangeInterestEligibleTenure}
-            placeHolder="3"
-          />
-          <InputSelect
-            labelName="Tenure Type"
-            inputOptions={tenureTypeOptions}
-            inputName="loanTenureType"
-            isSearchable={false}
-            onChange={handleChangeInterestEligibleTenure}
-          />
-          <InputNumber
-            labelName="Repayment Tenure"
-            inputName="repaymentTenure"
-            inputValue={interestEligibleTenure.repaymentTenure}
-            onChange={handleChangeInterestEligibleTenure}
-            placeHolder="0"
-          />
-          <InputSelect
-            labelName="Repayment Tenure Type"
-            inputName="repaymentTenureType"
-            inputOptions={tenureTypeOptions}
-            inputValue={interestEligibleTenure.repaymentTenureType}
-            onChange={handleChangeInterestEligibleTenure}
-          />
-          <div className="flex justify-center align-middle">
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={handleAddFields}
-              circle={true}
-            />
-          </div>
-        </div>
+        <ProductInputFields formData={formData} handleChange={handleChange} setFormData={setFormData}/>
         <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -536,6 +219,7 @@ const CreateProduct = () => {
             </tbody>
           </table>
         </div>
+
         <div className="text-right mt-5">
           <Button
             buttonIcon={CheckCircleIcon}

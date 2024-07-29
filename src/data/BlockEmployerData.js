@@ -38,25 +38,25 @@ export const BlockedEmployerHeaderList = [
 
 export const BlockedEmployerList = [
   {
-    name: "Employer A",
+    employerId: "Employer A",
     blockedOn: "01/02/2023",
-    reason: "Fraudulent Activities",
+    reasonForBlocking: "Fraudulent Activities",
     totalBlockedDuration: "8 months",
     status: "Active",
     href: "/employers/1",
   },
   {
-    name: "Employer B",
+    employerId: "Employer B",
     blockedOn: "12/04/2023",
-    reason: "Non-compliance",
+    reasonForBlocking: "Non-compliance",
     totalBlockedDuration: "5 months",
     status: "Active",
     href: "/employers/2",
   },
   {
-    name: "Employer C",
+    employerId: "Employer C",
     blockedOn: "25/07/2023",
-    reason: "Repeated Offenses",
+    reasonForBlocking: "Repeated Offenses",
     totalBlockedDuration: "10 months",
     status: "Inactive",
     href: "/employers/3",

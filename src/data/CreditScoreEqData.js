@@ -42,24 +42,24 @@ export const HeaderList = [
 export const CreditScoreEqList = [
   {
     name: "Cash Loan Temp",
-    created: "07/06/2021",
+    createdOn: "07/06/2021",
     openLoans: "2367",
-    disbursedPrincipal: "$234M",
+    totalDisbursedPrincipal: "$234M",
     status: "Active",
     href: "/credit-score/25253d57-f269-4c23-b213-9cda4ffe07ff",
   },
   {
     name: "BNPL Temp",
-    created: "14/09/2022",
+    createdOn: "14/09/2022",
     openLoans: "1490",
-    disbursedPrincipal: "$750M",
+    totalDisbursedPrincipal: "$750M",
     status: "Active",
   },
   {
     name: "Overdraft Temp",
-    created: "19/09/2022",
+    createdOn: "19/09/2022",
     openLoans: "185",
-    disbursedPrincipal: "$90M",
+    totalDisbursedPrincipal: "$90M",
     status: "Inactive",
   },
 ];

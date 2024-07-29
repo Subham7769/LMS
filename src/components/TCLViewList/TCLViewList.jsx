@@ -209,7 +209,7 @@ const TCLViewList = () => {
       // Optionally, handle the error in the UI, such as showing an error message
     }
   };
-
+console.log(tableData)
   return (
     <Body>
       {/* Select & Add to List */}

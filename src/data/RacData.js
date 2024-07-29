@@ -34,34 +34,34 @@ export const RacStats = [
   export const HeaderList = [
     "Name",
     "Created On",
-    "% Approved",
+    "Approved",
     "Total Processed",
     "Status",
   ];
   
-  export const ProductList = [
-    {
-        name: "Cash Product RAC",
-        created: "07/06/2021",
-        approved: "40%",
-        processed: "2367",
-        status: "Active",
-        href: "/rac/cash-loan/rmc",
-      },
-      {
-        name: "BNPL Product RAC",
-        created: "14/09/2022",
-        approved: "20%",
-        processed: "750",
-        status: "Active",
-        href: "/rac/cash-loan/rmc",
-      },
-      {
-        name: "Overdraft Product RAC",
-        created: "19/09/2022",
-        approved: "85%",
-        processed: "901",
-        status: "Inactive",
-        href: "/rac/cash-loan/rmc",
-      },
-  ];
+export const ProductList = [
+  {
+    name: "Cash Product RAC",
+    createdOn: "07/06/2021",
+    approved: "40%",
+    totalProcessed: "2367",
+    status: "Active",
+    href: "/rac/cash-loan/rmc",
+  },
+  {
+    name: "BNPL Product RAC",
+    createdOn: "14/09/2022",
+    approved: "20%",
+    totalProcessed: "750",
+    status: "Active",
+    href: "/rac/cash-loan/rmc",
+  },
+  {
+    name: "Overdraft Product RAC",
+    createdOn: "19/09/2022",
+    approved: "85%",
+    totalProcessed: "901",
+    status: "Inactive",
+    href: "/rac/cash-loan/rmc",
+  },
+];

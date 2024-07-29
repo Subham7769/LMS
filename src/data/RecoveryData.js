@@ -35,36 +35,37 @@ export const RecoveryHeaderList = [
   "Case ID",
   "Opened On",
   "Recovered Amount",
-  "Total Outstanding",
+  "Outstanding Amount",
   "Status",
 ];
 
 export const RecoveryProductList = [
   {
-    name: "Recovery Plan A",
-    opened: "10/01/2022",
+    caseId: "Recovery Plan A",
+    openedOn: "10/01/2022",
     recoveredAmount: "$50M",
     outstandingAmount: "$20M",
     status: "Active",
     href: "/recovery/1",
   },
   {
-    name: "Recovery Plan B",
-    opened: "15/03/2022",
+    caseId: "Recovery Plan B",
+    openedOn: "15/03/2022",
     recoveredAmount: "$70M",
     outstandingAmount: "$30M",
     status: "Active",
     href: "/recovery/2",
   },
   {
-    name: "Recovery Plan C",
-    opened: "22/06/2022",
+    caseId: "Recovery Plan C",
+    openedOn: "22/06/2022",
     recoveredAmount: "$30M",
     outstandingAmount: "$10M",
     status: "Inactive",
     href: "/recovery/3",
   },
 ];
+
 
 export const RecoveryViewListData = [
   {

@@ -15,6 +15,8 @@ const ProductGroupPage = () => {
             ListItem={ProductList}
             HandleAction={null}
             Searchable={true}
+            Sortable={true} // New prop to enable/disable sorting
+            Divider={false}
             />
         </Body>
     )

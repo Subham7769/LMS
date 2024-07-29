@@ -2,7 +2,7 @@ import React from "react";
 import Body from "../components/Common/Body/Body";
 import StatContainer from "../components/Common/StatContainer/StatContainer";
 import ListTable from "../components/Common/ListTable/ListTable";
-import { DebtBurdenStats, DebtCaseHeaderList, DebtPlanList } from "../data/DebtBurdenData";
+import { DebtBurdenStats, HeaderList, ProductList } from "../data/DebtBurdenData";
 
 const DebtBurdenPage = () => {
   return (
@@ -10,10 +10,12 @@ const DebtBurdenPage = () => {
       <StatContainer stats={DebtBurdenStats} />
       <ListTable
         ListName={"Debt Burden List"}
-        ListHeader={DebtCaseHeaderList}
-        ListItem={DebtPlanList}
+        ListHeader={HeaderList}
+        ListItem={ProductList}
         HandleAction={null}
         Searchable={true}
+        Sortable={true} // New prop to enable/disable sorting
+        Divider={false}
       />
     </Body>
   );
