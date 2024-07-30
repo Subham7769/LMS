@@ -12,11 +12,10 @@ import { Passed, Warning } from "../Toasts";
 import { useParams } from "react-router-dom";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import Button from "../Common/Button/Button";
 
 const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const [inputList, setInputList] = useState([]);
-  const [newAmount, setNewAmount] = useState("");
-  const [newTenure, setNewTenure] = useState("");
   const { rulePolicyId } = useParams();
   const authToken = localStorage.getItem("authToken");
   const [editingIndex, setEditingIndex] = useState(null);
@@ -205,8 +204,6 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
               message={"The item was added successfully"}
             />
           ));
-          setNewAmount("");
-          setNewTenure("");
         }
         return response.text();
       })
@@ -296,84 +293,42 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 mx-auto max-w-[660px] border border-red-600">
-        <div className="flex items-center justify-between">
-          <div className="text-lg">Max Finance Amount With Tenure</div>
+      <div className="shadow-md bg-gray-100 rounded-xl p-6">
+        <div className="text-lg mb-5">Max Finance Amount With Tenure</div>
+        <div className="grid grid-cols-4 gap-5 items-end">
+          <InputNumber
+            labelName={"Amount"}
+            inputName={"financeAmount"}
+            inputValue={maxFinAmtRules.financeAmount}
+            onChange={handleRuleChange}
+            placeHolder={"999"}
+          />
+          <InputNumber
+            labelName={"Tenure"}
+            inputName={"tenure"}
+            inputValue={maxFinAmtRules.tenure}
+            onChange={handleRuleChange}
+            placeHolder={"6"}
+          />
+          <Button buttonIcon={PlusIcon} onClick={handleSave} circle={true} />
         </div>
-        <div className="flex gap-5 items-end mt-5">
-          <div className="relative">
-            {/* <label
-              htmlFor={`amount`}
-              className="bg-white px-1 text-xs text-gray-900"
-            >
-              Amount
-            </label>
-            <input
-              type="number"
-              name="financeAmount"
-              id={`financeAmount`}
-              value={newAmount}
-              onChange={(e) => setNewAmount(e.target.value)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="999"
-            /> */}
-            <InputNumber
-              labelName={"Amount"}
-              inputName={"financeAmount"}
-              inputValue={maxFinAmtRules.financeAmount}
-              onChange={handleRuleChange}
-              placeHolder={"999"}
-            />
-          </div>
-          <div className="relative">
-            {/* <label
-              htmlFor={`tenure`}
-              className="bg-white px-1 text-xs text-gray-900"
-            >
-              Tenure
-            </label>
-            <input
-              type="number"
-              name="tenure"
-              id={`tenure`}
-              value={newTenure}
-              onChange={(e) => setNewTenure(e.target.value)}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="6"
-            /> */}
-            <InputNumber
-              labelName={"Tenure"}
-              inputName={"tenure"}
-              inputValue={maxFinAmtRules.tenure}
-              onChange={handleRuleChange}
-              placeHolder={"6"}
-            />
-          </div>
-          <button
-            onClick={handleSave}
-            type="button"
-            className="rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
-        </div>
-        <div className="mt-4">
+        <div className="mt-6">
           <table className="divide-y divide-gray-200 w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th scope="col" onClick={() => handleSort("financeAmount")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
                     Amount {getSortIcon("financeAmount")}
                   </div>
                 </th>
                 <th scope="col" onClick={() => handleSort("tenure")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
                     Tenure {getSortIcon("tenure")}
                   </div>
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center"
                 >
                   Actions
                 </th>
@@ -404,9 +359,9 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                           placeholder="999"
                         />
                       ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        <div className="whitespace-nowrap text-center py-3 px-3 text-sm text-gray-500">
                           {item.financeAmount}
-                        </span>
+                        </div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -421,12 +376,12 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                           placeholder="6"
                         />
                       ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        <div className="whitespace-nowrap text-center py-3 px-3 text-sm text-gray-500">
                           {item.tenure}
-                        </span>
+                        </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium justify-center flex gap-2">
                       <button onClick={() => toggleEdit(index)} type="button">
                         {editingIndex === index ? (
                           <div

@@ -18,6 +18,9 @@ import toast, { Toaster } from "react-hot-toast";
 import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
+import Button from "../Common/Button/Button";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -47,10 +50,6 @@ const CreditPolicy = () => {
   const [secondRiskBasedPricingOperator, setsecondRiskBasedPricingOperator] =
     useState([]);
   const [allRuleData, setAllRuleData] = useState([]);
-  const [firstRiskBasedPricing, setfirstRiskBasedPricing] = useState("");
-  const [secondRiskBasedPricing, setsecondRiskBasedPricing] = useState("");
-  const [interestRate, setinterestRate] = useState("");
-  const [selectedPeriodType, setselectedPeriodType] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -199,18 +198,7 @@ const CreditPolicy = () => {
       operators: null,
     },
   ]);
-  const [riskBasedPricing, setRiskBasedPricing] = useState({});
-  const [riskBasedPricingEquation, setRiskBasedPricingEquation] = useState({});
-  const [rules, setRules] = useState({
-    ruleName: "0",
-    fieldType: "Employer",
-    rulePolicyTempId: rulePolicyId,
-    a_Weight: "",
-    b_Weight: "",
-    c_Weight: "",
-    d_Weight: "",
-  });
-  const [riskBasedPricingRules, setRiskBasedPricingRules] = useState({
+  const [riskBasedPricing, setRiskBasedPricing] = useState({
     operators: {
       firstRiskBasedPricingOperator: "",
       secondRiskBasedPricingOperator: "",
@@ -226,6 +214,16 @@ const CreditPolicy = () => {
         fieldType: "Employer",
       },
     ],
+  });
+  const [riskBasedPricingEquation, setRiskBasedPricingEquation] = useState({});
+  const [rules, setRules] = useState({
+    ruleName: "0",
+    fieldType: "Employer",
+    rulePolicyTempId: rulePolicyId,
+    a_Weight: "",
+    b_Weight: "",
+    c_Weight: "",
+    d_Weight: "",
   });
 
   const handleSort = (column) => {
@@ -376,23 +374,9 @@ const CreditPolicy = () => {
   const handleAddFieldsRBP = async () => {
     const token = localStorage.getItem("authToken");
     const postData = {
-      operators: {
-        firstRiskBasedPricingOperator: firstRiskBasedPricingOperator.value,
-        secondRiskBasedPricingOperator: secondRiskBasedPricingOperator.value,
-      },
-      riskBasedPricingRules: [
-        {
-          firstRiskBasedPricing: firstRiskBasedPricing,
-          secondRiskBasedPricing: secondRiskBasedPricing,
-          interestRate: interestRate,
-          interestPeriodType: selectedPeriodType.value,
-          ruleName: "0",
-          rulePolicyTempId: rulePolicyId,
-          fieldType: "Employer",
-        },
-      ],
+      ...riskBasedPricing,
     };
-
+    console.log(postData);
     try {
       const postResponse = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/risk-based-pricing-rule",
@@ -418,10 +402,6 @@ const CreditPolicy = () => {
           />
         ));
         fetchData();
-        setfirstRiskBasedPricing("");
-        setsecondRiskBasedPricing("");
-        setinterestRate("");
-        setselectedPeriodType([]);
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -673,6 +653,41 @@ const CreditPolicy = () => {
     });
   };
 
+  const handleRuleChange2 = (e) => {
+    const { name, value, id } = e.target;
+
+    setRiskBasedPricing((prevState) => {
+      const isOperator = prevState.operators.hasOwnProperty(name);
+      const isRuleField =
+        prevState.riskBasedPricingRules[0].hasOwnProperty(name);
+
+      if (isOperator) {
+        // Update an operator
+        return {
+          ...prevState,
+          operators: {
+            ...prevState.operators,
+            [name]: value,
+          },
+        };
+      } else if (isRuleField) {
+        // Update a rule
+        console.log(isRuleField);
+        return {
+          ...prevState,
+          riskBasedPricingRules: [
+            {
+              ...prevState.riskBasedPricingRules[0],
+              [name]: value,
+            },
+          ],
+        };
+      }
+    });
+  };
+
+  console.log(riskBasedPricing);
+
   if (loading) {
     return <LoadingState />;
   }
@@ -681,448 +696,404 @@ const CreditPolicy = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <MaxFinAmtTen FAWTData={FAWTData} fetchData={fetchData} />
       {riskBasedPricingEquation ? (
-        <div className="border-b border-gray-300 pb-8 my-8">
+        <div className="shadow-md bg-gray-100 rounded-xl p-6 my-6">
           <div className=" text-center my-4 text-lg">
             Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
             (*Length of Service*C%) + (*Cities*D%)]
           </div>
-          <div className="flex justify-center">
-            <table className="divide-y divide-gray-300 w-5/6">
-              <thead>
-                <tr className="divide-x divide-gray-200">
-                  <th className="py-3.5 px-2 text-center text-gray-900">A</th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">B</th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">C</th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">D</th>
-                  <th className="py-3.5 px-2 text-center text-gray-900">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                <tr className="divide-x divide-gray-200 text-center">
+          <table className="divide-y divide-gray-300 w-full">
+            <thead className="bg-gray-50">
+              <tr className="divide-x divide-gray-200">
+                <th className="py-3.5 px-2 text-center text-gray-900">A</th>
+                <th className="py-3.5 px-2 text-center text-gray-900">B</th>
+                <th className="py-3.5 px-2 text-center text-gray-900">C</th>
+                <th className="py-3.5 px-2 text-center text-gray-900">D</th>
+                <th className="py-3.5 px-2 text-center text-gray-900">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              <tr className="divide-x divide-gray-200 text-center">
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"a_Weight"}
+                    inputValue={rules.a_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"b_Weight"}
+                    inputValue={rules.b_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"c_Weight"}
+                    inputValue={rules.c_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"d_Weight"}
+                    inputValue={rules.d_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={handleAddRBPE}
+                    className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    <CheckCircleIcon
+                      className="-ml-0.5 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                    Add
+                  </button>
+                </td>
+              </tr>
+              {riskBasedPricingEquation?.rules?.map((item, index) => (
+                <tr
+                  key={item.ruleName || index}
+                  className="divide-x divide-gray-200 text-center"
+                >
                   <td className="whitespace-nowrap py-4 px-5 text-gray-500">
                     <InputNumber
                       inputName={"a_Weight"}
-                      inputValue={rules.a_Weight}
-                      onChange={handleRuleChange}
+                      inputId={item.ruleName}
+                      inputValue={item.a_Weight}
+                      onChange={handleChange}
                       placeHolder={"0.54"}
                     />
                   </td>
                   <td className="whitespace-nowrap py-4 px-5 text-gray-500">
                     <InputNumber
                       inputName={"b_Weight"}
-                      inputValue={rules.b_Weight}
-                      onChange={handleRuleChange}
+                      inputId={item.ruleName}
+                      inputValue={item.b_Weight}
+                      onChange={handleChange}
                       placeHolder={"0.54"}
                     />
                   </td>
                   <td className="whitespace-nowrap py-4 px-5 text-gray-500">
                     <InputNumber
                       inputName={"c_Weight"}
-                      inputValue={rules.c_Weight}
-                      onChange={handleRuleChange}
+                      inputId={item.ruleName}
+                      inputValue={item.c_Weight}
+                      onChange={handleChange}
                       placeHolder={"0.54"}
                     />
                   </td>
                   <td className="whitespace-nowrap py-4 px-5 text-gray-500">
                     <InputNumber
                       inputName={"d_Weight"}
-                      inputValue={rules.d_Weight}
-                      onChange={handleRuleChange}
+                      inputId={item.ruleName}
+                      inputValue={item.d_Weight}
+                      onChange={handleChange}
                       placeHolder={"0.54"}
                     />
                   </td>
-                  <td>
+                  <td className="py-4 flex gap-2 px-4">
                     <button
                       type="button"
-                      onClick={handleAddRBPE}
-                      className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      onClick={() => handleUpdateRBPE(index)}
+                      className="block w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
                     >
-                      <CheckCircleIcon
-                        className="-ml-0.5 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      Add
+                      <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteRBPE(item.ruleName)}
+                      className="block w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    >
+                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                   </td>
                 </tr>
-                {riskBasedPricingEquation?.rules?.map((item, index) => (
-                  <tr
-                    key={item.ruleName || index}
-                    className="divide-x divide-gray-200 text-center"
-                  >
-                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                      <InputNumber
-                        inputName={"a_Weight"}
-                        inputId={item.ruleName}
-                        inputValue={item.a_Weight}
-                        onChange={handleChange}
-                        placeHolder={"0.54"}
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                      <InputNumber
-                        inputName={"b_Weight"}
-                        inputId={item.ruleName}
-                        inputValue={item.b_Weight}
-                        onChange={handleChange}
-                        placeHolder={"0.54"}
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                      <InputNumber
-                        inputName={"c_Weight"}
-                        inputId={item.ruleName}
-                        inputValue={item.c_Weight}
-                        onChange={handleChange}
-                        placeHolder={"0.54"}
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                      <InputNumber
-                        inputName={"d_Weight"}
-                        inputId={item.ruleName}
-                        inputValue={item.d_Weight}
-                        onChange={handleChange}
-                        placeHolder={"0.54"}
-                      />
-                    </td>
-                    <td className="py-4 flex gap-2 px-4">
-                      <button
-                        type="button"
-                        onClick={() => handleUpdateRBPE(index)}
-                        className="block w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
-                      >
-                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteRBPE(item.ruleName)}
-                        className="block w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : null}
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="flex items-center justify-between">
-          <div className="text-lg">Risk Based Pricing</div>
-        </div>
-        <div className="flex gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
-          <div className="mb-3">
-            <label htmlFor="firstRiskBasedPricing" className="block">
-              Minimum Risk Based Pricing
-            </label>
-            <div className="flex gap-4">
-              <Select
-                className="min-w-20"
-                options={operatorOptions}
-                value={firstRiskBasedPricingOperator}
-                onChange={(firstRiskBasedPricingOperator) =>
-                  setfirstRiskBasedPricingOperator(
-                    firstRiskBasedPricingOperator
-                  )
-                }
-                isSearchable={false}
-              />
-              <input
-                type="number"
-                name="firstRiskBasedPricing"
-                value={firstRiskBasedPricing}
-                onChange={(e) => setfirstRiskBasedPricing(e.target.value)}
-                placeholder={"0.5"}
-                className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="secondRiskBasedPricing" className="block">
-              Maximum Risk Based Pricing
-            </label>
-            <div className="flex gap-4">
-              <Select
-                className="min-w-20"
-                options={operatorOptions}
-                value={secondRiskBasedPricingOperator}
-                onChange={(secondRiskBasedPricingOperator) =>
-                  setsecondRiskBasedPricingOperator(
-                    secondRiskBasedPricingOperator
-                  )
-                }
-                isSearchable={false}
-              />
-              <input
-                type="number"
-                name="secondRiskBasedPricing"
-                value={secondRiskBasedPricing}
-                onChange={(e) => setsecondRiskBasedPricing(e.target.value)}
-                placeholder={"2"}
-                className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="interestRate" className="block">
-              Simple Interest
-            </label>
-            <input
-              type="number"
-              name="interestRate"
-              value={interestRate}
-              onChange={(e) => setinterestRate(e.target.value)}
-              className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="4000"
+      <div className="shadow-md rounded-xl p-6 bg-gray-100">
+        <div className="text-lg">Risk Based Pricing</div>
+        <div className="grid grid-cols-5 gap-8 my-5 items-end">
+          <SelectAndNumber
+            labelName={"Minimum Risk Based Pricing"}
+            inputSelectName={"firstRiskBasedPricingOperator"}
+            inputSelectValue={
+              riskBasedPricing?.operators?.firstRiskBasedPricingOperator
+            }
+            inputSelectOptions={operatorOptions}
+            onChangeSelect={handleRuleChange2}
+            inputNumberName={"firstRiskBasedPricing"}
+            inputNumberValue={
+              riskBasedPricing?.riskBasedPricingRules[0]?.firstRiskBasedPricing
+            }
+            onChangeNumber={handleRuleChange2}
+            placeHolder={"0.5"}
+          />
+          <SelectAndNumber
+            labelName={"Maximum Risk Based Pricing"}
+            inputSelectName={"secondRiskBasedPricingOperator"}
+            inputSelectValue={
+              riskBasedPricing?.operators?.secondRiskBasedPricingOperator
+            }
+            inputSelectOptions={operatorOptions}
+            onChangeSelect={handleRuleChange2}
+            inputNumberName={"secondRiskBasedPricing"}
+            inputNumberValue={
+              riskBasedPricing?.riskBasedPricingRules[0]?.secondRiskBasedPricing
+            }
+            onChangeNumber={handleRuleChange2}
+            placeHolder={"0.5"}
+          />
+          <InputNumber
+            labelName={"Simple Interest"}
+            inputName={"interestRate"}
+            inputValue={
+              riskBasedPricing?.riskBasedPricingRules[0]?.interestRate
+            }
+            onChange={handleRuleChange2}
+            placeHolder={"4000"}
+          />
+          <InputSelect
+            labelName={"PER"}
+            inputOptions={options}
+            inputName={"interestPeriodType"}
+            inputValue={
+              riskBasedPricing?.riskBasedPricingRules[0]?.interestPeriodType
+            }
+            onChange={handleRuleChange2}
+          />
+          <div>
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={handleAddFieldsRBP}
+              circle={true}
             />
           </div>
-          <div className="relative mb-3">
-            <label htmlFor="interestPeriodType" className="block">
-              PER
-            </label>
-            <Select
-              className="w-36"
-              options={options}
-              name="interestPeriodType"
-              value={selectedPeriodType}
-              onChange={(selectedOption) =>
-                setselectedPeriodType(selectedOption)
-              }
-              isSearchable={false}
-            />
-          </div>
-          <button
-            onClick={handleAddFieldsRBP}
-            type="button"
-            className="rounded-full mb-3 bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
         </div>
-        <div>
-          <table className="w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <table className="w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope="col" onClick={() => handleSort("min")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  Minimum Risk Based Pricing {getSortIcon("min")}
+                </div>
+              </th>
+              <th scope="col" onClick={() => handleSort("max")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  Maximum Risk Based Pricing {getSortIcon("max")}
+                </div>
+              </th>
+              <th scope="col" onClick={() => handleSort("simp")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  Simple Interest {getSortIcon("simp")}
+                </div>
+              </th>
+              <th scope="col" onClick={() => handleSort("per")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  PER {getSortIcon("per")}
+                </div>
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {currentItems.length === 0 ? (
               <tr>
-                <th scope="col" onClick={() => handleSort("min")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Minimum Risk Based Pricing {getSortIcon("min")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("max")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Maximum Risk Based Pricing {getSortIcon("max")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("simp")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Simple Interest {getSortIcon("simp")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("per")}>
-                  <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    PER {getSortIcon("per")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                  No Data To Show Yet
+                </td>
               </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No Data To Show Yet
-                  </td>
-                </tr>
-              ) : (
-                currentItems.map((item, index) => (
-                  <tr key={index}>
-                    <td className="p-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <div className="flex gap-4">
-                          <Select
-                            className="min-w-20"
-                            options={operatorOptions}
-                            value={firstRiskBasedPricingOperator}
-                            onChange={(firstRiskBasedPricingOperator) =>
-                              setfirstRiskBasedPricingOperator(
-                                firstRiskBasedPricingOperator
-                              )
-                            }
-                            isSearchable={false}
-                          />
-                          <input
-                            type="number"
-                            name="firstRiskBasedPricing"
-                            value={item.firstRiskBasedPricing}
-                            onChange={(e) => handleChange(e, index)}
-                            placeholder={"0.5"}
-                            className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-start ml-20 gap-5">
-                          <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                            {firstRiskBasedPricingOperator.value}
-                          </span>
-                          <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                            {item.firstRiskBasedPricing}
-                          </span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <div className="flex gap-4">
-                          <Select
-                            className="min-w-20"
-                            options={operatorOptions}
-                            value={secondRiskBasedPricingOperator}
-                            onChange={(secondRiskBasedPricingOperator) =>
-                              setsecondRiskBasedPricingOperator(
-                                secondRiskBasedPricingOperator
-                              )
-                            }
-                            isSearchable={false}
-                          />
-                          <input
-                            type="number"
-                            name="secondRiskBasedPricing"
-                            value={item.secondRiskBasedPricing}
-                            onChange={(e) => handleChangeRBP(e, index)}
-                            placeholder={"2"}
-                            className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-start ml-20 gap-5">
-                          <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                            {secondRiskBasedPricingOperator.value}
-                          </span>
-                          <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                            {item.secondRiskBasedPricing}
-                          </span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <input
-                          type="number"
-                          name="interestRate"
-                          value={item.interestRate}
-                          onChange={(e) => handleChangeRBP(e, index)}
-                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          placeholder="4000"
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.interestRate}
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      {editingIndex === index ? (
+            ) : (
+              currentItems.map((item, index) => (
+                <tr key={index}>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <div className="flex gap-4">
                         <Select
-                          className="w-32"
-                          options={options}
-                          name="interestPeriodType"
-                          value={[
-                            {
-                              label: item.interestPeriodType,
-                              value: item.interestPeriodType,
-                            },
-                          ]}
-                          onChange={(selectedOption) =>
-                            handleSelectChange(
-                              "interestPeriodType",
-                              index,
-                              selectedOption
+                          className="min-w-20"
+                          options={operatorOptions}
+                          value={firstRiskBasedPricingOperator}
+                          onChange={(firstRiskBasedPricingOperator) =>
+                            setfirstRiskBasedPricingOperator(
+                              firstRiskBasedPricingOperator
                             )
                           }
                           isSearchable={false}
                         />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.interestPeriodType}
+                        <input
+                          type="number"
+                          name="firstRiskBasedPricing"
+                          value={item.firstRiskBasedPricing}
+                          onChange={(e) => handleChange(e, index)}
+                          placeholder={"0.5"}
+                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-start ml-20 gap-5">
+                        <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {firstRiskBasedPricingOperator.value}
                         </span>
+                        <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {item.firstRiskBasedPricing}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <div className="flex gap-4">
+                        <Select
+                          className="min-w-20"
+                          options={operatorOptions}
+                          value={secondRiskBasedPricingOperator}
+                          onChange={(secondRiskBasedPricingOperator) =>
+                            setsecondRiskBasedPricingOperator(
+                              secondRiskBasedPricingOperator
+                            )
+                          }
+                          isSearchable={false}
+                        />
+                        <input
+                          type="number"
+                          name="secondRiskBasedPricing"
+                          value={item.secondRiskBasedPricing}
+                          onChange={(e) => handleChangeRBP(e, index)}
+                          placeholder={"2"}
+                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-start ml-20 gap-5">
+                        <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {secondRiskBasedPricingOperator.value}
+                        </span>
+                        <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {item.secondRiskBasedPricing}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <input
+                        type="number"
+                        name="interestRate"
+                        value={item.interestRate}
+                        onChange={(e) => handleChangeRBP(e, index)}
+                        className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="4000"
+                      />
+                    ) : (
+                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        {item.interestRate}
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <Select
+                        className="w-32"
+                        options={options}
+                        name="interestPeriodType"
+                        value={[
+                          {
+                            label: item.interestPeriodType,
+                            value: item.interestPeriodType,
+                          },
+                        ]}
+                        onChange={(selectedOption) =>
+                          handleSelectChange(
+                            "interestPeriodType",
+                            index,
+                            selectedOption
+                          )
+                        }
+                        isSearchable={false}
+                      />
+                    ) : (
+                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        {item.interestPeriodType}
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                    <button onClick={() => toggleEdit(index)} type="button">
+                      {editingIndex === index ? (
+                        <div
+                          onClick={informUser}
+                          className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                          <CheckCircleIcon
+                            className="h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                          <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                        </div>
                       )}
-                    </td>
-                    <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                      <button onClick={() => toggleEdit(index)} type="button">
-                        {editingIndex === index ? (
-                          <div
-                            onClick={informUser}
-                            className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                          >
-                            <CheckCircleIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            <PencilIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleDeleteRBP(item.ruleName)}
-                        type="button"
-                        className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || currentItems.length === 0}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
-          </div>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteRBP(item.ruleName)}
+                      type="button"
+                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    >
+                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        <div className="mt-4 w-full flex justify-center gap-5 items-center">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`flex items-center px-4 py-2 rounded-md ${
+              currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-500"
+            }`}
+          >
+            <ChevronLeftIcon className="w-5 h-5" />
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || currentItems.length === 0}
+            className={`flex items-center px-4 py-2 rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-500"
+            }`}
+          >
+            <ChevronRightIcon className="w-5 h-5" />
+          </button>
         </div>
-        <div className="text-right mt-5">
+        <div className="text-right ">
           <button
             type="button"
             onClick={handleUpdateRBP}
