@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
+import ListTable from "../Common/ListTable/ListTable";
 
 // Utility function for date formatting
 const formatDate = (dateString) => {
@@ -13,46 +14,6 @@ const formatDate = (dateString) => {
   const day = String(dateObj.getDate()).padStart(2, "0");
   return `${day} ${monthName} ${year}`;
 };
-
-const TableHeader = () => (
-  <thead>
-    <tr className="divide-x divide-gray-200">
-      {[
-        "Payment Date",
-        "Payment Amount",
-        "Loan Id",
-        "Payment Status",
-        "Triggered By",
-      ].map((header, index) => (
-        <th key={index} className="py-3.5 px-4 text-center text-gray-900">
-          {header}
-        </th>
-      ))}
-    </tr>
-  </thead>
-);
-
-const TableCell = ({ children }) => (
-  <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-    <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-      {children}
-    </div>
-  </td>
-);
-
-const TableRow = ({ repayment }) => (
-  <tr className="divide-x divide-gray-200 text-center w-full">
-    {[
-      repayment.formattedProcessDate,
-      repayment.repaymentAmount,
-      repayment.loanId,
-      repayment.repaymentStatus,
-      repayment.repaymentOriginator,
-    ].map((text, index) => (
-      <TableCell key={index}>{text}</TableCell>
-    ))}
-  </tr>
-);
 
 const PaymentHistory = () => {
   const url = "/repayments";
@@ -76,14 +37,23 @@ const PaymentHistory = () => {
   }
 
   return (
-    <table className="divide-y divide-gray-300">
-      <TableHeader />
-      <tbody className="divide-y divide-gray-200 bg-white">
-        {repaymentsArr.map((repay, index) => (
-          <TableRow key={repay.loanId + index} repayment={repay} />
-        ))}
-      </tbody>
-    </table>
+    <ListTable
+      ListHeader={[
+        "Payment Date",
+        "Payment Amount",
+        "Loan Id",
+        "Payment Status",
+        "Triggered By",
+      ]}
+      ListItem={repaymentsArr.map((repayment) => ({
+        processDate: repayment.formattedProcessDate,
+        repaymentAmount: repayment.repaymentAmount,
+        loanId: repayment.loanId,
+        repaymentStatus: repayment.repaymentStatus,
+        repaymentOriginator: repayment.repaymentOriginator,
+      }))}
+      Divider={true}
+    />
   );
 };
 

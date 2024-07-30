@@ -64,7 +64,7 @@ const SubscriberInfo = () => {
   }
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <div className="flex items-center gap-5 mb-5">
         <div>
           <img
@@ -77,79 +77,76 @@ const SubscriberInfo = () => {
       </div>
 
       <div className="shadow-md rounded-xl py-4 px-5 border border-red-600">
-        <div className="flex border-b border-gray-300 pb-4">
-          <div className="py-2 pr-4 flex flex-col border-r border-gray-300">
-            <div className="flex gap-2 py-2">
-              <div className="w-24">Full Name :</div>
-              <div>{firstNameEn + " " + middleNameEn + " " + lastNameEn}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-24">Gender :</div>
-              <div>{gender}</div>
-            </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 border-b border-gray-300 pb-2">
+          <div className="py-2">
+            <div className="font-semibold">Full Name:</div>
+            <div>{firstNameEn + " " + middleNameEn + " " + lastNameEn}</div>
           </div>
-          <div className=" px-4 py-2  flex flex-col border-r border-gray-300">
-            <div className="flex gap-2 py-2">
-              <div className="w-32">Date of Birth:</div>
-              <div>{formattedDateOfBirth}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-32">Active Id Type :</div>
-              <div>{idType}</div>
-            </div>
+          <div className="py-2">
+            <div className="font-semibold">Gender:</div>
+            <div>{gender}</div>
           </div>
-          <div className="px-4 py-2  flex flex-col border-r border-gray-300">
-            <div className="flex gap-2 py-2">
-              <div className="w-40">Occupation :</div>
-              <div>{occupation}</div>
-            </div>
-            <div className="flex gap-2 py-2">
-              <div className="w-40">Monthly expenses :</div>
-              <div>{totalMonthlyExpenses}</div>
-            </div>
+          <div className="py-2">
+            <div className="font-semibold">Date of Birth:</div>
+            <div>{formattedDateOfBirth}</div>
           </div>
-          <div className="px-4 py-2 flex flex-col">
-            <div className="flex gap-2 py-2">
-              <div className="w-48">Account Creation Date :</div>
-              <div>{regiDate}</div>
-            </div>
+          <div className="py-2">
+            <div className="font-semibold">Active Id Type:</div>
+            <div>{idType}</div>
+          </div>
+          <div className="py-2">
+            <div className="font-semibold">Occupation:</div>
+            <div>{occupation}</div>
+          </div>
+          <div className="py-2">
+            <div className="font-semibold">Monthly expenses:</div>
+            <div>{totalMonthlyExpenses}</div>
+          </div>
+          <div className="py-2">
+            <div className="font-semibold">Account Creation Date:</div>
+            <div>{regiDate}</div>
           </div>
         </div>
-        <div className="flex gap-16">
-          <div className="mt-4 border-r border-gray-300 pr-20">
-            <div className="text-xl mb-4">Residential Details</div>
-            <div className="flex gap-10">
-              <div className="flex gap-5">
-                <div className="flex flex-col gap-y-3">
-                  <div>Address :</div>
-                  <div>Street Name :</div>
-                  <div>Postal Code :</div>
-                  <div>Additional Number :</div>
-                </div>
-                <div className="flex flex-col gap-y-3">
-                  <div>{buildingNumber + ", " + streetName + ", " + city}</div>
-                  <div>{streetName}</div>
-                  <div>{postOfficeBox}</div>
-                  <div>{additionalNumbers}</div>
-                </div>
-              </div>
-              <div className="flex gap-5">
-                <div className="flex flex-col gap-y-3">
-                  <div>Neigborhood :</div>
-                  <div>City :</div>
-                  <div>Building Number :</div>
-                  <div>House is rented or not flag :</div>
-                </div>
-                <div className="flex flex-col gap-y-3">
-                  <div>{neighborhood}</div>
-                  <div>{city}</div>
-                  <div>{buildingNumber}</div>
-                  <div>{rent}</div>
-                </div>
-              </div>
+
+        <FamilyDetails info={kycInfo} />
+        <div className="mt-4">
+          <div className="text-xl mb-4 border-b border-gray-300 pb-2">
+            Residential Details
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <div className="font-semibold">Address:</div>
+              <div>{buildingNumber + ", " + streetName + ", " + city}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Street Name:</div>
+              <div>{streetName}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Postal Code:</div>
+              <div>{postOfficeBox}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Additional Number:</div>
+              <div>{additionalNumbers}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Neighborhood:</div>
+              <div>{neighborhood}</div>
+            </div>
+            <div>
+              <div className="font-semibold">City:</div>
+              <div>{city}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Building Number:</div>
+              <div>{buildingNumber}</div>
+            </div>
+            <div>
+              <div className="font-semibold">House is rented:</div>
+              <div>{rent}</div>
             </div>
           </div>
-          <FamilyDetails info={kycInfo} />
         </div>
       </div>
     </div>

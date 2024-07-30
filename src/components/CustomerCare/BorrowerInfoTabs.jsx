@@ -25,7 +25,7 @@ const BorrowerInfoTabs = () => {
   ];
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 text-sm">
       <div className="flex justify-between">
         <div className="flex mb-10">
           {tabs.slice(0, 6).map((tab) => (

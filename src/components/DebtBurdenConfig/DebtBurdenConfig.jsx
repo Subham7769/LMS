@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  PlusIcon,
-  TrashIcon,
-  PencilIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/20/solid";
+import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed, Warning } from "../Toasts";
+import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
-import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import DynamicName from "../Common/DynamicName/DynamicName";
-import Table from "./Table";
 import { operatorOptions, empOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import ListTable from "../Common/ListTable/ListTable";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -30,10 +23,6 @@ const DebtBurdenConfig = () => {
     firstNetIncomeBracketInSARuleOperator: "",
     secondNetIncomeBracketInSARuleOperator: "",
   });
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [name, setName] = useState("Fetching Name...");
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,44 +40,6 @@ const DebtBurdenConfig = () => {
   });
 
   console.log(formData);
-
-  const handleSort = (column) => {
-    let direction = "asc";
-    if (sortConfig.key === column && sortConfig.direction === "asc") {
-      direction = "desc";
-    } else if (sortConfig.key === column && sortConfig.direction === "desc") {
-      direction = ""; // This will reset the sort
-    }
-    setSortConfig({ key: column, direction });
-  };
-
-  const getSortIcon = (column) => {
-    if (sortConfig.key === column) {
-      if (sortConfig.direction === "asc") {
-        return <FaSortAmountDown className="ml-2" />;
-      } else if (sortConfig.direction === "desc") {
-        return <FaSortAmountUp className="ml-2" />;
-      }
-    }
-    return <FaSort className="ml-2" title="Sort Data" />;
-  };
-
-  // Handle page change
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Page Changed"}
-        message={`You have switched to page: ${newPage}`}
-      />
-    ));
-  };
-
-  const toggleEdit = (index) => {
-    setEditingIndex(editingIndex === index ? null : index);
-  };
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -421,46 +372,6 @@ const DebtBurdenConfig = () => {
     }
   }, [debtBurdenData, dbcTempId]);
 
-  function informUser() {
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"View Mode"}
-        message={"Switched to View Mode"}
-      />
-    ));
-  }
-
-  function informUser1() {
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Edit Mode"}
-        message={"Switched to Edit Mode"}
-      />
-    ));
-  }
-
-  const sortedItems = [...rules].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "asc" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "asc" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  // Calculate the current items to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Determine total number of pages
-  const totalPages = Math.ceil(rules.length / itemsPerPage);
-
   if (loading) {
     return <LoadingState />;
   }
@@ -592,50 +503,32 @@ const DebtBurdenConfig = () => {
           </div>
         </div>
         <div>
-          <div className="w-full">
-            <Table
-              handleChange={handleTableChange}
-              handleDelete={handleDelete}
-              handleSort={handleSort}
-              toggleEdit={toggleEdit}
-              editingIndex={editingIndex}
-              currentItems={currentItems}
-              getSortIcon={getSortIcon}
-              informUser={informUser}
-              informUser1={informUser1}
-              TrashIcon={TrashIcon}
-              PencilIcon={PencilIcon}
-              empOptions={empOptions}
-            />
-          </div>
-
-          <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
-          </div>
+          <ListTable
+            ListHeader={[
+              "Start Net Income Bracket",
+              "End Net Income Bracket",
+              "Product Level",
+              "Consumer DBR",
+              "GDBR (Without MTG)",
+              "Employer Retired",
+              "GDBR (Including MTG)",
+              "Actions",
+            ]}
+            ListItem={rules.map((rule) => ({
+              startNetIncomeBracketInSARule: rule.startNetIncomeBracketInSARule,
+              endNetIncomeBracketInSARule: rule.endNetIncomeBracketInSARule,
+              productLevel: rule.productLevel,
+              consumerDBR: rule.consumerDBR,
+              gdbrWithoutMTG: rule.gdbrWithoutMTG,
+              employerRetired: rule.employerRetired,
+              gdbrWithMTG: rule.gdbrWithMTG,
+            }))}
+            Divider={true}
+            Sortable={true}
+            Editable={true}
+            HandleAction={handleDelete}
+            handleEditableFields={handleTableChange}
+          />
         </div>
       </div>
     </>

@@ -23,6 +23,7 @@ import {
   options,
 } from "../../data/OptionsData";
 import ProductInputFields from "./ProductInputFields";
+import ListTable from "../Common/ListTable/ListTable";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -415,264 +416,53 @@ const LoanProductConfig = () => {
         />
       </div>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <ProductInputFields formData={formData} handleChange={handleChange} setFormData={setFormData}/>
+        <ProductInputFields
+          formData={formData}
+          handleChange={handleChange}
+          setFormData={setFormData}
+        />
         <div>
-          <table className="w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" onClick={() => handleSort("interestRate")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Simple Interest {getSortIcon("interestRate")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  onClick={() => handleSort("interestPeriodType")}
-                >
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    PER {getSortIcon("interestPeriodType")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("LoanTenure")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Loan Tenure {getSortIcon("LoanTenure")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("tenureType")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Loan Tenure Type {getSortIcon("tenureType")}
-                  </div>
-                </th>
-
-                <th scope="col" onClick={() => handleSort("RepaymentTenure")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Repayment Tenure {getSortIcon("RepaymentTenure")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  onClick={() => handleSort("RepaymentTenureType")}
-                >
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Repayment Tenure Type {getSortIcon("RepaymentTenureType")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.length < 1 ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No Data To Show Yet
-                  </td>
-                </tr>
-              ) : (
-                currentItems.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputText
-                          inputName={`interestRate-${index}`}
-                          inputValue={item.interestRate}
-                          onChange={(e) =>
-                            handleInterestChange(
-                              index,
-                              "interestRate",
-                              e.target.value
-                            )
-                          }
-                          placeHolder="2%"
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.interestRate}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputSelect
-                          inputOptions={options}
-                          inputName={`interestPeriodType-${index}`}
-                          inputValue={item.interestPeriodType}
-                          onChange={(selectedOption) =>
-                            handleInterestChange(
-                              index,
-                              "interestPeriodType",
-                              selectedOption
-                            )
-                          }
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.interestPeriodType
-                            ? item.interestPeriodType
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputNumber
-                          inputName={`loanTenure-${index}`}
-                          inputValue={item.loanTenure}
-                          onChange={(e) =>
-                            handleInterestChange(
-                              index,
-                              "loanTenure",
-                              e.target.value
-                            )
-                          }
-                          placeHolder="3"
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.loanTenure}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputSelect
-                          inputOptions={tenureTypeOptions}
-                          inputName={`loanTenureType-${index}`}
-                          inputValue={item.loanTenureType}
-                          onChange={(selectedOption) =>
-                            handleInterestChange(
-                              index,
-                              "loanTenureType",
-                              selectedOption
-                            )
-                          }
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.loanTenureType ? item.loanTenureType : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputNumber
-                          inputName={`repaymentTenure-${index}`}
-                          inputValue={item.repaymentTenure}
-                          onChange={(e) =>
-                            handleInterestChange(
-                              index,
-                              "repaymentTenure",
-                              e.target.value
-                            )
-                          }
-                          placeHolder="3"
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.repaymentTenure}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputSelect
-                          inputOptions={tenureTypeOptions}
-                          inputName={`repaymentTenureType-${index}`}
-                          inputValue={item.repaymentTenureType}
-                          onChange={(selectedOption) =>
-                            handleInterestChange(
-                              index,
-                              "repaymentTenureType",
-                              selectedOption
-                            )
-                          }
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.repaymentTenureType
-                            ? item.repaymentTenureType
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                      <button onClick={() => toggleEdit(index)} type="button">
-                        {editingIndex === index ? (
-                          <div
-                            onClick={informUser}
-                            className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                          >
-                            <CheckCircleIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            <PencilIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(index)}
-                        type="button"
-                        className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="text-right mt-5">
-            <button
-              type="button"
-              onClick={handleSave}
-              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-              Save
-            </button>
-          </div>
+          <ListTable
+            ListHeader={[
+              "Simple Interest",
+              "PER",
+              "Tenure",
+              "Tenure Type",
+              "Repayment Tenure",
+              "Repayment Tenure Type",
+              "Actions",
+            ]}
+            ListItem={formData.interestEligibleTenure
+              .filter(
+                (item) =>
+                  item.interestRate &&
+                  item.interestPeriodType &&
+                  item.loanTenure &&
+                  item.loanTenureType &&
+                  item.repaymentTenure &&
+                  item.repaymentTenureType
+              )
+              .map((item) => ({
+                interestRate: item.interestRate,
+                interestPeriodType: item.interestPeriodType,
+                loanTenure: item.loanTenure,
+                loanTenureType: item.loanTenureType,
+                repaymentTenure: item.repaymentTenure,
+                repaymentTenureType: item.repaymentTenureType,
+              }))}
+            Divider={true}
+            Sortable={true}
+            Editable={true}
+            HandleAction={handleDelete}
+          />
+        </div>
+        <div className="text-right mt-5">
+          <Button
+            buttonIcon={CheckCircleIcon}
+            buttonName={"Save"}
+            onClick={handleSave}
+            rectangle={true}
+          />
         </div>
       </div>
     </>

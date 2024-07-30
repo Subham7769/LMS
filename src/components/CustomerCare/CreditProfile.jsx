@@ -1,17 +1,18 @@
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
+import ListTable from "../Common/ListTable/ListTable";
 
 const DataWithIcon = ({ value, name }) => {
   return (
-    <div className="flex gap-2 py-2 text-sm">
+    <div className="flex gap-2 py-2 text-sm items-center">
       <div
-        className="w-60 2xl:w-80 cursor-pointer"
-        title="Consumer Credit Bureau liabilities"
+        className="w-60 2xl:w-80 cursor-pointer flex items-center"
+        title={name}
       >
-        {name}{" "}
-        <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />{" "}
-        :{" "}
+        {name}
+        <InformationCircleIcon className="h-4 w-4 ml-2 text-gray-500 hover:text-black" />
+        :
       </div>
       <div>{value}</div>
     </div>
@@ -20,8 +21,8 @@ const DataWithIcon = ({ value, name }) => {
 
 const DataWithoutIcon = ({ value, name }) => {
   return (
-    <div className="flex gap-2 py-2 text-sm">
-      <div className="w-60 2xl:w-80">{name} : </div>
+    <div className="flex gap-2 py-2 text-sm items-center">
+      <div className="w-60 2xl:w-80">{name} :</div>
       <div>{value}</div>
     </div>
   );
@@ -52,50 +53,19 @@ const CreditProfile = () => {
 
   return (
     <>
-      <div className="rounded-xl p-4 border border-red-600 w-fit overflow-auto max-h-[260px] pr-5">
-        <table className="divide-y divide-gray-300 w-full text-sm">
-          <thead className="bg-white sticky top-0">
-            <tr className="divide-x divide-gray-200">
-              <th className="py-3.5 px-2 text-center text-gray-900">No.</th>
-              <th className="py-3.5 px-2 text-center text-gray-900">
-                Project Name
-              </th>
-              <th className="py-3.5 px-2 text-center text-gray-900">
-                Total TCL
-              </th>
-              <th className="py-3.5 px-2 text-center text-gray-900">Net TCL</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {creditProfileData.map((cp, index) => (
-              <tr key={index} className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {index + 1}
-                  </div>
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {cp.projectName}
-                  </div>
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {cp.totalTCL ? cp.totalTCL : "N/A"}
-                  </div>
-                </td>
-                <td className="whitespace-nowrap py-4 px-2 text-gray-500">
-                  <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                    {cp.netTCL}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
-        <div className="flex gap-6 py-3">
+      <ListTable
+        ListName="Credit Profile Data"
+        ListHeader={["No.", "Product Name", "Total TCL", "Net TCL"]}
+        ListItem={creditProfileData.map((cp, index) => ({
+          no: index + 1,
+          projectName: cp.loanProductName,
+          totalTCL: cp.totalTCL ? cp.totalTCL : "N/A",
+          netTCL: cp.netTCL,
+        }))}
+        Divider={true}
+      />
+      <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 shadow-lg mt-8 relative bg-white">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-3">
           <div className="py-2 pr-6 flex flex-col border-r border-gray-300">
             <DataWithIcon
               name="Consumer CB liabilities"
@@ -118,7 +88,7 @@ const CreditProfile = () => {
               value={adjustedEMI}
             />
           </div>
-          <div className=" pr-6 py-2 flex flex-col border-r border-gray-300">
+          <div className="pr-6 py-2 flex flex-col border-r border-gray-300">
             <DataWithoutIcon name="Credit Bureau Score" value={simahScore} />
             <DataWithoutIcon name="Derived Credit Score" value={creditScore} />
             <DataWithoutIcon name="Gross income" value={gosiFullWage} />

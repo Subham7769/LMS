@@ -68,7 +68,7 @@ const CreditInstrument = () => {
 
   return (
     <div className="flex items-start">
-      <table className="divide-y divide-gray-300 border-r border-gray-300">
+      <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
         <TableHeader />
         <tbody className="divide-y divide-gray-200 bg-white">
           {[

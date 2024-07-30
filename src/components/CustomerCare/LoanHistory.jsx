@@ -1,7 +1,6 @@
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
 import { useEffect, useState, useRef } from "react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import LoanInfoModal from "./LoanInfoModal";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -9,6 +8,7 @@ import InputText from "../Common/InputText/InputText";
 import { useParams, useNavigate } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import { loanStatusOptions } from "../../data/OptionsData";
+import ListTable from "../Common/ListTable/ListTable";
 
 const LoanHistory = () => {
   const { subID } = useParams();
@@ -142,90 +142,6 @@ const LoanHistory = () => {
     }
   };
 
-  const headers = [
-    "Loan ID",
-    "Loan Status",
-    "Loan Type",
-    "View Details",
-    "Loan Amount",
-    "Loan Origination",
-    "Loan Disbursement",
-    "Outstanding Principal",
-    "Missed Installments Number",
-    "Clearance Letter",
-  ];
-
-  const renderCellContent = (loan, key) => {
-    switch (key) {
-      case "Loan ID":
-        return (
-          <div
-            title={loan.loanId}
-            className="w-[100px] cursor-pointer flex mx-auto hover:text-gray-900"
-          >
-            <div className="w-[84px] whitespace-nowrap overflow-hidden text-ellipsis">
-              {loan.loanId}
-            </div>
-            <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-          </div>
-        );
-      case "Loan Status":
-        return (
-          <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-            {loanStatusOptions[loan.loanStatus].label}
-          </div>
-        );
-      case "Loan Type":
-        return (
-          <div
-            title={loan.loanType}
-            className="w-[100px] cursor-pointer flex mx-auto hover:text-gray-900"
-          >
-            <div className="w-[84px] whitespace-nowrap overflow-hidden text-ellipsis">
-              {loan.loanType}
-            </div>
-            <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-          </div>
-        );
-      case "View Details":
-        return (
-          <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-            <Button
-              buttonName="View Details"
-              onClick={() => handleViewDetails(loan)}
-              rectangle={true}
-            />
-            <LoanInfoModal
-              onClose={() => setShowModal(false)}
-              visible={showModal}
-              loanDetails={selectedLoan}
-              mgLeft={leftPanelWidth}
-            />
-          </div>
-        );
-      case "Loan Amount":
-        return loan.loanAmount.toFixed(2);
-      case "Loan Origination":
-        return loan.formattedSubmitDate;
-      case "Loan Disbursement":
-        return loan.formattedPaidDate;
-      case "Outstanding Principal":
-        return loan.outstandingPrincipal;
-      case "Missed Installments Number":
-        return loan.missedInstallmentsNumber;
-      case "Clearance Letter":
-        return (
-          <Button
-            buttonName="PDF"
-            onClick={handleDownloadPdf}
-            rectangle={true}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   if (loanHistoryData.length === 0) {
     return <LoadingState />;
   } else if (loanHistoryData.status === 500) {
@@ -269,37 +185,53 @@ const LoanHistory = () => {
       {filteredLoansarr.length === 0 ? (
         <>No Loan Data</>
       ) : (
-        <table className="divide-y divide-gray-300">
-          <thead>
-            <tr className="divide-x divide-gray-200">
-              {headers.map((header) => (
-                <th
-                  key={header}
-                  className="py-3.5 px-2 text-center text-gray-900"
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {filteredLoansarr.map((loan) => (
-              <tr
-                key={loan.loanId}
-                className="divide-x divide-gray-200 text-center w-full"
-              >
-                {headers.map((header) => (
-                  <td
-                    key={header}
-                    className="py-4 px-2 text-gray-500 whitespace-nowrap"
-                  >
-                    {renderCellContent(loan, header)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ListTable
+          ListHeader={[
+            "Loan ID",
+            "Loan Status",
+            "Loan Type",
+            "View Details",
+            "Loan Amount",
+            "Loan Origination",
+            "Loan Disbursement",
+            "Outstanding Principal",
+            "Missed Installments Number",
+            "Clearance Letter",
+          ]}
+          ListItem={filteredLoansarr.map((loan) => ({
+            loanId: loan.loanId,
+            loanStatus: loanStatusOptions[loan.loanStatus].label,
+            loanType: loan.loanType,
+            viewDetails: (
+              <>
+                <Button
+                  buttonName={"View Details"}
+                  onClick={() => handleViewDetails(loan)}
+                  rectangle={true}
+                />
+                <LoanInfoModal
+                  onClose={() => setShowModal(false)}
+                  visible={showModal}
+                  loanDetails={selectedLoan}
+                  mgLeft={leftPanelWidth}
+                />
+              </>
+            ),
+            loanAmount: loan.loanAmount.toFixed(2),
+            loanOrigination: loan.formattedSubmitDate,
+            loanDisbursement: loan.formattedPaidDate,
+            outstandingPrincipal: loan.outstandingPrincipal,
+            missedInstallMents: loan.missedInstallmentsNumber,
+            clearanceLetter: (
+              <Button
+                buttonName={"PDF"}
+                onClick={handleDownloadPdf}
+                rectangle={true}
+              />
+            ),
+          }))}
+          Divider={true}
+        />
       )}
     </>
   );

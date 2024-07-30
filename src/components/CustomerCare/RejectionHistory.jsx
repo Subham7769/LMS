@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
+import ListTable from "../Common/ListTable/ListTable";
 
 const RejectionHistory = () => {
   const url = "/rejection-history";
@@ -33,33 +34,14 @@ const RejectionHistory = () => {
   }
 
   return (
-    <table className="divide-y divide-gray-300">
-      <thead>
-        <tr className="divide-x divide-gray-200">
-          <th className="py-3.5 px-4 text-center">Rejection Date</th>
-          <th className="py-3.5 px-4 text-center">Rejection Reason</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-200 bg-white">
-        {rejectionsArr.map((reject) => (
-          <tr
-            key={reject.id}
-            className="divide-x divide-gray-200 text-center w-full"
-          >
-            <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-              <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                {reject.formattedRejectionDate}
-              </div>
-            </td>
-            <td className="whitespace-nowrap py-4 px-4 text-gray-500">
-              <div className="mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                {reject.rejectionReason}
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <ListTable
+      ListHeader={["Rejection Date", "Rejection Reason"]}
+      ListItem={rejectionsArr.map((reject) => ({
+        rejectionDate: reject.formattedRejectionDate,
+        rejectionReason: reject.rejectionReason,
+      }))}
+      Divider={true}
+    />
   );
 };
 

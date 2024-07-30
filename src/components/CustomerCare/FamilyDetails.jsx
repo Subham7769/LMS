@@ -19,19 +19,15 @@ const FamilyDetails = ({ info }) => {
   ];
 
   return (
-    <div className="mt-4">
-      <div className="text-xl mb-4">Family Details</div>
-      <div className="flex gap-10">
-        <div className="flex flex-col gap-y-3">
-          {details.map((detail, index) => (
-            <div key={index}>{detail.label}:</div>
-          ))}
-        </div>
-        <div className="flex flex-col gap-y-3">
-          {details.map((detail, index) => (
-            <div key={index}>{detail.value || "N/A"}</div>
-          ))}
-        </div>
+    <div className="mt-4 border-b border-gray-300">
+      <div className="text-xl mb-2 border-b pb-2">Family Details</div>
+      <div className="grid md:grid-cols-2 gap-4">
+        {details.map((detail, index) => (
+          <div key={index} className="py-2">
+            <div className="font-semibold">{detail.label}:</div>
+            <div>{detail.value || "N/A"}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
