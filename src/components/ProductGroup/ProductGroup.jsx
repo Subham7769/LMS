@@ -73,10 +73,10 @@ const ProductGroup = () => {
 
       const formattedProductTypeOptions = data.activeLoansCount.map((item) => ({
         value: item.productType,
-        label: item.productType
-      }))
+        label: item.productType,
+      }));
 
-      setProductTypeOptions(formattedProductTypeOptions)
+      setProductTypeOptions(formattedProductTypeOptions);
 
       setFormData(formattedData);
       setLoading(false);
@@ -116,7 +116,7 @@ const ProductGroup = () => {
       <div className="shadow-md rounded-xl p-5 border border-red-600 w-full mt-5">
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
-            labelName="Percentage from EMI"
+            labelName="Percentage from Equatted Installments"
             inputName="overduePercentage"
             inputValue={formData.overduePercentage}
           />

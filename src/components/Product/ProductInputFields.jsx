@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import InputSelect from '../Common/InputSelect/InputSelect'
-import InputText from '../Common/InputText/InputText'
-import InputNumber from '../Common/InputNumber/InputNumber'
-import InputCheckbox from '../Common/InputCheckbox/InputCheckbox'
+import React, { useEffect, useState } from "react";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 
 import useAllProjectInfo from "../../utils/useAllProjectInfo";
@@ -129,7 +129,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
     RPDataInfo,
     CSDataInfo,
     TCLDataInfo,
-    RecoveryDataInfo
+    RecoveryDataInfo,
   ]);
   return (
     <>
@@ -140,9 +140,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputOptions={tenureOptions}
             inputName="eligibleCustomerType"
             inputValue={
-              formData.eligibleCustomerType
-                ? formData.eligibleCustomerType
-                : ""
+              formData.eligibleCustomerType ? formData.eligibleCustomerType : ""
             }
             onChange={handleChange}
             isSearchable={false}
@@ -213,8 +211,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             onChange={handleChange}
             isSearchable={false}
           />
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end">
           <InputText
             labelName="Processing Fee"
             inputName="fee"
@@ -222,6 +218,8 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             onChange={handleChange}
             placeHolder="1%"
           />
+        </div>
+        <div className="grid grid-cols-5 gap-5 items-end">
           <InputText
             labelName="Management Fee Vat"
             inputName="managementFeeVat"
@@ -235,6 +233,12 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputValue={formData.numberOfEmisForEarlySettlement}
             onChange={handleChange}
             placeHolder="3"
+          />
+          <InputCheckbox
+            labelName="Overdraft"
+            inputChecked={formData.overdraft}
+            onChange={handleChange}
+            inputName="overdraft"
           />
           <InputCheckbox
             labelName="Refinanced With"
@@ -302,7 +306,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ProductInputFields
+export default ProductInputFields;

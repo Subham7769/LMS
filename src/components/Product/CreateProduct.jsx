@@ -9,7 +9,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import Button from "../Common/Button/Button";
 import ProductInputFields from "./ProductInputFields";
-import ListTable from "../Common/ListTable/ListTable";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
@@ -28,6 +27,7 @@ const CreateProduct = () => {
     loanProductId: "0",
     managementFeeVat: "",
     numberOfEmisForEarlySettlement: "",
+    overdraft: null,
     productType: productName,
     projectId: "",
     racId: "",
@@ -133,39 +133,96 @@ const CreateProduct = () => {
           setFormData={setFormData}
         />
         <div>
-          <ListTable
-            ListHeader={[
-              "Simple Interest",
-              "PER",
-              "Tenure",
-              "Tenure Type",
-              "Repayment Tenure",
-              "Repayment Tenure Type",
-              "Actions",
-            ]}
-            ListItem={formData.interestEligibleTenure
-              .filter(
+          <table className="w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {[
+                  "Simple Interest",
+                  "PER",
+                  "Tenure",
+                  "Tenure Type",
+                  "Repayment Tenure",
+                  "Repayment Tenure Type",
+                  "Actions",
+                ].map((item, index) => (
+                  <th scope="col" key={index}>
+                    <div
+                      className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}
+                    >
+                      {item}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {formData.interestEligibleTenure.length < 1 ||
+              formData.interestEligibleTenure.every(
                 (item) =>
-                  item.interestRate &&
-                  item.interestPeriodType &&
-                  item.loanTenure &&
-                  item.loanTenureType &&
-                  item.repaymentTenure &&
-                  item.repaymentTenureType
-              )
-              .map((item) => ({
-                interestRate: item.interestRate,
-                interestPeriodType: item.interestPeriodType,
-                loanTenure: item.loanTenure,
-                loanTenureType: item.loanTenureType,
-                repaymentTenure: item.repaymentTenure,
-                repaymentTenureType: item.repaymentTenureType,
-              }))}
-            Divider={true}
-            Sortable={true}
-            Editable={true}
-            HandleAction={handleDelete}
-          />
+                  !item.interestRate &&
+                  !item.interestPeriodType &&
+                  !item.loanTenure &&
+                  !item.loanTenureType &&
+                  !item.repaymentTenure &&
+                  !item.repaymentTenureType
+              ) ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
+                    No Data To Show Yet
+                  </td>
+                </tr>
+              ) : (
+                formData.interestEligibleTenure
+                  .filter(
+                    (item) =>
+                      item.interestRate &&
+                      item.interestPeriodType &&
+                      item.loanTenure &&
+                      item.loanTenureType &&
+                      item.repaymentTenure &&
+                      item.repaymentTenureType
+                  )
+                  .map((item, index) => (
+                    <tr
+                      key={index}
+                      className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
+                    >
+                      <td className="py-2 whitespace-nowrap">
+                        {item.interestRate}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.interestPeriodType}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.loanTenure}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.loanTenureType}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.repaymentTenure}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.repaymentTenureType}
+                      </td>
+                      <td className="py-2">
+                        <Button
+                          buttonIcon={TrashIcon}
+                          onClick={() => handleDelete(index)}
+                          circle={true}
+                          className={
+                            "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))
+              )}
+            </tbody>
+          </table>
         </div>
 
         <div className="text-right mt-5">
