@@ -195,7 +195,7 @@ const LoanHistory = () => {
                   buttonName={"View Details"}
                   onClick={() => handleViewDetails(loan)}
                   rectangle={true}
-                  className={"text-[10px] px-1"}
+                  className={"text-[10px] py-0 px-0"}
                 />
                 <LoanInfoModal
                   onClose={() => setShowModal(false)}
@@ -215,8 +215,7 @@ const LoanHistory = () => {
                 buttonName={"PDF"}
                 onClick={handleDownloadPdf}
                 rectangle={true}
-                className={"text-[10px] px-1"}
-
+                className={"text-[10px] py-0 px-0"}
               />
             ),
           }))}
