@@ -1,6 +1,5 @@
 import React from "react";
 import Select from "react-select";
-import Body from "../Body/Body";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import Button from "../Button/Button";
 
@@ -40,8 +39,8 @@ const SelectAndAdd = ({
   onClick,
 }) => {
   return (
-    <Body>
-      <div className="flex gap-4 bg-gray-100 p-10 rounded-xl">
+    <>
+      <div className="flex gap-4 bg-gray-100 p-5 py-10 rounded-xl">
         <div className="w-1/2 flex gap-4">
           <div className="w-2/4">
             <label htmlFor="entriesSelect" className="sr-only">
@@ -62,7 +61,7 @@ const SelectAndAdd = ({
           </div>
         </div>
       </div>
-    </Body>
+    </>
   );
 };
 

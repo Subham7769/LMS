@@ -29,7 +29,7 @@ const CreateNew = ({ placeholder, buttonName, createFunction, editable, navigate
 
     return (
         isEditing ? (
-            <div className='pl-6 w-full flex justify-between '>
+            <div className='flex justify-center'>
                 <input
                     type="text"
                     name="Name"
@@ -38,14 +38,14 @@ const CreateNew = ({ placeholder, buttonName, createFunction, editable, navigate
                     onBlur={handleBlur}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    className="placeholder:text-xs text-xs block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1"
+                    className="placeholder:text-xs text-xs focus:ring-1 focus:ring-inset focus:ring-indigo-600 w-11/12 rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1 -mx-2"
                     placeholder={placeholder}
                     autoFocus
                 />
             </div>
         ) : (
             <div
-                className='text-gray-500 pl-6 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600'
+                className='text-gray-500 pl-5 pr-1 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600'
                 onClick={() => { editable ? setEditing(!isEditing) : navigate(navigateSuccess) }}>
                 <p>{buttonName}</p>
                 <div>

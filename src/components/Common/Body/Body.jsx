@@ -1,6 +1,6 @@
 const Body = ({ children }) => {
   return (
-    <div className="mx-auto max-w-none">
+    <div className="flex-grow p-5">
       {children}
     </div>
   );

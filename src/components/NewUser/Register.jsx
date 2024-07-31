@@ -1,16 +1,15 @@
 import { useParams, useNavigate } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Sorry from "../../assets/image/sorry.png";
 
-const CommentsModal = ({ margin, closeModal, message }) => {
+const CommentsModal = ({ closeModal, message }) => {
   console.log(message);
   return (
     <div
       id="loanInfoContainer"
-      style={{ marginLeft: `${margin}px` }}
       className="fixed inset-0 bg-black/10 backdrop-blur-sm flex justify-center items-center transition-opacity duration-300 ease-out"
     >
       <div className="bg-white border border-red-600 p-6 rounded-xl overflow-hidden w-[70%] md:w-2/4 h-[300px] relative shadow-lg transition-transform transform duration-500 ease-out scale-100">
@@ -42,24 +41,9 @@ const CommentsModal = ({ margin, closeModal, message }) => {
 
 const EligibilityResults = ({ eligibilityResults }) => {
   const projects = eligibilityResults.registrationResults.projects;
-  const [leftPanelWidth, setLeftPanelWidth] = useState(0);
-  const leftPanelWidthRef = useRef(0);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState([]);
 
-  useEffect(() => {
-    const leftPanel = document.getElementById("SideBarId");
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      const newWidth = entries[0].contentRect.width;
-      setLeftPanelWidth(newWidth);
-      leftPanelWidthRef.current = newWidth;
-    });
-
-    resizeObserver.observe(leftPanel);
-
-    return () => resizeObserver.disconnect();
-  }, []);
 
   const handleModalOpen = (message) => {
     setModalMessage(message || []);
@@ -141,7 +125,6 @@ const EligibilityResults = ({ eligibilityResults }) => {
       </div>
       {isModalOpen && (
         <CommentsModal
-          margin={leftPanelWidth}
           closeModal={() => setModalOpen(false)}
           message={modalMessage}
         />

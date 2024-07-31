@@ -20,19 +20,6 @@ const LoanHistory = () => {
   const [leftPanelWidth, setLeftPanelWidth] = useState(0);
   const leftPanelWidthRef = useRef(0);
 
-  useEffect(() => {
-    const leftPanel = document.getElementById("SideBarId");
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      const newWidth = entries[0].contentRect.width;
-      setLeftPanelWidth(newWidth); // Update state with padding
-      leftPanelWidthRef.current = newWidth; // Update reference
-    });
-
-    resizeObserver.observe(leftPanel);
-
-    return () => resizeObserver.disconnect(); // Cleanup on unmount
-  }, []);
 
   const [loansarr, setLoansarr] = useState(
     loanHistoryData.map((loan) => ({
@@ -208,6 +195,7 @@ const LoanHistory = () => {
                   buttonName={"View Details"}
                   onClick={() => handleViewDetails(loan)}
                   rectangle={true}
+                  className={"text-[10px] px-1"}
                 />
                 <LoanInfoModal
                   onClose={() => setShowModal(false)}
@@ -227,6 +215,8 @@ const LoanHistory = () => {
                 buttonName={"PDF"}
                 onClick={handleDownloadPdf}
                 rectangle={true}
+                className={"text-[10px] px-1"}
+
               />
             ),
           }))}

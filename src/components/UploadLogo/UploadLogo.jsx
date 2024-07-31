@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react'
-import Body from '../Common/Body/Body'
 import { PhotoIcon, PlayIcon,MapPinIcon, ClockIcon } from "@heroicons/react/20/solid";
 
 
@@ -20,7 +19,7 @@ const UploadLogo = () => {
   }
 
   return (
-    <Body>
+    <>
       <div className="flex justify-center items-center border-2 w-50%">
         <div className="flex flex-col">
           <div className="flex justify-around">
@@ -43,7 +42,7 @@ const UploadLogo = () => {
           )}
         </div>
       </div>
-    </Body>
+    </>
   )
 }
 

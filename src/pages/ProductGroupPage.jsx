@@ -1,5 +1,4 @@
 import React from 'react'
-import Body from '../components/Common/Body/Body'
 import ListTable from "../components/Common/ListTable/ListTable";
 import { GroupStats, HeaderList, ProductList } from '../data/GroupData';
 import StatContainer from '../components/Common/StatContainer/StatContainer';
@@ -7,7 +6,7 @@ import StatContainer from '../components/Common/StatContainer/StatContainer';
 
 const ProductGroupPage = () => {
     return (
-        <Body>
+        <>
             <StatContainer stats={GroupStats} />
             <ListTable 
             ListName={"Product Group List"} 
@@ -18,7 +17,7 @@ const ProductGroupPage = () => {
             Sortable={true} // New prop to enable/disable sorting
             Divider={false}
             />
-        </Body>
+        </>
     )
 }
 

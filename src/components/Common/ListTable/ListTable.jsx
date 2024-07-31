@@ -132,6 +132,7 @@ const ListTable = ({
 
   // Use sortedData instead of ListItem for rendering
   const dataToRender = searchTerm ? filteredData : sortedData;
+  console.log(dataToRender)
   return (
     <div className="bg-gray-100 py-6 rounded-xl mt-4">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -176,7 +177,7 @@ const ListTable = ({
                   <th
                     key={index}
                     scope="col"
-                    className={`w-1/${HeaderCellWidth} `}
+                    className={`w-1/${HeaderCellWidth} max-w-24`}
                     onClick={() => handleSort(toLowerCamelCase(header))}
                   >
                     <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
@@ -197,7 +198,7 @@ const ListTable = ({
                     key !== "href" ? (
                       <td
                         key={idx}
-                        className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-3 px-3 text-sm text-gray-500`}
+                        className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-sm text-gray-500`}
                       >
                         {product.href ? (
                           <Link className="w-full block" to={product.href}>

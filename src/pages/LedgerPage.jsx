@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Body from '../components/Common/Body/Body'
 import { ledgerArr, HeaderList } from '../data/LedgerData';
 import LedgerListTable from '../components/LedgerListTable/LedgerListTable';
 import { useEffect } from 'react';
@@ -29,9 +28,9 @@ const CustomerCarePage = () => {
         fetchLedgerData();
     }, []);
     return (
-        <Body>
+        <>
             {ledgerData ? <LedgerListTable ListName={"Ledger List"} ListHeader={HeaderList} ListItem={ledgerData} /> : <Loader />}
-        </Body>
+        </>
     )
 }
 

@@ -211,7 +211,7 @@ const TCLViewList = () => {
   };
 console.log(tableData)
   return (
-    <Body>
+    <>
       {/* Select & Add to List */}
       <div className="flex justify-between items-center mb-3">
         <DynamicName initialName={TCLName} onSave={handleUpdateTCL} />
@@ -237,7 +237,7 @@ console.log(tableData)
         HandleAction={handleDelete}
         Searchable={false}
       />
-    </Body>
+    </>
   )
 }
 
