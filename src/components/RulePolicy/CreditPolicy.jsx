@@ -55,149 +55,6 @@ const CreditPolicy = () => {
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState([
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "city",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          cityName: "",
-          point: "",
-        },
-      ],
-      operators: null,
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "creditScore",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          firstCreditScore: "",
-          secondCreditScore: "",
-          maxLoanAmount: "",
-          residentMaxLoanAmount: "",
-        },
-      ],
-      operators: {
-        firstCreditScoreOperator: "",
-        secondCreditScoreOperator: "",
-      },
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "employmentSector",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          employmentSectorName: "",
-          point: "",
-        },
-      ],
-      operators: null,
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "maxFinanceAmount",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "",
-          rulePolicyTempId: rulePolicyId,
-          firstGrossSalary: "",
-          secondGrossSalary: "",
-          maxLoanAmount: "",
-          residentMaxLoanAmount: "",
-        },
-      ],
-      operators: {
-        firstGrossSalaryOperator: "",
-        secondGrossSalaryOperator: "",
-      },
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "financeAmountWithTenure",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          financeAmount: "",
-          tenure: "",
-        },
-      ],
-      operators: null,
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "lengthOfService",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "",
-          rulePolicyTempId: rulePolicyId,
-          firstLengthOfService: "",
-          secondLengthOfService: "",
-          point: "",
-        },
-      ],
-      operators: {
-        firstLengthOfServiceOperator: "",
-        secondLengthOfServiceOperator: "",
-      },
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "riskBasedPricing",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          firstRiskBasedPricing: "",
-          secondRiskBasedPricing: "",
-          interestPeriodType: "",
-          interestRate: "",
-        },
-      ],
-      operators: {
-        firstRiskBasedPricingOperator: "",
-        secondRiskBasedPricingOperator: "",
-      },
-    },
-    {
-      id: "",
-      rulePolicyTempId: rulePolicyId,
-      name: "riskBasedPricingEquation",
-      rules: [
-        {
-          ruleName: "",
-          fieldType: "Employer",
-          rulePolicyTempId: rulePolicyId,
-          a_Weight: "",
-          b_Weight: "",
-          c_Weight: "",
-          d_Weight: "",
-        },
-      ],
-      operators: null,
-    },
-  ]);
   const [riskBasedPricing, setRiskBasedPricing] = useState({
     operators: {
       firstRiskBasedPricingOperator: "",
@@ -310,12 +167,10 @@ const CreditPolicy = () => {
       );
       if (response.status === 200) {
         setLoading(false);
-        console.log("Loading false");
       }
       const data = await response.json();
 
       setAllRuleData(data);
-      setFormData(data);
 
       // Find the required rules from the fetched data
       setRiskBasedPricingEquation({
@@ -685,8 +540,6 @@ const CreditPolicy = () => {
       }
     });
   };
-
-  console.log(riskBasedPricing);
 
   if (loading) {
     return <LoadingState />;

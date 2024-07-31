@@ -27,9 +27,6 @@ const LengthofService = ({
   const [secondLengthOfServiceOperator, setsecondLengthOfServiceOperator] =
     useState([]);
   const [LOSInputList, setLOSInputList] = useState([]);
-  const [firstLengthOfService, setfirstLengthOfService] = useState("");
-  const [secondLengthOfService, setsecondLengthOfService] = useState("");
-  const [point, setpoint] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -259,8 +256,6 @@ const LengthofService = ({
       }
     });
   };
-
-  console.log(lengthOfService);
 
   const sortedItems = [...LOSInputList].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {

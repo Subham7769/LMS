@@ -4,6 +4,7 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams } from "react-router-dom";
 import CreditPolicy from "./CreditPolicy";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import Button from "../Common/Button/Button";
 
 const NewCreditPolicy = () => {
   const [creditPolicyName, setCreditPolicyName] = useState("");
@@ -145,26 +146,26 @@ const NewCreditPolicy = () => {
     <>
       <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
         <DynamicName initialName={creditPolicyName} onSave={handleUpdateCP} />
-        <div className="flex items-center justify-between gap-6">
-          <button
-            type="button"
-            onClick={handleClone}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Clone
-          </button>
-          <button
+        <div className="flex gap-6">
+          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+          <Button
+            buttonIcon={TrashIcon}
             onClick={() => handleDelete(rulePolicyId)}
-            type="button"
-            className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+            circle={true}
+            className={
+              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+            }
+          />
         </div>
       </div>
       <div className="mt-4">
-          <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneRP} initialName={creditPolicyName}/>
-          <CreditPolicy />
+        <CloneModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onCreateClone={createCloneRP}
+          initialName={creditPolicyName}
+        />
+        <CreditPolicy />
       </div>
     </>
   );
