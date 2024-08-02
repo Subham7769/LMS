@@ -146,8 +146,7 @@ const LoanProductConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
-          productType,
+        `${import.meta.env.VITE_PRODUCT_READ}${productType}`,
         {
           method: "GET",
           headers: {
@@ -240,8 +239,7 @@ const LoanProductConfig = () => {
 
     try {
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/" +
-          loanProId,
+        `${import.meta.env.VITE_PRODUCT_UPDATE}${loanProId}`,
         {
           method: "PUT",
           headers: {
@@ -267,7 +265,7 @@ const LoanProductConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${productType}`,
+        `${import.meta.env.VITE_PRODUCT_READ}${productType}`,
         {
           method: "GET",
           headers: {
@@ -295,7 +293,7 @@ const LoanProductConfig = () => {
 
       // Submit the updated data back using PUT request
       const updateResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${loanProId}`,
+        `${import.meta.env.VITE_PRODUCT_UPDATE}${loanProId}`,
         {
           method: "PUT",
           headers: {
@@ -329,7 +327,7 @@ const LoanProductConfig = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products/${deleteURL}`,
+        `${import.meta.env.VITE_PRODUCT_DELETE}${deleteURL}`,
         {
           method: "DELETE",
           headers: {

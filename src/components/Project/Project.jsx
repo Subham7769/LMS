@@ -21,7 +21,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
 
-const LoanForm = () => {
+const Project = () => {
   const [ProjectData, setProjectData] = useState([]);
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
@@ -90,8 +90,7 @@ const LoanForm = () => {
     try {
       const ptoken = localStorage.getItem("projectToken");
       const data = await fetch(
-        "https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects/" +
-          projectId,
+          `${import.meta.env.VITE_PROJECT_READ}${projectId}`,
         {
           method: "GET",
           headers: {
@@ -188,7 +187,7 @@ const LoanForm = () => {
         tclIncludeInterest: ProjectData.tclIncludeInterest,
         lateRepaymentPenalty: ProjectData.lateRepaymentPenalty,
         earlyRepaymentDiscount: ProjectData.earlyRepaymentDiscount,
-        hasDownPayment:ProjectData.hasDownPayment,
+        hasDownPayment: ProjectData.hasDownPayment,
         managementFee: ProjectData.managementFee,
         vatFee: ProjectData.vatFee,
         // Criteria fields initialized as empty, will be updated by parseCriteriaAndSetFormData
@@ -303,26 +302,20 @@ const LoanForm = () => {
       paymentOption: ProjectData.paymentOption,
       bearers: ProjectData.bearers,
       projectId: projectId,
-      criteria: `tcl ${formData.tclOperator} ${
-        formData.tclAmount
-      } and loanAmount ${formData.minLoanOperator} ${
-        formData.minLoanAmount
-      } and loanAmount ${formData.maxLoanOperator} ${
-        formData.maxLoanAmount
-      } and numberOfInstallments ${formData.minInstallmentsOperator} ${
-        formData.minInstallmentsAmount
-      } and numberOfInstallments ${formData.maxInstallmentsOperator} ${
-        formData.maxInstallmentsAmount
-      } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${
-        formData.loanType === "asset"
+      criteria: `tcl ${formData.tclOperator} ${formData.tclAmount
+        } and loanAmount ${formData.minLoanOperator} ${formData.minLoanAmount
+        } and loanAmount ${formData.maxLoanOperator} ${formData.maxLoanAmount
+        } and numberOfInstallments ${formData.minInstallmentsOperator} ${formData.minInstallmentsAmount
+        } and numberOfInstallments ${formData.maxInstallmentsOperator} ${formData.maxInstallmentsAmount
+        } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${formData.loanType === "asset"
           ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
           : ""
-      }`,
+        }`,
     };
     try {
       const authToken = localStorage.getItem("projectToken");
       const response = await fetch(
-        `https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects`,
+        `${import.meta.env.VITE_PROJECT_UPDATE}`,
         {
           method: "PUT",
           headers: {
@@ -366,7 +359,7 @@ const LoanForm = () => {
       const token = localStorage.getItem("projectToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects/${projectId}`,
+        `${import.meta.env.VITE_PROJECT_DELETE}${projectId}`,
         {
           method: "DELETE",
           headers: {
@@ -709,9 +702,8 @@ const LoanForm = () => {
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
-                  className={`flex-1 w-full ${
-                    formData.loanType === "cash" && "hidden"
-                  }`}
+                  className={`flex-1 w-full ${formData.loanType === "cash" && "hidden"
+                    }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}
@@ -854,4 +846,4 @@ const LoanForm = () => {
   );
 };
 
-export default LoanForm;
+export default Project;

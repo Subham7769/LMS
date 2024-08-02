@@ -34,9 +34,9 @@ const RecoveryConfig = () => {
     tenureType: "",
     recoveryEquation: "",
   });
-  const postURL =
-    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-rule";
-  const updateURL = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-rule/${formData.recoveryEquationId}`;
+  const postURL = import.meta.env.VITE_RECOVERY_CREATE
+  const updateURL = `${import.meta.env.VITE_RECOVERY_UPDATE}${formData.recoveryEquationId}`;
+
 
   const [isEditingEquation, setIsEditingEquation] = useState(false);
 
@@ -45,10 +45,10 @@ const RecoveryConfig = () => {
 
     if (name === "recoveryEquation") {
       // Regex to match only the characters w, r, d, and other allowed characters
-      const allowedCharactersRegex = /^[wrd\s0-9()+\-*/.><]*$/;
+      const allowedCharactersRegex = /^[wrd\s0-9()+=\-*/.><]*$/;
       if (!allowedCharactersRegex.test(value)) {
         toast.error(
-          "Invalid character detected! Only 'w', 'r', 'd', numbers, and the following symbols are allowed: ' ', '(', ')', '+', '-', '*', '/'.,'<','>'"
+          `Only w, r, d, 0-9 & allowed symbols:  'space' (  ) + - * / . < > `
         );
         return;
       }
@@ -62,7 +62,7 @@ const RecoveryConfig = () => {
   };
 
   const handleNameUpdate = async (newName) => {
-    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp/${recoveryEquationTempId}/name/${newName}`;
+    const url = `${import.meta.env.VITE_RECOVERY_NAME_UPDATE}${recoveryEquationTempId}/name/${newName}`;
 
     try {
       const response = await fetch(url, {
@@ -98,8 +98,7 @@ const RecoveryConfig = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp/id/" +
-          recoveryEquationTempId,
+        `${import.meta.env.VITE_RECOVERY_NAME_READ}${recoveryEquationTempId}`,
         {
           method: "GET",
           headers: {
@@ -126,8 +125,7 @@ const RecoveryConfig = () => {
     setLoading(true);
     try {
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-rule/temp-id/" +
-          recoveryEquationTempId,
+        `${import.meta.env.VITE_RECOVERY_READ}${recoveryEquationTempId}`,
         {
           method: "GET",
           headers: {
@@ -200,11 +198,7 @@ const RecoveryConfig = () => {
   const createClone = async (cloneName) => {
     try {
       const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp/" +
-          recoveryEquationTempId +
-          "/clone/" +
-          cloneName,
+      const data = await fetch(`${VITE_RECOVERY_CREATE_CLONE}${recoveryEquationTempId}/clone/${cloneName}`,
         {
           method: "POST",
           headers: {
@@ -230,7 +224,7 @@ const RecoveryConfig = () => {
   const deleteSettings = async () => {
     try {
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp/${recoveryEquationTempId}`,
+        `${import.meta.env.VITE_RECOVERY_DELETE}/${recoveryEquationTempId}`,
         {
           method: "DELETE",
           headers: {

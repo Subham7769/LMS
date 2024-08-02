@@ -173,7 +173,7 @@ const SideBar = () => {
                 {menu.submenuItems.map((submenuItem) => (
                   <div key={submenuItem.name}>
                     <NavLink to={submenuItem.href} className="text-gray-500">
-                      <li className="text-xs flex items-center  gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                      <li className="text-xs flex items-center w-44 gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
                         {submenuItem.name}
                       </li>
                     </NavLink>

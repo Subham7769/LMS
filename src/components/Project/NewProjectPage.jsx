@@ -27,16 +27,16 @@ const NewProjectPage = () => {
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
 
-  function getFormattedDate(date) {
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    // const hours = String(date.getUTCHours()).padStart(2, "0");
-    // const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-    // const seconds = String(date.getUTCSeconds()).padStart(2, "0");
-    console.log(`${year}-${month}-${day} 00:00:00`);
-    return `${year}-${month}-${day} 00:00:00`;
-  }
+  // function getFormattedDate(date) {
+  //   const year = date.getUTCFullYear();
+  //   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  //   const day = String(date.getUTCDate()).padStart(2, "0");
+  //   // const hours = String(date.getUTCHours()).padStart(2, "0");
+  //   // const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  //   // const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+  //   console.log(`${year}-${month}-${day} 00:00:00`);
+  //   return `${year}-${month}-${day} 00:00:00`;
+  // }
 
   const [formData, setFormData] = useState({
     name: projectName,
@@ -312,7 +312,7 @@ const NewProjectPage = () => {
       const projectToken = localStorage.getItem("projectToken");
       console.log(projectToken);
       const response = await fetch(
-        "https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/projects",
+        `${import.meta.env.VITE_PROJECT_CREATE}`,
         {
           method: "POST",
           headers: {

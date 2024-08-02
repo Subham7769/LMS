@@ -13,17 +13,10 @@ import useRulePolicy from "../../utils/useRulePolicy";
 import useRecoveryInfo from "../../utils/useRecoveryInfo";
 import useTCLInfo from "../../utils/useTCLInfo";
 import useRACInfo from "../../utils/useRACInfo";
-
-import {
-  options,
-  tenureOptions,
-  tenureTypeOptions,
-} from "../../data/OptionsData";
-import {
-  PlusIcon,
-  CheckCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
+import { options, tenureOptions, tenureTypeOptions, } from "../../data/OptionsData";
+import { PlusIcon } from "@heroicons/react/20/solid";
+import toast from "react-hot-toast";
+import { Failed } from "../Toasts";
 
 const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   // Custom Hooks
@@ -62,21 +55,35 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   };
 
   const handleAddFields = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      interestEligibleTenure: [
-        ...prevFormData.interestEligibleTenure,
-        interestEligibleTenure,
-      ],
-    }));
-    setInterestEligibleTenure({
-      interestRate: "",
-      interestPeriodType: "",
-      loanTenure: "",
-      loanTenureType: "",
-      repaymentTenure: "",
-      repaymentTenureType: "",
-    });
+    if (Object.values(interestEligibleTenure).every(field => String(field).trim() !== "")) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        interestEligibleTenure: [
+          ...prevFormData.interestEligibleTenure,
+          interestEligibleTenure,
+        ],
+      }));
+      setInterestEligibleTenure({
+        interestRate: "",
+        interestPeriodType: "",
+        loanTenure: "",
+        loanTenureType: "",
+        repaymentTenure: "",
+        repaymentTenureType: "",
+      });
+      return;
+    } else {
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Failed"}
+          message={"All Fields Required!"}
+        />));
+      return;
+    }
+
+
   };
 
   useEffect(() => {

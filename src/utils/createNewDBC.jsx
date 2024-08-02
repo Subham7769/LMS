@@ -7,8 +7,7 @@ export async function createNewDBC(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/" +
-        Name,
+      `${import.meta.env.VITE_DBR_CREATE}${Name}`,
       {
         method: "POST",
         headers: {

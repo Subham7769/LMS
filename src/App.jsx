@@ -64,7 +64,7 @@ const CreditBureauDetails = lazy(() =>
   import("./components/CustomerCare/CreditBureauDetails")
 );
 const Login = lazy(() => import("./components/Login/Login"));
-const LoanForm = lazy(() => import("./components/Project/LoanForm"));
+const Project = lazy(() => import("./components/Project/Project"));
 const CreateRac = lazy(() => import("./components/RAC/CreateRac"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
 const BpmnComponent = lazy(() =>
@@ -154,7 +154,7 @@ const routes = [
         element: <ProductGroup />,
       },
       { path: "/product_group/new/:configId", element: <CreateProdGroup /> },
-      { path: "/project/:projectId", element: <LoanForm /> },
+      { path: "/project/:projectId", element: <Project /> },
       { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
       { path: "/create-product/:productName", element: <CreateProduct /> },
       { path: "/newdbc/:dbcTempId", element: <DebtBurdenConfig /> },

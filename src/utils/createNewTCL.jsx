@@ -7,8 +7,7 @@ export async function createNewTCL(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/" +
-          Name,
+        `${import.meta.env.VITE_TCL_CREATE}${Name}`,
         {
           method: "POST",
           headers: {

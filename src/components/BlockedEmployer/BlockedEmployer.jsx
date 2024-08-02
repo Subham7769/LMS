@@ -34,8 +34,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/block-employers-rule/" +
-        blockEmployersTempId,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_READ}${blockEmployersTempId}`,
         {
           method: "GET",
           headers: {
@@ -58,7 +57,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/${blockEmployersTempId}/${ruleName}/block-employers-rule/${name}`,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_DELETE_ENTRY}${blockEmployersTempId}/${ruleName}/block-employers-rule/${name}`,
         {
           method: "DELETE",
           headers: {
@@ -88,8 +87,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/id/" +
-        blockEmployersTempId,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_NAME_READ}${blockEmployersTempId}`,
         {
           method: "GET",
           headers: {
@@ -116,7 +114,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/${blockEmployersTempId}/name/${newName}`,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_NAME_UPDATE}${blockEmployersTempId}/name/${newName}`,
         {
           method: "PUT",
           headers: {
@@ -151,7 +149,7 @@ const BlockedEmployer = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/${blockEmployersTempId}`,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_DELETE}${blockEmployersTempId}`,
         {
           method: "DELETE",
           headers: {
@@ -234,10 +232,7 @@ const BlockedEmployer = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/" +
-        blockEmployersTempId +
-        "/clone/" +
-        cloneBEName,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_CREATE_CLONE}${blockEmployersTempId}/clone/${cloneBEName}`,
         {
           method: "POST",
           headers: {

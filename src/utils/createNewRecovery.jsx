@@ -7,8 +7,7 @@ export async function createNewRecovery(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp/" +
-        Name,
+      `${import.meta.env.VITE_RECOVERY_CREATE}${Name}`,
       {
         method: "POST",
         headers: {

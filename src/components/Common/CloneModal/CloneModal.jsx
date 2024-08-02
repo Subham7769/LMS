@@ -17,7 +17,7 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
         <h2 className="text-xl font-semibold">Create Clone of {initialName} </h2>
         <InputText inputName={"clonnedName"} inputValue={cloneName} onChange={handleChange} placeHolder={"Enter Cloned Name"} />
         <div className="flex gap-3 justify-center md:justify-end">
-          <Button buttonName={"Cancel"} onClick={() => { onClose(); setCloneName(""); }} className={" bg-gray-600 text-white hover:bg-gray-500 self-end"} rectangle={true} />
+          <Button buttonName={"Cancel"} onClick={() => { onClose(); setCloneName(""); }} className={"bg-gray-600 text-white hover:bg-gray-500 focus-visible:outline-gray-600 self-end"} rectangle={true} />
           <Button buttonName={"Create Clone"} onClick={() => { onCreateClone(cloneName); onClose(); }} rectangle={true}  className={"self-end"}/>
         </div>
       </div>

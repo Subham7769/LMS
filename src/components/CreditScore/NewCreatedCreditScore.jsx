@@ -20,8 +20,7 @@ const NewCreatedCreditScore = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/id/" +
-          creditScoreId,
+        `${import.meta.env.VITE_CREDIT_SCORE_READ_BY_ID}${creditScoreId}`,
         {
           method: "GET",
           headers: {
@@ -56,10 +55,7 @@ const NewCreatedCreditScore = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-          creditScoreId +
-          "/clone/" +
-          cloneCSEName,
+        `${import.meta.env.VITE_CREDIT_SCORE_CREATE_CLONE}${creditScoreId}/clone/${cloneCSEName}`,
         {
           method: "POST",
           headers: {
@@ -87,10 +83,7 @@ const NewCreatedCreditScore = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-          creditScoreId +
-          "/name/" +
-          updatecseName,
+        `${import.meta.env.VITE_CREDIT_SCORE_NAME_UPDATE}${creditScoreId}/name/${updatecseName}`,
         {
           method: "PUT",
           headers: {
@@ -119,7 +112,7 @@ const NewCreatedCreditScore = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/${creditScoreId}`,
+        `${import.meta.env.VITE_CREDIT_SCORE_DELETE}${creditScoreId}`,
         {
           method: "DELETE",
           headers: {

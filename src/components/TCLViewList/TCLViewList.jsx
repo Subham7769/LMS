@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { TclViewListHeaderList } from '../../data/TclData';
-import Body from '../Common/Body/Body';
 import ListTable from '../Common/ListTable/ListTable'
 import SelectAndAdd from '../Common/SelectAndAdd/SelectAndAdd';
 import { useNavigate, useParams } from "react-router-dom";
@@ -92,7 +91,7 @@ const TCLViewList = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-files/" + tclId,
+        `${import.meta.env.VITE_TCL_FILENAME_READ}${tclId}`,
         {
           method: "GET",
           headers: {
@@ -128,8 +127,7 @@ const TCLViewList = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/by-id/" +
-        tclId,
+        `${import.meta.env.VITE_TCL_READ}${tclId}`,
         {
           method: "GET",
           headers: {
@@ -155,10 +153,7 @@ const TCLViewList = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/" +
-        tclId +
-          "/name/" +
-          updateTCLName,
+        `${import.meta.env.VITE_TCL_NAME_UPDATE}${tclId}/name/${updateTCLName}`,
         {
           method: "PUT",
           headers: {
@@ -186,7 +181,7 @@ const TCLViewList = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/${deleteURL}`,
+        `${import.meta.env.VITE_TCL_DELETE}${deleteURL}`,
         {
           method: "DELETE",
           headers: {

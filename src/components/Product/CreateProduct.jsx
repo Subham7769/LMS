@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  PlusIcon,
   CheckCircleIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
@@ -72,16 +71,15 @@ const CreateProduct = () => {
             item.repaymentTenure &&
             item.repaymentTenureType
         );
-      const { recoveryType, ...postData } = { ...formData };
       // Create a copy of formData with filtered interestEligibleTenure
       const filteredFormData = {
-        ...postData,
+        ...formData,
         interestEligibleTenure: filteredInterestEligibleTenure,
       };
 
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products",
+        `${import.meta.env.VITE_PRODUCT_CREATE}`,
         {
           method: "POST",
           headers: {
@@ -156,16 +154,7 @@ const CreateProduct = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {formData.interestEligibleTenure.length < 1 ||
-              formData.interestEligibleTenure.every(
-                (item) =>
-                  !item.interestRate &&
-                  !item.interestPeriodType &&
-                  !item.loanTenure &&
-                  !item.loanTenureType &&
-                  !item.repaymentTenure &&
-                  !item.repaymentTenureType
-              ) ? (
+              {formData.interestEligibleTenure.length < 1 ? (
                 <tr>
                   <td
                     colSpan="7"
@@ -175,17 +164,7 @@ const CreateProduct = () => {
                   </td>
                 </tr>
               ) : (
-                formData.interestEligibleTenure
-                  .filter(
-                    (item) =>
-                      item.interestRate &&
-                      item.interestPeriodType &&
-                      item.loanTenure &&
-                      item.loanTenureType &&
-                      item.repaymentTenure &&
-                      item.repaymentTenureType
-                  )
-                  .map((item, index) => (
+                formData.interestEligibleTenure.map((item, index) => (
                     <tr
                       key={index}
                       className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
@@ -225,14 +204,17 @@ const CreateProduct = () => {
           </table>
         </div>
 
-        <div className="text-right mt-5">
-          <Button
-            buttonIcon={CheckCircleIcon}
-            buttonName={"Save"}
-            onClick={handleSave}
-            rectangle={true}
-          />
-        </div>
+      </div>
+      <div className="flex mt-4  justify-end ">
+        {/* Submit Button */}
+        <Button
+          buttonIcon={CheckCircleIcon}
+          buttonName={"Create"}
+          onClick={handleSave}
+          rectangle={true}
+          className="flex items-center justify-center mt-3 w-44"
+
+        />
       </div>
     </>
   );
