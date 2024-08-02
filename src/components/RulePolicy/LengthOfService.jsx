@@ -99,7 +99,7 @@ const LengthofService = ({
 
     try {
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/length-of-service-point-rule",
+        `${import.meta.env.VITE_RULE_POLICY_LOS_CREATE_ENTRY}`,
         {
           method: "POST",
           headers: {
@@ -142,7 +142,7 @@ const LengthofService = ({
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/length-of-service-point-rule/${ruleName}`,
+        `${import.meta.env.VITE_RULE_POLICY_LOS_DELETE_ENTRY}${rulePolicyId}/length-of-service-point-rule/${ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -182,7 +182,7 @@ const LengthofService = ({
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/length-of-service-point-rule",
+        `${import.meta.env.VITE_RULE_POLICY_LOS_UPDATE_ENTRY}`,
         {
           method: "PUT",
           headers: {

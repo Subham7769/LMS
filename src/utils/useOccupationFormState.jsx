@@ -61,7 +61,7 @@ const useOccupationFormState = (initialState, Occupation, fetchData) => {
 
       try {
         const postResponse = await fetch(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/employment-sector-point-rule",
+          `${import.meta.env.VITE_RULE_POLICY_OCCUPATION_CREATE_ENTRY}`,
           {
             method: "POST",
             headers: {
@@ -107,7 +107,7 @@ const useOccupationFormState = (initialState, Occupation, fetchData) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyTempId}/employment-sector-point-rule/${tagToDelete.ruleName}`,
+        `${import.meta.env.VITE_RULE_POLICY_OCCUPATION_DELETE_ENTRY}${rulePolicyTempId}/employment-sector-point-rule/${tagToDelete.ruleName}`,
         {
           method: "DELETE",
           headers: {

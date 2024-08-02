@@ -195,7 +195,7 @@ const BlockedEmployer = () => {
       }
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `cREATE`,
+        `${import.meta.env.VITE_BLOCKED_EMPLOYER_CREATE_ENTRY}`,
         {
           method: data.length === 0 ? "POST" : "PUT",
           headers: {

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams } from "react-router-dom";
-import CreditPolicy from "./CreditPolicy";
+import RulePolicy from "./RulePolicy";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
 
-const NewCreditPolicy = () => {
-  const [creditPolicyName, setCreditPolicyName] = useState("");
+const NewRulePolicy = () => {
+  const [rulePolicyName, setRulePolicyName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { rulePolicyId } = useParams();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const NewCreditPolicy = () => {
         return; // Stop further execution
       }
       const CreditScoreDetails = await data.json();
-      setCreditPolicyName(CreditScoreDetails.name.replace(/-/g, " "));
+      setRulePolicyName(CreditScoreDetails.name.replace(/-/g, " "));
       // console.log(CreditScoreEqData);
     } catch (error) {
       console.error(error);
@@ -56,10 +56,7 @@ const NewCreditPolicy = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
-          rulePolicyId +
-          "/clone/" +
-          cloneRPName,
+        `${import.meta.env.VITE_RULE_POLICY_CREATE_CLONE}${rulePolicyId}/clone/${cloneRPName}`,
         {
           method: "POST",
           headers: {
@@ -83,14 +80,11 @@ const NewCreditPolicy = () => {
     }
   };
 
-  const handleUpdateCP = async (updateCpName) => {
+  const handleUpdateRPName = async (updateRPName) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/" +
-          rulePolicyId +
-          "/name/" +
-          updateCpName,
+        `${import.meta.env.VITE_RULE_POLICY_NAME_UPDATE}${rulePolicyId}/name/${updateRPName}`,
         {
           method: "PUT",
           headers: {
@@ -119,7 +113,7 @@ const NewCreditPolicy = () => {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${deleteURL}`,
+        `${import.meta.env.VITE_RULE_POLICY_DELETE}${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -145,7 +139,7 @@ const NewCreditPolicy = () => {
   return (
     <>
       <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
-        <DynamicName initialName={creditPolicyName} onSave={handleUpdateCP} />
+        <DynamicName initialName={rulePolicyName} onSave={handleUpdateRPName} />
         <div className="flex gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button
@@ -163,12 +157,12 @@ const NewCreditPolicy = () => {
           isOpen={isModalOpen}
           onClose={closeModal}
           onCreateClone={createCloneRP}
-          initialName={creditPolicyName}
+          initialName={rulePolicyName}
         />
-        <CreditPolicy />
+        <RulePolicy />
       </div>
     </>
   );
 };
 
-export default NewCreditPolicy;
+export default NewRulePolicy;

@@ -39,7 +39,7 @@ const ProductGroup = () => {
       const auth = localStorage.getItem("authToken");
 
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/concurrent-loans/config",
+        `${import.meta.env.VITE_PRODUCT_GROUP_READ}`,
         {
           method: "GET",
           headers: {

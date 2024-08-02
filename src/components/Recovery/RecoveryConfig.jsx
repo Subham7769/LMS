@@ -34,7 +34,7 @@ const RecoveryConfig = () => {
     tenureType: "",
     recoveryEquation: "",
   });
-  const postURL = import.meta.env.VITE_RECOVERY_CREATE
+  const postURL = import.meta.env.VITE_RECOVERY_CREATE_CREATE_DATA
   const updateURL = `${import.meta.env.VITE_RECOVERY_UPDATE}${formData.recoveryEquationId}`;
 
 
@@ -198,7 +198,7 @@ const RecoveryConfig = () => {
   const createClone = async (cloneName) => {
     try {
       const token = localStorage.getItem("authToken");
-      const data = await fetch(`${VITE_RECOVERY_CREATE_CLONE}${recoveryEquationTempId}/clone/${cloneName}`,
+      const data = await fetch(`${import.meta.env.VITE_RECOVERY_CREATE_CLONE}${recoveryEquationTempId}/clone/${cloneName}`,
         {
           method: "POST",
           headers: {

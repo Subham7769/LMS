@@ -86,7 +86,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     const absoluteIndex = indexOfFirstItem + indexInPage;
     const ruleToDelete = inputList[absoluteIndex];
     fetch(
-      `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/${rulePolicyId}/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
+      `${import.meta.env.VITE_RULE_POLICY_MFAT_DELETE_ENTRY}${rulePolicyId}/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
       {
         method: "DELETE",
         headers: {
@@ -135,7 +135,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     };
 
     fetch(
-      `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/finance-amount-with-tenure-rule`,
+      `${import.meta.env.VITE_RULE_POLICY_MFAT_UPDATE_ENTRY}`,
       {
         method: "PUT",
         headers: {
@@ -172,7 +172,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
       .catch((error) => console.error("Error updating data:", error));
   };
 
-  const handleSave = () => {
+  const CreateEntry = () => {
     const payload = {
       financeAmountWithTenureRules: [
         {
@@ -182,7 +182,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     };
 
     fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/finance-amount-with-tenure-rule",
+      `${import.meta.env.VITE_RULE_POLICY_MFAT_CREATE_ENTRY}`,
       {
         method: "POST",
         headers: {
@@ -310,7 +310,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
             onChange={handleRuleChange}
             placeHolder={"6"}
           />
-          <Button buttonIcon={PlusIcon} onClick={handleSave} circle={true} />
+          <Button buttonIcon={PlusIcon} onClick={CreateEntry} circle={true} />
         </div>
         <div className="mt-6">
           <table className="divide-y divide-gray-200 w-full">

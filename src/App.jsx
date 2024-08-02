@@ -7,8 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 
-const NewCreditPolicy = lazy(() =>
-  import("./components/RulePolicy/NewCreditPolicy")
+const NewRulePolicy = lazy(() =>
+  import("./components/RulePolicy/NewRulePolicy")
 );
 const NewCreatedCreditScore = lazy(() =>
   import("./components/CreditScore/NewCreatedCreditScore")
@@ -182,7 +182,7 @@ const routes = [
       },
       {
         path: "/rule-policy/:rulePolicyId",
-        element: <NewCreditPolicy />,
+        element: <NewRulePolicy />,
       },
       {
         path: "/global-config/liability-matrix",

@@ -13,7 +13,7 @@ const LedgerPage = () => {
     const fetchLedgerData = async () => {
       try {
         const fetchData = await axios.get(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/gl/all",
+          `${import.meta.env.VITE_GENERAL_LEDGER_READ}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
