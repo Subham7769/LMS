@@ -123,7 +123,6 @@ const LoanConfigDD = () => {
       registrationResultsData.registrationResults.projects.filter(
         (project) => project.isRegister === true
       );
-    console.log(eligibleProjects);
     const formattedRACData = eligibleProjects.map(({ loanProducts }) => ({
       value: loanProducts[0].productName,
       label: loanProducts[0].productName.replace(/_/g, " "),
@@ -163,7 +162,6 @@ const LoanConfigDD = () => {
       }
       const json = await data.json();
       setLoanConfigData(json);
-      
     } catch (error) {
       console.error(error);
     }
@@ -171,28 +169,47 @@ const LoanConfigDD = () => {
 
   useEffect(() => {
     if (loanConfigData.length === 0) return;
-    console.log(loanConfigData);
-      setShowModal(true);
-      setErrorFlag(false);
-  },[loanConfigData])
+    setShowModal(true);
+    setErrorFlag(false);
+  }, [loanConfigData]);
 
   useEffect(() => {
-    if (loanType?.target?.value !== "CASH_LOAN_V1" && loanType?.target?.value !== "BNPL_LOAN") {
-      setamount('');
+    if (
+      loanType?.target?.value !== "CASH_LOAN_V1" &&
+      loanType?.target?.value !== "BNPL_LOAN"
+    ) {
+      setamount("");
     }
   }, [loanType]); // Depend on loanType changes
 
   return (
     <>
       <div className="grid grid-cols-5 gap-4 items-end">
-        <InputSelect labelName={"Loan Type"} inputName={"loanType"} inputOptions={loanTypeOptions} inputValue={loanType} onChange={(loanselectedOption) => setloanType(loanselectedOption)} searchable={false} />
-        {loanType?.target?.value === "CASH_LOAN_V1" || loanType?.target?.value === "BNPL_LOAN" ? (
-          <InputNumber labelName={"Amount"} inputName={"amount"} inputValue={amount} onChange={(e) => setamount(e.target.value)} placeHolder={"5000"}/>
-        ) : (
-          null
-        )}
+        <InputSelect
+          labelName={"Loan Type"}
+          inputName={"loanType"}
+          inputOptions={loanTypeOptions}
+          inputValue={loanType}
+          onChange={(loanselectedOption) => setloanType(loanselectedOption)}
+          searchable={false}
+        />
+        {loanType?.target?.value === "CASH_LOAN_V1" ||
+        loanType?.target?.value === "BNPL_LOAN" ? (
+          <InputNumber
+            labelName={"Amount"}
+            inputName={"amount"}
+            inputValue={amount}
+            onChange={(e) => setamount(e.target.value)}
+            placeHolder={"5000"}
+          />
+        ) : null}
         <div>
-          <Button buttonIcon={CheckCircleIcon} rectangle={true} buttonName={"Submit"} onClick={handleSave}/>
+          <Button
+            buttonIcon={CheckCircleIcon}
+            rectangle={true}
+            buttonName={"Submit"}
+            onClick={handleSave}
+          />
         </div>
       </div>
       {showModal ? (

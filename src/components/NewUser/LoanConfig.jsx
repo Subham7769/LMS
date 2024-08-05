@@ -65,7 +65,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
   useEffect(() => {
     if (!visible) return null;
     setloanConfigData(loanConfigDataProp);
-  }, []);
+  }, [loanConfigDataProp]);
 
   const handleProceed = async (transactionId, index) => {
     const postData = {
@@ -107,24 +107,31 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
       </>
     );
   }
+  const arrowVis = loanConfigData.dynamicCashLoanOffers.length;
+  console.log(arrowVis);
   const settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: arrowVis < 4 ? arrowVis : 4,
     slidesToScroll: 2,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
+    nextArrow: arrowVis < 4 ? "" : <SampleNextArrow />,
+    prevArrow: arrowVis < 4 ? "" : <SamplePrevArrow />,
     responsive: [
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: arrowVis < 3 ? arrowVis : 3,
           slidesToScroll: 2,
-        }
+        },
       },
-    ]
+    ],
   };
+
+  const width =
+    arrowVis < 4 ? arrowVis * 201 : window.innerWidth < 1280 ? 603 : 804; // Calculate width
+  console.log(width);
+  const sliderContainWidth = `w-[${width}px]`;
 
   const handleInstallmentModal = (data) => {
     setIsModalOpen(true);
@@ -136,8 +143,9 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
     setSelectedInstallmentData(null); // Clear the data when closing the modal
   };
 
-  const tableDividerStyle = "divide-x divide-gray-200 text-center w-full h-[58px]"
-  const tableSliderStyle = "whitespace-nowrap p-4 text-gray-500"
+  const tableDividerStyle =
+    "divide-x divide-gray-200 text-center w-full h-[58px]";
+  const tableSliderStyle = "whitespace-nowrap p-4 text-gray-500";
   return (
     <>
       <div className="flex flex-col xl:flex-row xl:gap-5 items-baseline mb-8">
@@ -154,12 +162,12 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                 <div>{loanConfigData.profile.cashTCL}</div>
               </div>
             </div>
-              <div className="flex gap-10 mb-5">
-                <div className="flex gap-5">
-                  <div>Net Cash TCL : </div>
-                  <div>{loanConfigData.profile.netCashTCL}</div>
-                </div>
+            <div className="flex gap-10 mb-5">
+              <div className="flex gap-5">
+                <div>Net Cash TCL : </div>
+                <div>{loanConfigData.profile.netCashTCL}</div>
               </div>
+            </div>
           </div>
         </div>
         <div>
@@ -201,7 +209,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
         </div>
       </div>
       <div className="flex items-start w-fit shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-        <div className="w-[330px] ">
+        <div className="w-[330px]">
           <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
             <thead className="bg-gray-50">
               <tr className={tableDividerStyle}>
@@ -212,9 +220,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className={tableDividerStyle}>
-                <td className="py-2 text-gray-500">
-                  Transaction Id
-                </td>
+                <td className="py-2 text-gray-500">Transaction Id</td>
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
@@ -228,7 +234,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                    Annual Interest Rate Percent Without Fee
+                  Annual Interest Rate Percent Without Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
@@ -237,15 +243,11 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  APR Per Month Percent
-                </td>
+                <td className="py-2  text-gray-500">APR Per Month Percent</td>
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  
-                    APR Without Fee Per Month Percent
-                  
+                  APR Without Fee Per Month Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
@@ -254,31 +256,21 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Daily Interest Rate
-                </td>
+                <td className="py-2  text-gray-500">Daily Interest Rate</td>
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
-                  
-                    Daily Interest Rate Percent Without Fee
-                  
+                  Daily Interest Rate Percent Without Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Duration
-                </td>
+                <td className="py-2  text-gray-500">Duration</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Duration In Months
-                </td>
+                <td className="py-2  text-gray-500">Duration In Months</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Tenure
-                </td>
+                <td className="py-2  text-gray-500">Tenure</td>
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
@@ -286,9 +278,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Loan Flat Rate
-                </td>
+                <td className="py-2  text-gray-500">Loan Flat Rate</td>
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
@@ -302,45 +292,29 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="  text-gray-500">
-                  
-                    Monthly Interest Rate Percent Without Fee
-                  
+                  Monthly Interest Rate Percent Without Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Principal Amount
-                </td>
+                <td className="py-2  text-gray-500">Principal Amount</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Schema
-                </td>
+                <td className="py-2  text-gray-500">Schema</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Service Fee
-                </td>
+                <td className="py-2  text-gray-500">Service Fee</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Service Fee Tax
-                </td>
+                <td className="py-2  text-gray-500">Service Fee Tax</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Total Interest Amount
-                </td>
+                <td className="py-2  text-gray-500">Total Interest Amount</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Total Loan Amount
-                </td>
+                <td className="py-2  text-gray-500">Total Loan Amount</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Total Management Fee
-                </td>
+                <td className="py-2  text-gray-500">Total Management Fee</td>
               </tr>
               <tr className={tableDividerStyle}>
                 <td className="py-2  text-gray-500">
@@ -348,14 +322,13 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
-                  Action
-                </td>
+                <td className="py-2  text-gray-500">Action</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="w-[603px] xl:w-[804px] ">
+        <div className={sliderContainWidth}>
+          {/* <div className="w-[804px]"> */}
           <Slider {...settings}>
             {loanConfigData.dynamicCashLoanOffers.map((ci, index) => {
               return (
@@ -440,9 +413,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                       </td>
                     </tr>
                     <tr className={tableDividerStyle}>
-                      <td className={tableSliderStyle}>
-                        {ci.duration}
-                      </td>
+                      <td className={tableSliderStyle}>{ci.duration}</td>
                     </tr>
                     <tr className={tableDividerStyle}>
                       <td className={tableSliderStyle}>
@@ -457,14 +428,21 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                     <tr className={tableDividerStyle}>
                       <td className={tableSliderStyle}>
                         <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                          <div className="cursor-pointer" onClick={() => handleInstallmentModal(ci.installmentSummaryResponse)}>EMI Details</div>
+                          <div
+                            className="cursor-pointer"
+                            onClick={() =>
+                              handleInstallmentModal(
+                                ci.installmentSummaryResponse
+                              )
+                            }
+                          >
+                            EMI Details
+                          </div>
                         </div>
                       </td>
                     </tr>
                     <tr className={tableDividerStyle}>
-                      <td className={tableSliderStyle}>
-                        {ci.loanFlatRate}
-                      </td>
+                      <td className={tableSliderStyle}>{ci.loanFlatRate}</td>
                     </tr>
                     <tr className={tableDividerStyle}>
                       <td className={tableSliderStyle}>
@@ -482,9 +460,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                       </td>
                     </tr>
                     <tr className={tableDividerStyle}>
-                      <td className={tableSliderStyle}>
-                        {ci.principalAmount}
-                      </td>
+                      <td className={tableSliderStyle}>{ci.principalAmount}</td>
                     </tr>
                     <tr className={tableDividerStyle}>
                       <td className={tableSliderStyle}>
@@ -502,14 +478,10 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                       </td>
                     </tr>
                     <tr className={tableDividerStyle}>
-                      <td className={tableSliderStyle}>
-                        {ci.serviceFee}
-                      </td>
+                      <td className={tableSliderStyle}>{ci.serviceFee}</td>
                     </tr>
                     <tr className={tableDividerStyle}>
-                      <td className={tableSliderStyle}>
-                        {ci.serviceFeeTax}
-                      </td>
+                      <td className={tableSliderStyle}>{ci.serviceFeeTax}</td>
                     </tr>
                     <tr className={tableDividerStyle}>
                       <td className={tableSliderStyle}>
@@ -517,9 +489,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                       </td>
                     </tr>
                     <tr className={tableDividerStyle}>
-                      <td className={tableSliderStyle}>
-                        {ci.totalLoanAmount}
-                      </td>
+                      <td className={tableSliderStyle}>{ci.totalLoanAmount}</td>
                     </tr>
                     <tr className={tableDividerStyle}>
                       <td className={tableSliderStyle}>
@@ -535,9 +505,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                       <td className={tableSliderStyle}>
                         <div
                           className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
-                          onClick={() =>
-                            handleProceed(ci.transactionId, index)
-                          }
+                          onClick={() => handleProceed(ci.transactionId, index)}
                         >
                           Proceed
                         </div>
@@ -549,11 +517,11 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
             })}
           </Slider>
         </div>
-        {isModalOpen && selectedInstallmentData   && (
-          <InstallmentInfoComp 
-            isOpen={isModalOpen} 
-            onClose={closeModal} 
-            installDataProp={selectedInstallmentData} 
+        {isModalOpen && selectedInstallmentData && (
+          <InstallmentInfoComp
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            installDataProp={selectedInstallmentData}
           />
         )}
       </div>

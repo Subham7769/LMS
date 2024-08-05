@@ -121,6 +121,7 @@ const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
 const CreateProdGroup = lazy(() =>
   import("./components/ProductGroup/CreateProdGroup")
 );
+const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
 
 const routes = [
   {
@@ -227,6 +228,7 @@ const routes = [
         ],
       },
       { path: "/ledger", element: <LedgerPage /> },
+      { path: "/user-management", element: <UserManagementPage /> },
       { path: "/test", element: <CreateNew /> },
     ],
   },

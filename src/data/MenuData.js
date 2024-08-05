@@ -261,5 +261,11 @@ export const MenusInitial = [
     icon: BookOpenIcon,
     current: false,
   },
+  {
+    title: "User Management",
+    href: "/user-management",
+    icon: UsersIcon,
+    current: false,
+  },
   // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
 ];
