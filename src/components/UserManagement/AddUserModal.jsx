@@ -113,6 +113,7 @@ const AddUserModal = ({ isOpen, onClose, role, getUser }) => {
       username: "",
     });
     setConfirmPassword("");
+    setUserRole([]);
   };
 
   if (!isOpen) return null;
@@ -121,7 +122,7 @@ const AddUserModal = ({ isOpen, onClose, role, getUser }) => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-4/5 ">
+        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-10/12 ">
           <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
             <InputText
               labelName="User Name"

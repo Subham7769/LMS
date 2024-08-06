@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
+import { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import AddUserModal from "./AddUserModal";
 import ActionOption from "./ActionOption";
@@ -53,6 +52,8 @@ const UserManagement = ({ role }) => {
     setSelectedUserData(data); // Set the selected installment data
   };
 
+  const options = { day: "2-digit", month: "short", year: "numeric" };
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -94,7 +95,11 @@ const UserManagement = ({ role }) => {
                     <td className="p-4 text-gray-500">
                       {item.active ? "Active" : "Suspended"}
                     </td>
-                    <td className="p-4 text-gray-500">{item.creationDate}</td>
+                    <td className="p-4 text-gray-500">
+                      {new Intl.DateTimeFormat("en-GB", options).format(
+                        item.creationDate
+                      )}
+                    </td>
                     <td className="p-4 text-gray-500">
                       <div onClick={() => handleUserAction(item)}>
                         <ActionOption
