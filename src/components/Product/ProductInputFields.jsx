@@ -13,10 +13,15 @@ import useRulePolicy from "../../utils/useRulePolicy";
 import useRecoveryInfo from "../../utils/useRecoveryInfo";
 import useTCLInfo from "../../utils/useTCLInfo";
 import useRACInfo from "../../utils/useRACInfo";
-import { options, tenureOptions, tenureTypeOptions, } from "../../data/OptionsData";
+import {
+  options,
+  tenureOptions,
+  tenureTypeOptions,
+} from "../../data/OptionsData";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { Failed } from "../Toasts";
+import useCreditScoreEligibleTenure from "../../utils/useCreditScoreEligibleTenure";
 
 const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   // Custom Hooks
@@ -25,6 +30,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   const BEDataInfo = useBEInfo();
   const RPDataInfo = useRulePolicy();
   const CSDataInfo = useCreditScoreEq();
+  const CSETDataInfo = useCreditScoreEligibleTenure();
   const ProjectDataInfo = useAllProjectInfo();
   const TCLDataInfo = useTCLInfo();
   const RecoveryDataInfo = useRecoveryInfo();
@@ -34,6 +40,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   const [beOptions, setBeOptions] = useState([]);
   const [rpOptions, setRpOptions] = useState([]);
   const [csOptions, setCsOptions] = useState([]);
+  const [csETOptions, setCsETOptions] = useState([]);
   const [racOptions, setRacOptions] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
   const [TCLOptions, setTCLOptions] = useState([]);
@@ -55,7 +62,11 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   };
 
   const handleAddFields = () => {
-    if (Object.values(interestEligibleTenure).every(field => String(field).trim() !== "")) {
+    if (
+      Object.values(interestEligibleTenure).every(
+        (field) => String(field).trim() !== ""
+      )
+    ) {
       setFormData((prevFormData) => ({
         ...prevFormData,
         interestEligibleTenure: [
@@ -79,11 +90,10 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           toast={toast}
           title={"Failed"}
           message={"All Fields Required!"}
-        />));
+        />
+      ));
       return;
     }
-
-
   };
 
   useEffect(() => {
@@ -93,6 +103,10 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
     }));
     const formattedCSData = CSDataInfo.map(({ name, href }) => ({
       value: href.replace("/credit-score/", ""),
+      label: name,
+    }));
+    const formattedCSETData = CSETDataInfo.map(({ name, href }) => ({
+      value: href.replace("/credit-score-eligible-tenure/", ""),
       label: name,
     }));
     const finalData = DBRConfigInfo.map(({ name, href }) => ({
@@ -127,6 +141,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
     setBeOptions(formattedBEData);
     setRpOptions(rpData);
     setCsOptions(formattedCSData);
+    setCsETOptions(formattedCSETData);
     setTCLOptions(formattedTCLData);
   }, [
     RACDataInfo,
@@ -218,6 +233,16 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             onChange={handleChange}
             isSearchable={false}
           />
+          <InputSelect
+            labelName="Credit Score Eligible Tenure"
+            inputOptions={csETOptions}
+            inputName="creditScoreEtTempId"
+            inputValue={formData.creditScoreEtTempId}
+            onChange={handleChange}
+            isSearchable={false}
+          />
+        </div>
+        <div className="grid grid-cols-5 gap-5 items-end">
           <InputText
             labelName="Processing Fee"
             inputName="fee"
@@ -225,8 +250,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             onChange={handleChange}
             placeHolder="1%"
           />
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end">
           <InputText
             labelName="Management Fee Vat"
             inputName="managementFeeVat"

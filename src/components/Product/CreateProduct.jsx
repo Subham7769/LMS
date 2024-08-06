@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  CheckCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
+import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
@@ -17,7 +14,7 @@ const CreateProduct = () => {
     id: "0",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
-    creditScoreEtTempId: "663c8ec2-33fd-4388-8c46-695098bdbd74",
+    creditScoreEtTempId: "",
     dbcTempId: "",
     disableRac: false,
     eligibleCustomerType: "",
@@ -165,45 +162,44 @@ const CreateProduct = () => {
                 </tr>
               ) : (
                 formData.interestEligibleTenure.map((item, index) => (
-                    <tr
-                      key={index}
-                      className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
-                    >
-                      <td className="py-2 whitespace-nowrap">
-                        {item.interestRate}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.interestPeriodType}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.loanTenure}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.loanTenureType}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.repaymentTenure}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.repaymentTenureType}
-                      </td>
-                      <td className="py-2">
-                        <Button
-                          buttonIcon={TrashIcon}
-                          onClick={() => handleDelete(index)}
-                          circle={true}
-                          className={
-                            "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
-                          }
-                        />
-                      </td>
-                    </tr>
-                  ))
+                  <tr
+                    key={index}
+                    className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
+                  >
+                    <td className="py-2 whitespace-nowrap">
+                      {item.interestRate}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.interestPeriodType}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.loanTenure}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.loanTenureType}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.repaymentTenure}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.repaymentTenureType}
+                    </td>
+                    <td className="py-2">
+                      <Button
+                        buttonIcon={TrashIcon}
+                        onClick={() => handleDelete(index)}
+                        circle={true}
+                        className={
+                          "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
         </div>
-
       </div>
       <div className="flex mt-4  justify-end ">
         {/* Submit Button */}
@@ -213,7 +209,6 @@ const CreateProduct = () => {
           onClick={handleSave}
           rectangle={true}
           className="flex items-center justify-center mt-3 w-44"
-
         />
       </div>
     </>

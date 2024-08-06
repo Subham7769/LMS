@@ -24,6 +24,7 @@ import { createNewBE } from "../utils/createNewBE";
 import { createNewCreditScoreEq } from "../utils/createNewCreditScoreEq";
 import { createNewRulePolicy } from "../utils/createNewRulePolicy";
 import { createNewTCL } from "../utils/createNewTCL";
+import { createNewCreditScoreET } from "../utils/createNewCreditScoreET";
 
 export const MenusInitial = [
   {
@@ -109,6 +110,22 @@ export const MenusInitial = [
     buttonName: "Create Product", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/create-product/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Credit Score Eligible Tenure",
+    href: "/credit-score-eligible-tenure",
+    icon: CalculatorIcon,
+    current: false,
+    submenu: true,
+    createButton: true, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: createNewCreditScoreET, //Create function
+    buttonName: "Create Credit Score Eligible Tenure", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/credit-score-eligible-tenure/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,

@@ -13,6 +13,7 @@ import useRulePolicy from "../../../utils/useRulePolicy";
 import useTCLInfo from "../../../utils/useTCLInfo";
 import useProdGroupInfo from "../../../utils/useProdGroupInfo";
 import useRecoveryInfo from "../../../utils/useRecoveryInfo";
+import useCreditScoreEligibleTenure from "../../../utils/useCreditScoreEligibleTenure";
 
 const SideBar = () => {
   const [open, setOpen] = useState(
@@ -29,10 +30,11 @@ const SideBar = () => {
   const TCLInfo = useTCLInfo();
   const ProdGroupInfo = useProdGroupInfo();
   const RecoveryInfo = useRecoveryInfo();
+  const CreditScoreETInfo = useCreditScoreEligibleTenure();
 
   const [submenuStates, setSubmenuStates] = useState(
     JSON.parse(localStorage.getItem("submenuStates")) ??
-    Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
+      Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
   );
 
   useEffect(() => {
@@ -68,6 +70,9 @@ const SideBar = () => {
         if (menu.title === "Recovery") {
           return { ...menu, submenuItems: RecoveryInfo };
         }
+        if (menu.title === "Credit Score Eligible Tenure") {
+          return { ...menu, submenuItems: CreditScoreETInfo };
+        }
         return menu;
       })
     );
@@ -82,6 +87,7 @@ const SideBar = () => {
     TCLInfo,
     ProdGroupInfo,
     RecoveryInfo,
+    CreditScoreETInfo,
   ]);
 
   useEffect(() => {
@@ -104,14 +110,20 @@ const SideBar = () => {
 
   return (
     <div
-      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${open ? "w-52" : "w-14"}`}
+      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${
+        open ? "w-52" : "w-14"
+      }`}
     >
       {/* Collapse Button */}
-      <button onClick={toggleSidebar} className={`z-30 absolute right-1 top-56 bg-indigo-500 h-16 w-4 rounded-full p-0`}>
+      <button
+        onClick={toggleSidebar}
+        className={`z-30 absolute right-1 top-56 bg-indigo-500 h-16 w-4 rounded-full p-0`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4  text-white transition-transform duration-300 ${open ? "rotate-180" : ""
-            }`}
+          className={`h-4 w-4  text-white transition-transform duration-300 ${
+            open ? "rotate-180" : ""
+          }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -124,10 +136,15 @@ const SideBar = () => {
           />
         </svg>
       </button>
-      <ul className={`pt-2  pr-1 border-r h-auto overflow-y-auto scrollbar-none border-gray-200`}>
+      <ul
+        className={`pt-2  pr-1 border-r h-auto overflow-y-auto scrollbar-none border-gray-200`}
+      >
         {/* Main Menu */}
         {Menus.map((menu, index) => (
-          <div key={menu.title} className={`${index===Menus.length-1 && "mb-52"}`}>
+          <div
+            key={menu.title}
+            className={`${index === Menus.length - 1 && "mb-52"}`}
+          >
             <NavLink to={menu.href} className="text-gray-500">
               <li
                 onClick={() => toggleSubmenu(index)}
@@ -137,14 +154,17 @@ const SideBar = () => {
                   <menu.icon className="h-5 w-5 shrink-0" />
                 </span>
                 <span
-                  className={`text-sm flex-1 transform duration-1000 ease-in-out ${!open && "hidden"}`}
+                  className={`text-sm flex-1 transform duration-1000 ease-in-out ${
+                    !open && "hidden"
+                  }`}
                 >
                   {menu.title}
                 </span>
                 {menu.submenu && open && (
                   <ChevronRightIcon
-                    className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""
-                      }`}
+                    className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${
+                      submenuStates[index]?.isOpen ? "rotate-90" : ""
+                    }`}
                     onClick={() => toggleSubmenu(index)}
                   />
                 )}
@@ -184,7 +204,6 @@ const SideBar = () => {
           </div>
         ))}
       </ul>
-
     </div>
   );
 };

@@ -126,7 +126,7 @@ const CreditScore = () => {
   };
 
   useEffect(() => {
-    async function getProductInfo() {
+    async function getCreditScoreInfo() {
       setLoading(true);
       try {
         const token = localStorage.getItem("authToken");
@@ -159,7 +159,7 @@ const CreditScore = () => {
       }
     }
 
-    getProductInfo();
+    getCreditScoreInfo();
   }, [creditScoreId]);
 
   const handleAddFields = async () => {
