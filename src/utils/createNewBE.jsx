@@ -24,7 +24,7 @@ export async function createNewBE(
     }
     const beDetails = await response.json();
     navigate(navigateSuccess + beDetails.blockEmployerTempId);
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }

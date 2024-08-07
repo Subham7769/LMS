@@ -24,7 +24,7 @@ export async function createNewDBC(
     const dbcDetails = await response.json();
     console.log(dbcDetails);
     navigate(navigateSuccess + dbcDetails.dbcTempId);
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }

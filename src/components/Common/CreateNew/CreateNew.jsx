@@ -1,21 +1,53 @@
 import React, { useState } from 'react';
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from 'react-router-dom';
+import { fetchRACData, fetchDBRData, fetchBEData, fetchProjectData, fetchProductData, fetchCreditScoreEqData, fetchRulePolicyData, fetchTCLData,fetchProdGroupData,fetchRecoveryData } from '../../../redux/Slices/sidebarSlice'
+import { useDispatch } from 'react-redux';
 
 
-const CreateNew = ({ placeholder, buttonName, createFunction, editable, navigateSuccess, navigateFail }) => {
+const CreateNew = ({ placeholder, buttonName, createFunction, menuTitle, editable, navigateSuccess, navigateFail }) => {
     const [Name, setName] = useState("");
     const [isEditing, setEditing] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
 
     const handleChange = (e) => {
         setName(e.target.value);
     };
+    function dispatchType(menuTitle) {
+        switch (menuTitle) {
+            case 'RAC':
+                return fetchRACData;
+            case 'DBR Config':
+                return fetchDBRData;
+            case 'Blocked Employer':
+                return fetchBEData;
+            case 'Project':
+                return fetchProjectData;
+            case 'Product':
+                return fetchProductData;
+            case 'Credit Score':
+                return fetchCreditScoreEqData;
+              case 'Rule Policy':
+                return fetchRulePolicyData;
+              case 'TCL':
+                return fetchTCLData;
+              case 'Product Group':
+                return fetchProdGroupData;
+              case 'Recovery':
+                return fetchRecoveryData;
+            default:
+                return null;
+        }
+    }
 
-    const handleKeyDown = (e) => {
+
+    const handleKeyDown = async (e) => {
         if (e.key === "Enter") {
-            createFunction(Name, navigate, navigateSuccess, navigateFail);
+            await createFunction(Name, navigate, navigateSuccess, navigateFail);
+            const dispatcherFunction = dispatchType(menuTitle)
+            dispatch(dispatcherFunction())
             setEditing(false);
             setName('');
         }

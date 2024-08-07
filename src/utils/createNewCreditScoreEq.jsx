@@ -25,7 +25,7 @@ export async function createNewCreditScoreEq(
     const creditScoreDetails = await response.json();
     console.log(creditScoreDetails);
     navigate(navigateSuccess + creditScoreDetails.creditScoreEqTempId);
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }

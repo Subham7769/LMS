@@ -24,7 +24,7 @@ export async function createNewTCL(
       const TCLDetails = await response.json();
       console.log(TCLDetails);
       navigate(navigateSuccess + TCLDetails.tclId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }

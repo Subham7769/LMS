@@ -24,7 +24,7 @@ export async function createNewRulePolicy(
     const rulePolicyDetails = await response.json();
     //   console.log(rulePolicyDetails);
     navigate(navigateSuccess + rulePolicyDetails.rulePolicyTempId);
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }

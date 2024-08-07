@@ -1,47 +1,20 @@
-import {
-  RectangleGroupIcon,
-  ArrowPathRoundedSquareIcon,
-  ChartPieIcon,
-  CubeIcon,
-  CurrencyRupeeIcon,
-  AdjustmentsHorizontalIcon,
-  Cog6ToothIcon,
-  ClipboardDocumentCheckIcon,
-  HomeIcon,
-  UsersIcon,
-  BookOpenIcon,
-  HeartIcon,
-  CalculatorIcon,
-  ClipboardDocumentListIcon,
-} from "@heroicons/react/24/outline";
-import { createNewRac } from "../utils/createNewRac";
-import { createNewProduct } from "../utils/createNewProduct";
-import { createNewRecovery } from "../utils/createNewRecovery";
-import { createNewProductGroup } from "../utils/createNewProductGroup";
-import { CreditCardIcon, NoSymbolIcon } from "@heroicons/react/20/solid";
-import { createNewDBC } from "../utils/createNewDBC";
-import { createNewBE } from "../utils/createNewBE";
-import { createNewCreditScoreEq } from "../utils/createNewCreditScoreEq";
-import { createNewRulePolicy } from "../utils/createNewRulePolicy";
-import { createNewTCL } from "../utils/createNewTCL";
-
 export const MenusInitial = [
   {
     title: "Home",
     href: "/",
-    icon: HomeIcon,
+    icon: "HomeIcon",
     count: "5",
     current: true,
   },
   {
     title: "RAC",
     href: "/rac",
-    icon: ClipboardDocumentCheckIcon,
+    icon: "ClipboardDocumentCheckIcon",
     current: false,
     submenu: true,
     createButton: true, //if create RAC from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewRac, //Create function
+    createFunction: "createNewRac",
     buttonName: "Create RAC", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/newrac/", // navigation
@@ -52,12 +25,12 @@ export const MenusInitial = [
   {
     title: "Recovery",
     href: "/recovery",
-    icon: ArrowPathRoundedSquareIcon,
+    icon: "ArrowPathRoundedSquareIcon",
     current: false,
     submenu: true,
     createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewRecovery, //Create function
+    createFunction: "createNewRecovery",
     buttonName: "Create Recovery", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/recovery/", // navigation
@@ -68,12 +41,12 @@ export const MenusInitial = [
   {
     title: "TCL",
     href: "/tcl",
-    icon: CurrencyRupeeIcon,
+    icon: "CurrencyRupeeIcon",
     current: false,
     submenu: true,
     createButton: true, //if create TCL from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewTCL, //Create function
+    createFunction: "createNewTCL",
     buttonName: "Create TCL", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/tcl/", // navigation
@@ -84,12 +57,12 @@ export const MenusInitial = [
   {
     title: "Project",
     href: "/project/projectPage", //previous -> "/project/loan-form"
-    icon: ChartPieIcon,
+    icon: "ChartPieIcon",
     current: false,
     submenu: true,
     createButton: true, //if create project from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewProduct, //Create function
+    createFunction: "createNewProject",
     buttonName: "Create Project", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/project/newProject/", // navigation
@@ -100,12 +73,12 @@ export const MenusInitial = [
   {
     title: "Product",
     href: "/product",
-    icon: CubeIcon,
+    icon: "CubeIcon",
     current: false,
     submenu: true,
     createButton: true, //if create product from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewProduct, //Create function
+    createFunction: "createNewProduct",
     buttonName: "Create Product", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/create-product/", // navigation
@@ -116,12 +89,12 @@ export const MenusInitial = [
   {
     title: "DBR Config",
     href: "/dbc",
-    icon: CreditCardIcon,
+    icon: "CreditCardIcon",
     current: false,
     submenu: true,
     createButton: true, //if create RAC from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewDBC, //Create function
+    createFunction: "createNewDBC",
     buttonName: "Create DBR", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/newdbc/", // navigation
@@ -132,12 +105,12 @@ export const MenusInitial = [
   {
     title: "Blocked Employer",
     href: "/blocked-employer",
-    icon: NoSymbolIcon,
+    icon: "NoSymbolIcon",
     current: false,
     submenu: true,
     createButton: true, //if create RAC from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewBE, //Create function
+    createFunction: "createNewBE",
     buttonName: "Create BE", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/blocked-employer/", // navigation
@@ -148,12 +121,12 @@ export const MenusInitial = [
   {
     title: "Credit Score",
     href: "/credit-score",
-    icon: CalculatorIcon,
+    icon: "CalculatorIcon",
     current: false,
     submenu: true,
     createButton: true, //if create product from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewCreditScoreEq, //Create function
+    createFunction: "createNewCreditScoreEq",
     buttonName: "Create Credit Score", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/credit-score/", // navigation
@@ -164,12 +137,12 @@ export const MenusInitial = [
   {
     title: "Rule Policy",
     href: "/rule-policy",
-    icon: ClipboardDocumentListIcon,
+    icon: "ClipboardDocumentListIcon",
     current: false,
     submenu: true,
     createButton: true, //if create product from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewRulePolicy, //Create function
+    createFunction: "createNewRulePolicy",
     buttonName: "Create Rule Policy", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/rule-policy/", // navigation
@@ -180,12 +153,12 @@ export const MenusInitial = [
   {
     title: "Product Group",
     href: "/product_group",
-    icon: RectangleGroupIcon,
+    icon: "RectangleGroupIcon",
     current: false,
     submenu: true,
     createButton: true, //if create product from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: createNewProductGroup, //Create function
+    createFunction: "createNewProductGroup",
     buttonName: "Create Group", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/product_group/new/", // navigation
@@ -196,16 +169,16 @@ export const MenusInitial = [
   {
     title: "Business Rule",
     href: "/business-rule/1",
-    icon: AdjustmentsHorizontalIcon,
+    icon: "AdjustmentsHorizontalIcon",
     current: false,
     submenu: true,
-    createButton: true, //if create product from Side bar Using input box
-    editable: false, //if Button takes input string
-    createFunction: null, //Create function
-    buttonName: "Create Rule", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/business-rule/1", // navigation
-    navigateFail: "/login", // navigation
+    // createButton: true, //if create product from Side bar Using input box
+    // editable: false, //if Button takes input string
+    // createFunction: null,
+    // buttonName: "Create Rule", //Create button text
+    // placeholder: "Enter Name", //required placeholder for input box
+    // navigateSuccess: "/business-rule/1", // navigation
+    // navigateFail: "/login", // navigation
     submenuItems: [
       { name: "Business Rule 1", href: "/business-rule/1" },
       { name: "Business Rule 2", href: "/business-rule/2" },
@@ -216,7 +189,7 @@ export const MenusInitial = [
   {
     title: "Global Config",
     href: "/global-config/liability-matrix",
-    icon: Cog6ToothIcon,
+    icon: "Cog6ToothIcon",
     current: false,
     submenu: true,
     submenuItems: [
@@ -246,20 +219,25 @@ export const MenusInitial = [
   {
     title: "Customer Care",
     href: "/customer-care",
-    icon: HeartIcon,
+    icon: "HeartIcon",
     current: false,
   },
   {
     title: "User Product Testing",
     href: "/user",
-    icon: UsersIcon,
+    icon: "UsersIcon",
     current: false,
   },
   {
     title: "General Ledger",
     href: "/ledger",
-    icon: BookOpenIcon,
+    icon: "BookOpenIcon",
     current: false,
   },
-  // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
+  // { 
+  //   title: "TestComponent", 
+  //   href: "/test", 
+  //   icon: "BeakerIcon",
+  //   current: false 
+  // },
 ];

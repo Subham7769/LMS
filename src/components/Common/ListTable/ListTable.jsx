@@ -132,7 +132,7 @@ const ListTable = ({
 
   // Use sortedData instead of ListItem for rendering
   const dataToRender = searchTerm ? filteredData : sortedData;
-  console.log(dataToRender)
+  // console.log(dataToRender)
   return (
     <div className="bg-gray-100 py-6 rounded-xl mt-4">
       <div className="px-4 sm:px-6 lg:px-8">

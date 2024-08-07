@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 
 const useRacRules = (url1, url2) => {
   const [RACRulesInfo, setRACRulesInfo] = useState([]);
-  const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const { racID } = useParams();
 
   useEffect(() => {
@@ -13,11 +14,8 @@ const useRacRules = (url1, url2) => {
   async function getRACRulesInfo() {
     try {
       const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
-          racID +
-          url1 +
-          url2,
+      const response = await fetch(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${racID}${url1}${url2}`,
         {
           method: "GET",
           headers: {
@@ -26,21 +24,27 @@ const useRacRules = (url1, url2) => {
           },
         }
       );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        navigate("/login");
+        return;
       }
-      const json = await data.json();
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const text = await response.text();
+      const json = text ? JSON.parse(text) : [];
       setRACRulesInfo(json);
-      // console.log(RACRulesInfo);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching RAC rules:", error);
+      setError(error.message);
     }
   }
-  // console.log(subscriberListNew);
-  return RACRulesInfo;
+
+  return { RACRulesInfo, error };
 };
 
 export default useRacRules;

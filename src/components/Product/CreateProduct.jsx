@@ -8,10 +8,13 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import Button from "../Common/Button/Button";
 import ProductInputFields from "./ProductInputFields";
+import { useDispatch } from "react-redux";
+import {fetchProductData } from '../../redux/Slices/sidebarSlice'
 
 const CreateProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     id: "0",
@@ -102,8 +105,9 @@ const CreateProduct = () => {
           />
         ));
         setTimeout(() => {
+          dispatch(fetchProductData())
           navigate("/product/");
-          window.location.reload();
+          // window.location.reload();
         }, 2000);
       }
     } catch (error) {
@@ -165,40 +169,40 @@ const CreateProduct = () => {
                 </tr>
               ) : (
                 formData.interestEligibleTenure.map((item, index) => (
-                    <tr
-                      key={index}
-                      className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
-                    >
-                      <td className="py-2 whitespace-nowrap">
-                        {item.interestRate}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.interestPeriodType}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.loanTenure}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.loanTenureType}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.repaymentTenure}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.repaymentTenureType}
-                      </td>
-                      <td className="py-2">
-                        <Button
-                          buttonIcon={TrashIcon}
-                          onClick={() => handleDelete(index)}
-                          circle={true}
-                          className={
-                            "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
-                          }
-                        />
-                      </td>
-                    </tr>
-                  ))
+                  <tr
+                    key={index}
+                    className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
+                  >
+                    <td className="py-2 whitespace-nowrap">
+                      {item.interestRate}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.interestPeriodType}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.loanTenure}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.loanTenureType}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.repaymentTenure}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.repaymentTenureType}
+                    </td>
+                    <td className="py-2">
+                      <Button
+                        buttonIcon={TrashIcon}
+                        onClick={() => handleDelete(index)}
+                        circle={true}
+                        className={
+                          "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>

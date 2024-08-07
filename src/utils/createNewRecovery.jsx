@@ -24,7 +24,7 @@ export async function createNewRecovery(
     const RecoveryDetails = await response.json();
     console.log(RecoveryDetails);
     navigate(navigateSuccess + RecoveryDetails.recoveryEquationTempId);
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }

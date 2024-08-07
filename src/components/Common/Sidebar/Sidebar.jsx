@@ -1,24 +1,57 @@
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import useRACInfo from "../../../utils/useRACInfo";
-import useAllProjectInfo from "../../../utils/useAllProjectInfo";
-import useProductInfo from "../../../utils/useProductInfo";
-import { MenusInitial } from "../../../data/MenuData";
-import CreateNew from "../CreateNew/CreateNew";
-import useDBInfo from "../../../utils/useDBInfo";
-import useBEInfo from "../../../utils/useBEInfo";
-import useCreditScoreEq from "../../../utils/useCreditScoreEq";
-import useRulePolicy from "../../../utils/useRulePolicy";
-import useTCLInfo from "../../../utils/useTCLInfo";
-import useProdGroupInfo from "../../../utils/useProdGroupInfo";
-import useRecoveryInfo from "../../../utils/useRecoveryInfo";
+import { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  toggleSidebar,
+  setSubmenuStates,
+  setMenus
+} from '../../../redux/Slices/sidebarSlice';
+import CreateNew from '../CreateNew/CreateNew';
+import useRACInfo from '../../../utils/useRACInfo';
+import useAllProjectInfo from '../../../utils/useAllProjectInfo';
+import useProductInfo from '../../../utils/useProductInfo';
+import useDBInfo from '../../../utils/useDBInfo';
+import useBEInfo from '../../../utils/useBEInfo';
+import useCreditScoreEq from '../../../utils/useCreditScoreEq';
+import useRulePolicy from '../../../utils/useRulePolicy';
+import useTCLInfo from '../../../utils/useTCLInfo';
+import useProdGroupInfo from '../../../utils/useProdGroupInfo';
+import useRecoveryInfo from '../../../utils/useRecoveryInfo';
+import {
+  RectangleGroupIcon,
+  ArrowPathRoundedSquareIcon,
+  ChartPieIcon,
+  CubeIcon,
+  CurrencyRupeeIcon,
+  AdjustmentsHorizontalIcon,
+  Cog6ToothIcon,
+  ClipboardDocumentCheckIcon,
+  HomeIcon,
+  UsersIcon,
+  BookOpenIcon,
+  HeartIcon,
+  CalculatorIcon,
+  ClipboardDocumentListIcon,
+} from "@heroicons/react/24/outline";
+import { CreditCardIcon, NoSymbolIcon } from "@heroicons/react/20/solid";
+
+import { createNewRac } from "../../../utils/createNewRac";
+import { createNewProduct } from "../../../utils/createNewProduct";
+import { createNewProject } from "../../../utils/createNewProject";
+import { createNewRecovery } from "../../../utils/createNewRecovery";
+import { createNewProductGroup } from "../../../utils/createNewProductGroup";
+import { createNewDBC } from "../../../utils/createNewDBC";
+import { createNewBE } from "../../../utils/createNewBE";
+import { createNewCreditScoreEq } from "../../../utils/createNewCreditScoreEq";
+import { createNewRulePolicy } from "../../../utils/createNewRulePolicy";
+import { createNewTCL } from "../../../utils/createNewTCL";
 
 const SideBar = () => {
-  const [open, setOpen] = useState(
-    JSON.parse(localStorage.getItem("sidebarOpen")) ?? true
-  );
-  const [Menus, setMenus] = useState(MenusInitial);
+  const dispatch = useDispatch();
+  const open = useSelector((state) => state.sidebar.open);
+  const submenuStates = useSelector((state) => state.sidebar.submenuStates);
+  const menus = useSelector((state) => state.sidebar.menus);
   const RACDataInfo = useRACInfo();
   const ProjectDataInfo = useAllProjectInfo();
   const ProductDataInfo = useProductInfo();
@@ -30,47 +63,80 @@ const SideBar = () => {
   const ProdGroupInfo = useProdGroupInfo();
   const RecoveryInfo = useRecoveryInfo();
 
-  const [submenuStates, setSubmenuStates] = useState(
-    JSON.parse(localStorage.getItem("submenuStates")) ??
-    Menus.map((menu) => (menu.submenu ? { isOpen: false } : null))
-  );
+
+  const iconMapping = {
+    HomeIcon,
+    ClipboardDocumentCheckIcon,
+    ArrowPathRoundedSquareIcon,
+    CurrencyRupeeIcon,
+    ChartPieIcon,
+    CubeIcon,
+    CreditCardIcon,
+    NoSymbolIcon,
+    CalculatorIcon,
+    ClipboardDocumentListIcon,
+    RectangleGroupIcon,
+    AdjustmentsHorizontalIcon,
+    Cog6ToothIcon,
+    HeartIcon,
+    UsersIcon,
+    BookOpenIcon,
+  };
+
+  const functionMapping = {
+    createNewRac,
+    createNewProduct,
+    createNewProject,
+    createNewRecovery,
+    createNewProductGroup,
+    createNewDBC,
+    createNewBE,
+    createNewCreditScoreEq,
+    createNewRulePolicy,
+    createNewTCL
+  }
+
 
   useEffect(() => {
-    setMenus((prevMenus) =>
-      prevMenus.map((menu) => {
-        if (menu.title === "RAC") {
-          return { ...menu, submenuItems: RACDataInfo };
-        }
-        if (menu.title === "DBR Config") {
-          return { ...menu, submenuItems: DBCData };
-        }
-        if (menu.title === "Blocked Employer") {
-          return { ...menu, submenuItems: BEData };
-        }
-        if (menu.title === "Project") {
-          return { ...menu, submenuItems: ProjectDataInfo };
-        }
-        if (menu.title === "Product") {
-          return { ...menu, submenuItems: ProductDataInfo };
-        }
-        if (menu.title === "Credit Score") {
-          return { ...menu, submenuItems: CreditScoreEqInfo };
-        }
-        if (menu.title === "Rule Policy") {
-          return { ...menu, submenuItems: RulePolicyInfo };
-        }
-        if (menu.title === "TCL") {
-          return { ...menu, submenuItems: TCLInfo };
-        }
-        if (menu.title === "Product Group") {
-          return { ...menu, submenuItems: ProdGroupInfo };
-        }
-        if (menu.title === "Recovery") {
-          return { ...menu, submenuItems: RecoveryInfo };
-        }
-        return menu;
-      })
-    );
+    localStorage.setItem("submenuStates", JSON.stringify(submenuStates));
+  }, [submenuStates]);
+
+  useEffect(() => {
+    const updatedMenus = menus.map((menu) => {
+      if (menu.title === 'RAC') {
+        return { ...menu, submenuItems: RACDataInfo };
+      }
+      if (menu.title === 'DBR Config') {
+        return { ...menu, submenuItems: DBCData };
+      }
+      if (menu.title === 'Blocked Employer') {
+        return { ...menu, submenuItems: BEData };
+      }
+      if (menu.title === 'Project') {
+        return { ...menu, submenuItems: ProjectDataInfo };
+      }
+      if (menu.title === 'Product') {
+        return { ...menu, submenuItems: ProductDataInfo };
+      }
+      if (menu.title === 'Credit Score') {
+        return { ...menu, submenuItems: CreditScoreEqInfo };
+      }
+      if (menu.title === 'Rule Policy') {
+        return { ...menu, submenuItems: RulePolicyInfo };
+      }
+      if (menu.title === 'TCL') {
+        return { ...menu, submenuItems: TCLInfo };
+      }
+      if (menu.title === 'Product Group') {
+        return { ...menu, submenuItems: ProdGroupInfo };
+      }
+      if (menu.title === 'Recovery') {
+        return { ...menu, submenuItems: RecoveryInfo };
+      }
+      return menu;
+    });
+
+    dispatch(setMenus(updatedMenus));
   }, [
     RACDataInfo,
     DBCData,
@@ -82,35 +148,31 @@ const SideBar = () => {
     TCLInfo,
     ProdGroupInfo,
     RecoveryInfo,
+    dispatch,
   ]);
 
-  useEffect(() => {
-    localStorage.setItem("sidebarOpen", JSON.stringify(open));
-  }, [open]);
 
-  useEffect(() => {
-    localStorage.setItem("submenuStates", JSON.stringify(submenuStates));
-  }, [submenuStates]);
-
-  const toggleSidebar = () => setOpen(!open);
-
-  const toggleSubmenu = (index) => {
-    setSubmenuStates(
-      submenuStates.map((state, i) =>
-        i === index && state ? { isOpen: !state.isOpen } : state
-      )
-    );
+  const handleToggleSidebar = () => {
+    dispatch(toggleSidebar());
   };
+
+  const handleToggleSubmenu = (index) => {
+    const updatedStates = submenuStates.map((state, i) =>
+      i === index ? { ...state, isOpen: !state.isOpen } : state
+    );
+    dispatch(setSubmenuStates(updatedStates));
+  };
+
 
   return (
     <div
-      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${open ? "w-52" : "w-14"}`}
+      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${open ? 'w-52' : 'w-14'}`}
     >
       {/* Collapse Button */}
-      <button onClick={toggleSidebar} className={`z-30 absolute right-1 top-56 bg-indigo-500 h-16 w-4 rounded-full p-0`}>
+      <button onClick={handleToggleSidebar} className={`z-30 absolute right-1 top-56 bg-indigo-500 h-16 w-4 rounded-full p-0`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4  text-white transition-transform duration-300 ${open ? "rotate-180" : ""
+          className={`h-4 w-4 text-white transition-transform duration-300 ${open ? 'rotate-180' : ''
             }`}
           fill="none"
           viewBox="0 0 24 24"
@@ -124,67 +186,72 @@ const SideBar = () => {
           />
         </svg>
       </button>
-      <ul className={`pt-2  pr-1 border-r h-auto overflow-y-auto scrollbar-none border-gray-200`}>
+      <ul className={`pt-2 pr-1 border-r h-auto overflow-y-auto scrollbar-none border-gray-200`}>
         {/* Main Menu */}
-        {Menus.map((menu, index) => (
-          <div key={menu.title} className={`${index===Menus.length-1 && "mb-52"}`}>
-            <NavLink to={menu.href} className="text-gray-500">
-              <li
-                onClick={() => toggleSubmenu(index)}
-                className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
-              >
-                <span className="text-2xl block float-left">
-                  <menu.icon className="h-5 w-5 shrink-0" />
-                </span>
-                <span
-                  className={`text-sm flex-1 transform duration-1000 ease-in-out ${!open && "hidden"}`}
+        {menus.map((menu, index) => {
+          const IconComponent = iconMapping[menu.icon];
+          const createFunction = functionMapping[menu.createFunction];
+          // console.log(menu.title + "-> "+menu.createFunction)
+          return (
+            <div key={menu.title} className={`${index === menus.length - 1 && 'mb-52'}`}>
+              <NavLink to={menu.href} className="text-gray-500">
+                <li
+                  onClick={() => handleToggleSubmenu(index)}
+                  className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
                 >
-                  {menu.title}
-                </span>
-                {menu.submenu && open && (
-                  <ChevronRightIcon
-                    className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""
-                      }`}
-                    onClick={() => toggleSubmenu(index)}
-                  />
-                )}
-              </li>
-            </NavLink>
-            {/* SubMenu */}
-            {menu.submenu && submenuStates[index]?.isOpen && open && (
-              <ul>
-                {
-                  //if create from Side bar Using input box
-                  menu.createButton ? (
-                    <div>
-                      <li className="py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                        <CreateNew
-                          placeholder={menu.placeholder}
-                          buttonName={menu.buttonName}
-                          createFunction={menu.createFunction}
-                          editable={menu.editable}
-                          navigateSuccess={menu.navigateSuccess}
-                          navigateFail={menu.navigateFail}
-                        />
-                      </li>
+                  <span className="text-2xl block float-left">
+                    <IconComponent className="h-5 w-5 shrink-0" />
+                  </span>
+                  <span
+                    className={`text-sm flex-1 transform duration-1000 ease-in-out ${!open && 'hidden'}`}
+                  >
+                    {menu.title}
+                  </span>
+                  {menu.submenu && open && (
+                    <ChevronRightIcon
+                      className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? 'rotate-90' : ''
+                        }`}
+                      onClick={() => handleToggleSubmenu(index)}
+                    />
+                  )}
+                </li>
+              </NavLink>
+              {/* SubMenu */}
+              {menu.submenu && submenuStates[index]?.isOpen && open && (
+                <ul>
+                  {
+                    // if create from Side bar Using input box
+                    menu.createButton ? (
+                      <div>
+                        <li className="py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                          <CreateNew
+                            placeholder={menu.placeholder}
+                            buttonName={menu.buttonName}
+                            createFunction={createFunction}
+                            menuTitle={menu.title}
+                            editable={menu.editable}
+                            navigateSuccess={menu.navigateSuccess}
+                            navigateFail={menu.navigateFail}
+                          />
+                        </li>
+                      </div>
+                    ) : null
+                  }
+                  {menu.submenuItems.map((submenuItem) => (
+                    <div key={submenuItem.name}>
+                      <NavLink to={submenuItem.href} className="text-gray-500">
+                        <li className="text-xs flex items-center w-44 gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                          {submenuItem.name}
+                        </li>
+                      </NavLink>
                     </div>
-                  ) : null
-                }
-                {menu.submenuItems.map((submenuItem) => (
-                  <div key={submenuItem.name}>
-                    <NavLink to={submenuItem.href} className="text-gray-500">
-                      <li className="text-xs flex items-center w-44 gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                        {submenuItem.name}
-                      </li>
-                    </NavLink>
-                  </div>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
+                  ))}
+                </ul>
+              )}
+            </div>
+          )
+        })}
       </ul>
-
     </div>
   );
 };
