@@ -46,6 +46,9 @@ import { createNewBE } from "../../../utils/createNewBE";
 import { createNewCreditScoreEq } from "../../../utils/createNewCreditScoreEq";
 import { createNewRulePolicy } from "../../../utils/createNewRulePolicy";
 import { createNewTCL } from "../../../utils/createNewTCL";
+import { createNewCreditScoreET } from "../../../utils/createNewCreditScoreET";
+import { useCreditScoreEligibleTenure } from "../../../utils/useCreditScoreEligibleTenure";
+
 
 const SideBar = () => {
   const dispatch = useDispatch();
@@ -62,6 +65,8 @@ const SideBar = () => {
   const TCLInfo = useTCLInfo();
   const ProdGroupInfo = useProdGroupInfo();
   const RecoveryInfo = useRecoveryInfo();
+  const CreditScoreEligibleTenureInfo = useCreditScoreEligibleTenure();
+
 
 
   const iconMapping = {
@@ -93,7 +98,8 @@ const SideBar = () => {
     createNewBE,
     createNewCreditScoreEq,
     createNewRulePolicy,
-    createNewTCL
+    createNewTCL,
+    createNewCreditScoreET,
   }
 
 
@@ -132,6 +138,9 @@ const SideBar = () => {
       }
       if (menu.title === 'Recovery') {
         return { ...menu, submenuItems: RecoveryInfo };
+      }
+      if (menu.title === 'Credit Score Eligible Tenure') {
+        return { ...menu, submenuItems: CreditScoreEligibleTenureInfo };
       }
       return menu;
     });

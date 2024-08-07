@@ -163,6 +163,17 @@ export const fetchRecoveryData = createAsyncThunk('fetchRecoveryData', async () 
   return await useFetchData(url, transformData);
 });
 
+export const fetchCreditScoreEligibleTenureData = createAsyncThunk('fetchCreditScoreEligibleTenureData', async () => {
+  const url = "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cset-temp";
+  const transformData = (data) => {
+    return data.map(({ name, creditScoreEtTempId  }) => ({
+      name: name.replace(/-/g, " "),
+      href: "/credit-score-eligible-tenure/" + creditScoreEtTempId,
+    }));
+  };
+  return await useFetchData(url, transformData);
+});
+
 const initialState = {
   open: JSON.parse(localStorage.getItem("sidebarOpen")) ?? true,
   submenuStates: MenusInitial.map((menu) =>
@@ -286,6 +297,18 @@ const sidebarSlice = createSlice({
         const submenuItems = action.payload;
         const updatedMenus = state.menus.map((menu) => {
           if (menu.title === "Recovery") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+      })
+      .addCase(fetchCreditScoreEligibleTenureData.fulfilled, (state, action) => {
+        const submenuItems = action.payload;
+    console.log(submenuItems)
+
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "Credit Score Eligible Tenure") {
             return { ...menu, submenuItems };
           }
           return menu;

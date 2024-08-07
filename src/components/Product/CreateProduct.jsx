@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  CheckCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
+import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
@@ -20,7 +17,7 @@ const CreateProduct = () => {
     id: "0",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
-    creditScoreEtTempId: "663c8ec2-33fd-4388-8c46-695098bdbd74",
+    creditScoreEtTempId: "",
     dbcTempId: "",
     disableRac: false,
     eligibleCustomerType: "",
@@ -207,7 +204,6 @@ const CreateProduct = () => {
             </tbody>
           </table>
         </div>
-
       </div>
       <div className="flex mt-4  justify-end ">
         {/* Submit Button */}
@@ -217,7 +213,6 @@ const CreateProduct = () => {
           onClick={handleSave}
           rectangle={true}
           className="flex items-center justify-center mt-3 w-44"
-
         />
       </div>
     </>

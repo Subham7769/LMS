@@ -87,6 +87,22 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
+    title: "Credit Score Eligible Tenure",
+    href: "/credit-score-eligible-tenure",
+    icon: "CalculatorIcon",
+    current: false,
+    submenu: true,
+    createButton: true, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewCreditScoreET", //Create function
+    buttonName: "Create New Tenure", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/credit-score-eligible-tenure/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
     title: "DBR Config",
     href: "/dbc",
     icon: "CreditCardIcon",
@@ -234,10 +250,11 @@ export const MenusInitial = [
     icon: "BookOpenIcon",
     current: false,
   },
-  // { 
-  //   title: "TestComponent", 
-  //   href: "/test", 
-  //   icon: "BeakerIcon",
-  //   current: false 
-  // },
+  {
+    title: "User Management",
+    href: "/user-management",
+    icon: "UsersIcon",
+    current: false,
+  },
+  // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
 ];

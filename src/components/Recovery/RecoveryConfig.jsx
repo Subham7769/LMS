@@ -17,26 +17,27 @@ import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import { Passed } from "../Toasts";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import {
+  fetchName,
+  fetchData,
+  setData,
+} from "../../redux/Slices/recoverySlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
   const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [itemName, setItemName] = useState("");
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    id: "",
-    recoveryEquationId: "",
-    recoveryEquationTempId: recoveryEquationTempId,
-    tenure: "",
-    tenureType: "",
-    recoveryEquation: "",
-  });
-  const postURL = import.meta.env.VITE_RECOVERY_CREATE_CREATE_DATA
-  const updateURL = `${import.meta.env.VITE_RECOVERY_UPDATE}${formData.recoveryEquationId}`;
-
+  const { itemName, data, loading, error } = useSelector(
+    (state) => state.recovery
+  );
+  const [formData, setFormData] = useState([]);
+  const postURL = import.meta.env.VITE_RECOVERY_CREATE_CREATE_DATA;
+  const updateURL = `${import.meta.env.VITE_RECOVERY_UPDATE}${
+    formData.recoveryEquationId
+  }`;
 
   const [isEditingEquation, setIsEditingEquation] = useState(false);
 
@@ -62,7 +63,9 @@ const RecoveryConfig = () => {
   };
 
   const handleNameUpdate = async (newName) => {
-    const url = `${import.meta.env.VITE_RECOVERY_NAME_UPDATE}${recoveryEquationTempId}/name/${newName}`;
+    const url = `${
+      import.meta.env.VITE_RECOVERY_NAME_UPDATE
+    }${recoveryEquationTempId}/name/${newName}`;
 
     try {
       const response = await fetch(url, {
@@ -93,65 +96,13 @@ const RecoveryConfig = () => {
     }
   };
 
-  async function fetchName() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_RECOVERY_NAME_READ}${recoveryEquationTempId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const retrievedname = await data.json();
-      setItemName(retrievedname.name);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching name:", error);
-    }
-  }
-
-  async function fetchData() {
-    setLoading(true);
-    try {
-      const data = await fetch(
-        `${import.meta.env.VITE_RECOVERY_READ}${recoveryEquationTempId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const response = await data.json();
-      setData(response);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching name:", error);
-    }
-  }
-
   useEffect(() => {
-    fetchName();
-    fetchData();
-  }, [recoveryEquationTempId]);
+    dispatch(fetchName(recoveryEquationTempId));
+    dispatch(fetchData(recoveryEquationTempId));
+    dispatch(
+      setData({ ...data, recoveryEquationTempId: recoveryEquationTempId })
+    );
+  }, [dispatch, recoveryEquationTempId]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -163,7 +114,6 @@ const RecoveryConfig = () => {
         recoveryEquation: data[0].recoveryEquation,
       };
       setFormData(assignedData);
-      console.log(assignedData);
     }
   }, [data, recoveryEquationTempId]);
 
@@ -188,7 +138,8 @@ const RecoveryConfig = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       } else if (response.ok) {
-        fetchData();
+        // fetchData();
+        dispatch(fetchData(recoveryEquationTempId));
       }
     } catch (error) {
       console.log(error);
@@ -198,7 +149,10 @@ const RecoveryConfig = () => {
   const createClone = async (cloneName) => {
     try {
       const token = localStorage.getItem("authToken");
-      const data = await fetch(`${import.meta.env.VITE_RECOVERY_CREATE_CLONE}${recoveryEquationTempId}/clone/${cloneName}`,
+      const data = await fetch(
+        `${
+          import.meta.env.VITE_RECOVERY_CREATE_CLONE
+        }${recoveryEquationTempId}/clone/${cloneName}`,
         {
           method: "POST",
           headers: {
@@ -258,6 +212,7 @@ const RecoveryConfig = () => {
   const handleClone = () => {
     setIsModalOpen(true);
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -268,6 +223,10 @@ const RecoveryConfig = () => {
 
   if (loading) {
     return <LoadingState />;
+  }
+
+  if (error) {
+    <p>Error: {error}</p>;
   }
 
   return (

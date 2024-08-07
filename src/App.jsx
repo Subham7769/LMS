@@ -13,6 +13,11 @@ const NewRulePolicy = lazy(() =>
 const NewCreatedCreditScore = lazy(() =>
   import("./components/CreditScore/NewCreatedCreditScore")
 );
+const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
+const CreditScoreET = lazy(() =>
+  import("./components/CreditScoreET/CreditScoreET")
+);
+
 const CreditScoreEqPage = lazy(() => import("./pages/CreditScoreEqPage"));
 
 const RecoveryConfig = lazy(() =>
@@ -121,6 +126,7 @@ const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
 const CreateProdGroup = lazy(() =>
   import("./components/ProductGroup/CreateProdGroup")
 );
+const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
 
 const routes = [
   {
@@ -167,6 +173,14 @@ const routes = [
       {
         path: "/product/:productType/loan-product-config/:projectId/:loanProId",
         element: <LoanProductConfig />,
+      },
+      {
+        path: "/credit-score-eligible-tenure",
+        element: <CreditScoreETPage />,
+      },
+      {
+        path: "/credit-score-eligible-tenure/:creditScoreETId",
+        element: <CreditScoreET />,
       },
       {
         path: "/credit-score",
@@ -227,6 +241,7 @@ const routes = [
         ],
       },
       { path: "/ledger", element: <LedgerPage /> },
+      { path: "/user-management", element: <UserManagementPage /> },
       { path: "/test", element: <CreateNew /> },
     ],
   },
