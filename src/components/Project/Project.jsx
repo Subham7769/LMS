@@ -20,6 +20,8 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
+import { fetchData } from "../../redux/Slices/projectSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Project = () => {
   const [ProjectData, setProjectData] = useState([]);
@@ -30,88 +32,18 @@ const Project = () => {
   const formattedDate = (date) => {
     return date.substring(0, 10);
   };
-
-  const [formData, setFormData] = useState({
-    name: "",
-    projectDescription: "",
-    country: "",
-    location: "",
-    currencyName: "",
-    loanType: "",
-    flatInterestRate: "",
-    interestRatePeriod: "",
-    interestPeriodUnit: "",
-    downRepaymentGracePeriod: "",
-    emiRepaymentGracePeriod: "",
-    loanGracePeriod: "",
-    rollOverGracePeriod: "",
-    rollOverPenaltyFactor: "",
-    rollOverPenaltyFee: "",
-    rollOverInterestRate: "",
-    lateEmiPenaltyFactor: "",
-    maxPaymetAttemps: "",
-    startDate: new Date().toISOString().slice(0, 10),
-    endDate: "",
-    lateRepaymentPenalty: "",
-    earlyRepaymentDiscount: "",
-    serviceFee: "",
-    calculateInterest: false,
-    hasEarlyLateRepayment: false,
-    hasDownPayment: false,
-    tclIncludeFee: true,
-    tclIncludeInterest: true,
-    managementFee: "",
-    tclRef: "",
-    vatFee: "",
-    clientIds: [],
-    tclAmount: "",
-    minLoanOperator: "",
-    minLoanAmount: "",
-    maxLoanOperator: "",
-    maxLoanAmount: "",
-    tclOperator: "",
-    minInstallmentsOperator: "",
-    minInstallmentsAmount: "",
-    maxInstallmentsOperator: "",
-    maxInstallmentsAmount: "",
-    downPaymentOperator: "",
-    downPaymentWay: "",
-    downPaymentPercentage: "",
-    openLoanOperator: "",
-    openLoanAmount: "",
-  });
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.project);
+  const [formData, setFormData] = useState({});
   // console.log(formData);
 
   useEffect(() => {
-    getProjectInfo();
-  }, [projectId]);
+    dispatch(fetchData(projectId));
+  }, [dispatch, projectId]);
 
-  async function getProjectInfo() {
-    try {
-      const ptoken = localStorage.getItem("projectToken");
-      const data = await fetch(
-          `${import.meta.env.VITE_PROJECT_READ}${projectId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${ptoken}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const projectDetails = await data.json();
-      setProjectData(projectDetails);
-      //   // console.log(ProjectData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  useEffect(() => {
+    setProjectData(data);
+  }, [data, projectId]);
 
   const parseCriteriaAndSetFormData = (criteria) => {
     const regex = /(\w+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
@@ -302,29 +234,32 @@ const Project = () => {
       paymentOption: ProjectData.paymentOption,
       bearers: ProjectData.bearers,
       projectId: projectId,
-      criteria: `tcl ${formData.tclOperator} ${formData.tclAmount
-        } and loanAmount ${formData.minLoanOperator} ${formData.minLoanAmount
-        } and loanAmount ${formData.maxLoanOperator} ${formData.maxLoanAmount
-        } and numberOfInstallments ${formData.minInstallmentsOperator} ${formData.minInstallmentsAmount
-        } and numberOfInstallments ${formData.maxInstallmentsOperator} ${formData.maxInstallmentsAmount
-        } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${formData.loanType === "asset"
+      criteria: `tcl ${formData.tclOperator} ${
+        formData.tclAmount
+      } and loanAmount ${formData.minLoanOperator} ${
+        formData.minLoanAmount
+      } and loanAmount ${formData.maxLoanOperator} ${
+        formData.maxLoanAmount
+      } and numberOfInstallments ${formData.minInstallmentsOperator} ${
+        formData.minInstallmentsAmount
+      } and numberOfInstallments ${formData.maxInstallmentsOperator} ${
+        formData.maxInstallmentsAmount
+      } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${
+        formData.loanType === "asset"
           ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
           : ""
-        }`,
+      }`,
     };
     try {
       const authToken = localStorage.getItem("projectToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_PROJECT_UPDATE}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_PROJECT_UPDATE}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(postData),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -402,9 +337,18 @@ const Project = () => {
     ));
   };
 
-  if (ProjectData.length === 0) {
+  // if (ProjectData.length === 0) {
+  //   return <LoadingState />;
+  // }
+
+  if (loading) {
     return <LoadingState />;
   }
+
+  if (error) {
+    <p>Error: {error}</p>;
+  }
+  // console.log(data);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -702,8 +646,9 @@ const Project = () => {
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
-                  className={`flex-1 w-full ${formData.loanType === "cash" && "hidden"
-                    }`}
+                  className={`flex-1 w-full ${
+                    formData.loanType === "cash" && "hidden"
+                  }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}
