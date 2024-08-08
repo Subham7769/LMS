@@ -34,7 +34,14 @@ const RecoveryConfig = () => {
   const { itemName, data, loading, error } = useSelector(
     (state) => state.recovery
   );
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState({
+    id: "",
+    recoveryEquationId: "",
+    recoveryEquationTempId: recoveryEquationTempId,
+    tenure: "",
+    tenureType: "",
+    recoveryEquation: "",
+  });
   const postURL = import.meta.env.VITE_RECOVERY_CREATE_CREATE_DATA;
   const updateURL = `${import.meta.env.VITE_RECOVERY_UPDATE}${
     formData.recoveryEquationId
@@ -227,6 +234,8 @@ const RecoveryConfig = () => {
   if (error) {
     <p>Error: {error}</p>;
   }
+
+  console.log(formData);
 
   return (
     <>

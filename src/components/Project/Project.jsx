@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, TrashIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
@@ -21,7 +21,9 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
-import { useDispatch } from "react-redux";
+import { fetchData } from "../../redux/Slices/projectSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "../Common/Button/Button";
 
 const Project = () => {
   const [ProjectData, setProjectData] = useState([]);
@@ -33,88 +35,17 @@ const Project = () => {
   const formattedDate = (date) => {
     return date.substring(0, 10);
   };
-
-  const [formData, setFormData] = useState({
-    name: "",
-    projectDescription: "",
-    country: "",
-    location: "",
-    currencyName: "",
-    loanType: "",
-    flatInterestRate: "",
-    interestRatePeriod: "",
-    interestPeriodUnit: "",
-    downRepaymentGracePeriod: "",
-    emiRepaymentGracePeriod: "",
-    loanGracePeriod: "",
-    rollOverGracePeriod: "",
-    rollOverPenaltyFactor: "",
-    rollOverPenaltyFee: "",
-    rollOverInterestRate: "",
-    lateEmiPenaltyFactor: "",
-    maxPaymetAttemps: "",
-    startDate: new Date().toISOString().slice(0, 10),
-    endDate: "",
-    lateRepaymentPenalty: "",
-    earlyRepaymentDiscount: "",
-    serviceFee: "",
-    calculateInterest: false,
-    hasEarlyLateRepayment: false,
-    hasDownPayment: false,
-    tclIncludeFee: true,
-    tclIncludeInterest: true,
-    managementFee: "",
-    tclRef: "",
-    vatFee: "",
-    clientIds: [],
-    tclAmount: "",
-    minLoanOperator: "",
-    minLoanAmount: "",
-    maxLoanOperator: "",
-    maxLoanAmount: "",
-    tclOperator: "",
-    minInstallmentsOperator: "",
-    minInstallmentsAmount: "",
-    maxInstallmentsOperator: "",
-    maxInstallmentsAmount: "",
-    downPaymentOperator: "",
-    downPaymentWay: "",
-    downPaymentPercentage: "",
-    openLoanOperator: "",
-    openLoanAmount: "",
-  });
+  const { data, loading, error } = useSelector((state) => state.project);
+  const [formData, setFormData] = useState({});
   // console.log(formData);
 
   useEffect(() => {
-    getProjectInfo();
-  }, [projectId]);
+    dispatch(fetchData(projectId));
+  }, [dispatch, projectId]);
 
-  async function getProjectInfo() {
-    try {
-      const ptoken = localStorage.getItem("projectToken");
-      const data = await fetch(
-          `${import.meta.env.VITE_PROJECT_READ}${projectId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${ptoken}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const projectDetails = await data.json();
-      setProjectData(projectDetails);
-      //   // console.log(ProjectData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  useEffect(() => {
+    setProjectData(data);
+  }, [data, projectId]);
 
   const parseCriteriaAndSetFormData = (criteria) => {
     const regex = /(\w+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
@@ -317,17 +248,14 @@ const Project = () => {
     };
     try {
       const authToken = localStorage.getItem("projectToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_PROJECT_UPDATE}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_PROJECT_UPDATE}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(postData),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -350,6 +278,8 @@ const Project = () => {
           />
         ));
       }
+      dispatch(fetchProjectData())
+
       const responseData = await response.json();
       console.log("Project updated successfully:", responseData);
     } catch (error) {
@@ -376,7 +306,7 @@ const Project = () => {
         throw new Error("Failed to delete the item");
       }
       dispatch(fetchProjectData())
-      
+
       navigate("/project/projectPage");
       // Refresh the page after navigation
       // window.location.reload();
@@ -407,14 +337,31 @@ const Project = () => {
     ));
   };
 
-  if (ProjectData.length === 0) {
+  // if (ProjectData.length === 0) {
+  //   return <LoadingState />;
+  // }
+
+  if (loading) {
     return <LoadingState />;
   }
+
+  if (error) {
+    <p>Error: {error}</p>;
+  }
+  // console.log(data);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="mb-4">
+      <div className="flex justify-between items-center mb-3">
         <DynamicName initialName={formData.name} onSave={handleChange} />
+        <Button
+          buttonIcon={TrashIcon}
+          onClick={() => handleDelete()}
+          circle={true}
+          className={
+            "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+          }
+        />
       </div>
       <form className="">
         <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
@@ -829,22 +776,12 @@ const Project = () => {
           </div>
         </div>
         <div className="flex items-center justify-end gap-4 mt-4">
-          <button
-            type="button"
+          <Button
+            buttonName={"Update"}
+            buttonIcon={CheckCircleIcon}
             onClick={handleUpdate}
-            className="inline-flex items-center gap-x-1.5 mt-3 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-44 justify-center"
-          >
-            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Update
-          </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="inline-flex items-center gap-x-1.5 mt-3 rounded-md bg-red-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-44 justify-center"
-          >
-            <XCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Delete
-          </button>
+            rectangle={true}
+          />
         </div>
       </form>
     </>

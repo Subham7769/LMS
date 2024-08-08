@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { TclViewListHeaderList } from '../../data/TclData';
-import ListTable from '../Common/ListTable/ListTable'
-import SelectAndAdd from '../Common/SelectAndAdd/SelectAndAdd';
+import React, { useEffect, useState } from "react";
+import { TclViewListHeaderList } from "../../data/TclData";
+import ListTable from "../Common/ListTable/ListTable";
+import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 import { useNavigate, useParams } from "react-router-dom";
-import DynamicName from '../Common/DynamicName/DynamicName';
+import DynamicName from "../Common/DynamicName/DynamicName";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { convertDate } from '../../utils/convertDate';
 import Button from '../Common/Button/Button';
-import { useDispatch } from 'react-redux';
 import { fetchTCLData } from '../../redux/Slices/sidebarSlice';
+import { fetchName, fetchData } from "../../redux/Slices/tclSlice";
+import { useDispatch, useSelector } from "react-redux";
+import LoadingState from "../LoadingState/LoadingState";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [TclViewListData, setTclViewListData] = useState([]);
-  const [selectOptions, setSelectOptions] = useState([]);
   const [message, setMessage] = useState("");
-  const [TCLName, setTCLName] = useState("");
   const { tclId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { itemName, data, loading, error } = useSelector((state) => state.tcl);
 
   const handleChange = (selectedOption) => {
     setFileSelectedOption(selectedOption);
@@ -36,7 +35,8 @@ const TCLViewList = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/files/by-id/" + fileSelectedOption.value,
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/files/by-id/" +
+          fileSelectedOption.value,
         {
           method: "GET",
           headers: {
@@ -53,7 +53,6 @@ const TCLViewList = () => {
       }
       const TCLDetails = await data.json();
 
-      
       // Transform the Product data to the desired format
       const formattedTCLInfoData = {
         name: TCLDetails.fileName,
@@ -65,7 +64,6 @@ const TCLViewList = () => {
         totalRows: TCLDetails.totalRows,
       };
 
-      setTclViewListData(prevData => [...prevData, formattedTCLInfoData]);
       // Directly check if the formatted data is already in the table
       const alreadyExists = tableData.some(
         (item) => item.name === formattedTCLInfoData.name
@@ -74,7 +72,7 @@ const TCLViewList = () => {
       if (alreadyExists) {
         setMessage("The selected file is already added to the table.");
       } else {
-        setTableData(prevData => [formattedTCLInfoData, ...prevData]);
+        setTableData((prevData) => [formattedTCLInfoData, ...prevData]);
         setMessage(""); // Clear message if data is successfully added
       }
     } catch (error) {
@@ -87,71 +85,11 @@ const TCLViewList = () => {
   };
 
   useEffect(() => {
-    getTCLFileNames();
-    getTCLInfo()
-  }, [tclId])
-
-  async function getTCLFileNames() {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_TCL_FILENAME_READ}${tclId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const TCLDetails = await data.json();
-
-      // Transform the Product data to the desired format
-      const formattedTCLInfoData = TCLDetails.map(
-        ({ fileName, tclFileId }) => ({
-          value: tclFileId,
-          label: fileName.replace(/.csv/g, " "),
-
-        })
-      );
-
-      setSelectOptions(formattedTCLInfoData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function getTCLInfo() {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_TCL_READ}${tclId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const TCLDetails = await data.json();
-      setTCLName(TCLDetails.tclName.replace(/_/g, " "));
-    } catch (error) {
-      console.error(error);
-    }
-  }
+    dispatch(fetchName(tclId));
+    dispatch(fetchData(tclId));
+    setTableData([]);
+    setFileSelectedOption(null);
+  }, [dispatch, tclId]);
 
   const handleUpdateTCL = async (updateTCLName) => {
     try {
@@ -209,20 +147,35 @@ const TCLViewList = () => {
       // Optionally, handle the error in the UI, such as showing an error message
     }
   };
-console.log(tableData)
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    <p>Error: {error}</p>;
+  }
+
   return (
     <>
       {/* Select & Add to List */}
       <div className="flex justify-between items-center mb-3">
-        <DynamicName initialName={TCLName} onSave={handleUpdateTCL} />
-        <Button buttonIcon={TrashIcon} onClick={() => handleDeleteTCL(tclId)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
+        <DynamicName initialName={itemName} onSave={handleUpdateTCL} />
+        <Button
+          buttonIcon={TrashIcon}
+          onClick={() => handleDeleteTCL(tclId)}
+          circle={true}
+          className={
+            "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+          }
+        />
       </div>
       <SelectAndAdd
-        ListName={'Select TCL List'}
-        SelectOptions={selectOptions}
+        ListName={"Select TCL List"}
+        SelectOptions={data}
         SelectedOption={fileSelectedOption}
         HandleChange={handleChange}
-        ButtonName={'Add to List'}
+        ButtonName={"Add to List"}
         onClick={addData}
       />
 
@@ -238,7 +191,7 @@ console.log(tableData)
         Searchable={false}
       />
     </>
-  )
-}
+  );
+};
 
-export default TCLViewList
+export default TCLViewList;

@@ -21,12 +21,14 @@ import InputDate from "../Common/InputDate/InputDate";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import { fetchProjectData } from '../../redux/Slices/sidebarSlice'
+import { useDispatch } from "react-redux";
 
 const NewProjectPage = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
+  const dispatch = useDispatch()
 
 
   const [formData, setFormData] = useState({
@@ -79,7 +81,6 @@ const NewProjectPage = () => {
     openLoanAmount: "", //not in API
   });
 
-  console.log(formData);
   useEffect(() => {
     const pattern = /([a-zA-Z]+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
     let match;
@@ -313,6 +314,7 @@ const NewProjectPage = () => {
           body: JSON.stringify(postData),
         }
       );
+      console.log(response)
       if (!response.ok) {
         const errorMessage = await response.text();
         toast.custom((t) => (
@@ -330,7 +332,7 @@ const NewProjectPage = () => {
       }
 
       const data = await response.json();
-
+      dispatch(fetchProjectData())
       toast.custom((t) => (
         <Passed
           t={t}
@@ -339,7 +341,7 @@ const NewProjectPage = () => {
           message={"Project created successfully!"}
         />
       ));
-      dispatch(fetchProjectData())
+
 
       // Redirect to the project details page or any other appropriate page
       navigate(`/project/${data.projectId}`);
