@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchRACData } from '../../redux/Slices/sidebarSlice'
 
 const CreateRac = () => {
   const [racName, setRacName] = useState("");
   const navigate = useNavigate();
-  async function createNewRac(racName) {
+  const dispatch = useDispatch();
+
+  async function createRac(racName) {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
@@ -26,8 +30,9 @@ const CreateRac = () => {
       }
       const racDetails = await data.json();
       console.log(racDetails);
+      dispatch(fetchRACData());
       navigate("/newrac/" + racDetails.racId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -50,7 +55,7 @@ const CreateRac = () => {
       </div>
       <div>
         <button
-          onClick={() => createNewRac(racName)}
+          onClick={() => createRac(racName)}
           type="button"
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >

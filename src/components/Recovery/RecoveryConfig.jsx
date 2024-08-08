@@ -23,6 +23,7 @@ import {
   setData,
 } from "../../redux/Slices/recoverySlice";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchRecoveryData } from "../../redux/Slices/sidebarSlice";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -89,7 +90,10 @@ const RecoveryConfig = () => {
             message={"The name was updated successfully"}
           />
         ));
-        window.location.reload();
+        dispatch(fetchName(recoveryEquationTempId));
+      dispatch(fetchRecoveryData());
+
+        // window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -122,7 +126,7 @@ const RecoveryConfig = () => {
     toggleEditEquation();
   };
 
-  const postData = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       const response = fetch(data.length < 1 ? postURL : updateURL, {
@@ -168,14 +172,15 @@ const RecoveryConfig = () => {
         return; // Stop further execution
       }
       const Details = await data.json();
+      dispatch(fetchRecoveryData());
       navigate("/recovery/" + Details.recoveryEquationTempId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const deleteSettings = async () => {
+  const handleDelete = async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_RECOVERY_DELETE}/${recoveryEquationTempId}`,
@@ -193,16 +198,10 @@ const RecoveryConfig = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       } else if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Item Deleted"}
-            message={"Item was deleted successfully"}
-          />
-        ));
+        dispatch(fetchRecoveryData());
+        
         navigate("/recovery");
-        window.location.reload();
+        // window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -238,7 +237,7 @@ const RecoveryConfig = () => {
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button
             buttonIcon={TrashIcon}
-            onClick={deleteSettings}
+            onClick={handleDelete}
             circle={true}
             className={
               "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
@@ -342,7 +341,7 @@ const RecoveryConfig = () => {
             <Button
               buttonIcon={CheckCircleIcon}
               buttonName={"Update"}
-              onClick={postData}
+              onClick={handleUpdate}
               rectangle={true}
             />
           </div>

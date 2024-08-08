@@ -7,6 +7,8 @@ import DynamicName from '../Common/DynamicName/DynamicName';
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { convertDate } from '../../utils/convertDate';
 import Button from '../Common/Button/Button';
+import { useDispatch } from 'react-redux';
+import { fetchTCLData } from '../../redux/Slices/sidebarSlice';
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
@@ -17,6 +19,8 @@ const TCLViewList = () => {
   const [TCLName, setTCLName] = useState("");
   const { tclId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const handleChange = (selectedOption) => {
     setFileSelectedOption(selectedOption);
@@ -194,9 +198,10 @@ const TCLViewList = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchTCLData())
       navigate("/tcl");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {

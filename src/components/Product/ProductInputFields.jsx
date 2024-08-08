@@ -21,7 +21,7 @@ import {
 import { PlusIcon } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { Failed } from "../Toasts";
-import useCreditScoreEligibleTenure from "../../utils/useCreditScoreEligibleTenure";
+import { useCreditScoreEligibleTenure } from "../../utils/useCreditScoreEligibleTenure";
 
 const ProductInputFields = ({ formData, handleChange, setFormData }) => {
   // Custom Hooks

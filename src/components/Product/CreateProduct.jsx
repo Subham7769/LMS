@@ -56,7 +56,7 @@ const CreateProduct = () => {
     }));
   };
 
-  const handleSave = async () => {
+  const CreateProduct = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
 
     try {
@@ -93,19 +93,10 @@ const CreateProduct = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Success"}
-            message={"Product Created Successfully !!"}
-          />
-        ));
-        setTimeout(() => {
+
           dispatch(fetchProductData())
           navigate("/product/");
-          // window.location.reload();
-        }, 2000);
+
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -210,7 +201,7 @@ const CreateProduct = () => {
         <Button
           buttonIcon={CheckCircleIcon}
           buttonName={"Create"}
-          onClick={handleSave}
+          onClick={CreateProduct}
           rectangle={true}
           className="flex items-center justify-center mt-3 w-44"
         />

@@ -192,7 +192,7 @@ const NewProjectPage = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const createNewProject = async (e) => {
     e.preventDefault();
 
     const formattedStartDate =
@@ -339,9 +339,9 @@ const NewProjectPage = () => {
           message={"Project created successfully!"}
         />
       ));
+      dispatch(fetchProjectData())
 
       // Redirect to the project details page or any other appropriate page
-      dispatch(fetchProjectData())
       navigate(`/project/${data.projectId}`);
     } catch (error) {
       console.error("Error creating project:", error);
@@ -805,7 +805,7 @@ const NewProjectPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            onClick={handleSubmit}
+            onClick={createNewProject}
             className="flex items-center justify-center mt-3 w-44 bg-indigo-600  hover:bg-white hover:text-black hover:border hover:drop-shadow-lg text-white p-2 rounded-md"
           >
             <FaCheckCircle className="mr-2" />

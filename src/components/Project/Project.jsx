@@ -20,6 +20,8 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
+import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const Project = () => {
   const [ProjectData, setProjectData] = useState([]);
@@ -27,6 +29,7 @@ const Project = () => {
   const [filteredLocations, setFilteredLocations] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const formattedDate = (date) => {
     return date.substring(0, 10);
   };
@@ -254,7 +257,7 @@ const Project = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleUpdate = async () => {
     const formattedStartDate =
       new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const formattedEndDate =
@@ -372,9 +375,11 @@ const Project = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchProjectData())
+      
       navigate("/project/projectPage");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {
@@ -826,7 +831,7 @@ const Project = () => {
         <div className="flex items-center justify-end gap-4 mt-4">
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={handleUpdate}
             className="inline-flex items-center gap-x-1.5 mt-3 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-44 justify-center"
           >
             <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />

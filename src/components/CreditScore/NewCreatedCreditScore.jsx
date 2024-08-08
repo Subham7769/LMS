@@ -5,12 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import CreditScore from "./CreditScore";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import { fetchCreditScoreEqData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const NewCreatedCreditScore = () => {
   const [creditScoreName, setCreditScoreName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getCSEInfo();
@@ -72,8 +75,10 @@ const NewCreatedCreditScore = () => {
       }
       const cseDetails = await data.json();
       console.log(cseDetails);
+      dispatch(fetchCreditScoreEqData())
+
       navigate("/credit-score/" + cseDetails.creditScoreEqTempId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -101,7 +106,9 @@ const NewCreatedCreditScore = () => {
       const cseDetails = await data.json();
       console.log(cseDetails);
       navigate("/credit-score/" + cseDetails.creditScoreEqTempId);
-      window.location.reload();
+      dispatch(fetchCreditScoreEqData())
+      getCSEInfo()
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -125,9 +132,11 @@ const NewCreatedCreditScore = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchCreditScoreEqData())
+
       navigate("/credit-score");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {

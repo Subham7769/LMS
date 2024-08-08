@@ -174,6 +174,7 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk('fetchCreditS
   return await useFetchData(url, transformData);
 });
 
+
 const initialState = {
   open: JSON.parse(localStorage.getItem("sidebarOpen")) ?? true,
   submenuStates: MenusInitial.map((menu) =>
@@ -305,8 +306,6 @@ const sidebarSlice = createSlice({
       })
       .addCase(fetchCreditScoreEligibleTenureData.fulfilled, (state, action) => {
         const submenuItems = action.payload;
-    console.log(submenuItems)
-
         const updatedMenus = state.menus.map((menu) => {
           if (menu.title === "Credit Score Eligible Tenure") {
             return { ...menu, submenuItems };

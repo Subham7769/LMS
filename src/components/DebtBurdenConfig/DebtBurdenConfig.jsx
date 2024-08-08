@@ -20,9 +20,12 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import { fetchDBRData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { dbcTempId } = useParams();
   const [rules, setRules] = useState([]);
   const [debtBurdenData, setDebtBurdenData] = useState([]);
@@ -143,8 +146,10 @@ const DebtBurdenConfig = () => {
       }
       const dbcDetails = await data.json();
       console.log(dbcDetails);
+      dispatch(fetchDBRData())
+
       navigate("/newdbc/" + dbcDetails.dbcTempId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -233,8 +238,11 @@ const DebtBurdenConfig = () => {
             message={"The name was updated successfully"}
           />
         ));
-        // fetchName();
-        window.location.reload();
+
+        fetchName();
+      dispatch(fetchDBRData())
+
+        // window.location.reload();
       }
     } catch (error) {
       console.error("Error Updating Name:", error);
@@ -259,9 +267,11 @@ const DebtBurdenConfig = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchDBRData())
+      
       navigate("/dbc");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {

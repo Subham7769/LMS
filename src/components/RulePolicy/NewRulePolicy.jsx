@@ -5,12 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import RulePolicy from "./RulePolicy";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
+import { fetchRulePolicyData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const NewRulePolicy = () => {
   const [rulePolicyName, setRulePolicyName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { rulePolicyId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getCSEInfo();
@@ -73,8 +76,10 @@ const NewRulePolicy = () => {
       }
       const rpDetails = await data.json();
       console.log(rpDetails);
+      dispatch(fetchRulePolicyData())
+
       navigate("/rule-policy/" + rpDetails.rulePolicyTempId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -101,8 +106,11 @@ const NewRulePolicy = () => {
       }
       const rpDetails = await data.json();
       console.log(rpDetails);
+      getCSEInfo()
+      dispatch(fetchRulePolicyData())
+
       navigate("/rule-policy/" + rpDetails.rulePolicyTempId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -126,9 +134,10 @@ const NewRulePolicy = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchRulePolicyData())
       navigate("/rule-policy");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {

@@ -5,19 +5,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   toggleSidebar,
   setSubmenuStates,
-  setMenus
+  fetchRACData,
+  fetchDBRData,
+  fetchBEData,
+  fetchProjectData,
+  fetchProductData,
+  fetchCreditScoreEqData,
+  fetchRulePolicyData,
+  fetchTCLData,
+  fetchProdGroupData,
+  fetchRecoveryData,
+  fetchCreditScoreEligibleTenureData
 } from '../../../redux/Slices/sidebarSlice';
-import CreateNew from '../CreateNew/CreateNew';
-import useRACInfo from '../../../utils/useRACInfo';
-import useAllProjectInfo from '../../../utils/useAllProjectInfo';
-import useProductInfo from '../../../utils/useProductInfo';
-import useDBInfo from '../../../utils/useDBInfo';
-import useBEInfo from '../../../utils/useBEInfo';
-import useCreditScoreEq from '../../../utils/useCreditScoreEq';
-import useRulePolicy from '../../../utils/useRulePolicy';
-import useTCLInfo from '../../../utils/useTCLInfo';
-import useProdGroupInfo from '../../../utils/useProdGroupInfo';
-import useRecoveryInfo from '../../../utils/useRecoveryInfo';
 import {
   RectangleGroupIcon,
   ArrowPathRoundedSquareIcon,
@@ -32,9 +31,8 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
-  ClipboardDocumentListIcon,
+  ClipboardDocumentListIcon,CreditCardIcon, NoSymbolIcon
 } from "@heroicons/react/24/outline";
-import { CreditCardIcon, NoSymbolIcon } from "@heroicons/react/20/solid";
 
 import { createNewRac } from "../../../utils/createNewRac";
 import { createNewProduct } from "../../../utils/createNewProduct";
@@ -47,27 +45,14 @@ import { createNewCreditScoreEq } from "../../../utils/createNewCreditScoreEq";
 import { createNewRulePolicy } from "../../../utils/createNewRulePolicy";
 import { createNewTCL } from "../../../utils/createNewTCL";
 import { createNewCreditScoreET } from "../../../utils/createNewCreditScoreET";
-import { useCreditScoreEligibleTenure } from "../../../utils/useCreditScoreEligibleTenure";
 
+import CreateNew from '../CreateNew/CreateNew';
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.sidebar.open);
   const submenuStates = useSelector((state) => state.sidebar.submenuStates);
   const menus = useSelector((state) => state.sidebar.menus);
-  const RACDataInfo = useRACInfo();
-  const ProjectDataInfo = useAllProjectInfo();
-  const ProductDataInfo = useProductInfo();
-  const DBCData = useDBInfo();
-  const BEData = useBEInfo();
-  const CreditScoreEqInfo = useCreditScoreEq();
-  const RulePolicyInfo = useRulePolicy();
-  const TCLInfo = useTCLInfo();
-  const ProdGroupInfo = useProdGroupInfo();
-  const RecoveryInfo = useRecoveryInfo();
-  const CreditScoreEligibleTenureInfo = useCreditScoreEligibleTenure();
-
-
 
   const iconMapping = {
     HomeIcon,
@@ -102,61 +87,23 @@ const SideBar = () => {
     createNewCreditScoreET,
   }
 
-
   useEffect(() => {
     localStorage.setItem("submenuStates", JSON.stringify(submenuStates));
   }, [submenuStates]);
 
   useEffect(() => {
-    const updatedMenus = menus.map((menu) => {
-      if (menu.title === 'RAC') {
-        return { ...menu, submenuItems: RACDataInfo };
-      }
-      if (menu.title === 'DBR Config') {
-        return { ...menu, submenuItems: DBCData };
-      }
-      if (menu.title === 'Blocked Employer') {
-        return { ...menu, submenuItems: BEData };
-      }
-      if (menu.title === 'Project') {
-        return { ...menu, submenuItems: ProjectDataInfo };
-      }
-      if (menu.title === 'Product') {
-        return { ...menu, submenuItems: ProductDataInfo };
-      }
-      if (menu.title === 'Credit Score') {
-        return { ...menu, submenuItems: CreditScoreEqInfo };
-      }
-      if (menu.title === 'Rule Policy') {
-        return { ...menu, submenuItems: RulePolicyInfo };
-      }
-      if (menu.title === 'TCL') {
-        return { ...menu, submenuItems: TCLInfo };
-      }
-      if (menu.title === 'Product Group') {
-        return { ...menu, submenuItems: ProdGroupInfo };
-      }
-      if (menu.title === 'Recovery') {
-        return { ...menu, submenuItems: RecoveryInfo };
-      }
-      if (menu.title === 'Credit Score Eligible Tenure') {
-        return { ...menu, submenuItems: CreditScoreEligibleTenureInfo };
-      }
-      return menu;
-    });
-
-    dispatch(setMenus(updatedMenus));
+    dispatch(fetchRACData());
+    dispatch(fetchDBRData());
+    dispatch(fetchBEData());
+    dispatch(fetchProjectData());
+    dispatch(fetchProductData());
+    dispatch(fetchCreditScoreEqData());
+    dispatch(fetchRulePolicyData());
+    dispatch(fetchTCLData());
+    dispatch(fetchProdGroupData());
+    dispatch(fetchRecoveryData());
+    dispatch(fetchCreditScoreEligibleTenureData());
   }, [
-    RACDataInfo,
-    DBCData,
-    ProjectDataInfo,
-    ProductDataInfo,
-    BEData,
-    CreditScoreEqInfo,
-    RulePolicyInfo,
-    TCLInfo,
-    ProdGroupInfo,
-    RecoveryInfo,
     dispatch,
   ]);
 
@@ -175,7 +122,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${open ? 'w-52' : 'w-14'}`}
+      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${open ? 'w-56' : 'w-14'}`}
     >
       {/* Collapse Button */}
       <button onClick={handleToggleSidebar} className={`z-30 absolute right-1 top-56 bg-indigo-500 h-16 w-4 rounded-full p-0`}>
@@ -195,7 +142,7 @@ const SideBar = () => {
           />
         </svg>
       </button>
-      <ul className={`pt-2 pr-1 border-r h-auto overflow-y-auto scrollbar-none border-gray-200`}>
+      <ul className={`pt-2 pr-1 border-r h-auto ${open ? 'w-52' : 'w-10'}  overflow-y-auto scrollbar-none border-gray-200`}>
         {/* Main Menu */}
         {menus.map((menu, index) => {
           const IconComponent = iconMapping[menu.icon];
@@ -249,7 +196,7 @@ const SideBar = () => {
                   {menu.submenuItems.map((submenuItem) => (
                     <div key={submenuItem.name}>
                       <NavLink to={submenuItem.href} className="text-gray-500">
-                        <li className="text-xs flex items-center w-44 gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                        <li className="text-xs flex items-center  gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
                           {submenuItem.name}
                         </li>
                       </NavLink>

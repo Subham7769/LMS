@@ -23,12 +23,15 @@ import {
   options,
 } from "../../data/OptionsData";
 import ProductInputFields from "./ProductInputFields";
+import { fetchProductData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
   // Initial Data
   const [productConfigData, setProductConfigData] = useState([]);
+  const dispatch = useDispatch();
 
   // Sort & Pagination
   const [editingIndex, setEditingIndex] = useState(null);
@@ -340,9 +343,10 @@ const LoanProductConfig = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchProductData())
       navigate("/product");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {

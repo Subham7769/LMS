@@ -8,6 +8,8 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import { useDispatch } from "react-redux";
+import { fetchBEData } from '../../redux/Slices/sidebarSlice'
 
 const BlockedEmployer = () => {
   const [itemName, setItemName] = useState("");
@@ -16,6 +18,7 @@ const BlockedEmployer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { blockEmployersTempId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     blockEmployersTempId: blockEmployersTempId,
@@ -162,9 +165,10 @@ const BlockedEmployer = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       } else if (deleteResponse.ok) {
+        dispatch(fetchBEData())
         navigate("/blocked-employer");
         // Refresh the page after navigation
-        window.location.reload();
+        // window.location.reload();
       }
     } catch (error) {
       console.error(error);
@@ -249,8 +253,9 @@ const BlockedEmployer = () => {
       }
       const beDetails = await data.json();
       console.log(beDetails);
+      dispatch(fetchBEData())
       navigate("/blocked-employer/" + beDetails.blockEmployerTempId);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -279,34 +284,34 @@ const BlockedEmployer = () => {
         <DynamicName initialName={itemName} onSave={updateName} />
         <div className="flex gap-4">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => deleteBE()} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
+          <Button buttonIcon={TrashIcon} onClick={() => deleteBE()} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
         </div>
       </div>
-        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneBE} initialName={itemName}/>
-        <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-          <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
-            <div className="relative w-1/4">
-              <InputText
-                labelName="Add Blocked Employer"
-                inputName="name"
-                inputValue={formData.name}
-                onChange={handleChange}
-                placeHolder="Blocked Employer"
-              />
-            </div>
-            <Button buttonIcon={PlusIcon} onClick={postItem} circle={true}/> 
+      <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneBE} initialName={itemName} />
+      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+        <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
+          <div className="relative w-1/4">
+            <InputText
+              labelName="Add Blocked Employer"
+              inputName="name"
+              inputValue={formData.name}
+              onChange={handleChange}
+              placeHolder="Blocked Employer"
+            />
           </div>
-          {data.map((item, index) => {
-            return item.blockEmployersName.map((name, i) => (
-              <div key={`${index}-${i}`} className="flex gap-5 items-end mt-5">
-                <div className="relative w-1/4">
-                  <InputText inputValue={name} disabled={true} />
-                </div>
-                <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"}/>
-              </div>
-            ));
-          })}
+          <Button buttonIcon={PlusIcon} onClick={postItem} circle={true} />
         </div>
+        {data.map((item, index) => {
+          return item.blockEmployersName.map((name, i) => (
+            <div key={`${index}-${i}`} className="flex gap-5 items-end mt-5">
+              <div className="relative w-1/4">
+                <InputText inputValue={name} disabled={true} />
+              </div>
+              <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
+            </div>
+          ));
+        })}
+      </div>
     </>
   );
 };

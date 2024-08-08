@@ -14,6 +14,8 @@ import { RowChanged, Warning } from "../Toasts";
 import Button from "../Common/Button/Button";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import CloneModal from "../Common/CloneModal/CloneModal";
+import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
@@ -22,6 +24,7 @@ const CreditScoreET = () => {
   const [creditScoreETName, setCreditScoreETName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     operators: {
       firstCreditScoreOperator: "",
@@ -296,10 +299,12 @@ const CreditScoreET = () => {
       }
       const csetDetails = await data.json();
       console.log(csetDetails);
+      dispatch(fetchCreditScoreEligibleTenureData())
       navigate(
         "/credit-score-eligible-tenure/" + csetDetails.creditScoreEtTempId
       );
-      window.location.reload();
+
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -325,9 +330,10 @@ const CreditScoreET = () => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete the item");
       }
+      dispatch(fetchCreditScoreEligibleTenureData())
       navigate("/credit-score-eligible-tenure");
       // Refresh the page after navigation
-      window.location.reload();
+      // window.location.reload();
 
       // After deletion, fetch the updated data list
     } catch (error) {
