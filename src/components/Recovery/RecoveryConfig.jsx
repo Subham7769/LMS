@@ -21,89 +21,37 @@ import {
   fetchName,
   fetchData,
   setData,
+  handleChange,
+  updateOrPostData,
+  deleteRecovery,
+  createClone,
+  updateRecoveryName,
 } from "../../redux/Slices/recoverySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecoveryData } from "../../redux/Slices/sidebarSlice";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
-  const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { itemName, data, loading, error } = useSelector(
     (state) => state.recovery
   );
-  const [formData, setFormData] = useState({
-    id: "",
-    recoveryEquationId: "",
-    recoveryEquationTempId: recoveryEquationTempId,
-    tenure: "",
-    tenureType: "",
-    recoveryEquation: "",
-  });
-  const postURL = import.meta.env.VITE_RECOVERY_CREATE_CREATE_DATA;
-  const updateURL = `${import.meta.env.VITE_RECOVERY_UPDATE}${
-    formData.recoveryEquationId
-  }`;
-
   const [isEditingEquation, setIsEditingEquation] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChangeWrapper = (e) => {
     const { name, value } = e.target;
-
-    if (name === "recoveryEquation") {
-      // Regex to match only the characters w, r, d, and other allowed characters
-      const allowedCharactersRegex = /^[wrd\s0-9()+=\-*/.><]*$/;
-      if (!allowedCharactersRegex.test(value)) {
-        toast.error(
-          `Only w, r, d, 0-9 & allowed symbols:  'space' (  ) + - * / . < > `
-        );
-        return;
-      }
-    }
-
-    // Update state
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    dispatch(handleChange({ name, value }));
   };
 
   const handleNameUpdate = async (newName) => {
-    const url = `${
-      import.meta.env.VITE_RECOVERY_NAME_UPDATE
-    }${recoveryEquationTempId}/name/${newName}`;
-
     try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Name Updated"}
-            message={"The name was updated successfully"}
-          />
-        ));
-        dispatch(fetchName(recoveryEquationTempId));
+      await dispatch(updateRecoveryName({ recoveryEquationTempId, newName }));
+      dispatch(fetchName(recoveryEquationTempId));
       dispatch(fetchRecoveryData());
-
-        // window.location.reload();
-      }
     } catch (error) {
-      console.log(error);
+      console.error("Failed to update name:", error);
     }
   };
 
@@ -115,103 +63,46 @@ const RecoveryConfig = () => {
     );
   }, [dispatch, recoveryEquationTempId]);
 
-  useEffect(() => {
-    if (data.length > 0) {
-      const assignedData = {
-        recoveryEquationId: data[0].recoveryEquationId,
-        recoveryEquationTempId: recoveryEquationTempId,
-        tenure: data[0].tenure,
-        tenureType: data[0].tenureType,
-        recoveryEquation: data[0].recoveryEquation,
-      };
-      setFormData(assignedData);
-    }
-  }, [data, recoveryEquationTempId]);
-
   const saveSettings = () => {
     toast.success("Equation modified!");
     toggleEditEquation();
   };
 
-  const handleUpdate = async (e) => {
+  const handleUpdate = (e) => {
     e.preventDefault();
-    try {
-      const response = fetch(data.length < 1 ? postURL : updateURL, {
-        method: data.length < 1 ? "POST" : "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (response.ok) {
-        // fetchData();
-        dispatch(fetchData(recoveryEquationTempId));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const createClone = async (cloneName) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${
-          import.meta.env.VITE_RECOVERY_CREATE_CLONE
-        }${recoveryEquationTempId}/clone/${cloneName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const Details = await data.json();
-      dispatch(fetchRecoveryData());
-      navigate("/recovery/" + Details.recoveryEquationTempId);
-      // window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+    dispatch(
+      updateOrPostData({
+        formData: data,
+        isUpdate: data.length > 0,
+      })
+    );
   };
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_RECOVERY_DELETE}/${recoveryEquationTempId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (response.ok) {
-        dispatch(fetchRecoveryData());
-        
-        navigate("/recovery");
-        // window.location.reload();
+      await dispatch(deleteRecovery(recoveryEquationTempId)).unwrap();
+      await dispatch(fetchRecoveryData());
+      navigate("/recovery");
+    } catch (err) {
+      if (err === "Unauthorized") {
+        navigate("/login");
+      } else {
+        console.error("Error deleting recovery:", err);
       }
-    } catch (error) {
-      console.log(error);
+    }
+  };
+
+  const createCloneRecovery = async (cloneName) => {
+    try {
+      const Details = await dispatch(
+        createClone({ recoveryEquationTempId, cloneName })
+      ).unwrap();
+      dispatch(fetchRecoveryData());
+      navigate("/recovery/" + Details.recoveryEquationTempId);
+    } catch (err) {
+      if (err === "Unauthorized") {
+        navigate("/login");
+      }
     }
   };
 
@@ -235,8 +126,6 @@ const RecoveryConfig = () => {
     <p>Error: {error}</p>;
   }
 
-  console.log(formData);
-
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -257,7 +146,7 @@ const RecoveryConfig = () => {
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onCreateClone={createClone}
+        onCreateClone={createCloneRecovery}
         initialName={itemName}
       />
       <div className=" flex flex-col gap-4 rounded-lg border bg-white shadow-md border-red-600 p-6 ">
@@ -266,8 +155,8 @@ const RecoveryConfig = () => {
             <InputNumber
               labelName={"Tenure"}
               inputName={"tenure"}
-              inputValue={formData.tenure}
-              onChange={handleChange}
+              inputValue={data.tenure}
+              onChange={handleChangeWrapper}
               placeHolder={"24"}
             />
           </div>
@@ -275,9 +164,9 @@ const RecoveryConfig = () => {
             <InputSelect
               labelName="Tenure Type"
               inputName="tenureType"
-              inputValue={formData.tenureType}
+              inputValue={data.tenureType}
               inputOptions={options}
-              onChange={handleChange}
+              onChange={handleChangeWrapper}
               placeHolder="Select Tenure Type"
             />
           </div>
@@ -291,8 +180,8 @@ const RecoveryConfig = () => {
                     labelName={"Recovery Equation"}
                     inputName={"recoveryEquation"}
                     rowCount={"3"}
-                    inputValue={formData.recoveryEquation}
-                    onChange={handleChange}
+                    inputValue={data.recoveryEquation}
+                    onChange={handleChangeWrapper}
                     placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
                   />
                 ) : (
@@ -300,8 +189,8 @@ const RecoveryConfig = () => {
                     <InputText
                       labelName={"Recovery Equation"}
                       inputName="recoveryEquation"
-                      inputValue={formData.recoveryEquation}
-                      onChange={handleChange}
+                      inputValue={data.recoveryEquation}
+                      onChange={handleChangeWrapper}
                       placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
                       readOnly={true}
                     />
