@@ -25,23 +25,20 @@ import {
 import ProductInputFields from "./ProductInputFields";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
-import { fetchData } from "../../redux/Slices/productSlice";
-import { useDispatch, useSelector } from "react-redux";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
   // Initial Data
   const [productConfigData, setProductConfigData] = useState([]);
+  const dispatch = useDispatch();
 
   // Sort & Pagination
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  // const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.product);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     loanProductId: "",
@@ -143,12 +140,39 @@ const LoanProductConfig = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchData(productType));
-  }, [dispatch, productType, projectId]);
+    getProductInfo();
+  }, [productType, projectId]);
 
-  useEffect(() => {
-    setProductConfigData(data);
-  }, [data, productType, projectId]);
+  async function getProductInfo() {
+    setProductConfigData([]);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        `${import.meta.env.VITE_PRODUCT_READ}${productType}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      const productConfigDetails = await data.json();
+      // console.log(racDetails);
+      setProductConfigData(productConfigDetails);
+      setLoading(false);
+      //   window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleInterestChange = (index, field, eventOrValue) => {
     // Determine if the input is an event object or a value
@@ -376,10 +400,6 @@ const LoanProductConfig = () => {
 
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (error) {
-    <p>Error: {error}</p>;
   }
 
   return (
