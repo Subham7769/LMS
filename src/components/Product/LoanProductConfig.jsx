@@ -17,15 +17,10 @@ import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import Button from "../Common/Button/Button";
-import {
-  tenureOptions,
-  tenureTypeOptions,
-  options,
-} from "../../data/OptionsData";
+import { tenureTypeOptions, options } from "../../data/OptionsData";
 import ProductInputFields from "./ProductInputFields";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -72,8 +67,6 @@ const LoanProductConfig = () => {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
-
-  console.log(formData);
 
   useEffect(() => {
     if (productConfigData.length === 0) {
@@ -268,32 +261,7 @@ const LoanProductConfig = () => {
     toast.loading("Updating name, please wait...", { duration: 3000 });
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_PRODUCT_READ}${productType}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Check for token expiration or invalid token
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-
-      const productConfigDetails = await response.json();
-
-      // Replace the data of the field
-      productConfigDetails.productType = newName;
-
-      // Rename disableRac to isDisableRac and keep its value
-      // productConfigDetails.isDisableRac = productConfigDetails.disableRac;
-      // delete productConfigDetails.disableRac;
+      formData.productType = newName;
 
       // Submit the updated data back using PUT request
       const updateResponse = await fetch(
@@ -304,7 +272,7 @@ const LoanProductConfig = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(productConfigDetails),
+          body: JSON.stringify(formData),
         }
       );
 
@@ -346,10 +314,6 @@ const LoanProductConfig = () => {
       }
       dispatch(fetchProductData());
       navigate("/product");
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
     } catch (error) {
       console.error(error);
       // Optionally, handle the error in the UI, such as showing an error message
@@ -403,6 +367,41 @@ const LoanProductConfig = () => {
     return <LoadingState />;
   }
 
+  const columns = [
+    { label: "Simple Interest", key: "interestRate", sortable: true },
+    { label: "PER", key: "interestPeriodType", sortable: true },
+    { label: "Loan Tenure", key: "LoanTenure", sortable: true },
+    { label: "Loan Tenure Type", key: "tenureType", sortable: true },
+    { label: "Repayment Tenure", key: "RepaymentTenure", sortable: true },
+    {
+      label: "Repayment Tenure Type",
+      key: "RepaymentTenureType",
+      sortable: true,
+    },
+    { label: "Actions", key: "actions", sortable: false }, // No sorting for actions
+  ];
+
+  const TableHead = () => {
+    return (
+      <thead className="bg-gray-50">
+        <tr>
+          {columns.map((column) => (
+            <th
+              key={column.key}
+              scope="col"
+              onClick={column.sortable ? () => handleSort(column.key) : null}
+              className={column.sortable ? "cursor-pointer" : ""}
+            >
+              <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider flex">
+                {column.label} {column.sortable && getSortIcon(column.key)}
+              </div>
+            </th>
+          ))}
+        </tr>
+      </thead>
+    );
+  };
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -415,9 +414,12 @@ const LoanProductConfig = () => {
           buttonIcon={TrashIcon}
           onClick={() => handleDeleteLoanProduct(loanProId)}
           circle={true}
+          className={
+            "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+          }
         />
       </div>
-      <ContainerTile>
+      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
         <ProductInputFields
           formData={formData}
           handleChange={handleChange}
@@ -425,53 +427,7 @@ const LoanProductConfig = () => {
         />
         <div>
           <table className="w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" onClick={() => handleSort("interestRate")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Simple Interest {getSortIcon("interestRate")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  onClick={() => handleSort("interestPeriodType")}
-                >
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    PER {getSortIcon("interestPeriodType")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("LoanTenure")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Loan Tenure {getSortIcon("LoanTenure")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("tenureType")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Loan Tenure Type {getSortIcon("tenureType")}
-                  </div>
-                </th>
-
-                <th scope="col" onClick={() => handleSort("RepaymentTenure")}>
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Repayment Tenure {getSortIcon("RepaymentTenure")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  onClick={() => handleSort("RepaymentTenureType")}
-                >
-                  <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                    Repayment Tenure Type {getSortIcon("RepaymentTenureType")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
+            <TableHead />
             <tbody className="bg-white divide-y divide-gray-200">
               {currentItems.length < 1 ? (
                 <tr>
@@ -630,11 +586,13 @@ const LoanProductConfig = () => {
                           </div>
                         )}
                       </button>
-                      <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() => handleDelete(index)}
-                      circle={true}
-                    />
+                      <button
+                        onClick={() => handleDelete(index)}
+                        type="button"
+                        className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      >
+                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -642,44 +600,51 @@ const LoanProductConfig = () => {
             </tbody>
           </table>
           <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
+            <Button
+              buttonIcon={ChevronLeftIcon}
+              onClick={
+                currentPage === 1 ? "" : () => handlePageChange(currentPage - 1)
+              }
+              rectangle={true}
+              className={`
+          ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : ""}
+        `}
               disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
+            />
+
             <span className="text-sm text-gray-700">
               Page {currentPage} of {totalPages}
             </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
+
+            <Button
+              buttonIcon={ChevronRightIcon}
+              onClick={
+                currentPage === totalPages || currentItems.length < 1
+                  ? ""
+                  : () => handlePageChange(currentPage + 1)
+              }
+              rectangle={true}
+              className={`
+          ${
+            currentPage === totalPages || currentItems.length < 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : ""
+          }
+        `}
               disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
+            />
           </div>
+
           <div className="text-right mt-5">
-            <button
-              type="button"
+            <Button
+              buttonIcon={CheckCircleIcon}
+              buttonName="Save"
               onClick={handleSave}
-              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-              Save
-            </button>
+              rectangle={true}
+            />
           </div>
         </div>
-      </ContainerTile>
+      </div>
     </>
   );
 };

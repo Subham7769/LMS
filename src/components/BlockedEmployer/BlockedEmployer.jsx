@@ -8,69 +8,77 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
-import { useDispatch } from "react-redux";
-import { fetchBEData } from '../../redux/Slices/sidebarSlice'
-import ContainerTile from '../Common/ContainerTile/ContainerTile'
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBEData } from "../../redux/Slices/sidebarSlice";
+import {
+  setFormData,
+  resetFormData,
+  setBlockEmployersTempId,
+  fetchBlockedEmployerData,
+  fetchBlockedEmployerName,
+  updateBlockedEmployerName,
+  deleteBlockedEmployerEntry,
+  deleteBlockedEmployer,
+  addBlockedEmployerEntry,
+  cloneBlockedEmployer,
+} from "../../redux/Slices/beSlice";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const BlockedEmployer = () => {
-  const [itemName, setItemName] = useState("");
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { blockEmployersTempId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({
-    blockEmployersTempId: blockEmployersTempId,
-    name: "",
-    cloneBEName: "",
-    fieldType: "Employer",
-    result: 1,
-  });
+  const formData = useSelector((state) => state.blockedEmployer.formData);
+  const data = useSelector((state) => state.blockedEmployer.data);
+  const itemName = useSelector((state) => state.blockedEmployer.itemName);
+  const loading = useSelector((state) => state.blockedEmployer.loading);
+  const error = useSelector((state) => state.blockedEmployer.error);
+  const cloneSuccess = useSelector(
+    (state) => state.blockedEmployer.cloneSuccess
+  );
+
+  useEffect(() => {
+    dispatch(setBlockEmployersTempId(blockEmployersTempId));
+    dispatch(fetchBlockedEmployerData(blockEmployersTempId));
+    dispatch(fetchBlockedEmployerName(blockEmployersTempId));
+  }, [blockEmployersTempId, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      if (error === "Unauthorized") {
+        localStorage.clear();
+        navigate("/login");
+      } else {
+        toast.custom((t) => (
+          <Failed t={t} toast={toast} title={"Error"} message={error} />
+        ));
+      }
+    }
+  }, [error, navigate]);
+
+  useEffect(() => {
+    if (cloneSuccess) {
+      dispatch(fetchBEData());
+      navigate(`/blocked-employer/${cloneSuccess}`);
+    }
+  }, [cloneSuccess, dispatch, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    dispatch(setFormData({ [name]: value }));
   };
 
-  async function fetchData() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_READ}${blockEmployersTempId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      let responseData = await response.json();
-      if (response.ok) {
-        setData(responseData);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function deleteItem(name, ruleName) {
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_DELETE_ENTRY}${blockEmployersTempId}/${ruleName}/block-employers-rule/${name}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.ok) {
+  const handleDeleteItem = (name, ruleName) => {
+    dispatch(
+      deleteBlockedEmployerEntry({
+        blockEmployersTempId,
+        name,
+        ruleName,
+      })
+    ).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
         toast.custom((t) => (
           <Passed
             t={t}
@@ -79,138 +87,40 @@ const BlockedEmployer = () => {
             message={"Item has been deleted successfully"}
           />
         ));
-        fetchData();
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function fetchName() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_NAME_READ}${blockEmployersTempId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const retrievedname = await data.json();
-      setItemName(retrievedname.name);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching name:", error);
-    }
-  }
-
-  async function updateName(newName) {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_NAME_UPDATE}${blockEmployersTempId}/name/${newName}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (data.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Update Successful"}
-            message={"The name was updated successfully"}
-          />
-        ));
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Error Updating Name:", error);
-    }
-  }
-
-  const deleteBE = async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_DELETE}${blockEmployersTempId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      } else if (deleteResponse.ok) {
-        dispatch(fetchBEData())
-        navigate("/blocked-employer");
-        // Refresh the page after navigation
-        // window.location.reload();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    });
   };
 
-  async function postItem(e) {
-    e.preventDefault();
-    // setLoading(true)
-    const payload = {
-      blockEmployerName: formData.name,
-      blockEmployersTempId: formData.blockEmployersTempId,
-      fieldType: formData.fieldType,
-      result: formData.result,
-      ruleName: data && data[0] && data[0].ruleName ? data[0].ruleName : "0",
-    };
-    try {
-      if (formData.name === "") {
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Adding Failed"}
-            message={"Cannot post empty data"}
-          />
-        ));
-        return;
-      }
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_CREATE_ENTRY}`,
-        {
-          method: data.length === 0 ? "POST" : "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ blockEmployersRules: [payload] }),
+  const handleUpdateName = (newName) => {
+    dispatch(updateBlockedEmployerName({ blockEmployersTempId, newName })).then(
+      (action) => {
+        if (action.type.endsWith("fulfilled")) {
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Update Successful"}
+              message={"The name was updated successfully"}
+            />
+          ));
         }
-      );
-      if (response.ok) {
+      }
+    );
+  };
+
+  const handleDeleteBE = () => {
+    dispatch(deleteBlockedEmployer(blockEmployersTempId)).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
+        dispatch(fetchBEData());
+        navigate("/blocked-employer");
+      }
+    });
+  };
+
+  const handlePostItem = (e) => {
+    e.preventDefault();
+    dispatch(addBlockedEmployerEntry()).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
         toast.custom((t) => (
           <Passed
             t={t}
@@ -219,47 +129,34 @@ const BlockedEmployer = () => {
             message={"Item was added successfully"}
           />
         ));
-        fetchData();
-        setFormData({
-          blockEmployersTempId: blockEmployersTempId,
-          name: "",
-          cloneBEName: "",
-          fieldType: "Employer",
-          result: 1,
-        })
+      } else if (action.type.endsWith("rejected")) {
+        toast.custom((t) => (
+          <Failed
+            t={t}
+            toast={toast}
+            title={"Adding Failed"}
+            message={action.payload || "Failed to add item"}
+          />
+        ));
       }
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
+    });
+  };
 
-  const createCloneBE = async (cloneBEName) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_BLOCKED_EMPLOYER_CREATE_CLONE}${blockEmployersTempId}/clone/${cloneBEName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+  const createCloneBE = (cloneBEName) => {
+    dispatch(cloneBlockedEmployer({ blockEmployersTempId, cloneBEName })).then(
+      (action) => {
+        if (action.type.endsWith("fulfilled")) {
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Clone Created"}
+              message={"Clone has been created successfully"}
+            />
+          ));
         }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
       }
-      const beDetails = await data.json();
-      console.log(beDetails);
-      dispatch(fetchBEData())
-      navigate("/blocked-employer/" + beDetails.blockEmployerTempId);
-      // window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+    );
   };
 
   const handleClone = () => {
@@ -269,26 +166,30 @@ const BlockedEmployer = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    fetchData();
-    fetchName();
-  }, [blockEmployersTempId]);
-
   if (loading) {
     return <LoadingState />;
   }
-  console.log("test");
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
-        <DynamicName initialName={itemName} onSave={updateName} />
+        <DynamicName initialName={itemName} onSave={handleUpdateName} />
         <div className="flex gap-4">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => deleteBE()} circle={true} />
+          <Button
+            buttonIcon={TrashIcon}
+            onClick={handleDeleteBE}
+            circle={true}
+          />
         </div>
       </div>
-      <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneBE} initialName={itemName} />
+      <CloneModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onCreateClone={createCloneBE}
+        initialName={itemName}
+      />
       <ContainerTile>
         <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
           <div className="relative w-1/4">
@@ -300,7 +201,11 @@ const BlockedEmployer = () => {
               placeHolder="Blocked Employer"
             />
           </div>
-          <Button buttonIcon={PlusIcon} onClick={postItem} circle={true} />
+          <Button
+            buttonIcon={PlusIcon}
+            onClick={handlePostItem}
+            circle={true}
+          />
         </div>
         {data.map((item, index) => {
           return item.blockEmployersName.map((name, i) => (
@@ -308,12 +213,15 @@ const BlockedEmployer = () => {
               <div className="relative w-1/4">
                 <InputText inputValue={name} disabled={true} />
               </div>
-              <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} />
+              <Button
+                buttonIcon={TrashIcon}
+                onClick={() => handleDeleteItem(name, item.ruleName)}
+                circle={true}
+              />
             </div>
           ));
         })}
       </ContainerTile>
-
     </>
   );
 };

@@ -5,6 +5,7 @@ import recoverySlice from "./Slices/recoverySlice";
 import tclSlice from "./Slices/tclSlice";
 import projectSlice from "./Slices/projectSlice";
 import productSlice from "./Slices/productSlice";
+import beSlice from "./Slices/beSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     tcl: tclSlice,
     project: projectSlice,
     product: productSlice,
+    blockedEmployer: beSlice,
   },
 });
 
