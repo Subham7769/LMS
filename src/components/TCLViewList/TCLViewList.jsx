@@ -15,12 +15,15 @@ import {
   deleteTCL,
   clearTableData,
   removeTableDataByIndex,
+  deleteTCLFile,
+  uploadTCLFile,
 } from "../../redux/Slices/tclSlice";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingState from "../LoadingState/LoadingState";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   // const [tableData, setTableData] = useState([]);
   const [message, setMessage] = useState("");
   const { tclId } = useParams();
@@ -35,8 +38,18 @@ const TCLViewList = () => {
     setMessage(""); // Reset message on selection change
   };
 
-  const handleDelete = (index) => {
-    dispatch(removeTableDataByIndex(index));
+  const handleDelete = async (index) => {
+    const tclFileId = tableData[index].tclFileId;
+    try {
+      await dispatch(deleteTCLFile({ tclFileId })).unwrap();
+      dispatch(removeTableDataByIndex(index));
+      dispatch(fetchData(tclId));
+      setFileSelectedOption(null);
+      // dispatch(removeTCLById(tclFileId)); // Remove from tableData
+    } catch (err) {
+      console.error("Failed to delete:", err);
+      setMessage("Failed to delete item. Please try again.");
+    }
   };
 
   const addData = () => {
@@ -69,6 +82,29 @@ const TCLViewList = () => {
       .catch((err) => console.error(err));
   };
 
+  // Handle file input change
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  // Handle file upload
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
+      setMessage("Please choose a file to upload.");
+      return;
+    }
+
+    dispatch(uploadTCLFile({ tclId, selectedFile }))
+      .unwrap()
+      .then((successMessage) => {
+        setMessage(successMessage);
+        setSelectedFile(null); // Clear the file input
+      })
+      .catch((errorMessage) => {
+        setMessage(errorMessage);
+      });
+  };
+
   useEffect(() => {
     dispatch(fetchName(tclId));
     dispatch(fetchData(tclId));
@@ -84,6 +120,9 @@ const TCLViewList = () => {
     <p>Error: {error}</p>;
   }
 
+  // Remove tclFileId from each item in tableData
+  const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
+
   return (
     <>
       {/* Select & Add to List */}
@@ -94,6 +133,20 @@ const TCLViewList = () => {
           onClick={() => handleDeleteTCL(tclId)}
           circle={true}
         />
+      </div>
+      <div className="mb-4 bg-gray-100 p-5 py-10 rounded-xl shadow-md border-gray-300 border">
+        <div className="grid grid-cols-4 gap-4">
+          <div>
+            <input type="file" onChange={handleFileChange} />
+          </div>
+          <div>
+            <Button
+              buttonName={"Upload"}
+              onClick={handleFileUpload}
+              rectangle={true}
+            />
+          </div>
+        </div>
       </div>
       <SelectAndAdd
         ListName={"Select TCL List"}
@@ -111,7 +164,7 @@ const TCLViewList = () => {
       <ListTable
         ListName={"TCL List"}
         ListHeader={TclViewListHeaderList}
-        ListItem={tableData}
+        ListItem={tableDataWithoutId}
         HandleAction={handleDelete}
         Searchable={false}
       />
