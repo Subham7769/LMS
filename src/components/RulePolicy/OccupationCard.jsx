@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useOccupationFormState from "../../utils/useOccupationFormState";
 import TagInput from "../TagInput/TagInput";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const OccupationCard = ({ occupationData, fetchData }) => {
   const { rulePolicyId } = useParams();
@@ -46,7 +47,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
 
   return (
     <>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full">
+      <ContainerTile>
         <div className="text-lg mb-3">Occupation</div>
         <TagInput
           formData={formData}
@@ -58,7 +59,7 @@ const OccupationCard = ({ occupationData, fetchData }) => {
           inputNumberName={"points"}
           inputNumberLabel={"Add Points"}
         />
-      </div>
+      </ContainerTile>
     </>
   );
 };

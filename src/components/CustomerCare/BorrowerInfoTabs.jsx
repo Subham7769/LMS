@@ -29,13 +29,13 @@ const BorrowerInfoTabs = () => {
       <div className="flex justify-between">
         <div className="flex mb-10">
           {tabs.slice(0, 6).map((tab) => (
-            <div className="border-r border-gray-400 px-2" key={tab.path}>
+            <div className=" px-2 " key={tab.path}>
               <Link
                 to={tab.path}
-                className={`py-1 px-1.5 ${
+                className={`py-1 px-1.5 text-[16px] rounded ${
                   currentPath === tab.path
-                    ? "text-white bg-indigo-500 rounded"
-                    : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+                    ? "text-white bg-indigo-500 "
+                    : "text-indigo-600 hover:bg-gray-200 hover:text-indigo-700 hover:font-medium"
                 }`}
               >
                 {tab.label}
@@ -46,10 +46,10 @@ const BorrowerInfoTabs = () => {
         <div className="px-2">
           <Link
             to={tabs[6].path}
-            className={`bg-gray-500 rounded py-1 px-1.5 ${
+            className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${
               currentPath === tabs[6].path
                 ? "text-white bg-indigo-500 rounded"
-                : "text-white hover:border-b hover:border-red-600 hover:font-medium"
+                : "text-white hover:border-b hover:bg-indigo-600 hover:font-medium"
             }`}
           >
             {tabs[6].label}

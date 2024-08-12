@@ -14,6 +14,7 @@ import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelectNew from "../Common/DynamicSelect/InputSelect";
 import InputSelect from "../Common/InputSelect/InputSelect";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const BareMinimumExp = () => {
   const [ExpenseDataNew, setExpenseDataNew] = useState([]);
@@ -228,51 +229,54 @@ const BareMinimumExp = () => {
           Bare Minimum Expenses
         </b>
       </h2>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <div className="grid grid-cols-5 gap-4 items-end border-b border-gray-300 pb-5">
-          <InputText
-            labelName="Expenses"
-            inputName="expensesName"
-            inputValue={formData.expensesName}
-            onChange={handleInputChange}
-            placeHolder="Food and Living"
-          />
-          <InputSelect
-            labelName="Type"
-            inputOptions={typeOptions}
-            inputName="dependantType"
-            inputValue={formData.dependantType}
-            onChange={handleInputChange}
-            searchable={false}
-          />
-          <InputSelect
-            labelName="Expenses Frequency"
-            inputOptions={frequencyOptions}
-            inputName="expensesFrequency"
-            inputValue={formData.expensesFrequency}
-            onChange={handleInputChange}
-            searchable={false}
-          />
-          <InputNumber
-            labelName="Bare Min Expense Per Person"
-            inputName="bareMinimum"
-            inputValue={formData.bareMinimum}
-            onChange={handleInputChange}
-            placeHolder="200"
-          />
-          <Button
-            buttonIcon={PlusIcon}
-            onClick={handleAddFields}
-            circle={true}
-          />
-        </div>
+      <div className="flex flex-col gap-5">
+        <ContainerTile>
+          <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
+            <InputText
+              labelName="Expenses"
+              inputName="expensesName"
+              inputValue={formData.expensesName}
+              onChange={handleInputChange}
+              placeHolder="Food and Living"
+            />
+            <InputSelect
+              labelName="Type"
+              inputOptions={typeOptions}
+              inputName="dependantType"
+              inputValue={formData.dependantType}
+              onChange={handleInputChange}
+              searchable={false}
+            />
+            <InputSelect
+              labelName="Expenses Frequency"
+              inputOptions={frequencyOptions}
+              inputName="expensesFrequency"
+              inputValue={formData.expensesFrequency}
+              onChange={handleInputChange}
+              searchable={false}
+            />
+            <InputNumber
+              labelName="Bare Min Expense Per Person"
+              inputName="bareMinimum"
+              inputValue={formData.bareMinimum}
+              onChange={handleInputChange}
+              placeHolder="200"
+            />
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={handleAddFields}
+              circle={true}
+            />
+          </div>
+        </ContainerTile>
+        <ContainerTile>
         {(ExpenseDataNew.length === 0
           ? ExpenseData.expenses
           : ExpenseDataNew
         ).map((expdata) => (
           <div
             key={expdata.id}
-            className="grid grid-cols-5 gap-4 items-end mt-5"
+            className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end border-b border-b-gray-400 py-10"
           >
             <InputText
               labelName="Expenses"
@@ -327,13 +331,11 @@ const BareMinimumExp = () => {
                 buttonIcon={TrashIcon}
                 onClick={() => handleDelete(expdata.id)}
                 circle={true}
-                className={
-                  "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-                }
               />
             </div>
           </div>
         ))}
+        </ContainerTile>
       </div>
     </>
   );

@@ -134,7 +134,7 @@ const ListTable = ({
   const dataToRender = searchTerm ? filteredData : sortedData;
   // console.log(dataToRender)
   return (
-    <div className="bg-gray-100 py-6 rounded-xl mt-4">
+    <div className="shadow-md bg-gray-100 border-gray-300 border py-6 rounded-xl mt-4">
       <div className="px-4 sm:px-6 lg:px-8">
         {Searchable && (
           <div className="mb-5 w-full">

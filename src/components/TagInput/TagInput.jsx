@@ -58,7 +58,7 @@ const TagInput = ({
       {formData.tags.map((tag, index) => (
         <div
           key={index}
-          className="bg-gray-300 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
+          className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
         >
           <div>{tag[inputSelectName ? inputSelectName : inputTextName]}</div>
           <div>|</div>
@@ -66,7 +66,7 @@ const TagInput = ({
           <div>
             <XCircleIcon
               onClick={() => deleteTag(tag)}
-              className="block h-5 w-5 cursor-pointer "
+              className="block h-5 w-5 cursor-pointer text-gray-900"
               aria-hidden="true"
             />
           </div>

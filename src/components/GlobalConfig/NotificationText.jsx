@@ -10,6 +10,7 @@ import { notiChannelOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputTextarea from "../Common/InputTextArea/InputTextArea";
 import InputSelect from "../Common/InputSelect/InputSelect";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const NotificationText = () => {
   const [inputList, setInputList] = useState([]);
@@ -100,13 +101,13 @@ const NotificationText = () => {
           Notification Text
         </b>
       </h2>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+      <ContainerTile>
         {inputList.map((notdata) => (
           <div
             key={notdata.id}
             className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
           >
-            <div className="grid grid-cols-4 gap-8">
+            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputText
                 labelName="Notification Type"
                 inputName="notificationType"
@@ -133,7 +134,7 @@ const NotificationText = () => {
                 searchable={false}
               />
             </div>
-            <div className="grid grid-cols-4 gap-8">
+            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputTextarea
                 labelName="Notification Message En"
                 rowCount={2}
@@ -172,7 +173,7 @@ const NotificationText = () => {
             </div>
           </div>
         ))}
-      </div>
+      </ContainerTile>
     </>
   );
 };

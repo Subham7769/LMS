@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   const [inputList, setInputList] = useState([]);
@@ -293,9 +294,9 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="shadow-md bg-gray-100 rounded-xl p-6">
+      <ContainerTile>
         <div className="text-lg mb-5">Max Finance Amount With Tenure</div>
-        <div className="grid grid-cols-4 gap-5 items-end">
+        <div className="grid grid-cols-3 gap-5 items-end">
           <InputNumber
             labelName={"Amount"}
             inputName={"financeAmount"}
@@ -418,6 +419,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                         >
                           <TrashIcon className="h-5 w-5" aria-hidden="true" />
                         </button>
+                        
                       )}
                     </td>
                   </tr>
@@ -453,9 +455,10 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
             </button>
           </div>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };
 
 export default MaxFinAmtTen;
+// shadow-md bg-gray-100 rounded-xl p-6

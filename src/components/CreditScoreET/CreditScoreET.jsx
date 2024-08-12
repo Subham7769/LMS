@@ -16,6 +16,7 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
@@ -371,7 +372,7 @@ const CreditScoreET = () => {
         onCreateClone={createCloneCSET}
         initialName={creditScoreETName}
       />
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+      <ContainerTile>
         <div className="grid grid-cols-4 gap-2 mb-5">
           <InputSelect
             labelName={"Rule 1"}
@@ -450,7 +451,7 @@ const CreditScoreET = () => {
             Save
           </button>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };

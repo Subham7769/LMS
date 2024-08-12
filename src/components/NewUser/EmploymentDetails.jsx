@@ -7,6 +7,7 @@ import LoadingState from "../LoadingState/LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 function EmploymentDetails() {
   // Params Data, API urls and Auth Token
@@ -126,7 +127,7 @@ function EmploymentDetails() {
       <h2 className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md w-1/5 cursor-pointer">
         <b>Employment Details</b>
       </h2>
-      <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
+      <ContainerTile>
         <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {/* Full Name */}
             <InputText
@@ -195,7 +196,7 @@ function EmploymentDetails() {
         <div className="flex items-center justify-end gap-4 mt-4">
           <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={updateData} rectangle={true}/>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 }

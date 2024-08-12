@@ -10,6 +10,7 @@ import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { useDispatch } from "react-redux";
 import { fetchBEData } from '../../redux/Slices/sidebarSlice'
+import ContainerTile from '../Common/ContainerTile/ContainerTile'
 
 const BlockedEmployer = () => {
   const [itemName, setItemName] = useState("");
@@ -284,11 +285,11 @@ const BlockedEmployer = () => {
         <DynamicName initialName={itemName} onSave={updateName} />
         <div className="flex gap-4">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => deleteBE()} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
+          <Button buttonIcon={TrashIcon} onClick={() => deleteBE()} circle={true} />
         </div>
       </div>
       <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createCloneBE} initialName={itemName} />
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+      <ContainerTile>
         <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
           <div className="relative w-1/4">
             <InputText
@@ -307,11 +308,12 @@ const BlockedEmployer = () => {
               <div className="relative w-1/4">
                 <InputText inputValue={name} disabled={true} />
               </div>
-              <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
+              <Button buttonIcon={TrashIcon} onClick={() => deleteItem(name, item.ruleName)} circle={true} />
             </div>
           ));
         })}
-      </div>
+      </ContainerTile>
+
     </>
   );
 };

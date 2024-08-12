@@ -146,7 +146,7 @@ const NewCreatedCreditScore = () => {
   };
   return (
     <>
-      <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
+      <div className="flex justify-between items-center">
         <DynamicName initialName={creditScoreName} onSave={handleUpdateCSE} />
         <div className="flex items-center justify-between gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
@@ -154,9 +154,6 @@ const NewCreatedCreditScore = () => {
             buttonIcon={TrashIcon}
             onClick={() => handleDelete(creditScoreId)}
             circle={true}
-            className={
-              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-            }
           />
         </div>
       </div>

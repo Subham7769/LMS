@@ -5,6 +5,7 @@ import { Passed } from "../Toasts";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const Disbursement = () => {
   const [disbursementData, setdisbursementData] = useState([]);
@@ -120,7 +121,7 @@ const Disbursement = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
+      <ContainerTile>
         <div className="text-lg">Proceed for disbursement</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputText
@@ -143,7 +144,7 @@ const Disbursement = () => {
           buttonName={"Submit"}
           onClick={handleDisbursement}
         />
-      </div>
+      </ContainerTile>
     </>
   );
 };

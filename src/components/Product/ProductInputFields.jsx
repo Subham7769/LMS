@@ -5,14 +5,6 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 
-import useAllProjectInfo from "../../utils/useAllProjectInfo";
-import useDBInfo from "../../utils/useDBInfo";
-import useBEInfo from "../../utils/useBEInfo";
-import useCreditScoreEq from "../../utils/useCreditScoreEq";
-import useRulePolicy from "../../utils/useRulePolicy";
-import useRecoveryInfo from "../../utils/useRecoveryInfo";
-import useTCLInfo from "../../utils/useTCLInfo";
-import useRACInfo from "../../utils/useRACInfo";
 import {
   options,
   tenureOptions,
@@ -21,30 +13,20 @@ import {
 import { PlusIcon } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { Failed } from "../Toasts";
-import { useCreditScoreEligibleTenure } from "../../utils/useCreditScoreEligibleTenure";
+import { useSelector } from "react-redux";
+
 
 const ProductInputFields = ({ formData, handleChange, setFormData }) => {
-  // Custom Hooks
-  const RACDataInfo = useRACInfo();
-  const DBRConfigInfo = useDBInfo();
-  const BEDataInfo = useBEInfo();
-  const RPDataInfo = useRulePolicy();
-  const CSDataInfo = useCreditScoreEq();
-  const CSETDataInfo = useCreditScoreEligibleTenure();
-  const ProjectDataInfo = useAllProjectInfo();
-  const TCLDataInfo = useTCLInfo();
-  const RecoveryDataInfo = useRecoveryInfo();
-
-  // Options
-  const [dbrOptions, setDbrOptions] = useState([]);
-  const [beOptions, setBeOptions] = useState([]);
-  const [rpOptions, setRpOptions] = useState([]);
-  const [csOptions, setCsOptions] = useState([]);
-  const [csETOptions, setCsETOptions] = useState([]);
-  const [racOptions, setRacOptions] = useState([]);
-  const [projectOptions, setProjectOptions] = useState([]);
-  const [TCLOptions, setTCLOptions] = useState([]);
-  const [recoveryOptions, setRecoveryOptions] = useState([]);
+  // Sidebar Redux Data
+  const RACDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'RAC')[0].submenuItems);;
+  const DBRConfigInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'DBR Config')[0].submenuItems);
+  const BEDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Blocked Employer')[0].submenuItems);
+  const RPDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Rule Policy')[0].submenuItems);
+  const CSDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Credit Score')[0].submenuItems);
+  const CSETDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Credit Score Eligible Tenure')[0].submenuItems);
+  const ProjectDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Project')[0].submenuItems);
+  const TCLDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'TCL')[0].submenuItems);
+  const RecoveryDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Recovery')[0].submenuItems);
 
   // Entries State
   const [interestEligibleTenure, setInterestEligibleTenure] = useState({
@@ -96,60 +78,20 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
     }
   };
 
+  // Reusable function for formatting dropdown data
+  function formateDataDropDown(replacerString, data) {
+    return data.map(({ name, href }) => ({
+      value: href.replace(replacerString, ""),
+      label: name,
+    }));
+  }
   useEffect(() => {
-    const formattedRACData = RACDataInfo.map(({ name, href }) => ({
-      value: href.replace("/newrac/", ""),
-      label: name,
-    }));
-    const formattedCSData = CSDataInfo.map(({ name, href }) => ({
-      value: href.replace("/credit-score/", ""),
-      label: name,
-    }));
-    const formattedCSETData = CSETDataInfo.map(({ name, href }) => ({
-      value: href.replace("/credit-score-eligible-tenure/", ""),
-      label: name,
-    }));
-    const finalData = DBRConfigInfo.map(({ name, href }) => ({
-      value: href.replace("/newdbc/", ""),
-      label: name,
-    }));
-    const formattedProjectData = ProjectDataInfo.map(({ name, href }) => ({
-      value: href.replace("/project/", ""),
-      label: name,
-    }));
-    const formattedBEData = BEDataInfo.map(({ name, href }) => ({
-      value: href.replace("/blocked-employer/", ""),
-      label: name,
-    }));
-    const rpData = RPDataInfo.map(({ name, href }) => ({
-      value: href.replace("/rule-policy/", ""),
-      label: name,
-    }));
-    const formattedTCLData = TCLDataInfo.map(({ name, href }) => ({
-      value: href.replace("/tcl/", ""),
-      label: name,
-    }));
-    const RecoveryData = RecoveryDataInfo.map(({ name, href }) => ({
-      value: href.replace("/recovery/", ""),
-      label: name,
-    }));
 
-    setRecoveryOptions(RecoveryData);
-    setRacOptions(formattedRACData);
-    setDbrOptions(finalData);
-    setProjectOptions(formattedProjectData);
-    setBeOptions(formattedBEData);
-    setRpOptions(rpData);
-    setCsOptions(formattedCSData);
-    setCsETOptions(formattedCSETData);
-    setTCLOptions(formattedTCLData);
   }, [
-    RACDataInfo,
     DBRConfigInfo,
     ProjectDataInfo,
     BEDataInfo,
     RPDataInfo,
-    CSDataInfo,
     TCLDataInfo,
     RecoveryDataInfo,
   ]);
@@ -169,7 +111,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           />
           <InputSelect
             labelName="RAC"
-            inputOptions={racOptions}
+            inputOptions={formateDataDropDown("/newrac/", RACDataInfo)}
             inputName="racId"
             inputValue={formData.racId}
             onChange={handleChange}
@@ -177,7 +119,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           />
           <InputSelect
             labelName="Project"
-            inputOptions={projectOptions}
+            inputOptions={formateDataDropDown("/project/", ProjectDataInfo)}
             inputName="projectId"
             inputValue={formData.projectId}
             onChange={handleChange}
@@ -185,14 +127,14 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           />
           <InputSelect
             labelName="TCL"
-            inputOptions={TCLOptions}
+            inputOptions={formateDataDropDown("/tcl/", TCLDataInfo)}
             inputName="tclFileId"
             inputValue={formData.tclFileId}
             onChange={handleChange}
             isSearchable={false}
           />
           <InputSelect
-            inputOptions={recoveryOptions}
+            inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
             labelName="Recovery Type"
             inputName="recoveryEquationTempId"
             isSearchable={false}
@@ -203,7 +145,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
         <div className="grid grid-cols-5 gap-5 items-end mb-4">
           <InputSelect
             labelName="DBR Config"
-            inputOptions={dbrOptions}
+            inputOptions={formateDataDropDown("/newdbc/", DBRConfigInfo)}
             inputName="dbcTempId"
             inputValue={formData.dbcTempId}
             onChange={handleChange}
@@ -211,7 +153,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           />
           <InputSelect
             labelName="Blocked Employer"
-            inputOptions={beOptions}
+            inputOptions={formateDataDropDown("/blocked-employer/", BEDataInfo)}
             inputName="blockEmployersTempId"
             inputValue={formData.blockEmployersTempId}
             onChange={handleChange}
@@ -219,23 +161,23 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           />
           <InputSelect
             labelName="Rule Policy"
-            inputOptions={rpOptions}
+            inputOptions={formateDataDropDown("/rule-policy/", RPDataInfo)}
             inputName="rulePolicyTempId"
             inputValue={formData.rulePolicyTempId}
             onChange={handleChange}
             isSearchable={false}
           />
           <InputSelect
-            labelName="Credit Score Rule"
-            inputOptions={csOptions}
+            labelName="Credit Score"
+            inputOptions={formateDataDropDown("/credit-score/", CSDataInfo)}
             inputName="creditScoreEqTempId"
             inputValue={formData.creditScoreEqTempId}
             onChange={handleChange}
             isSearchable={false}
           />
           <InputSelect
-            labelName="Credit Score Eligible Tenure"
-            inputOptions={csETOptions}
+            labelName="Eligible Tenure"
+            inputOptions={formateDataDropDown("/credit-score-eligible-tenure/", CSETDataInfo)}
             inputName="creditScoreEtTempId"
             inputValue={formData.creditScoreEtTempId}
             onChange={handleChange}

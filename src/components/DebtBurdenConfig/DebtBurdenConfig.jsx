@@ -22,6 +22,7 @@ import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { fetchDBRData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -493,7 +494,7 @@ const DebtBurdenConfig = () => {
         onCreateClone={createCloneDBC}
         initialName={name}
       />
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+      <ContainerTile>
         <div className="grid grid-cols-8 gap-2">
           <div className="relative">
             <InputSelect
@@ -642,7 +643,7 @@ const DebtBurdenConfig = () => {
             </button>
           </div>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };

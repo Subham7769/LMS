@@ -21,6 +21,7 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const options = [
   { value: "DAILY", label: "DAILY" },
@@ -548,7 +549,7 @@ const CreditPolicy = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <MaxFinAmtTen FAWTData={FAWTData} fetchData={fetchData} />
       {riskBasedPricingEquation ? (
-        <div className="shadow-md bg-gray-100 rounded-xl p-6 my-6">
+        <ContainerTile>
           <div className=" text-center my-4 text-lg">
             Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
             (*Length of Service*C%) + (*Cities*D%)]
@@ -674,9 +675,9 @@ const CreditPolicy = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        </ContainerTile>
       ) : null}
-      <div className="shadow-md rounded-xl p-6 bg-gray-100">
+      <ContainerTile>
         <div className="text-lg">Risk Based Pricing</div>
         <div className="grid grid-cols-5 gap-8 my-5 items-end">
           <SelectAndNumber
@@ -955,7 +956,7 @@ const CreditPolicy = () => {
             Save
           </button>
         </div>
-      </div>
+      </ContainerTile>
       <LengthofService
         LOSData={LOSData}
         operatorOptions={operatorOptions}
@@ -963,7 +964,7 @@ const CreditPolicy = () => {
         fetchData={fetchData}
         rulePolicyId={rulePolicyId}
       />
-      <div className="flex gap-10">
+      <div className="flex gap-8">
         <CityCard cityData={cityData} fetchData={fetchData} />
         <OccupationCard occupationData={occupationData} fetchData={fetchData} />
       </div>

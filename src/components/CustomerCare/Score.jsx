@@ -1,6 +1,7 @@
 import React from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const Score = () => {
   const url = "/simah-recent-response";
@@ -22,7 +23,7 @@ const Score = () => {
   } = score;
 
   return (
-    <div className="shadow-md rounded-xl py-5 px-10 border border-red-600 w-fit mx-auto">
+    <ContainerTile>
       <div className="flex gap-10">
         <div className="py-2 pr-10 flex flex-col border-r border-gray-300">
           <ScoreDetail label="Score" value={scscore} />
@@ -38,7 +39,7 @@ const Score = () => {
           />
         </div>
       </div>
-    </div>
+    </ContainerTile>
   );
 };
 

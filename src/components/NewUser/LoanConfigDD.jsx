@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const loanTypeOptionsInitital = [
   { value: "Cash loan", label: "Cash Loan" },
@@ -183,7 +184,8 @@ const LoanConfigDD = () => {
   }, [loanType]); // Depend on loanType changes
 
   return (
-    <>
+    <div className="flex flex-col gap-5">
+    <ContainerTile>
       <div className="grid grid-cols-5 gap-4 items-end">
         <InputSelect
           labelName={"Loan Type"}
@@ -212,6 +214,7 @@ const LoanConfigDD = () => {
           />
         </div>
       </div>
+      </ContainerTile>
       {showModal ? (
         <LoanConfig
           visible={showModal}
@@ -227,7 +230,7 @@ const LoanConfigDD = () => {
       ) : (
         ""
       )}
-    </>
+    </div>
   );
 };
 

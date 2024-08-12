@@ -4,6 +4,7 @@ import LoadingState from "../LoadingState/LoadingState";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CommentsModal = ({ closeModal, message }) => {
   return (
@@ -43,36 +44,33 @@ const EligibilityResults = ({ eligibilityResults }) => {
 
   return (
     <>
-      <div className="p-4 grid max-md:grid-cols-1 grid-cols-2 2xl:grid-cols-3 gap-3">
+      <div className="p-4 grid max-md:grid-cols-1 grid-cols-2 2xl:grid-cols-2 gap-3">
         {projects.map((project, index) => (
-          <div
-            key={index}
-            className="rounded-xl px-2 py-4 shadow-md border border-red-600"
-          >
-            <h2 className="text-[16px] text-center font-semibold mb-4">
+          <ContainerTile>
+            <h2 className="text-[16px] text-center font-semibold">
               {project.projectName}
             </h2>
             <table className="table-auto w-full border-collapse">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-2 text-[14px] font-semibold border-b">
+                  <th className="px-4 py-2 text-[14px] font-semibold border-b border-gray-400">
                     Product
                   </th>
-                  <th className="px-4 py-2 text-[14px] font-semibold border-b">
+                  <th className="px-4 py-2 text-[14px] font-semibold border-b border-gray-400">
                     Eligibility
                   </th>
-                  <th className="px-4 py-2 text-[14px] font-semibold border-b">
+                  <th className="px-4 py-2 text-[14px] font-semibold border-b border-gray-400">
                     Comments
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {project.loanProducts.map((product, idx) => (
-                  <tr key={idx} className="border-t border-b">
-                    <td className="px-4 py-2 border-r text-[11px]">
+                  <tr key={idx} className="border-t border-b border-gray-400">
+                    <td className="px-4 py-2 border-r text-[11px] border-gray-400">
                       {product.productName}
                     </td>
-                    <td className="px-4 py-2 text-[11px] text-green-500 font-semibold flex items-center justify-center border-r">
+                    <td className="px-4 py-2 text-[11px] text-green-500 font-semibold flex items-center justify-center border-r border-gray-400">
                       {product.eligibleStatus === "ELIGIBLE" ? (
                         <CheckBadgeIcon className="2xl:h-7 2xl:w-7 h-5 w-5" />
                       ) : (
@@ -99,7 +97,7 @@ const EligibilityResults = ({ eligibilityResults }) => {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ContainerTile>
         ))}
       </div>
     </>

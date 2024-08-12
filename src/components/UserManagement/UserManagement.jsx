@@ -4,6 +4,7 @@ import Button from "../Common/Button/Button";
 import AddUserModal from "./AddUserModal";
 import ActionOption from "./ActionOption";
 import Loader from "../Common/Loader/Loader";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const UserManagement = ({ role }) => {
   // Data States
@@ -59,7 +60,7 @@ const UserManagement = ({ role }) => {
       <Toaster position="top-center" reverseOrder={false} />
 
       {allUsersInfo.length > 0 ? (
-        <div className="shadow-md bg-gray-100 rounded-xl p-6">
+        <ContainerTile>
           <div className="flex justify-between mb-5 items-end">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
               Users List
@@ -114,7 +115,7 @@ const UserManagement = ({ role }) => {
               </tbody>
             </table>
           </div>
-        </div>
+        </ContainerTile>
       ) : (
         <Loader />
       )}

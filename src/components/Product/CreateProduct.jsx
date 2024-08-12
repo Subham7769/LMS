@@ -6,7 +6,8 @@ import { Passed } from "../Toasts";
 import Button from "../Common/Button/Button";
 import ProductInputFields from "./ProductInputFields";
 import { useDispatch } from "react-redux";
-import {fetchProductData } from '../../redux/Slices/sidebarSlice'
+import { fetchProductData } from '../../redux/Slices/sidebarSlice'
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
@@ -94,8 +95,8 @@ const CreateProduct = () => {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
 
-          dispatch(fetchProductData())
-          navigate("/product/");
+        dispatch(fetchProductData())
+        navigate("/product/");
 
       }
     } catch (error) {
@@ -116,86 +117,85 @@ const CreateProduct = () => {
           {productName}
         </b>
       </h2>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <ProductInputFields
-          formData={formData}
-          handleChange={handleChange}
-          setFormData={setFormData}
-        />
-        <div>
-          <table className="w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                {[
-                  "Simple Interest",
-                  "PER",
-                  "Tenure",
-                  "Tenure Type",
-                  "Repayment Tenure",
-                  "Repayment Tenure Type",
-                  "Actions",
-                ].map((item, index) => (
-                  <th scope="col" key={index}>
-                    <div
-                      className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}
-                    >
-                      {item}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {formData.interestEligibleTenure.length < 1 ? (
+      <ContainerTile>
+          <ProductInputFields
+            formData={formData}
+            handleChange={handleChange}
+            setFormData={setFormData}
+          />
+          <div>
+            <table className="w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No Data To Show Yet
-                  </td>
+                  {[
+                    "Simple Interest",
+                    "PER",
+                    "Tenure",
+                    "Tenure Type",
+                    "Repayment Tenure",
+                    "Repayment Tenure Type",
+                    "Actions",
+                  ].map((item, index) => (
+                    <th scope="col" key={index}>
+                      <div
+                        className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}
+                      >
+                        {item}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
-              ) : (
-                formData.interestEligibleTenure.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
-                  >
-                    <td className="py-2 whitespace-nowrap">
-                      {item.interestRate}
-                    </td>
-                    <td className="py-2 whitespace-nowrap">
-                      {item.interestPeriodType}
-                    </td>
-                    <td className="py-2 whitespace-nowrap">
-                      {item.loanTenure}
-                    </td>
-                    <td className="py-2 whitespace-nowrap">
-                      {item.loanTenureType}
-                    </td>
-                    <td className="py-2 whitespace-nowrap">
-                      {item.repaymentTenure}
-                    </td>
-                    <td className="py-2 whitespace-nowrap">
-                      {item.repaymentTenureType}
-                    </td>
-                    <td className="py-2">
-                      <Button
-                        buttonIcon={TrashIcon}
-                        onClick={() => handleDelete(index)}
-                        circle={true}
-                        className={
-                          "bg-red-600 p-2 hover:bg-red-500 focus-visible:outline-red-600"
-                        }
-                      />
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {formData.interestEligibleTenure.length < 1 ? (
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
+                      No Data To Show Yet
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                ) : (
+                  formData.interestEligibleTenure.map((item, index) => (
+                    <tr
+                      key={index}
+                      className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
+                    >
+                      <td className="py-2 whitespace-nowrap">
+                        {item.interestRate}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.interestPeriodType}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.loanTenure}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.loanTenureType}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.repaymentTenure}
+                      </td>
+                      <td className="py-2 whitespace-nowrap">
+                        {item.repaymentTenureType}
+                      </td>
+                      <td className="py-2">
+                        <Button
+                          buttonIcon={TrashIcon}
+                          onClick={() => handleDelete(index)}
+                          circle={true}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+      </ContainerTile>
+
       <div className="flex mt-4  justify-end ">
         {/* Submit Button */}
         <Button

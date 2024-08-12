@@ -24,6 +24,7 @@ import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
 import { fetchData } from "../../redux/Slices/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const Project = () => {
   const [ProjectData, setProjectData] = useState([]);
@@ -363,8 +364,8 @@ const Project = () => {
           }
         />
       </div>
-      <form className="">
-        <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
+      <form className="flex flex-col gap-8">
+        <ContainerTile>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Description */}
             <InputText
@@ -557,9 +558,9 @@ const Project = () => {
               placeHolder={"0"}
             />
           </div>
-        </div>
+        </ContainerTile>
 
-        <div className="w-full mx-auto bg-white p-6 mt-8 shadow-md rounded-xl border border-red-600">
+        <ContainerTile>
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
@@ -733,9 +734,9 @@ const Project = () => {
               </div>
             </div>
           </div>
-        </div>
+        </ContainerTile>
 
-        <div className="w-full mx-auto bg-white shadow-md rounded-xl border border-red-600 p-6 mt-8">
+        <ContainerTile>
           <div className="gap-5">
             <div>
               <InputTextArea
@@ -774,7 +775,7 @@ const Project = () => {
               />
             </div>
           </div>
-        </div>
+        </ContainerTile>
         <div className="flex items-center justify-end gap-4 mt-4">
           <Button
             buttonName={"Update"}

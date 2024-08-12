@@ -15,6 +15,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LiabilitiesMatrix = () => {
   const token = localStorage.getItem("authToken");
@@ -246,76 +247,77 @@ const LiabilitiesMatrix = () => {
           Credit Bureau Liabilities Matrix
         </b>
       </h2>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 relative">
-        <div className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6">
-          <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-8 items-center">
-            <InputSelect
-              labelName="Product"
-              inputOptions={productOptions}
-              inputName="product"
-              inputValue={newForm.product}
-              onChange={handleNewInputChange}
-            />
-            <InputText
-              labelName="CB Description (CODE)"
-              inputName="simahDescriptionCode"
-              placeHolder="TMTG"
-              inputValue={newForm.simahDescriptionCode}
-              onChange={handleNewInputChange}
-            />
+      <div className="flex flex-col gap-5">
+      <ContainerTile>
+        <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 max-sm:grid-cols-1 gap-8 items-center">
+          <InputSelect
+            labelName="Product"
+            inputOptions={productOptions}
+            inputName="product"
+            inputValue={newForm.product}
+            onChange={handleNewInputChange}
+          />
+          <InputText
+            labelName="CB Description (CODE)"
+            inputName="simahDescriptionCode"
+            placeHolder="TMTG"
+            inputValue={newForm.simahDescriptionCode}
+            onChange={handleNewInputChange}
+          />
 
-            <InputSelect
-              labelName="Issuer"
-              inputOptions={issuerOptions}
-              inputName="issuer"
-              inputValue={newForm.issuer}
+          <InputSelect
+            labelName="Issuer"
+            inputOptions={issuerOptions}
+            inputName="issuer"
+            inputValue={newForm.issuer}
+            onChange={handleNewInputChange}
+          />
+
+          <div className="mt-2">
+            <InputCheckbox
+              labelName="Active Rule"
+              inputName="activeRule"
+              inputChecked={newForm.activeRule}
               onChange={handleNewInputChange}
             />
-
-            <div className="mt-2">
-              <InputCheckbox
-                labelName="Active Rule"
-                inputName="activeRule"
-                inputChecked={newForm.activeRule}
-                onChange={handleNewInputChange}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-8 items-end">
-            <InputSelect
-              labelName="GDBR (Without Mortgage)"
-              inputOptions={gdbrWoMortageOptions}
-              inputName="applicabilityGDBR"
-              inputValue={newForm.applicabilityGDBR}
-              onChange={handleNewInputChange}
-            />
-
-            <InputSelect
-              labelName="GDBR (including Mortgage)"
-              inputOptions={gdbrWMortageOptions}
-              inputName="totalExposure"
-              inputValue={newForm.totalExposure}
-              onChange={handleNewInputChange}
-            />
-
-            <InputSelect
-              labelName="Default considered in CB score"
-              inputOptions={defaultScoreOptions}
-              inputName="defaultConsideredInSIMAHscore"
-              inputValue={newForm.defaultConsideredInSIMAHscore}
-              onChange={handleNewInputChange}
-            />
-
-            <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
           </div>
         </div>
+        <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 gap-8 items-end">
+          <InputSelect
+            labelName="GDBR (Without Mortgage)"
+            inputOptions={gdbrWoMortageOptions}
+            inputName="applicabilityGDBR"
+            inputValue={newForm.applicabilityGDBR}
+            onChange={handleNewInputChange}
+          />
+
+          <InputSelect
+            labelName="GDBR (including Mortgage)"
+            inputOptions={gdbrWMortageOptions}
+            inputName="totalExposure"
+            inputValue={newForm.totalExposure}
+            onChange={handleNewInputChange}
+          />
+
+          <InputSelect
+            labelName="Default considered in CB score"
+            inputOptions={defaultScoreOptions}
+            inputName="defaultConsideredInSIMAHscore"
+            inputValue={newForm.defaultConsideredInSIMAHscore}
+            onChange={handleNewInputChange}
+          />
+
+          <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
+        </div>
+      </ContainerTile>
+      <ContainerTile>
         {allData.length > 0 ? (
           allData.map((item, index) => (
             <div
               key={index}
               className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
             >
-              <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-8 items-end">
+              <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
                 <InputSelect
                   labelName="Product"
                   inputOptions={productOptions}
@@ -346,7 +348,7 @@ const LiabilitiesMatrix = () => {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-8 items-end">
+              <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
                 <InputSelect
                   labelName="GDBR (Without Mortgage)"
                   inputOptions={gdbrWoMortageOptions}
@@ -385,6 +387,7 @@ const LiabilitiesMatrix = () => {
         <div className="absolute bottom-1 left-2 text-xs text-gray-500">
           *CB - Credit Bureau
         </div>
+      </ContainerTile>
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import InstallmentInfoComp from "./InstallmentInfoComp";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -148,33 +149,31 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
   const tableSliderStyle = "whitespace-nowrap p-4 text-gray-500";
   return (
     <>
-      <div className="flex flex-col xl:flex-row xl:gap-5 items-baseline mb-8">
-        <div>
-          <div className="font-semibold mt-5 mb-2">Profile : </div>
-          <div className="rounded-xl pt-6 pb-2 px-5 border border-red-600 w-fit">
-            <div className="flex gap-5 mb-5 border-b border-gray-300 pb-4">
-              <div className="flex gap-5 border-r border-gray-300 pr-5">
-                <div>Cash Credit Score : </div>
-                <div>{loanConfigData.profile.cashCreditScore}</div>
+      <div className="grid grid-cols-2 gap-5">
+
+          <ContainerTile>
+          <div className="font-semibold text-center -mt-3 mb-3">Profile : </div>
+            <div className="flex gap-5 mb-5  text-[16px] pb-4 ">
+              <div className="flex gap-5  pr-5 ">
+                <span>Cash Credit Score : </span>
+                <span>{loanConfigData.profile.cashCreditScore}</span>
               </div>
               <div className="flex gap-5">
                 <div>Cash TCL : </div>
                 <div>{loanConfigData.profile.cashTCL}</div>
               </div>
             </div>
-            <div className="flex gap-10 mb-5">
+            <div className="flex gap-10 mb-5 text-[16px]">
               <div className="flex gap-5">
                 <div>Net Cash TCL : </div>
                 <div>{loanConfigData.profile.netCashTCL}</div>
               </div>
             </div>
-          </div>
-        </div>
-        <div>
-          <div className="font-semibold mb-2 mt-8">Cash Loan Stats : </div>
-          <div className="rounded-xl pt-2 pb-2 px-5 border border-red-600 relative">
-            <div className="flex gap-5 py-3">
-              <div className="pr-5 py-2 flex flex-col border-r border-gray-300">
+          </ContainerTile>
+          <ContainerTile>
+          <div className="font-semibold text-center -mt-3 mb-3">Cash Loan Stats : </div>
+            <div className="grid grid-cols-2 gap-5">
+              <div className=" flex flex-col text-[16px]">
                 <div className="flex gap-2 py-2">
                   <div className="w-40">Max Loan Amount : </div>
                   <div>{loanConfigData.cashLoanStats.maxLoanAmount}</div>
@@ -184,7 +183,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                   <div>{loanConfigData.cashLoanStats.minLoanAmount}</div>
                 </div>
               </div>
-              <div className="pr-5 py-2 flex flex-col border-r border-gray-300">
+              <div className=" flex flex-col text-[16px]">
                 <div className="flex gap-2 py-2">
                   <div className="w-52">Max Loan Duration Days : </div>
                   <div>{loanConfigData.cashLoanStats.maxLoanDuration}</div>
@@ -194,7 +193,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                   <div>{loanConfigData.cashLoanStats.minLoanDuration}</div>
                 </div>
               </div>
-              <div className="py-2 flex flex-col">
+              <div className=" flex flex-col text-[16px]">
                 <div className="flex gap-2 py-2">
                   <div className="w-40">Max Tenure Months : </div>
                   <div>{loanConfigData.cashLoanStats.maxTenure}</div>
@@ -205,12 +204,12 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </ContainerTile>
+
       </div>
       <div className="flex items-start w-fit shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
         <div className="w-[330px]">
-          <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
+          <table className="divide-y divide-gray-300  w-full">
             <thead className="bg-gray-50">
               <tr className={tableDividerStyle}>
                 <th className="py-3.5  text-center ">
@@ -334,7 +333,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
               return (
                 <table
                   key={index}
-                  className="divide-y divide-gray-300 border-r border-gray-300 w-full"
+                  className="divide-y divide-gray-300 border-r w-full"
                 >
                   <thead className="bg-gray-50">
                     <tr className="divide-x divide-gray-200 h-[58px]">

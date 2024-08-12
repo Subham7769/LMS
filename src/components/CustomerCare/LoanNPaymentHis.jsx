@@ -4,10 +4,10 @@ import PaymentHistory from "./PaymentHistory";
 
 const Tab = ({ isActive, onClick, children }) => (
   <div
-    className={`py-1 px-1.5 cursor-pointer ${
+    className={`py-1 px-1.5 cursor-pointer rounded text-[16px] ${
       isActive
-        ? "text-white bg-indigo-500 rounded"
-        : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+        ? "text-white bg-indigo-500 "
+        : "text-indigo-500 hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
     }`}
     onClick={onClick}
   >
@@ -21,7 +21,7 @@ const LoanNPaymentHist = () => {
   return (
     <>
       <div className="flex mb-7">
-        <div className="border-r border-gray-400 px-2">
+        <div className=" px-2">
           <Tab isActive={isLoanVisible} onClick={() => setIsLoanVisible(true)}>
             Loan History
           </Tab>

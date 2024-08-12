@@ -2,6 +2,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const DataWithIcon = ({ value, name }) => {
   return (
@@ -52,7 +53,7 @@ const CreditProfile = () => {
   } = loanOfferCalData;
 
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <ListTable
         ListName="Credit Profile Data"
         ListHeader={["No.", "Product Name", "Total TCL", "Net TCL"]}
@@ -64,7 +65,7 @@ const CreditProfile = () => {
         }))}
         Divider={true}
       />
-      <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 shadow-lg mt-8 relative bg-white">
+      <ContainerTile>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-3">
           <div className="py-2 pr-6 flex flex-col border-r border-gray-300">
             <DataWithIcon
@@ -114,8 +115,8 @@ const CreditProfile = () => {
         <div className="absolute text-xs text-gray-400 bottom-1 left-2">
           *CB - Credit Bureau, *GDBR - Gross Debt Burden Ratio, *MTG - Mortgage
         </div>
-      </div>
-    </>
+      </ContainerTile>
+    </div>
   );
 };
 

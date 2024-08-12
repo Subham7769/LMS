@@ -147,7 +147,7 @@ const NewRulePolicy = () => {
   };
   return (
     <>
-      <div className="flex justify-between items-baseline border-b border-gray-300 pb-5">
+      <div className="flex justify-between items-center">
         <DynamicName initialName={rulePolicyName} onSave={handleUpdateRPName} />
         <div className="flex gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
@@ -155,13 +155,10 @@ const NewRulePolicy = () => {
             buttonIcon={TrashIcon}
             onClick={() => handleDelete(rulePolicyId)}
             circle={true}
-            className={
-              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-            }
           />
         </div>
       </div>
-      <div className="mt-4">
+      <div className="flex flex-col gap-8 mt-4">
         <CloneModal
           isOpen={isModalOpen}
           onClose={closeModal}

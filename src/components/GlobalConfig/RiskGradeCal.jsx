@@ -10,6 +10,7 @@ import LoadingState from "../LoadingState/LoadingState";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const RiskGradeCal = () => {
   const token = localStorage.getItem("authToken");
@@ -196,74 +197,77 @@ const RiskGradeCal = () => {
           Risk Grading Calculation
         </b>
       </h2>
-      <div className="shadow-md rounded-xl p-5 border border-red-600 flex flex-col gap-3">
+      <div className="flex flex-col gap-5">
 
-        <div className="grid grid-cols-4 max-sm:grid-cols-1 gap-4 mb-3 border-b-2 pb-5">
-          <InputNumber
-            labelName="From"
-            inputName="from"
-            inputValue={newForm.from}
-            onChange={handleNewInputChange}
-            placeHolder="10"
-          />
-          <InputNumber
-            labelName="To"
-            inputName="to"
-            inputValue={newForm.to}
-            onChange={handleNewInputChange}
-            placeHolder="30"
-          />
-          <InputText
-            labelName="Risk Grade"
-            inputName="grade"
-            inputValue={newForm.grade}
-            onChange={handleNewInputChange}
-            placeHolder="R1"
-          />
-          <div className="mt-4">
-            <Button
-              onClick={handleAddFields}
-              buttonIcon={PlusIcon}
-              circle={true}
-            />
-          </div>
-
-        </div>
-        {allData.map((rgdata) => (
-          <div key={rgdata.id} className="grid grid-cols-4 max-sm:grid-cols-1 gap-4 mb-3">
+        <ContainerTile>
+          <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
             <InputNumber
               labelName="From"
               inputName="from"
-              inputValue={rgdata.from}
-              onChange={(e) => handleChange(e, rgdata.id)}
+              inputValue={newForm.from}
+              onChange={handleNewInputChange}
+              placeHolder="10"
             />
             <InputNumber
               labelName="To"
               inputName="to"
-              inputValue={rgdata.to}
-              onChange={(e) => handleChange(e, rgdata.id)}
+              inputValue={newForm.to}
+              onChange={handleNewInputChange}
+              placeHolder="30"
             />
             <InputText
               labelName="Risk Grade"
               inputName="grade"
-              inputValue={rgdata.grade}
-              onChange={(e) => handleChange(e, rgdata.id)}
+              inputValue={newForm.grade}
+              onChange={handleNewInputChange}
+              placeHolder="R1"
             />
-            <div className="flex items-center gap-4 mt-4">
+            <div className="mt-4">
               <Button
-                onClick={() => handleSave(rgdata.id)}
-                buttonIcon={CheckCircleIcon}
+                onClick={handleAddFields}
+                buttonIcon={PlusIcon}
                 circle={true}
-              />
-              <Button
-                onClick={() => handleDelete(rgdata.id)}
-                buttonIcon={TrashIcon}
-                circle={true}
-                className="bg-red-600 hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               />
             </div>
           </div>
-        ))}
+        </ContainerTile>
+        <ContainerTile>
+          {allData.map((rgdata) => (
+            <div key={rgdata.id} className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4 py-5">
+              <InputNumber
+                labelName="From"
+                inputName="from"
+                inputValue={rgdata.from}
+                onChange={(e) => handleChange(e, rgdata.id)}
+              />
+              <InputNumber
+                labelName="To"
+                inputName="to"
+                inputValue={rgdata.to}
+                onChange={(e) => handleChange(e, rgdata.id)}
+              />
+              <InputText
+                labelName="Risk Grade"
+                inputName="grade"
+                inputValue={rgdata.grade}
+                onChange={(e) => handleChange(e, rgdata.id)}
+              />
+              <div className="flex items-center gap-4 mt-4">
+                <Button
+                  onClick={() => handleSave(rgdata.id)}
+                  buttonIcon={CheckCircleIcon}
+                  circle={true}
+                />
+                <Button
+                  onClick={() => handleDelete(rgdata.id)}
+                  buttonIcon={TrashIcon}
+                  circle={true}
+                  className="bg-red-600 hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                />
+              </div>
+            </div>
+          ))}
+        </ContainerTile>
       </div>
     </>
   );

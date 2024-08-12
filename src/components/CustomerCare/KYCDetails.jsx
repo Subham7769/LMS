@@ -1,6 +1,7 @@
 import React from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const KYCDetailItem = ({ label, value }) => (
   <div className="flex gap-2 py-2 text-sm">
@@ -35,7 +36,7 @@ const KYCDetails = () => {
   } = kycInfo.recentGosiData.employmentStatusInfo[0] || {};
 
   return (
-    <div className="shadow-md rounded-xl py-4 px-5 border border-red-600 mt-4">
+    <ContainerTile>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 py-3">
         <div className="px-4 py-2 flex flex-col border-r border-gray-300">
           <KYCDetailItem label="Full Name" value={fullName} />
@@ -62,7 +63,7 @@ const KYCDetails = () => {
           <KYCDetailItem label="Working Months" value={workingMonths} />
         </div>
       </div>
-    </div>
+    </ContainerTile>
   );
 };
 

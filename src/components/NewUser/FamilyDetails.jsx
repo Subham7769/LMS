@@ -8,6 +8,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { maritalOptions, booleanOptions } from "../../data/OptionsData";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 function FamilyDetails() {
   const [clientData, setClientData] = useState([]);
@@ -133,7 +134,7 @@ function FamilyDetails() {
       >
         <b>Family Details</b>
       </h2>
-      <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
+      <ContainerTile>
         <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {/* Marital Status */}
             <InputSelect
@@ -199,7 +200,7 @@ function FamilyDetails() {
         <div className="flex items-center justify-end gap-4 mt-4">
           <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={updateData} rectangle={true}/>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 }

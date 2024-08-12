@@ -22,6 +22,7 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import { fetchProjectData } from '../../redux/Slices/sidebarSlice'
 import { useDispatch } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const NewProjectPage = () => {
   const navigate = useNavigate();
@@ -380,8 +381,8 @@ const NewProjectPage = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <form>
-        <div className="w-full mx-auto bg-white p-6 shadow-md rounded-xl border border-red-600">
+      <form className="flex flex-col gap-8">
+        <ContainerTile>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Name */}
             <InputText
@@ -583,9 +584,8 @@ const NewProjectPage = () => {
               placeHolder={"0"}
             />
           </div>
-        </div>
-
-        <div className="w-full mx-auto bg-white p-6 mt-8 shadow-md rounded-xl border border-red-600">
+        </ContainerTile>
+        <ContainerTile>
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
@@ -760,9 +760,8 @@ const NewProjectPage = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="w-full mx-auto bg-white shadow-md rounded-xl border border-red-600 p-6 mt-8">
+        </ContainerTile>
+        <ContainerTile>
           <div className="gap-5">
             <div>
               <InputTextArea
@@ -801,8 +800,7 @@ const NewProjectPage = () => {
               />
             </div>
           </div>
-        </div>
-
+        </ContainerTile>
         <div className="flex mt-4  justify-end ">
           {/* Submit Button */}
           <button

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useCityFormState from "../../utils/useCityFormState";
 import TagInput from "../TagInput/TagInput";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CityCard = ({ cityData, fetchData }) => {
   const { rulePolicyId } = useParams();
@@ -46,7 +47,7 @@ const CityCard = ({ cityData, fetchData }) => {
 
   return (
     <>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600 w-full">
+      <ContainerTile>
         <div className="flex items-center justify-between mb-3">
           <div className="text-lg">City</div>
         </div>
@@ -60,7 +61,7 @@ const CityCard = ({ cityData, fetchData }) => {
           inputNumberName={"points"}
           inputNumberLabel={"Add Points"}
         />
-      </div>
+      </ContainerTile>
     </>
   );
 };

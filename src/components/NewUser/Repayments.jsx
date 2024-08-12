@@ -5,6 +5,7 @@ import { Passed } from "../Toasts";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const loanIdOptionsInitial = [{ value: "test", label: "test" }];
 
@@ -137,14 +138,14 @@ const Repayment = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="rounded-xl pt-5 pb-7 px-5 border border-red-600 mt-8 relative">
+      <ContainerTile>
         <div className="text-lg">Proceed for Repayments</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputSelect labelName={"Select Loan Id"} inputName={"userloanID"} inputValue={userloanID} inputOptions={loanIdOptions} onChange={handleLoanIdChange} searchable={false}/>
           <InputNumber labelName={"Enter Amount"} inputName={"amount"} inputValue={amount} onChange={(e) => setamount(e.target.value)} placeHolder={"5000"}/>
         </div>
         <Button rectangle={true} buttonName={"Submit"} onClick={handleRepayment}/>
-      </div>
+      </ContainerTile>
     </>
   );
 };

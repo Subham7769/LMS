@@ -53,6 +53,8 @@ const SideBar = () => {
   const open = useSelector((state) => state.sidebar.open);
   const submenuStates = useSelector((state) => state.sidebar.submenuStates);
   const menus = useSelector((state) => state.sidebar.menus);
+  const loading = useSelector((state) => state.sidebar.loading);
+  const error = useSelector((state) => state.sidebar.error);
 
   const iconMapping = {
     HomeIcon,

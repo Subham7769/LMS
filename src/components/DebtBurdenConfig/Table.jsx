@@ -144,7 +144,7 @@ export default function Table({
                 <div onClick={() => toggleEdit(index)} type="button">
                   <Button buttonIcon={editingIndex === index ? CheckCircleIcon : PencilIcon} onClick={editingIndex === index ? informUser : informUser1} circle={true} />
                 </div>
-                <Button buttonIcon={TrashIcon} onClick={() => handleDelete(index)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
+                <Button buttonIcon={TrashIcon} onClick={() => handleDelete(index)} circle={true} />
               </td>
             </tr>
           ))

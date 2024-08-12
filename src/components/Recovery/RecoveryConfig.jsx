@@ -29,6 +29,7 @@ import {
 } from "../../redux/Slices/recoverySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecoveryData } from "../../redux/Slices/sidebarSlice";
+import ContainerTile from '../Common/ContainerTile/ContainerTile'
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -137,9 +138,6 @@ const RecoveryConfig = () => {
             buttonIcon={TrashIcon}
             onClick={handleDelete}
             circle={true}
-            className={
-              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-            }
           />
         </div>
       </div>
@@ -149,7 +147,7 @@ const RecoveryConfig = () => {
         onCreateClone={createCloneRecovery}
         initialName={itemName}
       />
-      <div className=" flex flex-col gap-4 rounded-lg border bg-white shadow-md border-red-600 p-6 ">
+      <ContainerTile className=" flex flex-col gap-4 ">
         <div className="flex gap-4 space-x-2 2xl:w-[50%] w-[75%]">
           <div className="flex-1">
             <InputNumber
@@ -244,7 +242,7 @@ const RecoveryConfig = () => {
             />
           </div>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };

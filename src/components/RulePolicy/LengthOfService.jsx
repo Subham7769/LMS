@@ -14,6 +14,7 @@ import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LengthofService = ({
   LOSData,
@@ -278,7 +279,7 @@ const LengthofService = ({
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="shadow-md rounded-xl p-6 bg-gray-100 my-6">
+      <ContainerTile>
         <div className="text-lg">Length of Service</div>
         <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
           <SelectAndNumber
@@ -474,13 +475,11 @@ const LengthofService = ({
                         </div>
                       )}
                     </button>
-                    <button
+                    <Button
+                      buttonIcon={TrashIcon}
                       onClick={() => handleDelete(item.ruleName)}
-                      type="button"
-                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                    >
-                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
+                      circle={true}
+                    />
                   </td>
                 </tr>
               ))
@@ -491,11 +490,10 @@ const LengthofService = ({
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`flex items-center px-4 py-2 rounded-md ${
-              currentPage === 1
+            className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1
                 ? "bg-gray-300 cursor-not-allowed"
                 : "bg-indigo-600 text-white hover:bg-indigo-500"
-            }`}
+              }`}
           >
             <ChevronLeftIcon className="w-5 h-5" />
           </button>
@@ -505,16 +503,15 @@ const LengthofService = ({
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || currentItems.length < 1}
-            className={`flex items-center px-4 py-2 rounded-md ${
-              currentPage === totalPages
+            className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages
                 ? "bg-gray-300 cursor-not-allowed"
                 : "bg-indigo-600 text-white hover:bg-indigo-500"
-            }`}
+              }`}
           >
             <ChevronRightIcon className="w-5 h-5" />
           </button>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };

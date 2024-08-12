@@ -9,6 +9,7 @@ import DynamicName from "../Common/DynamicName/DynamicName";
 import LoadingState from "../Common/Loader/Loader";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import useInList from "../../utils/useInList";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CreateProdGroup = () => {
   const { configId, groupName } = useParams();
@@ -59,7 +60,7 @@ const CreateProdGroup = () => {
       <div className="flex items-center justify-between">
         <DynamicName initialName={configId} onSave={handleSave} />
       </div>
-      <div className="shadow-md rounded-xl p-5 border border-red-600 w-full mt-5">
+      <ContainerTile>
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
             labelName="Percentage from EMI"
@@ -93,7 +94,7 @@ const CreateProdGroup = () => {
             rectangle={true}
           />
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };

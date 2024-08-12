@@ -3,6 +3,7 @@ import FamilyDetails from "./FamilyDetails";
 import useDateExtract from "../../utils/useDateExtract";
 import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const SubscriberInfo = () => {
   const { subID } = useParams();
@@ -76,7 +77,7 @@ const SubscriberInfo = () => {
         <div className="text-xl">Borrower Id : {subID}</div>
       </div>
 
-      <div className="shadow-md rounded-xl py-4 px-5 border border-red-600">
+      <ContainerTile>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 border-b border-gray-300 pb-2">
           <div className="py-2">
             <div className="font-semibold">Full Name:</div>
@@ -148,7 +149,7 @@ const SubscriberInfo = () => {
             </div>
           </div>
         </div>
-      </div>
+      </ContainerTile>
     </div>
   );
 };

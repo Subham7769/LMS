@@ -19,13 +19,13 @@ const UserInfoTabs = () => {
     <div className="mt-4">
       <div className="flex mb-10">
         {tabs.map((tab) => (
-          <div className="border-r border-gray-400 px-2" key={tab.path}>
+          <div className="px-2" key={tab.path}>
             <Link
               to={tab.path}
-              className={`py-1 px-1.5 ${
+              className={`py-1 px-1.5 text-[16px] rounded ${
                 currentPath === tab.path
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-indigo-500 hover:border-b hover:border-red-600 hover:text-indigo-700 hover:font-medium"
+                  ? "text-white bg-indigo-500 "
+                  : "text-indigo-500  hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
               }`}
             >
               {tab.label}

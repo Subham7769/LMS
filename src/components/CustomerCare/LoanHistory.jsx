@@ -134,31 +134,68 @@ const LoanHistory = () => {
   } else if (loanHistoryData.status === 500) {
     return <div>No data for the request</div>;
   }
+  const headerList = [
+    "Loan ID",
+    "Loan Status",
+    "Loan Type",
+    "View Details",
+    "Loan Amount",
+    "Loan Origination",
+    "Loan Disbursement",
+    "Outstanding Principal",
+    "Missed Installments Number",
+    "Clearance Letter",
+  ]
+  const itemList = filteredLoansarr.map((loan) => ({
+    loanId: loan.loanId,
+    loanStatus: loanStatusOptions[loan.loanStatus].label,
+    loanType: loan.loanType,
+    viewDetails: (
+      <>
+        <Button
+          buttonName={"View Details"}
+          onClick={() => handleViewDetails(loan)}
+          rectangle={true}
+          className={"text-[10px] py-0 px-0"}
+        />
+        <LoanInfoModal
+          onClose={() => setShowModal(false)}
+          visible={showModal}
+          loanDetails={selectedLoan}
+        />
+      </>
+    ),
+    loanAmount: loan.loanAmount.toFixed(2),
+    loanOrigination: loan.formattedSubmitDate,
+    loanDisbursement: loan.formattedPaidDate,
+    outstandingPrincipal: loan.outstandingPrincipal,
+    missedInstallMents: loan.missedInstallmentsNumber,
+    clearanceLetter: (
+      <Button
+        buttonName={"PDF"}
+        onClick={handleDownloadPdf}
+        rectangle={true}
+        className={"text-[10px] py-0 px-0"}
+      />
+    ),
+  }))
 
   return (
     <>
-      <div className="flex items-end mb-10 w-full">
-        <div className="w-1/3">&nbsp;</div>
-        <div className="w-1/3 flex">
-          <div>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="block w-full py-1.5 pl-10 pr-3">
-                <InputText inputName="search" placeHolder="Search" />
-              </div>
-            </div>
-          </div>
+      <div className="flex items-center  w-full justify-between">
+
+        <div className="w-1/3 flex  items-center justify-start mt-4">
+          <InputText inputName="search" placeHolder="Search" />
+          <MagnifyingGlassIcon
+            className="h-5 w-5 text-gray-400 -ml-8 "
+            aria-hidden="true"
+          />
         </div>
-        <div className="relative w-1/3 flex justify-end">
-          <div className="w-52">
+        <div className="w-1/3">&nbsp;</div>
+        <div className="w-1/3 flex items-center justify-end">
+          <div className="w-full">
             <InputSelect
               labelName="Select Loan Status"
-              className="w-52"
               inputOptions={loanStatusOptions}
               inputId="loanStatus"
               inputName="loanStatus"
@@ -173,52 +210,8 @@ const LoanHistory = () => {
         <>No Loan Data</>
       ) : (
         <ListTable
-          ListHeader={[
-            "Loan ID",
-            "Loan Status",
-            "Loan Type",
-            "View Details",
-            "Loan Amount",
-            "Loan Origination",
-            "Loan Disbursement",
-            "Outstanding Principal",
-            "Missed Installments Number",
-            "Clearance Letter",
-          ]}
-          ListItem={filteredLoansarr.map((loan) => ({
-            loanId: loan.loanId,
-            loanStatus: loanStatusOptions[loan.loanStatus].label,
-            loanType: loan.loanType,
-            viewDetails: (
-              <>
-                <Button
-                  buttonName={"View Details"}
-                  onClick={() => handleViewDetails(loan)}
-                  rectangle={true}
-                  className={"text-[10px] py-0 px-0"}
-                />
-                <LoanInfoModal
-                  onClose={() => setShowModal(false)}
-                  visible={showModal}
-                  loanDetails={selectedLoan}
-                  mgLeft={leftPanelWidth}
-                />
-              </>
-            ),
-            loanAmount: loan.loanAmount.toFixed(2),
-            loanOrigination: loan.formattedSubmitDate,
-            loanDisbursement: loan.formattedPaidDate,
-            outstandingPrincipal: loan.outstandingPrincipal,
-            missedInstallMents: loan.missedInstallmentsNumber,
-            clearanceLetter: (
-              <Button
-                buttonName={"PDF"}
-                onClick={handleDownloadPdf}
-                rectangle={true}
-                className={"text-[10px] py-0 px-0"}
-              />
-            ),
-          }))}
+          ListHeader={headerList}
+          ListItem={itemList}
           Divider={true}
         />
       )}
