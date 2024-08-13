@@ -131,7 +131,6 @@ const NotificationText = () => {
                 inputName="notificationChannel"
                 inputValue={notdata.notificationChannel}
                 onChange={handleChange}
-                searchable={false}
               />
             </div>
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">

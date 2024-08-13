@@ -10,10 +10,8 @@ const BlockedEmployerPage = () => {
         ListName={"Blocked Employer List"}
         ListHeader={BlockedEmployerHeaderList}
         ListItem={BlockedEmployerList}
-        HandleAction={null}
         Searchable={true}
         Sortable={true} // New prop to enable/disable sorting
-        Divider={false}
       />
     </>
   );

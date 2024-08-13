@@ -107,7 +107,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
               formData.eligibleCustomerType ? formData.eligibleCustomerType : ""
             }
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="RAC"
@@ -115,7 +114,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="racId"
             inputValue={formData.racId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="Project"
@@ -123,7 +121,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="projectId"
             inputValue={formData.projectId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="TCL"
@@ -131,13 +128,11 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="tclFileId"
             inputValue={formData.tclFileId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
             labelName="Recovery Type"
             inputName="recoveryEquationTempId"
-            isSearchable={false}
             inputValue={formData.recoveryEquationTempId}
             onChange={handleChange}
           />
@@ -149,7 +144,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="dbcTempId"
             inputValue={formData.dbcTempId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="Blocked Employer"
@@ -157,7 +151,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="blockEmployersTempId"
             inputValue={formData.blockEmployersTempId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="Rule Policy"
@@ -165,7 +158,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="rulePolicyTempId"
             inputValue={formData.rulePolicyTempId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="Credit Score"
@@ -173,7 +165,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="creditScoreEqTempId"
             inputValue={formData.creditScoreEqTempId}
             onChange={handleChange}
-            isSearchable={false}
           />
           <InputSelect
             labelName="Eligible Tenure"
@@ -181,7 +172,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
             inputName="creditScoreEtTempId"
             inputValue={formData.creditScoreEtTempId}
             onChange={handleChange}
-            isSearchable={false}
           />
         </div>
         <div className="grid grid-cols-5 gap-5 items-end">
@@ -252,7 +242,6 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           labelName="Tenure Type"
           inputOptions={tenureTypeOptions}
           inputName="loanTenureType"
-          isSearchable={false}
           onChange={handleChangeInterestEligibleTenure}
         />
         <InputNumber

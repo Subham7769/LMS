@@ -245,7 +245,6 @@ const BareMinimumExp = () => {
               inputName="dependantType"
               inputValue={formData.dependantType}
               onChange={handleInputChange}
-              searchable={false}
             />
             <InputSelect
               labelName="Expenses Frequency"
@@ -253,7 +252,6 @@ const BareMinimumExp = () => {
               inputName="expensesFrequency"
               inputValue={formData.expensesFrequency}
               onChange={handleInputChange}
-              searchable={false}
             />
             <InputNumber
               labelName="Bare Min Expense Per Person"
@@ -295,7 +293,6 @@ const BareMinimumExp = () => {
               onChange={(selectedOption) =>
                 handleChange(null, expdata.id, "dependantType", selectedOption)
               }
-              searchable={false}
             />
             <InputSelectNew
               labelName="Expenses Frequency"
@@ -311,7 +308,6 @@ const BareMinimumExp = () => {
                   selectedOption
                 )
               }
-              searchable={false}
             />
             <InputNumber
               labelName="Bare Min Expense Per Person"

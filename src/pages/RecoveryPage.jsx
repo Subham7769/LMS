@@ -12,10 +12,8 @@ const RecoveryPage = () => {
         ListName="Recovery List"
         ListHeader={RecoveryHeaderList}
         ListItem={RecoveryProductList}
-        HandleAction={null}
         Searchable={true}
         Sortable={true} // New prop to enable/disable sorting
-        Divider={false}
       />
     </>
   );

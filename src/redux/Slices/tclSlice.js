@@ -60,6 +60,39 @@ export const fetchData = createAsyncThunk(
   }
 );
 
+export const uploadTCLFile = createAsyncThunk(
+  "tcl/uploadTCLFile",
+  async ({ tclId, selectedFile }, { rejectWithValue, dispatch }) => {
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_TCL_UPLOAD_URL}${tclId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to upload file");
+      }
+
+      // Dispatch to fetch updated data after successful upload
+      dispatch(fetchData(tclId));
+
+      return "File uploaded successfully!";
+    } catch (error) {
+      return rejectWithValue("Error uploading file. Please try again.");
+    }
+  }
+);
+
 export const addTCLData = createAsyncThunk(
   "tcl/addTCLData",
   async (fileSelectedOption, { getState, rejectWithValue }) => {
@@ -90,6 +123,7 @@ export const addTCLData = createAsyncThunk(
         totalUser: TCLDetails.totalUser,
         uploadedDate: convertDate(TCLDetails.createTime),
         totalRows: TCLDetails.totalRows,
+        tclFileId: TCLDetails.tclFileId,
       };
 
       const { tcl } = getState();
@@ -160,6 +194,31 @@ export const deleteTCL = createAsyncThunk(
       }
 
       dispatch(fetchTCLData());
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteTCLFile = createAsyncThunk(
+  "tcl/deleteTCLFile",
+  async ({ tclFileId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_TCL_FILE_DELETE}${tclFileId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        return rejectWithValue("Failed to delete item");
+      }
+      return tclFileId;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -245,6 +304,27 @@ const tclSlice = createSlice({
       })
       .addCase(deleteTCL.rejected, (state, action) => {
         state.error = action.payload;
+      })
+      .addCase(deleteTCLFile.fulfilled, (state, action) => {
+        state.tableData = state.tableData.filter(
+          (item) => item.value !== action.payload
+        );
+      })
+      .addCase(deleteTCLFile.rejected, (state, action) => {
+        toast.error(action.payload);
+      })
+      .addCase(uploadTCLFile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadTCLFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success(action.payload); // Notify the user of success
+      })
+      .addCase(uploadTCLFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(action.payload); // Notify the user of the error
       });
   },
 });

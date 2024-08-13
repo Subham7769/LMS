@@ -360,9 +360,6 @@ const CreditScoreET = () => {
             buttonIcon={TrashIcon}
             onClick={() => handleDeleteCSET(creditScoreETId)}
             circle={true}
-            className={
-              "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-            }
           />
         </div>
       </div>

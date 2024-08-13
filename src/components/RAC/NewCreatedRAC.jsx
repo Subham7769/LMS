@@ -154,7 +154,7 @@ const NewCreatedRAC = () => {
         <DynamicName initialName={RACData.name} onSave={handleNameUpdate} />
         <div className="flex items-center justify-between gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(racID)} circle={true} className={"bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"} />
+          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(racID)} circle={true} />
         </div>
       </div>
       <div className="mt-4">

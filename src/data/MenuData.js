@@ -241,7 +241,7 @@ export const MenusInitial = [
   {
     title: "User Product Testing",
     href: "/user",
-    icon: "UsersIcon",
+    icon: "HandRaisedIcon",
     current: false,
   },
   {
@@ -253,7 +253,7 @@ export const MenusInitial = [
   {
     title: "User Management",
     href: "/user-management",
-    icon: "UsersIcon",
+    icon: "UserGroupIcon",
     current: false,
   },
   // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },

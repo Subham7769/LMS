@@ -44,42 +44,6 @@ const useFetchData = async (url, transformData, options = {}) => {
     return Promise.reject(error.message || "Data fetch failed");
   }
 };
-// const useFetchData = async (url, transformData, options = {}) => {
-//   const {
-//     tokenKey = "authToken",
-//     redirectPath = "/login",
-//     tokenUrl = null,
-//   } = options;
-//   let token = localStorage.getItem(tokenKey);
-//   if (tokenUrl) {
-//     const tokenResponse = await axios.get(tokenUrl);
-//     token = tokenResponse.data.value;
-//     localStorage.setItem("projectToken", tokenResponse.data.value);
-//   }
-
-//   try {
-//     const response = await axios.get(url, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-
-//     if (response.status === 401 || response.status === 403) {
-//       localStorage.removeItem(tokenKey);
-//       // navigate to redirectPath
-//       window.location.href = redirectPath;
-//       return;
-//     }
-
-//     const result = response.data;
-//     const transformedData = transformData(result);
-//     return transformedData;
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// };
 
 export const fetchRACData = createAsyncThunk(
   "fetchRACData",

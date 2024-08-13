@@ -359,9 +359,6 @@ const Project = () => {
           buttonIcon={TrashIcon}
           onClick={() => handleDelete()}
           circle={true}
-          className={
-            "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-          }
         />
       </div>
       <form className="flex flex-col gap-8">

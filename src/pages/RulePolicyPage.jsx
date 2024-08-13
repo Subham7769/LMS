@@ -15,10 +15,8 @@ const RulePolicyPage = () => {
         ListName={"Rule Policy List"}
         ListHeader={HeaderList}
         ListItem={RulePolicyList}
-        HandleAction={null}
         Searchable={true}
         Sortable={true} // New prop to enable/disable sorting
-        Divider={false}
       />
     </>
   );

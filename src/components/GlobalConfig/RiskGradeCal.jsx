@@ -262,7 +262,6 @@ const RiskGradeCal = () => {
                   onClick={() => handleDelete(rgdata.id)}
                   buttonIcon={TrashIcon}
                   circle={true}
-                  className="bg-red-600 hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                 />
               </div>
             </div>

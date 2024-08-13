@@ -201,7 +201,6 @@ const LoanHistory = () => {
               inputName="loanStatus"
               inputValue={selectedOption}
               onChange={handleChange}
-              searchable={false}
             />
           </div>
         </div>
