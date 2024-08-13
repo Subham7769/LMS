@@ -212,7 +212,6 @@ const CreditScore = () => {
                 fweightage: formData.fweightage,
               },
             ]}
-            Searchable={false}
             Editable={true}
             handleEditableFields={handleChange}
             Divider={true}
@@ -230,7 +229,6 @@ const CreditScore = () => {
               expatriatesCreditScore: formData.expatriatesCreditScore,
             },
           ]}
-          Searchable={false}
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
@@ -245,7 +243,6 @@ const CreditScore = () => {
               ownStatusScore: formData.ownStatusScore,
             },
           ]}
-          Searchable={false}
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
@@ -266,14 +263,13 @@ const CreditScore = () => {
               unknownStatusScore: formData.unknownStatusScore,
             },
           ]}
-          Searchable={false}
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
         />
       </div>
       <div className="bg-gray-100 rounded-xl p-6">
-        <h2 className="text-xl mb-5 text-center">Dependents Rules</h2>
+        <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">Dependents Rules</h2>
         <div className="grid grid-cols-3 gap-5 justify-between">
           <div>
             <div className="mb-3">
@@ -376,7 +372,7 @@ const CreditScore = () => {
           </div>
           <div>
             <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[16px]">
                 Value:{" "}
               </div>
               <div>
@@ -390,7 +386,7 @@ const CreditScore = () => {
               </div>
             </div>
             <div className="grid grid-cols-2  gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[16px]">
                 Value:{" "}
               </div>
               <div>
@@ -404,7 +400,7 @@ const CreditScore = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[16px]">
                 Value:{" "}
               </div>
               <div>
@@ -420,7 +416,7 @@ const CreditScore = () => {
           </div>
         </div>
       </div>
-      <div className="text-right mt-8 mr-12">
+      <div className="text-right mt-8">
         <Button
           buttonIcon={CheckCircleIcon}
           buttonName={"Update"}

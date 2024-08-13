@@ -1,5 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/20/solid";
+import {
+  MagnifyingGlassIcon,
+  TrashIcon,
+  PlusIcon,
+  CheckCircleIcon,
+  PencilIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@heroicons/react/20/solid";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
@@ -10,8 +18,8 @@ const ListTable = ({
   ListNameAlign = "left",
   ListHeader,
   ListItem,
-  HandleAction,
-  Searchable,
+  ListAction,// actions to be executed in list
+  Searchable = false,
   Divider = false,
   Sortable = false,
   Editable = false,
@@ -198,7 +206,7 @@ const ListTable = ({
                     key !== "href" ? (
                       <td
                         key={idx}
-                        className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-sm text-gray-500`}
+                        className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-[16px] text-gray-500`}
                       >
                         {product.href ? (
                           <Link className="w-full block" to={product.href}>
@@ -221,16 +229,15 @@ const ListTable = ({
                   )}
                   {ListHeader.includes("Actions") && (
                     <td
-                      className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
-                    >
-                      <Button
-                        buttonIcon={TrashIcon}
-                        onClick={() => HandleAction(index)}
-                        circle={true}
-                        className={
-                          "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-                        }
-                      />
+                      className={`w-1/${HeaderCellWidth} flex justify-center align-middle whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
+                    >{
+                        ListAction.map((item) =>
+                          <Button
+                            buttonIcon={item.icon}
+                            onClick={() => item.action(index)}
+                            circle={item.circle}
+                          />)
+                      }
                     </td>
                   )}
                 </tr>

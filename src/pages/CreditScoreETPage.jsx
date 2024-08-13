@@ -15,10 +15,8 @@ const CreditScoreETPage = () => {
         ListName={"Credit Score Eligible Tenure List"}
         ListHeader={HeaderList}
         ListItem={CreditScoreETList}
-        HandleAction={null}
         Searchable={true}
         Sortable={true} // New prop to enable/disable sorting
-        Divider={false}
       />
     </>
   );

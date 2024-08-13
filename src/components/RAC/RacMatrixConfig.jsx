@@ -1773,7 +1773,6 @@ const RacMatrixConfig = () => {
                   defaultValue={operatorOptions[3]}
                   inputOptions={operatorOptions}
                   inputValue={firstWriteOffOperatorOption}
-                  isSearchable={false}
                   onChange={(firstWriteOffOperatorOption) => {
                     setfirstWriteOffOperatorOption(firstWriteOffOperatorOption);
                   }}
@@ -1796,7 +1795,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondWriteOffOperator}
-                  isSearchable={false}
                   onChange={(secondWriteOffOperator) => {
                     setSecondWriteOffOperator(secondWriteOffOperator);
                   }}
@@ -1819,7 +1817,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={firstWriteOffOperatorOption}
-                  isSearchable={false}
                   onChange={(firstWriteOffOperatorOption) => {
                     setfirstWriteOffOperatorOption(firstWriteOffOperatorOption);
                   }}
@@ -1842,7 +1839,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondWriteOffOperator}
-                  isSearchable={false}
                   onChange={(secondWriteOffOperator) => {
                     setSecondWriteOffOperator(secondWriteOffOperator);
                   }}
@@ -1881,7 +1877,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={GSoperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setGSoperator(selectedOption)}
                 />
                 <InputNumber
@@ -1902,7 +1897,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={GSoperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setGSoperator(selectedOption)}
                 />
                 <InputNumber
@@ -1939,7 +1933,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={SSoperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setSSoperator(selectedOption)}
                 />
                 <InputNumber
@@ -1960,7 +1953,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={SSoperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setSSoperator(selectedOption)}
                 />
                 <InputNumber
@@ -1997,7 +1989,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={minActiveOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) =>
                     setMinActiveOperator(selectedOption)
                   }
@@ -2020,7 +2011,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={maxActiveOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) =>
                     setMaxActiveOperator(selectedOption)
                   }
@@ -2061,7 +2051,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={firstAgeOperator}
-                  isSearchable={false}
                   onChange={(firstAgeOperator) => {
                     setfirstAgeOperator(firstAgeOperator);
                   }}
@@ -2084,7 +2073,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondAgeOperator}
-                  isSearchable={false}
                   onChange={(secondAgeOperator) => {
                     setSecondAgeOperator(secondAgeOperator);
                   }}
@@ -2107,7 +2095,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={firstAgeOperator}
-                  isSearchable={false}
                   onChange={(firstAgeOperator) => {
                     setfirstAgeOperator(firstAgeOperator);
                   }}
@@ -2130,7 +2117,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondAgeOperator}
-                  isSearchable={false}
                   onChange={(secondAgeOperator) => {
                     setSecondAgeOperator(secondAgeOperator);
                   }}
@@ -2169,7 +2155,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={losOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setLosOperator(selectedOption)}
                 />
                 <InputNumber
@@ -2190,7 +2175,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={losOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setLosOperator(selectedOption)}
                 />
                 <InputNumber
@@ -2226,7 +2210,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={dispOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setDispOperator(selectedOption)}
                 />
                 <InputNumber
@@ -2247,7 +2230,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={dispOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setDispOperator(selectedOption)}
                 />
                 <InputNumber
@@ -2284,7 +2266,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={depOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setDepOperator(selectedOption)}
                 />
                 <InputNumber
@@ -2322,7 +2303,6 @@ const RacMatrixConfig = () => {
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={csOperator}
-                  isSearchable={false}
                   onChange={(selectedOption) => setCSOperator(selectedOption)}
                 />
                 <InputNumber

@@ -193,7 +193,6 @@ const LoanConfigDD = () => {
           inputOptions={loanTypeOptions}
           inputValue={loanType}
           onChange={(loanselectedOption) => setloanType(loanselectedOption)}
-          searchable={false}
         />
         {loanType?.target?.value === "CASH_LOAN_V1" ||
         loanType?.target?.value === "BNPL_LOAN" ? (

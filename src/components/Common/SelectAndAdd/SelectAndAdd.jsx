@@ -2,7 +2,6 @@ import React from "react";
 import Select from "react-select";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import Button from "../Button/Button";
-import ContainerTile from "../ContainerTile/ContainerTile";
 
 // Custom Styling
 const customSelectStyles = {
@@ -40,7 +39,7 @@ const SelectAndAdd = ({
   onClick,
 }) => {
   return (
-    <ContainerTile>
+
         <div className="w-1/2 flex gap-4">
           <div className="w-2/4">
             <label htmlFor="entriesSelect" className="sr-only">
@@ -60,7 +59,7 @@ const SelectAndAdd = ({
               <Button buttonIcon={PlusIcon} onClick={onClick} circle={true} />
           </div>
         </div>
-    </ContainerTile>
+
   );
 };
 

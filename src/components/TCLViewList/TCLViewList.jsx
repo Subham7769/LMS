@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TclViewListHeaderList } from "../../data/TclData";
 import ListTable from "../Common/ListTable/ListTable";
 import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 import { useNavigate, useParams } from "react-router-dom";
 import DynamicName from "../Common/DynamicName/DynamicName";
-import { TrashIcon } from "@heroicons/react/20/solid";
-import { convertDate } from "../../utils/convertDate";
+import { TrashIcon, FolderPlusIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import {
   fetchName,
@@ -20,6 +19,7 @@ import {
 } from "../../redux/Slices/tclSlice";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingState from "../LoadingState/LoadingState";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
@@ -29,6 +29,7 @@ const TCLViewList = () => {
   const { tclId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
   const { itemName, data, tableData, loading, error } = useSelector(
     (state) => state.tcl
   );
@@ -73,14 +74,6 @@ const TCLViewList = () => {
       .catch((err) => console.error(err));
   };
 
-  const handleDeleteTCL = () => {
-    dispatch(deleteTCL(tclId))
-      .unwrap()
-      .then(() => {
-        navigate("/tcl");
-      })
-      .catch((err) => console.error(err));
-  };
 
   // Handle file input change
   const handleFileChange = (e) => {
@@ -112,6 +105,23 @@ const TCLViewList = () => {
     setFileSelectedOption(null);
   }, [dispatch, tclId]);
 
+  const handleDeleteTCL = () => {
+    dispatch(deleteTCL(tclId))
+      .unwrap()
+      .then(() => {
+        navigate("/tcl");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  // actions to be executed in list
+  const ActionList = [{
+    icon: TrashIcon,
+    circle: true,
+    action: handleDelete,
+  }]
+
+
   if (loading) {
     return <LoadingState />;
   }
@@ -122,6 +132,10 @@ const TCLViewList = () => {
 
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
+
+  const handleFileClick = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <>
@@ -134,29 +148,30 @@ const TCLViewList = () => {
           circle={true}
         />
       </div>
-      <div className="mb-4 bg-gray-100 p-5 py-10 rounded-xl shadow-md border-gray-300 border">
-        <div className="grid grid-cols-4 gap-4">
-          <div>
-            <input type="file" onChange={handleFileChange} />
-          </div>
-          <div>
-            <Button
-              buttonName={"Upload"}
-              onClick={handleFileUpload}
-              rectangle={true}
-            />
-          </div>
+      <ContainerTile className={'flex items-center justify-between'}>
+        <SelectAndAdd
+          ListName={"Select TCL List"}
+          SelectOptions={data}
+          SelectedOption={fileSelectedOption}
+          HandleChange={handleChange}
+          ButtonName={"Add to List"}
+          onClick={addData}
+        />
+        <div className="w-3/4 flex justify-end items-center gap-5">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }} // Hide the default input
+          />
+          <FolderPlusIcon className="h-12 w-12 text-indigo-600" onClick={handleFileClick} />
+          <Button
+            buttonName={"Upload"}
+            onClick={handleFileUpload}
+            rectangle={true}
+          />
         </div>
-      </div>
-      <SelectAndAdd
-        ListName={"Select TCL List"}
-        SelectOptions={data}
-        SelectedOption={fileSelectedOption}
-        HandleChange={handleChange}
-        ButtonName={"Add to List"}
-        onClick={addData}
-      />
-
+      </ContainerTile>
       {/* Message */}
       {message && <div className="mb-4 text-red-500">{message}</div>}
 
@@ -165,8 +180,7 @@ const TCLViewList = () => {
         ListName={"TCL List"}
         ListHeader={TclViewListHeaderList}
         ListItem={tableDataWithoutId}
-        HandleAction={handleDelete}
-        Searchable={false}
+        ListAction={ActionList}
       />
     </>
   );

@@ -12,7 +12,7 @@ const InputSelect = ({
   disabled = false,
   hidden = false,
   isMulti = false,
-  searchable = true,
+  searchable = false,
 }) => {
   const handleChange = (selectedOption) => {
     onChange({
