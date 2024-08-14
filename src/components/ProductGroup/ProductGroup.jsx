@@ -111,7 +111,7 @@ const ProductGroup = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-5">
         <DynamicName initialName={formData.name} onSave={handleSave} />
       </div>
       <ContainerTile>

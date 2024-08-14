@@ -112,7 +112,7 @@ const CreditProfile = () => {
             />
           </div>
         </div>
-        <div className="absolute text-xs text-gray-400 bottom-1 left-2">
+        <div className="text-xs text-gray-400 -mb-3">
           *CB - Credit Bureau, *GDBR - Gross Debt Burden Ratio, *MTG - Mortgage
         </div>
       </ContainerTile>

@@ -144,9 +144,11 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
     setSelectedInstallmentData(null); // Clear the data when closing the modal
   };
 
+  const tileClass = "py-2 text-[14px] text-gray-500"
+
   const tableDividerStyle =
     "divide-x divide-gray-200 text-center w-full h-[58px]";
-  const tableSliderStyle = "whitespace-nowrap p-4 text-gray-500";
+  const tableSliderStyle = "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
   return (
     <>
       <div className="grid grid-cols-2 gap-5">
@@ -207,9 +209,9 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
           </ContainerTile>
 
       </div>
-      <div className="flex items-start w-fit shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+      <div className="flex items-start w-full shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
         <div className="w-[330px]">
-          <table className="divide-y divide-gray-300  w-full">
+          <table className="divide-y divide-gray-300  w-full border-r border-gray-300">
             <thead className="bg-gray-50">
               <tr className={tableDividerStyle}>
                 <th className="py-3.5  text-center ">
@@ -219,109 +221,109 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className={tableDividerStyle}>
-                <td className="py-2 text-gray-500">Transaction Id</td>
+                <td className={tileClass}>Transaction Id</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Annual Flat Rate Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Annual Interest Rate Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Annual Interest Rate Percent Without Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   APR As Per Tenure Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">APR Per Month Percent</td>
+                <td className={tileClass}>APR Per Month Percent</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   APR Without Fee Per Month Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Avrage Number Of installment
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Daily Interest Rate</td>
+                <td className={tileClass}>Daily Interest Rate</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Daily Interest Rate Percent Without Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Duration</td>
+                <td className={tileClass}>Duration</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Duration In Months</td>
+                <td className={tileClass}>Duration In Months</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Tenure</td>
+                <td className={tileClass}>Tenure</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Instalments Summary Response
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Loan Flat Rate</td>
+                <td className={tileClass}>Loan Flat Rate</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Monthly Flat Rate Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Monthly Interest Rate Percent
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="  text-gray-500">
+                <td className={tileClass}>
                   Monthly Interest Rate Percent Without Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Principal Amount</td>
+                <td className={tileClass}>Principal Amount</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Schema</td>
+                <td className={tileClass}>Schema</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Service Fee</td>
+                <td className={tileClass}>Service Fee</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Service Fee Tax</td>
+                <td className={tileClass}>Service Fee Tax</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Total Interest Amount</td>
+                <td className={tileClass}>Total Interest Amount</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Total Loan Amount</td>
+                <td className={tileClass}>Total Loan Amount</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Total Management Fee</td>
+                <td className={tileClass}>Total Management Fee</td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">
+                <td className={tileClass}>
                   Total Management Vat Fee
                 </td>
               </tr>
               <tr className={tableDividerStyle}>
-                <td className="py-2  text-gray-500">Action</td>
+                <td className={tileClass}>Action</td>
               </tr>
             </tbody>
           </table>
@@ -333,7 +335,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
               return (
                 <table
                   key={index}
-                  className="divide-y divide-gray-300 border-r w-full"
+                  className="divide-y divide-gray-300 border-r border-gray-300 w-full"
                 >
                   <thead className="bg-gray-50">
                     <tr className="divide-x divide-gray-200 h-[58px]">

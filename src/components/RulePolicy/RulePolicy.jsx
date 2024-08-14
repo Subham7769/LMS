@@ -257,6 +257,23 @@ const CreditPolicy = () => {
           />
         ));
         fetchData();
+        setRiskBasedPricing({
+          operators: {
+            firstRiskBasedPricingOperator: "",
+            secondRiskBasedPricingOperator: "",
+          },
+          riskBasedPricingRules: [
+            {
+              firstRiskBasedPricing: "",
+              secondRiskBasedPricing: "",
+              interestRate: "",
+              interestPeriodType: "",
+              ruleName: "0",
+              rulePolicyTempId: rulePolicyId,
+              fieldType: "Employer",
+            },
+          ],
+        })
       }
     } catch (error) {
       console.error("Failed to update data:", error);

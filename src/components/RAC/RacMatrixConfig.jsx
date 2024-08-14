@@ -247,10 +247,11 @@ const RacMatrixConfig = () => {
   const [dependents, setDependents] = useState("");
   const [cScore, setCScore] = useState("");
 
-  useEffect(() => {
+  useEffect(() => {               console.log(nationalityData)
     if (nationalityData.rules && nationalityData.rules.length > 0) {
       const availableNationalities =
-        nationalityData.rules[0].availableNationality;
+        nationalityData.rules[0].availableNationality; 
+
       setUpdateFlag(true);
       if (availableNationalities && availableNationalities.length > 0) {
         const formattedNationalityDataArr = availableNationalities.map(
@@ -260,6 +261,7 @@ const RacMatrixConfig = () => {
           })
         );
         setSelctedOption(formattedNationalityDataArr);
+
         setRuleNameID(nationalityData.rules[0].ruleName);
         setEnabledNationality(
           nationalityData.rules[0].ruleUsed === "USED" ? true : false

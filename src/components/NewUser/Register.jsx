@@ -13,7 +13,7 @@ const CommentsModal = ({ closeModal, message }) => {
       id="loanInfoContainer"
       className="fixed inset-0 bg-black/10 backdrop-blur-sm flex justify-center items-center transition-opacity duration-300 ease-out"
     >
-      <ContainerTile>
+      <ContainerTile className="bg-white border border-red-600 p-6 rounded-xl overflow-hidden w-[70%] md:w-2/4 h-[300px] relative shadow-lg transition-transform transform duration-500 ease-out scale-100">
         {/* Close Button */}
         <div
           onClick={closeModal}

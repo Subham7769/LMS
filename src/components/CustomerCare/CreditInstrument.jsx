@@ -40,7 +40,7 @@ const TableHeader = () => (
 
 const TableRow = ({ children }) => (
   <tr className="divide-x divide-gray-200 text-center w-full h-[58px]">
-    <td className="whitespace-nowrap py-4 px-4 text-gray-500">{children}</td>
+    <td className="whitespace-nowrap py-4 px-3 text-gray-500">{children}</td>
   </tr>
 );
 
@@ -68,7 +68,7 @@ const CreditInstrument = () => {
 
   return (
     <div className="flex items-start">
-      <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
+      <table className="divide-y divide-gray-300 border-r border-gray-300 w-full text-[14px]">
         <TableHeader />
         <tbody className="divide-y divide-gray-200 bg-white">
           {[
@@ -101,7 +101,7 @@ const CreditInstrument = () => {
           {cidetail.map((ci, index) => (
             <table
               key={index}
-              className="divide-y divide-gray-300 border-r border-gray-300 w-[200px]"
+              className="divide-y divide-gray-300 border-r border-gray-300 w-[200px] text-[14px]"
             >
               <thead>
                 <tr className="divide-x divide-gray-200">
@@ -124,9 +124,9 @@ const CreditInstrument = () => {
                 </TableRow>
                 <TableRow>{ci.cilimit}</TableRow>
                 <TableRow>{ci.ciissudt}</TableRow>
-                <TableRow>{ci.ciprodexpdt}</TableRow>
+                <TableRow>{ci.ciprodexpdt?ci.ciprodexpdt:'-'}</TableRow>
                 <TableRow>{ci.cistatus}</TableRow>
-                <TableRow>{ci.ciclsddt}</TableRow>
+                <TableRow>{ci.ciclsddt?ci.ciclsddt:"-"}</TableRow>
                 <TableRow>{ci.citnr}</TableRow>
                 <TableRow>{ci.cifrq}</TableRow>
                 <TableRow>{ci.ciinstl}</TableRow>

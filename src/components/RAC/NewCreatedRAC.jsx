@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import RacMatrixConfig from "./RacMatrixConfig";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import LoadingState from "../LoadingState/LoadingState";
@@ -19,9 +19,8 @@ const NewCreatedRAC = () => {
   const handleDelete = async (deleteURL) => {
     try {
       const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac//${deleteURL}`,
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -36,21 +35,19 @@ const NewCreatedRAC = () => {
       }
       navigate("/rac");
       dispatch(fetchRACData());
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
     } catch (error) {
       console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
     }
   };
+
   const handleClone = () => {
     setIsModalOpen(true);
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const createClone = async (cloneRACName) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -67,22 +64,20 @@ const NewCreatedRAC = () => {
           },
         }
       );
-      // Check for token expiration or invalid token
       if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
+        localStorage.removeItem("authToken");
+        navigate("/login");
+        return;
       }
       const racDetails = await data.json();
-      console.log(racDetails);
       dispatch(fetchRACData());
       navigate("/newrac/" + racDetails.racId);
-      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
   };
-  const handleNameUpdate = async (updateRACName) => {
+
+  const handleNameUpdate = useCallback(async (updateRACName) => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
@@ -98,22 +93,19 @@ const NewCreatedRAC = () => {
           },
         }
       );
-      // Check for token expiration or invalid token
       if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
+        localStorage.removeItem("authToken");
+        navigate("/login");
+        return;
       }
       const racDetails = await data.json();
-      console.log(racDetails);
       dispatch(fetchRACData());
       navigate("/newrac/" + racDetails.racId);
-      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
-  }; 
-  
+  }, [racID, dispatch, navigate]);
+
   useEffect(() => {
     async function getRACInfo() {
       try {
@@ -129,25 +121,24 @@ const NewCreatedRAC = () => {
             },
           }
         );
-        // Check for token expiration or invalid token
         if (data.status === 401 || data.status === 403) {
-          localStorage.removeItem("authToken"); // Clear the token
-          navigate("/login"); // Redirect to login page
-          return; // Stop further execution
+          localStorage.removeItem("authToken");
+          navigate("/login");
+          return;
         }
         const racDetails = await data.json();
-        // console.log(racDetails);
         setRACData(racDetails);
-        //   window.location.reload();
       } catch (error) {
         console.error(error);
       }
     }
     getRACInfo();
-  }, [racID,handleNameUpdate]);
+  }, [racID, navigate]);
+
   if (RACData.length === 0) {
     return <LoadingState />;
   }
+
   return (
     <>
       <div className="flex justify-between items-baseline ">
@@ -158,8 +149,8 @@ const NewCreatedRAC = () => {
         </div>
       </div>
       <div className="mt-4">
-          <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createClone} initialName={RACData.name}/>
-          <RacMatrixConfig />
+        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createClone} initialName={RACData.name} />
+        <RacMatrixConfig />
       </div>
     </>
   );

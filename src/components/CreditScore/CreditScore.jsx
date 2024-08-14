@@ -149,11 +149,12 @@ const CreditScore = () => {
         } else if (data.ok) {
           setLoading(false);
         }
+
         const creditScoreDetails = await data.json();
+       
         setCreditScoreData(creditScoreDetails);
         setFormData((prevState) => ({ ...prevState, ...creditScoreDetails }));
-        // console.log(formData);
-        //   window.location.reload();
+
       } catch (error) {
         console.error(error);
       }
@@ -162,6 +163,7 @@ const CreditScore = () => {
     getCreditScoreInfo();
   }, [creditScoreId]);
 
+  
   const handleAddFields = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the authentication token
     try {
@@ -180,7 +182,7 @@ const CreditScore = () => {
       );
 
       if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
+        toast.error("Failed to Update! Invalid field Dependents");
       } else if (postResponse.ok) {
         toast.custom((t) => <RowChanged t={t} toast={toast} />);
       }

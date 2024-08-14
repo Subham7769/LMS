@@ -172,7 +172,7 @@ export const MenusInitial = [
     icon: "RectangleGroupIcon",
     current: false,
     submenu: true,
-    createButton: true, //if create product from Side bar Using input box
+    createButton: false, //if create product from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewProductGroup",
     buttonName: "Create Group", //Create button text

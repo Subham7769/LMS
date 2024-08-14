@@ -250,7 +250,7 @@ const DebtBurdenConfig = () => {
     }
   }
 
-  const deleteDBC = async (dbcTempId) => {
+  const handleDelete = async (dbcTempId) => {
     try {
       const token = localStorage.getItem("authToken");
       // First, send a DELETE request
@@ -333,7 +333,7 @@ const DebtBurdenConfig = () => {
     }
   };
 
-  const handleDelete = async (index) => {
+  const handleItemDelete = async (index) => {
     toast.loading("Deleting...", {
       duration: 1000,
       position: "bottom-center",
@@ -343,7 +343,7 @@ const DebtBurdenConfig = () => {
     console.log(ruleToDelete.ruleName);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_DBR_DELETE}${dbcTempId}/${ruleToDelete.ruleName}`,
+        `${import.meta.env.VITE_DBR_DELETE_RULE}${dbcTempId}/${ruleToDelete.ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -480,7 +480,7 @@ const DebtBurdenConfig = () => {
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button
             buttonIcon={TrashIcon}
-            onClick={() => deleteDBC(dbcTempId)}
+            onClick={() => handleDelete(dbcTempId)}
             circle={true}
           />
         </div>
@@ -598,7 +598,7 @@ const DebtBurdenConfig = () => {
           <div className="w-full">
             <Table
               handleChange={handleTableChange}
-              handleDelete={handleDelete}
+              handleDelete={handleItemDelete}
               handleSort={handleSort}
               toggleEdit={toggleEdit}
               editingIndex={editingIndex}

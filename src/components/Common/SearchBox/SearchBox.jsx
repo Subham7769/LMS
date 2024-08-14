@@ -6,7 +6,7 @@ import InputNumber from '../InputNumber/InputNumber';
 
 const SearchBox = () => {
     const location = useLocation();
-    const [borrowerID, setBorrowerID] = useState("");
+    const [borrowerID, setBorrowerID] = useState("3333333361");
     const [borrowerNotFound, setBorrowerNotFound] = useState(false);
     const navigate = useNavigate(); // Adding useNavigate  for navigation
 
