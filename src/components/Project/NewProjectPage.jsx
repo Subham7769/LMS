@@ -20,342 +20,52 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputDate from "../Common/InputDate/InputDate";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
-import { fetchProjectData } from '../../redux/Slices/sidebarSlice'
-import { useDispatch } from "react-redux";
+import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
+import { useDispatch, useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  setFormData,
+  handleChangeInFormData,
+  createProject,
+} from "../../redux/Slices/projectSlice";
 
 const NewProjectPage = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
-  const dispatch = useDispatch()
-
-
-  const [formData, setFormData] = useState({
-    name: projectName,
-    projectDescription: "",
-    country: "",
-    location: "",
-    currencyName: "",
-    loanType: "",
-    flatInterestRate: "",
-    interestRatePeriod: "",
-    interestPeriodUnit: "",
-    downRepaymentGracePeriod: "",
-    emiRepaymentGracePeriod: "",
-    loanGracePeriod: "",
-    rollOverGracePeriod: "",
-    rollOverPenaltyFactor: "",
-    rollOverPenaltyFee: "",
-    rollOverInterestRate: "",
-    lateEmiPenaltyFactor: "",
-    maxPaymetAttemps: "",
-    startDate: new Date().toISOString().slice(0, 10),
-    endDate: "",
-    lateRepaymentPenalty: "",
-    earlyRepaymentDiscount: "",
-    serviceFee: "",
-    calculateInterest: false,
-    hasEarlyLateRepayment: false,
-    hasDownPayment: false,
-    tclIncludeFee: true,
-    tclIncludeInterest: true,
-    managementFee: "",
-    tclRef: "",
-    vatFee: "",
-    clientIds: [],
-    tclAmount: "", //not in API
-    minLoanOperator: "", //not in API
-    minLoanAmount: "", //not in API
-    maxLoanOperator: "", //not in API
-    maxLoanAmount: "", //not in API
-    tclOperator: "", //not in API
-    minInstallmentsOperator: "", //not in API
-    minInstallmentsAmount: "", //not in API
-    maxInstallmentsOperator: "", //not in API
-    maxInstallmentsAmount: "", //not in API
-    downPaymentOperator: "", //not in API
-    downPaymentWay: "", //not in API
-    downPaymentPercentage: "", //not in API
-    openLoanOperator: "", //not in API
-    openLoanAmount: "", //not in API
-  });
-
-  useEffect(() => {
-    const pattern = /([a-zA-Z]+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
-    let match;
-    while ((match = pattern.exec(formData.criteria)) !== null) {
-      const [_, variable, operator, value] = match;
-      const parsedValue = parseInt(value);
-
-      if (isNaN(parsedValue)) {
-        console.error(
-          `Failed to parse value ${value} for variable ${variable}`
-        );
-        continue;
-      }
-
-      const updateOperatorAndValue = (
-        operatorField,
-        valueField,
-        operator,
-        parsedValue
-      ) => {
-        setFormData((prevState) => ({
-          ...prevState,
-          [operatorField]: { value: operator, label: operator },
-          [valueField]: parsedValue,
-        }));
-      };
-
-      switch (variable) {
-        case "loanAmount":
-          if (operator === ">=" || operator === ">") {
-            updateOperatorAndValue(
-              "minLoanOperator",
-              "minLoanAmount",
-              operator,
-              parsedValue
-            );
-          } else if (operator === "<=" || operator === "<") {
-            updateOperatorAndValue(
-              "maxLoanOperator",
-              "maxLoanAmount",
-              operator,
-              parsedValue
-            );
-          }
-          break;
-        case "tcl":
-          updateOperatorAndValue(
-            "tclOperator",
-            "tclAmount",
-            operator,
-            parsedValue
-          );
-          break;
-        case "numberOfInstallments":
-          if (operator === ">=" || operator === ">") {
-            updateOperatorAndValue(
-              "minInstallmentsOperator",
-              "minInstallmentsAmount",
-              operator,
-              parsedValue
-            );
-          } else if (operator === "<=" || operator === "<") {
-            updateOperatorAndValue(
-              "maxInstallmentsOperator",
-              "maxInstallmentsAmount",
-              operator,
-              parsedValue
-            );
-          }
-          break;
-        case "freqCap":
-          updateOperatorAndValue(
-            "openLoanOperator",
-            "openLoanAmount",
-            operator,
-            parsedValue
-          );
-          break;
-        default:
-          break;
-      }
-    }
-  }, [formData.criteria]);
+  const dispatch = useDispatch();
+  const { formData, loading, error } = useSelector((state) => state.project);
 
   useEffect(() => {
     setFilteredLocations(locationOptions[formData.country] || []);
   }, [formData.country]);
 
-  const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    const positiveIntegerFields = [
-      "interestRatePeriod",
-      "downRepaymentGracePeriod",
-      "emiRepaymentGracePeriod",
-      "loanGracePeriod",
-      "rollOverGracePeriod",
-    ];
-  
-    if (type === "checkbox") {
-      setFormData((prevState) => ({ ...prevState, [name]: checked }));
-    } else {
-      if (positiveIntegerFields.includes(name)) {
-        // Allow empty string for the purpose of clearing the input
-        if (value !== "" && !/^[0-9]\d*$/.test(value)) {
-          alert("Please enter a positive integer.");
-          return;
-        }
-      }
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
+  useEffect(() => {
+    if (projectName) {
+      dispatch(setFormData({ name: projectName }));
     }
+  }, [dispatch, projectName]);
+
+  console.log(formData);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target; // Extracting only the name and value properties
+    dispatch(handleChangeInFormData({ name, value })); // Passing only the serializable data
   };
 
-  const createNewProject = async (e) => {
-    e.preventDefault();
-
-    const formattedStartDate =
-      new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
-    const formattedEndDate =
-      new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
-    const startDateObj = new Date(formattedStartDate);
-    const endDateObj = new Date(formattedEndDate);
-
-    if (endDateObj < startDateObj) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Validation Error"}
-          message={"End date cannot be earlier than start date."}
-        />
-      ));
-      return;
-    }
-
-    const requiredFields = [
-      "startDate",
-      "endDate",
-      "currencyName",
-      "interestRatePeriod",
-      "country",
-      "location",
-      "projectDescription",
-      "interestPeriodUnit",
-      "loanType",
-      "lateRepaymentPenalty",
-      "earlyRepaymentDiscount",
-      "maxPaymetAttemps",
-      "serviceFee",
-      "downRepaymentGracePeriod",
-      "emiRepaymentGracePeriod",
-      "loanGracePeriod",
-      "rollOverGracePeriod",
-      "rollOverPenaltyFee",
-      "lateEmiPenaltyFactor",
-      "name",
-      "managementFee",
-      "vatFee",
-    ];
-
-    for (const field of requiredFields) {
-      if (!formData[field]) {
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Validation Error"}
-            message={`Please fill in ${field
-              .replace(/([A-Z])/g, " $1")
-              .trim()}.`}
-          />
-        ));
-        return;
-      }
-    }
-
-    const {
-      tclAmount,
-      minLoanOperator,
-      minLoanAmount,
-      maxLoanOperator,
-      maxLoanAmount,
-      tclOperator,
-      minInstallmentsOperator,
-      minInstallmentsAmount,
-      maxInstallmentsOperator,
-      maxInstallmentsAmount,
-      downPaymentOperator,
-      downPaymentWay,
-      openLoanOperator,
-      downPaymentPercentage,
-      openLoanAmount,
-      ...filteredFormData
-    } = formData;
-
-    const postData = {
-      ...filteredFormData,
-      clientIds: clientIdsString.split(","),
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-      projectTimeZone: "GMT-180",
-      paymentOption: ["mobile wallet", "top up", "credit card"],
-      bearers: ["SMS", "USSD"],
-      criteria: `tcl ${formData.tclOperator} ${
-        formData.tclAmount
-      } and loanAmount ${formData.minLoanOperator} ${
-        formData.minLoanAmount
-      } and loanAmount ${formData.maxLoanOperator} ${
-        formData.maxLoanAmount
-      } and numberOfInstallments ${formData.minInstallmentsOperator} ${
-        formData.minInstallmentsAmount
-      } and numberOfInstallments ${formData.maxInstallmentsOperator} ${
-        formData.maxInstallmentsAmount
-      } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${
-        formData.loanType === "asset"
-          ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
-          : ""
-      }`,
-    };
-
+  const createNewProject = async (event) => {
+    event.preventDefault();
     try {
-      const projectToken = localStorage.getItem("projectToken");
-      console.log(projectToken);
-      const response = await fetch(
-        `${import.meta.env.VITE_PROJECT_CREATE}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${projectToken}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-      console.log(response)
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Error"}
-            message={
-              errorMessage ||
-              "Failed to create project. Please try again later."
-            }
-          />
-        ));
-        return;
+      const Details = await dispatch(
+        createProject({ formData, clientIdsString })
+      ).unwrap();
+      dispatch(fetchProjectData());
+      navigate("/project/" + Details.projectId);
+    } catch (err) {
+      if (err === "Unauthorized") {
+        navigate("/login");
       }
-
-      const data = await response.json();
-      dispatch(fetchProjectData())
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Success"}
-          message={"Project created successfully!"}
-        />
-      ));
-
-
-      // Redirect to the project details page or any other appropriate page
-      navigate(`/project/${data.projectId}`);
-    } catch (error) {
-      console.error("Error creating project:", error);
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Error"}
-          message={"Failed to create project. Please try again later."}
-        />
-      ));
     }
   };
 
