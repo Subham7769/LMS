@@ -45,7 +45,6 @@ const EligibilityResults = ({ eligibilityResults }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState([]);
 
-
   const handleModalOpen = (message) => {
     setModalMessage(message || []);
     setModalOpen(true);

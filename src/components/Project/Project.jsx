@@ -1,6 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CheckCircleIcon, TrashIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import {
+  CheckCircleIcon,
+  TrashIcon,
+  XCircleIcon,
+} from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
@@ -21,302 +25,49 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
-import { fetchData } from "../../redux/Slices/projectSlice";
+import {
+  fetchData,
+  setFormData,
+  handleChangeInFormData,
+  updateProject,
+  deleteProject,
+} from "../../redux/Slices/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const Project = () => {
-  const [ProjectData, setProjectData] = useState([]);
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const formattedDate = (date) => {
-    return date.substring(0, 10);
-  };
-  const { data, loading, error } = useSelector((state) => state.project);
-  const [formData, setFormData] = useState({});
-  // console.log(formData);
+  const { formData, loading, error } = useSelector((state) => state.project);
 
   useEffect(() => {
     dispatch(fetchData(projectId));
   }, [dispatch, projectId]);
 
-  useEffect(() => {
-    setProjectData(data);
-  }, [data, projectId]);
-
-  const parseCriteriaAndSetFormData = (criteria) => {
-    const regex = /(\w+)\s*(<=|>=|<|>|==)\s*(\d+)/g;
-    let match;
-    const results = {};
-
-    // Extract all the matching criteria
-    while ((match = regex.exec(criteria)) !== null) {
-      const [_, field, operator, amount] = match;
-      if (!results[field]) {
-        results[field] = [];
-      }
-      results[field].push({ operator, amount });
-    }
-
-    // Extract parsed criteria and set them in form data
-    const updatedFormData = {
-      minLoanOperator: results.loanAmount?.[0]?.operator || "",
-      minLoanAmount: results.loanAmount?.[0]?.amount || "",
-      maxLoanOperator: results.loanAmount?.[1]?.operator || "",
-      maxLoanAmount: results.loanAmount?.[1]?.amount || "",
-      minInstallmentsOperator:
-        results.numberOfInstallments?.[0]?.operator || "",
-      minInstallmentsAmount: results.numberOfInstallments?.[0]?.amount || "",
-      maxInstallmentsOperator:
-        results.numberOfInstallments?.[1]?.operator || "",
-      maxInstallmentsAmount: results.numberOfInstallments?.[1]?.amount || "",
-      tclOperator: results.tcl?.[0]?.operator || "",
-      tclAmount: results.tcl?.[0]?.amount || "",
-      openLoanOperator: results.freqCap?.[0]?.operator || "",
-      openLoanAmount: results.freqCap?.[0]?.amount || "",
-    };
-
-    // Set form data with the parsed criteria
-    setFormData((prevData) => ({
-      ...prevData,
-      ...updatedFormData,
-    }));
-  };
-
-  useEffect(() => {
-    if (ProjectData.length === 0) {
-      console.log("Fetching data");
-    } else {
-      // Initial form data setup
-      const initialFormData = {
-        name: ProjectData.name,
-        projectDescription: ProjectData.projectDescription,
-        country: ProjectData.country,
-        location: ProjectData.location,
-        currencyName: ProjectData.currencyName,
-        loanType: ProjectData.loanType,
-        flatInterestRate: ProjectData.flatInterestRate,
-        interestRatePeriod: ProjectData.interestRatePeriod,
-        interestPeriodUnit: ProjectData.interestPeriodUnit,
-        downRepaymentGracePeriod: ProjectData.downRepaymentGracePeriod,
-        emiRepaymentGracePeriod: ProjectData.emiRepaymentGracePeriod,
-        loanGracePeriod: ProjectData.loanGracePeriod,
-        rollOverGracePeriod: ProjectData.rollOverGracePeriod,
-        rollOverPenaltyFee: null,
-        rollOverInterestRate: ProjectData.rollOverInterestRate,
-        lateEmiPenaltyFactor: ProjectData.lateEmiPenaltyFactor,
-        maxPaymetAttemps: ProjectData.maxPaymetAttemps,
-        rollOverPenaltyFactor: ProjectData.rollOverPenaltyFactor,
-        startDate: formattedDate(ProjectData.startDate),
-        endDate: formattedDate(ProjectData.endDate),
-        serviceFee: ProjectData.serviceFee,
-        clientIds: ProjectData.clientIds,
-        hasEarlyLateRepayment: ProjectData.hasEarlyLateRepayment,
-        calculateInterest: ProjectData.calculateInterest,
-        downPaymentPercentage: ProjectData.downPaymentPercentage,
-        tclIncludeFee: ProjectData.tclIncludeFee,
-        tclIncludeInterest: ProjectData.tclIncludeInterest,
-        lateRepaymentPenalty: ProjectData.lateRepaymentPenalty,
-        earlyRepaymentDiscount: ProjectData.earlyRepaymentDiscount,
-        hasDownPayment: ProjectData.hasDownPayment,
-        managementFee: ProjectData.managementFee,
-        vatFee: ProjectData.vatFee,
-        // Criteria fields initialized as empty, will be updated by parseCriteriaAndSetFormData
-        minLoanAmount: "",
-        maxLoanAmount: "",
-        minLoanOperator: "",
-        maxLoanOperator: "",
-        minInstallmentsAmount: "",
-        maxInstallmentsOperator: "",
-        maxInstallmentsAmount: "",
-        minInstallmentsOperator: "",
-        tclAmount: "",
-        tclOperator: "",
-        openLoanAmount: "",
-        openLoanOperator: "",
-      };
-
-      // Set the initial form data
-      setFormData(initialFormData);
-
-      // Parse the criteria and set additional form data
-      parseCriteriaAndSetFormData(ProjectData.criteria);
-    }
-  }, [ProjectData]);
+  // console.log(formData);
 
   useEffect(() => {
     setFilteredLocations(locationOptions[formData.country] || []);
   }, [formData.country]);
 
   const handleChange = (e) => {
-    // Check if e is an event or a string
-    if (typeof e === "string") {
-      setFormData((prevState) => ({ ...prevState, name: e }));
-      toast.custom((t) => (
-        <Warning
-          t={t}
-          toast={toast}
-          title={"Not Updated Yet"}
-          message={"To confirm the name change click Update button"}
-        />
-      ));
-    } else {
-      const { name, value, checked, type } = e.target;
-      const positiveIntegerFields = [
-        "interestRatePeriod",
-        "downRepaymentGracePeriod",
-        "emiRepaymentGracePeriod",
-        "loanGracePeriod",
-        "rollOverGracePeriod",
-      ];
-
-      if (type === "checkbox") {
-        setFormData((prevState) => ({ ...prevState, [name]: checked }));
-      } else {
-        if (positiveIntegerFields.includes(name)) {
-          // Allow empty string for the purpose of clearing the input
-          if (value !== "" && !/^[0-9]\d*$/.test(value)) {
-            alert("Please enter a positive integer.");
-            return;
-          }
-        }
-        setFormData((prevState) => ({ ...prevState, [name]: value }));
-      }
-    }
+    const { name, value, checked, type } = e.target; // Extracting only the name and value properties
+    dispatch(handleChangeInFormData({ name, value, checked, type })); // Passing only the serializable data
   };
 
-  const handleUpdate = async () => {
-    const formattedStartDate =
-      new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
-    const formattedEndDate =
-      new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
-    const startDateObj = new Date(formattedStartDate);
-    const endDateObj = new Date(formattedEndDate);
-
-    if (endDateObj < startDateObj) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Validation Error"}
-          message={"End date cannot be earlier than start date."}
-        />
-      ));
-      return;
-    }
-
-    const {
-      tclAmount,
-      minLoanOperator,
-      minLoanAmount,
-      maxLoanOperator,
-      maxLoanAmount,
-      tclOperator,
-      minInstallmentsOperator,
-      minInstallmentsAmount,
-      maxInstallmentsOperator,
-      maxInstallmentsAmount,
-      downPaymentOperator,
-      downPaymentWay,
-      openLoanOperator,
-      downPaymentPercentage,
-      openLoanAmount,
-      ...filteredFormData
-    } = formData;
-
-    const postData = {
-      ...filteredFormData,
-      clientIds: clientIdsString.split(","),
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-      projectTimeZone: ProjectData.projectTimeZone,
-      paymentOption: ProjectData.paymentOption,
-      bearers: ProjectData.bearers,
-      projectId: projectId,
-      criteria: `tcl ${formData.tclOperator} ${formData.tclAmount
-        } and loanAmount ${formData.minLoanOperator} ${formData.minLoanAmount
-        } and loanAmount ${formData.maxLoanOperator} ${formData.maxLoanAmount
-        } and numberOfInstallments ${formData.minInstallmentsOperator} ${formData.minInstallmentsAmount
-        } and numberOfInstallments ${formData.maxInstallmentsOperator} ${formData.maxInstallmentsAmount
-        } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${formData.loanType === "asset"
-          ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
-          : ""
-        }`,
-    };
-    try {
-      const authToken = localStorage.getItem("projectToken");
-      const response = await fetch(`${import.meta.env.VITE_PROJECT_UPDATE}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Update Failed"}
-            message={errorData.message}
-          />
-        ));
-        throw new Error(errorData.message || "Failed to update the project");
-      } else if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Update Successful"}
-            message={"The data was updated successfully"}
-          />
-        ));
-      }
-      dispatch(fetchProjectData())
-
-      const responseData = await response.json();
-      console.log("Project updated successfully:", responseData);
-    } catch (error) {
-      console.error("Error updating project:", error);
-    }
+  const handleUpdate = () => {
+    dispatch(updateProject({ formData, projectId, clientIdsString }));
   };
 
   const handleDelete = async () => {
-    try {
-      const token = localStorage.getItem("projectToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${import.meta.env.VITE_PROJECT_DELETE}${projectId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      }
-      dispatch(fetchProjectData())
-
-      navigate("/project/projectPage");
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
-    } catch (error) {
-      console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
-    }
+    const token = localStorage.getItem("projectToken");
+    await dispatch(deleteProject({ projectId, token })).unwrap();
+    dispatch(fetchProjectData());
+    navigate("/project/projectPage");
   };
 
   const divStyle = {
@@ -652,8 +403,9 @@ const Project = () => {
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
-                  className={`flex-1 w-full ${formData.loanType === "cash" && "hidden"
-                    }`}
+                  className={`flex-1 w-full ${
+                    formData.loanType === "cash" && "hidden"
+                  }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}

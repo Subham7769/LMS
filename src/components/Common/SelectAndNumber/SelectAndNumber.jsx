@@ -81,9 +81,11 @@ const SelectAndNumber = ({
           defaultValue={inputSelectValue}
           options={inputSelectOptions}
           className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm "
-          value={inputSelectOptions.find(
-            (option) => option.value === inputSelectValue
-          )}
+          value={
+            inputSelectOptions.find(
+              (option) => option.value === inputSelectValue
+            ) || null
+          }
           onChange={handleSelectChange}
           isDisabled={disabledSelect}
           isHidden={hiddenSelect}
@@ -105,9 +107,11 @@ const SelectAndNumber = ({
               defaultValue={inputSelect2Value}
               options={inputSelect2Options}
               className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm "
-              value={inputSelect2Options.find(
-                (option) => option.value === inputSelect2Value
-              )}
+              value={
+                inputSelect2Options.find(
+                  (option) => option.value === inputSelect2Value
+                ) || null
+              }
               onChange={handleSelect2Change}
               isDisabled={disabledSelect2}
               isHidden={hiddenSelect2}

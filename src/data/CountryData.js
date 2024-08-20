@@ -2770,6 +2770,7 @@ export const loanTypeOptions = [
 ];
 
 export const interestPeriodOptions = [
+  { value: "daily", label: "Daily" },
   { value: "Monthly", label: "Monthly" },
   { value: "Weekly", label: "Weekly" },
   { value: "Forthnightly", label: "Forthnightly" },
