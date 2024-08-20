@@ -415,6 +415,10 @@ const projectSlice = createSlice({
           tclAmount: results.tcl?.[0]?.amount || "",
           openLoanOperator: results.freqCap?.[0]?.operator || "",
           openLoanAmount: results.freqCap?.[0]?.amount || "",
+          downPaymentPercentage:
+            results.downPaymentPercentage?.[0].amount || "",
+          downPaymentOperator:
+            results.downPaymentPercentage?.[0].operator || "",
         };
       })
       .addCase(fetchData.rejected, (state, action) => {
