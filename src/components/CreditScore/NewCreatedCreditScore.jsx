@@ -5,8 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import CreditScore from "./CreditScore";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
-import { fetchCreditScoreEqData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
+import { fetchCreditScoreEqData } from "../../redux/Slices/sidebarSlice";
+import {
+  cloneCreditScore,
+  deleteCreditScore,
+  renameCreditScore,
+} from "../../redux/Slices/creditScoreSlice";
+import toast, { Toaster } from "react-hot-toast";
+import { Passed } from "../Toasts";
 
 const NewCreatedCreditScore = () => {
   const [creditScoreName, setCreditScoreName] = useState("");
@@ -32,15 +39,13 @@ const NewCreatedCreditScore = () => {
           },
         }
       );
-      // Check for token expiration or invalid token
       if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
+        localStorage.removeItem("authToken");
+        navigate("/login");
+        return;
       }
       const CreditScoreDetails = await data.json();
       setCreditScoreName(CreditScoreDetails.name.replace(/-/g, " "));
-      // console.log(CreditScoreEqData);
     } catch (error) {
       console.error(error);
     }
@@ -56,115 +61,75 @@ const NewCreatedCreditScore = () => {
 
   const createCloneCSE = async (cloneCSEName) => {
     try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_CREATE_CLONE}${creditScoreId}/clone/${cloneCSEName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const cseDetails = await data.json();
-      console.log(cseDetails);
-      dispatch(fetchCreditScoreEqData())
+      const response = await dispatch(
+        cloneCreditScore({ creditScoreId, cloneCSEName })
+      ).unwrap();
+      setIsModalOpen(false);
+      dispatch(fetchCreditScoreEqData());
 
-      navigate("/credit-score/" + cseDetails.creditScoreEqTempId);
-      // window.location.reload();
+      if (response?.creditScoreEqTempId) {
+        navigate(`/credit-score/${response.creditScoreEqTempId}`);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleUpdateCSE = async (updatecseName) => {
+  const handleRename = async (updatecseName) => {
     try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_NAME_UPDATE}${creditScoreId}/name/${updatecseName}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const cseDetails = await data.json();
-      console.log(cseDetails);
-      navigate("/credit-score/" + cseDetails.creditScoreEqTempId);
-      dispatch(fetchCreditScoreEqData())
-      getCSEInfo()
-      // window.location.reload();
+      await dispatch(
+        renameCreditScore({ creditScoreId, updatecseName })
+      ).unwrap();
+      setCreditScoreName(updatecseName);
+      dispatch(fetchCreditScoreEqData());
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Rename Successful"}
+          message={"The name has been updated"}
+        />
+      ));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDelete = async (creditScoreId) => {
+  const handleDelete = async () => {
     try {
-      const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_DELETE}${creditScoreId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      }
-      dispatch(fetchCreditScoreEqData())
-
+      await dispatch(deleteCreditScore(creditScoreId)).unwrap();
       navigate("/credit-score");
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
+      dispatch(fetchCreditScoreEqData());
     } catch (error) {
       console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
     }
   };
+
   return (
     <>
-      <div className="flex justify-between items-center">
-        <DynamicName initialName={creditScoreName} onSave={handleUpdateCSE} />
-        <div className="flex items-center justify-between gap-6">
-          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={() => handleDelete(creditScoreId)}
-            circle={true}
-          />
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="px-3 pt-3">
+        <div className="flex justify-between items-center">
+          <DynamicName initialName={creditScoreName} onSave={handleRename} />
+          <div className="flex items-center gap-2">
+            <TrashIcon
+              className="w-6 h-6 text-red-500 cursor-pointer"
+              onClick={handleDelete}
+            />
+            <Button
+              buttonName={"Clone"}
+              onClick={handleClone}
+              rectangle={true}
+            />
+          </div>
         </div>
-      </div>
-      <div className="mt-4">
+        <CreditScore />
         <CloneModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          onCreateClone={createCloneCSE}
+          onCreateClone={createCloneCSE} // This is where the issue is
           initialName={creditScoreName}
         />
-        <CreditScore />
       </div>
     </>
   );

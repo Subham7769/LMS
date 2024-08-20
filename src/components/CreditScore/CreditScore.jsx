@@ -1,20 +1,25 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Select from "react-select";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { RowChanged } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import Button from "../Common/Button/Button";
+import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import ListTable from "../Common/ListTable/ListTable";
+import {
+  fetchCreditScore,
+  updateCreditScore,
+  setFormData,
+} from "../../redux/Slices/creditScoreSlice";
 import {
   CreditScoreHeaderList,
   MaritialScoreHeaderList,
   NationalityScoreHeaderList,
   ResidentialScoreHeaderList,
 } from "../../data/CreditScoreEqData";
+import InputNumber from "../Common/InputNumber/InputNumber";
 
 const options = [
   { value: "==", label: "==" },
@@ -27,173 +32,45 @@ const options = [
 const CreditScore = () => {
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
-  const [creditScoreData, setCreditScoreData] = useState([]);
-  const [formData, setFormData] = useState({
-    aweightage: "",
-    bweightage: "",
-    creditScoreEqTempId: creditScoreId,
-    cweightage: "",
-    dweightage: "",
-    eweightage: "",
-    fweightage: "",
-    residentsCreditScore: "",
-    expatriatesCreditScore: "",
-    rentStatusScore: "",
-    ownStatusScore: "",
-    marriedStatusScore: "",
-    singleStatusScore: "",
-    divorcedStatusScore: "",
-    widowedStatusScore: "",
-    separatedStatusScore: "",
-    unknownStatusScore: "",
-    dependentsRules: {
-      operators: {
-        firstDependentsOperator: "",
-        secondDependentsOperator: "",
-      },
-      rules: [
-        {
-          ruleName: "1",
-          fieldType: "Employer",
-          creditScoreEqTempId: creditScoreId,
-          firstDependent: "",
-          secondDependent: "",
-          value: "",
-        },
-        {
-          ruleName: "2",
-          fieldType: "Employer",
-          creditScoreEqTempId: creditScoreId,
-          firstDependent: "",
-          secondDependent: "",
-          value: "",
-        },
-        {
-          ruleName: "3",
-          fieldType: "Employer",
-          creditScoreEqTempId: creditScoreId,
-          firstDependent: "",
-          secondDependent: "",
-          value: "",
-        },
-      ],
-    },
-  });
+  const dispatch = useDispatch();
+  const { creditScoreData, formData, loading } = useSelector(
+    (state) => state.creditScore
+  );
 
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    dispatch(fetchCreditScore(creditScoreId))
+      .unwrap()
+      .catch((error) => {
+        if (error === "Unauthorized") {
+          navigate("/login");
+        }
+      });
+  }, [creditScoreId, dispatch, navigate]);
 
   const handleChange = (e) => {
     const { name, value, id } = e.target;
-
-    setFormData((prevState) => {
-      const isOperator =
-        prevState.dependentsRules.operators.hasOwnProperty(name);
-      const isRuleField = prevState.dependentsRules.rules.some(
-        (rule) => rule.ruleName === id && rule.hasOwnProperty(name)
-      );
-
-      if (isOperator) {
-        // Update an operator
-        return {
-          ...prevState,
-          dependentsRules: {
-            ...prevState.dependentsRules,
-            operators: {
-              ...prevState.dependentsRules.operators,
-              [name]: value,
-            },
-          },
-        };
-      } else if (isRuleField) {
-        // Update a rule
-        return {
-          ...prevState,
-          dependentsRules: {
-            ...prevState.dependentsRules,
-            rules: prevState.dependentsRules.rules.map((rule) =>
-              rule.ruleName === id ? { ...rule, [name]: value } : rule
-            ),
-          },
-        };
-      } else {
-        // Update a field directly in formData
-        return {
-          ...prevState,
-          [name]: value,
-        };
-      }
-    });
+    dispatch(setFormData({ name, value, id }));
   };
 
-  useEffect(() => {
-    async function getCreditScoreInfo() {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("authToken");
-        const data = await fetch(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
-            creditScoreId,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Check for token expiration or invalid token
-        if (data.status === 401 || data.status === 403) {
-          localStorage.removeItem("authToken"); // Clear the token
-          navigate("/login"); // Redirect to login page
-          return; // Stop further execution
-        } else if (data.ok) {
-          setLoading(false);
-        }
-
-        const creditScoreDetails = await data.json();
-       
-        setCreditScoreData(creditScoreDetails);
-        setFormData((prevState) => ({ ...prevState, ...creditScoreDetails }));
-
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    getCreditScoreInfo();
-  }, [creditScoreId]);
-
-  
   const handleAddFields = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-    try {
-      // POST request to add new fields
-      const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/" +
-          creditScoreId,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!postResponse.ok) {
-        toast.error("Failed to Update! Invalid field Dependents");
-      } else if (postResponse.ok) {
+    dispatch(updateCreditScore({ creditScoreId, formData }))
+      .unwrap()
+      .then(() => {
         toast.custom((t) => <RowChanged t={t} toast={toast} />);
-      }
-    } catch (error) {
-      console.error("Failed to update data:", error);
-    }
+      })
+      .catch((error) => {
+        if (error === "Unexpected end of JSON input") {
+          toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        } else {
+          toast.error(error);
+        }
+      });
   };
 
   if (loading) {
     return <LoadingState />;
   }
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -271,7 +148,9 @@ const CreditScore = () => {
         />
       </div>
       <div className="bg-gray-100 rounded-xl p-6">
-        <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">Dependents Rules</h2>
+        <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">
+          Dependents Rules
+        </h2>
         <div className="grid grid-cols-3 gap-5 justify-between">
           <div>
             <div className="mb-3">

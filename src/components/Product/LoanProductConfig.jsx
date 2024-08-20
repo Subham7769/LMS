@@ -381,27 +381,6 @@ const LoanProductConfig = () => {
     { label: "Actions", key: "actions", sortable: false }, // No sorting for actions
   ];
 
-  const TableHead = () => {
-    return (
-      <thead className="bg-gray-50">
-        <tr>
-          {columns.map((column) => (
-            <th
-              key={column.key}
-              scope="col"
-              onClick={column.sortable ? () => handleSort(column.key) : null}
-              className={column.sortable ? "cursor-pointer" : ""}
-            >
-              <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider flex">
-                {column.label} {column.sortable && getSortIcon(column.key)}
-              </div>
-            </th>
-          ))}
-        </tr>
-      </thead>
-    );
-  };
-
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -427,7 +406,25 @@ const LoanProductConfig = () => {
         />
         <div>
           <table className="w-full divide-y divide-gray-200">
-            <TableHead />
+            <thead className="bg-gray-50">
+              <tr>
+                {columns.map((column) => (
+                  <th
+                    key={column.key}
+                    scope="col"
+                    onClick={
+                      column.sortable ? () => handleSort(column.key) : null
+                    }
+                    className={column.sortable ? "cursor-pointer" : ""}
+                  >
+                    <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider flex">
+                      {column.label}{" "}
+                      {column.sortable && getSortIcon(column.key)}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {currentItems.length < 1 ? (
                 <tr>

@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchRules,
+  fetchName,
+  updateName,
+  createCloneDBC,
+  addRule,
+  deleteDBC,
+  handleChange,
+  toggleModal,
+  setCurrentPage,
+  deleteRule,
+  updateOperator,
+  resetFormData,
+  updateRule,
+} from "../../redux/Slices/dbrSlice";
 import {
   PlusIcon,
   TrashIcon,
@@ -11,7 +27,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import { useParams } from "react-router-dom";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import Table from "./Table";
 import { operatorOptions, empOptions } from "../../data/OptionsData";
@@ -20,41 +35,30 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
-import { fetchDBRData } from "../../redux/Slices/sidebarSlice";
-import { useDispatch } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { dbcTempId } = useParams();
-  const [rules, setRules] = useState([]);
-  const [debtBurdenData, setDebtBurdenData] = useState([]);
-  const [operators, setOperators] = useState({
-    firstNetIncomeBracketInSARuleOperator: "",
-    secondNetIncomeBracketInSARuleOperator: "",
-  });
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const [name, setName] = useState("Fetching Name...");
-  const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [formData, setFormData] = useState({
-    ruleName: "0",
-    dbcTempId: dbcTempId,
-    employerRetired: "",
-    startNetIncomeBracketInSARule: "",
-    endNetIncomeBracketInSARule: "",
-    productLevel: "",
-    consumerDBR: "",
-    gdbrWithoutMTG: "",
-    gdbrWithMTG: "",
-  });
+  // Redux state selectors
+  const rules = useSelector((state) => state.dbrConfig.rules);
+  const operators = useSelector((state) => state.dbrConfig.operators);
+  const name = useSelector((state) => state.dbrConfig.name);
+  const loading = useSelector((state) => state.dbrConfig.loading);
+  const currentPage = useSelector((state) => state.dbrConfig.currentPage);
+  const isModalOpen = useSelector((state) => state.dbrConfig.isModalOpen);
+  const formData = useSelector((state) => state.dbrConfig.formData);
 
-  console.log(formData);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    dispatch(fetchRules(dbcTempId));
+    dispatch(fetchName(dbcTempId));
+  }, [dbcTempId, dispatch]);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -66,20 +70,13 @@ const DebtBurdenConfig = () => {
     setSortConfig({ key: column, direction });
   };
 
-  const getSortIcon = (column) => {
-    if (sortConfig.key === column) {
-      if (sortConfig.direction === "asc") {
-        return <FaSortAmountDown className="ml-2" />;
-      } else if (sortConfig.direction === "desc") {
-        return <FaSortAmountUp className="ml-2" />;
-      }
-    }
-    return <FaSort className="ml-2" title="Sort Data" />;
+  const handleOperatorChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(updateOperator({ name, value }));
   };
 
-  // Handle page change
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+    dispatch(setCurrentPage(newPage));
     toast.custom((t) => (
       <Warning
         t={t}
@@ -90,220 +87,87 @@ const DebtBurdenConfig = () => {
     ));
   };
 
-  const toggleEdit = (index) => {
-    setEditingIndex(editingIndex === index ? null : index);
-  };
+  const handleItemDelete = (index) => {
+    const authToken = localStorage.getItem("authToken");
+    const ruleToDelete = rules[indexOfFirstItem + index];
 
-  const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setFormData((prevState) => ({ ...prevState, [name]: checked }));
-    } else {
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
+    if (!ruleToDelete) {
+      console.error("No rule found to delete at this index.");
+      return;
     }
-  };
 
-  useEffect(() => {
-    fetchRules();
-    fetchName();
-    setFormData({
-      ruleName: "0",
-      dbcTempId: dbcTempId,
-      employerRetired: "",
-      startNetIncomeBracketInSARule: "",
-      endNetIncomeBracketInSARule: "",
-      productLevel: "",
-      consumerDBR: "",
-      gdbrWithoutMTG: "",
-      gdbrWithMTG: "",
-    });
-  }, [dbcTempId]);
-
-  const handleClone = () => {
-    setIsModalOpen(true);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const createCloneDBC = async (cloneDBCName) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_DBR_CREATE_CLONE}${dbcTempId}/clone/${cloneDBCName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const dbcDetails = await data.json();
-      console.log(dbcDetails);
-      dispatch(fetchDBRData())
-
-      navigate("/newdbc/" + dbcDetails.dbcTempId);
-      // window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchRules = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_DBR_READ}${dbcTempId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const debtBurdenConfig = await data.json();
-      setDebtBurdenData(debtBurdenConfig);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  async function fetchName() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_DBR_NAME_READ}${dbcTempId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const retrievedname = await data.json();
-      setName(retrievedname.name);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching name:", error);
-    }
-  }
-
-  async function updateName(newName) {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_DBR_NAME_UPDATE}${dbcTempId}/name/${newName}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (data.ok) {
+    dispatch(
+      deleteRule({
+        index,
+        ruleName: ruleToDelete.ruleName,
+        dbcTempId,
+        authToken,
+      })
+    ).then((response) => {
+      if (response.error) {
+        console.error("Error deleting rule:", response.error);
+      } else {
+        console.log("Rule deleted successfully.");
         toast.custom((t) => (
           <Passed
             t={t}
             toast={toast}
-            title={"Update Successful"}
-            message={"The name was updated successfully"}
+            title={"Deleting Successful"}
+            message={"The item was deleted successfully"}
           />
         ));
-
-        fetchName();
-      dispatch(fetchDBRData())
-
-        // window.location.reload();
       }
-    } catch (error) {
-      console.error("Error Updating Name:", error);
-    }
-  }
+    });
+  };
 
-  const handleDelete = async (dbcTempId) => {
+  const toggleEdit = (index) => {
+    setEditingIndex(editingIndex === index ? null : index);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    dispatch(
+      handleChange({ name, value: type === "checkbox" ? checked : value })
+    );
+  };
+
+  const handleClone = () => {
+    dispatch(toggleModal());
+  };
+
+  const closeModal = () => {
+    dispatch(toggleModal());
+  };
+
+  const createClone = async (cloneDBCName) => {
     try {
-      const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${import.meta.env.VITE_DBR_DELETE}${dbcTempId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const resultAction = await dispatch(
+        createCloneDBC({ dbcTempId, cloneDBCName })
       );
 
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
+      if (createCloneDBC.fulfilled.match(resultAction)) {
+        const newDbcTempId = resultAction.payload;
+        navigate("/newdbc/" + newDbcTempId);
+      } else {
+        console.error(
+          "Failed to create clone:",
+          resultAction.payload || "Unknown error"
+        );
       }
-      dispatch(fetchDBRData())
-      
-      navigate("/dbc");
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
     } catch (error) {
-      console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
+      console.error("Error during clone creation:", error);
     }
   };
 
-  const handleAddRule = async () => {
-    toast.loading("Adding...", {
-      duration: 1000,
-      position: "bottom-center",
-    });
-    const authToken = localStorage.getItem("authToken");
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_DBR_ADD_RULE}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ operators: operators, dbrRules: [formData] }),
-        }
-      );
+  const updateNameHandler = (newName) => {
+    dispatch(updateName({ dbcTempId, newName }));
+  };
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else if (response.ok) {
-        fetchRules();
+  const addNewRule = () => {
+    dispatch(addRule({ operators, formData, dbcTempId }))
+      .unwrap()
+      .then((response) => {
+        console.log("Rule added successfully:", response);
         toast.custom((t) => (
           <Passed
             t={t}
@@ -312,93 +176,36 @@ const DebtBurdenConfig = () => {
             message={"The item was added successfully"}
           />
         ));
-        setFormData({
-          ruleName: "0",
-          dbcTempId: dbcTempId,
-          employerRetired: "",
-          startNetIncomeBracketInSARule: "",
-          endNetIncomeBracketInSARule: "",
-          productLevel: "",
-          consumerDBR: "",
-          gdbrWithoutMTG: "",
-          gdbrWithMTG: "",
-        });
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
+        dispatch(resetFormData());
+      })
+      .catch((error) => {
+        console.error("Failed to add rule:", error);
+      });
+  };
+
+  const deleteCurrentDBC = async () => {
+    try {
+      const resultAction = await dispatch(deleteDBC(dbcTempId));
+
+      if (deleteDBC.fulfilled.match(resultAction)) {
+        navigate("/dbc");
+      } else {
+        console.error(
+          "Failed to delete DBC:",
+          resultAction.payload || "Unknown error"
+        );
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error during deletion:", error);
     }
   };
 
-  const handleItemDelete = async (index) => {
-    toast.loading("Deleting...", {
-      duration: 1000,
-      position: "bottom-center",
-    });
-    const authToken = localStorage.getItem("authToken");
-    const ruleToDelete = rules[indexOfFirstItem + index];
-    console.log(ruleToDelete.ruleName);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_DBR_DELETE_RULE}${dbcTempId}/${ruleToDelete.ruleName}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      if (response.ok) {
-        setRules(rules.filter((_, i) => i !== index));
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Delete Successful"}
-            message={"The item was deleted successfully"}
-          />
-        ));
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-    } catch (error) {
-      console.error("Error deleting rule:", error);
-    }
-  };
-
-  const handleTableChange = async (index, field, value) => {
-    toast.loading("Updating...", {
-      duration: 1000,
-      position: "bottom-center",
-    });
-    const authToken = localStorage.getItem("authToken");
-    const newRules = [...rules];
-    newRules[index][field] = value;
-    setRules(newRules);
-
-    // Make a PUT request to update the data
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_DBR_UPDATE}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ operators, dbrRules: newRules }),
-        }
-      );
-      if (response.ok) {
-        console.log("Data updated successfully");
+  const handleTableChange = (index, field, value) => {
+    dispatch(updateRule({ index, field, value, rules, operators, dbcTempId }))
+      .unwrap()
+      .then((updatedRules) => {
+        // Log the successful update or perform any other action with the updated rules
+        console.log("Update successful:", updatedRules);
         toast.custom((t) => (
           <Passed
             t={t}
@@ -407,25 +214,13 @@ const DebtBurdenConfig = () => {
             message={"The item was updated successfully"}
           />
         ));
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
+      })
+      .catch((error) => {
+        // Handle errors that occurred during the update process
+        console.error("Failed to update rule:", error);
+        toast.error("Failed to update the item. Please try again.");
+      });
   };
-
-  useEffect(() => {
-    if (debtBurdenData.length === 0) {
-      setLoading(true);
-      console.log("Fetching data");
-    } else {
-      setRules(debtBurdenData?.dbrRules || []);
-      setOperators(debtBurdenData?.operators || []);
-    }
-  }, [debtBurdenData, dbcTempId]);
 
   function informUser() {
     toast.custom((t) => (
@@ -448,6 +243,17 @@ const DebtBurdenConfig = () => {
       />
     ));
   }
+
+  const getSortIcon = (column) => {
+    if (sortConfig.key === column) {
+      if (sortConfig.direction === "asc") {
+        return <FaSortAmountDown className="ml-2" />;
+      } else if (sortConfig.direction === "desc") {
+        return <FaSortAmountUp className="ml-2" />;
+      }
+    }
+    return <FaSort className="ml-2" title="Sort Data" />;
+  };
 
   const sortedItems = [...rules].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -475,12 +281,12 @@ const DebtBurdenConfig = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
-        <DynamicName initialName={name} onSave={updateName} />
+        <DynamicName initialName={name} onSave={updateNameHandler} />
         <div className="flex gap-4">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button
             buttonIcon={TrashIcon}
-            onClick={() => handleDelete(dbcTempId)}
+            onClick={() => deleteCurrentDBC(dbcTempId)}
             circle={true}
           />
         </div>
@@ -488,7 +294,7 @@ const DebtBurdenConfig = () => {
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onCreateClone={createCloneDBC}
+        onCreateClone={createClone}
         initialName={name}
       />
       <ContainerTile>
@@ -498,12 +304,7 @@ const DebtBurdenConfig = () => {
               labelName={"Rule 1"}
               inputValue={operators.firstNetIncomeBracketInSARuleOperator}
               inputOptions={operatorOptions}
-              onChange={(selected) =>
-                setOperators({
-                  ...operators,
-                  firstNetIncomeBracketInSARuleOperator: selected.target.value,
-                })
-              }
+              onChange={handleOperatorChange}
               inputName="firstNetIncomeBracketInSARuleOperator"
             />
           </div>
@@ -512,12 +313,7 @@ const DebtBurdenConfig = () => {
               labelName="Rule 2"
               inputValue={operators.secondNetIncomeBracketInSARuleOperator}
               inputOptions={operatorOptions}
-              onChange={(selected) =>
-                setOperators({
-                  ...operators,
-                  secondNetIncomeBracketInSARuleOperator: selected.target.value,
-                })
-              }
+              onChange={handleOperatorChange}
               inputName="secondNetIncomeBracketInSARuleOperator"
             />
           </div>
@@ -528,7 +324,7 @@ const DebtBurdenConfig = () => {
               labelName="Start Net"
               inputName={`startNetIncomeBracketInSARule`}
               inputValue={formData.startNetIncomeBracketInSARule}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeHolder="10000"
             />
           </div>
@@ -537,7 +333,7 @@ const DebtBurdenConfig = () => {
               labelName="End Net"
               inputName={`endNetIncomeBracketInSARule`}
               inputValue={formData.endNetIncomeBracketInSARule}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeHolder="20000"
             />
           </div>
@@ -546,7 +342,7 @@ const DebtBurdenConfig = () => {
               labelName="Product Level"
               inputName={`productLevel`}
               inputValue={formData.productLevel}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeHolder="33%"
             />
           </div>
@@ -555,7 +351,7 @@ const DebtBurdenConfig = () => {
               labelName="Consumer DBR"
               inputName={`consumerDBR`}
               inputValue={formData.consumerDBR}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeHolder="65%"
             />
           </div>
@@ -564,7 +360,7 @@ const DebtBurdenConfig = () => {
               labelName="GDBR (Without MTG)"
               inputName={`gdbrWithoutMTG`}
               inputValue={formData.gdbrWithoutMTG}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeHolder="65%"
             />
           </div>
@@ -573,7 +369,7 @@ const DebtBurdenConfig = () => {
               labelName="Employer Retired"
               inputName={`employerRetired`}
               inputValue={formData.employerRetired}
-              onChange={handleChange}
+              onChange={handleInputChange}
               inputOptions={empOptions}
             />
           </div>
@@ -582,16 +378,12 @@ const DebtBurdenConfig = () => {
               labelName="GDBR (including MTG)"
               inputName={`gdbrWithMTG`}
               inputValue={formData.gdbrWithMTG}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeHolder="65%"
             />
           </div>
           <div className="w-8">
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={handleAddRule}
-              circle={true}
-            />
+            <Button buttonIcon={PlusIcon} onClick={addNewRule} circle={true} />
           </div>
         </div>
         <div>

@@ -6,6 +6,8 @@ import tclSlice from "./Slices/tclSlice";
 import projectSlice from "./Slices/projectSlice";
 import productSlice from "./Slices/productSlice";
 import beSlice from "./Slices/beSlice";
+import dbrSlice from "./Slices/dbrSlice";
+import creditScoreSlice from "./Slices/creditScoreSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +17,8 @@ const store = configureStore({
     project: projectSlice,
     product: productSlice,
     blockedEmployer: beSlice,
+    dbrConfig: dbrSlice,
+    creditScore: creditScoreSlice,
   },
 });
 
