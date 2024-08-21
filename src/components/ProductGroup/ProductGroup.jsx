@@ -1,108 +1,69 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-// import { productTypeOptions } from "../../data/OptionsData";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
-import useGroupFormState from "../../utils/useGroupFormState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import LoadingState from "../Common/Loader/Loader";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  fetchPGroups,
+  setFormData,
+} from "../../redux/Slices/productGroupSlice";
 
 const ProductGroup = () => {
   const { configId } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const isNewGroup = configId === "newGroup";
   const newGroupName = location.state?.Name || "New Group";
-  const [loading, setLoading] = useState(false);
-  const [productTypeOptions, setProductTypeOptions] = useState([]);
 
-  const {
-    formData,
-    handleChange,
-    handleSelectChange,
-    addTag,
-    deleteTag,
-    setFormData,
-  } = useGroupFormState({
-    name: configId,
-    product: "",
-    limit: "",
-    tags: [],
-    selectedOption: null,
-  });
-
-  async function fetchPGroups() {
-    setLoading(true);
-    try {
-      const auth = localStorage.getItem("authToken");
-
-      const response = await fetch(
-        `${import.meta.env.VITE_PRODUCT_GROUP_READ}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth}`,
-          },
-        }
-      );
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-
-      const data = await response.json();
-
-      const formattedData = {
-        name: data.configId,
-        product: "",
-        limit: "",
-        tags: data.activeLoansCount.map((item) => ({
-          product: item.productType,
-          limit: item.activeLoansCount,
-        })),
-        selectedOption: null,
-        inList: data.activeList.inList,
-        hardLimit: data.financeHardLimit.hardLimit,
-        overduePercentage: data.overDuePercentage.percentageFromEmi,
-      };
-
-      const formattedProductTypeOptions = data.activeLoansCount.map((item) => ({
-        value: item.productType,
-        label: item.productType,
-      }));
-
-      setProductTypeOptions(formattedProductTypeOptions);
-
-      setFormData(formattedData);
-      setLoading(false);
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  }
+  const dispatch = useDispatch();
+  const { formData, productTypeOptions, loading } = useSelector(
+    (state) => state.productGroup
+  );
 
   useEffect(() => {
-    fetchPGroups();
+    dispatch(fetchPGroups());
     if (isNewGroup) {
-      setFormData((prevState) => ({ ...prevState, name: newGroupName }));
+      dispatch(setFormData({ name: newGroupName }));
     } else {
-      setFormData((prevState) => ({ ...prevState, name: configId }));
+      dispatch(setFormData({ name: configId }));
     }
-  }, [configId, isNewGroup, newGroupName, setFormData]);
+  }, [dispatch, configId, isNewGroup, newGroupName]);
+
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      dispatch(setFormData({ [name]: value }));
+    },
+    [dispatch]
+  );
 
   const handleSave = useCallback(
     (newName) => {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        name: newName,
-      }));
+      dispatch(setFormData({ name: newName }));
     },
-    [setFormData]
+    [dispatch]
+  );
+
+  const addTag = useCallback(
+    (tag) => {
+      if (formData.tags.includes(tag)) {
+        alert("This product already exists!");
+      } else {
+        alert("Cannot add product for now!");
+      }
+    },
+    [dispatch, formData.tags]
+  );
+
+  const deleteTag = useCallback(
+    (tag) => {
+      dispatch(setFormData({ tags: formData.tags.filter((t) => t !== tag) }));
+    },
+    [dispatch, formData.tags]
   );
 
   if (loading) {
@@ -120,21 +81,23 @@ const ProductGroup = () => {
             labelName="Percentage from Equated Installments"
             inputName="overduePercentage"
             inputValue={formData.overduePercentage}
+            onChange={handleInputChange} 
           />
           <InputNumber
             labelName="Finance Hard Limit"
             inputName="hardLimit"
             inputValue={formData.hardLimit}
+            onChange={handleInputChange} 
           />
         </div>
         <div className="border-b pb-4 mb-2">
           <TagInput
             formData={formData}
-            handleChange={handleChange}
+            handleChange={handleInputChange} 
             inputSelectName={"product"}
             inputSelectLabel={"Add Products"}
-            handleSelectChange={handleSelectChange}
-            addTag={addTag}
+            handleSelectChange={handleInputChange} 
+            addTag={addTag} 
             deleteTag={deleteTag}
             productTypeOptions={productTypeOptions}
             inputNumberName={"limit"}
