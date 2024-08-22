@@ -11,6 +11,7 @@ const BlockedEmployerPage = () => {
         ListHeader={BlockedEmployerHeaderList}
         ListItem={BlockedEmployerList}
         Searchable={true}
+        SearchBy={"employerId"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

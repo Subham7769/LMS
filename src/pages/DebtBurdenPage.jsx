@@ -13,6 +13,7 @@ const DebtBurdenPage = () => {
         ListHeader={HeaderList}
         ListItem={ProductList}
         Searchable={true}
+        SearchBy={"caseId"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

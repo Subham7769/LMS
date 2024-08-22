@@ -13,6 +13,7 @@ const RecoveryPage = () => {
         ListHeader={RecoveryHeaderList}
         ListItem={RecoveryProductList}
         Searchable={true}
+        SearchBy={"caseId"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

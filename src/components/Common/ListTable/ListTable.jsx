@@ -20,16 +20,23 @@ const ListTable = ({
   ListItem,
   ListAction,// actions to be executed in list
   Searchable = false,
+  SearchBy,
   Divider = false,
   Sortable = false,
   Editable = false,
+  Paginated = true,
+  PageSize = 10,
   handleEditableFields,
 }) => {
   const HeaderCellWidth = ListHeader.length + 1; // Calculate cell width based on header length
 
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const [filteredData, setFilteredData] = useState();
+  const [filteredData, setFilteredData] = useState(ListItem);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(PageSize);
+
+  const totalPages = Math.ceil(filteredData.length / pageSize);
 
   useEffect(() => {
     setFilteredData(ListItem);
@@ -83,12 +90,14 @@ const ListTable = ({
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
-
+  
     const filtered = ListItem.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
+      item[SearchBy]?.toString().includes(value)
     );
+  
     setFilteredData(filtered);
   };
+  
 
   // Handle Sort Functionality
   const handleSort = (column) => {
@@ -141,6 +150,10 @@ const ListTable = ({
   // Use sortedData instead of ListItem for rendering
   const dataToRender = searchTerm ? filteredData : sortedData;
   // console.log(dataToRender)
+  const currentData = Paginated
+    ? dataToRender.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    : dataToRender;
+
   return (
     <div className="shadow-md bg-gray-100 border-gray-300 border p-5 rounded-xl mt-4">
       {Searchable && (
@@ -196,7 +209,7 @@ const ListTable = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {dataToRender.map((product, index) => (
+            {currentData.map((product, index) => (
               <tr
                 className={Divider ? "divide-x divide-gray-200" : ""}
                 key={index}
@@ -244,6 +257,34 @@ const ListTable = ({
           </tbody>
         </table>
       </div>
+      {/* Pagination Controls */}
+      {Paginated && totalPages > 1 && (
+        <div className="mt-6 flex justify-center items-center gap-5">
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`flex items-center px-2 py-2 rounded-md ${currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+              }`}
+          >
+            <ChevronLeftIcon className="w-5 h-5" />
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`flex items-center px-2 py-2 rounded-md ${currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+              }`}
+          >
+            <ChevronRightIcon className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

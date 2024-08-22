@@ -1,45 +1,32 @@
-import React, { useState } from "react";
-import { ledgerArr, HeaderList } from "../data/LedgerData";
+import {  HeaderList } from "../data/LedgerData";
 import LedgerListTable from "../components/LedgerListTable/LedgerListTable";
 import { useEffect } from "react";
-import axios from "axios";
-import Loader from "../components/Common/Loader/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLedgerData } from "../redux/Slices/ledgerSlice";
+import LoadingState from "../components/LoadingState/LoadingState";
 
 const LedgerPage = () => {
-  const [ledgerData, setLedgerData] = useState(null);
+  const dispatch = useDispatch();
+  const { ledgerData, loading, error } = useSelector(state => state.ledger)
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const fetchLedgerData = async () => {
-      try {
-        const fetchData = await axios.get(
-          `${import.meta.env.VITE_GENERAL_LEDGER_READ}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(fetchData.data);
-        setLedgerData(fetchData.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchLedgerData();
-  }, []);
+  useEffect(()=>{
+    dispatch(fetchLedgerData())
+  },[dispatch])
+
+    // Conditional rendering based on loading and error states
+    if (loading) {
+      return <LoadingState />;
+    }
+  
+    if (error) {
+      return <div>Error: {error}</div>;
+    }
   return (
-    <>
-      {ledgerData ? (
         <LedgerListTable
           ListName={"Ledger List"}
           ListHeader={HeaderList}
           ListItem={ledgerData}
         />
-      ) : (
-        <Loader />
-      )}
-    </>
   );
 };
 
