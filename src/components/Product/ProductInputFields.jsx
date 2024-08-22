@@ -13,20 +13,57 @@ import {
 import { PlusIcon } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { Failed } from "../Toasts";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addInterestTenure } from "../../redux/Slices/productSlice";
 
-
-const ProductInputFields = ({ formData, handleChange, setFormData }) => {
+const ProductInputFields = ({ formData, handleChange }) => {
   // Sidebar Redux Data
-  const RACDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'RAC')[0].submenuItems);;
-  const DBRConfigInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'DBR Config')[0].submenuItems);
-  const BEDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Blocked Employer')[0].submenuItems);
-  const RPDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Rule Policy')[0].submenuItems);
-  const CSDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Credit Score')[0].submenuItems);
-  const CSETDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Credit Score Eligible Tenure')[0].submenuItems);
-  const ProjectDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Project')[0].submenuItems);
-  const TCLDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'TCL')[0].submenuItems);
-  const RecoveryDataInfo = useSelector(state => state.sidebar.menus.filter(item => item.title === 'Recovery')[0].submenuItems);
+  const RACDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "RAC")[0].submenuItems
+  );
+  const DBRConfigInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "DBR Config")[0]
+        .submenuItems
+  );
+  const BEDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "Blocked Employer")[0]
+        .submenuItems
+  );
+  const RPDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "Rule Policy")[0]
+        .submenuItems
+  );
+  const CSDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "Credit Score")[0]
+        .submenuItems
+  );
+  const CSETDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter(
+        (item) => item.title === "Credit Score Eligible Tenure"
+      )[0].submenuItems
+  );
+  const ProjectDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "Project")[0]
+        .submenuItems
+  );
+  const TCLDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "TCL")[0].submenuItems
+  );
+  const RecoveryDataInfo = useSelector(
+    (state) =>
+      state.sidebar.menus.filter((item) => item.title === "Recovery")[0]
+        .submenuItems
+  );
+
+  const dispatch = useDispatch();
 
   // Entries State
   const [interestEligibleTenure, setInterestEligibleTenure] = useState({
@@ -49,13 +86,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
         (field) => String(field).trim() !== ""
       )
     ) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        interestEligibleTenure: [
-          ...prevFormData.interestEligibleTenure,
-          interestEligibleTenure,
-        ],
-      }));
+      dispatch(addInterestTenure(interestEligibleTenure));
       setInterestEligibleTenure({
         interestRate: "",
         interestPeriodType: "",
@@ -85,9 +116,7 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
       label: name,
     }));
   }
-  useEffect(() => {
-
-  }, [
+  useEffect(() => {}, [
     DBRConfigInfo,
     ProjectDataInfo,
     BEDataInfo,
@@ -168,7 +197,10 @@ const ProductInputFields = ({ formData, handleChange, setFormData }) => {
           />
           <InputSelect
             labelName="Eligible Tenure"
-            inputOptions={formateDataDropDown("/credit-score-eligible-tenure/", CSETDataInfo)}
+            inputOptions={formateDataDropDown(
+              "/credit-score-eligible-tenure/",
+              CSETDataInfo
+            )}
             inputName="creditScoreEtTempId"
             inputValue={formData.creditScoreEtTempId}
             onChange={handleChange}

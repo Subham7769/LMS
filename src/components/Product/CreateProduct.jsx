@@ -1,108 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import Button from "../Common/Button/Button";
 import ProductInputFields from "./ProductInputFields";
-import { useDispatch } from "react-redux";
-import { fetchProductData } from '../../redux/Slices/sidebarSlice'
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductData } from "../../redux/Slices/sidebarSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  deleteInterestTenure,
+  setFormData,
+  updateFormField,
+  createProductData,
+} from "../../redux/Slices/productSlice";
+import LoadingState from "../LoadingState/LoadingState";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
   const dispatch = useDispatch();
-
-  const [formData, setFormData] = useState({
-    id: "0",
-    blockEmployersTempId: "",
-    creditScoreEqTempId: "",
-    creditScoreEtTempId: "",
-    dbcTempId: "",
-    disableRac: false,
-    eligibleCustomerType: "",
-    fee: "",
-    interestEligibleTenure: [],
-    loanProductId: "0",
-    managementFeeVat: "",
-    numberOfEmisForEarlySettlement: "",
-    overdraft: null,
-    productType: productName,
-    projectId: "",
-    racId: "",
-    refinancedWith: false,
-    rulePolicyTempId: "",
-    tclFileId: "",
-    recoveryEquationTempId: "",
-  });
+  const { formData, loading, error } = useSelector((state) => state.product);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setFormData((prevState) => ({ ...prevState, [name]: checked }));
-      console.log(formData);
-    } else {
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
-      console.log(formData);
-    }
+    const fieldValue = type === "checkbox" ? checked : value;
+    dispatch(updateFormField({ name, value: fieldValue }));
   };
+
+  useEffect(() => {
+    if (productName) {
+      dispatch(setFormData({ productType: productName }));
+    }
+  }, [dispatch, productName]);
 
   const handleDelete = (index) => {
-    const deleteList = [...formData.interestEligibleTenure];
-    deleteList.splice(index, 1);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      interestEligibleTenure: deleteList,
-    }));
+    dispatch(deleteInterestTenure({ index: index }));
   };
 
-  const CreateProduct = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-
+  const handleCreateProduct = async () => {
     try {
-      // Filter out objects with empty fields
-      const filteredInterestEligibleTenure =
-        formData.interestEligibleTenure.filter(
-          (item) =>
-            item.interestRate &&
-            item.interestPeriodType &&
-            item.loanTenure &&
-            item.loanTenureType &&
-            item.repaymentTenure &&
-            item.repaymentTenureType
-        );
-      // Create a copy of formData with filtered interestEligibleTenure
-      const filteredFormData = {
-        ...formData,
-        interestEligibleTenure: filteredInterestEligibleTenure,
-      };
-
-      // POST request to add new fields
-      const postResponse = await fetch(
-        `${import.meta.env.VITE_PRODUCT_CREATE}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(filteredFormData),
-        }
-      );
-
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-
-        dispatch(fetchProductData())
-        navigate("/product/");
-
-      }
+      await dispatch(createProductData(formData)).unwrap();
+      dispatch(fetchProductData());
+      navigate("/product/");
     } catch (error) {
-      console.error("Failed to update data:", error);
+      console.error("Failed to create product:", error);
+      // Optionally, you could use a toast notification here to notify the user of the error
     }
   };
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    <p>Error: {error}</p>;
+  }
 
   console.log(formData);
 
@@ -118,82 +71,77 @@ const CreateProduct = () => {
         </b>
       </h2>
       <ContainerTile>
-          <ProductInputFields
-            formData={formData}
-            handleChange={handleChange}
-            setFormData={setFormData}
-          />
-          <div>
-            <table className="w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {[
-                    "Simple Interest",
-                    "PER",
-                    "Tenure",
-                    "Tenure Type",
-                    "Repayment Tenure",
-                    "Repayment Tenure Type",
-                    "Actions",
-                  ].map((item, index) => (
-                    <th scope="col" key={index}>
-                      <div
-                        className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}
-                      >
-                        {item}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {formData.interestEligibleTenure.length < 1 ? (
-                  <tr>
-                    <td
-                      colSpan="7"
-                      className="px-6 py-4 text-center text-gray-500"
+        <ProductInputFields formData={formData} handleChange={handleChange} />
+        <div>
+          <table className="w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {[
+                  "Simple Interest",
+                  "PER",
+                  "Tenure",
+                  "Tenure Type",
+                  "Repayment Tenure",
+                  "Repayment Tenure Type",
+                  "Actions",
+                ].map((item, index) => (
+                  <th scope="col" key={index}>
+                    <div
+                      className={`py-3 text-center text-[12px] font-medium text-gray-500 uppercase tracking-wider cursor-pointer`}
                     >
-                      No Data To Show Yet
+                      {item}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {formData?.interestEligibleTenure?.length < 1 ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
+                    No Data To Show Yet
+                  </td>
+                </tr>
+              ) : (
+                formData?.interestEligibleTenure?.map((item, index) => (
+                  <tr
+                    key={index}
+                    className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
+                  >
+                    <td className="py-2 whitespace-nowrap">
+                      {item.interestRate}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.interestPeriodType}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.loanTenure}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.loanTenureType}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.repaymentTenure}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item.repaymentTenureType}
+                    </td>
+                    <td className="py-2">
+                      <Button
+                        buttonIcon={TrashIcon}
+                        onClick={() => handleDelete(index)}
+                        circle={true}
+                      />
                     </td>
                   </tr>
-                ) : (
-                  formData.interestEligibleTenure.map((item, index) => (
-                    <tr
-                      key={index}
-                      className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"
-                    >
-                      <td className="py-2 whitespace-nowrap">
-                        {item.interestRate}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.interestPeriodType}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.loanTenure}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.loanTenureType}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.repaymentTenure}
-                      </td>
-                      <td className="py-2 whitespace-nowrap">
-                        {item.repaymentTenureType}
-                      </td>
-                      <td className="py-2">
-                        <Button
-                          buttonIcon={TrashIcon}
-                          onClick={() => handleDelete(index)}
-                          circle={true}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </ContainerTile>
 
       <div className="flex mt-4  justify-end ">
@@ -201,7 +149,7 @@ const CreateProduct = () => {
         <Button
           buttonIcon={CheckCircleIcon}
           buttonName={"Create"}
-          onClick={CreateProduct}
+          onClick={handleCreateProduct}
           rectangle={true}
           className="flex items-center justify-center mt-3 w-44"
         />

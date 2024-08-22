@@ -20,13 +20,22 @@ import Button from "../Common/Button/Button";
 import { tenureTypeOptions, options } from "../../data/OptionsData";
 import ProductInputFields from "./ProductInputFields";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
-import { useDispatch } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  fetchData,
+  setFormData,
+  updateFormField,
+  updateInterestTenure,
+  deleteInterestTenure,
+  saveProductData,
+  updateProductName,
+  deleteLoanProduct,
+} from "../../redux/Slices/productSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
-  // Initial Data
-  const [productConfigData, setProductConfigData] = useState([]);
   const dispatch = useDispatch();
 
   // Sort & Pagination
@@ -34,79 +43,24 @@ const LoanProductConfig = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const [loading, setLoading] = useState(false);
+  const { formData, loading, error } = useSelector((state) => state.product);
 
-  const [formData, setFormData] = useState({
-    loanProductId: "",
-    blockEmployersTempId: "",
-    creditScoreEqTempId: "",
-    creditScoreEtTempId: "",
-    dbcTempId: "",
-    disableRac: null,
-    eligibleCustomerType: "",
-    fee: "",
-    interestEligibleTenure: [{ interestRate: "", tenure: "" }],
-    interestPeriodType: "",
-    managementFeeVat: "",
-    numberOfEmisForEarlySettlement: "",
-    overdraft: null,
-    productType: "",
-    projectId: "",
-    racId: "",
-    refinancedWith: null,
-    rulePolicyTempId: "",
-    tclFileId: "",
-    recoveryEquationTempId: "",
-  });
+  useEffect(() => {
+    dispatch(fetchData(productType));
+  }, [dispatch, productType]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setFormData((prevState) => ({ ...prevState, [name]: checked }));
-    } else {
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
-    }
+    const fieldValue = type === "checkbox" ? checked : value;
+    dispatch(updateFormField({ name, value: fieldValue }));
   };
 
-  useEffect(() => {
-    if (productConfigData.length === 0) {
-      console.log("Fetching Product Config Data");
-    } else {
-      const assignedData = {
-        loanProductId: productConfigData.loanProductId,
-        blockEmployersTempId: productConfigData.blockEmployersTempId,
-        creditScoreEqTempId: productConfigData.creditScoreEqTempId,
-        creditScoreEtTempId: productConfigData.creditScoreEtTempId,
-        dbcTempId: productConfigData.dbcTempId,
-        disableRac: productConfigData.disableRac,
-        eligibleCustomerType: productConfigData.eligibleCustomerType,
-        fee: productConfigData.fee,
-        interestEligibleTenure: productConfigData.interestEligibleTenure.map(
-          (tenure) => ({
-            interestRate: tenure.interestRate,
-            interestPeriodType: tenure.interestPeriodType,
-            loanTenure: tenure.loanTenure,
-            loanTenureType: tenure.loanTenureType,
-            repaymentTenure: tenure.repaymentTenure,
-            repaymentTenureType: tenure.repaymentTenureType,
-          })
-        ),
-        interestPeriodType: productConfigData.interestPeriodType,
-        managementFeeVat: productConfigData.managementFeeVat,
-        numberOfEmisForEarlySettlement:
-          productConfigData.numberOfEmisForEarlySettlement,
-        overdraft: productConfigData.overdraft,
-        productType: productConfigData.productType,
-        projectId: productConfigData.projectId,
-        racId: productConfigData.racId,
-        refinancedWith: productConfigData.refinancedWith,
-        rulePolicyTempId: productConfigData.rulePolicyTempId,
-        tclFileId: productConfigData.tclFileId,
-        recoveryEquationTempId: productConfigData.recoveryEquationTempId,
-      };
-      setFormData(assignedData);
-    }
-  }, [productConfigData]);
+  const handleInterestChange = (index, field, eventOrValue) => {
+    const value = eventOrValue?.target
+      ? eventOrValue.target.value
+      : eventOrValue;
+    dispatch(updateInterestTenure({ index, field, value }));
+  };
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -118,86 +72,16 @@ const LoanProductConfig = () => {
     setSortConfig({ key: column, direction });
   };
 
-  const getSortIcon = (column) => {
-    if (sortConfig.key === column) {
-      if (sortConfig.direction === "asc") {
-        return <FaSortAmountDown className="ml-2" />;
-      } else if (sortConfig.direction === "desc") {
-        return <FaSortAmountUp className="ml-2" />;
-      }
-    }
-    return <FaSort className="ml-2" title="Sort Data" />;
-  };
-
   const toggleEdit = (index) => {
     setEditingIndex(editingIndex === index ? null : index);
   };
 
-  useEffect(() => {
-    getProductInfo();
-  }, [productType, projectId]);
-
-  async function getProductInfo() {
-    setProductConfigData([]);
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_PRODUCT_READ}${productType}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const productConfigDetails = await data.json();
-      // console.log(racDetails);
-      setProductConfigData(productConfigDetails);
-      setLoading(false);
-      //   window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const handleInterestChange = (index, field, eventOrValue) => {
-    // Determine if the input is an event object or a value
-    const value =
-      eventOrValue && eventOrValue.target
-        ? eventOrValue.target.value
-        : eventOrValue.value || eventOrValue;
-
-    const updatedInterestTenure = formData.interestEligibleTenure.map(
-      (item, idx) => {
-        if (index === idx) {
-          return { ...item, [field]: value };
-        }
-        return item;
-      }
-    );
-
-    setFormData((prevState) => ({
-      ...prevState,
-      interestEligibleTenure: updatedInterestTenure,
-    }));
-  };
+  console.log(formData);
 
   const handleDelete = (indexInPage) => {
     const absoluteIndex = indexOfFirstItem + indexInPage;
-    const deleteList = [...formData.interestEligibleTenure];
-    deleteList.splice(absoluteIndex, 1);
-    setFormData((prevState) => ({
-      ...prevState,
-      interestEligibleTenure: deleteList,
-    }));
+    dispatch(deleteInterestTenure({ index: absoluteIndex }));
+
     toast.custom((t) => (
       <Warning
         t={t}
@@ -209,114 +93,42 @@ const LoanProductConfig = () => {
   };
 
   const handleSave = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-
-    // Define the data to be sent with the POST request
-    const postData = {
-      blockEmployersTempId: formData.blockEmployersTempId,
-      creditScoreEqTempId: formData.creditScoreEqTempId,
-      creditScoreEtTempId: formData.creditScoreEtTempId,
-      dbcTempId: formData.dbcTempId,
-      eligibleCustomerType: formData.eligibleCustomerType,
-      fee: formData.fee,
-      interestEligibleTenure: formData.interestEligibleTenure,
-      interestPeriodType: formData.interestPeriodType,
-      disableRac: formData.disableRac,
-      managementFeeVat: formData.managementFeeVat,
-      numberOfEmisForEarlySettlement: formData.numberOfEmisForEarlySettlement,
-      overdraft: formData.overdraft,
-      productType: formData.productType,
-      projectId: formData.projectId,
-      racId: formData.racId,
-      refinancedWith: formData.refinancedWith,
-      rulePolicyTempId: formData.rulePolicyTempId,
-      tclFileId: formData.tclFileId,
-      recoveryEquationTempId: formData.recoveryEquationTempId,
-    };
-
     try {
-      const postResponse = await fetch(
-        `${import.meta.env.VITE_PRODUCT_UPDATE}${loanProId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
-      }
+      // Dispatch the saveProductData thunk with necessary parameters
+      dispatch(saveProductData({ loanProId, formData }));
+      // toast.custom((t) => <RowChanged t={t} toast={toast} />);
     } catch (error) {
       console.error("Failed to update data:", error);
     }
   };
 
-  async function handleProductNameChange(newName) {
+  const handleProductNameChange = async (newName) => {
     toast.loading("Updating name, please wait...", { duration: 3000 });
     try {
-      const token = localStorage.getItem("authToken");
-      formData.productType = newName;
-
-      // Submit the updated data back using PUT request
-      const updateResponse = await fetch(
-        `${import.meta.env.VITE_PRODUCT_UPDATE}${loanProId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
+      await dispatch(
+        updateProductName({
+          loanProId,
+          newName,
+        })
       );
-
-      // Check if the update was successful
-      if (updateResponse.ok) {
-        toast.success("Name Updated, redirecting...");
-        navigate(
-          `/product/${newName}/loan-product-config/${projectId}/${loanProId}`
-        );
-        window.location.reload();
-      } else {
-        console.error(
-          "Failed to update product info",
-          await updateResponse.text()
-        );
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  }
-
-  const handleDeleteLoanProduct = async (deleteURL) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${import.meta.env.VITE_PRODUCT_DELETE}${deleteURL}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      navigate(
+        `/product/${newName}/loan-product-config/${projectId}/${loanProId}`
       );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      }
+      dispatch(fetchData(newName));
       dispatch(fetchProductData());
+    } catch (error) {
+      console.error("Failed to update product name:", error);
+    }
+  };
+
+  const handleDeleteLoanProduct = async () => {
+    try {
+      await dispatch(deleteLoanProduct(loanProId)).unwrap();
+      await dispatch(fetchProductData());
       navigate("/product");
     } catch (error) {
-      console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
+      console.error("Failed to delete loan product:", error);
+      // Optionally handle the error in the UI
     }
   };
 
@@ -333,8 +145,27 @@ const LoanProductConfig = () => {
     ));
   };
 
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    <p>Error: {error}</p>;
+  }
+
+  const getSortIcon = (column) => {
+    if (sortConfig.key === column) {
+      if (sortConfig.direction === "asc") {
+        return <FaSortAmountDown className="ml-2" />;
+      } else if (sortConfig.direction === "desc") {
+        return <FaSortAmountUp className="ml-2" />;
+      }
+    }
+    return <FaSort className="ml-2" title="Sort Data" />;
+  };
+
   // Sort the items based on sortConfig
-  const sortedItems = [...formData.interestEligibleTenure].sort((a, b) => {
+  const sortedItems = [...formData?.interestEligibleTenure].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -363,10 +194,6 @@ const LoanProductConfig = () => {
     ));
   }
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   const columns = [
     { label: "Simple Interest", key: "interestRate", sortable: true },
     { label: "PER", key: "interestPeriodType", sortable: true },
@@ -386,7 +213,7 @@ const LoanProductConfig = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center mb-5">
         <DynamicName
-          initialName={productType}
+          initialName={formData.productType}
           onSave={handleProductNameChange}
         />
         <Button
@@ -399,11 +226,7 @@ const LoanProductConfig = () => {
         />
       </div>
       <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
-        <ProductInputFields
-          formData={formData}
-          handleChange={handleChange}
-          setFormData={setFormData}
-        />
+        <ProductInputFields formData={formData} handleChange={handleChange} />
         <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -583,13 +406,11 @@ const LoanProductConfig = () => {
                           </div>
                         )}
                       </button>
-                      <button
+                      <Button
+                        buttonIcon={TrashIcon}
                         onClick={() => handleDelete(index)}
-                        type="button"
-                        className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
+                        circle={true}
+                      />
                     </td>
                   </tr>
                 ))
@@ -600,7 +421,9 @@ const LoanProductConfig = () => {
             <Button
               buttonIcon={ChevronLeftIcon}
               onClick={
-                currentPage === 1 ? "" : () => handlePageChange(currentPage - 1)
+                currentPage === 1
+                  ? () => {}
+                  : () => handlePageChange(currentPage - 1)
               }
               rectangle={true}
               className={`
@@ -617,7 +440,7 @@ const LoanProductConfig = () => {
               buttonIcon={ChevronRightIcon}
               onClick={
                 currentPage === totalPages || currentItems.length < 1
-                  ? ""
+                  ? () => {}
                   : () => handlePageChange(currentPage + 1)
               }
               rectangle={true}
@@ -631,7 +454,6 @@ const LoanProductConfig = () => {
               disabled={currentPage === totalPages || currentItems.length < 1}
             />
           </div>
-
           <div className="text-right mt-5">
             <Button
               buttonIcon={CheckCircleIcon}
