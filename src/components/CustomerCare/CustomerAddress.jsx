@@ -1,17 +1,33 @@
 import LoadingState from "../LoadingState/LoadingState";
-import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import ListTable from "../Common/ListTable/ListTable";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
+import { useParams } from "react-router-dom";
 
 const CustomerAddress = () => {
-  const url = "/simah-recent-response";
-  const CBDetilsData = useBorrowerInfo(url);
+  const { subID } = useParams();  // Extracting subID from the URL
+  const url = "/simah-recent-response";  // The URL endpoint
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    if (subID) {  // Check if subID exists
+      console.log("Fetching Customer Address Data");
+      dispatch(fetchBorrowerData({ subID, url }));
+    }
+  }, [dispatch, subID, url]);  // Add subID and url to the dependency array
+  
+  const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
 
-  if (CBDetilsData.length === 0) {
+  if (loading) {
     return <LoadingState />;
   }
 
-  const { address } =
-    CBDetilsData.response.message.item[0].rspreport.consumer[0].addresses;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  const address = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.addresses?.address || [];
 
   return (
     <ListTable
@@ -27,13 +43,13 @@ const CustomerAddress = () => {
       ]}
       ListItem={address.map((add, index) => ({
         index: index + 1,
-        caloaddt: add.caloaddt,
-        cacadt: add.cacadt,
-        cacad1E: add.cacad1E,
-        cacad6: add.cacad6,
-        cacad7: add.cacad7,
-        cacad8E: add.cacad8E,
-        cacad9: add.cacad9,
+        caloaddt: add.caloaddt || "N/A",
+        cacadt: add.cacadt || "N/A",
+        cacad1E: add.cacad1E || "N/A",
+        cacad6: add.cacad6 || "N/A",
+        cacad7: add.cacad7 || "N/A",
+        cacad8E: add.cacad8E || "N/A",
+        cacad9: add.cacad9 || "N/A",
       }))}
       Divider={true}
     />

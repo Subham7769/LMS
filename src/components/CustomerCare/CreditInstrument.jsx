@@ -3,8 +3,9 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
+import { useSelector } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const Arrow = ({ className, style, onClick, direction }) => (
   <div className={className} style={style} onClick={onClick}>
@@ -31,7 +32,7 @@ const SampleNextArrow = memo((props) => <Arrow {...props} direction="next" />);
 const SamplePrevArrow = memo((props) => <Arrow {...props} direction="prev" />);
 
 const TableHeader = () => (
-  <thead>
+  <thead className="bg-gray-50">
     <tr className="divide-x divide-gray-200">
       <th className="py-3.5 px-4 text-center">Credit Instrument</th>
     </tr>
@@ -45,65 +46,68 @@ const TableRow = ({ children }) => (
 );
 
 const CreditInstrument = () => {
-  const url = "/simah-recent-response";
-  const CBDetilsData = useBorrowerInfo(url);
+  const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
 
-  if (CBDetilsData.length === 0) {
+  if (loading) {
     return <LoadingState />;
   }
 
-  const cidetail =
-    CBDetilsData.response.message.item[0].rspreport.consumer[0].cidetails
-      .cidetail;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 5,
-    slidesToScroll: 2,
+    slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
+  const headerList = [
+    "Creditor",
+    "Product",
+    "Account Number",
+    "Credit Limit",
+    "Issue Date",
+    "Product Expire Date",
+    "Status",
+    "Closed Date",
+    "Tenure",
+    "Payment Frequency",
+    "Instalment Amount",
+    "Consumer Sallary",
+    "Security Type",
+    "Outstanding Balance",
+    "Past Due Balance",
+    "Last Amount Paid",
+    "Last Payment Date",
+    "As Of Date",
+    "Summary",
+  ]
+
+  const cidetail = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.cidetails?.cidetail;
 
   return (
-    <div className="flex items-start">
-      <table className="divide-y divide-gray-300 border-r border-gray-300 w-full text-[14px]">
+    <ContainerTile>
+    <div className="flex items-start shadow-md bg-gray-100 mt-4">
+      <table className="divide-y divide-gray-300 border-r border-gray-200 w-full text-[14px]">
         <TableHeader />
         <tbody className="divide-y divide-gray-200 bg-white">
-          {[
-            "Creditor",
-            "Product",
-            "Account Number",
-            "Credit Limit",
-            "Issue Date",
-            "Product Expire Date",
-            "Status",
-            "Closed Date",
-            "Tenure",
-            "Payment Frequency",
-            "Instalment Amount",
-            "Consumer Sallary",
-            "Security Type",
-            "Outstanding Balance",
-            "Past Due Balance",
-            "Last Amount Paid",
-            "Last Payment Date",
-            "As Of Date",
-            "Summary",
-          ].map((header, index) => (
+          {headerList.map((header, index) => (
             <TableRow key={index}>{header}</TableRow>
           ))}
         </tbody>
       </table>
-      <div className="w-[1005px]">
+      <div className="w-[984px]">
         <Slider {...settings}>
           {cidetail.map((ci, index) => (
             <table
               key={index}
-              className="divide-y divide-gray-300 border-r border-gray-300 w-[200px] text-[14px]"
+              className="divide-y divide-gray-300  w-[200px] text-[14px]"
             >
-              <thead>
+              <thead className="bg-gray-50">
                 <tr className="divide-x divide-gray-200">
                   <th className="py-3.5 px-4 text-center">{index + 1}</th>
                 </tr>
@@ -114,7 +118,7 @@ const CreditInstrument = () => {
                 <TableRow>
                   <div
                     title={ci.ciaccno}
-                    className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
+                    className="w-[165px] cursor-pointer flex mx-auto hover:text-gray-900"
                   >
                     <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
                       {ci.ciaccno}
@@ -124,9 +128,9 @@ const CreditInstrument = () => {
                 </TableRow>
                 <TableRow>{ci.cilimit}</TableRow>
                 <TableRow>{ci.ciissudt}</TableRow>
-                <TableRow>{ci.ciprodexpdt?ci.ciprodexpdt:'-'}</TableRow>
+                <TableRow>{ci.ciprodexpdt ? ci.ciprodexpdt : '-'}</TableRow>
                 <TableRow>{ci.cistatus}</TableRow>
-                <TableRow>{ci.ciclsddt?ci.ciclsddt:"-"}</TableRow>
+                <TableRow>{ci.ciclsddt ? ci.ciclsddt : "-"}</TableRow>
                 <TableRow>{ci.citnr}</TableRow>
                 <TableRow>{ci.cifrq}</TableRow>
                 <TableRow>{ci.ciinstl}</TableRow>
@@ -140,7 +144,7 @@ const CreditInstrument = () => {
                 <TableRow>
                   <div
                     title={ci.cisummry}
-                    className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
+                    className="w-[165px] cursor-pointer flex mx-auto hover:text-gray-900"
                   >
                     <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
                       {ci.cisummry}
@@ -153,7 +157,7 @@ const CreditInstrument = () => {
           ))}
         </Slider>
       </div>
-    </div>
+    </div></ContainerTile>
   );
 };
 

@@ -33,8 +33,8 @@ const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
 
-const SubscriberInfo = lazy(() =>
-  import("./components/CustomerCare/SubscriberInfo")
+const PersonalInfo = lazy(() =>
+  import("./components/CustomerCare/PersonalInfo")
 );
 const LiabilitiesMatrix = lazy(() =>
   import("./components/GlobalConfig/LiabilitiesMatrix")
@@ -214,7 +214,7 @@ const routes = [
         path: "/borrower/:subID",
         element: <BorrowerInfoTabs />,
         children: [
-          { path: "personal-info", element: <SubscriberInfo /> },
+          { path: "personal-info", element: <PersonalInfo /> },
           { path: "kyc", element: <KYCDetails /> },
           { path: "credit-profile", element: <CreditProfile /> },
           { path: "loanNpayment", element: <LoanNPaymentHist /> },

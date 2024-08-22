@@ -142,109 +142,107 @@ const ListTable = ({
   const dataToRender = searchTerm ? filteredData : sortedData;
   // console.log(dataToRender)
   return (
-    <div className="shadow-md bg-gray-100 border-gray-300 border py-6 rounded-xl mt-4">
-      <div className="px-4 sm:px-6 lg:px-8">
-        {Searchable && (
-          <div className="mb-5 w-full">
-            <label htmlFor="search" className="sr-only">
-              Search
-            </label>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                id="search"
-                name="search"
-                className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                placeholder="Search"
-                type="search"
-                value={searchTerm}
-                onChange={handleSearch}
+    <div className="shadow-md bg-gray-100 border-gray-300 border p-5 rounded-xl mt-4">
+      {Searchable && (
+        <div className="mb-5 w-full">
+          <label htmlFor="search" className="sr-only">
+            Search
+          </label>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
               />
             </div>
-          </div>
-        )}
-
-        <div className="sm:flex sm:items-center">
-          <div className={`sm:flex-auto text-${ListNameAlign}`}>
-            <h1 className="font-semibold leading-6 text-gray-900">
-              {ListName}
-            </h1>
+            <input
+              id="search"
+              name="search"
+              className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+              placeholder="Search"
+              type="search"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
           </div>
         </div>
+      )}
 
-        <div className="mt-4 flow-root overflow-hidden ">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr className={Divider ? "divide-x divide-gray-200" : ""}>
-                {ListHeader.map((header, index) => (
-                  <th
-                    key={index}
-                    scope="col"
-                    className={`w-1/${HeaderCellWidth} max-w-24`}
-                    onClick={() => handleSort(toLowerCamelCase(header))}
-                  >
-                    <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
-                      {header}
-                      {getSortIcon(toLowerCamelCase(header))}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {dataToRender.map((product, index) => (
-                <tr
-                  className={Divider ? "divide-x divide-gray-200" : ""}
+      <div className="sm:flex sm:items-center">
+        <div className={`sm:flex-auto text-${ListNameAlign}`}>
+          <h1 className="font-semibold leading-6 text-gray-900 mb-4">
+            {ListName}
+          </h1>
+        </div>
+      </div>
+
+      <div className="flow-root overflow-hidden ">
+        <table className="min-w-full divide-y divide-gray-300">
+          <thead className="bg-gray-50">
+            <tr className={Divider ? "divide-x divide-gray-200" : ""}>
+              {ListHeader.map((header, index) => (
+                <th
                   key={index}
+                  scope="col"
+                  className={`w-1/${HeaderCellWidth} max-w-24`}
+                  onClick={() => handleSort(toLowerCamelCase(header))}
                 >
-                  {Object.keys(product).map((key, idx) =>
-                    key !== "href" ? (
-                      <td
-                        key={idx}
-                        className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-[16px] text-gray-500`}
-                      >
-                        {product.href ? (
-                          <Link className="w-full block" to={product.href}>
-                            {product[key]}
-                          </Link>
-                        ) : Editable ? (
-                          <>
-                            <InputNumber
-                              inputName={key}
-                              inputValue={product[key]}
-                              onChange={handleEditableFields}
-                              placeHolder="3"
-                            />
-                          </>
-                        ) : (
-                          product[key]
-                        )}
-                      </td>
-                    ) : null
-                  )}
-                  {ListHeader.includes("Actions") && (
-                    <td
-                      className={`w-1/${HeaderCellWidth} flex justify-center align-middle whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
-                    >{
-                        ListAction.map((item) =>
-                          <Button
-                            buttonIcon={item.icon}
-                            onClick={() => item.action(index)}
-                            circle={item.circle}
-                          />)
-                      }
-                    </td>
-                  )}
-                </tr>
+                  <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
+                    {header}
+                    {getSortIcon(toLowerCamelCase(header))}
+                  </div>
+                </th>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {dataToRender.map((product, index) => (
+              <tr
+                className={Divider ? "divide-x divide-gray-200" : ""}
+                key={index}
+              >
+                {Object.keys(product).map((key, idx) =>
+                  key !== "href" ? (
+                    <td
+                      key={idx}
+                      className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-[14px] text-gray-500`}
+                    >
+                      {product.href ? (
+                        <Link className="w-full block" to={product.href}>
+                          {product[key]}
+                        </Link>
+                      ) : Editable ? (
+                        <>
+                          <InputNumber
+                            inputName={key}
+                            inputValue={product[key]}
+                            onChange={handleEditableFields}
+                            placeHolder="3"
+                          />
+                        </>
+                      ) : (
+                        product[key]
+                      )}
+                    </td>
+                  ) : null
+                )}
+                {ListHeader.includes("Actions") && (
+                  <td
+                    className={`w-1/${HeaderCellWidth} flex justify-center align-middle whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
+                  >{
+                      ListAction.map((item) =>
+                        <Button
+                          buttonIcon={item.icon}
+                          onClick={() => item.action(index)}
+                          circle={item.circle}
+                        />)
+                    }
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

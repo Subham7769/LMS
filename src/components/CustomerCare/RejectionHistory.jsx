@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import LoadingState from "../LoadingState/LoadingState";
-import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import ListTable from "../Common/ListTable/ListTable";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
+import { useParams } from "react-router-dom";
 
 const RejectionHistory = () => {
+  const { subID } = useParams();
+  const dispatch = useDispatch();
   const url = "/rejection-history";
-  const rejectionHistoryData = useBorrowerInfo(url);
+  const { rejectionHistory, loading, error } = useSelector(state => state.customerCare);
   const [rejectionsArr, setRejectionsArr] = useState([]);
 
   useEffect(() => {
-    if (rejectionHistoryData.length > 0) {
-      const formattedRejections = rejectionHistoryData.map((reject) => {
+    dispatch(fetchBorrowerData({ subID, url }))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (rejectionHistory.length > 0) {
+      const formattedRejections = rejectionHistory.map((reject) => {
         const dateObj = new Date(reject.rejectionDate);
         const year = dateObj.getFullYear();
         const month = String(dateObj.getMonth() + 1).padStart(2, "0");
@@ -27,12 +35,16 @@ const RejectionHistory = () => {
       });
       setRejectionsArr(formattedRejections);
     }
-  }, [rejectionHistoryData]);
+  }, [rejectionHistory]);
 
-  if (rejectionHistoryData.length === 0) {
+  // Conditional rendering starts after hooks have been defined
+  if (loading) {
     return <LoadingState />;
   }
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <ListTable
       ListHeader={["Rejection Date", "Rejection Reason"]}

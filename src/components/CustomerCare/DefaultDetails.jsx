@@ -1,18 +1,19 @@
-import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
+import { useSelector } from "react-redux";
 
 const DefaultDetails = () => {
-  const url = "/simah-recent-response";
-  const CBDetilsData = useBorrowerInfo(url);
+  const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
 
-  if (CBDetilsData.length === 0) {
+  if (loading) {
     return <LoadingState />;
   }
 
-  const defaultDet =
-    CBDetilsData.response.message.item[0].rspreport.consumer[0].defaults
-      .default;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  const defaultDet = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.defaults?.default;
 
   return (
     <ListTable

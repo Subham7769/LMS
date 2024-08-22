@@ -1,36 +1,38 @@
-import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import LoadingState from "../LoadingState/LoadingState";
-import { useEffect, useState, useRef } from "react";
 import LoanInfoModal from "./LoanInfoModal";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
-import { useParams, useNavigate } from "react-router-dom";
+import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
-import { loanStatusOptions } from "../../data/OptionsData";
 import ListTable from "../Common/ListTable/ListTable";
+import { useEffect, useState } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { useParams } from "react-router-dom";
+import { loanStatusOptions } from "../../data/OptionsData";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBorrowerData,downloadClearanceLetter } from "../../redux/Slices/borrowerSlice";
 
 const LoanHistory = () => {
   const { subID } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {loanHistory, downloadLoading, downloadError,error, loading} = useSelector(state => state.customerCare);
   const url = "/loans";
   const [showModal, setShowModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
-  const loanHistoryData = useBorrowerInfo(url);
-  const [leftPanelWidth, setLeftPanelWidth] = useState(0);
-  const leftPanelWidthRef = useRef(0);
 
+  useEffect(() => {
+    dispatch(fetchBorrowerData({ subID, url }))
+  }, [dispatch])
 
-  const [loansarr, setLoansarr] = useState(
-    loanHistoryData.map((loan) => ({
+  const [loansarr, setLoansarr] = useState(loanHistory.map((loan) => ({
       ...loan,
       formattedSubmitDate: "",
       formattedPaidDate: "",
     }))
   );
+
   useEffect(() => {
-    if (loanHistoryData) {
-      const formattedLoans = loanHistoryData.map((loan) => {
+    if (loanHistory) {
+      const formattedLoans = loanHistory.map((loan) => {
         const dateObjSubmit = new Date(loan.submitDate);
         const yearSubmit = dateObjSubmit.getFullYear();
 
@@ -65,12 +67,11 @@ const LoanHistory = () => {
       setLoansarr(formattedLoans);
       setFilteredLoansarr(formattedLoans);
     }
-  }, [loanHistoryData]);
+  }, [loanHistory]);
 
   const [filteredLoansarr, setFilteredLoansarr] = useState(loansarr);
-  const [selectedOption, setSelctedOption] = useState(
-    loanStatusOptions[0].value
-  );
+  const [selectedOption, setSelctedOption] = useState(loanStatusOptions[0].value);
+
   const handleChange = (event) => {
     const selectedOption = event.target.value;
     setSelctedOption(selectedOption);
@@ -92,48 +93,7 @@ const LoanHistory = () => {
     setSelectedLoan(loan);
     setShowModal(true);
   };
-  const handleDownloadPdf = async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const url =
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/clearance-letter/" +
-        subID +
-        "/" +
-        filteredLoansarr.loanId;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/pdf",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.setAttribute("download", "clearance_letter.pdf"); // You can rename the downloaded file here
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error("Download failed:", error);
-    }
-  };
 
-  if (loanHistoryData.length === 0) {
-    return <LoadingState />;
-  } else if (loanHistoryData.status === 500) {
-    return <div>No data for the request</div>;
-  }
   const headerList = [
     "Loan ID",
     "Loan Status",
@@ -146,6 +106,7 @@ const LoanHistory = () => {
     "Missed Installments Number",
     "Clearance Letter",
   ]
+
   const itemList = filteredLoansarr.map((loan) => ({
     loanId: loan.loanId,
     loanStatus: loanStatusOptions[loan.loanStatus].label,
@@ -173,12 +134,21 @@ const LoanHistory = () => {
     clearanceLetter: (
       <Button
         buttonName={"PDF"}
-        onClick={handleDownloadPdf}
+        onClick={()=>dispatch(downloadClearanceLetter({ subID, loanId:loan.loanId }))}
         rectangle={true}
         className={"text-[10px] py-0 px-0"}
       />
     ),
   }))
+
+  // Conditional rendering starts after hooks have been defined
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <>
@@ -206,7 +176,7 @@ const LoanHistory = () => {
         </div>
       </div>
       {filteredLoansarr.length === 0 ? (
-        <>No Loan Data</>
+        <div className="text-center shadow-md bg-gray-100 border-gray-300 border py-5 rounded-xl mt-4 px-5">No Loan Data</div>
       ) : (
         <ListTable
           ListHeader={headerList}

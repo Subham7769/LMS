@@ -1,53 +1,46 @@
 import React from "react";
 import LoadingState from "../LoadingState/LoadingState";
-import useBorrowerInfo from "../../utils/useBorrowerInfo";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useSelector } from "react-redux";
 
 const Score = () => {
-  const url = "/simah-recent-response";
-  const CBDetailsData = useBorrowerInfo(url);
+  const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
 
-  if (CBDetailsData.length === 0 || CBDetailsData.response.length === 0) {
+  if (loading) {
     return <LoadingState />;
   }
 
-  const { score } =
-    CBDetailsData.response.message.item[0].rspreport.consumer[0];
-  const {
-    scscore,
-    scscorecard,
-    scscoreindex,
-    scminimum,
-    scmaximum,
-    screasoncodes,
-  } = score;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (CreditBureauDetails.length === 0 || CreditBureauDetails.response.length === 0) {
+    return <LoadingState />;
+  }
+
+  // Subcomponents for cleaner structure
+  const InfoRow = ({ label, value }) => (
+    <div className="py-2 grid grid-cols-3">
+      <div className="font-semibold">{label}:</div>
+      <div className="col-span-2">{value || "N/A"}</div>
+    </div>
+  );
+
+  const { score } = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0];
+  const { scscore, scscorecard, scscoreindex, scminimum, scmaximum, screasoncodes, } = score;
 
   return (
     <ContainerTile>
-      <div className="flex gap-10">
-        <div className="py-2 pr-10 flex flex-col border-r border-gray-300">
-          <ScoreDetail label="Score" value={scscore} />
-          <ScoreDetail label="Score Card" value={scscorecard} />
-          <ScoreDetail label="Score Index" value={scscoreindex} />
-        </div>
-        <div className="py-2 flex flex-col">
-          <ScoreDetail label="Minimum Score" value={scminimum} />
-          <ScoreDetail label="Maximum Score" value={scmaximum} />
-          <ScoreDetail
-            label="Reason Codes"
-            value={screasoncodes.screasoncode.join(" ")}
-          />
-        </div>
+      <div className="grid grid-cols-2 gap-4 text-[14px]">
+        <InfoRow label="Score" value={scscore} />
+        <InfoRow label="Score Card" value={scscorecard} />
+        <InfoRow label="Score Index" value={scscoreindex} />
+        <InfoRow label="Minimum Score" value={scminimum} />
+        <InfoRow label="Maximum Score" value={scmaximum} />
+        <InfoRow label="Reason Codes" value={screasoncodes.screasoncode.join(" ")} />
       </div>
     </ContainerTile>
   );
 };
-
-const ScoreDetail = ({ label, value }) => (
-  <div className="flex gap-2 py-1.5">
-    <div className="w-32">{label}:</div>
-    <div>{value}</div>
-  </div>
-);
 
 export default Score;
