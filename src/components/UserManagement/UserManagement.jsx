@@ -1,4 +1,11 @@
-import { useEffect, useState } from "react";
+// components/UserManagement.js
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUsers,
+  setSelectedUserData,
+  setIsModalOpen,
+} from "../../redux/Slices/userManagementSlice";
 import { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import AddUserModal from "./AddUserModal";
@@ -7,50 +14,25 @@ import Loader from "../Common/Loader/Loader";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const UserManagement = ({ role }) => {
-  // Data States
-  const [allUsersInfo, setAllUsersInfo] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUserData, setSelectedUserData] = useState(null);
+  const dispatch = useDispatch();
+  const { allUsersInfo, loading, selectedUserData, isModalOpen } = useSelector(
+    (state) => state.userManagement
+  );
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const handleAddUser = () => {
-    setIsModalOpen(true);
+    dispatch(setIsModalOpen(true));
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const getUser = async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users?offset=0&limit=10",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (data.status === 400) {
-        const errorData = await data.json();
-        console.log(errorData.message);
-        return; // Stop further execution
-      }
-      const json = await data.json();
-      setAllUsersInfo(json);
-    } catch (error) {
-      console.error(error);
-    }
+    dispatch(setIsModalOpen(false));
   };
 
   const handleUserAction = (data) => {
-    setSelectedUserData(data); // Set the selected installment data
+    dispatch(setSelectedUserData(data));
   };
 
   const options = { day: "2-digit", month: "short", year: "numeric" };
@@ -59,7 +41,9 @@ const UserManagement = ({ role }) => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
 
-      {allUsersInfo.length > 0 ? (
+      {loading ? (
+        <Loader />
+      ) : (
         <ContainerTile>
           <div className="flex justify-between mb-5 items-end">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
@@ -91,7 +75,10 @@ const UserManagement = ({ role }) => {
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {allUsersInfo.map((item) => (
-                  <tr className="divide-x divide-gray-200 text-center">
+                  <tr
+                    key={item.username}
+                    className="divide-x divide-gray-200 text-center"
+                  >
                     <td className="p-4 text-gray-500">{item.username}</td>
                     <td className="p-4 text-gray-500">
                       {item.active ? "Active" : "Suspended"}
@@ -105,7 +92,6 @@ const UserManagement = ({ role }) => {
                       <div onClick={() => handleUserAction(item)}>
                         <ActionOption
                           userDataProp={selectedUserData}
-                          getUser={getUser}
                           role={role}
                         />
                       </div>
@@ -116,15 +102,8 @@ const UserManagement = ({ role }) => {
             </table>
           </div>
         </ContainerTile>
-      ) : (
-        <Loader />
       )}
-      <AddUserModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        role={role}
-        getUser={getUser}
-      />
+      <AddUserModal isOpen={isModalOpen} onClose={closeModal} role={role} />
     </>
   );
 };

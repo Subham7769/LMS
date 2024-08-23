@@ -20,7 +20,6 @@ import Button from "../Common/Button/Button";
 import { tenureTypeOptions, options } from "../../data/OptionsData";
 import ProductInputFields from "./ProductInputFields";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
   fetchData,
   setFormData,
@@ -96,7 +95,7 @@ const LoanProductConfig = () => {
     try {
       // Dispatch the saveProductData thunk with necessary parameters
       dispatch(saveProductData({ loanProId, formData }));
-      // toast.custom((t) => <RowChanged t={t} toast={toast} />);
+      toast.custom((t) => <RowChanged t={t} toast={toast} />);
     } catch (error) {
       console.error("Failed to update data:", error);
     }

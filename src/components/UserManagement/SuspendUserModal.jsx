@@ -3,52 +3,38 @@ import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
+import {
+  fetchUsers,
+  suspendUser,
+} from "../../redux/Slices/userManagementSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const SuspendUserModal = ({ isOpen, onClose, getUser, userDetails }) => {
+const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
   const [suspensionReason, setSuspensionReason] = useState("");
+  const dispatch = useDispatch();
 
-  const suspendUser = async (e) => {
+  const handleSuspendUser = async (e) => {
     e.preventDefault();
-
     try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/${userDetails.username}/suspend/${suspensionReason}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (data.status === 400) {
-        const errorData = await data.json();
-        console.log(errorData.message);
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Failed"}
-            message={errorData.message}
-          />
-        ));
-        return; // Stop further execution
-      }
-      if (data.status === 200) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Success"}
-            message={"User Suspended Successfully !!"}
-          />
-        ));
-        getUser();
-        onClose();
-      }
+      await dispatch(
+        suspendUser({
+          userName: userDetails.username,
+          reason: suspensionReason,
+        })
+      ).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Success"}
+          message={"User Suspended Successfully !!"}
+        />
+      ));
+      onClose();
     } catch (error) {
-      console.error(error);
+      toast.custom((t) => (
+        <Failed t={t} toast={toast} title={"Failed"} message={error} />
+      ));
     }
   };
 
@@ -79,7 +65,7 @@ const SuspendUserModal = ({ isOpen, onClose, getUser, userDetails }) => {
             />
             <Button
               buttonName={"Suspend"}
-              onClick={suspendUser}
+              onClick={handleSuspendUser}
               rectangle={true}
               className={"self-end"}
             />

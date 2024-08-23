@@ -6,12 +6,20 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import EditUserModal from "./EditUserModal";
 import SuspendUserModal from "./SuspendUserModal";
+import {
+  activateUser,
+  fetchUsers,
+  generatePassword,
+  deleteUser,
+} from "../../redux/Slices/userManagementSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ActionOption = ({ userDataProp, getUser, role }) => {
   const [userName, setUserName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuspendModalOpen, setIsSuspendModalOpen] = useState(false);
   const [isUserActive, setIsUserActive] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setUserName(userDataProp?.username);
@@ -23,35 +31,15 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
       duration: 1000,
       position: "bottom-center",
     });
-    const authToken = localStorage.getItem("authToken");
-    try {
-      const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/${userName}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Delete Successful"}
-            message={"The user was deleted successfully"}
-          />
-        ));
-        getUser();
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
+    await dispatch(deleteUser(userName)).unwrap();
+    toast.custom((t) => (
+      <Passed
+        t={t}
+        toast={toast}
+        title="Delete Successful"
+        message="The user was deleted successfully"
+      />
+    ));
   };
 
   const handleEditUser = () => {
@@ -71,35 +59,16 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
       duration: 1000,
       position: "bottom-center",
     });
-    const authToken = localStorage.getItem("authToken");
-    try {
-      const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/${userName}/activate`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Activate Successful"}
-            message={"The user was activated successfully"}
-          />
-        ));
-        getUser();
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
+    await dispatch(activateUser(userDataProp.username)).unwrap();
+    toast.custom((t) => (
+      <Passed
+        t={t}
+        toast={toast}
+        title="Activate Successful"
+        message="The user was activated successfully"
+      />
+    ));
+    dispatch(fetchUsers());
   };
 
   const handleGeneratePassword = async () => {
@@ -107,35 +76,16 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
       duration: 1000,
       position: "bottom-center",
     });
-    const authToken = localStorage.getItem("authToken");
-    try {
-      const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/${userName}/generate_password`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Successful"}
-            message={"New Password generated successfully"}
-          />
-        ));
-        getUser();
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
+    await dispatch(generatePassword(userDataProp.username)).unwrap();
+    toast.custom((t) => (
+      <Passed
+        t={t}
+        toast={toast}
+        title="Successful"
+        message="New Password generated successfully"
+      />
+    ));
+    dispatch(fetchUsers());
   };
 
   const closeSuspendModal = () => {
@@ -213,7 +163,6 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
         isOpen={isSuspendModalOpen}
         onClose={closeSuspendModal}
         userDetails={userDataProp}
-        getUser={getUser}
       />
     </>
   );

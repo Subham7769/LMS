@@ -1,110 +1,58 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import SelectInput from "../Common/DynamicSelect/DynamicSelect";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
+import {
+  setFormData,
+  setUserRole,
+  updateUser,
+} from "../../redux/Slices/userManagementSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const EditUserModal = ({ isOpen, onClose, role, getUser, userDetails }) => {
-  const [formData, setFormData] = useState({
-    active: true,
-    email: "",
-    firstname: "",
-    lastname: "",
-    password: "",
-    roles: [],
-    username: "",
-  });
-  const [userRole, setUserRole] = useState([]);
+const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
+  const dispatch = useDispatch();
+  const { formData, userRole } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
-    setFormData(userDetails);
+    dispatch(setFormData(userDetails));
     const formattedRoleData = userDetails?.roles.map(({ id, name }) => ({
       label: name,
       value: id,
     }));
-    setUserRole(formattedRoleData);
-  }, [userDetails]);
+    dispatch(setUserRole(formattedRoleData));
+  }, [userDetails, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    dispatch(setFormData({ [name]: value }));
   };
 
   const handleRoles = (selectedUserRole) => {
-    setUserRole(selectedUserRole);
+    dispatch(setUserRole(selectedUserRole));
   };
 
   const updateData = async (e) => {
     e.preventDefault();
-    const selectedRoles = userRole.map((item) => ({
-      id: item.value,
-      name: item.label,
-    }));
-    const postData = {
-      active: true,
-      email: formData.email,
-      firstname: formData.firstname,
-      lastname: formData.lastname,
-      password: formData.password,
-      roles: selectedRoles,
-      username: formData.username,
-    };
-    console.log(postData);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/${userDetails.username}/edit`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-      if (data.status === 400) {
-        const errorData = await data.json();
-        console.log(errorData.message);
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Failed"}
-            message={errorData.message}
-          />
-        ));
-        return; // Stop further execution
-      }
-      if (data.status === 200) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Success"}
-            message={"User Details updated Successfully !!"}
-          />
-        ));
-        getUser();
-        clearFormData();
-        onClose();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
-  const clearFormData = () => {
-    setFormData({
-      active: true,
-      email: "",
-      firstname: "",
-      lastname: "",
-      password: "",
-      roles: [],
-      username: "",
-    });
+    try {
+      await dispatch(updateUser({ userDetails, formData, userRole })).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Success"}
+          message={"User Details updated Successfully !!"}
+        />
+      ));
+      onClose();
+    } catch (error) {
+      console.log(error.message);
+      toast.custom((t) => (
+        <Failed t={t} toast={toast} title={"Error"} message={error.message} />
+      ));
+    }
   };
 
   if (!isOpen) return null;

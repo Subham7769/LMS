@@ -6,88 +6,50 @@ import InputPassword from "../Common/InputPassword/InputPassword";
 import SelectInput from "../Common/DynamicSelect/DynamicSelect";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed, Warning } from "../Toasts";
+import {
+  createUser,
+  setFormData,
+  setConfirmPassword,
+  setUserRole,
+  clearFormData,
+} from "../../redux/Slices/userManagementSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const AddUserModal = ({ isOpen, onClose, role, getUser }) => {
-  const [formData, setFormData] = useState({
-    active: true,
-    email: "",
-    firstname: "",
-    lastname: "",
-    password: "",
-    roles: [],
-    username: "",
-  });
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [userRole, setUserRole] = useState([]);
+const AddUserModal = ({ isOpen, onClose, role }) => {
+  const dispatch = useDispatch();
+  const { formData, confirmPassword, userRole } = useSelector(
+    (state) => state.userManagement
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    dispatch(setFormData({ [name]: value }));
   };
 
   const handleRoles = (selectedUserRole) => {
-    setUserRole(selectedUserRole);
+    dispatch(setUserRole(selectedUserRole));
   };
 
   const updateData = async (e) => {
     e.preventDefault();
-    const selectedRoles = userRole.map((item) => ({
-      id: item.value,
-      name: item.label,
-    }));
+
     if (confirmPassword === formData.password) {
-      const postData = {
-        active: true,
-        email: formData.email,
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        password: formData.password,
-        roles: selectedRoles,
-        username: formData.username,
-      };
-      console.log(postData);
       try {
-        const token = localStorage.getItem("authToken");
-        const data = await fetch(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(postData),
-          }
-        );
-        if (data.status === 400) {
-          const errorData = await data.json();
-          console.log(errorData.message);
-          toast.custom((t) => (
-            <Failed
-              t={t}
-              toast={toast}
-              title={"Failed"}
-              message={errorData.message}
-            />
-          ));
-          return; // Stop further execution
-        }
-        if (data.status === 200) {
-          console.log("User added Successfully !!");
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Success"}
-              message={"User added Successfully !!"}
-            />
-          ));
-          getUser();
-          clearFormData();
-          onClose();
-        }
+        await dispatch(createUser({ formData, userRole })).unwrap();
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Success"}
+            message={"User added Successfully !!"}
+          />
+        ));
+        dispatch(clearFormData());
+        onClose();
       } catch (error) {
-        console.error(error);
+        toast.custom((t) => (
+          <Failed t={t} toast={toast} title={"Error"} message={error.message} />
+        ));
       }
     } else {
       toast.custom((t) => (
@@ -98,22 +60,7 @@ const AddUserModal = ({ isOpen, onClose, role, getUser }) => {
           message={"Password not matched!!"}
         />
       ));
-      console.log("Password not matched!!");
     }
-  };
-
-  const clearFormData = () => {
-    setFormData({
-      active: true,
-      email: "",
-      firstname: "",
-      lastname: "",
-      password: "",
-      roles: [],
-      username: "",
-    });
-    setConfirmPassword("");
-    setUserRole([]);
   };
 
   if (!isOpen) return null;
@@ -163,7 +110,7 @@ const AddUserModal = ({ isOpen, onClose, role, getUser }) => {
               labelName="Confirm Password"
               inputName="confirmPassword"
               inputValue={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
               required
             />
             <SelectInput
@@ -180,7 +127,7 @@ const AddUserModal = ({ isOpen, onClose, role, getUser }) => {
               buttonName={"Cancel"}
               onClick={() => {
                 onClose();
-                clearFormData();
+                dispatch(clearFormData());
               }}
               className={" bg-gray-600 text-white hover:bg-gray-500 self-end"}
               rectangle={true}

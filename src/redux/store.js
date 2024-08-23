@@ -11,6 +11,7 @@ import creditScoreSlice from "./Slices/creditScoreSlice";
 import borrowerSlice from "./Slices/borrowerSlice";
 import productGroupSlice from "./Slices/productGroupSlice";
 import ledgerSlice from "./Slices/ledgerSlice";
+import userManagementSlice from "./Slices/userManagementSlice";
 // import rulePolicySlice from "./Slices/rulePolicySlice";
 
 const store = configureStore({
@@ -23,10 +24,11 @@ const store = configureStore({
     blockedEmployer: beSlice,
     dbrConfig: dbrSlice,
     creditScore: creditScoreSlice,
-    customerCare:borrowerSlice,
+    customerCare: borrowerSlice,
     productGroup: productGroupSlice,
+    userManagement: userManagementSlice,
     // rulePolicy: rulePolicySlice,
-    ledger:ledgerSlice
+    ledger: ledgerSlice,
   },
 });
 
