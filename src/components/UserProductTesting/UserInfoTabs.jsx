@@ -6,7 +6,7 @@ const UserInfoTabs = () => {
   const currentPath = location.pathname;
 
   const tabs = [
-    { path: `/user/${userID}/user-info`, label: "Eligibility" },
+    { path: `/user/${userID}/user-eligibilty`, label: "Eligibility" },
     { path: `/user/${userID}/register`, label: "Register" },
     { path: `/user/${userID}/loan-config`, label: "Loan Config" },
     { path: `/user/${userID}/disbursement`, label: "Disbursement Status" },

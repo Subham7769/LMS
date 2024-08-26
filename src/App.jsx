@@ -82,21 +82,21 @@ const BpmnComponent3 = lazy(() =>
   import("./components/BusinessRule/BpmnComponent3")
 );
 
-const UserInfoTabs = lazy(() => import("./components/NewUser/UserInfoTabs"));
-const UserInfo = lazy(() => import("./components/NewUser/UserInfo"));
-const Disbursement = lazy(() => import("./components/NewUser/Disbursement"));
-const Register = lazy(() => import("./components/NewUser/Register"));
+const UserInfoTabs = lazy(() => import("./components/UserProductTesting/UserInfoTabs"));
+const Eligibility = lazy(() => import("./components/UserProductTesting/Eligibility"));
+const Disbursement = lazy(() => import("./components/UserProductTesting/Disbursement"));
+const Register = lazy(() => import("./components/UserProductTesting/Register"));
 const InstallmentInfoComp = lazy(() =>
-  import("./components/NewUser/InstallmentInfoComp")
+  import("./components/UserProductTesting/InstallmentInfoComp")
 );
-const LoanConfigDD = lazy(() => import("./components/NewUser/LoanConfigDD"));
+const LoanConfigDD = lazy(() => import("./components/UserProductTesting/LoanConfigDD"));
 const BlockedEmployer = lazy(() =>
   import("./components/BlockedEmployer/BlockedEmployer")
 );
-const Repayment = lazy(() => import("./components/NewUser/Repayments"));
-const FamilyDetails = lazy(() => import("./components/NewUser/FamilyDetails"));
+const Repayment = lazy(() => import("./components/UserProductTesting/Repayments"));
+const FamilyDetails = lazy(() => import("./components/UserProductTesting/FamilyDetails"));
 const EmploymentDetails = lazy(() =>
-  import("./components/NewUser/EmploymentDetails")
+  import("./components/UserProductTesting/EmploymentDetails")
 );
 const CreateProduct = lazy(() => import("./components/Product/CreateProduct"));
 const TestComponent = lazy(() =>
@@ -227,7 +227,7 @@ const routes = [
         path: "/user/:userID",
         element: <UserInfoTabs />,
         children: [
-          { path: "user-info", element: <UserInfo /> },
+          { path: "user-eligibilty", element: <Eligibility /> },
           { path: "register", element: <Register /> },
           { path: "loan-config", element: <LoanConfigDD /> },
           {

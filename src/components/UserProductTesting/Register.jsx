@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Sorry from "../../assets/image/sorry.png";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useDispatch, useSelector } from "react-redux";
+import { getBorrowerInfo } from "../../redux/Slices/userProductTestingSlice";
 
 const CommentsModal = ({ closeModal, message }) => {
   console.log(message);
@@ -41,7 +43,7 @@ const CommentsModal = ({ closeModal, message }) => {
 };
 
 const EligibilityResults = ({ eligibilityResults }) => {
-  const projects = eligibilityResults.registrationResults.projects;
+  const projects = eligibilityResults?.registrationResults?.projects;
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState([]);
 
@@ -131,110 +133,20 @@ const EligibilityResults = ({ eligibilityResults }) => {
 };
 
 const Register = () => {
-  const [registrationResultsData, setregistrationResultsData] = useState([]);
   const { userID } = useParams();
-  const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getBorrowerInfo();
-  }, [userID]);
+    dispatch(getBorrowerInfo(userID))
+  }, [dispatch, userID])
 
-  async function getBorrowerInfo() {
-    const postData = {
-      msisdn: "966500666496",
-      firstNameEn: "MOHAMMED",
-      lastNameEn: "ABIDABRAHIM",
-      middleNameEn: "MAHMOUD",
-      firstNameAr: "محمد",
-      lastNameAr: "عبيد ابراهيم",
-      middleNameAr: "محمود",
-      gender: "M",
-      dateOfBirth: "1983-07-29",
-      idType: "IQAMA ID",
-      idNumber: userID,
-      idExpiryDate: "2030-08-24",
-      nationality: "لبنان",
-      nationalityId: 122,
-      occupation: "N/A",
-      residenceDetails: {
-        buildingNumber: "4083",
-        streetName: "اغادير",
-        city: "الرياض",
-        cityId: 85,
-        neighborhood: "الملك عبد العزيز",
-        postOfficeBox: "12233",
-        additionalNumbers: "7787",
-        unitNumber: "1",
-        rent: true,
-        homeOwnership: 0,
-        residentialType: "VILLA",
-      },
-      maritalDetails: {
-        maritalStatus: "Married",
-        noOfDomesticWorkers: 0,
-        noOfChildren: 3,
-        totalDependent: 5,
-        breadWinner: true,
-        noOfDependentsInPrivateSchools: "2",
-        noOfDependentsInPublicSchools: "0",
-      },
-      totalMonthlyExpenses: 0.0,
-      monthlyExpenses: {
-        RE: 0.0,
-        FLE: 0.0,
-        TE: 0.0,
-        CE: 0.0,
-        UE: 0.0,
-        EE: 0.0,
-        HHE: 0.0,
-        HCE: 0.0,
-        IP: 0.0,
-        EDT: 0.0,
-        MR: 0.0,
-        OMR: 0.0,
-      },
-    };
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
-          userID,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-      if (data.status === 404) {
-        console.log("User Not Found"); // Clear the token
-        navigate("/user"); // Redirect to login page
-        return; // Stop further execution
-      }
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const json = await data.json();
-      // console.log(json);
-      setregistrationResultsData(json);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { register, loading, error } = useSelector((state) => state.userProductTesting);
+  console.log(register)
 
-  console.log(registrationResultsData);
-  if (registrationResultsData.length === 0) {
-    return (
-      <>
-        <LoadingState />
-      </>
-    );
-  } else if (registrationResultsData.message === "Borrower already exists") {
+  // Conditional rendering based on loading and error states
+  if (loading) {
+    return <LoadingState />;
+  } else if (register.message === "Borrower already exists") {
     return (
       <>
         <div className="min-h-[70vh] w-full flex flex-col items-center justify-center">
@@ -244,15 +156,12 @@ const Register = () => {
             alt="Loading Icon"
           />
           <p className="text-center font-bold text-xl">
-            {registrationResultsData.message}
+            {register.message}
           </p>
         </div>
       </>
     );
-  } else if (
-    registrationResultsData.message ===
-    "Something is wrong, please contact system administrator"
-  ) {
+  } else if (register.message === "Something is wrong, please contact system administrator") {
     return (
       <>
         <div className="min-h-[70vh] w-full flex flex-col items-center justify-center">
@@ -262,13 +171,18 @@ const Register = () => {
             alt="Loading Icon"
           />
           <p className="text-center font-bold text-xl">
-            {registrationResultsData.message}
+            {register.message}
           </p>
         </div>
       </>
     );
   }
-  return <EligibilityResults eligibilityResults={registrationResultsData} />;
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return <EligibilityResults eligibilityResults={register} />;
 };
 
 export default Register;

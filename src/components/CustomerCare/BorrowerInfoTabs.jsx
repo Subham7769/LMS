@@ -21,7 +21,7 @@ const BorrowerInfoTabs = () => {
       path: `/borrower/${subID}/credit-bureau-details`,
       label: "Credit Bureau Details",
     },
-    { path: `/user/${subID}/user-info`, label: "Back to User Page" },
+    { path: `/user/${subID}/user-eligibilty`, label: "Back to User Page" },
   ];
 
   return (

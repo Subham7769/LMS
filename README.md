@@ -2000,7 +2000,7 @@ const SearchBox = () => {
                 navigate("/login"); // Redirect to login page
                 return; // Stop further execution
             }
-            navigate("/user/" + borrowerID + "/user-info");
+            navigate("/user/" + borrowerID + "/user-eligibilty");
             setBorrowerNotFound(false);
         } catch (error) {
             console.error(error);
@@ -2169,7 +2169,7 @@ const UserPage = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      navigate("/user/" + borrowerID + "/user-info");
+      navigate("/user/" + borrowerID + "/user-eligibilty");
       setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);
@@ -2382,7 +2382,7 @@ const SearchBox = () => {
                 navigate("/login"); // Redirect to login page
                 return; // Stop further execution
             }
-            navigate("/user/" + borrowerID + "/user-info");
+            navigate("/user/" + borrowerID + "/user-eligibilty");
             setBorrowerNotFound(false);
         } catch (error) {
             console.error(error);
