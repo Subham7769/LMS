@@ -11,7 +11,7 @@ import { getDisbursementInfo, submitDisbursement } from "../../redux/Slices/user
 import LoadingState from "../LoadingState/LoadingState";
 
 const Disbursement = () => {
-  const { disbursementData, disbursementSubmit, loading, error } = useSelector(state => state.userProductTesting)
+  const { disbursementData, loading, error } = useSelector(state => state.userProductTesting)
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     amount: "",

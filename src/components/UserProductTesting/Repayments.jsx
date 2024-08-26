@@ -17,7 +17,7 @@ const Repayment = () => {
   const dispatch = useDispatch();
   const [amount, setamount] = useState("");
   const [userloanID, setuserloanID] = useState([]);
-  const { loanIdOptions, repaymentData, repaymentSubmit, loading, error } = useSelector(state => state.userProductTesting)
+  const { loanIdOptions, repaymentData, loading, error } = useSelector(state => state.userProductTesting)
 
   useEffect(() => {
     dispatch(getRepaymentInfo({ userID, navigate }))
