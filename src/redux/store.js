@@ -12,6 +12,7 @@ import borrowerSlice from "./Slices/borrowerSlice";
 import productGroupSlice from "./Slices/productGroupSlice";
 import ledgerSlice from "./Slices/ledgerSlice";
 import userManagementSlice from "./Slices/userManagementSlice";
+import creditScoreETSlice from "./Slices/creditScoreETSlice";
 // import rulePolicySlice from "./Slices/rulePolicySlice";
 
 const store = configureStore({
@@ -27,6 +28,7 @@ const store = configureStore({
     customerCare: borrowerSlice,
     productGroup: productGroupSlice,
     userManagement: userManagementSlice,
+    creditScoreET: creditScoreETSlice,
     // rulePolicy: rulePolicySlice,
     ledger: ledgerSlice,
   },

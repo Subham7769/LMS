@@ -10,205 +10,62 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
-import { RowChanged, Warning } from "../Toasts";
+import { Passed, RowChanged, Warning } from "../Toasts";
 import Button from "../Common/Button/Button";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import CloneModal from "../Common/CloneModal/CloneModal";
-import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
-import { useDispatch } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchCreditScoreETInfo,
+  fetchCreditScoreETName,
+  handleChangeDispatch,
+  addTenure,
+  deleteTenure,
+  updateTenure,
+  saveCreditScoreET,
+  updateCreditScoreETName,
+  createCloneCSET,
+  handleDeleteCSET,
+  setFormData,
+} from "../../redux/Slices/creditScoreETSlice";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
-  const [loading, setLoading] = useState(false);
   const [tenure, setTenure] = useState("");
-  const [creditScoreETName, setCreditScoreETName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    operators: {
-      firstCreditScoreOperator: "",
-      secondCreditScoreOperator: "",
-    },
-    rules: [
-      {
-        firstCreditScore: "",
-        secondCreditScore: "",
-        creditScoreEtTempId: creditScoreETId,
-        ruleName: "0",
-        fieldType: "Employer",
-        tenure: [],
-      },
-    ],
-  });
 
-  async function getCreditScoreETInfo() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${
-          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_READ
-        }${creditScoreETId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      } else if (data.ok) {
-        setLoading(false);
-      }
-      const creditScoreETDetails = await data.json();
-      const updatedDetails = {
-        operators: creditScoreETDetails.operators || {
-          firstCreditScoreOperator: "",
-          secondCreditScoreOperator: "",
-        },
-        rules: creditScoreETDetails.rules || [
-          {
-            firstCreditScore: "",
-            secondCreditScore: "",
-            creditScoreEtTempId: creditScoreETId,
-            ruleName: "0",
-            fieldType: "Employer",
-            tenure: [],
-          },
-        ],
-      };
-      setFormData((prevState) => ({ ...prevState, ...updatedDetails }));
-      // console.log(formData);
-      //   window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function getCreditScoreETName() {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${
-          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_NAME_READ
-        }${creditScoreETId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const CreditScoreETDetails = await data.json();
-      setCreditScoreETName(CreditScoreETDetails.name.replace(/-/g, " "));
-      // console.log(CreditScoreEqData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { formData, creditScoreETName, loading, error } = useSelector(
+    (state) => state.creditScoreET
+  );
 
   useEffect(() => {
-    getCreditScoreETInfo();
-    getCreditScoreETName();
-  }, [creditScoreETId]);
+    dispatch(fetchCreditScoreETInfo(creditScoreETId));
+    dispatch(fetchCreditScoreETName(creditScoreETId));
+    dispatch(
+      setFormData({ ...formData, creditScoreEtTempId: creditScoreETId })
+    );
+  }, [creditScoreETId, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prevState) => {
-      const isOperator = prevState.operators.hasOwnProperty(name);
-      const isRuleField = prevState.rules[0].hasOwnProperty(name);
-
-      if (isOperator) {
-        // Update an operator
-        return {
-          ...prevState,
-          operators: {
-            ...prevState.operators,
-            [name]: value,
-          },
-        };
-      } else if (isRuleField) {
-        // Update a rule
-        console.log(isRuleField);
-        return {
-          ...prevState,
-          rules: [
-            {
-              ...prevState.rules[0],
-              [name]: value,
-            },
-          ],
-        };
-      }
-    });
+    dispatch(handleChangeDispatch({ name, value }));
   };
 
-  const handleAddET = async () => {
-    setFormData((prevFormData) => {
-      // Copy the existing rules array
-      const updatedRules = [...prevFormData.rules];
-
-      // Append the new tenure value to the tenure array in rules[0]
-      updatedRules[0].tenure = [...updatedRules[0].tenure, tenure];
-
-      // Update the formData state with the new rules array
-      return {
-        ...prevFormData,
-        rules: updatedRules,
-      };
-    });
+  const handleAddET = () => {
+    dispatch(addTenure(tenure));
     setTenure("");
   };
 
   const handleSaveET = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-    try {
-      // POST request to add new fields
-      const postResponse = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_UPDATE}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
-        getCreditScoreETInfo();
-      }
-    } catch (error) {
-      console.error("Failed to update data:", error);
-    }
+    await dispatch(saveCreditScoreET(formData)).unwrap();
+    toast.custom((t) => <RowChanged t={t} toast={toast} />);
   };
 
   const handleDelete = (index) => {
-    const deleteList = [...formData.rules];
-    deleteList[0].tenure.splice(index, 1);
-    setFormData((prevState) => ({
-      ...prevState,
-      rules: deleteList,
-    }));
+    dispatch(deleteTenure(index));
     toast.custom((t) => (
       <Warning
         t={t}
@@ -220,53 +77,14 @@ const CreditScoreET = () => {
   };
 
   const handleTenureChange = (index, e) => {
-    const updatedTenure = formData.rules[0].tenure.map((item, idx) => {
-      if (index === idx) {
-        return e.target.value; // Update the specific tenure value at the index
-      }
-      return item;
-    });
-    setFormData((prevState) => {
-      const updatedRules = [...prevState.rules];
-      updatedRules[0].tenure = updatedTenure; // Update the tenure array in rules[0]
-
-      return {
-        ...prevState,
-        rules: updatedRules,
-      };
-    });
+    dispatch(updateTenure({ index, value: e.target.value }));
   };
 
   const handleUpdateCSET = async (updatecsetName) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${
-          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_NAME_UPDATE
-        }${creditScoreETId}/name/${updatecsetName}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const csetDetails = await data.json();
-      console.log(csetDetails);
-      navigate(
-        "/credit-score-eligible-tenure/" + csetDetails.creditScoreEtTempId
-      );
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+    await dispatch(
+      updateCreditScoreETName({ creditScoreETId, updatecsetName })
+    ).unwrap();
+    dispatch(fetchCreditScoreETName(creditScoreETId));
   };
 
   const handleClone = () => {
@@ -277,74 +95,33 @@ const CreditScoreET = () => {
     setIsModalOpen(false);
   };
 
-  const createCloneCSET = async (cloneCSETName) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${
-          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_CREATE_CLONE
-        }${creditScoreETId}/clone/${cloneCSETName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const csetDetails = await data.json();
-      console.log(csetDetails);
-      dispatch(fetchCreditScoreEligibleTenureData())
-      navigate(
-        "/credit-score-eligible-tenure/" + csetDetails.creditScoreEtTempId
-      );
-
-      // window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+  const onCreateClone = async (cloneCSETName) => {
+    setIsModalOpen(false);
+    const details = await dispatch(
+      createCloneCSET({ creditScoreETId, cloneCSETName })
+    ).unwrap();
+    toast.custom((t) => (
+      <Passed
+        t={t}
+        toast={toast}
+        title="Clone Successful"
+        message="The clone was created successfully"
+      />
+    ));
+    navigate("/credit-score-eligible-tenure/" + details.creditScoreEtTempId);
   };
 
-  const handleDeleteCSET = async (creditScoreETId) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${
-          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE
-        }${creditScoreETId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      }
-      dispatch(fetchCreditScoreEligibleTenureData())
-      navigate("/credit-score-eligible-tenure");
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
-    } catch (error) {
-      console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
-    }
+  const onDeleteCSET = async () => {
+    await dispatch(handleDeleteCSET(creditScoreETId)).unwrap();
+    navigate("/credit-score-eligible-tenure");
   };
 
   if (loading) {
     return <LoadingState />;
+  }
+
+  if (error) {
+    <p>Error: {error}</p>;
   }
   return (
     <>
@@ -358,7 +135,7 @@ const CreditScoreET = () => {
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button
             buttonIcon={TrashIcon}
-            onClick={() => handleDeleteCSET(creditScoreETId)}
+            onClick={() => onDeleteCSET(creditScoreETId)}
             circle={true}
           />
         </div>
@@ -366,7 +143,7 @@ const CreditScoreET = () => {
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onCreateClone={createCloneCSET}
+        onCreateClone={onCreateClone}
         initialName={creditScoreETName}
       />
       <ContainerTile>
