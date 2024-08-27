@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import InputText from "../InputText/InputText";
 
-const DynamicName = ({ initialName, onSave }) => {
+const DynamicName = ({ initialName, onSave, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(initialName);
 
@@ -43,7 +43,7 @@ const DynamicName = ({ initialName, onSave }) => {
           </button>
         </div>
       ) : (
-        <h2 onClick={handleEdit}>
+        <h2 onClick={editable && handleEdit}>
           <b
             title="Edit Name"
             className="mb-4 text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"

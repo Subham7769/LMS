@@ -59,6 +59,20 @@ const Project = () => {
     dispatch(handleChangeInFormData({ name, value, checked, type })); // Passing only the serializable data
   };
 
+  const updateName = (name) => {
+    dispatch(setFormData({ name:"name", value: name }))    
+    dispatch(fetchProjectData());
+    // toast.custom((t) => (
+    //   <Warning
+    //     t={t}
+    //     toast={toast}
+    //     title={"Not Updated Yet"}
+    //     message={"To confirm the name change click Update button"}
+    //   />
+    // ));
+
+  }
+
   const handleUpdate = () => {
     dispatch(updateProject({ formData, projectId, clientIdsString }));
   };
@@ -105,7 +119,7 @@ const Project = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center mb-3">
-        <DynamicName initialName={formData.name} onSave={handleChange} />
+        <DynamicName initialName={formData.name} onSave={updateName} editable={false}/>
         <Button
           buttonIcon={TrashIcon}
           onClick={() => handleDelete()}
@@ -403,9 +417,8 @@ const Project = () => {
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
-                  className={`flex-1 w-full ${
-                    formData.loanType === "cash" && "hidden"
-                  }`}
+                  className={`flex-1 w-full ${formData.loanType === "cash" && "hidden"
+                    }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}

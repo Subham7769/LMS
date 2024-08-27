@@ -31,6 +31,7 @@ import {
   deleteLoanProduct,
 } from "../../redux/Slices/productSlice";
 import { useDispatch, useSelector } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -219,12 +220,9 @@ const LoanProductConfig = () => {
           buttonIcon={TrashIcon}
           onClick={() => handleDeleteLoanProduct(loanProId)}
           circle={true}
-          className={
-            "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
-          }
         />
       </div>
-      <div className="shadow-md rounded-xl pb-8 pt-6 px-5 border border-red-600">
+      <ContainerTile>
         <ProductInputFields formData={formData} handleChange={handleChange} />
         <div>
           <table className="w-full divide-y divide-gray-200">
@@ -462,7 +460,7 @@ const LoanProductConfig = () => {
             />
           </div>
         </div>
-      </div>
+      </ContainerTile>
     </>
   );
 };

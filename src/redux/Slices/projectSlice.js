@@ -339,13 +339,11 @@ const projectSlice = createSlice({
       state.loading = action.payload;
     },
     setFormData: (state, action) => {
-      // state.formData = { ...state.formData, ...action.payload };
-      const { name } = action.payload;
-      state.formData = {
-        ...projectInitialState.formData, // Reset to initial state
-        ...action.payload, // Apply the new changes
-        name: name || state.formData.name, // Ensure name field is set
-      };
+      const { name, value } = action.payload;
+      state.formData[name] = value;
+    },
+    resetFormData: (state) => {
+      state.formData = projectInitialState.formData;
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -471,6 +469,7 @@ const projectSlice = createSlice({
 export const {
   setLoading,
   setFormData,
+  resetFormData,
   setError,
   parseCriteria,
   handleChangeInFormData,

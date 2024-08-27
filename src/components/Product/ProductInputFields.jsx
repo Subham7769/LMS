@@ -272,6 +272,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
         />
         <InputSelect
           labelName="Tenure Type"
+          inputValue={interestEligibleTenure.loanTenureType}
           inputOptions={tenureTypeOptions}
           inputName="loanTenureType"
           onChange={handleChangeInterestEligibleTenure}

@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
   setFormData,
+  resetFormData,
   handleChangeInFormData,
   createProject,
 } from "../../redux/Slices/projectSlice";
@@ -43,15 +44,16 @@ const NewProjectPage = () => {
 
   useEffect(() => {
     if (projectName) {
-      dispatch(setFormData({ name: projectName }));
+      dispatch(resetFormData());
+      dispatch(setFormData({ name:'name' ,value: projectName }));
     }
   }, [dispatch, projectName]);
 
   console.log(formData);
 
   const handleChange = (e) => {
-    const { name, value } = e.target; // Extracting only the name and value properties
-    dispatch(handleChangeInFormData({ name, value })); // Passing only the serializable data
+    const { name, value, checked, type } = e.target; // Extracting only the name and value properties
+    dispatch(handleChangeInFormData({ name, value, checked, type })); // Passing only the serializable data
   };
 
   const createNewProject = async (event) => {
