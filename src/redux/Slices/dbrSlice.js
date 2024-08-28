@@ -319,9 +319,12 @@ export const dbrSlice = createSlice({
         gdbrWithMTG: "",
       };
     },
-    updateOperator(state, action) {
+    updateOperator: (state, action) => {
       const { name, value } = action.payload;
-      state.operators[name] = value;
+      state.operators = {
+        ...state.operators,
+        [name]: value,
+      };
     },
     toggleModal: (state) => {
       state.isModalOpen = !state.isModalOpen;

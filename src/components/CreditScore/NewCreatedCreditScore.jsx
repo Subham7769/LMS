@@ -112,14 +112,15 @@ const NewCreatedCreditScore = () => {
         <div className="flex justify-between items-center">
           <DynamicName initialName={creditScoreName} onSave={handleRename} />
           <div className="flex items-center gap-2">
-            <TrashIcon
-              className="w-6 h-6 text-red-500 cursor-pointer"
-              onClick={handleDelete}
-            />
             <Button
               buttonName={"Clone"}
               onClick={handleClone}
               rectangle={true}
+            />
+            <Button
+              buttonIcon={TrashIcon}
+              onClick={handleDelete}
+              circle={true}
             />
           </div>
         </div>

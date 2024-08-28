@@ -67,6 +67,8 @@ const CreditScore = () => {
       });
   };
 
+  // console.log(formData);
+
   if (loading) {
     return <LoadingState />;
   }

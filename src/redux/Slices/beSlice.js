@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchBEData } from "./sidebarSlice"; 
+import { fetchBEData } from "./sidebarSlice";
 
 const initialState = {
   formData: {
@@ -78,7 +78,7 @@ export const fetchBlockedEmployerName = createAsyncThunk(
 
 export const updateBlockedEmployerName = createAsyncThunk(
   "blockedEmployer/updateBlockedEmployerName",
-  async ({ blockEmployersTempId, newName }, { rejectWithValue }) => {
+  async ({ blockEmployersTempId, newName }, { rejectWithValue, dispatch }) => {
     try {
       const token = getToken();
       const response = await fetch(
@@ -101,6 +101,7 @@ export const updateBlockedEmployerName = createAsyncThunk(
         const data = await response.json();
         return rejectWithValue(data);
       }
+      dispatch(fetchBEData());
       return { newName };
     } catch (error) {
       return rejectWithValue(error.message);

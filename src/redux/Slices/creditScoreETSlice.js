@@ -99,7 +99,10 @@ export const saveCreditScoreET = createAsyncThunk(
 // Thunk for updating the Credit Score ET Name
 export const updateCreditScoreETName = createAsyncThunk(
   "creditScoreET/updateCreditScoreETName",
-  async ({ creditScoreETId, updatecsetName }, { rejectWithValue }) => {
+  async (
+    { creditScoreETId, updatecsetName },
+    { rejectWithValue, dispatch }
+  ) => {
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
@@ -119,6 +122,7 @@ export const updateCreditScoreETName = createAsyncThunk(
       }
       const csetDetails = await response.json();
       console.log(csetDetails);
+      dispatch(fetchCreditScoreEligibleTenureData());
     } catch (error) {
       console.error(error);
       return rejectWithValue(error.message);

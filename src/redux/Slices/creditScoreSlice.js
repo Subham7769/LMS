@@ -236,11 +236,69 @@ const creditScoreSlice = createSlice({
       })
       .addCase(fetchCreditScore.fulfilled, (state, action) => {
         state.loading = false;
-        // Ensure the payload is an array before assigning it
-        state.creditScoreData = Array.isArray(action.payload)
-          ? action.payload
-          : [];
-        state.formData = { ...state.formData, ...action.payload };
+        console.log(action.payload);
+
+        // Check if action.payload is empty or null
+        if (!action.payload.id) {
+          state.formData = {
+            aweightage: "",
+            bweightage: "",
+            creditScoreEqTempId: action.meta.arg,
+            cweightage: "",
+            dweightage: "",
+            eweightage: "",
+            fweightage: "",
+            residentsCreditScore: "",
+            expatriatesCreditScore: "",
+            rentStatusScore: "",
+            ownStatusScore: "",
+            marriedStatusScore: "",
+            singleStatusScore: "",
+            divorcedStatusScore: "",
+            widowedStatusScore: "",
+            separatedStatusScore: "",
+            unknownStatusScore: "",
+            dependentsRules: {
+              operators: {
+                firstDependentsOperator: "",
+                secondDependentsOperator: "",
+              },
+              rules: [
+                {
+                  ruleName: "1",
+                  fieldType: "Employer",
+                  creditScoreEqTempId: action.meta.arg,
+                  firstDependent: "",
+                  secondDependent: "",
+                  value: "",
+                },
+                {
+                  ruleName: "2",
+                  fieldType: "Employer",
+                  creditScoreEqTempId: action.meta.arg,
+                  firstDependent: "",
+                  secondDependent: "",
+                  value: "",
+                },
+                {
+                  ruleName: "3",
+                  fieldType: "Employer",
+                  creditScoreEqTempId: action.meta.arg,
+                  firstDependent: "",
+                  secondDependent: "",
+                  value: "",
+                },
+              ],
+            },
+          };
+        } else {
+          // If not empty, update formData with the payload
+          state.formData = {
+            ...state.formData,
+            ...action.payload,
+          };
+          console.log(state.formData);
+        }
       })
       .addCase(fetchCreditScore.rejected, (state, action) => {
         state.loading = false;

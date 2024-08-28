@@ -53,9 +53,9 @@ const NewCreatedRAC = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
-        racID +
-        "/clone/" +
-        cloneRACName,
+          racID +
+          "/clone/" +
+          cloneRACName,
         {
           method: "POST",
           headers: {
@@ -77,16 +77,14 @@ const NewCreatedRAC = () => {
     }
   };
 
-  const handleNameUpdate = useCallback(async (updateRACName) => {
+  async function getRACInfo() {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
-        racID +
-        "/name/" +
-        updateRACName,
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/id/" +
+          racID,
         {
-          method: "PUT",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -99,22 +97,29 @@ const NewCreatedRAC = () => {
         return;
       }
       const racDetails = await data.json();
-      dispatch(fetchRACData());
-      navigate("/newrac/" + racDetails.racId);
+      setRACData(racDetails);
     } catch (error) {
       console.error(error);
     }
-  }, [racID, dispatch, navigate]);
+  }
 
   useEffect(() => {
-    async function getRACInfo() {
+    getRACInfo();
+  }, [racID, navigate]);
+
+  console.log(RACData);
+
+  const handleNameUpdate = useCallback(
+    async (updateRACName) => {
       try {
         const token = localStorage.getItem("authToken");
         const data = await fetch(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/id/" +
-          racID,
+          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
+            racID +
+            "/name/" +
+            updateRACName,
           {
-            method: "GET",
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -127,13 +132,15 @@ const NewCreatedRAC = () => {
           return;
         }
         const racDetails = await data.json();
-        setRACData(racDetails);
+        dispatch(fetchRACData());
+        getRACInfo();
+        navigate("/newrac/" + racDetails.racId);
       } catch (error) {
         console.error(error);
       }
-    }
-    getRACInfo();
-  }, [racID, navigate]);
+    },
+    [racID, dispatch, navigate]
+  );
 
   if (RACData.length === 0) {
     return <LoadingState />;
@@ -145,11 +152,20 @@ const NewCreatedRAC = () => {
         <DynamicName initialName={RACData.name} onSave={handleNameUpdate} />
         <div className="flex items-center justify-between gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={() => handleDelete(racID)} circle={true} />
+          <Button
+            buttonIcon={TrashIcon}
+            onClick={() => handleDelete(racID)}
+            circle={true}
+          />
         </div>
       </div>
       <div className="mt-4">
-        <CloneModal isOpen={isModalOpen} onClose={closeModal} onCreateClone={createClone} initialName={RACData.name} />
+        <CloneModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onCreateClone={createClone}
+          initialName={RACData.name}
+        />
         <RacMatrixConfig />
       </div>
     </>
