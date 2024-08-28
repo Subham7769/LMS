@@ -244,7 +244,7 @@ const tclSlice = createSlice({
       state.data = action.payload;
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.error.message;
     },
     clearTableData: (state) => {
       state.tableData = [];
@@ -264,7 +264,7 @@ const tclSlice = createSlice({
       })
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
@@ -275,7 +275,7 @@ const tclSlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(addTCLData.pending, (state) => {
         state.loading = true;
@@ -287,14 +287,14 @@ const tclSlice = createSlice({
       })
       .addCase(addTCLData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateTCL.fulfilled, (state, action) => {
         state.itemName = action.payload.tclName;
         state.error = null;
       })
       .addCase(updateTCL.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteTCL.pending, (state) => {
         state.loading = true;
@@ -303,7 +303,7 @@ const tclSlice = createSlice({
         toast.success("Recovery configuration deleted successfully!");
       })
       .addCase(deleteTCL.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteTCLFile.fulfilled, (state, action) => {
         state.tableData = state.tableData.filter(
@@ -312,6 +312,7 @@ const tclSlice = createSlice({
       })
       .addCase(deleteTCLFile.rejected, (state, action) => {
         toast.error(action.payload);
+        state.error = action.error.message;
       })
       .addCase(uploadTCLFile.pending, (state) => {
         state.loading = true;
@@ -323,7 +324,7 @@ const tclSlice = createSlice({
       })
       .addCase(uploadTCLFile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
         toast.error(action.payload); // Notify the user of the error
       });
   },

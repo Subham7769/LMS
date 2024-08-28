@@ -287,7 +287,7 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(fetchCreditScoreETInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(fetchCreditScoreETName.pending, (state) => {
         state.loading = true;
@@ -299,7 +299,7 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(fetchCreditScoreETName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(saveCreditScoreET.pending, (state) => {
         state.loading = true;
@@ -309,7 +309,7 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(saveCreditScoreET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateCreditScoreETName.pending, (state) => {
         state.loading = true;
@@ -319,7 +319,7 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(updateCreditScoreETName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(createCloneCSET.pending, (state) => {
         state.loading = true;
@@ -329,7 +329,7 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(createCloneCSET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(handleDeleteCSET.pending, (state) => {
         state.loading = true;
@@ -339,7 +339,7 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(handleDeleteCSET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

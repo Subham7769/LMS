@@ -15,7 +15,8 @@ import {
   fetchTCLData,
   fetchProdGroupData,
   fetchRecoveryData,
-  fetchCreditScoreEligibleTenureData
+  fetchCreditScoreEligibleTenureData,
+  setMenus
 } from '../../../redux/Slices/sidebarSlice';
 import {
   RectangleGroupIcon,
@@ -31,7 +32,7 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
-  ClipboardDocumentListIcon,CreditCardIcon, NoSymbolIcon, HandRaisedIcon, UserGroupIcon
+  ClipboardDocumentListIcon, CreditCardIcon, NoSymbolIcon, HandRaisedIcon, UserGroupIcon
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -50,11 +51,7 @@ import CreateNew from '../CreateNew/CreateNew';
 
 const SideBar = () => {
   const dispatch = useDispatch();
-  const open = useSelector((state) => state.sidebar.open);
-  const submenuStates = useSelector((state) => state.sidebar.submenuStates);
-  const menus = useSelector((state) => state.sidebar.menus);
-  const loading = useSelector((state) => state.sidebar.loading);
-  const error = useSelector((state) => state.sidebar.error);
+  const { menus, loading, error, submenuStates, open } = useSelector((state) => state.sidebar);
 
   const iconMapping = {
     HomeIcon,
@@ -96,17 +93,73 @@ const SideBar = () => {
   }, [submenuStates]);
 
   useEffect(() => {
-    dispatch(fetchRACData());
-    dispatch(fetchDBRData());
-    dispatch(fetchBEData());
-    dispatch(fetchProjectData());
-    dispatch(fetchProductData());
-    dispatch(fetchCreditScoreEqData());
-    dispatch(fetchRulePolicyData());
-    dispatch(fetchTCLData());
-    dispatch(fetchProdGroupData());
-    dispatch(fetchRecoveryData());
-    dispatch(fetchCreditScoreEligibleTenureData());
+    const roleName = localStorage.getItem("roleName");
+    console.log(roleName)
+    switch (roleName) {
+      case 'ROLE_SUPERADMIN':
+        dispatch(fetchRACData());
+        dispatch(fetchDBRData());
+        dispatch(fetchBEData());
+        dispatch(fetchProjectData());
+        dispatch(fetchProductData());
+        dispatch(fetchCreditScoreEqData());
+        dispatch(fetchRulePolicyData());
+        dispatch(fetchTCLData());
+        dispatch(fetchProdGroupData());
+        dispatch(fetchRecoveryData());
+        dispatch(fetchCreditScoreEligibleTenureData());
+        break;
+
+      case 'ROLE_ADMIN':
+        dispatch(fetchRACData());
+        dispatch(fetchDBRData());
+        dispatch(fetchBEData());
+        dispatch(fetchProjectData());
+        dispatch(fetchProductData());
+        dispatch(fetchCreditScoreEqData());
+        dispatch(fetchRulePolicyData());
+        dispatch(fetchTCLData());
+        dispatch(fetchProdGroupData());
+        dispatch(fetchRecoveryData());
+        dispatch(fetchCreditScoreEligibleTenureData());
+        break;
+
+      case 'ROLE_CUSTOMER_CARE_USER':
+        
+        break;
+
+      case 'ROLE_CREDITOR_ADMIN':
+        dispatch(fetchRACData());
+        dispatch(fetchDBRData());
+        dispatch(fetchBEData());
+        dispatch(fetchProjectData());
+        dispatch(fetchProductData());
+        dispatch(fetchCreditScoreEqData());
+        dispatch(fetchRulePolicyData());
+        dispatch(fetchTCLData());
+        dispatch(fetchProdGroupData());
+        dispatch(fetchRecoveryData());
+        dispatch(fetchCreditScoreEligibleTenureData());
+        break;
+
+      case 'ROLE_CUSTOMER_CARE_MANAGER':
+        break;
+
+      case 'ROLE_TICKETING_USER':
+        break;
+
+      case 'ROLE_TICKETING_SUPERVISOR':
+        break;
+
+      case 'ROLE_TECHNICAL':
+        break;
+
+      default:
+        state.menus = [];
+        break;
+    }
+
+    dispatch(setMenus({ roleName }))
   }, [
     dispatch,
   ]);

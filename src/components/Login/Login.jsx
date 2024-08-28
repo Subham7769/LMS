@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 
@@ -8,6 +8,9 @@ import BG2 from "../../assets/image/3.webp";
 import BG3 from "../../assets/image/4.webp";
 import BG4 from "../../assets/image/5.webp";
 import BG5 from "../../assets/image/6.jpg";
+
+import { setMenus } from "../../redux/Slices/sidebarSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState("Login");
@@ -21,7 +24,11 @@ const Login = () => {
   const [buttonText, setButtonText] = useState("Login");
   const images = [BG, BG1, BG2, BG3, BG4, BG5];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+
+  }, [])
   // Function to handle login
   const login = (username, password) => {
     setButtonText("Validating User");
@@ -51,11 +58,51 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
+        console.log(data?.roles[0]?.name)
+        dispatch(setMenus({ roleName: data?.roles[0]?.name }))
         setButtonText("Validated!");
         console.log("Login Successful:", data);
+        localStorage.setItem("roleName", data?.roles[0]?.name);
         localStorage.setItem("username", username);
         setTimeout(() => {
-          navigate("/");
+          switch (data?.roles[0]?.name) {
+            case "ROLE_SUPERADMIN":
+              navigate("/");
+              break;
+
+            case "ROLE_ADMIN":
+              navigate("/");
+              break;
+
+            case "ROLE_CUSTOMER_CARE_USER":
+              navigate("/customer-care");
+              break;
+
+            case "ROLE_CREDITOR_ADMIN":
+              navigate("/");
+              break;
+
+            case "ROLE_CUSTOMER_CARE_MANAGER":
+              navigate("/customer-care");
+              break;
+
+            case "ROLE_TICKETING_USER":
+              navigate("/");
+              break;
+
+            case "ROLE_TICKETING_SUPERVISOR":
+              navigate("/");
+              break;
+
+            case "ROLE_TECHNICAL":
+              navigate("/customer-care");
+              break;
+
+            default:
+              navigate("/");
+              break;
+          }
+
         }, 0);
       })
       .catch((error) => {

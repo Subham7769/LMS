@@ -18,7 +18,6 @@ const LoanConfigDD = () => {
   const { userID } = useParams();
   const dispatch = useDispatch()
 
-  console.log(loanOptions)
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
   }, [dispatch, userID]);

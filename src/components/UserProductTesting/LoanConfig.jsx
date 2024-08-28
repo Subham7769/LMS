@@ -179,7 +179,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
           </div>
         </ContainerTile>
       </div>
-      <div className="flex items-start w-full shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+      <ContainerTile className="flex items-start w-full">
         <div className="w-[330px]">
           <table className="divide-y divide-gray-300  w-full border-r border-gray-300">
             <thead className="bg-gray-50">
@@ -344,7 +344,7 @@ const LoanConfig = ({ visible, loanConfigDataProp }) => {
             installDataProp={selectedInstallmentData}
           />
         )}
-      </div>
+      </ContainerTile>
     </>
   );
 };

@@ -346,6 +346,7 @@ export const dbrSlice = createSlice({
       })
       .addCase(fetchRules.rejected, (state) => {
         state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchName.fulfilled, (state, action) => {
         state.name = action.payload;
@@ -360,13 +361,14 @@ export const dbrSlice = createSlice({
       })
       .addCase(deleteRule.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchName.rejected, (state) => {
         state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(updateName.fulfilled, (state) => {
         state.loading = false;
@@ -376,6 +378,7 @@ export const dbrSlice = createSlice({
       })
       .addCase(updateName.rejected, (state) => {
         state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(createCloneDBC.fulfilled, (state, action) => {
         state.currentPage = 1;
@@ -386,6 +389,7 @@ export const dbrSlice = createSlice({
       })
       .addCase(createCloneDBC.rejected, (state) => {
         state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(addRule.fulfilled, (state) => {
         state.loading = false;
@@ -395,6 +399,7 @@ export const dbrSlice = createSlice({
       })
       .addCase(addRule.rejected, (state) => {
         state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(deleteDBC.fulfilled, (state) => {
         state.loading = false;
@@ -404,6 +409,7 @@ export const dbrSlice = createSlice({
       })
       .addCase(deleteDBC.rejected, (state) => {
         state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(updateRule.pending, (state) => {
         state.loading = false;
@@ -414,7 +420,7 @@ export const dbrSlice = createSlice({
       })
       .addCase(updateRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

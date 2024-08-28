@@ -204,7 +204,7 @@ const productSlice = createSlice({
       };
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.error.message;
     },
     updateFormField: (state, action) => {
       const { name, value } = action.payload;
@@ -233,7 +233,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(saveProductData.pending, (state) => {
         state.loading = true;
@@ -244,7 +244,7 @@ const productSlice = createSlice({
       })
       .addCase(saveProductData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateProductName.pending, (state) => {
         state.loading = true;
@@ -255,7 +255,7 @@ const productSlice = createSlice({
       })
       .addCase(updateProductName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteLoanProduct.pending, (state) => {
         state.loading = true;
@@ -265,7 +265,7 @@ const productSlice = createSlice({
       })
       .addCase(deleteLoanProduct.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(createProductData.pending, (state) => {
         state.loading = true;
@@ -276,7 +276,7 @@ const productSlice = createSlice({
       })
       .addCase(createProductData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // Set the error message if the request fails
+        state.error = action.error.message; // Set the error message if the request fails
       });
   },
 });

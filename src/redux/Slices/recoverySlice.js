@@ -206,7 +206,7 @@ const recoverySlice = createSlice({
       state.data = action.payload;
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.error.message;
     },
     handleChange: (state, action) => {
       const { name, value } = action.payload;
@@ -240,7 +240,7 @@ const recoverySlice = createSlice({
       })
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
@@ -263,15 +263,15 @@ const recoverySlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateOrPostData.fulfilled, (state, action) => {
         state.data = action.payload;
         toast.success("Data updated successfully!");
       })
       .addCase(updateOrPostData.rejected, (state, action) => {
-        state.error = action.payload;
-        // toast.error(`Error: ${action.payload}`);
+        state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(deleteRecovery.pending, (state) => {
         state.loading = true;
@@ -280,6 +280,7 @@ const recoverySlice = createSlice({
         toast.success("Recovery configuration deleted successfully!");
       })
       .addCase(deleteRecovery.rejected, (state, action) => {
+        state.error = action.error.message;
         if (action.payload === "Unauthorized") {
           toast.error("Session expired. Please log in again.");
         } else {
@@ -290,6 +291,7 @@ const recoverySlice = createSlice({
         state.loading = true;
       })
       .addCase(createClone.fulfilled, (state, action) => {
+        state.loading = false;
         toast.success("Clone created successfully!");
       })
       .addCase(createClone.rejected, (state, action) => {
@@ -297,7 +299,10 @@ const recoverySlice = createSlice({
           toast.error("Session expired. Please log in again.");
         } else {
           toast.error("Failed to create clone.");
+        state.error = action.error.message;
         }
+        state.error = action.error.message;
+
       })
       .addCase(updateRecoveryName.fulfilled, (state, action) => {
         state.itemName = action.payload;
@@ -309,6 +314,7 @@ const recoverySlice = createSlice({
         } else {
           toast.error("Failed to update name.");
         }
+        state.error = action.error.message;
       });
   },
 });

@@ -346,7 +346,7 @@ const projectSlice = createSlice({
       state.formData = projectInitialState.formData;
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.error.message;
     },
     handleChangeInFormData: (state, action) => {
       const { name, value, checked, type } = action.payload;
@@ -421,7 +421,7 @@ const projectSlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateProject.pending, (state) => {
         state.loading = true;
@@ -433,7 +433,7 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
         toast.success("Project deleted successfully!");
@@ -447,7 +447,7 @@ const projectSlice = createSlice({
       .addCase(deleteProject.rejected, (state, action) => {
         toast.error("Failed to delete project");
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(createProject.pending, (state) => {
         state.loading = true;
@@ -461,7 +461,7 @@ const projectSlice = createSlice({
       })
       .addCase(createProject.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

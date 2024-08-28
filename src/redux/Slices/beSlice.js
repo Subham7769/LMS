@@ -269,7 +269,7 @@ const beSlice = createSlice({
       })
       .addCase(fetchBlockedEmployerData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       })
 
       // Fetch Blocked Employer Name
@@ -283,7 +283,7 @@ const beSlice = createSlice({
       })
       .addCase(fetchBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       })
 
       // Update Blocked Employer Name
@@ -297,7 +297,7 @@ const beSlice = createSlice({
       })
       .addCase(updateBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       })
 
       // Delete Blocked Employer Entry
@@ -322,7 +322,7 @@ const beSlice = createSlice({
       })
       .addCase(deleteBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       })
 
       // Delete Blocked Employer
@@ -338,7 +338,7 @@ const beSlice = createSlice({
       })
       .addCase(deleteBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       })
 
       // Add Blocked Employer Entry
@@ -373,7 +373,7 @@ const beSlice = createSlice({
       })
       .addCase(addBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       })
 
       // Clone Blocked Employer
@@ -387,7 +387,7 @@ const beSlice = createSlice({
       })
       .addCase(cloneBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error =  action.error.message;
       });
   },
 });

@@ -302,7 +302,7 @@ const creditScoreSlice = createSlice({
       })
       .addCase(fetchCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateCreditScore.pending, (state) => {
         state.loading = true;
@@ -312,7 +312,7 @@ const creditScoreSlice = createSlice({
       })
       .addCase(updateCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(cloneCreditScore.pending, (state) => {
         state.loading = true;
@@ -326,7 +326,7 @@ const creditScoreSlice = createSlice({
       })
       .addCase(cloneCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(renameCreditScore.pending, (state) => {
         state.loading = true;
@@ -340,7 +340,7 @@ const creditScoreSlice = createSlice({
       })
       .addCase(renameCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteCreditScore.pending, (state) => {
         state.loading = true;
@@ -353,7 +353,7 @@ const creditScoreSlice = createSlice({
       })
       .addCase(deleteCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

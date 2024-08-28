@@ -87,7 +87,7 @@ const productGroupSlice = createSlice({
       })
       .addCase(fetchPGroups.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

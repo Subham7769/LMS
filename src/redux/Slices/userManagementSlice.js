@@ -287,7 +287,7 @@ const userManagementSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -297,7 +297,7 @@ const userManagementSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(suspendUser.pending, (state) => {
         state.loading = true;
@@ -307,7 +307,7 @@ const userManagementSlice = createSlice({
       })
       .addCase(suspendUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
@@ -317,7 +317,7 @@ const userManagementSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

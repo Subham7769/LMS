@@ -61,19 +61,16 @@ export const fetchBorrowerData = createAsyncThunk(
         }
       );
       if (response.status === 404) {
-        const navigate = useNavigate();
-        navigate("/customer-care");
         return rejectWithValue("Borrower Not Found");
       }
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        const navigate = useNavigate();
-        navigate("/login");
         return rejectWithValue("Unauthorized");
       }
       const data = await response.json();
       return data;
     } catch (err) {
+      console.log(err.message)
       return rejectWithValue(err.message);
     }
   }
@@ -168,12 +165,9 @@ const borrowerSlice = createSlice({
     builder
       .addCase(fetchBorrowerData.pending, (state, action) => {
         state.loading = true;
-        const { url } = action.meta.arg;
-        console.log(url);
       })
       .addCase(fetchBorrowerData.fulfilled, (state, action) => {
         const { url } = action.meta.arg;
-        console.log(url);
         if (url.includes("/credit-profile")) {
           state.creditProfile = action.payload;
         } else if (url.includes("/loan-offers-calculations")) {
@@ -185,7 +179,6 @@ const borrowerSlice = createSlice({
         } else if (url.includes("/rejection-history")) {
           state.rejectionHistory = action.payload;
         } else if (url.includes("/simah-recent-response")) {
-          console.log(action.payload);
           state.CreditBureauDetails = action.payload;
         } else {
           state.personalInfo = action.payload;
@@ -195,7 +188,7 @@ const borrowerSlice = createSlice({
       .addCase(fetchBorrowerData.rejected, (state, action) => {
         state.loading = false;
         console.error("fetchBorrowerData failed:", action.payload);
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;
@@ -214,7 +207,7 @@ const borrowerSlice = createSlice({
       })
       .addCase(downloadClearanceLetter.rejected, (state, action) => {
         state.downloadLoading = false;
-        state.downloadError = action.payload;
+        state.downloadError = action.error.message;
         console.error("Download failed:", action.payload);
       })
       .addCase(downloadFile.pending, (state) => {
@@ -226,7 +219,7 @@ const borrowerSlice = createSlice({
       })
       .addCase(downloadFile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Download failed";
+        state.error = action.error.message; 
       });
   },
 });

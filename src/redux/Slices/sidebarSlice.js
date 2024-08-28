@@ -64,46 +64,50 @@ export const fetchRACData = createAsyncThunk(
   }
 );
 
-export const fetchDBRData = createAsyncThunk("fetchDBRData", async (_,{rejectWithValue}) => {
-  const url =
-    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/";
-  const transformData = (data) => {
-    return data.map(({ name, dbcTempId }) => ({
-      name: name.replace(/-/g, " "),
-      href: "/newdbc/" + dbcTempId,
-    }));
-  };
-  try {
-    
-    return await useFetchData(url, transformData);
-  } catch (error) {
-    return rejectWithValue(error.message)
+export const fetchDBRData = createAsyncThunk(
+  "fetchDBRData",
+  async (_, { rejectWithValue }) => {
+    const url =
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/";
+    const transformData = (data) => {
+      return data.map(({ name, dbcTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/newdbc/" + dbcTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
-export const fetchBEData = createAsyncThunk("fetchBEData", async (_, {rejectWithValue}) => {
-  const url =
-    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/";
-  const transformData = (data) => {
-    return data.map(({ name, blockEmployerTempId }) => ({
-      name: name.replace(/-/g, " "),
-      href: "/blocked-employer/" + blockEmployerTempId,
-    }));
-  };
-  try {
-    
-    return await useFetchData(url, transformData);
-  } catch (error) {
-    return rejectWithValue(error.message)
+export const fetchBEData = createAsyncThunk(
+  "fetchBEData",
+  async (_, { rejectWithValue }) => {
+    const url =
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/";
+    const transformData = (data) => {
+      return data.map(({ name, blockEmployerTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/blocked-employer/" + blockEmployerTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const fetchProjectData = createAsyncThunk(
   "project/fetchProjectData",
   async (_, { rejectWithValue }) => {
     const url = `https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/allprojects?limit=10&offset=0`;
     const tokenUrl =
-    "https://lms-api-dev.lmscarbon.com/lms-carbon-client-registration/api/v1/client/DarwinClient/token";
+      "https://lms-api-dev.lmscarbon.com/lms-carbon-client-registration/api/v1/client/DarwinClient/token";
     const transformData = (data) => {
       return data.map(({ name, projectId }) => ({
         name,
@@ -111,7 +115,7 @@ export const fetchProjectData = createAsyncThunk(
       }));
     };
     try {
-      return await useFetchData(url, transformData,{tokenUrl});
+      return await useFetchData(url, transformData, { tokenUrl });
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -157,7 +161,7 @@ export const fetchCreditScoreEqData = createAsyncThunk(
 
 export const fetchRulePolicyData = createAsyncThunk(
   "fetchRulePolicyData",
-  async (_,{rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     const url =
       "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp";
     const transformData = (data) => {
@@ -167,34 +171,35 @@ export const fetchRulePolicyData = createAsyncThunk(
       }));
     };
     try {
-      
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
 );
 
-export const fetchTCLData = createAsyncThunk("fetchTCLData", async (_,{rejectWithValue}) => {
-  const url =
-    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-tcl";
-  const transformData = (data) => {
-    return data.map(({ tclId, tclName }) => ({
-      name: tclName.replace(/_/g, " "),
-      href: "/tcl/" + tclId,
-    }));
-  };
-  try {
-    
-    return await useFetchData(url, transformData);
-  } catch (error) {
-    return rejectWithValue(error.message)
+export const fetchTCLData = createAsyncThunk(
+  "fetchTCLData",
+  async (_, { rejectWithValue }) => {
+    const url =
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-tcl";
+    const transformData = (data) => {
+      return data.map(({ tclId, tclName }) => ({
+        name: tclName.replace(/_/g, " "),
+        href: "/tcl/" + tclId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const fetchProdGroupData = createAsyncThunk(
   "fetchProdGroupData",
-  async (_,{rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     const url =
       "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/concurrent-loans/config";
     const transformData = (data) => {
@@ -205,17 +210,16 @@ export const fetchProdGroupData = createAsyncThunk(
       }));
     };
     try {
-      
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
 );
 
 export const fetchRecoveryData = createAsyncThunk(
   "fetchRecoveryData",
-  async (_,{rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     const url =
       "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp";
     const transformData = (data) => {
@@ -225,17 +229,16 @@ export const fetchRecoveryData = createAsyncThunk(
       }));
     };
     try {
-      
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
 );
 
 export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
   "fetchCreditScoreEligibleTenureData",
-  async (_,{rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     const url =
       "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cset-temp";
     const transformData = (data) => {
@@ -245,13 +248,36 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
       }));
     };
     try {
-      
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
 );
+
+const ROLE_CREDITOR_ADMIN = [
+  "Home",
+  "RAC",
+  "Recovery",
+  "TCL",
+  "Project",
+  "Product",
+  "Credit Score Eligible Tenure",
+  "DBR Config",
+  "Blocked Employer",
+  "Credit Score",
+  "Rule Policy",
+  "Product Group",
+  "Business Rule",
+  "Global Config",
+];
+const ROLE_CUSTOMER_CARE_MANAGER = ["Customer Care"];
+const ROLE_CUSTOMER_CARE_USER = ["Customer Care"];
+const ROLE_TECHNICAL = [
+  "Customer Care",
+  "User Product Testing",
+  "General Ledger",
+];
 
 const initialState = {
   open: JSON.parse(localStorage.getItem("sidebarOpen")) ?? true,
@@ -279,7 +305,52 @@ const sidebarSlice = createSlice({
       );
     },
     setMenus(state, action) {
-      state.menus = action.payload;
+      const { roleName } = action.payload;
+      switch (roleName) {
+        case "ROLE_SUPERADMIN":
+          state.menus = MenusInitial;
+          break;
+
+        case "ROLE_ADMIN":
+          state.menus = MenusInitial;
+          break;
+
+        case "ROLE_CUSTOMER_CARE_USER":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_CUSTOMER_CARE_USER.includes(item.title)
+          );
+          break;
+
+        case "ROLE_CREDITOR_ADMIN":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_CREDITOR_ADMIN.includes(item.title)
+          );
+          break;
+
+        case "ROLE_CUSTOMER_CARE_MANAGER":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_CUSTOMER_CARE_MANAGER.includes(item.title)
+          );
+          break;
+
+        case "ROLE_TICKETING_USER":
+          state.menus = MenusInitial;
+          break;
+
+        case "ROLE_TICKETING_SUPERVISOR":
+          state.menus = MenusInitial;
+          break;
+
+        case "ROLE_TECHNICAL":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_TECHNICAL.includes(item.title)
+          );
+          break;
+
+        default:
+          state.menus = [];
+          break;
+      }
     },
   },
   extraReducers: (builder) => {

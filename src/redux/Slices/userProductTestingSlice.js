@@ -521,7 +521,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getUserEligibility.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(getBorrowerInfo.pending, (state) => {
         state.loading = true;
@@ -533,7 +533,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
@@ -552,7 +552,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;
@@ -565,7 +565,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(submitLoanConfiguration.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Something went wrong";
+        state.error = action.payload;
       })
       .addCase(getDisbursementInfo.pending, (state) => {
         state.loading = true;
@@ -577,7 +577,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getDisbursementInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(submitDisbursement.pending, (state) => {
         state.loading = true;
@@ -589,7 +589,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(submitDisbursement.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(getRepaymentInfo.pending, (state) => {
         state.loading = true;
@@ -605,7 +605,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getRepaymentInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(submitRepayment.pending, (state) => {
         state.loading = true;
@@ -617,7 +617,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(submitRepayment.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(getBorrowerDetails.pending, (state) => {
         state.loading = true;
@@ -638,7 +638,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getBorrowerDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(updateFamilyDetails.pending, (state) => {
         state.loading = true;
@@ -650,7 +650,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(updateFamilyDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Something went wrong!";
+        state.error = action.error.message; 
       });
   },
 });
