@@ -4,6 +4,7 @@ const BorrowerInfoTabs = () => {
   const { subID } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
+  const roleName = localStorage.getItem("roleName");
 
   const tabs = [
     { path: `/borrower/${subID}/personal-info`, label: "Personal Info" },
@@ -43,7 +44,8 @@ const BorrowerInfoTabs = () => {
             </div>
           ))}
         </div>
-        <div className="px-2">
+        {
+          roleName === "ROLE_CUSTOMER_CARE_MANAGER" || roleName === "ROLE_CUSTOMER_CARE_USER" ?"":<div className="px-2">
           <Link
             to={tabs[6].path}
             className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${
@@ -55,6 +57,8 @@ const BorrowerInfoTabs = () => {
             {tabs[6].label}
           </Link>
         </div>
+        }
+        
       </div>
       <div>
         <Outlet />

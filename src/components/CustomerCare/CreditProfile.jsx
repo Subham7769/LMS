@@ -102,7 +102,7 @@ const CreditProfile = () => {
                   <DataWithoutIcon name="Net income" value={netIncome} />
                   <DataWithIcon name="DBR" value={eligibleDBR} />
                   <DataWithoutIcon name="Disposal income" value={disposableIncome?.toFixed(2)} />
-                  <DataWithoutIcon name="Maximum EMI amount" value={eligibleEMI.toFixed(2)} />
+                  <DataWithoutIcon name="Maximum EMI amount" value={eligibleEMI?.toFixed(2)} />
                   <DataWithoutIcon name="Propensity to pay"  value={propensityToPay?.toFixed(2)} />
                   <DataWithoutIcon name="Bare Minimum Expenses" value={bareMinimumExpenses} />
               <div className="text-xs text-gray-400 mt-3 -mb-5 col-span-2">
