@@ -188,7 +188,7 @@ const borrowerSlice = createSlice({
       .addCase(fetchBorrowerData.rejected, (state, action) => {
         state.loading = false;
         console.error("fetchBorrowerData failed:", action.payload);
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;

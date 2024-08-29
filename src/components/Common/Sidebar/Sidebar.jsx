@@ -155,7 +155,6 @@ const SideBar = () => {
         break;
 
       default:
-        state.menus = [];
         break;
     }
 

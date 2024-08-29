@@ -11,7 +11,7 @@ const Score = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   if (CreditBureauDetails.length === 0 || CreditBureauDetails.response.length === 0) {

@@ -104,7 +104,9 @@ const SearchBox = () => {
                 </div>
             </div>
             {borrowerNotFound && (
-                <div className="text-red-600 mt-4 text-center">Record Not Found</div>
+                <div className="text-red-600 mt-4 text-center p-5 bg-red-300 ">
+                    Borrower Not Found or Invalid ID
+                    </div>
             )}
         </>
     )

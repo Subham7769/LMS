@@ -4,6 +4,7 @@ import ListTable from "../Common/ListTable/ListTable";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
 import { useParams } from "react-router-dom";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 // Utility function for date formatting
 const formatDate = (dateString) => {
@@ -61,7 +62,7 @@ const PaymentHistory = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
   return (
     <ListTable

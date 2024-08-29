@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { loanStatusOptions } from "../../data/OptionsData";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBorrowerData,downloadClearanceLetter } from "../../redux/Slices/borrowerSlice";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LoanHistory = () => {
   const { subID } = useParams();
@@ -147,7 +148,7 @@ const LoanHistory = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   return (

@@ -179,7 +179,7 @@ const Register = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   return <EligibilityResults eligibilityResults={register} />;

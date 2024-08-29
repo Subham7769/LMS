@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
 import { useParams } from "react-router-dom";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CustomerAddress = () => {
   const { subID } = useParams();  // Extracting subID from the URL
@@ -24,7 +25,7 @@ const CustomerAddress = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   const address = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.addresses?.address || [];

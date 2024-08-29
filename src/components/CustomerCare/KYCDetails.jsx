@@ -33,7 +33,7 @@ const KYCDetails = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   return (

@@ -30,35 +30,34 @@ const BorrowerInfoTabs = () => {
       <div className="flex justify-between">
         <div className="flex mb-10">
           {tabs.slice(0, 6).map((tab) => (
-            <div className=" px-2 " key={tab.path}>
-              <Link
-                to={tab.path}
-                className={`py-1 px-1.5 text-[16px] rounded ${
-                  currentPath === tab.path
-                    ? "text-white bg-indigo-500 "
-                    : "text-indigo-600 hover:bg-gray-200 hover:text-indigo-700 hover:font-medium"
-                }`}
-              >
-                {tab.label}
-              </Link>
-            </div>
+            roleName === "ROLE_CUSTOMER_CARE_USER" && tab.label === "Credit Bureau Details" ? <></> :
+              (<div className=" px-2 " key={tab.path}>
+                <Link
+                  to={tab.path}
+                  className={`py-1 px-1.5 text-[16px] rounded ${currentPath === tab.path
+                      ? "text-white bg-indigo-500 "
+                      : "text-indigo-600 hover:bg-gray-200 hover:text-indigo-700 hover:font-medium"
+                    }`}
+                >
+                  {tab.label}
+                </Link>
+              </div>)
           ))}
         </div>
         {
-          roleName === "ROLE_CUSTOMER_CARE_MANAGER" || roleName === "ROLE_CUSTOMER_CARE_USER" ?"":<div className="px-2">
-          <Link
-            to={tabs[6].path}
-            className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${
-              currentPath === tabs[6].path
-                ? "text-white bg-indigo-500 rounded"
-                : "text-white hover:border-b hover:bg-indigo-600 hover:font-medium"
-            }`}
-          >
-            {tabs[6].label}
-          </Link>
-        </div>
+          roleName === "ROLE_CUSTOMER_CARE_MANAGER" || roleName === "ROLE_CUSTOMER_CARE_USER" ? "" : <div className="px-2">
+            <Link
+              to={tabs[6].path}
+              className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${currentPath === tabs[6].path
+                  ? "text-white bg-indigo-500 rounded"
+                  : "text-white hover:border-b hover:bg-indigo-600 hover:font-medium"
+                }`}
+            >
+              {tabs[6].label}
+            </Link>
+          </div>
         }
-        
+
       </div>
       <div>
         <Outlet />

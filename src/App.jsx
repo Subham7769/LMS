@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 // console.log(import.meta.env.VITE_BLOCKED_EMPLOYER_GET); // Outputs: link
 const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
@@ -214,7 +215,7 @@ const routes = [
         path: "/borrower/:subID",
         element: <BorrowerInfoTabs />,
         children: [
-          { path: "personal-info", element: <PersonalInfo /> },
+          { path: "personal-info", element: <PersonalInfo />, errorElement:<ErrorBoundary />},
           { path: "kyc", element: <KYCDetails /> },
           { path: "credit-profile", element: <CreditProfile /> },
           { path: "loanNpayment", element: <LoanNPaymentHist /> },

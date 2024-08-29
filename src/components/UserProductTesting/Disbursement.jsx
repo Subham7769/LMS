@@ -47,7 +47,7 @@ const Disbursement = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   if (disbursementData.status === 500) {
