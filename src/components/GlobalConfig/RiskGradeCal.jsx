@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   PlusIcon,
   TrashIcon,
@@ -11,175 +11,64 @@ import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchRiskGrades,
+  addRiskGrade,
+  updateRiskGrade,
+  deleteRiskGrade,
+  handleNewInputChange,
+  handleExistingInputChange,
+} from "../../redux/Slices/riskGradeCalSlice";
 
 const RiskGradeCal = () => {
-  const token = localStorage.getItem("authToken");
-  const [allData, setAllData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const [newForm, setNewForm] = useState({
-    id: Date.now(),
-    from: "",
-    to: "",
-    grade: "",
-  });
-
-  const handleNewInputChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setNewForm((prevState) => ({
-        ...prevState,
-        [name]: checked,
-      }));
-    } else {
-      setNewForm((prevState) => ({ ...prevState, [name]: value }));
-    }
-  };
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const json = await data.json();
-      setAllData(json);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const dispatch = useDispatch();
+  const { allData, newForm, loading } = useSelector(
+    (state) => state.riskGradeCal
+  );
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(fetchRiskGrades());
+  }, [dispatch]);
 
-  const handleAddFields = async () => {
-    try {
-      // POST request to add new fields
-      const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings/add",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(newForm),
-        }
-      );
-
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"Item has been added successfully"}
-          />
-        ));
-        setNewForm({
-          id: Date.now(),
-          from: "",
-          to: "",
-          grade: "",
-        });
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to update data:", error);
-    }
-  };
-
-  const handleChange = (e, id) => {
-    const { name, value } = e.target;
-
-    setAllData((prevAllData) =>
-      prevAllData.map((item) =>
-        item.id === id ? { ...item, [name]: value } : item
-      )
+  const handleAddFields = () => {
+    dispatch(addRiskGrade(newForm)).then(() =>
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Added Successfully"}
+          message={"Item has been added successfully"}
+        />
+      ))
     );
   };
 
-  const handleSave = async (id) => {
+  const handleSave = (id) => {
     const itemToUpdate = allData.find((item) => item.id === id);
-
-    try {
-      // PUT request to update the data
-      const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(itemToUpdate),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      } else if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated Successfully"}
-            message={"Data has been updated successfully"}
-          />
-        ));
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to update data:", error);
-    }
+    dispatch(updateRiskGrade(itemToUpdate)).then(() =>
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Updated Successfully"}
+          message={"Data has been updated successfully"}
+        />
+      ))
+    );
   };
 
-  const handleDelete = async (deleteURL) => {
-    try {
-      const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/risk-gradings/${deleteURL}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      } else if (deleteResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Deleted Successfully"}
-            message={"The item has been deleted successfully"}
-          />
-        ));
-        fetchData();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const handleDelete = (id) => {
+    dispatch(deleteRiskGrade(id)).then(() =>
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Deleted Successfully"}
+          message={"The item has been deleted successfully"}
+        />
+      ))
+    );
   };
 
   if (loading) {
@@ -198,28 +87,54 @@ const RiskGradeCal = () => {
         </b>
       </h2>
       <div className="flex flex-col gap-5">
-
         <ContainerTile>
           <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
             <InputNumber
               labelName="From"
               inputName="from"
               inputValue={newForm.from}
-              onChange={handleNewInputChange}
+              onChange={(e) =>
+                dispatch(
+                  handleNewInputChange({
+                    name: e.target.name,
+                    value: e.target.value,
+                    type: e.target.type,
+                    checked: e.target.checked,
+                  })
+                )
+              }
               placeHolder="10"
             />
             <InputNumber
               labelName="To"
               inputName="to"
               inputValue={newForm.to}
-              onChange={handleNewInputChange}
+              onChange={(e) =>
+                dispatch(
+                  handleNewInputChange({
+                    name: e.target.name,
+                    value: e.target.value,
+                    type: e.target.type,
+                    checked: e.target.checked,
+                  })
+                )
+              }
               placeHolder="30"
             />
             <InputText
               labelName="Risk Grade"
               inputName="grade"
               inputValue={newForm.grade}
-              onChange={handleNewInputChange}
+              onChange={(e) =>
+                dispatch(
+                  handleNewInputChange({
+                    name: e.target.name,
+                    value: e.target.value,
+                    type: e.target.type,
+                    checked: e.target.checked,
+                  })
+                )
+              }
               placeHolder="R1"
             />
             <div className="mt-4">
@@ -233,24 +148,51 @@ const RiskGradeCal = () => {
         </ContainerTile>
         <ContainerTile>
           {allData.map((rgdata) => (
-            <div key={rgdata.id} className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4 py-5">
+            <div
+              key={rgdata.id}
+              className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4 py-5"
+            >
               <InputNumber
                 labelName="From"
                 inputName="from"
                 inputValue={rgdata.from}
-                onChange={(e) => handleChange(e, rgdata.id)}
+                onChange={(e) =>
+                  dispatch(
+                    handleExistingInputChange({
+                      id: rgdata.id,
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
               <InputNumber
                 labelName="To"
                 inputName="to"
                 inputValue={rgdata.to}
-                onChange={(e) => handleChange(e, rgdata.id)}
+                onChange={(e) =>
+                  dispatch(
+                    handleExistingInputChange({
+                      id: rgdata.id,
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
               <InputText
                 labelName="Risk Grade"
                 inputName="grade"
                 inputValue={rgdata.grade}
-                onChange={(e) => handleChange(e, rgdata.id)}
+                onChange={(e) =>
+                  dispatch(
+                    handleExistingInputChange({
+                      id: rgdata.id,
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
               <div className="flex items-center gap-4 mt-4">
                 <Button

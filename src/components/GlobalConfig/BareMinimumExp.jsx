@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   PlusIcon,
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import useGlobalConfig from "../../utils/useGlobalConfig";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
+import { Failed, Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import { typeOptions, frequencyOptions } from "../../data/OptionsData";
@@ -15,90 +14,58 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelectNew from "../Common/DynamicSelect/InputSelect";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateFormData,
+  fetchExpenseData,
+  handleInputChange as handleReduxInputChange,
+  saveExpenseField,
+  deleteExpenseField,
+  addExpenseField,
+  resetFormData,
+} from "../../redux/Slices/bareMinimumExpSlice";
 
 const BareMinimumExp = () => {
-  const [ExpenseDataNew, setExpenseDataNew] = useState([]);
-  const [formData, setFormData] = useState({
-    expensesName: "",
-    expensesFrequency: "",
-    bareMinimum: "",
-    dependantType: "",
-  });
+  const dispatch = useDispatch();
 
-  const url = "expenses";
-  const ExpenseData = useGlobalConfig(url);
+  const { formData, expenseData, loading, error } = useSelector(
+    (state) => state.bareMinimumExp
+  );
+
+  useEffect(() => {
+    dispatch(fetchExpenseData());
+  }, [dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: checked,
-      }));
-    } else {
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
-    }
+    dispatch(updateFormData({ name, value, checked, type }));
   };
 
   const handleAddFields = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
-
     try {
-      // POST request to add new fields
-      const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses/add",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"Item has been added successfully"}
-          />
-        ));
-      }
-
-      // If the POST was successful, make a GET request to fetch the updated data
-      const getResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!getResponse.ok) {
-        throw new Error(`HTTP error! Status: ${getResponse.status}`);
-      }
-
-      const updatedData = await getResponse.json(); // Assuming the server returns JSON
-      // Update your state with the fetched data
-      setExpenseDataNew(updatedData.expenses); // Replace 'setYourStateHere' with your actual state update function
-      setFormData({
-        expensesName: "",
-        expensesFrequency: "",
-        bareMinimum: "",
-        dependantType: "",
-      });
+      await dispatch(addExpenseField(formData)).unwrap();
+      dispatch(resetFormData());
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Added Successfully"}
+          message={"Item has been added successfully"}
+        />
+      ));
     } catch (error) {
-      console.error("Failed to update data:", error);
+      // Handle the error here if needed
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Edit Failed"}
+          message={`${error.message}`}
+        />
+      ));
     }
   };
+
   const handleChange = (e, id, propName = null, selectedOption = null) => {
     let name, value;
 
@@ -111,113 +78,44 @@ const BareMinimumExp = () => {
       value = selectedOption.value;
     }
 
-    const newList =
-      ExpenseDataNew.length === 0 ? ExpenseData.expenses : ExpenseDataNew;
-    const updatedList = newList.map((item) => {
-      if (item.id === id) {
-        return { ...item, [name]: value };
-      }
-      return item;
-    });
-
-    setExpenseDataNew(updatedList);
+    dispatch(handleReduxInputChange({ id, name, value }));
   };
 
   const handleSave = async (id) => {
-    const token = localStorage.getItem("authToken"); // Retrieve the authentication token
+    // Find the item to be update
 
-    // Find the item to be updated
-    const itemToUpdate = ExpenseDataNew.find((item) => item.id === id);
-
-    try {
-      // PUT request to update the data
-      const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(itemToUpdate),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      } else if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated Successfully"}
-            message={"Data has been updated successfully"}
-          />
-        ));
-      }
-    } catch (error) {
-      console.error("Failed to update data:", error);
-    }
-  };
-  const handleDelete = async (deleteURL) => {
-    try {
-      const token = localStorage.getItem("authToken"); // Assuming you store your token in localStorage
-
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses/${deleteURL}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      } else if (deleteResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Deleted Successfully"}
-            message={"The item has been deleted successfully"}
-          />
-        ));
-      }
-
-      // After deletion, fetch the updated data list
-      const getResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/expenses",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!getResponse.ok) {
-        throw new Error("Failed to fetch updated data");
-      }
-
-      const updatedData = await getResponse.json();
-
-      setExpenseDataNew(updatedData.expenses); // Assuming you have a state or function like this to update your UI
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  if (ExpenseData.length === 0) {
-    return (
-      <>
-        <LoadingState />
-      </>
+    dispatch(saveExpenseField(id)).then(() =>
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Updated Successfully"}
+          message={"Data has been updated successfully"}
+        />
+      ))
     );
+  };
+
+  const handleDelete = async (id) => {
+    dispatch(deleteExpenseField(id)).then(() =>
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Deleted Successfully"}
+          message={"The item has been deleted successfully"}
+        />
+      ))
+    );
+  };
+
+  if (loading) {
+    return <LoadingState />;
   }
+
+  // if (error) {
+  //   return <p>Error: {error}</p>;
+  // }
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -268,69 +166,71 @@ const BareMinimumExp = () => {
           </div>
         </ContainerTile>
         <ContainerTile>
-        {(ExpenseDataNew.length === 0
-          ? ExpenseData.expenses
-          : ExpenseDataNew
-        ).map((expdata) => (
-          <div
-            key={expdata.id}
-            className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end border-b border-b-gray-400 py-10"
-          >
-            <InputText
-              labelName="Expenses"
-              inputName="expensesName"
-              id={`expense_${expdata.id}`}
-              inputValue={expdata.expensesName}
-              onChange={(e) => handleChange(e, expdata.id)}
-              placeHolder="Food and Living"
-            />
-            <InputSelectNew
-              labelName="Type"
-              inputOptions={typeOptions}
-              id={`type_${expdata.id}`}
-              inputName="dependantType"
-              inputValue={expdata.dependantType}
-              onChange={(selectedOption) =>
-                handleChange(null, expdata.id, "dependantType", selectedOption)
-              }
-            />
-            <InputSelectNew
-              labelName="Expenses Frequency"
-              inputOptions={frequencyOptions}
-              id={`frequency_${expdata.id}`}
-              inputName="expensesFrequency"
-              inputValue={expdata.expensesFrequency}
-              onChange={(selectedOption) =>
-                handleChange(
-                  null,
-                  expdata.id,
-                  "expensesFrequency",
-                  selectedOption
-                )
-              }
-            />
-            <InputNumber
-              labelName="Bare Min Expense Per Person"
-              inputName="bareMinimum"
-              inputId={`minExpense_${expdata.id}`}
-              inputValue={expdata.bareMinimum}
-              onChange={(e) => handleChange(e, expdata.id)}
-              placeHolder="200"
-            />
-            <div className="flex items-center gap-4">
-              <Button
-                buttonIcon={CheckCircleIcon}
-                onClick={() => handleSave(expdata.id)}
-                circle={true}
+          {expenseData.map((expdata) => (
+            <div
+              key={expdata.id}
+              className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end border-b border-b-gray-400 py-10"
+            >
+              <InputText
+                labelName="Expenses"
+                inputName="expensesName"
+                id={`expense_${expdata.id}`}
+                inputValue={expdata.expensesName}
+                onChange={(e) => handleChange(e, expdata.id)}
+                placeHolder="Food and Living"
               />
-              <Button
-                buttonIcon={TrashIcon}
-                onClick={() => handleDelete(expdata.id)}
-                circle={true}
+              <InputSelectNew
+                labelName="Type"
+                inputOptions={typeOptions}
+                id={`type_${expdata.id}`}
+                inputName="dependantType"
+                inputValue={expdata.dependantType}
+                onChange={(selectedOption) =>
+                  handleChange(
+                    null,
+                    expdata.id,
+                    "dependantType",
+                    selectedOption
+                  )
+                }
               />
+              <InputSelectNew
+                labelName="Expenses Frequency"
+                inputOptions={frequencyOptions}
+                id={`frequency_${expdata.id}`}
+                inputName="expensesFrequency"
+                inputValue={expdata.expensesFrequency}
+                onChange={(selectedOption) =>
+                  handleChange(
+                    null,
+                    expdata.id,
+                    "expensesFrequency",
+                    selectedOption
+                  )
+                }
+              />
+              <InputNumber
+                labelName="Bare Min Expense Per Person"
+                inputName="bareMinimum"
+                inputId={`minExpense_${expdata.id}`}
+                inputValue={expdata.bareMinimum}
+                onChange={(e) => handleChange(e, expdata.id)}
+                placeHolder="200"
+              />
+              <div className="flex items-center gap-4">
+                <Button
+                  buttonIcon={CheckCircleIcon}
+                  onClick={() => handleSave(expdata.id)}
+                  circle={true}
+                />
+                <Button
+                  buttonIcon={TrashIcon}
+                  onClick={() => handleDelete(expdata.id)}
+                  circle={true}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </ContainerTile>
       </div>
     </>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
 import _ from "lodash";
 import toast, { Toaster } from "react-hot-toast";
@@ -16,221 +16,79 @@ import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchData,
+  handleNewInputChange,
+  addNewItem,
+  updateItem,
+  deleteItem,
+} from "../../redux/Slices/liabilitiesMatrixSlice";
 
 const LiabilitiesMatrix = () => {
-  const token = localStorage.getItem("authToken");
-  const [allData, setAllData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { allData, newForm, loading } = useSelector(
+    (state) => state.liabilitiesMatrix
+  );
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const [newForm, setNewForm] = useState({
-    product: "",
-    simahDescriptionCode: "",
-    issuer: "",
-    applicabilityGDBR: "",
-    totalExposure: "",
-    activeRule: "",
-    defaultConsideredInSIMAHscore: "",
-  });
-
-  const handleNewInputChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    if (type === "checkbox") {
-      setNewForm((prevState) => ({
-        ...prevState,
-        [name]: checked ? "YES" : "NO",
-      }));
-    } else {
-      setNewForm((prevState) => ({ ...prevState, [name]: value }));
-    }
-  };
+    dispatch(fetchData());
+  }, [dispatch]);
 
   const handleInputChange = async (e, index) => {
     const { name, value, checked, type } = e.target;
 
-    // Clone the current data to update it
-    const updatedItem = { ...allData[index] };
-
-    // Store the old simahDescriptionCode
-    const oldSimahDescriptionCode = updatedItem.simahDescriptionCode;
-
-    // Update the specific field
-    if (type === "checkbox") {
-      updatedItem[name] = checked;
-    } else {
-      updatedItem[name] = value;
-    }
-
-    // Update the state with the modified data
-    const updatedData = [...allData];
-    updatedData[index] = updatedItem;
-    setAllData(updatedData);
-
-    // Prepare the data for PUT request
-    const putData = {
-      product: updatedItem.product,
-      issuer: updatedItem.issuer,
-      activeRule: updatedItem.activeRule === true ? "YES" : "NO",
-      applicabilityGDBR: updatedItem.applicabilityGDBR,
-      totalExposure: updatedItem.totalExposure,
-      defaultConsideredInSIMAHscore: updatedItem.defaultConsideredInSIMAHscore,
-      simahDescriptionCode:
-        name === "simahDescriptionCode"
-          ? oldSimahDescriptionCode
-          : updatedItem.simahDescriptionCode,
-      newSimahDescriptionCode:
-        name === "simahDescriptionCode"
-          ? updatedItem.simahDescriptionCode
-          : updatedItem.simahDescriptionCode,
+    const updatedItem = {
+      ...allData[index],
+      [name]: type === "checkbox" ? checked : value,
     };
 
-    // Send the PUT request
+    const oldSimahDescriptionCode = allData[index].simahDescriptionCode;
+
     try {
-      const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities/${oldSimahDescriptionCode}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(putData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      } else if (response.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated Successfully"}
-            message={"The item has been updated successfully"}
-          />
-        ));
-        fetchData();
-      }
-
-      const responseData = await response.json();
-      console.log("PUT request successful:", responseData);
+      await dispatch(
+        updateItem({ updatedItem, oldSimahDescriptionCode })
+      ).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Updated Successfully"}
+          message={"The item has been updated successfully"}
+        />
+      ));
     } catch (error) {
-      console.error("Error with PUT request:", error);
+      console.error(error);
     }
   };
 
-  const fetchData = async () => {
-    setLoading(true);
+  const handleDeleteRow = async (deleteURL) => {
     try {
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const json = await data.json();
-      setAllData(json);
-      setLoading(false);
+      await dispatch(deleteItem(deleteURL)).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Delete Successful"}
+          message={"The item has been deleted successfully"}
+        />
+      ));
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleAdd = async () => {
-    const token = localStorage.getItem("authToken");
-    const postData = {
-      product: newForm.product,
-      simahDescriptionCode: newForm.simahDescriptionCode,
-      issuer: newForm.issuer,
-      applicabilityGDBR: newForm.applicabilityGDBR,
-      totalExposure: newForm.totalExposure,
-      defaultConsideredInSIMAHscore: newForm.defaultConsideredInSIMAHscore,
-      activeRule: newForm.activeRule === "" ? "NO" : "YES",
-    };
-
-    try {
-      const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-
-      if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
-      } else if (postResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"The item has been added successfully"}
-          />
-        ));
-        setNewForm({
-          product: "",
-          simahDescriptionCode: "",
-          issuer: "",
-          applicabilityGDBR: "",
-          totalExposure: "",
-          activeRule: "",
-          defaultConsideredInSIMAHscore: "",
-        });
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to add data:", error);
-    }
+    await dispatch(addNewItem(newForm)).unwrap();
+    toast.custom((t) => (
+      <Passed
+        t={t}
+        toast={toast}
+        title={"Added Successfully"}
+        message={"The item has been added successfully"}
+      />
+    ));
   };
-
-  async function handleDeleteRow(deleteURL) {
-    try {
-      const token = localStorage.getItem("authToken");
-      const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/simah-liabilities/${deleteURL}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      } else if (deleteResponse.ok) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Delete Successful"}
-            message={"The items has been deleted successfully"}
-          />
-        ));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   if (loading) {
     return <LoadingState />;
@@ -247,144 +105,152 @@ const LiabilitiesMatrix = () => {
           Credit Bureau Liabilities Matrix
         </b>
       </h2>
-      <div className="flex flex-col gap-5">
-      <ContainerTile>
-        <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 max-sm:grid-cols-1 gap-8 items-center">
-          <InputSelect
-            labelName="Product"
-            inputOptions={productOptions}
-            inputName="product"
-            inputValue={newForm.product}
-            onChange={handleNewInputChange}
-          />
-          <InputText
-            labelName="CB Description (CODE)"
-            inputName="simahDescriptionCode"
-            placeHolder="TMTG"
-            inputValue={newForm.simahDescriptionCode}
-            onChange={handleNewInputChange}
-          />
-
-          <InputSelect
-            labelName="Issuer"
-            inputOptions={issuerOptions}
-            inputName="issuer"
-            inputValue={newForm.issuer}
-            onChange={handleNewInputChange}
-          />
-
-          <div className="mt-2">
-            <InputCheckbox
-              labelName="Active Rule"
-              inputName="activeRule"
-              inputChecked={newForm.activeRule}
-              onChange={handleNewInputChange}
+      <div className="flex flex-col gap-5 relative">
+        <ContainerTile>
+          <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 max-sm:grid-cols-1 gap-8 items-center">
+            <InputSelect
+              labelName="Product"
+              inputOptions={productOptions}
+              inputName="product"
+              inputValue={newForm.product}
+              onChange={(e) => dispatch(handleNewInputChange(e.target))}
             />
+            <InputText
+              labelName="CB Description (CODE)"
+              inputName="simahDescriptionCode"
+              placeHolder="TMTG"
+              inputValue={newForm.simahDescriptionCode}
+              onChange={(e) =>
+                dispatch(
+                  handleNewInputChange({
+                    name: e.target.name,
+                    value: e.target.value,
+                  })
+                )
+              }
+            />
+
+            <InputSelect
+              labelName="Issuer"
+              inputOptions={issuerOptions}
+              inputName="issuer"
+              inputValue={newForm.issuer}
+              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+            />
+
+            <div className="mt-2">
+              <InputCheckbox
+                labelName="Active Rule"
+                inputName="activeRule"
+                inputChecked={newForm.activeRule}
+                onChange={(e) => dispatch(handleNewInputChange(e.target))}
+              />
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 gap-8 items-end">
-          <InputSelect
-            labelName="GDBR (Without Mortgage)"
-            inputOptions={gdbrWoMortageOptions}
-            inputName="applicabilityGDBR"
-            inputValue={newForm.applicabilityGDBR}
-            onChange={handleNewInputChange}
-          />
+          <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 gap-8 items-end">
+            <InputSelect
+              labelName="GDBR (Without Mortgage)"
+              inputOptions={gdbrWoMortageOptions}
+              inputName="applicabilityGDBR"
+              inputValue={newForm.applicabilityGDBR}
+              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+            />
 
-          <InputSelect
-            labelName="GDBR (including Mortgage)"
-            inputOptions={gdbrWMortageOptions}
-            inputName="totalExposure"
-            inputValue={newForm.totalExposure}
-            onChange={handleNewInputChange}
-          />
+            <InputSelect
+              labelName="GDBR (including Mortgage)"
+              inputOptions={gdbrWMortageOptions}
+              inputName="totalExposure"
+              inputValue={newForm.totalExposure}
+              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+            />
 
-          <InputSelect
-            labelName="Default considered in CB score"
-            inputOptions={defaultScoreOptions}
-            inputName="defaultConsideredInSIMAHscore"
-            inputValue={newForm.defaultConsideredInSIMAHscore}
-            onChange={handleNewInputChange}
-          />
+            <InputSelect
+              labelName="Default considered in CB score"
+              inputOptions={defaultScoreOptions}
+              inputName="defaultConsideredInSIMAHscore"
+              inputValue={newForm.defaultConsideredInSIMAHscore}
+              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+            />
 
-          <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
-        </div>
-      </ContainerTile>
-      <ContainerTile>
-        {allData.length > 0 ? (
-          allData.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
-            >
-              <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
-                <InputSelect
-                  labelName="Product"
-                  inputOptions={productOptions}
-                  inputName="product"
-                  inputValue={item.product}
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-                <InputText
-                  labelName="CB Description (CODE)"
-                  inputName="simahDescriptionCode"
-                  inputValue={item.simahDescriptionCode}
-                  placeHolder="TMTG"
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-                <InputSelect
-                  labelName="Issuer"
-                  inputOptions={issuerOptions}
-                  inputName="issuer"
-                  inputValue={item.issuer}
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-                <div className="mb-2">
-                  <InputCheckbox
-                    labelName="Active Rule"
-                    inputName="activeRule"
-                    inputChecked={item.activeRule}
+            <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
+          </div>
+        </ContainerTile>
+        <ContainerTile>
+          {allData.length > 0 ? (
+            allData.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
+              >
+                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
+                  <InputSelect
+                    labelName="Product"
+                    inputOptions={productOptions}
+                    inputName="product"
+                    inputValue={item.product}
                     onChange={(e) => handleInputChange(e, index)}
+                    disabled
+                  />
+                  <InputText
+                    labelName="CB Description (CODE)"
+                    inputName="simahDescriptionCode"
+                    inputValue={item.simahDescriptionCode}
+                    placeHolder="TMTG"
+                    onChange={(e) => handleInputChange(e, index)}
+                  />
+                  <InputSelect
+                    labelName="Issuer"
+                    inputOptions={issuerOptions}
+                    inputName="issuer"
+                    inputValue={item.issuer}
+                    onChange={(e) => handleInputChange(e, index)}
+                  />
+                  <div className="mb-2">
+                    <InputCheckbox
+                      labelName="Active Rule"
+                      inputName="activeRule"
+                      inputChecked={item.activeRule === "YES" ? true : false}
+                      onChange={(e) => handleInputChange(e, index)}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
+                  <InputSelect
+                    labelName="GDBR (Without Mortgage)"
+                    inputOptions={gdbrWoMortageOptions}
+                    inputName="applicabilityGDBR"
+                    inputValue={item.applicabilityGDBR}
+                    onChange={(e) => handleInputChange(e, index)}
+                  />
+                  <InputSelect
+                    labelName="GDBR (including Mortgage)"
+                    inputOptions={gdbrWMortageOptions}
+                    inputName="totalExposure"
+                    inputValue={item.totalExposure}
+                    onChange={(e) => handleInputChange(e, index)}
+                  />
+                  <InputSelect
+                    labelName="Default considered in CB score"
+                    inputOptions={defaultScoreOptions}
+                    inputName="defaultConsideredInSIMAHscore"
+                    inputValue={item.defaultConsideredInSIMAHscore}
+                    onChange={(e) => handleInputChange(e, index)}
+                  />
+                  <Button
+                    buttonIcon={TrashIcon}
+                    onClick={() => handleDeleteRow(item.simahDescriptionCode)}
+                    circle={true}
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
-                <InputSelect
-                  labelName="GDBR (Without Mortgage)"
-                  inputOptions={gdbrWoMortageOptions}
-                  inputName="applicabilityGDBR"
-                  inputValue={item.applicabilityGDBR}
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-                <InputSelect
-                  labelName="GDBR (including Mortgage)"
-                  inputOptions={gdbrWMortageOptions}
-                  inputName="totalExposure"
-                  inputValue={item.totalExposure}
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-                <InputSelect
-                  labelName="Default considered in CB score"
-                  inputOptions={defaultScoreOptions}
-                  inputName="defaultConsideredInSIMAHscore"
-                  inputValue={item.defaultConsideredInSIMAHscore}
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => handleDeleteRow(item.simahDescriptionCode)}
-                  circle={true}
-                />
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center">No data available</p>
-        )}
-        <div className="absolute bottom-1 left-2 text-xs text-gray-500">
-          *CB - Credit Bureau
-        </div>
-      </ContainerTile>
+            ))
+          ) : (
+            <p className="text-center">No data available</p>
+          )}
+          <div className="absolute bottom-1 left-2 text-xs text-gray-500">
+            *CB - Credit Bureau
+          </div>
+        </ContainerTile>
       </div>
     </>
   );

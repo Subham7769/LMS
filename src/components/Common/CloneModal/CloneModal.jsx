@@ -25,12 +25,6 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
         <h2 className="text-xl font-semibold">
           Create Clone of {initialName}{" "}
         </h2>
-        {/* <InputText
-          inputName={"clonnedName"}
-          inputValue={cloneName}
-          onChange={handleChange}
-          placeHolder={"Enter Cloned Name"}
-        /> */}
         <input
           type="text"
           name="clonnedName"

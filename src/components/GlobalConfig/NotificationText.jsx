@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { PlusIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
-import Select from "react-select";
-import useGlobalConfig from "../../utils/useGlobalConfig";
+import { useEffect } from "react";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { toast, Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
@@ -11,84 +9,54 @@ import InputText from "../Common/InputText/InputText";
 import InputTextarea from "../Common/InputTextArea/InputTextArea";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchNotificationData,
+  handleChange,
+  saveNotificationData,
+} from "../../redux/Slices/notificationTextSlice";
 
 const NotificationText = () => {
-  const [inputList, setInputList] = useState([]);
-  const url = "notifications-data";
-  const notificationsData = useGlobalConfig(url);
+  const dispatch = useDispatch();
+  const { inputList, loading, error } = useSelector(
+    (state) => state.notificationText
+  );
 
   useEffect(() => {
-    if (notificationsData.length > 0) {
-      setInputList(notificationsData);
-    }
-  }, [notificationsData]);
-
-  if (notificationsData.length === 0) {
-    return (
-      <>
-        <LoadingState />
-      </>
-    );
-  }
-
-  const handleChange = (e) => {
-    const { name, value, id } = e.target;
-    const list = [...inputList];
-    const index = list.findIndex((item) => item.id === id);
-    if (index !== -1) {
-      list[index][name] = value;
-      setInputList(list);
-    }
-  };
+    dispatch(fetchNotificationData());
+  }, [dispatch]);
 
   const handleSave = async (id) => {
-    const token = localStorage.getItem("authToken");
-    const item = inputList.find((item) => item.id === id);
-    if (item) {
-      const updatedItem = {
-        notificationMessageEn: item.notificationMessageEn,
-        notificationMessageAr: item.notificationMessageAr,
-        notificationChannel: item.notificationChannel,
-      };
-
-      try {
-        const response = await fetch(
-          `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/notifications-data/${id}`,
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedItem), // Pass the updatedItem instead of item
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Edit Successful"}
-            message={"Notification edit was successful"}
-          />
-        ));
-      } catch (error) {
-        console.log(error.message);
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Edit Failed"}
-            message={`${error.message}`}
-          />
-        ));
-      }
+    try {
+      await dispatch(saveNotificationData(id)).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Updated Successfully"}
+          message={"Data has been updated successfully"}
+        />
+      ));
+    } catch (error) {
+      // Handle the error here if needed
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Edit Failed"}
+          message={`${error.message}`}
+        />
+      ));
     }
   };
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <>
@@ -130,7 +98,15 @@ const NotificationText = () => {
                 inputId={notdata.id}
                 inputName="notificationChannel"
                 inputValue={notdata.notificationChannel}
-                onChange={handleChange}
+                onChange={(e) =>
+                  dispatch(
+                    handleChange({
+                      id: notdata.id,
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
             </div>
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
@@ -140,7 +116,15 @@ const NotificationText = () => {
                 inputName="notificationMessageEn"
                 inputId={notdata.id}
                 inputValue={notdata.notificationMessageEn}
-                onChange={handleChange}
+                onChange={(e) =>
+                  dispatch(
+                    handleChange({
+                      id: notdata.id,
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
                 placeHolder="This is the emi reminder message, last payment amount is"
               />
               <InputTextarea
@@ -149,7 +133,15 @@ const NotificationText = () => {
                 inputName="notificationMessageAr"
                 inputId={notdata.id}
                 inputValue={notdata.notificationMessageAr}
-                onChange={handleChange}
+                onChange={(e) =>
+                  dispatch(
+                    handleChange({
+                      id: notdata.id,
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
                 placeHolder="This is the emi reminder message, last payment amount is"
               />
               <InputTextarea
