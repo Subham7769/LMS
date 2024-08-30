@@ -13,6 +13,7 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserLoanOptions, submitLoanConfiguration } from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
+import { useNavigate } from "react-router-dom";
 
 
 const LoanConfig = () => {
@@ -25,6 +26,7 @@ const LoanConfig = () => {
   const { loanOptions, loanConfigData, showModal, loading, error } = useSelector(state => state.userProductTesting)
   const { userID } = useParams();
   const dispatch = useDispatch()
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
 
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
@@ -117,6 +119,7 @@ const LoanConfig = () => {
       transactionId: transactionId,
       contractNumber: "test18monthTenure",
     };
+    console.log(postData)
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
