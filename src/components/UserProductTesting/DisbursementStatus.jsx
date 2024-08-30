@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDisbursementInfo, submitDisbursement } from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
 
-const Disbursement = () => {
+const DisbursementStatus = () => {
   const { disbursementData, loading, error } = useSelector(state => state.userProductTesting)
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
@@ -85,4 +85,4 @@ const Disbursement = () => {
   );
 };
 
-export default Disbursement;
+export default DisbursementStatus;

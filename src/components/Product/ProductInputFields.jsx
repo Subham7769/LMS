@@ -139,7 +139,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
           />
           <InputSelect
             labelName="RAC"
-            inputOptions={formateDataDropDown("/newrac/", RACDataInfo)}
+            inputOptions={formateDataDropDown("/rac/", RACDataInfo)}
             inputName="racId"
             inputValue={formData.racId}
             onChange={handleChange}
@@ -169,7 +169,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
         <div className="grid grid-cols-5 gap-5 items-end mb-4">
           <InputSelect
             labelName="DBR Config"
-            inputOptions={formateDataDropDown("/newdbc/", DBRConfigInfo)}
+            inputOptions={formateDataDropDown("/dbr-config/", DBRConfigInfo)}
             inputName="dbcTempId"
             inputValue={formData.dbcTempId}
             onChange={handleChange}

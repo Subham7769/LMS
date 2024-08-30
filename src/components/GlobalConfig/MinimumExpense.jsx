@@ -25,7 +25,7 @@ import {
   resetFormData,
 } from "../../redux/Slices/bareMinimumExpSlice";
 
-const BareMinimumExp = () => {
+const MinimumExpense = () => {
   const dispatch = useDispatch();
 
   const { formData, expenseData, loading, error } = useSelector(
@@ -237,4 +237,4 @@ const BareMinimumExp = () => {
   );
 };
 
-export default BareMinimumExp;
+export default MinimumExpense;

@@ -53,7 +53,7 @@ function SamplePrevArrow(props) {
   );
 }
 
-const InstallmentInfoComp = ({ isOpen, onClose, installDataProp }) => {
+const InstallmentSummery = ({ isOpen, onClose, installDataProp }) => {
   const [installmentConfigData, setinstallmentConfigData] = useState([]);
   useEffect(() => {
     if (!isOpen) return null;
@@ -83,8 +83,7 @@ const InstallmentInfoComp = ({ isOpen, onClose, installDataProp }) => {
   const sliderContainWidth = `w-[${width}px]`;
 
   const installTableDividerStyle = "divide-x divide-gray-200 text-center w-full h-[58px]"
-  const installTableColor = "py-2  text-gray-500"
-  const installSliderStyle = "whitespace-nowrap p-4 text-gray-500"
+  const installTableColor = "py-2 text-gray-500"
   return (
     <>
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
@@ -198,77 +197,77 @@ const InstallmentInfoComp = ({ isOpen, onClose, installDataProp }) => {
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.closingAmount}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.earlySettlementFee}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.installmentDate}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.installmentValue}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.interestValue}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.managementFee}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.principalOutstandingAmount}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.principalValue}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.savedFee}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.savedFeePercent}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.termCost}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.thirdPartyCost}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.totalOutsandingAmount}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.totalRequiredAmount}
                         </td>
                       </tr>
                       <tr className={installTableDividerStyle}>
-                        <td className={installSliderStyle}>
+                        <td className={installTableColor}>
                           {ci.vatFee}
                         </td>
                       </tr>
@@ -286,4 +285,4 @@ const InstallmentInfoComp = ({ isOpen, onClose, installDataProp }) => {
   );
 };
 
-export default InstallmentInfoComp;
+export default InstallmentSummery;

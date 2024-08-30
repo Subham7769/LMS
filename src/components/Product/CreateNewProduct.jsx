@@ -16,7 +16,7 @@ import {
 } from "../../redux/Slices/productSlice";
 import LoadingState from "../LoadingState/LoadingState";
 
-const CreateProduct = () => {
+const CreateNewProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
   const dispatch = useDispatch();
@@ -158,4 +158,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default CreateNewProduct;

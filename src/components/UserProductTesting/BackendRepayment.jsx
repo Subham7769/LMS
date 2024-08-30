@@ -11,7 +11,7 @@ import { getRepaymentInfo, submitRepayment } from "../../redux/Slices/userProduc
 import LoadingState from "../LoadingState/LoadingState";
 
 
-const Repayment = () => {
+const BackendRepayment = () => {
   const { userID } = useParams();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const dispatch = useDispatch();
@@ -60,4 +60,4 @@ const Repayment = () => {
   );
 };
 
-export default Repayment;
+export default BackendRepayment;

@@ -1,18 +1,18 @@
 import { useLocation, Link, useParams, Outlet } from "react-router-dom";
 
-const UserInfoTabs = () => {
+const UserProductTesting = () => {
   const { userID } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
 
   const tabs = [
-    { path: `/user/${userID}/user-eligibilty`, label: "Eligibility" },
-    { path: `/user/${userID}/register`, label: "Register" },
-    { path: `/user/${userID}/loan-config`, label: "Loan Config" },
-    { path: `/user/${userID}/disbursement`, label: "Disbursement Status" },
-    { path: `/user/${userID}/repayment`, label: "Backend Repayments" },
-    { path: `/user/${userID}/family-details`, label: "Family Details" },
-    { path: `/user/${userID}/employment-details`, label: "Employment Details" },
+    { path: `/user-product-testing/${userID}/eligibilty`, label: "Eligibility" },
+    { path: `/user-product-testing/${userID}/register`, label: "Register" },
+    { path: `/user-product-testing/${userID}/loan-config`, label: "Loan Config" },
+    { path: `/user-product-testing/${userID}/disbursement-status`, label: "Disbursement Status" },
+    { path: `/user-product-testing/${userID}/backend-repayment`, label: "Backend Repayments" },
+    { path: `/user-product-testing/${userID}/family-details`, label: "Family Details" },
+    { path: `/user-product-testing/${userID}/employment-details`, label: "Employment Details" },
   ];
 
   return (
@@ -40,4 +40,4 @@ const UserInfoTabs = () => {
   );
 };
 
-export default UserInfoTabs;
+export default UserProductTesting;

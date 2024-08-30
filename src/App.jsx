@@ -4,22 +4,31 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
-// console.log(import.meta.env.VITE_BLOCKED_EMPLOYER_GET); // Outputs: link
 const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
-const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
-
-const NewRulePolicy = lazy(() =>
-  import("./components/RulePolicy/NewRulePolicy")
-);
-const NewCreatedCreditScore = lazy(() =>
-  import("./components/CreditScore/NewCreatedCreditScore")
-);
 const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
-const CreditScoreET = lazy(() =>
-  import("./components/CreditScoreET/CreditScoreET")
-);
-
 const CreditScoreEqPage = lazy(() => import("./pages/CreditScoreEqPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const TclPage = lazy(() => import("./pages/TclPage"));
+const RacPage = lazy(() => import("./pages/RacPage"));
+const ProjectPage = lazy(() => import("./pages/ProjectPage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
+const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
+const NewUserPage = lazy(() => import("./pages/UserProductTestingPage"));
+const LedgerPage = lazy(() => import("./pages/LedgerPage"));
+const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
+const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
+const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
+const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
+
+const CreateNewProject = lazy(() => import("./components/Project/CreateNewProject"));
+const CreateNewProductGroup = lazy(() => import("./components/ProductGroup/CreateNewProductGroup"));
+const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
+const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
+const NewRulePolicy = lazy(() => import("./components/RulePolicy/NewRulePolicy"));
+const CreateNewCreditScore = lazy(() => import("./components/CreditScore/CreateNewCreditScore"));
+const CreditScoreET = lazy(() => import("./components/CreditScoreET/CreditScoreET"));
+
 
 const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
@@ -40,11 +49,11 @@ const PersonalInfo = lazy(() =>
 const LiabilitiesMatrix = lazy(() =>
   import("./components/GlobalConfig/LiabilitiesMatrix")
 );
-const RiskGradeCal = lazy(() =>
-  import("./components/GlobalConfig/RiskGradeCal")
+const RiskGradeMatrix = lazy(() =>
+  import("./components/GlobalConfig/RiskGradeMatrix")
 );
-const BareMinimumExp = lazy(() =>
-  import("./components/GlobalConfig/BareMinimumExp")
+const MinimumExpense = lazy(() =>
+  import("./components/GlobalConfig/MinimumExpense")
 );
 const NotificationText = lazy(() =>
   import("./components/GlobalConfig/NotificationText")
@@ -53,8 +62,8 @@ const ProductGroup = lazy(() =>
   import("./components/ProductGroup/ProductGroup")
 );
 
-const BorrowerInfoTabs = lazy(() =>
-  import("./components/CustomerCare/BorrowerInfoTabs")
+const CustomerCare = lazy(() =>
+  import("./components/CustomerCare/CustomerCare")
 );
 const KYCDetails = lazy(() => import("./components/CustomerCare/KYCDetails"));
 const CreditProfile = lazy(() =>
@@ -71,183 +80,133 @@ const CreditBureauDetails = lazy(() =>
 );
 const Login = lazy(() => import("./components/Login/Login"));
 const Project = lazy(() => import("./components/Project/Project"));
-const CreateRac = lazy(() => import("./components/RAC/CreateRac"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
-const BpmnComponent = lazy(() =>
-  import("./components/BusinessRule/BpmnComponent")
+const BusinessRule1 = lazy(() =>
+  import("./components/BusinessRule/BusinessRule1")
 );
-const BpmnComponent2 = lazy(() =>
-  import("./components/BusinessRule/BpmnComponent2")
+const BusinessRule2 = lazy(() =>
+  import("./components/BusinessRule/BusinessRule2")
 );
-const BpmnComponent3 = lazy(() =>
-  import("./components/BusinessRule/BpmnComponent3")
+const BusinessRule3 = lazy(() =>
+  import("./components/BusinessRule/BusinessRule3")
 );
 
-const UserInfoTabs = lazy(() => import("./components/UserProductTesting/UserInfoTabs"));
+const UserProductTesting = lazy(() => import("./components/UserProductTesting/UserProductTesting"));
 const Eligibility = lazy(() => import("./components/UserProductTesting/Eligibility"));
-const Disbursement = lazy(() => import("./components/UserProductTesting/Disbursement"));
+const DisbursementStatus = lazy(() => import("./components/UserProductTesting/DisbursementStatus"));
 const Register = lazy(() => import("./components/UserProductTesting/Register"));
-const InstallmentInfoComp = lazy(() =>
-  import("./components/UserProductTesting/InstallmentInfoComp")
+const InstallmentSummery = lazy(() =>
+  import("./components/UserProductTesting/InstallmentSummery")
 );
-const LoanConfigDD = lazy(() => import("./components/UserProductTesting/LoanConfigDD"));
+const LoanConfig = lazy(() => import("./components/UserProductTesting/LoanConfig"));
 const BlockedEmployer = lazy(() =>
   import("./components/BlockedEmployer/BlockedEmployer")
 );
-const Repayment = lazy(() => import("./components/UserProductTesting/Repayments"));
+const BackendRepayment = lazy(() => import("./components/UserProductTesting/BackendRepayment"));
 const FamilyDetails = lazy(() => import("./components/UserProductTesting/FamilyDetails"));
+const CreateNewProduct = lazy(() => import("./components/Product/CreateNewProduct"));
 const EmploymentDetails = lazy(() =>
   import("./components/UserProductTesting/EmploymentDetails")
 );
-const CreateProduct = lazy(() => import("./components/Product/CreateProduct"));
+const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 const TestComponent = lazy(() =>
   import("./components/TestComponent/TestComponent")
 );
-const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 const LoadingState = lazy(() =>
   import("./components/LoadingState/LoadingState")
 );
-const HomePage = lazy(() => import("./pages/HomePage"));
-const TclPage = lazy(() => import("./pages/TclPage"));
-const RacPage = lazy(() => import("./pages/RacPage"));
-const ProjectPage = lazy(() => import("./pages/ProjectPage"));
-const ProductPage = lazy(() => import("./pages/ProductPage"));
-const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
-const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
-const NewUserPage = lazy(() => import("./pages/UserProductTestingPage"));
-const LedgerPage = lazy(() => import("./pages/LedgerPage"));
-const CreateNew = lazy(() => import("./components/Common/CreateNew/CreateNew"));
-const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
-const NewProjectPage = lazy(() =>
-  import("./components/Project/NewProjectPage")
-);
-const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
-const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
-const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
-const CreateProdGroup = lazy(() =>
-  import("./components/ProductGroup/CreateProdGroup")
-);
-const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
 
 const routes = [
+
+  // Accessing All Main Components
+  { path: "/login", element: <Login />, errorElement: <ErrorBoundary /> },
+
   {
     path: "/",
     element: <AppLayout />,
     children: [
-      { path: "/", element: <HomePage /> },
-      { path: "/rac", element: <RacPage /> },
-      { path: "/create-rac", element: <CreateRac /> },
-      { path: "/newrac/:racID", element: <NewCreatedRAC /> },
-      { path: "/dbc", element: <DebtBurdenPage /> },
-      { path: "/blocked-employer", element: <BlockedEmployerPage /> },
-      { path: "/recovery", element: <RecoveryPage /> },
+      // Accessing All Page Components
+      { path: "/", element: <HomePage />, errorElement: <ErrorBoundary /> },
+      { path: "/rac", element: <RacPage />, errorElement: <ErrorBoundary /> },
+      { path: "/recovery", element: <RecoveryPage />, errorElement: <ErrorBoundary /> },
+      { path: "/tcl", element: <TclPage />, errorElement: <ErrorBoundary /> },
+      { path: "/project", element: <ProjectPage />, errorElement: <ErrorBoundary /> },
+      { path: "/product", element: <ProductPage />, errorElement: <ErrorBoundary /> },
+      { path: "/credit-score-eligible-tenure", element: <CreditScoreETPage />, errorElement: <ErrorBoundary /> },
+      { path: "/dbr-config", element: <DebtBurdenPage />, errorElement: <ErrorBoundary /> },
+      { path: "/blocked-employer", element: <BlockedEmployerPage />, errorElement: <ErrorBoundary /> },
+      { path: "/credit-score", element: <CreditScoreEqPage />, errorElement: <ErrorBoundary /> },
+      { path: "/rule-policy", element: <RulePolicyPage /> },
+      { path: "/product-group", element: <ProductGroupPage />, errorElement: <ErrorBoundary /> },
+      { path: "/customer-care", element: <CustomerCarePage />, errorElement: <ErrorBoundary /> },
+      { path: "/user-product-testing", element: <NewUserPage />, errorElement: <ErrorBoundary /> },
+      { path: "/general-ledger", element: <LedgerPage />, errorElement: <ErrorBoundary /> },
+      { path: "/user-management", element: <UserManagementPage />, errorElement: <ErrorBoundary /> },
+
+      // Accessing All Misc. Page Components
+      { path: "/settings", element: <UploadLogo />, errorElement: <ErrorBoundary /> },
+      { path: "/test", element: <TestComponent />, errorElement: <ErrorBoundary /> },
+      { path: "/notification", element: <Notifications />, errorElement: <ErrorBoundary /> },
+
+
+      // Accessing All Child Components
+      { path: "/rac/:racID", element: <NewCreatedRAC />, errorElement: <ErrorBoundary /> },
+      { path: "/recovery/:recoveryEquationTempId", element: <RecoveryConfig />, errorElement: <ErrorBoundary /> },
+      { path: "/tcl/:tclId", element: <TCLViewList />, errorElement: <ErrorBoundary /> },
+      { path: "/project/:projectId", element: <Project />, errorElement: <ErrorBoundary /> },
+      { path: "/product/:productType/loan-product-config/:projectId/:loanProId", element: <LoanProductConfig />, errorElement: <ErrorBoundary /> },
+      { path: "/credit-score-eligible-tenure/:creditScoreETId", element: <CreditScoreET />, errorElement: <ErrorBoundary /> },
+      { path: "/dbr-config/:dbcTempId", element: <DebtBurdenConfig />, errorElement: <ErrorBoundary /> },
+      { path: "/blocked-employer/:blockEmployersTempId", element: <BlockedEmployer />, errorElement: <ErrorBoundary /> },
+      { path: "/rule-policy/:rulePolicyId", element: <NewRulePolicy />, errorElement: <ErrorBoundary /> },
+      { path: "/product-group/:configId", element: <ProductGroup />, errorElement: <ErrorBoundary /> },
+      { path: "/business-rule/1", element: <BusinessRule1 />, errorElement: <ErrorBoundary /> },
+      { path: "/business-rule/2", element: <BusinessRule2 />, errorElement: <ErrorBoundary /> },
+      { path: "/business-rule/3", element: <BusinessRule3 />, errorElement: <ErrorBoundary /> },
+      { path: "/global-config/liabilities-matrix", element: <LiabilitiesMatrix />, errorElement: <ErrorBoundary /> },
+      { path: "/global-config/risk-grading-matrix", element: <RiskGradeMatrix />, errorElement: <ErrorBoundary /> },
+      { path: "/global-config/min-expense", element: <MinimumExpense />, errorElement: <ErrorBoundary /> },
+      { path: "/global-config/notification-text", element: <NotificationText />, errorElement: <ErrorBoundary /> },
+      
+      
+      // Accessing All New Created Child Components
+      { path: "/credit-score/:creditScoreId", element: <CreateNewCreditScore />, errorElement: <ErrorBoundary /> },
+      { path: "/product-group/newProductGroup/:configId", element: <CreateNewProductGroup />, errorElement: <ErrorBoundary /> },
+      { path: "/project/newProject/:projectName", element: <CreateNewProject />, errorElement: <ErrorBoundary /> },
+      { path: "/product/newProduct/:productName", element: <CreateNewProduct />, errorElement: <ErrorBoundary /> },
+
+
+      // Accessing All Page Component with it's Child Components
       {
-        path: "/recovery/:recoveryEquationTempId",
-        element: <RecoveryConfig />,
-      },
-      { path: "/tcl", element: <TclPage /> },
-      { path: "/tcl/:tclId", element: <TCLViewList /> },
-      { path: "/project/projectPage", element: <ProjectPage /> },
-      { path: "/product", element: <ProductPage /> },
-      { path: "/business-rule/1", element: <BpmnComponent /> },
-      { path: "/business-rule/2", element: <BpmnComponent2 /> },
-      { path: "/business-rule/3", element: <BpmnComponent3 /> },
-      {
-        path: "/product_group",
-        element: <ProductGroupPage />,
-      },
-      {
-        path: "/product_group/:configId",
-        element: <ProductGroup />,
-      },
-      { path: "/product_group/new/:configId", element: <CreateProdGroup /> },
-      { path: "/project/:projectId", element: <Project /> },
-      { path: "/project/newProject/:projectName", element: <NewProjectPage /> },
-      { path: "/create-product/:productName", element: <CreateProduct /> },
-      { path: "/newdbc/:dbcTempId", element: <DebtBurdenConfig /> },
-      { path: "/test", element: <TestComponent /> },
-      { path: "/settings", element: <UploadLogo /> },
-      {
-        path: "/blocked-employer/:blockEmployersTempId",
-        element: <BlockedEmployer />,
-      },
-      {
-        path: "/product/:productType/loan-product-config/:projectId/:loanProId",
-        element: <LoanProductConfig />,
-      },
-      {
-        path: "/credit-score-eligible-tenure",
-        element: <CreditScoreETPage />,
-      },
-      {
-        path: "/credit-score-eligible-tenure/:creditScoreETId",
-        element: <CreditScoreET />,
-      },
-      {
-        path: "/credit-score",
-        element: <CreditScoreEqPage />,
-      },
-      {
-        path: "/credit-score/:creditScoreId",
-        element: <NewCreatedCreditScore />,
-      },
-      {
-        path: "/rule-policy",
-        element: <RulePolicyPage />,
-      },
-      {
-        path: "/rule-policy/:rulePolicyId",
-        element: <NewRulePolicy />,
-      },
-      {
-        path: "/global-config/liability-matrix",
-        element: <LiabilitiesMatrix />,
-      },
-      { path: "/global-config/risk-grade-cal", element: <RiskGradeCal /> },
-      { path: "/global-config/bare-min-exp", element: <BareMinimumExp /> },
-      {
-        path: "/global-config/notification-text",
-        element: <NotificationText />,
-      },
-      { path: "/notification", element: <Notifications /> },
-      { path: "/customer-care", element: <CustomerCarePage /> },
-      {
-        path: "/borrower/:subID",
-        element: <BorrowerInfoTabs />,
+        path: "/customer-care/:subID",
+        element: <CustomerCare />,
         children: [
-          { path: "personal-info", element: <PersonalInfo />, errorElement:<ErrorBoundary />},
-          { path: "kyc", element: <KYCDetails /> },
-          { path: "credit-profile", element: <CreditProfile /> },
-          { path: "loanNpayment", element: <LoanNPaymentHist /> },
-          { path: "rejection-history", element: <RejectionHistory /> },
-          { path: "credit-bureau-details", element: <CreditBureauDetails /> },
+          { path: "personal-info", element: <PersonalInfo />, errorElement: <ErrorBoundary /> },
+          { path: "kyc-details", element: <KYCDetails />, errorElement: <ErrorBoundary /> },
+          { path: "credit-profile", element: <CreditProfile />, errorElement: <ErrorBoundary /> },
+          { path: "loan-payment-history", element: <LoanNPaymentHist />, errorElement: <ErrorBoundary /> },
+          { path: "rejection-history", element: <RejectionHistory />, errorElement: <ErrorBoundary /> },
+          { path: "credit-bureau-details", element: <CreditBureauDetails />, errorElement: <ErrorBoundary /> },
         ],
       },
-      { path: "/user", element: <NewUserPage /> },
       {
-        path: "/user/:userID",
-        element: <UserInfoTabs />,
+        path: "/user-product-testing/:userID",
+        element: <UserProductTesting />,
         children: [
-          { path: "user-eligibilty", element: <Eligibility /> },
-          { path: "register", element: <Register /> },
-          { path: "loan-config", element: <LoanConfigDD /> },
-          {
-            path: "loan-config/:installIndex/installment/:loanType/:amount",
-            element: <InstallmentInfoComp />,
-          },
-          { path: "disbursement", element: <Disbursement /> },
-          { path: "repayment", element: <Repayment /> },
-          { path: "family-details", element: <FamilyDetails /> },
-          { path: "employment-details", element: <EmploymentDetails /> },
+          { path: "eligibilty", element: <Eligibility />, errorElement: <ErrorBoundary /> },
+          { path: "register", element: <Register />, errorElement: <ErrorBoundary /> },
+          { path: "loan-config", element: <LoanConfig />, errorElement: <ErrorBoundary /> },
+          { path: "loan-config/:installIndex/installment/:loanType/:amount", element: <InstallmentSummery />, errorElement: <ErrorBoundary /> },
+          { path: "disbursement-status", element: <DisbursementStatus />, errorElement: <ErrorBoundary /> },
+          { path: "backend-repayment", element: <BackendRepayment />, errorElement: <ErrorBoundary /> },
+          { path: "family-details", element: <FamilyDetails />, errorElement: <ErrorBoundary /> },
+          { path: "employment-details", element: <EmploymentDetails />, errorElement: <ErrorBoundary /> },
         ],
       },
-      { path: "/ledger", element: <LedgerPage /> },
-      { path: "/user-management", element: <UserManagementPage /> },
-      { path: "/test", element: <CreateNew /> },
     ],
   },
-  { path: "/login", element: <Login /> },
 ];
+
 const appRouter = createBrowserRouter(routes);
 function App() {
   return (

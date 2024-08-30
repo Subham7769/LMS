@@ -30,7 +30,7 @@ import {
   createProject,
 } from "../../redux/Slices/projectSlice";
 
-const NewProjectPage = () => {
+const CreateNewProject = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
@@ -529,4 +529,4 @@ const NewProjectPage = () => {
   );
 };
 
-export default NewProjectPage;
+export default CreateNewProject;

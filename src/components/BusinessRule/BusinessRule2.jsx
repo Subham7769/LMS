@@ -6,7 +6,7 @@ import "@bpmn-io/properties-panel/dist/assets/properties-panel.css";
 import { BpmnPropertiesPanelModule } from "bpmn-js-properties-panel";
 import { BpmnPropertiesProviderModule } from "bpmn-js-properties-panel";
 
-export default function BpmnComponent2() {
+export default function BusinessRule2() {
   const modelerRef = useRef(null);
   const propertiesPanelRef = useRef(null);
 

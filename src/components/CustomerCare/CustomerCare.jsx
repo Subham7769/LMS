@@ -1,28 +1,28 @@
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 
-const BorrowerInfoTabs = () => {
+const CustomerCare = () => {
   const { subID } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
   const roleName = localStorage.getItem("roleName");
 
   const tabs = [
-    { path: `/borrower/${subID}/personal-info`, label: "Personal Info" },
-    { path: `/borrower/${subID}/credit-profile`, label: "Credit Profile" },
-    { path: `/borrower/${subID}/kyc`, label: "KYC Details" },
+    { path: `/customer-care/${subID}/personal-info`, label: "Personal Info" },
+    { path: `/customer-care/${subID}/credit-profile`, label: "Credit Profile" },
+    { path: `/customer-care/${subID}/kyc-details`, label: "KYC Details" },
     {
-      path: `/borrower/${subID}/loanNpayment`,
+      path: `/customer-care/${subID}/loan-payment-history`,
       label: "Loan & Payment History",
     },
     {
-      path: `/borrower/${subID}/rejection-history`,
+      path: `/customer-care/${subID}/rejection-history`,
       label: "Rejection History",
     },
     {
-      path: `/borrower/${subID}/credit-bureau-details`,
+      path: `/customer-care/${subID}/credit-bureau-details`,
       label: "Credit Bureau Details",
     },
-    { path: `/user/${subID}/user-eligibilty`, label: "Back to User Page" },
+    { path: `/user-product-testing/${subID}/eligibilty`, label: "Back to User Page" },
   ];
 
   return (
@@ -66,4 +66,4 @@ const BorrowerInfoTabs = () => {
   );
 };
 
-export default BorrowerInfoTabs;
+export default CustomerCare;

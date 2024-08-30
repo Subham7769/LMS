@@ -10,7 +10,7 @@ const tabComponents = {
   "customer-address": CustomerAddress,
   "credit-instruments": CreditInstrument,
   "default-details": DefaultDetails,
-  score: Score,
+  "score": Score,
   "download-reports": DownloadReports,
 };
 

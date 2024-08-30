@@ -36,7 +36,7 @@ const SearchBox = () => {
                 navigate("/login"); // Redirect to login page
                 return; // Stop further execution
             }
-            navigate("/borrower/" + borrowerID + "/personal-info");
+            navigate("/customer-care/" + borrowerID + "/personal-info");
             setBorrowerNotFound(false);
         } catch (error) {
             console.error(error);
@@ -61,7 +61,7 @@ const SearchBox = () => {
             if (data.status === 404) {
                 console.log("User Not Found"); // Clear the token
                 setBorrowerNotFound(true);
-                navigate("/user"); // Redirect to login page
+                navigate("/user-product-testing"); // Redirect to login page
                 return; // Stop further execution
             }
             // Check for token expiration or invalid token
@@ -70,7 +70,7 @@ const SearchBox = () => {
                 navigate("/login"); // Redirect to login page
                 return; // Stop further execution
             }
-            navigate("/user/" + borrowerID + "/user-eligibilty");
+            navigate("/user-product-testing/" + borrowerID + "/eligibilty");
             setBorrowerNotFound(false);
         } catch (error) {
             console.error(error);

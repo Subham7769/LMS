@@ -1,20 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-// import { productTypeOptions } from "../../data/OptionsData";
+import { useParams, useLocation } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
 import useGroupFormState from "../../utils/useGroupFormState";
 import DynamicName from "../Common/DynamicName/DynamicName";
-import LoadingState from "../Common/Loader/Loader";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import useInList from "../../utils/useInList";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
-const CreateProdGroup = () => {
+const CreateNewProductGroup = () => {
   const { configId, groupName } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const isNewGroup = groupName === "newGroup";
   const newGroupName = location.state?.Name || "New Group";
   const options = useInList();
@@ -99,4 +96,4 @@ const CreateProdGroup = () => {
   );
 };
 
-export default CreateProdGroup;
+export default CreateNewProductGroup;

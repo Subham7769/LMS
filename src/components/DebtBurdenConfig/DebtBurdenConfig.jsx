@@ -147,7 +147,7 @@ const DebtBurdenConfig = () => {
 
       if (createCloneDBC.fulfilled.match(resultAction)) {
         const newDbcTempId = resultAction.payload;
-        navigate("/newdbc/" + newDbcTempId);
+        navigate("/dbr-config/" + newDbcTempId);
       } else {
         console.error(
           "Failed to create clone:",
@@ -188,7 +188,7 @@ const DebtBurdenConfig = () => {
       const resultAction = await dispatch(deleteDBC(dbcTempId));
 
       if (deleteDBC.fulfilled.match(resultAction)) {
-        navigate("/dbc");
+        navigate("/dbr-config");
       } else {
         console.error(
           "Failed to delete DBC:",

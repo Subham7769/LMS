@@ -71,7 +71,7 @@ const NewCreatedRAC = () => {
       }
       const racDetails = await data.json();
       dispatch(fetchRACData());
-      navigate("/newrac/" + racDetails.racId);
+      navigate("/rac/" + racDetails.racId);
     } catch (error) {
       console.error(error);
     }
@@ -134,7 +134,7 @@ const NewCreatedRAC = () => {
         const racDetails = await data.json();
         dispatch(fetchRACData());
         getRACInfo();
-        navigate("/newrac/" + racDetails.racId);
+        navigate("/rac/" + racDetails.racId);
       } catch (error) {
         console.error(error);
       }

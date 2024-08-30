@@ -17,7 +17,7 @@ export const MenusInitial = [
     createFunction: "createNewRac",
     buttonName: "Create RAC", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/newrac/", // navigation
+    navigateSuccess: "/rac/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -56,7 +56,7 @@ export const MenusInitial = [
   },
   {
     title: "Project",
-    href: "/project/projectPage", //previous -> "/project/loan-form"
+    href: "/project", //previous -> "/project/loan-form"
     icon: "ChartPieIcon",
     current: false,
     submenu: true,
@@ -81,7 +81,7 @@ export const MenusInitial = [
     createFunction: "createNewProduct",
     buttonName: "Create Product", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/create-product/", // navigation
+    navigateSuccess: "product/newProduct/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -104,7 +104,7 @@ export const MenusInitial = [
   },
   {
     title: "DBR Config",
-    href: "/dbc",
+    href: "/dbr-config",
     icon: "CreditCardIcon",
     current: false,
     submenu: true,
@@ -113,7 +113,7 @@ export const MenusInitial = [
     createFunction: "createNewDBC",
     buttonName: "Create DBR", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/newdbc/", // navigation
+    navigateSuccess: "/dbr-config/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -168,7 +168,7 @@ export const MenusInitial = [
   },
   {
     title: "Product Group",
-    href: "/product_group",
+    href: "/product-group",
     icon: "RectangleGroupIcon",
     current: false,
     submenu: true,
@@ -177,7 +177,7 @@ export const MenusInitial = [
     createFunction: "createNewProductGroup",
     buttonName: "Create Group", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/product_group/new/", // navigation
+    navigateSuccess: "/product-group/newProductGroup/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -204,24 +204,24 @@ export const MenusInitial = [
   },
   {
     title: "Global Config",
-    href: "/global-config/liability-matrix",
+    href: "/global-config/liabilities-matrix",
     icon: "Cog6ToothIcon",
     current: false,
     submenu: true,
     submenuItems: [
       {
         name: "Liabilities Matrix",
-        href: "/global-config/liability-matrix",
+        href: "/global-config/liabilities-matrix",
         current: false,
       },
       {
         name: "Risk Grading Matrix",
-        href: "/global-config/risk-grade-cal",
+        href: "/global-config/risk-grading-matrix",
         current: false,
       },
       {
         name: "Minimum Expense",
-        href: "/global-config/bare-min-exp",
+        href: "/global-config/min-expense",
         current: false,
       },
       {
@@ -240,13 +240,13 @@ export const MenusInitial = [
   },
   {
     title: "User Product Testing",
-    href: "/user",
+    href: "/user-product-testing",
     icon: "HandRaisedIcon",
     current: false,
   },
   {
     title: "General Ledger",
-    href: "/ledger",
+    href: "/general-ledger",
     icon: "BookOpenIcon",
     current: false,
   },

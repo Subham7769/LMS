@@ -21,7 +21,7 @@ import {
   handleExistingInputChange,
 } from "../../redux/Slices/riskGradeCalSlice";
 
-const RiskGradeCal = () => {
+const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
   const { allData, newForm, loading } = useSelector(
     (state) => state.riskGradeCal
@@ -214,4 +214,4 @@ const RiskGradeCal = () => {
   );
 };
 
-export default RiskGradeCal;
+export default RiskGradeMatrix;

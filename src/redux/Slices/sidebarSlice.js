@@ -53,7 +53,7 @@ export const fetchRACData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, racId }) => ({
         name,
-        href: "/newrac/" + racId,
+        href: "/rac/" + racId,
       }));
     };
     try {
@@ -72,7 +72,7 @@ export const fetchDBRData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, dbcTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/newdbc/" + dbcTempId,
+        href: "/dbr-config/" + dbcTempId,
       }));
     };
     try {
@@ -206,7 +206,7 @@ export const fetchProdGroupData = createAsyncThunk(
       const ProdDetailsArray = Array.isArray(data) ? data : [data];
       return ProdDetailsArray.map(({ configId }) => ({
         name: configId.replace(/-/g, " "),
-        href: "/product_group/" + configId,
+        href: "/product-group/" + configId,
       }));
     };
     try {
