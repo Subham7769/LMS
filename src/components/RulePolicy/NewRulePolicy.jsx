@@ -6,46 +6,24 @@ import RulePolicy from "./RulePolicy";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
 import { fetchRulePolicyData } from "../../redux/Slices/sidebarSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createClone,
+  deleteRulePolicy,
+  fetchName,
+  updateRulePolicyName,
+} from "../../redux/Slices/rulePolicySlice";
 
 const NewRulePolicy = () => {
-  const [rulePolicyName, setRulePolicyName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { rulePolicyId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { itemName } = useSelector((state) => state.rulePolicy);
 
   useEffect(() => {
-    getCSEInfo();
-  }, [rulePolicyId]);
-
-  async function getCSEInfo() {
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/id/" +
-          rulePolicyId,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const CreditScoreDetails = await data.json();
-      setRulePolicyName(CreditScoreDetails.name.replace(/-/g, " "));
-      // console.log(CreditScoreEqData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+    dispatch(fetchName(rulePolicyId));
+  }, [dispatch, rulePolicyId]);
 
   const handleClone = () => {
     setIsModalOpen(true);
@@ -57,28 +35,11 @@ const NewRulePolicy = () => {
 
   const createCloneRP = async (cloneRPName) => {
     try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_RULE_POLICY_CREATE_CLONE}${rulePolicyId}/clone/${cloneRPName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const rpDetails = await data.json();
-      console.log(rpDetails);
-      dispatch(fetchRulePolicyData())
-
-      navigate("/rule-policy/" + rpDetails.rulePolicyTempId);
+      const Details = await dispatch(
+        createClone({ rulePolicyId, cloneRPName })
+      ).unwrap();
+      dispatch(fetchRulePolicyData());
+      navigate("/rule-policy/" + Details.rulePolicyTempId);
       // window.location.reload();
     } catch (error) {
       console.error(error);
@@ -87,54 +48,20 @@ const NewRulePolicy = () => {
 
   const handleUpdateRPName = async (updateRPName) => {
     try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        `${import.meta.env.VITE_RULE_POLICY_NAME_UPDATE}${rulePolicyId}/name/${updateRPName}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
-      const rpDetails = await data.json();
-      console.log(rpDetails);
-      getCSEInfo()
-      dispatch(fetchRulePolicyData())
-
-      navigate("/rule-policy/" + rpDetails.rulePolicyTempId);
-      // window.location.reload();
+      await dispatch(
+        updateRulePolicyName({ rulePolicyId, updateRPName })
+      ).unwrap();
+      dispatch(fetchName(rulePolicyId));
+      dispatch(fetchRulePolicyData());
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDelete = async (deleteURL) => {
+  const handleDelete = async (rulePolicyId) => {
     try {
-      const token = localStorage.getItem("authToken");
-      // First, send a DELETE request
-      const deleteResponse = await fetch(
-        `${import.meta.env.VITE_RULE_POLICY_DELETE}${deleteURL}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
-      }
-      dispatch(fetchRulePolicyData())
+      await dispatch(deleteRulePolicy(rulePolicyId)).unwrap();
+      dispatch(fetchRulePolicyData());
       navigate("/rule-policy");
       // Refresh the page after navigation
       // window.location.reload();
@@ -145,10 +72,11 @@ const NewRulePolicy = () => {
       // Optionally, handle the error in the UI, such as showing an error message
     }
   };
+
   return (
     <>
       <div className="flex justify-between items-center">
-        <DynamicName initialName={rulePolicyName} onSave={handleUpdateRPName} />
+        <DynamicName initialName={itemName} onSave={handleUpdateRPName} />
         <div className="flex gap-6">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
           <Button
@@ -163,7 +91,7 @@ const NewRulePolicy = () => {
           isOpen={isModalOpen}
           onClose={closeModal}
           onCreateClone={createCloneRP}
-          initialName={rulePolicyName}
+          initialName={itemName}
         />
         <RulePolicy />
       </div>

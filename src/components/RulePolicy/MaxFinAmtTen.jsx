@@ -14,22 +14,29 @@ import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchRulePolicyData,
+  setInputList,
+  updateFinanceAmountWithTenureRules,
+  updateInputListItem,
+  setMaxFinAmtRules,
+  createMaxFinAmtEntry,
+  deleteMaxFinAmtEntry,
+  clearInputListItem,
+} from "../../redux/Slices/rulePolicySlice";
 
-const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
-  const [inputList, setInputList] = useState([]);
+const MaxFinAmtTen = ({ FAWTData }) => {
   const { rulePolicyId } = useParams();
-  const authToken = localStorage.getItem("authToken");
   const [editingIndex, setEditingIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const [maxFinAmtRules, setMaxFinAmtRules] = useState({
-    ruleName: "0",
-    fieldType: "Employer",
-    rulePolicyTempId: rulePolicyId,
-    financeAmount: "",
-    tenure: "",
-  });
+  const dispatch = useDispatch();
+  const inputList = useSelector((state) => state.rulePolicy.inputList);
+  const maxFinAmtRules = useSelector(
+    (state) => state.rulePolicy.maxFinAmtRules
+  );
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -60,167 +67,85 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
     const filteredData = FAWTData.filter(
       (item) => item.rulePolicyTempId === rulePolicyId
     );
-    setInputList(filteredData);
+    dispatch(setInputList(filteredData));
   }, [FAWTData]);
 
   const handleRuleChange = (e) => {
     const { name, value } = e.target;
-    setMaxFinAmtRules((prevState) => {
-      return { ...prevState, [name]: value };
-    });
+    dispatch(
+      setMaxFinAmtRules({ [name]: value, rulePolicyTempId: rulePolicyId })
+    );
   };
 
   const handleChange = (e, index) => {
+    const absoluteIndex = indexOfFirstItem + index;
     const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setInputList(list);
+    dispatch(updateInputListItem({ index: absoluteIndex, name, value })); // Dispatch the update action
   };
 
   const handleClear = (index) => {
-    const list = [...inputList];
-    list.splice(index, 1);
-    setInputList(list);
+    const absoluteIndex = indexOfFirstItem + index;
+    dispatch(clearInputListItem(absoluteIndex));
   };
 
-  const handleDelete = (indexInPage) => {
+  const handleDelete = async (indexInPage) => {
     const absoluteIndex = indexOfFirstItem + indexInPage;
     const ruleToDelete = inputList[absoluteIndex];
-    fetch(
-      `${import.meta.env.VITE_RULE_POLICY_MFAT_DELETE_ENTRY}${rulePolicyId}/finance-amount-with-tenure-rule/${ruleToDelete.ruleName}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.text();
-      })
-      .then((data) => {
-        if (data) {
-          return JSON.parse(data);
-        } else {
-          console.log("Empty response");
-        }
-        const list = [...inputList];
-        list.splice(absoluteIndex, 1);
-        setInputList(list);
-        fetchData();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Delete Successful"}
-            message={"The item was deleted successfully"}
-          />
-        ));
-      })
-      .catch((error) => console.error("Error deleting data:", error));
+    try {
+      await dispatch(
+        deleteMaxFinAmtEntry({
+          rulePolicyId,
+          ruleName: ruleToDelete.ruleName,
+        })
+      ).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Delete Successful"}
+          message={"The item was deleted successfully"}
+        />
+      ));
+      dispatch(fetchRulePolicyData(rulePolicyId));
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
   };
 
-  const handleUpdate = (index) => {
-    const payload = {
-      financeAmountWithTenureRules: inputList.map((item, idx) => ({
-        ruleName: inputList[idx].ruleName,
-        fieldType: "Employer",
-        rulePolicyTempId: rulePolicyId,
-        financeAmount: item.financeAmount,
-        tenure: item.tenure,
-      })),
-    };
-
-    fetch(
-      `${import.meta.env.VITE_RULE_POLICY_MFAT_UPDATE_ENTRY}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        } else if (response.ok) {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Update Successful"}
-              message={"The item was updated successfully"}
-            />
-          ));
-        }
-        return response.text();
-      })
-      .then((data) => {
-        if (data) {
-          return JSON.parse(data);
-        } else {
-          console.log("Empty response");
-        }
-        console.log("Data successfully updated:", data);
-        fetchData();
-      })
-      .catch((error) => console.error("Error updating data:", error));
+  const handleUpdate = async () => {
+    try {
+      await dispatch(updateFinanceAmountWithTenureRules(inputList)).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Update Successful"}
+          message={"The item was updated successfully"}
+        />
+      ));
+      dispatch(fetchRulePolicyData(rulePolicyId));
+    } catch (error) {
+      console.error("Error during update:", error);
+    }
   };
 
-  const CreateEntry = () => {
-    const payload = {
-      financeAmountWithTenureRules: [
-        {
-          ...maxFinAmtRules,
-        },
-      ],
-    };
-
-    fetch(
-      `${import.meta.env.VITE_RULE_POLICY_MFAT_CREATE_ENTRY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        } else if (response.ok) {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Adding Successful"}
-              message={"The item was added successfully"}
-            />
-          ));
-        }
-        return response.text();
-      })
-      .then((data) => {
-        if (data) {
-          return JSON.parse(data);
-        } else {
-          console.log("Empty response");
-        }
-        console.log("Data successfully saved:", data);
-        fetchData();
-      })
-      .catch((error) => console.error("Error saving data:", error));
+  const CreateEntry = async () => {
+    try {
+      await dispatch(createMaxFinAmtEntry()).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Create Successful"}
+          message={"The item was created successfully"}
+        />
+      ));
+      dispatch(fetchRulePolicyData(rulePolicyId));
+    } catch (error) {
+      console.error("Error during create:", error);
+    }
   };
 
-  // Handle page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     toast.custom((t) => (
@@ -386,7 +311,7 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                       <button onClick={() => toggleEdit(index)} type="button">
                         {editingIndex === index ? (
                           <div
-                            onClick={() => handleUpdate(index)}
+                            onClick={handleUpdate}
                             className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                           >
                             <CheckCircleIcon
@@ -419,7 +344,6 @@ const MaxFinAmtTen = ({ FAWTData, fetchData }) => {
                         >
                           <TrashIcon className="h-5 w-5" aria-hidden="true" />
                         </button>
-                        
                       )}
                     </td>
                   </tr>
