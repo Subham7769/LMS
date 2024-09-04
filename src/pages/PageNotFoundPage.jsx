@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { FaceFrownIcon } from '@heroicons/react/20/solid';
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import Button from '../components/Common/Button/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,9 +15,9 @@ const PageNotFoundPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="text-center">
+      <div className="bg-white w-[80%] h-[80%] p-8 rounded-xl shadow-lg text-center">
         {/* 404 Icon */}
-        <FaceFrownIcon className="w-24 h-24 mx-auto text-indigo-500" />
+        <ExclamationCircleIcon className="w-24 h-24 mx-auto text-indigo-500" />
 
         {/* Main Heading */}
         <h1 className="mt-4 text-6xl font-extrabold text-gray-800">404</h1>

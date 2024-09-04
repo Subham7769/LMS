@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/Common/ProtectedRoute/ProtectedRoute";
 import AppErrorBoundary from "./components/ErrorBoundary/AppErrorBoundary"
 import PageErrorBoundary from "./components/ErrorBoundary/PageErrorBoundary"
 import RouteErrorBoundary from "./components/ErrorBoundary/RouteErrorBoundary";
+import SupportPage from "./pages/SupportPage";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const RacPage = lazy(() => import("./pages/RacPage"));
@@ -223,6 +224,9 @@ const routes = [
   
   // Access Denied Route
   { path: "/access-denied", element: <AccessDeniedPage />, errorElement: <RouteErrorBoundary /> },
+
+  // Support Route
+  { path: "/support", element: <SupportPage />, errorElement: <RouteErrorBoundary /> },
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
