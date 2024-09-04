@@ -228,51 +228,73 @@ const ProductInputFields = ({ formData, handleChange }) => {
             onChange={handleChange}
             placeHolder="3"
           />
-          <InputCheckbox
-            labelName="Refinanced With"
-            inputChecked={formData.refinancedWith}
-            onChange={handleChange}
-            inputName="refinancedWith"
-          />
-          <InputCheckbox
-            labelName="Disable RAC"
-            inputChecked={formData.disableRac}
-            onChange={handleChange}
-            inputName="disableRac"
-          />
-          <InputCheckbox
-            labelName="Overdraft"
-            inputChecked={formData.overdraft}
-            onChange={handleChange}
-            inputName="overdraft"
-          />
+
+          <div className="col-span-5 grid grid-cols-5 gap-5 items-end border-t-2 ">
+            <InputCheckbox
+              labelName="Overdraft"
+              inputChecked={formData.overdraft}
+              onChange={handleChange}
+              inputName="overdraft"
+            />
+
+            <InputCheckbox
+              labelName="Refinanced With"
+              inputChecked={formData.refinancedWith}
+              onChange={handleChange}
+              inputName="refinancedWith"
+            />
+            <InputCheckbox
+              labelName="Disable RAC"
+              inputChecked={formData.disableRac}
+              onChange={handleChange}
+              inputName="disableRac"
+            />
+
+          </div>
           {/* Newly added fields */}
           {formData.overdraft && (
             <>
+              <InputNumber
+                labelName="Max. Overdraft Principle Limit"
+                inputName="maxOverdraftPrincipalLimit"
+                inputValue={formData.maxOverdraftPrincipalLimit}
+                onChange={handleChange}
+                placeHolder="3"
+              />
+
+              <InputNumber
+                labelName="Min. Overdraft Principle Limit"
+                inputName="minOverdraftPrincipalLimit"
+                inputValue={formData.minOverdraftPrincipalLimit}
+                onChange={handleChange}
+                placeHolder="3"
+              />
+
               <InputText
                 labelName="Annual Fee"
                 inputName="annualFee"
-                inputValue={formData.managementFeeVat}
+                inputValue={formData.annualFee}
                 onChange={handleChange}
-                placeHolder="15"
+                placeHolder="3"
               />
 
-              <InputSelect
+              <InputNumber
                 labelName="Overdraft Product Period"
-                inputOptions={tenureTypeOptions}
-                inputName="creditScoreEtTempId"
-                inputValue={formData.creditScoreEtTempId}
+                inputName="overdraftProductPeriod"
+                inputValue={formData.overdraftProductPeriod}
                 onChange={handleChange}
+                placeHolder="3"
               />
 
-              <InputText
+              <InputNumber
                 labelName="Overdraft Payment Principle Percentage"
-                inputName="annualFee"
-                inputValue={formData.managementFeeVat}
+                inputName="overDraftPaymentPrinciplePercentage"
+                inputValue={formData.overDraftPaymentPrinciplePercentage}
                 onChange={handleChange}
-                placeHolder="15"
+                placeHolder="3"
               />
             </>)}
+
         </div>
       </div>
       <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
