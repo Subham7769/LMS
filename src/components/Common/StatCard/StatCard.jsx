@@ -18,7 +18,7 @@ const StatCard = ({ stat }) => {
             </dt>
             <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
                 <p className="text-2xl font-semibold text-gray-900">{stat.stat}</p>
-                {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ }
+                {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
                 <p className={`${textColorClass} ml-2 flex items-baseline text-sm font-semibold`}>
                     <IconComponent className={`h-5 w-5 flex-shrink-0 self-center ${iconColorClass}`} aria-hidden="true" />
                     <span className="sr-only">
