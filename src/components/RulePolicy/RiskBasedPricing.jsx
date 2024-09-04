@@ -1,4 +1,20 @@
-import { useState } from "react";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
+import InputNumber from "../Common/InputNumber/InputNumber";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import Button from "../Common/Button/Button";
+import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchRulePolicyData,
+  setPage,
+  setSortConfig,
+  updateRiskBasedPricingInput,
+  updateRiskBasedPricing,
+  addRiskBasedPricingRule,
+  deleteRiskBasedPricingRule,
+  updateRiskBasedPricingRules,
+} from "../../redux/Slices/rulePolicySlice";
 import {
   PlusIcon,
   TrashIcon,
@@ -7,24 +23,11 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
-import Select from "react-select";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed, Warning } from "../Toasts";
+import toast from "react-hot-toast";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addLengthOfServiceRule,
-  deleteLengthOfServiceRule,
-  fetchRulePolicyData,
-  setLengthOfService,
-  updateLengthOfServiceRule,
-  updateLOSInputList,
-} from "../../redux/Slices/rulePolicySlice";
+import { Passed, Warning } from "../Toasts";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -34,17 +37,31 @@ const operatorOptions = [
   { value: ">=", label: ">=" },
 ];
 
-const LengthofService = () => {
+const options = [
+  { value: "DAILY", label: "DAILY" },
+  { value: "WEEKLY", label: "WEEKLY" },
+  { value: "MONTHLY", label: "MONTHLY" },
+  { value: "YEARLY", label: "YEARLY" },
+];
+
+const RiskBasedPricing = () => {
   const dispatch = useDispatch();
   const { rulePolicyId } = useParams();
+  const { riskBasedPricing, riskBasedPricingInput, currentPage, sortConfig } =
+    useSelector((state) => state.rulePolicy);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
 
-  const { LOSInputList, lengthOfService } = useSelector(
-    (state) => state.rulePolicy
-  );
+  const handleRiskBasedPricingChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(updateRiskBasedPricingInput({ name, value, rulePolicyId }));
+  };
+
+  const handleChangeRBP = (e, index) => {
+    const absoluteIndex = indexOfFirstItem + index;
+    const { name, value } = e.target;
+    dispatch(updateRiskBasedPricing({ index: absoluteIndex, name, value }));
+  };
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -53,7 +70,8 @@ const LengthofService = () => {
     } else if (sortConfig.key === column && sortConfig.direction === "desc") {
       direction = ""; // This will reset the sort
     }
-    setSortConfig({ key: column, direction });
+    // setSortConfig({ key: column, direction });
+    dispatch(setSortConfig({ key: column, direction }));
   };
 
   const getSortIcon = (column) => {
@@ -71,8 +89,54 @@ const LengthofService = () => {
     setEditingIndex(editingIndex === index ? null : index);
   };
 
-  const handleAddFields = () => {
-    dispatch(addLengthOfServiceRule())
+  const handlePageChange = (newPage) => {
+    // setCurrentPage(newPage);
+    dispatch(setPage(newPage));
+    toast.custom((t) => (
+      <Warning
+        t={t}
+        toast={toast}
+        title={"Page Changed"}
+        message={`You have switched to page: ${newPage}`}
+      />
+    ));
+  };
+
+  function informUser() {
+    toast.custom((t) => (
+      <Warning
+        t={t}
+        toast={toast}
+        title={"Not Yet Saved"}
+        message={"Please click the save button to confirm changes"}
+      />
+    ));
+  }
+
+  const sortedItems = [...riskBasedPricing.riskBasedPricingRules].sort(
+    (a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === "asc" ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === "asc" ? 1 : -1;
+      }
+      return 0;
+    }
+  );
+
+  // Calculate the current items to display
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Determine total number of pages
+  const totalPages = Math.ceil(
+    riskBasedPricing.riskBasedPricingRules.length / itemsPerPage
+  );
+
+  const handleAddFieldsRBP = () => {
+    dispatch(addRiskBasedPricingRule(rulePolicyId))
       .unwrap()
       .then(() => {
         toast.custom((t) => (
@@ -97,17 +161,10 @@ const LengthofService = () => {
       });
   };
 
-  const handleChange = (e, index) => {
-    console.log(LOSInputList.lengthOfServiceRules);
-    const absoluteIndex = indexOfFirstItem + index;
-    const { name, value } = e.target;
-    dispatch(updateLOSInputList({ index: absoluteIndex, name, value }));
-  };
-
-  const handleDelete = async (ruleName) => {
+  const handleDeleteRBP = async (ruleName) => {
     try {
       await dispatch(
-        deleteLengthOfServiceRule({ rulePolicyId, ruleName })
+        deleteRiskBasedPricingRule({ rulePolicyId, ruleName })
       ).unwrap();
       toast.custom((t) => (
         <Passed
@@ -123,14 +180,16 @@ const LengthofService = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleUpdateRBP = async () => {
     const postData = {
-      operators: LOSInputList?.operators,
-      lengthOfServiceRules: LOSInputList?.lengthOfServiceRules,
+      operators: riskBasedPricing?.operators,
+      riskBasedPricingRules: riskBasedPricing?.riskBasedPricingRules,
     };
 
     try {
-      await dispatch(updateLengthOfServiceRule({ postData })).unwrap();
+      await dispatch(
+        updateRiskBasedPricingRules({ rulePolicyId, postData })
+      ).unwrap();
       toast.custom((t) => (
         <Passed
           t={t}
@@ -152,91 +211,66 @@ const LengthofService = () => {
     }
   };
 
-  // Handle page change
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Page Changed"}
-        message={`You have switched to page: ${newPage}`}
-      />
-    ));
-  };
-
-  const handleRuleChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(setLengthOfService({ name, value, rulePolicyId }));
-  };
-
-  const sortedItems = [...LOSInputList.lengthOfServiceRules].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "asc" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "asc" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  // Calculate the current items to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Determine total number of pages
-  const totalPages = Math.ceil(
-    LOSInputList.lengthOfServiceRules.length / itemsPerPage
-  );
-
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
-        <div className="text-lg">Length of Service</div>
-        <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
+        <div className="text-lg">Risk Based Pricing</div>
+        <div className="grid grid-cols-5 gap-8 my-5 items-end">
           <SelectAndNumber
-            labelName={"Minimum Length Of Service"}
-            inputSelectName={"firstLengthOfServiceOperator"}
+            labelName={"Minimum Risk Based Pricing"}
+            inputSelectName={"firstRiskBasedPricingOperator"}
             inputSelectValue={
-              lengthOfService?.operators?.firstLengthOfServiceOperator
+              riskBasedPricingInput?.operators?.firstRiskBasedPricingOperator
             }
             inputSelectOptions={operatorOptions}
-            onChangeSelect={handleRuleChange}
-            inputNumberName={"firstLengthOfService"}
+            onChangeSelect={handleRiskBasedPricingChange}
+            inputNumberName={"firstRiskBasedPricing"}
             inputNumberValue={
-              lengthOfService?.lengthOfServiceRules[0]?.firstLengthOfService
+              riskBasedPricingInput?.riskBasedPricingRules[0]
+                ?.firstRiskBasedPricing
             }
-            onChangeNumber={handleRuleChange}
+            onChangeNumber={handleRiskBasedPricingChange}
             placeHolder={"0.5"}
           />
           <SelectAndNumber
-            labelName={"Maximum Length Of Service"}
-            inputSelectName={"secondLengthOfServiceOperator"}
+            labelName={"Maximum Risk Based Pricing"}
+            inputSelectName={"secondRiskBasedPricingOperator"}
             inputSelectValue={
-              lengthOfService?.operators?.secondLengthOfServiceOperator
+              riskBasedPricingInput?.operators?.secondRiskBasedPricingOperator
             }
             inputSelectOptions={operatorOptions}
-            onChangeSelect={handleRuleChange}
-            inputNumberName={"secondLengthOfService"}
+            onChangeSelect={handleRiskBasedPricingChange}
+            inputNumberName={"secondRiskBasedPricing"}
             inputNumberValue={
-              lengthOfService?.lengthOfServiceRules[0]?.secondLengthOfService
+              riskBasedPricingInput?.riskBasedPricingRules[0]
+                ?.secondRiskBasedPricing
             }
-            onChangeNumber={handleRuleChange}
+            onChangeNumber={handleRiskBasedPricingChange}
             placeHolder={"0.5"}
           />
           <InputNumber
-            labelName={"Point"}
-            inputName={"point"}
-            inputValue={lengthOfService?.lengthOfServiceRules[0]?.point}
-            onChange={handleRuleChange}
+            labelName={"Simple Interest"}
+            inputName={"interestRate"}
+            inputValue={
+              riskBasedPricingInput?.riskBasedPricingRules[0]?.interestRate
+            }
+            onChange={handleRiskBasedPricingChange}
             placeHolder={"4000"}
+          />
+          <InputSelect
+            labelName={"PER"}
+            inputOptions={options}
+            inputName={"interestPeriodType"}
+            inputValue={
+              riskBasedPricingInput?.riskBasedPricingRules[0]
+                ?.interestPeriodType
+            }
+            onChange={handleRiskBasedPricingChange}
           />
           <div>
             <Button
               buttonIcon={PlusIcon}
-              onClick={handleAddFields}
+              onClick={handleAddFieldsRBP}
               circle={true}
             />
           </div>
@@ -246,25 +280,30 @@ const LengthofService = () => {
             <tr>
               <th
                 scope="col"
-                onClick={() => handleSort("firstLengthOfService")}
+                onClick={() => handleSort("firstRiskBasedPricing")}
               >
                 <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  Minimum Length Of Service{" "}
-                  {getSortIcon("firstLengthOfService")}
+                  Minimum Risk Based Pricing{" "}
+                  {getSortIcon("firstRiskBasedPricing")}
                 </div>
               </th>
               <th
                 scope="col"
-                onClick={() => handleSort("secondLengthOfService")}
+                onClick={() => handleSort("secondRiskBasedPricing")}
               >
                 <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  Maximum Length Of Service{" "}
-                  {getSortIcon("secondLengthOfService")}
+                  Maximum Risk Based Pricing{" "}
+                  {getSortIcon("secondRiskBasedPricing")}
                 </div>
               </th>
-              <th scope="col" onClick={() => handleSort("point")}>
+              <th scope="col" onClick={() => handleSort("interestRate")}>
                 <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  Point {getSortIcon("point")}
+                  Simple Interest {getSortIcon("interestRate")}
+                </div>
+              </th>
+              <th scope="col" onClick={() => handleSort("interestPeriodType")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  PER {getSortIcon("interestPeriodType")}
                 </div>
               </th>
               <th
@@ -276,7 +315,7 @@ const LengthofService = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.length < 1 ? (
+            {currentItems.length === 0 ? (
               <tr>
                 <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
                   No Data To Show Yet
@@ -285,7 +324,7 @@ const LengthofService = () => {
             ) : (
               currentItems.map((item, index) => (
                 <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
                       <div className="flex gap-4">
                         <Select
@@ -294,18 +333,18 @@ const LengthofService = () => {
                           value={[
                             {
                               label:
-                                LOSInputList?.operators
-                                  ?.firstLengthOfServiceOperator,
+                                riskBasedPricing?.operators
+                                  ?.firstRiskBasedPricingOperator,
                               value:
-                                LOSInputList?.operators
-                                  ?.firstLengthOfServiceOperator,
+                                riskBasedPricing?.operators
+                                  ?.firstRiskBasedPricingOperator,
                             },
                           ]}
                           onChange={(selectedOption) =>
-                            handleChange(
+                            handleChangeRBP(
                               {
                                 target: {
-                                  name: "firstLengthOfServiceOperator",
+                                  name: "firstRiskBasedPricingOperator",
                                   value: selectedOption.value,
                                 },
                               },
@@ -316,11 +355,10 @@ const LengthofService = () => {
                         />
                         <input
                           type="number"
-                          name="firstLengthOfService"
-                          id="firstLengthOfService"
-                          value={item.firstLengthOfService}
-                          onChange={(e) => handleChange(e, index)}
-                          placeholder={"1"}
+                          name="firstRiskBasedPricing"
+                          value={item.firstRiskBasedPricing}
+                          onChange={(e) => handleChangeRBP(e, index)}
+                          placeholder={"0.5"}
                           className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
@@ -328,17 +366,17 @@ const LengthofService = () => {
                       <div className="flex items-center justify-start ml-20 gap-5">
                         <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
                           {
-                            LOSInputList?.operators
-                              ?.firstLengthOfServiceOperator
+                            riskBasedPricing?.operators
+                              ?.firstRiskBasedPricingOperator
                           }
                         </span>
                         <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.firstLengthOfService}
+                          {item.firstRiskBasedPricing}
                         </span>
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
                       <div className="flex gap-4">
                         <Select
@@ -347,18 +385,18 @@ const LengthofService = () => {
                           value={[
                             {
                               label:
-                                LOSInputList?.operators
-                                  ?.secondLengthOfServiceOperator,
+                                riskBasedPricing?.operators
+                                  ?.secondRiskBasedPricingOperator,
                               value:
-                                LOSInputList?.operators
-                                  ?.secondLengthOfServiceOperator,
+                                riskBasedPricing?.operators
+                                  ?.secondRiskBasedPricingOperator,
                             },
                           ]}
                           onChange={(selectedOption) =>
-                            handleChange(
+                            handleChangeRBP(
                               {
                                 target: {
-                                  name: "secondLengthOfServiceOperator",
+                                  name: "secondRiskBasedPricingOperator",
                                   value: selectedOption.value,
                                 },
                               },
@@ -369,11 +407,10 @@ const LengthofService = () => {
                         />
                         <input
                           type="number"
-                          name="secondLengthOfService"
-                          id="secondLengthOfService"
-                          value={item.secondLengthOfService}
-                          onChange={(e) => handleChange(e, index)}
-                          placeholder={"4"}
+                          name="secondRiskBasedPricing"
+                          value={item.secondRiskBasedPricing}
+                          onChange={(e) => handleChangeRBP(e, index)}
+                          placeholder={"2"}
                           className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
@@ -381,37 +418,68 @@ const LengthofService = () => {
                       <div className="flex items-center justify-start ml-20 gap-5">
                         <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
                           {
-                            LOSInputList?.operators
-                              ?.secondLengthOfServiceOperator
+                            riskBasedPricing?.operators
+                              ?.secondRiskBasedPricingOperator
                           }
                         </span>
                         <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.secondLengthOfService}
+                          {item.secondRiskBasedPricing}
                         </span>
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
                       <input
                         type="number"
-                        name="point"
-                        value={item.point}
-                        onChange={(e) => handleChange(e, index)}
+                        name="interestRate"
+                        value={item.interestRate}
+                        onChange={(e) => handleChangeRBP(e, index)}
                         className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="0.4"
+                        placeholder="4000"
                       />
                     ) : (
-                      <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                        {item.point}
+                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        {item.interestRate}
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <Select
+                        className="w-32"
+                        options={options}
+                        name="interestPeriodType"
+                        value={[
+                          {
+                            label: item.interestPeriodType,
+                            value: item.interestPeriodType,
+                          },
+                        ]}
+                        onChange={(selectedOption) =>
+                          handleChangeRBP(
+                            {
+                              target: {
+                                name: "interestPeriodType",
+                                value: selectedOption.value,
+                              },
+                            },
+                            index
+                          )
+                        }
+                        isSearchable={false}
+                      />
+                    ) : (
+                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        {item.interestPeriodType}
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                     <button onClick={() => toggleEdit(index)} type="button">
                       {editingIndex === index ? (
                         <div
-                          onClick={handleSave}
+                          onClick={informUser}
                           className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                           <CheckCircleIcon
@@ -425,11 +493,13 @@ const LengthofService = () => {
                         </div>
                       )}
                     </button>
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() => handleDelete(item.ruleName)}
-                      circle={true}
-                    />
+                    <button
+                      onClick={() => handleDeleteRBP(item.ruleName)}
+                      type="button"
+                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    >
+                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
                   </td>
                 </tr>
               ))
@@ -453,7 +523,7 @@ const LengthofService = () => {
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages || currentItems.length < 1}
+            disabled={currentPage === totalPages || currentItems.length === 0}
             className={`flex items-center px-4 py-2 rounded-md ${
               currentPage === totalPages
                 ? "bg-gray-300 cursor-not-allowed"
@@ -463,9 +533,19 @@ const LengthofService = () => {
             <ChevronRightIcon className="w-5 h-5" />
           </button>
         </div>
+        <div className="text-right ">
+          <button
+            type="button"
+            onClick={handleUpdateRBP}
+            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+            Save
+          </button>
+        </div>
       </ContainerTile>
     </>
   );
 };
 
-export default LengthofService;
+export default RiskBasedPricing;

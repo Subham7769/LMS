@@ -18,7 +18,7 @@ import liabilitiesMatrixSlice from "./Slices/liabilitiesMatrixSlice";
 import riskGradeCalSlice from "./Slices/riskGradeCalSlice";
 import bareMinimumExpSlice from "./Slices/bareMinimumExpSlice";
 import notificationTextSlice from "./Slices/notificationTextSlice";
-// import rulePolicySlice from "./Slices/rulePolicySlice";
+import rulePolicySlice from "./Slices/rulePolicySlice";
 
 const store = configureStore({
   reducer: {
@@ -34,7 +34,7 @@ const store = configureStore({
     productGroup: productGroupSlice,
     userManagement: userManagementSlice,
     creditScoreET: creditScoreETSlice,
-    // rulePolicy: rulePolicySlice,
+    rulePolicy: rulePolicySlice,
     ledger: ledgerSlice,
     userProductTesting: userProductTestingSlice,
     liabilitiesMatrix: liabilitiesMatrixSlice,
