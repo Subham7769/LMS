@@ -116,7 +116,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
       label: name,
     }));
   }
-  useEffect(() => {}, [
+  useEffect(() => { }, [
     DBRConfigInfo,
     ProjectDataInfo,
     BEDataInfo,
@@ -229,12 +229,6 @@ const ProductInputFields = ({ formData, handleChange }) => {
             placeHolder="3"
           />
           <InputCheckbox
-            labelName="Overdraft"
-            inputChecked={formData.overdraft}
-            onChange={handleChange}
-            inputName="overdraft"
-          />
-          <InputCheckbox
             labelName="Refinanced With"
             inputChecked={formData.refinancedWith}
             onChange={handleChange}
@@ -246,6 +240,39 @@ const ProductInputFields = ({ formData, handleChange }) => {
             onChange={handleChange}
             inputName="disableRac"
           />
+          <InputCheckbox
+            labelName="Overdraft"
+            inputChecked={formData.overdraft}
+            onChange={handleChange}
+            inputName="overdraft"
+          />
+          {/* Newly added fields */}
+          {formData.overdraft && (
+            <>
+              <InputText
+                labelName="Annual Fee"
+                inputName="annualFee"
+                inputValue={formData.managementFeeVat}
+                onChange={handleChange}
+                placeHolder="15"
+              />
+
+              <InputSelect
+                labelName="Overdraft Product Period"
+                inputOptions={tenureTypeOptions}
+                inputName="creditScoreEtTempId"
+                inputValue={formData.creditScoreEtTempId}
+                onChange={handleChange}
+              />
+
+              <InputText
+                labelName="Overdraft Payment Principle Percentage"
+                inputName="annualFee"
+                inputValue={formData.managementFeeVat}
+                onChange={handleChange}
+                placeHolder="15"
+              />
+            </>)}
         </div>
       </div>
       <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
