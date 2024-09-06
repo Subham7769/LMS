@@ -182,6 +182,7 @@ const borrowerSlice = createSlice({
           state.CreditBureauDetails = action.payload;
         } else {
           state.personalInfo = action.payload;
+          console.log(action.payload)
         }
         state.loading = false;
       })

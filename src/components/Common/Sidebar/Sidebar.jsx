@@ -32,7 +32,9 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
-  ClipboardDocumentListIcon, CreditCardIcon, NoSymbolIcon, HandRaisedIcon, UserGroupIcon
+  ClipboardDocumentListIcon, CreditCardIcon, NoSymbolIcon, HandRaisedIcon, UserGroupIcon, MinusCircleIcon
+
+
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -71,7 +73,8 @@ const SideBar = () => {
     UsersIcon,
     BookOpenIcon,
     HandRaisedIcon,
-    UserGroupIcon
+    UserGroupIcon,
+    MinusCircleIcon
   };
 
   const functionMapping = {

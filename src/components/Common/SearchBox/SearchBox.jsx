@@ -10,7 +10,7 @@ const SearchBox = () => {
     const [borrowerNotFound, setBorrowerNotFound] = useState(false);
     const navigate = useNavigate(); // Adding useNavigate  for navigation
 
-    async function checkBorrowerInfoCustomer(borrowerID) {
+    async function checkBorrowerInfoCustomerCare(borrowerID) {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
@@ -43,7 +43,7 @@ const SearchBox = () => {
         }
     }
 
-    async function checkBorrowerInfoUser(borrowerID) {
+    async function checkBorrowerInfoUserProductTesting(borrowerID) {
         try {
             const token = localStorage.getItem("authToken");
             const data = await fetch(
@@ -77,11 +77,20 @@ const SearchBox = () => {
         }
     }
 
+    function checkBorrowerInfoOverdraftLoanOffer(borrowerID){
+        navigate(`/overdraft-loan-offers/${borrowerID}/overdraft-offer`)
+    }
+
     const handleClick = () => {
         {
-            location.pathname === '/customer-care'
-                ? checkBorrowerInfoCustomer(borrowerID)
-                : checkBorrowerInfoUser(borrowerID)
+            if(location.pathname === '/customer-care'){
+                checkBorrowerInfoCustomerCare(borrowerID)
+
+            }else if(location.pathname === '/user-product-testing'){
+                checkBorrowerInfoUserProductTesting(borrowerID)
+            }else{
+                checkBorrowerInfoOverdraftLoanOffer(borrowerID)
+            }
         }
     }
 

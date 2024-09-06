@@ -166,7 +166,8 @@ const ListTable = ({
                   scope="col"
                   className={`w-1/${HeaderCellWidth} max-w-24`}
                   onClick={() => handleSort(toLowerCamelCase(header))}
-                > 
+                  > 
+                  {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
                   <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
                     {header}
                     {getSortIcon(toLowerCamelCase(header))}

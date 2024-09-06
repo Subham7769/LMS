@@ -19,6 +19,7 @@ import riskGradeCalSlice from "./Slices/riskGradeCalSlice";
 import bareMinimumExpSlice from "./Slices/bareMinimumExpSlice";
 import notificationTextSlice from "./Slices/notificationTextSlice";
 import rulePolicySlice from "./Slices/rulePolicySlice";
+import overdraftLoanOffersSlice from "./Slices/overdraftLoanOffersSlice";
 
 const store = configureStore({
   reducer: {
@@ -41,6 +42,7 @@ const store = configureStore({
     riskGradeCal: riskGradeCalSlice,
     bareMinimumExp: bareMinimumExpSlice,
     notificationText: notificationTextSlice,
+    overdraftLoanOffers:overdraftLoanOffersSlice,
   },
 });
 

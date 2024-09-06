@@ -245,6 +245,12 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "Overdraft Loan Offers",
+    href: "/overdraft-loan-offers",
+    icon: "MinusCircleIcon",
+    current: false,
+  },
+  {
     title: "General Ledger",
     href: "/general-ledger",
     icon: "BookOpenIcon",
@@ -256,5 +262,6 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
+
   // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
 ];

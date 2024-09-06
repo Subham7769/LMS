@@ -3,126 +3,119 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// Error handlers
-import PageNotFound from "./pages/PageNotFoundPage";
-import AccessDeniedPage from "./pages/AccessDeniedPage";
-import ProtectedRoute from "./components/Common/ProtectedRoute/ProtectedRoute";
-import AppErrorBoundary from "./components/ErrorBoundary/AppErrorBoundary"
-import PageErrorBoundary from "./components/ErrorBoundary/PageErrorBoundary"
-import RouteErrorBoundary from "./components/ErrorBoundary/RouteErrorBoundary";
-import SupportPage from "./pages/SupportPage";
+// Error Handlers Imports
+const PageNotFound = lazy(() => import('./pages/PageNotFoundPage'));
+const AccessDeniedPage = lazy(() => import('./pages/AccessDeniedPage'));
+const ProtectedRoute = lazy(() => import('./components/Common/ProtectedRoute/ProtectedRoute'));
+const AppErrorBoundary = lazy(() => import('./components/ErrorBoundary/AppErrorBoundary'));
+const PageErrorBoundary = lazy(() => import('./components/ErrorBoundary/PageErrorBoundary'));
+const RouteErrorBoundary = lazy(() => import('./components/ErrorBoundary/RouteErrorBoundary'));
+const SupportPage = lazy(() => import('./pages/SupportPage'));
 
+// Misc. Imports
+const Login = lazy(() => import("./components/Login/Login"));
 const HomePage = lazy(() => import("./pages/HomePage"));
-const RacPage = lazy(() => import("./pages/RacPage"));
-const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
-const TclPage = lazy(() => import("./pages/TclPage"));
-const ProjectPage = lazy(() => import("./pages/ProjectPage"));
-const ProductPage = lazy(() => import("./pages/ProductPage"));
-const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
-const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
-const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
-const CreditScorePage = lazy(() => import("./pages/CreditScorePage"));
-const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
-const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
-const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
-const UserProductTestingPage = lazy(() => import("./pages/UserProductTestingPage"));
-const LedgerPage = lazy(() => import("./pages/LedgerPage"));
-const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
-
-const CreateNewProject = lazy(() => import("./components/Project/CreateNewProject"));
-const CreateNewProductGroup = lazy(() => import("./components/ProductGroup/CreateNewProductGroup"));
-const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
+const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
+const LoadingState = lazy(() =>  import("./components/LoadingState/LoadingState"));
+const Notifications = lazy(() =>  import("./components/Notifications/Notifications"));
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
-const NewRulePolicy = lazy(() => import("./components/RulePolicy/NewRulePolicy"));
-const CreateNewCreditScore = lazy(() => import("./components/CreditScore/CreateNewCreditScore"));
+const TestComponent = lazy(() =>  import("./components/TestComponent/TestComponent"));
+
+// RAC Imports
+const RacPage = lazy(() => import("./pages/RacPage"));
+const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
+
+// Recovery Imports
+const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
+const RecoveryConfig = lazy(() =>  import("./components/Recovery/RecoveryConfig"));
+
+// TCL Imports
+const TclPage = lazy(() => import("./pages/TclPage"));
+const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
+
+// Project Imports
+const Project = lazy(() => import("./components/Project/Project"));
+const ProjectPage = lazy(() => import("./pages/ProjectPage"));
+const CreateNewProject = lazy(() => import("./components/Project/CreateNewProject"));
+
+// Product Imports
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const CreateNewProduct = lazy(() => import("./components/Product/CreateNewProduct"));
+const LoanProductConfig = lazy(() =>  import("./components/Product/LoanProductConfig"));
+
+// CreditScoreET Imports
+const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
 const CreditScoreET = lazy(() => import("./components/CreditScoreET/CreditScoreET"));
 
+// DebtBurdenConfig Imports
+const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
+const DebtBurdenConfig = lazy(() =>  import("./components/DebtBurdenConfig/DebtBurdenConfig"));
 
-const RecoveryConfig = lazy(() =>
-  import("./components/Recovery/RecoveryConfig")
-);
-const Notifications = lazy(() =>
-  import("./components/Notifications/Notifications")
-);
-const LoanProductConfig = lazy(() =>
-  import("./components/Product/LoanProductConfig")
-);
-const DebtBurdenConfig = lazy(() =>
-  import("./components/DebtBurdenConfig/DebtBurdenConfig")
-);
+// BlockedEmployer Imports
+const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
+const BlockedEmployer = lazy(() => import("./components/BlockedEmployer/BlockedEmployer"));
 
-const PersonalInfo = lazy(() =>
-  import("./components/CustomerCare/PersonalInfo")
-);
-const LiabilitiesMatrix = lazy(() =>
-  import("./components/GlobalConfig/LiabilitiesMatrix")
-);
-const RiskGradeMatrix = lazy(() =>
-  import("./components/GlobalConfig/RiskGradeMatrix")
-);
-const MinimumExpense = lazy(() =>
-  import("./components/GlobalConfig/MinimumExpense")
-);
-const NotificationText = lazy(() =>
-  import("./components/GlobalConfig/NotificationText")
-);
-const ProductGroup = lazy(() =>
-  import("./components/ProductGroup/ProductGroup")
-);
+// CreditScore Imports
+const CreditScorePage = lazy(() => import("./pages/CreditScorePage"));
+const CreateNewCreditScore = lazy(() => import("./components/CreditScore/CreateNewCreditScore"));
 
-const CustomerCare = lazy(() =>
-  import("./components/CustomerCare/CustomerCare")
-);
+// RulePolicy Imports
+const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
+const NewRulePolicy = lazy(() => import("./components/RulePolicy/NewRulePolicy"));
+
+// ProductGroup Imports
+const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
+const CreateNewProductGroup = lazy(() => import("./components/ProductGroup/CreateNewProductGroup"));
+const ProductGroup = lazy(() =>  import("./components/ProductGroup/ProductGroup"));
+
+// Customer care Imports
+const CustomerCarePage = lazy(() => import("./pages/CustomerCarePage"));
+const CustomerCare = lazy(() =>  import("./components/CustomerCare/CustomerCare"));
+const PersonalInfo = lazy(() =>  import("./components/CustomerCare/PersonalInfo"));
 const KYCDetails = lazy(() => import("./components/CustomerCare/KYCDetails"));
-const CreditProfile = lazy(() =>
-  import("./components/CustomerCare/CreditProfile")
-);
-const LoanNPaymentHist = lazy(() =>
-  import("./components/CustomerCare/LoanNPaymentHis")
-);
-const RejectionHistory = lazy(() =>
-  import("./components/CustomerCare/RejectionHistory")
-);
-const CreditBureauDetails = lazy(() =>
-  import("./components/CustomerCare/CreditBureauDetails")
-);
-const Login = lazy(() => import("./components/Login/Login"));
-const Project = lazy(() => import("./components/Project/Project"));
-const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
-const BusinessRule1 = lazy(() =>
-  import("./components/BusinessRule/BusinessRule1")
-);
-const BusinessRule2 = lazy(() =>
-  import("./components/BusinessRule/BusinessRule2")
-);
-const BusinessRule3 = lazy(() =>
-  import("./components/BusinessRule/BusinessRule3")
-);
+const CreditProfile = lazy(() =>  import("./components/CustomerCare/CreditProfile"));
+const LoanNPaymentHist = lazy(() =>  import("./components/CustomerCare/LoanNPaymentHis"));
+const RejectionHistory = lazy(() =>  import("./components/CustomerCare/RejectionHistory"));
+const CreditBureauDetails = lazy(() =>  import("./components/CustomerCare/CreditBureauDetails"));
 
+// UserProductTesting Imports
+const UserProductTestingPage = lazy(() => import("./pages/UserProductTestingPage"));
 const UserProductTesting = lazy(() => import("./components/UserProductTesting/UserProductTesting"));
 const Eligibility = lazy(() => import("./components/UserProductTesting/Eligibility"));
 const DisbursementStatus = lazy(() => import("./components/UserProductTesting/DisbursementStatus"));
 const Register = lazy(() => import("./components/UserProductTesting/Register"));
-const InstallmentSummery = lazy(() =>
-  import("./components/UserProductTesting/InstallmentSummery")
-);
+const InstallmentSummery = lazy(() => import("./components/UserProductTesting/InstallmentSummery") );
 const LoanConfig = lazy(() => import("./components/UserProductTesting/LoanConfig"));
-const BlockedEmployer = lazy(() =>
-  import("./components/BlockedEmployer/BlockedEmployer")
-);
 const BackendRepayment = lazy(() => import("./components/UserProductTesting/BackendRepayment"));
 const FamilyDetails = lazy(() => import("./components/UserProductTesting/FamilyDetails"));
-const CreateNewProduct = lazy(() => import("./components/Product/CreateNewProduct"));
-const EmploymentDetails = lazy(() =>
-  import("./components/UserProductTesting/EmploymentDetails")
-);
-const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
-const TestComponent = lazy(() =>
-  import("./components/TestComponent/TestComponent")
-);
-const LoadingState = lazy(() =>
-  import("./components/LoadingState/LoadingState")
-);
+const EmploymentDetails = lazy(() =>  import("./components/UserProductTesting/EmploymentDetails"));
+
+// GlobalConfig Imports
+const LiabilitiesMatrix = lazy(() =>  import("./components/GlobalConfig/LiabilitiesMatrix"));
+const RiskGradeMatrix = lazy(() =>  import("./components/GlobalConfig/RiskGradeMatrix"));
+const MinimumExpense = lazy(() =>  import("./components/GlobalConfig/MinimumExpense"));
+const NotificationText = lazy(() =>  import("./components/GlobalConfig/NotificationText"));
+
+// Ledger Imports
+const LedgerPage = lazy(() => import("./pages/LedgerPage"));
+
+// User Management Imports
+const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
+
+// OverdraftLoanOffers Imports
+const OverdraftLoanOffersPage = lazy(() => import("./pages/OverdraftLoanOffersPage"));
+const OverdraftLoanOffers = lazy(() =>  import("./components/OverdraftLoanOffers/OverdraftLoanOffers"));
+const OverdraftOffer = lazy(() =>  import("./components/OverdraftLoanOffers/OverdraftOffer"));
+const AccountDetails = lazy(() =>  import("./components/OverdraftLoanOffers/AccountDetails"));
+const DebitAmount = lazy(() =>  import("./components/OverdraftLoanOffers/DebitAmount"));
+const PayAmount = lazy(() =>  import("./components/OverdraftLoanOffers/PayAmount"));
+const OverdraftDetails = lazy(() =>  import("./components/OverdraftLoanOffers/OverdraftDetails"));
+
+// BusinessRule Imports
+const BusinessRule1 = lazy(() =>  import("./components/BusinessRule/BusinessRule1"));
+const BusinessRule2 = lazy(() =>  import("./components/BusinessRule/BusinessRule2"));
+const BusinessRule3 = lazy(() =>  import("./components/BusinessRule/BusinessRule3"));
+
 
 const routes = [
 
@@ -158,6 +151,7 @@ const routes = [
       { path: "/user-product-testing", element: <UserProductTestingPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/general-ledger", element: <LedgerPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/user-management", element: <UserManagementPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "/overdraft-loan-offers", element: <OverdraftLoanOffersPage />, errorElement: <RouteErrorBoundary /> },
 
       // Accessing All Misc. Page Components
       { path: "/settings", element: <UploadLogo />, errorElement: <RouteErrorBoundary /> },
@@ -217,6 +211,17 @@ const routes = [
           { path: "backend-repayment", element: <BackendRepayment />, errorElement: <RouteErrorBoundary /> },
           { path: "family-details", element: <FamilyDetails />, errorElement: <RouteErrorBoundary /> },
           { path: "employment-details", element: <EmploymentDetails />, errorElement: <RouteErrorBoundary /> },
+        ],
+      },
+      {
+        path: "/overdraft-loan-offers/:userID",
+        element: <OverdraftLoanOffers/>,
+        children: [
+          { path: "overdraft-offer", element: <OverdraftOffer />, errorElement: <RouteErrorBoundary /> },
+          { path: "account-details", element: <AccountDetails />, errorElement: <RouteErrorBoundary /> },
+          { path: "debit-amount", element: <DebitAmount />, errorElement: <RouteErrorBoundary /> },
+          { path: "pay-amount", element: <PayAmount />, errorElement: <RouteErrorBoundary /> },
+          { path: "overdraft-details", element: <OverdraftDetails />, errorElement: <RouteErrorBoundary /> },
         ],
       },
     ],
