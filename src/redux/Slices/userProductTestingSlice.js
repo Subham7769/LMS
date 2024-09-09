@@ -585,7 +585,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(submitDisbursement.fulfilled, (state) => {
         state.loading = false;
-        console.log(action.payload)
+        // console.log(action.payload)
       })
       .addCase(submitDisbursement.rejected, (state, action) => {
         state.loading = false;
@@ -633,7 +633,7 @@ const userProductTestingSlice = createSlice({
           ...state.familyDetails,
           ...action.payload?.recentGosiData?.employmentStatusInfo[0],
         };
-        console.log(action.payload?.recentGosiData?.employmentStatusInfo[0])
+        // console.log(action.payload?.recentGosiData?.employmentStatusInfo[0])
         state.error = null;
       })
       .addCase(getBorrowerDetails.rejected, (state, action) => {
@@ -645,7 +645,7 @@ const userProductTestingSlice = createSlice({
         state.error = null;
       })
       .addCase(updateFamilyDetails.fulfilled, (state, action) => {
-        console.log(action.payload);
+        // console.log(action.payload);
         state.loading = false;
       })
       .addCase(updateFamilyDetails.rejected, (state, action) => {

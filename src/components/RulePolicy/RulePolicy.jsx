@@ -39,7 +39,7 @@ const CreditPolicy = () => {
       <RiskBasedPricingEquation />
       <RiskBasedPricing />
       <LengthofService />
-      <div className="flex gap-8">
+      <div className="flex gap-8 w-full">
         <CityCard cityData={cityData} />
         <OccupationCard occupationData={occupationData} />
       </div>

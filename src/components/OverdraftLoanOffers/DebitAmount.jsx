@@ -51,7 +51,7 @@ const DebitAmount = () => {
   }
 
   if (disbursementData.status === 500) {
-    return <ContainerTile className="text-center">No Loan Available for Disbursement</ContainerTile>;
+    return <ContainerTile className="text-center">No DebitAmount</ContainerTile>;
   }
 
   return (

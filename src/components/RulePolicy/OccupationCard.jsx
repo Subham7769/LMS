@@ -132,8 +132,7 @@ const OccupationCard = ({ occupationData }) => {
   };
 
   return (
-    <>
-      <ContainerTile>
+      <ContainerTile className={"w-full"}>
         <div className="text-lg mb-3">Occupation</div>
         <TagInput
           formData={occupationFormData}
@@ -146,7 +145,6 @@ const OccupationCard = ({ occupationData }) => {
           inputNumberLabel={"Add Points"}
         />
       </ContainerTile>
-    </>
   );
 };
 

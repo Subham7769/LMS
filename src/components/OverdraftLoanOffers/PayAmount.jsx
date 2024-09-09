@@ -51,7 +51,7 @@ const PayAmount = () => {
   }
 
   if (disbursementData.status === 500) {
-    return <ContainerTile className="text-center">No Loan Available for Disbursement</ContainerTile>;
+    return <ContainerTile className="text-center">No PayAmount</ContainerTile>;
   }
 
   return (

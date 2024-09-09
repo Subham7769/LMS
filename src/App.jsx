@@ -109,7 +109,7 @@ const OverdraftOffer = lazy(() =>  import("./components/OverdraftLoanOffers/Over
 const AccountDetails = lazy(() =>  import("./components/OverdraftLoanOffers/AccountDetails"));
 const DebitAmount = lazy(() =>  import("./components/OverdraftLoanOffers/DebitAmount"));
 const PayAmount = lazy(() =>  import("./components/OverdraftLoanOffers/PayAmount"));
-const OverdraftDetails = lazy(() =>  import("./components/OverdraftLoanOffers/OverdraftDetails"));
+const OverdraftDetailsTab = lazy(() =>  import("./components/OverdraftLoanOffers/OverdraftDetailsTab"));
 
 // BusinessRule Imports
 const BusinessRule1 = lazy(() =>  import("./components/BusinessRule/BusinessRule1"));
@@ -221,7 +221,7 @@ const routes = [
           { path: "account-details", element: <AccountDetails />, errorElement: <RouteErrorBoundary /> },
           { path: "debit-amount", element: <DebitAmount />, errorElement: <RouteErrorBoundary /> },
           { path: "pay-amount", element: <PayAmount />, errorElement: <RouteErrorBoundary /> },
-          { path: "overdraft-details", element: <OverdraftDetails />, errorElement: <RouteErrorBoundary /> },
+          { path: "overdraft-details/:accountNumber", element: <OverdraftDetailsTab />, errorElement: <RouteErrorBoundary /> },
         ],
       },
     ],

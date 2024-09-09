@@ -1,7 +1,7 @@
 import { useLocation, Link, useParams, Outlet } from "react-router-dom";
 
 const OverdraftLoanOffers = () => {
-  const { userID } = useParams();
+  const { userID, accountNumber } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -10,7 +10,7 @@ const OverdraftLoanOffers = () => {
     { path: `/overdraft-loan-offers/${userID}/account-details`, label: "Account Details" },
     { path: `/overdraft-loan-offers/${userID}/debit-amount`, label: "Debit Amount" },
     { path: `/overdraft-loan-offers/${userID}/pay-amount`, label: "Pay Amount" },
-    { path: `/overdraft-loan-offers/${userID}/overdraft-details`, label: "Overdraft Details" },
+    { path: `/overdraft-loan-offers/${userID}/overdraft-details/${accountNumber}`, label: "Overdraft Details" },
   ];
 
   return (

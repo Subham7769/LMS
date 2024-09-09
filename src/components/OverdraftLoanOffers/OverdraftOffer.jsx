@@ -6,22 +6,19 @@ import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import InputSelect from "../Common/InputSelect/InputSelect";
-import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingState from "../LoadingState/LoadingState";
 import { useNavigate } from "react-router-dom";
-import { updateOverdraftOfferField, submitOverdraftOffer } from "../../redux/Slices/overdraftLoanOffersSlice";
-import InstallmentSummery from "./InstallmentSummery";
+import { updateOverdraftOfferField, submitOverdraftOffer, createOverdraft } from "../../redux/Slices/overdraftLoanOffersSlice";
 import React from "react";
+import convertToReadableString from '../../utils/convertToReadableString'
 
 
 const OverdraftOffer = () => {
   const [settings, setSettings] = useState({});
   const [sliderContainWidth, setSliderContainWidth] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
   const { overdraftOffer, loanOptions, overdraftOfferData, showModal, loading, error } = useSelector(state => state.overdraftLoanOffers)
   const { userID } = useParams();
   const dispatch = useDispatch()
@@ -110,62 +107,18 @@ const OverdraftOffer = () => {
     );
   }
 
-  const CreateOverdraft = async (transactionId, index) => {
-    const postData = {
-      transactionId: transactionId,
-      contractNumber: "test18monthTenure",
-    };
-    console.log(postData)
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
-        userID +
-        "/loans",
-        {
-          method: "PuT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-      if (data.status === 400) {
-        const errorData = await data.json();
-        console.log(errorData.message);
-        return; // Stop further execution
-      }
-      const loanId = await data.json();
-      console.log(loanId.loanId);
-      navigate("/customer-care/" + userID + "/loan-payment-history");
-    } catch (error) {
-      console.error(error);
-    }
+  const handleCreateOverdraft = (transactionId, index) => {
+    dispatch(createOverdraft({ transactionId, userID }))
+      .unwrap()
+      .then(() => {
+        navigate(`/overdraft-loan-offers/${userID}/account-details`);
+      })
+      .catch((error) => {
+        console.error("Failed to create overdraft:", error);
+      });
   };
 
-  const handleInstallmentModal = (data) => {
-    setIsModalOpen(true);
-    setSelectedInstallmentData(data); // Set the selected installment data
-  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedInstallmentData(null); // Clear the data when closing the modal
-  };
-
-  const convertToReadableString = (str) => {
-    return str
-      // Replace underscores with spaces
-      .replace(/_/g, ' ')
-      // Insert a space before each uppercase letter that follows a lowercase letter
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      // Capitalize the first letter of the string
-      .replace(/^./, (str) => str.toUpperCase())
-      // Ensure uppercase sequences remain intact
-      .replace(/(?<=[a-z])([A-Z]{2,})/g, ' $1')
-      .trim(); // Remove any leading or trailing whitespace
-  };
 
   const LoanOfferRow = ({ label }) => {
     const text = typeof label === 'string' ? label : '';
@@ -275,23 +228,23 @@ const OverdraftOffer = () => {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                        {Object.entries(overdraftOfferData[0]).map(([key, value], index, array) => (
-                          <React.Fragment key={key}>
-                            <LoanOfferRow label={value} />
-                            {index + 1 === Object.entries(overdraftOfferData[0]).length && (
-                              <tr className={tableDividerStyle}>
-                                <td className={tableSliderStyle}>
-                                  <div
-                                    className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
-                                    onClick={() => CreateOverdraft(ci.transactionId, index)}
-                                  >
-                                    Create Overdraft
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-                          </React.Fragment>
-                        ))}
+                          {Object.entries(overdraftOfferData[0]).map(([key, value], index, array) => (
+                            <React.Fragment key={key}>
+                              <LoanOfferRow label={value} />
+                              {index + 1 === Object.entries(overdraftOfferData[0]).length && (
+                                <tr className={tableDividerStyle}>
+                                  <td className={tableSliderStyle}>
+                                    <div
+                                      className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
+                                      onClick={() => handleCreateOverdraft("Manual-a76febbf-e6aa-407c-843b-54f179b1d33e", index)}
+                                    >
+                                      Create Overdraft
+                                    </div>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
+                          ))}
                         </tbody>
                       </table>
                     </Slider>
@@ -314,7 +267,7 @@ const OverdraftOffer = () => {
                                 <td className={tableSliderStyle}>
                                   <div
                                     className="text-white max-w-[200px] bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
-                                    onClick={() => CreateOverdraft(overdraftOfferData[0].transactionId, index)}
+                                    onClick={() => handleCreateOverdraft("Manual-a76febbf-e6aa-407c-843b-54f179b1d33e", index)}
                                   >
                                     Create Overdraft
                                   </div>

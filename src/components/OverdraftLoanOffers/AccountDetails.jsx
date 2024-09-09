@@ -1,30 +1,77 @@
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import { maritalOptions, booleanOptions } from "../../data/OptionsData";
-import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import { updateFamilyDetailsField, getBorrowerDetails, updateFamilyDetails } from "../../redux/Slices/userProductTestingSlice";
+import { activateOverdraftLoanAccount, cancelOverdraftLoanAccount, closeOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Button from "../Common/Button/Button";
+import ListTable from "../Common/ListTable/ListTable";
+import convertToReadableString from '../../utils/convertToReadableString'
 
 function AccountDetails() {
-  const { familyDetails, loading, error } = useSelector(state => state.userProductTesting)
+  const { accountDetails, showModal, loading, error } = useSelector(state => state.overdraftLoanOffers)
   const { userID } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    dispatch(getBorrowerDetails(userID))
-  }, [dispatch, userID]);
+  // useEffect(() => {
+  //   dispatch(getBorrowerDetails(userID))
+  // }, [dispatch, userID]);
+  console.log(accountDetails)
 
-  const handleChange = (e) => {
-    const { name, value} = e.target;
-    // Dispatch the action to update the state
-    dispatch(updateFamilyDetailsField({ name, value}));
+  const handleActivateOverdraftLoanAccount = (accountNumber, supplementaryAccountsList) => {
+    dispatch(activateOverdraftLoanAccount({ accountNumber, supplementaryAccountsList }))
+      .unwrap()
+      .then(() => {
+        navigate(`/overdraft-loan-offers/${userID}/overdraft-details/${accountNumber}`);
+      })
+      .catch((error) => {
+        console.error("Failed to create overdraft:", error);
+      });
   };
+
+  const handleCancelOverdraftLoanAccount = (accountNumber, supplementaryAccountsList) => {
+    dispatch(cancelOverdraftLoanAccount({ accountNumber, supplementaryAccountsList }))
+      .unwrap()
+      .then(() => {
+        navigate(`/overdraft-loan-offers/${userID}/overdraft-details/${accountNumber}`);
+      })
+      .catch((error) => {
+        console.error("Failed to create overdraft:", error);
+      });
+  };
+
+  const handleCloseOverdraftLoanAccount = (accountNumber, supplementaryAccountsList) => {
+    dispatch(closeOverdraftLoanAccount({ accountNumber, supplementaryAccountsList }))
+      .unwrap()
+      .then(() => {
+        navigate(`/overdraft-loan-offers/${userID}/overdraft-details/${accountNumber}`);
+      })
+      .catch((error) => {
+        console.error("Failed to create overdraft:", error);
+      });
+  };
+
+  const InfoRow = ({ label, value }) => (
+    <div className="py-2 grid grid-cols-3">
+      <div className="font-semibold">{label}:</div>
+      <div className="col-span-2">{value || "N/A"}</div>
+    </div>
+  );
+
+
+  const {
+    accountNumber,
+    accountType,
+    balanceAmount,
+    currency,
+    maximumLimit,
+    status,
+    supplementaryAccountsList,
+    userId,
+  } = accountDetails;
+
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -42,73 +89,51 @@ function AccountDetails() {
         className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md w-1/5 cursor-pointer"
         title="Family Details"
       >
-        <b>Family Details</b>
+        <b>Account Details</b>
       </h2>
       <ContainerTile>
-        <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          {/* Marital Status */}
-          <InputSelect
-            labelName="Marital Status"
-            inputName="maritalStatus"
-            className="focus:ring focus:ring-blue-600 pb-2"
-            inputOptions={maritalOptions}
-            inputValue={familyDetails.maritalStatus}
-            onChange={handleChange}
+        <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
+          <InfoRow label="Account Number" value={accountNumber} />
+          <InfoRow label="Account Type" value={accountType} />
+          <InfoRow label="Balance Amount" value={balanceAmount} />
+          <InfoRow label="Currency" value={currency?.name} />
+          <InfoRow label="Correction Factor" value={currency?.correctionFactor} />
+          <InfoRow label="Maximum Limit" value={maximumLimit} />
+          <InfoRow label="Status" value={status} />
+          <InfoRow label="User ID" value={userId} />
+          <div className={supplementaryAccountsList ? "col-span-2": ""}>
+             {supplementaryAccountsList ?
+            (<ListTable
+            ListName={"Supplementary Accounts List"}
+              ListHeader={Object.keys(supplementaryAccountsList[0]).map(item => convertToReadableString(item))}
+              ListItem={Object.values(supplementaryAccountsList).map(value => value)}
+              Divider={true}
+            />) :
+            <InfoRow label="Supplementary Accounts List" value={supplementaryAccountsList} />}
+          </div>
+        </div>
+        <div className="mt-5 flex justify-evenly align-middle">
+          <Button
+            buttonName={"Activate"}
+            onClick={() => handleActivateOverdraftLoanAccount(accountNumber, supplementaryAccountsList)}
+            rectangle={true}
+            className={"bg-green-500"}
           />
-          {/* No. of Domestic Workers */}
-          <InputNumber
-            labelName="No. of Domestic Workers"
-            inputName="noOfDomesticWorkers"
-            inputValue={familyDetails.noOfDomesticWorkers}
-            onChange={handleChange}
-            placeHolder="1"
-            required
+          <Button
+            buttonName={"Cancel"}
+            onClick={() => handleCancelOverdraftLoanAccount(accountNumber, supplementaryAccountsList)}
+            rectangle={true}
+            className={"bg-red-500"}
           />
-          {/* No. of Children */}
-          <InputNumber
-            labelName="No. of Children"
-            inputName="noOfChildren"
-            inputValue={familyDetails.noOfChildren}
-            onChange={handleChange}
-            placeHolder="3"
-            required
+          <Button
+            buttonName={"Close"}
+            onClick={() => handleCloseOverdraftLoanAccount(
+              accountNumber, supplementaryAccountsList)
+            }
+            rectangle={true}
+            className={"bg-yellow-500"}
           />
-          {/* Total Dependents */}
-          <InputNumber
-            labelName="Total Dependents"
-            inputName="totalDependent"
-            inputValue={familyDetails.totalDependent}
-            onChange={handleChange}
-            placeHolder="4"
-            required
-          />
-          {/* Dependents in Private School */}
-          <InputNumber
-            labelName="Dependents in Private School"
-            inputName="noOfDependentsInPrivateSchools"
-            inputValue={familyDetails.noOfDependentsInPrivateSchools}
-            onChange={handleChange}
-            placeHolder="2"
-          />
-          {/* Dependents in Public School */}
-          <InputNumber
-            labelName="Dependents in Public School"
-            name="noOfDependentsInPublicSchools"
-            value={familyDetails.noOfDependentsInPublicSchools}
-            onChange={handleChange}
-            placeHolder="2"
-          />
-          {/* Bread Winner */}
-          <InputSelect
-            labelName="Bread Winner"
-            inputName="breadWinner"
-            inputOptions={booleanOptions}
-            inputValue={familyDetails.breadWinner}
-            onChange={handleChange}
-          />
-        </form>
-        <div className="flex items-center justify-end gap-4 mt-4">
-          <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={()=>dispatch(updateFamilyDetails({ familyDetails, userID }))} rectangle={true} />
+
         </div>
       </ContainerTile>
     </>

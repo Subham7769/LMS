@@ -130,8 +130,7 @@ const CityCard = ({ cityData }) => {
   };
 
   return (
-    <>
-      <ContainerTile>
+      <ContainerTile className={"w-full"}>
         <div className="flex items-center justify-between mb-3">
           <div className="text-lg">City</div>
         </div>
@@ -146,7 +145,6 @@ const CityCard = ({ cityData }) => {
           inputNumberLabel={"Add Points"}
         />
       </ContainerTile>
-    </>
   );
 };
 
