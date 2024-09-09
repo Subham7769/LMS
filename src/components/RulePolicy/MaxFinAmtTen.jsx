@@ -25,6 +25,8 @@ import {
   deleteMaxFinAmtEntry,
   clearInputListItem,
 } from "../../redux/Slices/rulePolicySlice";
+import ListTable from "../Common/ListTable/ListTable";
+import { MaxFinAmtHeaderList } from "../../data/RulePolicyData";
 
 const MaxFinAmtTen = ({ FAWTData }) => {
   const { rulePolicyId } = useParams();
@@ -216,6 +218,23 @@ const MaxFinAmtTen = ({ FAWTData }) => {
     sortedItems.sort(newItemsOnTop);
   }
 
+  const ActionList = [
+    {
+      icon: PencilIcon,
+      circle: true,
+      action: handleUpdate,
+    },
+    {
+      icon: TrashIcon,
+      circle: true,
+      action: handleDelete,
+    },
+  ];
+  const tableDataWithoutId = currentItems.map(
+    ({ ruleName, rulePolicyTempId, fieldType, ...rest }) => rest
+  );
+  console.log(currentItems);
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -239,118 +258,13 @@ const MaxFinAmtTen = ({ FAWTData }) => {
           <Button buttonIcon={PlusIcon} onClick={CreateEntry} circle={true} />
         </div>
         <div className="mt-6">
-          <table className="divide-y divide-gray-200 w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" onClick={() => handleSort("financeAmount")}>
-                  <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
-                    Amount {getSortIcon("financeAmount")}
-                  </div>
-                </th>
-                <th scope="col" onClick={() => handleSort("tenure")}>
-                  <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
-                    Tenure {getSortIcon("tenure")}
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.length < 1 ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No Data To Show Yet
-                  </td>
-                </tr>
-              ) : (
-                currentItems.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <input
-                          type="number"
-                          name="financeAmount"
-                          id={`financeAmount-${index}`}
-                          value={item.financeAmount}
-                          onChange={(e) => handleChange(e, index)}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          placeholder="999"
-                        />
-                      ) : (
-                        <div className="whitespace-nowrap text-center py-3 px-3 text-sm text-gray-500">
-                          {item.financeAmount}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <input
-                          type="number"
-                          name="tenure"
-                          id={`tenure-${index}`}
-                          value={item.tenure}
-                          onChange={(e) => handleChange(e, index)}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          placeholder="6"
-                        />
-                      ) : (
-                        <div className="whitespace-nowrap text-center py-3 px-3 text-sm text-gray-500">
-                          {item.tenure}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium justify-center flex gap-2">
-                      <button onClick={() => toggleEdit(index)} type="button">
-                        {editingIndex === index ? (
-                          <div
-                            onClick={handleUpdate}
-                            className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                          >
-                            <CheckCircleIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            <PencilIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        )}
-                      </button>
-                      {item.fieldType === "" || item.ruleName === "" ? (
-                        <button
-                          onClick={() => handleClear(index)}
-                          type="button"
-                          className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                        >
-                          <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleDelete(index)}
-                          type="button"
-                          className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                        >
-                          <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          <ListTable
+            ListHeader={MaxFinAmtHeaderList}
+            ListItem={tableDataWithoutId}
+            ListAction={ActionList}
+            handleEditableFields={handleChange}
+            Sortable={true}
+          />
           <div className="mt-4 flex justify-center gap-5 items-center">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
