@@ -32,7 +32,7 @@ const PIFDetails = React.lazy(() => import("./PIFDetails"));
     </div>
   );
   
-  const CreditBureauDetails = () => {
+  const OverdraftDetailsTab = () => {
     const [activeTab, setActiveTab] = useState("general-details");
     const ActiveComponent = tabComponents[activeTab];
   
@@ -56,5 +56,5 @@ const PIFDetails = React.lazy(() => import("./PIFDetails"));
     );
   };
   
-  export default CreditBureauDetails;
+  export default OverdraftDetailsTab;
   
