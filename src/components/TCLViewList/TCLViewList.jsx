@@ -74,7 +74,6 @@ const TCLViewList = () => {
       .catch((err) => console.error(err));
   };
 
-
   // Handle file input change
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -115,12 +114,13 @@ const TCLViewList = () => {
   };
 
   // actions to be executed in list
-  const ActionList = [{
-    icon: TrashIcon,
-    circle: true,
-    action: handleDelete,
-  }]
-
+  const ActionList = [
+    {
+      icon: TrashIcon,
+      circle: true,
+      action: handleDelete,
+    },
+  ];
 
   if (loading) {
     return <LoadingState />;
@@ -132,6 +132,7 @@ const TCLViewList = () => {
 
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
+  console.log(tableDataWithoutId);
 
   const handleFileClick = () => {
     fileInputRef.current.click();
@@ -148,7 +149,7 @@ const TCLViewList = () => {
           circle={true}
         />
       </div>
-      <ContainerTile className={'flex items-center justify-between'}>
+      <ContainerTile className={"flex items-center justify-between"}>
         <SelectAndAdd
           ListName={"Select TCL List"}
           SelectOptions={data}
@@ -162,9 +163,12 @@ const TCLViewList = () => {
             type="file"
             ref={fileInputRef}
             onChange={handleFileChange}
-            style={{ display: 'none' }} // Hide the default input
+            style={{ display: "none" }} // Hide the default input
           />
-          <FolderPlusIcon className="h-12 w-12 text-indigo-600" onClick={handleFileClick} />
+          <FolderPlusIcon
+            className="h-12 w-12 text-indigo-600"
+            onClick={handleFileClick}
+          />
           <Button
             buttonName={"Upload"}
             onClick={handleFileUpload}

@@ -63,3 +63,5 @@ export const RulePolicyList = [
     status: "Inactive",
   },
 ];
+
+export const MaxFinAmtHeaderList = ["financeAmount", "tenure", "Actions"];

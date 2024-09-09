@@ -35,8 +35,6 @@ const OccupationCard = ({ occupationData }) => {
     }
   }, [occupationData, rulePolicyId]);
 
-  console.log(occupationData);
-
   useEffect(() => {
     if (tags.length > 0) {
       dispatch(setOccupationFormData({ name: "tags", value: tags }));
