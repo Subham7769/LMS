@@ -18,36 +18,37 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchData,
-  handleNewInputChange,
-  addNewItem,
-  updateItem,
-  deleteItem,
-} from "../../redux/Slices/liabilitiesMatrixSlice";
+  fetchLiabilityData,
+  handleLiabilityNewInputChange,
+  addNewLiabilityItem,
+  updateLiabilityItem,
+  deleteLiabilityItem,
+} from "../../redux/Slices/globalConfigSlice";
 
 const LiabilitiesMatrix = () => {
   const dispatch = useDispatch();
-  const { allData, newForm, loading } = useSelector(
-    (state) => state.liabilitiesMatrix
+  const { allLiabilityData, newLiabilityForm, loading } = useSelector(
+    (state) => state.globalConfig
   );
 
   useEffect(() => {
-    dispatch(fetchData());
+    dispatch(fetchLiabilityData());
   }, [dispatch]);
 
   const handleInputChange = async (e, index) => {
     const { name, value, checked, type } = e.target;
 
     const updatedItem = {
-      ...allData[index],
+      ...allLiabilityData[index],
       [name]: type === "checkbox" ? checked : value,
     };
 
-    const oldSimahDescriptionCode = allData[index].simahDescriptionCode;
+    const oldSimahDescriptionCode =
+      allLiabilityData[index].simahDescriptionCode;
 
     try {
       await dispatch(
-        updateItem({ updatedItem, oldSimahDescriptionCode })
+        updateLiabilityItem({ updatedItem, oldSimahDescriptionCode })
       ).unwrap();
       toast.custom((t) => (
         <Passed
@@ -64,7 +65,7 @@ const LiabilitiesMatrix = () => {
 
   const handleDeleteRow = async (deleteURL) => {
     try {
-      await dispatch(deleteItem(deleteURL)).unwrap();
+      await dispatch(deleteLiabilityItem(deleteURL)).unwrap();
       toast.custom((t) => (
         <Passed
           t={t}
@@ -79,7 +80,7 @@ const LiabilitiesMatrix = () => {
   };
 
   const handleAdd = async () => {
-    await dispatch(addNewItem(newForm)).unwrap();
+    await dispatch(addNewLiabilityItem(newLiabilityForm)).unwrap();
     toast.custom((t) => (
       <Passed
         t={t}
@@ -112,17 +113,19 @@ const LiabilitiesMatrix = () => {
               labelName="Product"
               inputOptions={productOptions}
               inputName="product"
-              inputValue={newForm.product}
-              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+              inputValue={newLiabilityForm.product}
+              onChange={(e) =>
+                dispatch(handleLiabilityNewInputChange(e.target))
+              }
             />
             <InputText
               labelName="CB Description (CODE)"
               inputName="simahDescriptionCode"
               placeHolder="TMTG"
-              inputValue={newForm.simahDescriptionCode}
+              inputValue={newLiabilityForm.simahDescriptionCode}
               onChange={(e) =>
                 dispatch(
-                  handleNewInputChange({
+                  handleLiabilityNewInputChange({
                     name: e.target.name,
                     value: e.target.value,
                   })
@@ -134,16 +137,20 @@ const LiabilitiesMatrix = () => {
               labelName="Issuer"
               inputOptions={issuerOptions}
               inputName="issuer"
-              inputValue={newForm.issuer}
-              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+              inputValue={newLiabilityForm.issuer}
+              onChange={(e) =>
+                dispatch(handleLiabilityNewInputChange(e.target))
+              }
             />
 
             <div className="mt-2">
               <InputCheckbox
                 labelName="Active Rule"
                 inputName="activeRule"
-                inputChecked={newForm.activeRule}
-                onChange={(e) => dispatch(handleNewInputChange(e.target))}
+                inputChecked={newLiabilityForm.activeRule}
+                onChange={(e) =>
+                  dispatch(handleLiabilityNewInputChange(e.target))
+                }
               />
             </div>
           </div>
@@ -152,32 +159,38 @@ const LiabilitiesMatrix = () => {
               labelName="GDBR (Without Mortgage)"
               inputOptions={gdbrWoMortageOptions}
               inputName="applicabilityGDBR"
-              inputValue={newForm.applicabilityGDBR}
-              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+              inputValue={newLiabilityForm.applicabilityGDBR}
+              onChange={(e) =>
+                dispatch(handleLiabilityNewInputChange(e.target))
+              }
             />
 
             <InputSelect
               labelName="GDBR (including Mortgage)"
               inputOptions={gdbrWMortageOptions}
               inputName="totalExposure"
-              inputValue={newForm.totalExposure}
-              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+              inputValue={newLiabilityForm.totalExposure}
+              onChange={(e) =>
+                dispatch(handleLiabilityNewInputChange(e.target))
+              }
             />
 
             <InputSelect
               labelName="Default considered in CB score"
               inputOptions={defaultScoreOptions}
               inputName="defaultConsideredInSIMAHscore"
-              inputValue={newForm.defaultConsideredInSIMAHscore}
-              onChange={(e) => dispatch(handleNewInputChange(e.target))}
+              inputValue={newLiabilityForm.defaultConsideredInSIMAHscore}
+              onChange={(e) =>
+                dispatch(handleLiabilityNewInputChange(e.target))
+              }
             />
 
             <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
           </div>
         </ContainerTile>
         <ContainerTile>
-          {allData.length > 0 ? (
-            allData.map((item, index) => (
+          {allLiabilityData.length > 0 ? (
+            allLiabilityData.map((item, index) => (
               <div
                 key={index}
                 className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"

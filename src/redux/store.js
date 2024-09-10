@@ -14,12 +14,9 @@ import ledgerSlice from "./Slices/ledgerSlice";
 import userManagementSlice from "./Slices/userManagementSlice";
 import creditScoreETSlice from "./Slices/creditScoreETSlice";
 import userProductTestingSlice from "./Slices/userProductTestingSlice";
-import liabilitiesMatrixSlice from "./Slices/liabilitiesMatrixSlice";
-import riskGradeCalSlice from "./Slices/riskGradeCalSlice";
-import bareMinimumExpSlice from "./Slices/bareMinimumExpSlice";
-import notificationTextSlice from "./Slices/notificationTextSlice";
 import rulePolicySlice from "./Slices/rulePolicySlice";
 import overdraftLoanOffersSlice from "./Slices/overdraftLoanOffersSlice";
+import globalConfigSlice from "./Slices/globalConfigSlice";
 
 const store = configureStore({
   reducer: {
@@ -38,11 +35,8 @@ const store = configureStore({
     rulePolicy: rulePolicySlice,
     ledger: ledgerSlice,
     userProductTesting: userProductTestingSlice,
-    liabilitiesMatrix: liabilitiesMatrixSlice,
-    riskGradeCal: riskGradeCalSlice,
-    bareMinimumExp: bareMinimumExpSlice,
-    notificationText: notificationTextSlice,
-    overdraftLoanOffers:overdraftLoanOffersSlice,
+    globalConfig: globalConfigSlice,
+    overdraftLoanOffers: overdraftLoanOffersSlice,
   },
 });
 

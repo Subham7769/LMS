@@ -103,10 +103,6 @@ const Project = () => {
     ));
   };
 
-  // if (ProjectData.length === 0) {
-  //   return <LoadingState />;
-  // }
-
   if (loading) {
     return <LoadingState />;
   }

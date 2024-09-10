@@ -12,14 +12,14 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchNotificationData,
-  handleChange,
+  handleNotificationChange,
   saveNotificationData,
-} from "../../redux/Slices/notificationTextSlice";
+} from "../../redux/Slices/globalConfigSlice";
 
 const NotificationText = () => {
   const dispatch = useDispatch();
-  const { inputList, loading, error } = useSelector(
-    (state) => state.notificationText
+  const { notificationInputList, loading, error } = useSelector(
+    (state) => state.globalConfig
   );
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const NotificationText = () => {
         </b>
       </h2>
       <ContainerTile>
-        {inputList.map((notdata) => (
+        {notificationInputList.map((notdata) => (
           <div
             key={notdata.id}
             className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
@@ -100,7 +100,7 @@ const NotificationText = () => {
                 inputValue={notdata.notificationChannel}
                 onChange={(e) =>
                   dispatch(
-                    handleChange({
+                    handleNotificationChange({
                       id: notdata.id,
                       name: e.target.name,
                       value: e.target.value,
@@ -118,7 +118,7 @@ const NotificationText = () => {
                 inputValue={notdata.notificationMessageEn}
                 onChange={(e) =>
                   dispatch(
-                    handleChange({
+                    handleNotificationChange({
                       id: notdata.id,
                       name: e.target.name,
                       value: e.target.value,
@@ -135,7 +135,7 @@ const NotificationText = () => {
                 inputValue={notdata.notificationMessageAr}
                 onChange={(e) =>
                   dispatch(
-                    handleChange({
+                    handleNotificationChange({
                       id: notdata.id,
                       name: e.target.name,
                       value: e.target.value,

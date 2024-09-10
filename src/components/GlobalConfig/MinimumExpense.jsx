@@ -16,20 +16,20 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateFormData,
+  updateExpenseFormData,
   fetchExpenseData,
-  handleInputChange as handleReduxInputChange,
+  handleExpenseInputChange as handleReduxInputChange,
   saveExpenseField,
   deleteExpenseField,
   addExpenseField,
-  resetFormData,
-} from "../../redux/Slices/bareMinimumExpSlice";
+  resetExpenseFormData,
+} from "../../redux/Slices/globalConfigSlice";
 
 const MinimumExpense = () => {
   const dispatch = useDispatch();
 
-  const { formData, expenseData, loading, error } = useSelector(
-    (state) => state.bareMinimumExp
+  const { expenseForm, allExpenseData, loading, error } = useSelector(
+    (state) => state.globalConfig
   );
 
   useEffect(() => {
@@ -38,13 +38,13 @@ const MinimumExpense = () => {
 
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target;
-    dispatch(updateFormData({ name, value, checked, type }));
+    dispatch(updateExpenseFormData({ name, value, checked, type }));
   };
 
   const handleAddFields = async () => {
     try {
-      await dispatch(addExpenseField(formData)).unwrap();
-      dispatch(resetFormData());
+      await dispatch(addExpenseField(expenseForm)).unwrap();
+      dispatch(resetExpenseFormData());
       toast.custom((t) => (
         <Passed
           t={t}
@@ -83,7 +83,6 @@ const MinimumExpense = () => {
 
   const handleSave = async (id) => {
     // Find the item to be update
-
     dispatch(saveExpenseField(id)).then(() =>
       toast.custom((t) => (
         <Passed
@@ -113,9 +112,9 @@ const MinimumExpense = () => {
     return <LoadingState />;
   }
 
-  // if (error) {
-  //   return <p>Error: {error}</p>;
-  // }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -133,7 +132,7 @@ const MinimumExpense = () => {
             <InputText
               labelName="Expenses"
               inputName="expensesName"
-              inputValue={formData.expensesName}
+              inputValue={expenseForm.expensesName}
               onChange={handleInputChange}
               placeHolder="Food and Living"
             />
@@ -141,20 +140,20 @@ const MinimumExpense = () => {
               labelName="Type"
               inputOptions={typeOptions}
               inputName="dependantType"
-              inputValue={formData.dependantType}
+              inputValue={expenseForm.dependantType}
               onChange={handleInputChange}
             />
             <InputSelect
               labelName="Expenses Frequency"
               inputOptions={frequencyOptions}
               inputName="expensesFrequency"
-              inputValue={formData.expensesFrequency}
+              inputValue={expenseForm.expensesFrequency}
               onChange={handleInputChange}
             />
             <InputNumber
               labelName="Bare Min Expense Per Person"
               inputName="bareMinimum"
-              inputValue={formData.bareMinimum}
+              inputValue={expenseForm.bareMinimum}
               onChange={handleInputChange}
               placeHolder="200"
             />
@@ -166,7 +165,7 @@ const MinimumExpense = () => {
           </div>
         </ContainerTile>
         <ContainerTile>
-          {expenseData.map((expdata) => (
+          {allExpenseData.map((expdata) => (
             <div
               key={expdata.id}
               className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end border-b border-b-gray-400 py-10"

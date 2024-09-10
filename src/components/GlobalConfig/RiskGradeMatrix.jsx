@@ -17,14 +17,14 @@ import {
   addRiskGrade,
   updateRiskGrade,
   deleteRiskGrade,
-  handleNewInputChange,
-  handleExistingInputChange,
-} from "../../redux/Slices/riskGradeCalSlice";
+  handleRiskGradeNewInputChange,
+  handleRiskGradeExistingInputChange,
+} from "../../redux/Slices/globalConfigSlice";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
-  const { allData, newForm, loading } = useSelector(
-    (state) => state.riskGradeCal
+  const { allRiskGradeData, newRiskGradeForm, loading } = useSelector(
+    (state) => state.globalConfig
   );
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const RiskGradeMatrix = () => {
   }, [dispatch]);
 
   const handleAddFields = () => {
-    dispatch(addRiskGrade(newForm)).then(() =>
+    dispatch(addRiskGrade(newRiskGradeForm)).then(() =>
       toast.custom((t) => (
         <Passed
           t={t}
@@ -45,7 +45,7 @@ const RiskGradeMatrix = () => {
   };
 
   const handleSave = (id) => {
-    const itemToUpdate = allData.find((item) => item.id === id);
+    const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
     dispatch(updateRiskGrade(itemToUpdate)).then(() =>
       toast.custom((t) => (
         <Passed
@@ -92,10 +92,10 @@ const RiskGradeMatrix = () => {
             <InputNumber
               labelName="From"
               inputName="from"
-              inputValue={newForm.from}
+              inputValue={newRiskGradeForm.from}
               onChange={(e) =>
                 dispatch(
-                  handleNewInputChange({
+                  handleRiskGradeNewInputChange({
                     name: e.target.name,
                     value: e.target.value,
                     type: e.target.type,
@@ -108,10 +108,10 @@ const RiskGradeMatrix = () => {
             <InputNumber
               labelName="To"
               inputName="to"
-              inputValue={newForm.to}
+              inputValue={newRiskGradeForm.to}
               onChange={(e) =>
                 dispatch(
-                  handleNewInputChange({
+                  handleRiskGradeNewInputChange({
                     name: e.target.name,
                     value: e.target.value,
                     type: e.target.type,
@@ -124,10 +124,10 @@ const RiskGradeMatrix = () => {
             <InputText
               labelName="Risk Grade"
               inputName="grade"
-              inputValue={newForm.grade}
+              inputValue={newRiskGradeForm.grade}
               onChange={(e) =>
                 dispatch(
-                  handleNewInputChange({
+                  handleRiskGradeNewInputChange({
                     name: e.target.name,
                     value: e.target.value,
                     type: e.target.type,
@@ -147,7 +147,7 @@ const RiskGradeMatrix = () => {
           </div>
         </ContainerTile>
         <ContainerTile>
-          {allData.map((rgdata) => (
+          {allRiskGradeData.map((rgdata) => (
             <div
               key={rgdata.id}
               className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4 py-5"
@@ -158,7 +158,7 @@ const RiskGradeMatrix = () => {
                 inputValue={rgdata.from}
                 onChange={(e) =>
                   dispatch(
-                    handleExistingInputChange({
+                    handleRiskGradeExistingInputChange({
                       id: rgdata.id,
                       name: e.target.name,
                       value: e.target.value,
@@ -172,7 +172,7 @@ const RiskGradeMatrix = () => {
                 inputValue={rgdata.to}
                 onChange={(e) =>
                   dispatch(
-                    handleExistingInputChange({
+                    handleRiskGradeExistingInputChange({
                       id: rgdata.id,
                       name: e.target.name,
                       value: e.target.value,
@@ -186,7 +186,7 @@ const RiskGradeMatrix = () => {
                 inputValue={rgdata.grade}
                 onChange={(e) =>
                   dispatch(
-                    handleExistingInputChange({
+                    handleRiskGradeExistingInputChange({
                       id: rgdata.id,
                       name: e.target.name,
                       value: e.target.value,
