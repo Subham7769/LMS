@@ -147,30 +147,28 @@ const CreditScoreET = () => {
         initialName={creditScoreETName}
       />
       <ContainerTile>
-        <div className="grid grid-cols-4 gap-2 mb-5">
+        <div className="grid grid-cols-4 gap-2 mb-5 items-end">
           <InputSelect
-            labelName={"Rule 1"}
+            labelName={"Minimum Credit Score"}
             inputName={"firstCreditScoreOperator"}
             inputValue={formData?.operators?.firstCreditScoreOperator}
             inputOptions={operatorOptions}
             onChange={handleChange}
           />
+          <InputNumber
+            inputName={"firstCreditScore"}
+            inputValue={formData?.rules[0]?.firstCreditScore}
+            onChange={handleChange}
+            placeHolder="0"
+          />
           <InputSelect
-            labelName={"Rule 2"}
+            labelName={"Maximum Credit Score"}
             inputName={"secondCreditScoreOperator"}
             inputValue={formData?.operators?.secondCreditScoreOperator}
             inputOptions={operatorOptions}
             onChange={handleChange}
           />
           <InputNumber
-            labelName="Minimum Credit Score"
-            inputName={"firstCreditScore"}
-            inputValue={formData?.rules[0]?.firstCreditScore}
-            onChange={handleChange}
-            placeHolder="0"
-          />
-          <InputNumber
-            labelName="Maximum Credit Score"
             inputName={"secondCreditScore"}
             inputValue={formData?.rules[0]?.secondCreditScore}
             onChange={handleChange}

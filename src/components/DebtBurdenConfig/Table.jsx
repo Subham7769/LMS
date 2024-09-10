@@ -1,6 +1,4 @@
-import {
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import Button from "../Common/Button/Button";
 
@@ -24,11 +22,11 @@ export default function Table({
         <tr>
           {[
             {
-              name: "Start Net Income Bracket",
+              name: "Min Net Income Bracket",
               sortKey: "startNetIncomeBracketInSARule",
             },
             {
-              name: "End Net Income Bracket",
+              name: "Max Net Income Bracket",
               sortKey: "endNetIncomeBracketInSARule",
             },
             { name: "Product Level", sortKey: "productLevel" },
@@ -41,15 +39,17 @@ export default function Table({
             <th
               key={idx}
               scope="col"
-              className={`px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider ${column.sortKey ? "cursor-pointer" : ""
-                }`}
+              className={`px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider ${
+                column.sortKey ? "cursor-pointer" : ""
+              }`}
               onClick={
                 column.sortKey ? () => handleSort(column.sortKey) : undefined
               }
             >
               <div
-                className={`flex items-center ${column.sortKey ? "justify-between" : ""
-                  }`}
+                className={`flex items-center ${
+                  column.sortKey ? "justify-between" : ""
+                }`}
               >
                 {column.name}
                 {column.sortKey && getSortIcon(column.sortKey)}
@@ -142,9 +142,19 @@ export default function Table({
               ))}
               <td className="px-4 py-2 text-sm font-medium flex gap-2 justify-center">
                 <div onClick={() => toggleEdit(index)} type="button">
-                  <Button buttonIcon={editingIndex === index ? CheckCircleIcon : PencilIcon} onClick={editingIndex === index ? informUser : informUser1} circle={true} />
+                  <Button
+                    buttonIcon={
+                      editingIndex === index ? CheckCircleIcon : PencilIcon
+                    }
+                    onClick={editingIndex === index ? informUser : informUser1}
+                    circle={true}
+                  />
                 </div>
-                <Button buttonIcon={TrashIcon} onClick={() => handleDelete(index)} circle={true} />
+                <Button
+                  buttonIcon={TrashIcon}
+                  onClick={() => handleDelete(index)}
+                  circle={true}
+                />
               </td>
             </tr>
           ))

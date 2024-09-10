@@ -77,27 +77,24 @@ const CreditScore = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="my-5">
-        {/* <h2 className="text-xl text-center">Credit Score</h2> */}
-        <div className="flex justify-center">
-          <ListTable
-            ListName={creditScoreData.equation}
-            ListNameAlign={"center"}
-            ListHeader={CreditScoreHeaderList}
-            ListItem={[
-              {
-                aweightage: formData.aweightage,
-                bweightage: formData.bweightage,
-                cweightage: formData.cweightage,
-                dweightage: formData.dweightage,
-                eweightage: formData.eweightage,
-                fweightage: formData.fweightage,
-              },
-            ]}
-            Editable={true}
-            handleEditableFields={handleChange}
-            Divider={true}
-          />
-        </div>
+        <ListTable
+          ListName={formData.equation}
+          ListNameAlign={"center"}
+          ListHeader={CreditScoreHeaderList}
+          ListItem={[
+            {
+              aweightage: formData.aweightage,
+              bweightage: formData.bweightage,
+              cweightage: formData.cweightage,
+              dweightage: formData.dweightage,
+              eweightage: formData.eweightage,
+              fweightage: formData.fweightage,
+            },
+          ]}
+          Editable={true}
+          handleEditableFields={handleChange}
+          Divider={true}
+        />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <ListTable
@@ -255,7 +252,7 @@ const CreditScore = () => {
           </div>
           <div>
             <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[16px]">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
                 Value:{" "}
               </div>
               <div>
@@ -269,7 +266,7 @@ const CreditScore = () => {
               </div>
             </div>
             <div className="grid grid-cols-2  gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[16px]">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
                 Value:{" "}
               </div>
               <div>
@@ -283,7 +280,7 @@ const CreditScore = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[16px]">
+              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
                 Value:{" "}
               </div>
               <div>

@@ -298,10 +298,10 @@ const DebtBurdenConfig = () => {
         initialName={name}
       />
       <ContainerTile>
-        <div className="grid grid-cols-8 gap-2">
+        <div className="grid grid-cols-10 gap-2 items-end mt-2 border-b pb-5 mb-2">
           <div className="relative">
             <InputSelect
-              labelName={"Rule 1"}
+              labelName="Min Net"
               inputValue={operators.firstNetIncomeBracketInSARuleOperator}
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
@@ -309,19 +309,7 @@ const DebtBurdenConfig = () => {
             />
           </div>
           <div className="relative">
-            <InputSelect
-              labelName="Rule 2"
-              inputValue={operators.secondNetIncomeBracketInSARuleOperator}
-              inputOptions={operatorOptions}
-              onChange={handleOperatorChange}
-              inputName="secondNetIncomeBracketInSARuleOperator"
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-8 gap-2 items-end mt-2 border-b pb-5 mb-2">
-          <div className="relative">
             <InputNumber
-              labelName="Start Net"
               inputName={`startNetIncomeBracketInSARule`}
               inputValue={formData.startNetIncomeBracketInSARule}
               onChange={handleInputChange}
@@ -329,8 +317,16 @@ const DebtBurdenConfig = () => {
             />
           </div>
           <div className="relative">
+            <InputSelect
+              labelName="Max Net"
+              inputValue={operators.secondNetIncomeBracketInSARuleOperator}
+              inputOptions={operatorOptions}
+              onChange={handleOperatorChange}
+              inputName="secondNetIncomeBracketInSARuleOperator"
+            />
+          </div>
+          <div className="relative">
             <InputNumber
-              labelName="End Net"
               inputName={`endNetIncomeBracketInSARule`}
               inputValue={formData.endNetIncomeBracketInSARule}
               onChange={handleInputChange}

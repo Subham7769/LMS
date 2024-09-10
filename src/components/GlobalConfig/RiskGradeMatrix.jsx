@@ -75,6 +75,10 @@ const RiskGradeMatrix = () => {
     return <LoadingState />;
   }
 
+  const sortedRiskGradeData = [...allRiskGradeData].sort(
+    (a, b) => a.from - b.from
+  );
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -147,7 +151,7 @@ const RiskGradeMatrix = () => {
           </div>
         </ContainerTile>
         <ContainerTile>
-          {allRiskGradeData.map((rgdata) => (
+          {sortedRiskGradeData.map((rgdata) => (
             <div
               key={rgdata.id}
               className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4 py-5"

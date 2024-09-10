@@ -19,61 +19,34 @@ const TagInput = ({
   addTag,
   deleteTag,
   productTypeOptions,
-<<<<<<< HEAD
-}) => (
-  <>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
-      {inputSelectName && (
-        <InputSelect
-          labelName={inputSelectLabel}
-          inputName={inputSelectName}
-          inputOptions={productTypeOptions}
-          inputValue={formData[inputSelectName]}
-          onChange={handleChange}
-        />
-      )}
-      {inputTextName && (
-        <InputText
-          labelName={inputTextLabel}
-          inputName={inputTextName}
-          inputValue={formData[inputTextName]}
-          onChange={handleChange}
-          placeHolder={inputTextPlaceholder}
-        />
-      )}
-      {
-        inputNumberName &&
-        <InputNumber
-          labelName={inputNumberLabel}
-          inputName={inputNumberName}
-          inputValue={formData[inputNumberName]}
-          onChange={handleChange}
-          placeHolder={"2"}
-        />
-      }
-
-      <div className="">
-        <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
-      </div>
-    </div>
-=======
 }) => {
   const Content = () => (
->>>>>>> afdcf23e328564e34790c8dc76fcafc136130ac4
     <div
-      className={`grid grid-cols-2 ${inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
-        } gap-3 mt-3`}
+      className={`grid grid-cols-2 ${
+        inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
+      } gap-3 mt-3`}
     >
       {formData.tags.map((tag, index) => (
         <div
           key={index}
           className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
         >
-          <div>{tag[inputSelectName ? inputSelectName : inputTextName || inputNumberName]}</div>
+          <div>
+            {
+              tag[
+                inputSelectName
+                  ? inputSelectName
+                  : inputTextName || inputNumberName
+              ]
+            }
+          </div>
 
-          {
-            inputNumberName && inputTextName && <><div>|</div><div>{tag[inputNumberName]}</div></>
-          }
+          {inputNumberName && inputTextName && (
+            <>
+              <div>|</div>
+              <div>{tag[inputNumberName]}</div>
+            </>
+          )}
 
           <div>
             <XCircleIcon
