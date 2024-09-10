@@ -70,7 +70,7 @@ export const fetchCreditScoreETName = createAsyncThunk(
 // Thunk for saving the Credit Score ET
 export const saveCreditScoreET = createAsyncThunk(
   "creditScoreET/saveCreditScoreET",
-  async (formData, { rejectWithValue, dispatch }) => {
+  async (creditScoreET, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
@@ -81,14 +81,16 @@ export const saveCreditScoreET = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(creditScoreET),
         }
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       // Optionally, refetch the data to update the store
-      dispatch(fetchCreditScoreETInfo(formData.rules[0].creditScoreEtTempId));
+      dispatch(
+        fetchCreditScoreETInfo(creditScoreET.rules[0].creditScoreEtTempId)
+      );
     } catch (error) {
       console.error("Failed to update data:", error);
       return rejectWithValue(error.message);
@@ -202,7 +204,7 @@ export const handleDeleteCSET = createAsyncThunk(
 
 // Initial state
 const creditScoreETInitialState = {
-  formData: {
+  creditScoreET: {
     operators: {
       firstCreditScoreOperator: "",
       secondCreditScoreOperator: "",
@@ -217,6 +219,8 @@ const creditScoreETInitialState = {
         tenure: [],
       },
     ],
+    tags: [],
+    tenure: "",
   },
   creditScoreETName: "",
   loading: false,
@@ -228,31 +232,43 @@ const creditScoreETSlice = createSlice({
   initialState: creditScoreETInitialState,
   reducers: {
     setFormData: (state, action) => {
-      state.formData = action.payload;
+      state.creditScoreET = action.payload;
     },
     setCreditScoreETName: (state, action) => {
       state.creditScoreETName = action.payload;
     },
     handleChangeDispatch: (state, action) => {
       const { name, value } = action.payload;
-      const isOperator = state.formData.operators.hasOwnProperty(name);
-      const isRuleField = state.formData.rules[0].hasOwnProperty(name);
+      const isOperator = state.creditScoreET.operators.hasOwnProperty(name);
+      const isRuleField = state.creditScoreET.rules[0].hasOwnProperty(name);
 
       if (isOperator) {
-        state.formData.operators[name] = value;
+        state.creditScoreET.operators[name] = value;
       } else if (isRuleField) {
-        state.formData.rules[0][name] = value;
+        state.creditScoreET.rules[0][name] = value;
+      } else {
+        state.creditScoreET = { ...state.creditScoreET, ...action.payload };
       }
     },
+    setTenure: (state, action) => {
+      state.creditScoreET = { ...state.creditScoreET, ...action.payload };
+    },
     addTenure: (state, action) => {
-      state.formData.rules[0].tenure.push(action.payload);
+      state.creditScoreET.rules[0].tenure.push(action.payload);
+      state.creditScoreET.tags.push({
+        index: state.creditScoreET.tags.length, // Use the current length of the tags array as the latest index
+        tenure: action.payload,
+      });
+      state.creditScoreET.tenure = "";
     },
     deleteTenure: (state, action) => {
-      state.formData.rules[0].tenure.splice(action.payload, 1);
-    },
-    updateTenure: (state, action) => {
-      const { index, value } = action.payload;
-      state.formData.rules[0].tenure[index] = value;
+      // Delete the tenure from the rules array
+      state.creditScoreET.rules[0].tenure.splice(action.payload, 1);
+
+      // Delete the corresponding entry from the tags array based on the index
+      state.creditScoreET.tags = state.creditScoreET.tags
+        .filter((tag) => tag.index !== action.payload)
+        .map((tag, index) => ({ ...tag, index })); // Update the indices in tags to maintain consistency
     },
   },
   extraReducers: (builder) => {
@@ -264,25 +280,27 @@ const creditScoreETSlice = createSlice({
       .addCase(fetchCreditScoreETInfo.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload.operators) {
-          state.formData = action.payload;
+          state.creditScoreET.operators = action.payload.operators;
+          state.creditScoreET.rules = action.payload.rules;
+          // state.creditScoreET.tags = action.payload.rules[0].tenure;
+          state.creditScoreET.tags = action.payload.rules.flatMap((item) =>
+            item.tenure.map((tenure, index) => ({
+              // ruleName: item.ruleName, // Include ruleName from each payload item
+              index,
+              tenure: tenure, // Include each blockEmployersName as name
+            }))
+          );
         } else {
-          state.formData = {
-            operators: {
-              firstCreditScoreOperator: "",
-              secondCreditScoreOperator: "",
-            },
+          state.creditScoreET = {
+            ...creditScoreETInitialState.creditScoreET,
             rules: [
               {
-                firstCreditScore: "",
-                secondCreditScore: "",
-                creditScoreEtTempId: action.meta.arg, // Assuming creditScoreEtTempId is passed as an argument
-                ruleName: "0",
-                fieldType: "Employer",
-                tenure: [],
+                ...creditScoreETInitialState.creditScoreET.rules[0],
+                creditScoreEtTempId: action.meta.arg,
               },
             ],
           };
-          console.log(state.formData);
+          // state.creditScoreET.operators = action.payload.operators || creditScoreETInitialState.creditScoreET.operators;
         }
       })
       .addCase(fetchCreditScoreETInfo.rejected, (state, action) => {
@@ -349,8 +367,8 @@ export const {
   setCreditScoreETName,
   handleChangeDispatch,
   addTenure,
+  setTenure,
   deleteTenure,
-  updateTenure,
 } = creditScoreETSlice.actions;
 
 export default creditScoreETSlice.reducer;

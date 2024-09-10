@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBEData } from "../../redux/Slices/sidebarSlice";
 import {
   setFormData,
-  resetFormData,
   setBlockEmployersTempId,
   fetchBlockedEmployerData,
   fetchBlockedEmployerName,
@@ -23,18 +22,18 @@ import {
   cloneBlockedEmployer,
 } from "../../redux/Slices/beSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import TagInput from "../TagInput/TagInput";
 
 const BlockedEmployer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { blockEmployersTempId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { formData, data, itemName, loading, error } = useSelector((state) => state.blockedEmployer);
-
-  const cloneSuccess = useSelector(
-    (state) => state.blockedEmployer.cloneSuccess
+  const { loading, error } = useSelector((state) => state.blockedEmployer);
+  const blockEmployer = useSelector(
+    (state) => state.blockedEmployer.blockEmployer
   );
+  const { itemName, cloneSuccess } = blockEmployer;
 
   useEffect(() => {
     dispatch(setBlockEmployersTempId(blockEmployersTempId));
@@ -67,7 +66,7 @@ const BlockedEmployer = () => {
     dispatch(setFormData({ [name]: value }));
   };
 
-  const handleDeleteItem = (name, ruleName) => {
+  const handleDeleteItem = ({ name, ruleName }) => {
     dispatch(
       deleteBlockedEmployerEntry({
         blockEmployersTempId,
@@ -84,6 +83,7 @@ const BlockedEmployer = () => {
             message={"Item has been deleted successfully"}
           />
         ));
+        dispatch(fetchBlockedEmployerData(blockEmployersTempId));
       }
     });
   };
@@ -126,6 +126,7 @@ const BlockedEmployer = () => {
             message={"Item was added successfully"}
           />
         ));
+        dispatch(fetchBlockedEmployerData(blockEmployersTempId));
       } else if (action.type.endsWith("rejected")) {
         toast.custom((t) => (
           <Failed
@@ -166,7 +167,7 @@ const BlockedEmployer = () => {
   if (loading) {
     return <LoadingState />;
   }
-
+  console.log(blockEmployer);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -188,36 +189,14 @@ const BlockedEmployer = () => {
         initialName={itemName}
       />
       <ContainerTile>
-        <div className="flex items-center gap-5 border-b border-gray-300 pb-5">
-          <div className="relative w-1/4">
-            <InputText
-              labelName="Add Blocked Employer"
-              inputName="name"
-              inputValue={formData.name}
-              onChange={handleChange}
-              placeHolder="Blocked Employer"
-            />
-          </div>
-          <Button
-            buttonIcon={PlusIcon}
-            onClick={handlePostItem}
-            circle={true}
-          />
-        </div>
-        {data.map((item, index) => {
-          return item.blockEmployersName.map((name, i) => (
-            <div key={`${index}-${i}`} className="flex gap-5 items-end mt-5">
-              <div className="relative w-1/4">
-                <InputText inputValue={name} disabled={true} />
-              </div>
-              <Button
-                buttonIcon={TrashIcon}
-                onClick={() => handleDeleteItem(name, item.ruleName)}
-                circle={true}
-              />
-            </div>
-          ));
-        })}
+        <TagInput
+          formData={blockEmployer}
+          handleChange={handleChange}
+          inputTextName={"name"}
+          inputTextLabel={"Add Blocked Employer"}
+          addTag={handlePostItem}
+          deleteTag={handleDeleteItem}
+        />
       </ContainerTile>
     </>
   );

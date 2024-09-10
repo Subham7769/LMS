@@ -22,22 +22,22 @@ import {
   handleChangeDispatch,
   addTenure,
   deleteTenure,
-  updateTenure,
   saveCreditScoreET,
   updateCreditScoreETName,
   createCloneCSET,
   handleDeleteCSET,
   setFormData,
+  setTenure,
 } from "../../redux/Slices/creditScoreETSlice";
+import TagInput from "../TagInput/TagInput";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
-  const [tenure, setTenure] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { formData, creditScoreETName, loading, error } = useSelector(
+  const { creditScoreET, creditScoreETName, loading, error } = useSelector(
     (state) => state.creditScoreET
   );
 
@@ -45,7 +45,7 @@ const CreditScoreET = () => {
     dispatch(fetchCreditScoreETInfo(creditScoreETId));
     dispatch(fetchCreditScoreETName(creditScoreETId));
     dispatch(
-      setFormData({ ...formData, creditScoreEtTempId: creditScoreETId })
+      setFormData({ ...creditScoreET, creditScoreEtTempId: creditScoreETId })
     );
   }, [creditScoreETId, dispatch]);
 
@@ -55,16 +55,17 @@ const CreditScoreET = () => {
   };
 
   const handleAddET = () => {
-    dispatch(addTenure(tenure));
-    setTenure("");
+    dispatch(addTenure(creditScoreET.tenure));
+    // console.log(tenure);
   };
 
   const handleSaveET = async () => {
-    await dispatch(saveCreditScoreET(formData)).unwrap();
+    await dispatch(saveCreditScoreET(creditScoreET)).unwrap();
     toast.custom((t) => <RowChanged t={t} toast={toast} />);
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = ({ index }) => {
+    console.log(index);
     dispatch(deleteTenure(index));
     toast.custom((t) => (
       <Warning
@@ -76,8 +77,9 @@ const CreditScoreET = () => {
     ));
   };
 
-  const handleTenureChange = (index, e) => {
-    dispatch(updateTenure({ index, value: e.target.value }));
+  const handleChangeTenure = (e) => {
+    const { name, value } = e.target;
+    dispatch(setTenure({ [name]: value }));
   };
 
   const handleUpdateCSET = async (updatecsetName) => {
@@ -123,6 +125,8 @@ const CreditScoreET = () => {
   if (error) {
     <p>Error: {error}</p>;
   }
+
+  console.log(creditScoreET);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -151,68 +155,38 @@ const CreditScoreET = () => {
           <InputSelect
             labelName={"Minimum Credit Score"}
             inputName={"firstCreditScoreOperator"}
-            inputValue={formData?.operators?.firstCreditScoreOperator}
+            inputValue={creditScoreET?.operators?.firstCreditScoreOperator}
             inputOptions={operatorOptions}
             onChange={handleChange}
           />
           <InputNumber
             inputName={"firstCreditScore"}
-            inputValue={formData?.rules[0]?.firstCreditScore}
+            inputValue={creditScoreET?.rules[0]?.firstCreditScore}
             onChange={handleChange}
             placeHolder="0"
           />
           <InputSelect
             labelName={"Maximum Credit Score"}
             inputName={"secondCreditScoreOperator"}
-            inputValue={formData?.operators?.secondCreditScoreOperator}
+            inputValue={creditScoreET?.operators?.secondCreditScoreOperator}
             inputOptions={operatorOptions}
             onChange={handleChange}
           />
           <InputNumber
             inputName={"secondCreditScore"}
-            inputValue={formData?.rules[0]?.secondCreditScore}
+            inputValue={creditScoreET?.rules[0]?.secondCreditScore}
             onChange={handleChange}
             placeHolder="2"
           />
         </div>
-        <div className="flex items-end gap-5 border-b border-gray-300 pb-4 mb-4">
-          <div>
-            <InputNumber
-              labelName={"Eligible Tenures"}
-              inputName={"tenure"}
-              inputValue={tenure}
-              onChange={(e) => setTenure(e.target.value)}
-              placeHolder={"3"}
-            />
-          </div>
-          <div>
-            <Button buttonIcon={PlusIcon} onClick={handleAddET} circle={true} />
-          </div>
-        </div>
-        {formData?.rules[0]?.tenure.map((item, index) => (
-          <div key={index} className="flex items-end gap-5 mb-3">
-            <div>
-              <InputNumber
-                inputName={"tenure"}
-                // inputId={item.ruleName}
-                inputValue={item}
-                onChange={(e) => {
-                  handleTenureChange(index, e);
-                }}
-                placeHolder={"0.54"}
-              />
-            </div>
-            <div>
-              <button
-                type="button"
-                onClick={() => handleDelete(index)}
-                className="block w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-              >
-                <TrashIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        ))}
+        <TagInput
+          formData={creditScoreET}
+          handleChange={handleChangeTenure}
+          inputTextName={"tenure"}
+          inputTextLabel={"Eligible Tenure"}
+          addTag={handleAddET}
+          deleteTag={handleDelete}
+        />
         <div className="text-right">
           <button
             type="button"

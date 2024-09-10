@@ -2,18 +2,19 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchBEData } from "./sidebarSlice";
 
 const initialState = {
-  formData: {
+  blockEmployer: {
+    itemName: "",
+    cloneSuccess: null,
     blockEmployersTempId: "",
     name: "",
     cloneBEName: "",
     fieldType: "Employer",
     result: 1,
+    tags: [],
   },
-  data: [], // Fetched data
-  itemName: "", // Name of the blocked employer
+  // Name of the blocked employer
   loading: false, // Loading state
   error: null, // Error messages
-  cloneSuccess: null, // ID of the cloned employer (if any)
 };
 
 const getToken = () => localStorage.getItem("authToken");
@@ -130,7 +131,6 @@ export const deleteBlockedEmployerEntry = createAsyncThunk(
         const data = await response.json();
         return rejectWithValue(data);
       }
-      return { name, ruleName };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -158,7 +158,6 @@ export const deleteBlockedEmployer = createAsyncThunk(
         const data = await response.json();
         return rejectWithValue(data);
       }
-      return { blockEmployersTempId };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -171,22 +170,22 @@ export const addBlockedEmployerEntry = createAsyncThunk(
     try {
       const token = getToken();
       const state = getState();
-      const formData = state.blockedEmployer.formData;
-      const data = state.blockedEmployer.data;
+      const blockEmployer = state.blockedEmployer.blockEmployer;
+      const tags = state.blockedEmployer.blockEmployer.tags;
 
-      if (formData.name === "") {
+      if (blockEmployer.name === "") {
         return rejectWithValue("Cannot post empty data");
       }
 
       const payload = {
-        blockEmployerName: formData.name,
-        blockEmployersTempId: formData.blockEmployersTempId,
-        fieldType: formData.fieldType,
-        result: formData.result,
-        ruleName: data && data[0] && data[0].ruleName ? data[0].ruleName : "0",
+        blockEmployerName: blockEmployer.name,
+        blockEmployersTempId: blockEmployer.blockEmployersTempId,
+        fieldType: blockEmployer.fieldType,
+        result: blockEmployer.result,
+        ruleName: tags && tags[0] && tags[0].ruleName ? tags[0].ruleName : "0",
       };
 
-      const method = data.length === 0 ? "POST" : "PUT";
+      const method = tags.length === 0 ? "POST" : "PUT";
 
       const response = await fetch(
         `${import.meta.env.VITE_BLOCKED_EMPLOYER_CREATE_ENTRY}`,
@@ -247,13 +246,10 @@ const beSlice = createSlice({
   initialState,
   reducers: {
     setFormData: (state, action) => {
-      state.formData = { ...state.formData, ...action.payload };
-    },
-    resetFormData: (state) => {
-      state.formData = initialState.formData;
+      state.blockEmployer = { ...state.blockEmployer, ...action.payload };
     },
     setBlockEmployersTempId: (state, action) => {
-      state.formData.blockEmployersTempId = action.payload;
+      state.blockEmployer.blockEmployersTempId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -265,11 +261,16 @@ const beSlice = createSlice({
       })
       .addCase(fetchBlockedEmployerData.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.blockEmployer.tags = action.payload.flatMap((item) =>
+          item.blockEmployersName.map((name) => ({
+            ruleName: item.ruleName, // Include ruleName from each payload item
+            name: name, // Include each blockEmployersName as name
+          }))
+        );
       })
       .addCase(fetchBlockedEmployerData.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       })
 
       // Fetch Blocked Employer Name
@@ -279,11 +280,11 @@ const beSlice = createSlice({
       })
       .addCase(fetchBlockedEmployerName.fulfilled, (state, action) => {
         state.loading = false;
-        state.itemName = action.payload;
+        state.blockEmployer.itemName = action.payload;
       })
       .addCase(fetchBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       })
 
       // Update Blocked Employer Name
@@ -293,11 +294,11 @@ const beSlice = createSlice({
       })
       .addCase(updateBlockedEmployerName.fulfilled, (state, action) => {
         state.loading = false;
-        state.itemName = action.payload.newName;
+        state.blockEmployer.itemName = action.payload.newName;
       })
       .addCase(updateBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       })
 
       // Delete Blocked Employer Entry
@@ -307,22 +308,10 @@ const beSlice = createSlice({
       })
       .addCase(deleteBlockedEmployerEntry.fulfilled, (state, action) => {
         state.loading = false;
-        const { name, ruleName } = action.payload;
-        state.data = state.data.map((item) => {
-          if (item.ruleName === ruleName) {
-            return {
-              ...item,
-              blockEmployersName: item.blockEmployersName.filter(
-                (n) => n !== name
-              ),
-            };
-          }
-          return item;
-        });
       })
       .addCase(deleteBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       })
 
       // Delete Blocked Employer
@@ -332,13 +321,10 @@ const beSlice = createSlice({
       })
       .addCase(deleteBlockedEmployer.fulfilled, (state) => {
         state.loading = false;
-        state.data = [];
-        state.itemName = "";
-        state.formData = initialState.formData;
       })
       .addCase(deleteBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       })
 
       // Add Blocked Employer Entry
@@ -348,32 +334,11 @@ const beSlice = createSlice({
       })
       .addCase(addBlockedEmployerEntry.fulfilled, (state, action) => {
         state.loading = false;
-        const payload = action.payload;
-        if (state.data.length === 0) {
-          const newItem = {
-            ruleName: payload.ruleName,
-            blockEmployersName: [payload.blockEmployerName],
-          };
-          state.data = [newItem];
-        } else {
-          state.data = state.data.map((item) => {
-            if (item.ruleName === payload.ruleName) {
-              return {
-                ...item,
-                blockEmployersName: [
-                  ...item.blockEmployersName,
-                  payload.blockEmployerName,
-                ],
-              };
-            }
-            return item;
-          });
-        }
-        state.formData.name = "";
+        state.blockEmployer.name = "";
       })
       .addCase(addBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       })
 
       // Clone Blocked Employer
@@ -383,16 +348,15 @@ const beSlice = createSlice({
       })
       .addCase(cloneBlockedEmployer.fulfilled, (state, action) => {
         state.loading = false;
-        state.cloneSuccess = action.payload.blockEmployerTempId;
+        state.blockEmployer.cloneSuccess = action.payload.blockEmployerTempId;
       })
       .addCase(cloneBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
-        state.error =  action.error.message;
+        state.error = action.error.message;
       });
   },
 });
 
-export const { setFormData, resetFormData, setBlockEmployersTempId } =
-  beSlice.actions;
+export const { setFormData, setBlockEmployersTempId } = beSlice.actions;
 
 export default beSlice.reducer;

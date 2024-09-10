@@ -80,13 +80,15 @@ const TagInput = ({
             placeHolder={inputTextPlaceholder}
           />
         )}
-        <InputNumber
-          labelName={inputNumberLabel}
-          inputName={inputNumberName}
-          inputValue={formData[inputNumberName]}
-          onChange={handleChange}
-          placeHolder={"2"}
-        />
+        {inputNumberName && (
+          <InputNumber
+            labelName={inputNumberLabel}
+            inputName={inputNumberName}
+            inputValue={formData[inputNumberName]}
+            onChange={handleChange}
+            placeHolder={"2"}
+          />
+        )}
         <div className="">
           <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
         </div>

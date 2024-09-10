@@ -129,22 +129,24 @@ const CityCard = ({ cityData }) => {
     }
   };
 
+  console.log(cityFormData);
+
   return (
-      <ContainerTile className={"w-full"}>
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-lg">City</div>
-        </div>
-        <TagInput
-          formData={cityFormData}
-          handleChange={handleChange}
-          inputTextName={"city"}
-          inputTextLabel={"Add City"}
-          addTag={addTag}
-          deleteTag={deleteTag}
-          inputNumberName={"points"}
-          inputNumberLabel={"Add Points"}
-        />
-      </ContainerTile>
+    <ContainerTile className={"w-full"}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-lg">City</div>
+      </div>
+      <TagInput
+        formData={cityFormData}
+        handleChange={handleChange}
+        inputTextName={"city"}
+        inputTextLabel={"Add City"}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        inputNumberName={"points"}
+        inputNumberLabel={"Add Points"}
+      />
+    </ContainerTile>
   );
 };
 
