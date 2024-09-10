@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { getOverdraftLoanAccountPIF } from "../../redux/Slices/overdraftLoanOffersSlice";
 import { useEffect } from 'react';
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
@@ -9,9 +8,8 @@ import LoadingState from "../LoadingState/LoadingState";
 
 
 const PIFDetails = () => {
-  const { accountNumber } = useParams();
   const dispatch = useDispatch();
-  const { accountPIF, loading, error } = useSelector(state => state.overdraftLoanOffers)
+  const { accountPIF,accountNumberList,accountNumber, loading, error } = useSelector(state => state.overdraftLoanOffers)
 
   console.log(accountPIF)
 
@@ -23,8 +21,16 @@ const PIFDetails = () => {
   );
 
   useEffect(() => {
-    dispatch(getOverdraftLoanAccountPIF(accountNumber))
-  }, [dispatch])
+    if (accountNumberList.length > 0) {
+      dispatch(getOverdraftLoanAccountPIF(accountNumberList[0].value));
+    }
+  }, [accountNumberList, dispatch]);
+
+  useEffect(() => {
+    if (accountNumber) {
+      dispatch(getOverdraftLoanAccountPIF(accountNumber));
+    }
+  }, [accountNumber, dispatch]);
 
   // Conditional rendering starts after hooks have been defined
   if (loading) {

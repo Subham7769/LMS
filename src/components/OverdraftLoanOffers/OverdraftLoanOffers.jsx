@@ -1,8 +1,12 @@
 import { useLocation, Link, useParams, Outlet } from "react-router-dom";
+import { getOverdraftAccountNumberList } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const OverdraftLoanOffers = () => {
-  const { userID, accountNumber } = useParams();
+  const { userID } = useParams();
   const location = useLocation();
+  const dispatch = useDispatch()
   const currentPath = location.pathname;
 
   const tabs = [
@@ -10,8 +14,14 @@ const OverdraftLoanOffers = () => {
     { path: `/overdraft-loan-offers/${userID}/account-details`, label: "Account Details" },
     { path: `/overdraft-loan-offers/${userID}/debit-amount`, label: "Debit Amount" },
     { path: `/overdraft-loan-offers/${userID}/pay-amount`, label: "Pay Amount" },
-    { path: `/overdraft-loan-offers/${userID}/overdraft-details/${accountNumber}`, label: "Overdraft Details" },
+    { path: `/overdraft-loan-offers/${userID}/overdraft-details`, label: "Overdraft Details" },
   ];
+    // First API call: Fetch account number
+    useEffect(() => {
+      if (userID) {
+        dispatch(getOverdraftAccountNumberList(userID))
+      }
+    }, [dispatch, userID]);
 
   return (
     <div className="mt-4">

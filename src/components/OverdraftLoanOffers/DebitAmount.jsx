@@ -1,37 +1,36 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
-import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getDisbursementInfo, submitDisbursement } from "../../redux/Slices/userProductTestingSlice";
+import { getOverdraftAccountNumberList, debitOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
 import LoadingState from "../LoadingState/LoadingState";
+import convertToReadableString from '../../utils/convertToReadableString'
+
 
 const DebitAmount = () => {
-  const { disbursementData, loading, error } = useSelector(state => state.userProductTesting)
   const dispatch = useDispatch()
-  const [formData, setFormData] = useState({
-    amount: "",
-    userloanID: "",
-  });
-  const navigate = useNavigate(); // Adding useNavigate for navigation
+  const navigate = useNavigate();
   const { userID } = useParams();
+  const { debitAmount, accountNumberList, loading, error } = useSelector(state => state.overdraftLoanOffers)
 
+  const [formData, setFormData] = useState({
+    accountNumber: "",
+    debitAmount: "",
+    transactionId: "test-test-test-test",
+  });
 
-  useEffect(() => {
-    dispatch(getDisbursementInfo({ userID, navigate }));
-  }, []);
+  if (!accountNumberList) {
+    useEffect(() => {
+      if (userID) {
+        dispatch(getOverdraftAccountNumberList(userID))
+      }
+    }, [dispatch, userID]);
+  }
 
-  useEffect(() => {
-    console.log(disbursementData);
-    setFormData({
-      userloanID: disbursementData.loanId,
-      amount: disbursementData.principleAmount,
-    });
-  }, [disbursementData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +39,13 @@ const DebitAmount = () => {
       [name]: value,
     });
   };
+
+  const InfoRow = ({ label, value }) => (
+    <div className="py-2 grid grid-cols-3">
+      <div className="font-semibold">{label}:</div>
+      <div className="col-span-2">{value || "N/A"}</div>
+    </div>
+  );
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -50,27 +56,27 @@ const DebitAmount = () => {
     return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
-  if (disbursementData.status === 500) {
-    return <ContainerTile className="text-center">No DebitAmount</ContainerTile>;
+  if (accountNumberList?.length < 1) {
+    return <ContainerTile className="text-center">No Debit Amount Account</ContainerTile>;
   }
 
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
-        <div className="text-lg">Proceed for disbursement</div>
+        <div className="text-lg">Proceed for Debit Amount</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
-          <InputText
-            labelName={"Loan Id"}
-            inputName={"userloanID"}
-            disabled={true}
-            inputValue={formData.userloanID}
+          <InputSelect
+            labelName="Account Number List"
+            inputOptions={accountNumberList}
+            inputName="accountNumber"
+            inputValue={formData.accountNumber}
             onChange={handleChange}
           />
           <InputNumber
             labelName={"Enter Amount"}
-            inputName={"amount"}
-            inputValue={formData.amount}
+            inputName={"debitAmount"}
+            inputValue={formData.debitAmount}
             onChange={handleChange}
             placeHolder={"5000"}
           />
@@ -78,9 +84,16 @@ const DebitAmount = () => {
         <Button
           rectangle={true}
           buttonName={"Submit"}
-          onClick={() => dispatch(submitDisbursement({ userID, formData, navigate}))}
+          onClick={() => dispatch(debitOverdraftLoanAccount(formData))}
         />
       </ContainerTile>
+      {debitAmount?.accountStatus && <ContainerTile className={"mt-5"}>
+        <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
+          {
+            Object.entries(debitAmount?.accountStatus).map(([key, value]) => <InfoRow key={key} label={convertToReadableString(key)} value={value} />)
+          }
+        </div>
+      </ContainerTile >}
     </>
   );
 };

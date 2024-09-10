@@ -1,22 +1,27 @@
 import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import convertToReadableString from '../../utils/convertToReadableString'
 
 const GeneralDetails = () => {
-  const { accountNumber } = useParams();
   const dispatch = useDispatch();
-  const { overdraftDetails, loading, error } = useSelector(state => state.overdraftLoanOffers)
+  const { overdraftDetails,accountNumberList, accountNumber, loading, error } = useSelector(state => state.overdraftLoanOffers)
+  console.log(overdraftDetails)
 
   useEffect(() => {
-    dispatch(getOverdraftLoanAccount(accountNumber))
-  }, [dispatch])
+    if (accountNumberList.length > 0) {
+      dispatch(getOverdraftLoanAccount(accountNumberList[0].value));
+    }
+  }, [accountNumberList, dispatch]);
 
-  console.log(overdraftDetails)
+  useEffect(() => {
+    if (accountNumber) {
+      dispatch(getOverdraftLoanAccount(accountNumber));
+    }
+  }, [accountNumber, dispatch]);
 
   const InfoRow = ({ label, value }) => (
     <div className="py-2 grid grid-cols-3">
@@ -34,7 +39,7 @@ const GeneralDetails = () => {
 
   const renderListDetails = (key, data) => {
     if (!data) {
-      return <InfoRow label={`${convertToReadableString(key)}`} value={data} />;
+      return <ContainerTile><InfoRow label={`${convertToReadableString(key)}`} value={data} /></ContainerTile>
     }
 
     return (
@@ -59,6 +64,7 @@ const GeneralDetails = () => {
   }
 
   return (
+    <>
       <ContainerTile>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
           {
@@ -90,18 +96,21 @@ const GeneralDetails = () => {
               return <InfoRow key={key} label={convertToReadableString(key)} value={value} />;
             })
           }
-          {
-            Object.entries(overdraftDetails).map(([key, value]) => {
-              if (withModel.includes(key)) {
-                return renderListDetails(key, value);
-              }
-
-              // Handle other fields here if needed
-              return null;
-            })
-          }
         </div>
       </ContainerTile >
+      <div className="grid grid-cols-2 gap-4 text-[14px] pb-2 mt-5">
+        {
+          Object.entries(overdraftDetails).map(([key, value]) => {
+            if (withModel.includes(key)) {
+              return renderListDetails(key, value);
+            }
+
+            // Handle other fields here if needed
+            return null;
+          })
+        }
+      </div>
+    </>
   );
 };
 export default GeneralDetails;

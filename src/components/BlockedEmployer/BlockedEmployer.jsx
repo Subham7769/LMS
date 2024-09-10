@@ -30,11 +30,8 @@ const BlockedEmployer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const formData = useSelector((state) => state.blockedEmployer.formData);
-  const data = useSelector((state) => state.blockedEmployer.data);
-  const itemName = useSelector((state) => state.blockedEmployer.itemName);
-  const loading = useSelector((state) => state.blockedEmployer.loading);
-  const error = useSelector((state) => state.blockedEmployer.error);
+  const { formData, data, itemName, loading, error } = useSelector((state) => state.blockedEmployer);
+
   const cloneSuccess = useSelector(
     (state) => state.blockedEmployer.cloneSuccess
   );

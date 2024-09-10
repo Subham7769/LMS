@@ -221,7 +221,7 @@ const routes = [
           { path: "account-details", element: <AccountDetails />, errorElement: <RouteErrorBoundary /> },
           { path: "debit-amount", element: <DebitAmount />, errorElement: <RouteErrorBoundary /> },
           { path: "pay-amount", element: <PayAmount />, errorElement: <RouteErrorBoundary /> },
-          { path: "overdraft-details/:accountNumber", element: <OverdraftDetailsTab />, errorElement: <RouteErrorBoundary /> },
+          { path: "overdraft-details", element: <OverdraftDetailsTab />, errorElement: <RouteErrorBoundary /> },
         ],
       },
     ],

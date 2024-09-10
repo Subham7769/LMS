@@ -211,7 +211,7 @@ const ListTable = ({
                         />
                       </>
                     ) : (
-                      product[key]
+                      product[key] ? product[key] : "-"
                     )}
                   </td>
                 ) : null

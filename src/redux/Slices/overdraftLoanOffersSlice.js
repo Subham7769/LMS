@@ -276,6 +276,126 @@ export const getOverdraftLoanAccountPIF = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching account details by account number
+export const getOverdraftAccountNumberList = createAsyncThunk(
+  "overdraft/getAccountNumber",
+  async (userID, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/account/${userID}`
+      );
+      return response.data; // Return the account details on success
+    } catch (error) {
+      // Handle errors and return a rejected value
+      return rejectWithValue(
+        error.response?.data || "Error fetching account number"
+      );
+    }
+  }
+);
+
+export const debitOverdraftLoanAccount = createAsyncThunk(
+  "overdraft/debitOverdraftLoanAccount",
+  async (formData, { rejectWithValue }) => {
+    const postData = { ...formData };
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/debit",
+        {
+          method: "PUT", // Use POST method for debit API call
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData), // Convert the postData to JSON string
+        }
+      );
+
+      // Handle a 400 (bad request) response
+      if (response.status === 400) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message); // Pass the error message from the response
+      }
+
+      // Parse and return the response data if the request was successful
+      const responseData = await response.json();
+      return responseData; // Return the response data from the server
+    } catch (error) {
+      // Return a rejected action if an error occurred
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const payOverdraftLoanAccount = createAsyncThunk(
+  'overdraft/payOverdraftLoanAccount',
+  async (formData, { rejectWithValue }) => {
+    const postData = {...formData};
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/pay",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
+
+      // Check for a bad request
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+
+      const responseData = await response.json();
+      return responseData; // Return the response data on success
+    } catch (error) {
+      return rejectWithValue(error.message); // Handle network or other errors
+    }
+  }
+);
+
+export const getAccountDetails = createAsyncThunk(
+  'overdraft/getAccountDetails',
+  async (accountNumber, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    console.log(accountNumber)
+
+    try {
+      const response = await fetch(
+        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/details/${accountNumber}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Check for a bad request
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+
+      const data = await response.json();
+      return data; // Return the response data on success
+    } catch (error) {
+      return rejectWithValue(error.message); // Handle network or other errors
+    }
+  }
+);
+
+
 
 const initialState = {
   overdraftOffer: {
@@ -307,8 +427,16 @@ const initialState = {
   },
   accountOutstanding: {},
   accountPIF: {},
-  debitAmount: [],
-  payAmount: [],
+  debitAmount: {
+    userId: "",
+    accountStatus: null,
+  },
+  payAmount: {
+    userId: "",
+    accountStatus: null,
+  },
+  accountNumberList: null,
+  accountNumber:null,
   overdraftDetails: {},
   showModal: false,
   loading: false,
@@ -319,6 +447,9 @@ const overdraftLoanOffersSlice = createSlice({
   name: "overdraftLoanOffers",
   initialState,
   reducers: {
+    updateAccountNumber(state, action) {
+      state.accountNumber = action.payload;
+    },
     updateOverdraftOfferField: (state, action) => {
       const { name, value } = action.payload;
       state.overdraftOffer[name] = value;
@@ -461,9 +592,7 @@ const overdraftLoanOffersSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        getOverdraftLoanAccountOutstanding.fulfilled,
-        (state, action) => {
+      .addCase( getOverdraftLoanAccountOutstanding.fulfilled, (state, action) => {
           state.loading = false;
           console.log(action.payload); // Useful for debugging
           state.accountOutstanding = action.payload;
@@ -477,20 +606,76 @@ const overdraftLoanOffersSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        getOverdraftLoanAccountPIF.fulfilled,
-        (state, action) => {
-          state.loading = false;
-          console.log(action.payload); // Useful for debugging
-          state.accountPIF = action.payload;
-        }
-      )
+      .addCase(getOverdraftLoanAccountPIF.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload); // Useful for debugging
+        state.accountPIF = action.payload;
+      })
       .addCase(getOverdraftLoanAccountPIF.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(getOverdraftAccountNumberList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOverdraftAccountNumberList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accountNumberList= action.payload.accountNumberList.map(
+            (accountNumber) => ({
+              label: accountNumber,
+              value: accountNumber,
+            })
+          )
+      })
+      .addCase(getOverdraftAccountNumberList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch account details";
+      })
+      .addCase(debitOverdraftLoanAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(debitOverdraftLoanAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.debitAmount = {
+          ...state.debitAmount,
+          accountStatus: action.payload,
+        };
+      })
+      .addCase(debitOverdraftLoanAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(payOverdraftLoanAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(payOverdraftLoanAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.payAmount = {
+          ...state.payAmount,
+          accountStatus: action.payload,
+        };
+      })
+      .addCase(payOverdraftLoanAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getAccountDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAccountDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accountDetails = action.payload;
+      })
+      .addCase(getAccountDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-export const { updateOverdraftOfferField } = overdraftLoanOffersSlice.actions;
+export const { updateAccountNumber, updateOverdraftOfferField } = overdraftLoanOffersSlice.actions;
 export default overdraftLoanOffersSlice.reducer;
