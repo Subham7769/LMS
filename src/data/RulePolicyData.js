@@ -64,4 +64,4 @@ export const RulePolicyList = [
   },
 ];
 
-export const MaxFinAmtHeaderList = ["financeAmount", "tenure", "Actions"];
+export const MaxFinAmtHeaderList = ["Finance Amount", "tenure", "Actions"];

@@ -80,8 +80,8 @@ const ListTable = ({
       valB = parseInt(valB.replace(" months", ""));
     } else if (
       sortConfig.key === "openLoans" ||
-      sortConfig.key === "totalProcessed"||
-      sortConfig.key === "tenure"||
+      sortConfig.key === "totalProcessed" ||
+      sortConfig.key === "tenure" ||
       sortConfig.key === "financeAmount"
     ) {
       valA = parseInt(valA, 10);
@@ -212,8 +212,10 @@ const ListTable = ({
                           placeHolder="3"
                         />
                       </>
+                    ) : product[key] ? (
+                      product[key]
                     ) : (
-                      product[key] ? product[key] : "-"
+                      "-"
                     )}
                   </td>
                 ) : null
