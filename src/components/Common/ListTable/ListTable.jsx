@@ -80,7 +80,9 @@ const ListTable = ({
       valB = parseInt(valB.replace(" months", ""));
     } else if (
       sortConfig.key === "openLoans" ||
-      sortConfig.key === "totalProcessed"
+      sortConfig.key === "totalProcessed"||
+      sortConfig.key === "tenure"||
+      sortConfig.key === "financeAmount"
     ) {
       valA = parseInt(valA, 10);
       valB = parseInt(valB, 10);
