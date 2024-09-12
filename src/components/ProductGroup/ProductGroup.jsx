@@ -1,6 +1,5 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
@@ -9,95 +8,109 @@ import LoadingState from "../Common/Loader/Loader";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
+  fetchLoanProducts,
   fetchPGroups,
   setFormData,
+  updateProductGroup,
+  handleChangeDispatch,
+  deleteProductTag,
+  addProductTag,
 } from "../../redux/Slices/productGroupSlice";
+import { fetchProdGroupData } from "../../redux/Slices/sidebarSlice";
 
 const ProductGroup = () => {
-  const { configId } = useParams();
-  const location = useLocation();
-  const isNewGroup = configId === "newGroup";
-  const newGroupName = location.state?.Name || "New Group";
-
   const dispatch = useDispatch();
-  const { formData, productTypeOptions, loading } = useSelector(
+  const { productGroupData, productTypeOptions, loading } = useSelector(
     (state) => state.productGroup
   );
 
   useEffect(() => {
     dispatch(fetchPGroups());
-    if (isNewGroup) {
-      dispatch(setFormData({ name: newGroupName }));
+    dispatch(fetchLoanProducts());
+  }, [dispatch]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(handleChangeDispatch({ name, value }));
+  };
+
+  const handleUpdatePGName = (updatePGName) => {
+    dispatch(setFormData({ name: "configName", value: updatePGName }));
+  };
+
+  const handleTagInputChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(setFormData({ name, value }));
+  };
+
+  const addTag = () => {
+    // console.log(tag);
+    const newTag = {
+      product: productGroupData.product,
+      limit: productGroupData.limit, // You can pass the limit from the input fields or set a default value
+    };
+    if (
+      productGroupData.tags.some(
+        (existingTag) => existingTag.product === newTag.product
+      )
+    ) {
+      alert("This product already exists!");
     } else {
-      dispatch(setFormData({ name: configId }));
+      dispatch(addProductTag(newTag));
     }
-  }, [dispatch, configId, isNewGroup, newGroupName]);
+  };
 
-  const handleInputChange = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      dispatch(setFormData({ [name]: value }));
-    },
-    [dispatch]
-  );
+  const deleteTag = (tag) => {
+    dispatch(deleteProductTag(tag.product));
+  };
 
-  const handleSave = useCallback(
-    (newName) => {
-      dispatch(setFormData({ name: newName }));
-    },
-    [dispatch]
-  );
-
-  const addTag = useCallback(
-    (tag) => {
-      if (formData.tags.includes(tag)) {
-        alert("This product already exists!");
-      } else {
-        alert("Cannot add product for now!");
-      }
-    },
-    [dispatch, formData.tags]
-  );
-
-  const deleteTag = useCallback(
-    (tag) => {
-      dispatch(setFormData({ tags: formData.tags.filter((t) => t !== tag) }));
-    },
-    [dispatch, formData.tags]
-  );
+  const handleUpdate = async () => {
+    await dispatch(updateProductGroup(productGroupData)).unwrap();
+    await dispatch(fetchProdGroupData());
+  };
 
   if (loading) {
     return <LoadingState />;
   }
 
+  // console.log(formData);
+
   return (
     <>
       <div className="flex items-center justify-between mb-5">
-        <DynamicName initialName={formData.name} onSave={handleSave} editable={false}/>
+        <DynamicName
+          initialName={productGroupData?.configName}
+          onSave={handleUpdatePGName}
+        />
       </div>
       <ContainerTile>
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
             labelName="Percentage from Equated Installments"
             inputName="overduePercentage"
-            inputValue={formData.overduePercentage}
-            onChange={handleInputChange} 
+            inputValue={productGroupData?.overDuePercentage?.percentageFromEmi}
+            onChange={handleInputChange}
           />
           <InputNumber
             labelName="Finance Hard Limit"
             inputName="hardLimit"
-            inputValue={formData.hardLimit}
-            onChange={handleInputChange} 
+            inputValue={productGroupData?.financeHardLimit?.hardLimit}
+            onChange={handleInputChange}
+          />
+          <InputNumber
+            labelName="Renew Credit Report"
+            inputName="renewInDays"
+            inputValue={productGroupData?.renewCreditReport?.renewInDays}
+            onChange={handleInputChange}
           />
         </div>
         <div className="border-b pb-4 mb-2">
           <TagInput
-            formData={formData}
-            handleChange={handleInputChange} 
+            formData={productGroupData}
+            handleChange={handleTagInputChange}
             inputSelectName={"product"}
             inputSelectLabel={"Add Products"}
-            handleSelectChange={handleInputChange} 
-            addTag={addTag} 
+            addTag={addTag}
             deleteTag={deleteTag}
             productTypeOptions={productTypeOptions}
             inputNumberName={"limit"}
@@ -109,6 +122,7 @@ const ProductGroup = () => {
             buttonIcon={CheckCircleIcon}
             buttonName="Save"
             rectangle={true}
+            onClick={handleUpdate}
           />
         </div>
       </ContainerTile>

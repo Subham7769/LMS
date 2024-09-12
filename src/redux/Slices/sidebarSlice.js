@@ -204,8 +204,8 @@ export const fetchProdGroupData = createAsyncThunk(
       "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/concurrent-loans/config";
     const transformData = (data) => {
       const ProdDetailsArray = Array.isArray(data) ? data : [data];
-      return ProdDetailsArray.map(({ configId }) => ({
-        name: configId.replace(/-/g, " "),
+      return ProdDetailsArray.map(({ configName, configId }) => ({
+        name: configName.replace(/-/g, " "),
         href: "/product-group/" + configId,
       }));
     };

@@ -41,7 +41,7 @@ const TagInput = ({
             }
           </div>
 
-          {inputNumberName && inputTextName && (
+          {inputNumberName && (inputTextName || inputSelectName) && (
             <>
               <div>|</div>
               <div>{tag[inputNumberName]}</div>
