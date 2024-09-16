@@ -263,5 +263,5 @@ export const MenusInitial = [
     current: false,
   },
 
-  // { title: "TestComponent", href: "/test", icon: BeakerIcon, current: false },
+  { title: "TestComponent", href: "/test", icon: "BeakerIcon", current: false },
 ];

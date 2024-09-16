@@ -1,4 +1,5 @@
 import React from "react";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const InputNumber = ({
   labelName,
@@ -9,6 +10,11 @@ const InputNumber = ({
   placeHolder,
   disabled = false,
 }) => {
+
+  if (inputValue === null || inputValue === undefined) {
+    throw new Error("abc")
+  }
+
   const handleChange = (e) => {
     const { name, value, id } = e.target;
     onChange({
@@ -45,4 +51,14 @@ const InputNumber = ({
   );
 };
 
-export default InputNumber;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <InputNumber {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

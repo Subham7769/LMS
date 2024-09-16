@@ -1,5 +1,6 @@
 import React from 'react'
 import { TrashIcon } from '@heroicons/react/20/solid';
+import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
 const Button = ({ buttonIcon: ButtonIcon, buttonName, onClick, rectangle = false, circle = false, className }) => {
   const rectangleClass = 'rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5';
@@ -22,4 +23,14 @@ const Button = ({ buttonIcon: ButtonIcon, buttonName, onClick, rectangle = false
     </button>
   );
 }
-export default Button;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <Button {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

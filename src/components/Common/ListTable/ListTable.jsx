@@ -166,93 +166,10 @@ const ListTable = ({
   const currentData = Paginated
     ? dataToRender.slice((currentPage - 1) * pageSize, currentPage * pageSize)
     : dataToRender;
-  const Content = () => (
-    <>
-      <table className="min-w-full divide-y divide-gray-300">
-        <thead className="bg-gray-50">
-          <tr className={Divider ? "divide-x divide-gray-200" : ""}>
-            {ListHeader.map((header, index) => (
-              <th
-                key={index}
-                scope="col"
-                className={`w-1/${HeaderCellWidth} max-w-24`}
-                onClick={() => handleSort(toLowerCamelCase(header))}
-              >
-                {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
-                <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
-                  {header}
-                  {getSortIcon(toLowerCamelCase(header))}
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-          {currentData.map((product, rowIndex) => (
-            <tr
-              className={Divider ? "divide-x divide-gray-200" : ""}
-              key={rowIndex}
-            >
-              {Object.keys(product).map((key, idx) =>
-                key !== "href" ? (
-                  <td
-                    key={idx}
-                    className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-[14px] text-gray-500`}
-                  >
-                    {product.href ? (
-                      <Link className="w-full block" to={product.href}>
-                        {product[key]}
-                      </Link>
-                    ) : Editable || editingRowIndex === rowIndex ? (
-                      <>
-                        <InputNumber
-                          inputName={key}
-                          inputValue={product[key]}
-                          onChange={(e) => handleEditableFields(e, rowIndex)}
-                          placeHolder="3"
-                        />
-                      </>
-                    ) : product[key] ? (
-                      product[key]
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                ) : null
-              )}
-              {ListHeader.includes("Actions") && (
-                <td
-                  className={`flex justify-center gap-2 align-middle whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
-                >
-                  {ListAction.map((item, buttonIndex) => (
-                    <Button
-                      buttonIcon={
-                        ListAction.length > 1 && buttonIndex === 0
-                          ? editingRowIndex === rowIndex
-                            ? CheckCircleIcon
-                            : item.icon
-                          : item.icon // Ensure TrashIcon or any other icon shows correctly
-                      }
-                      onClick={
-                        () =>
-                          ListAction.length > 1 && buttonIndex === 0
-                            ? editingRowIndex === rowIndex
-                              ? item.action(rowIndex)
-                              : toggleEdit(rowIndex, buttonIndex)
-                            : item.action(rowIndex) // Keep original action for the other button
-                      }
-                      circle={item.circle}
-                      key={buttonIndex} // Use key to uniquely identify each button
-                    />
-                  ))}
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  );
+
+  const indexOfLastItem = currentPage * PageSize;
+  const indexOfFirstItem = indexOfLastItem - PageSize;
+
 
   return (
     <div
@@ -294,9 +211,95 @@ const ListTable = ({
       </div>
 
       <div className="flow-root overflow-hidden ">
-        <SectionErrorBoundary>
-          <Content />
-        </SectionErrorBoundary>
+        <table className="min-w-full divide-y divide-gray-300">
+          <thead className="bg-gray-50">
+            <tr className={Divider ? "divide-x divide-gray-200" : ""}>
+              {ListHeader.map((header, index) => (
+                <th
+                  key={index}
+                  scope="col"
+                  className={`w-1/${HeaderCellWidth} max-w-24`}
+                  onClick={() => handleSort(toLowerCamelCase(header))}
+                >
+                  {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
+                  <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
+                    {header}
+                    {getSortIcon(toLowerCamelCase(header))}
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {currentData.map((product, rowIndex) => (
+              <tr
+                className={Divider ? "divide-x divide-gray-200" : ""}
+                key={indexOfFirstItem + rowIndex}
+              >
+                {Object.keys(product).map((key, idx) =>
+                  key !== "href" ? (
+                    <td
+                      key={idx}
+                      className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-[14px] text-gray-500`}
+                    >
+                      {product.href ? (
+                        <Link className="w-full block" to={product.href}>
+                          {product[key]}
+                        </Link>
+                      ) : Editable ||
+                        editingRowIndex === indexOfFirstItem + rowIndex ? (
+                        <>
+                          <InputNumber
+                            inputName={key}
+                            inputValue={product[key]}
+                            onChange={(e) =>
+                              handleEditableFields(e, indexOfFirstItem + rowIndex)
+                            }
+                            placeHolder="3"
+                          />
+                        </>
+                      ) : product[key] ? (
+                        product[key]
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                  ) : null
+                )}
+                {ListHeader.includes("Actions") && (
+                  <td
+                    className={`flex justify-center gap-2 align-middle whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
+                  >
+                    {ListAction.map((item, buttonIndex) => (
+                      <Button
+                        buttonIcon={
+                          ListAction.length > 1 && buttonIndex === 0
+                            ? editingRowIndex === indexOfFirstItem + rowIndex
+                              ? CheckCircleIcon
+                              : item.icon
+                            : item.icon // Ensure TrashIcon or any other icon shows correctly
+                        }
+                        onClick={
+                          () =>
+                            ListAction.length > 1 && buttonIndex === 0
+                              ? editingRowIndex === indexOfFirstItem + rowIndex
+                                ? item.action(indexOfFirstItem + rowIndex)
+                                : toggleEdit(
+                                  indexOfFirstItem + rowIndex,
+                                  buttonIndex
+                                )
+                              : item.action(indexOfFirstItem + rowIndex) // Keep original action for the other button
+                        }
+                        circle={item.circle}
+                        key={buttonIndex} // Use key to uniquely identify each button
+                      />
+                    ))}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       {/* Pagination Controls */}
       {Paginated && totalPages > 1 && (
@@ -304,11 +307,10 @@ const ListTable = ({
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`flex items-center px-2 py-2 rounded-md ${
-              currentPage === 1
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-indigo-500 text-white cursor-pointer"
-            }`}
+            className={`flex items-center px-2 py-2 rounded-md ${currentPage === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-indigo-500 text-white cursor-pointer"
+              }`}
           >
             <ChevronLeftIcon className="w-5 h-5" />
           </button>
@@ -318,11 +320,10 @@ const ListTable = ({
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`flex items-center px-2 py-2 rounded-md ${
-              currentPage === totalPages
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-indigo-500 text-white cursor-pointer"
-            }`}
+            className={`flex items-center px-2 py-2 rounded-md ${currentPage === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-indigo-500 text-white cursor-pointer"
+              }`}
           >
             <ChevronRightIcon className="w-5 h-5" />
           </button>
@@ -332,4 +333,14 @@ const ListTable = ({
   );
 };
 
-export default ListTable;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <SectionErrorBoundary>
+      <ListTable {...props} />
+    </SectionErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

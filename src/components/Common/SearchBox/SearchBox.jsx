@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Button from "../Button/Button";
 import InputText from "../InputText/InputText";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const SearchBox = () => {
   const location = useLocation();
@@ -128,4 +129,14 @@ const SearchBox = () => {
   );
 };
 
-export default SearchBox;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <SearchBox {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

@@ -1,4 +1,5 @@
 import React from 'react'
+import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
 const InputPassword = ({
   labelName,
@@ -32,4 +33,13 @@ const InputPassword = ({
   )
 }
 
-export default InputPassword
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <InputPassword {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

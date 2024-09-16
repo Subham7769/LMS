@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Button from "../Button/Button";
-import InputText from "../InputText/InputText";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   const [cloneName, setCloneName] = useState("");
@@ -64,4 +64,13 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   );
 };
 
-export default CloneModal;
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <CloneModal {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

@@ -1,4 +1,5 @@
 import React from 'react';
+import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
 const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled = false }) => {
     const handleChange = (e) => {
@@ -26,6 +27,16 @@ const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled 
     );
 };
 
-export default InputCheckbox;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+    return (
+      <ElementErrorBoundary>
+        <InputCheckbox {...props} />
+      </ElementErrorBoundary>
+    );
+  };
+  
+  export default WithErrorBoundary;
 
 

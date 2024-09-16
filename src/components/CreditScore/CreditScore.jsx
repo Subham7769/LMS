@@ -78,17 +78,17 @@ const CreditScore = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="my-5">
         <ListTable
-          ListName={formData.equation}
+          ListName={formData?.equation}
           ListNameAlign={"center"}
           ListHeader={CreditScoreHeaderList}
           ListItem={[
             {
-              aweightage: formData.aweightage,
-              bweightage: formData.bweightage,
-              cweightage: formData.cweightage,
-              dweightage: formData.dweightage,
-              eweightage: formData.eweightage,
-              fweightage: formData.fweightage,
+              aweightage: formData?.aweightage,
+              bweightage: formData?.bweightage,
+              cweightage: formData?.cweightage,
+              dweightage: formData?.dweightage,
+              eweightage: formData?.eweightage,
+              fweightage: formData?.fweightage,
             },
           ]}
           Editable={true}
@@ -103,8 +103,8 @@ const CreditScore = () => {
           ListHeader={NationalityScoreHeaderList}
           ListItem={[
             {
-              residentsCreditScore: formData.residentsCreditScore,
-              expatriatesCreditScore: formData.expatriatesCreditScore,
+              residentsCreditScore: formData?.residentsCreditScore,
+              expatriatesCreditScore: formData?.expatriatesCreditScore,
             },
           ]}
           Editable={true}
@@ -117,8 +117,8 @@ const CreditScore = () => {
           ListHeader={ResidentialScoreHeaderList}
           ListItem={[
             {
-              rentStatusScore: formData.rentStatusScore,
-              ownStatusScore: formData.ownStatusScore,
+              rentStatusScore: formData?.rentStatusScore,
+              ownStatusScore: formData?.ownStatusScore,
             },
           ]}
           Editable={true}
@@ -133,12 +133,12 @@ const CreditScore = () => {
           ListHeader={MaritialScoreHeaderList}
           ListItem={[
             {
-              marriedStatusScore: formData.marriedStatusScore,
-              singleStatusScore: formData.singleStatusScore,
-              divorcedStatusScore: formData.divorcedStatusScore,
-              widowedStatusScore: formData.widowedStatusScore,
-              separatedStatusScore: formData.separatedStatusScore,
-              unknownStatusScore: formData.unknownStatusScore,
+              marriedStatusScore: formData?.marriedStatusScore,
+              singleStatusScore: formData?.singleStatusScore,
+              divorcedStatusScore: formData?.divorcedStatusScore,
+              widowedStatusScore: formData?.widowedStatusScore,
+              separatedStatusScore: formData?.separatedStatusScore,
+              unknownStatusScore: formData?.unknownStatusScore,
             },
           ]}
           Editable={true}
@@ -163,9 +163,9 @@ const CreditScore = () => {
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
-                inputNumberId={formData?.dependentsRules?.rules[0]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules?.[0]?.ruleName}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules[0]?.firstDependent
+                  formData?.dependentsRules?.rules?.[0]?.firstDependent
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
@@ -183,9 +183,9 @@ const CreditScore = () => {
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules[1]?.firstDependent
+                  formData?.dependentsRules?.rules?.[1]?.firstDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules[1]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules?.[1]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -202,9 +202,9 @@ const CreditScore = () => {
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules[2]?.firstDependent
+                  formData?.dependentsRules?.rules?.[2]?.firstDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules[2]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules?.[2]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -223,9 +223,9 @@ const CreditScore = () => {
                 hiddenSelect={false}
                 inputNumberName={"secondDependent"}
                 inputNumberValue={
-                  formData.dependentsRules?.rules[0]?.secondDependent
+                  formData?.dependentsRules?.rules[0]?.secondDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules[0]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules?.[0]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -242,9 +242,9 @@ const CreditScore = () => {
                 hiddenSelect={false}
                 inputNumberName={"secondDependent"}
                 inputNumberValue={
-                  formData.dependentsRules?.rules[1]?.secondDependent
+                  formData?.dependentsRules?.rules?.[1]?.secondDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules[1]?.ruleName}
+                inputNumberId={formData?.dependentsRules?.rules?.[1]?.ruleName}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
               />
@@ -258,8 +258,8 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules?.rules[0]?.ruleName}
-                  inputValue={formData?.dependentsRules?.rules[0]?.value}
+                  inputId={formData?.dependentsRules[0]?.rules?.[0]?.ruleName}
+                  inputValue={formData?.dependentsRules?.rules?.[0]?.value}
                   onChange={handleChange}
                   placeHolder={"0.54"}
                 />
@@ -272,8 +272,8 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules?.rules[1]?.ruleName}
-                  inputValue={formData?.dependentsRules?.rules[1]?.value}
+                  inputId={formData?.dependentsRules?.rules?.[1]?.ruleName}
+                  inputValue={formData?.dependentsRules?.rules?.[1]?.value}
                   onChange={handleChange}
                   placeHolder={"0.54"}
                 />
@@ -286,8 +286,8 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules?.rules[2]?.ruleName}
-                  inputValue={formData?.dependentsRules?.rules[2]?.value}
+                  inputId={formData?.dependentsRules?.rules?.[2]?.ruleName}
+                  inputValue={formData?.dependentsRules?.rules?.[2]?.value}
                   onChange={handleChange}
                   placeHolder={"0.54"}
                 />

@@ -2,6 +2,7 @@ import React from "react";
 import Select from "react-select";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import Button from "../Button/Button";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 // Custom Styling
 const customSelectStyles = {
@@ -63,4 +64,14 @@ const SelectAndAdd = ({
   );
 };
 
-export default SelectAndAdd;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <SelectAndAdd {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

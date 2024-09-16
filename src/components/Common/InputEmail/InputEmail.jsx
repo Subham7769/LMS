@@ -1,4 +1,5 @@
 import React from 'react'
+import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
 const InputEmail = ({ 
   labelName,
@@ -31,4 +32,14 @@ const InputEmail = ({
   )
 }
 
-export default InputEmail
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <InputEmail {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

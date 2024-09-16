@@ -1,4 +1,5 @@
 import { Switch } from "@headlessui/react";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -76,4 +77,14 @@ const ToggleSwitch = ({ enabled, setEnabled }) => {
   );
 };
 
-export default ToggleSwitch;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <ToggleSwitch {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

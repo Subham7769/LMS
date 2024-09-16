@@ -3,58 +3,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import UserImg from "../../../assets/image/user.png";
-
-const Header = () => {
-  const userNavigation = useMemo(
-    () => [
-      // { name: "Your Profile", href: "#" },
-      // { name: "Settings", href: "#" },
-      { name: "Sign out", href: "/login", action: () => localStorage.clear() },
-    ],
-    []
-  );
-
-  return (
-    <header
-      className="shadow-md sticky h-14 top-0 left-0 bg-white z-50 flex items-center justify-between"
-      id="navBarId"
-    >
-
-      {/* logo */}
-      <div className="w-1/3 flex shrink-0 items-center">
-        <img
-          className={`h-8 ${open ? "w-auto" : "w-10 h-auto"} ml-5`}
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
-      </div>
-      <div className="flex justify-center w-1/3">
-        <div>
-          <label htmlFor="search" className="sr-only">
-            Search
-          </label>
-          {/* Uncomment and customize the search input if needed */}
-          {/* <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-            </div>
-            <input
-              id="search"
-              name="search"
-              className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-              placeholder="Search"
-              type="search"
-            />
-          </div> */}
-        </div>
-      </div>
-      <div className="px-8 py-3 relative flex justify-end items-center gap-5 w-1/3">
-        <NotificationButton />
-        <UserMenu userNavigation={userNavigation} />
-      </div>
-    </header>
-  );
-};
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const NotificationButton = () => (
   <Link to="/notification">
@@ -109,4 +58,70 @@ const UserMenu = ({ userNavigation }) => (
   </Menu>
 );
 
-export default Header;
+const Header = () => {
+  const userNavigation = useMemo(
+    () => [
+      // { name: "Your Profile", href: "#" },
+      // { name: "Settings", href: "#" },
+      { name: "Sign out", href: "/login", action: () => localStorage.clear() },
+    ],
+    []
+  );
+
+  return (
+    <header
+      className="shadow-md sticky h-14 top-0 left-0 bg-white z-50 flex items-center justify-between"
+      id="navBarId"
+    >
+
+      {/* logo */}
+      <div className="w-1/3 flex shrink-0 items-center">
+        <img
+          className={`h-8 ${open ? "w-auto" : "w-10 h-auto"} ml-5`}
+          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          alt="Your Company"
+        />
+      </div>
+      <div className="flex justify-center w-1/3">
+        <div>
+          <label htmlFor="search" className="sr-only">
+            Search
+          </label>
+          {/* Uncomment and customize the search input if needed */}
+          {/* <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </div>
+            <input
+              id="search"
+              name="search"
+              className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+              placeholder="Search"
+              type="search"
+            />
+          </div> */}
+        </div>
+      </div>
+      <div className="px-8 py-3 relative flex justify-end items-center gap-5 w-1/3">
+        <ElementErrorBoundary>
+          <NotificationButton />
+        </ElementErrorBoundary>
+        <ElementErrorBoundary>
+          <UserMenu userNavigation={userNavigation} />
+        </ElementErrorBoundary>
+      </div>
+    </header>
+  );
+};
+
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <Header {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

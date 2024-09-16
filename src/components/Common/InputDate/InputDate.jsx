@@ -1,6 +1,8 @@
 import React from 'react'
+import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
 const InputDate = ({labelName, inputName, inputValue, onChange }) => {
+    
     return (
         <>
             <label
@@ -20,4 +22,14 @@ const InputDate = ({labelName, inputName, inputValue, onChange }) => {
     )
 }
 
-export default InputDate
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+    return (
+      <ElementErrorBoundary>
+        <InputDate {...props} />
+      </ElementErrorBoundary>
+    );
+  };
+  
+  export default WithErrorBoundary;

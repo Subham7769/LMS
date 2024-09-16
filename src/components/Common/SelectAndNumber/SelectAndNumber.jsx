@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const SelectAndNumber = ({
   labelName,
@@ -27,6 +28,11 @@ const SelectAndNumber = ({
   onChangeNumber2,
   placeHolderNumber2,
 }) => {
+
+  if (inputSelectValue === null || inputSelectValue === undefined) {
+    throw new console.error("abc");
+  }
+
   const handleSelectChange = (selectedOption) => {
     onChangeSelect({
       target: {
@@ -132,4 +138,14 @@ const SelectAndNumber = ({
   );
 };
 
-export default SelectAndNumber;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <SelectAndNumber {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

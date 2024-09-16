@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import InputText from "../InputText/InputText";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const DynamicName = ({ initialName, onSave, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -56,4 +57,14 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
   );
 };
 
-export default DynamicName;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <DynamicName {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

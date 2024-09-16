@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const InputSelect = ({
   labelName,
@@ -55,4 +56,14 @@ const InputSelect = ({
   );
 };
 
-export default InputSelect;
+
+// Now wrap the entire component with ElementErrorBoundary where it's being used
+const WithErrorBoundary = (props) => {
+  return (
+    <ElementErrorBoundary>
+      <InputSelect {...props} />
+    </ElementErrorBoundary>
+  );
+};
+
+export default WithErrorBoundary;

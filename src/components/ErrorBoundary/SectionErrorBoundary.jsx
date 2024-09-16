@@ -16,10 +16,10 @@ class SectionErrorBoundary extends React.Component {
     // You can log the error to an error reporting service here
     console.error("Error caught in SectionErrorBoundary:", error, errorInfo);
   }
-
+  
   renderErrorMessage() {
+    const ClassStyle = "error-boundary text-wrap w-full text-center bg-white rounded-xl flex flex-col justify-center align-middle py-2"
     const { error } = this.state;
-const ClassStyle ="error-boundary text-wrap w-full text-center bg-white rounded-xl flex flex-col justify-center align-middle py-2"
     // Example: You can classify errors based on their type or content
     if (error.message.includes('Network')) {
       return (
@@ -60,6 +60,8 @@ const ClassStyle ="error-boundary text-wrap w-full text-center bg-white rounded-
   }
 
   render() {
+    const ClassStyle = "error-boundary text-wrap w-full text-center bg-white rounded-xl flex flex-col justify-center align-middle py-2"
+
     if (this.state.hasError) {
       return (
         <div className={ClassStyle}>
