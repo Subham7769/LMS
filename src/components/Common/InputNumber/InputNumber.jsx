@@ -11,9 +11,9 @@ const InputNumber = ({
   disabled = false,
 }) => {
 
-  if (inputValue === null || inputValue === undefined) {
-    throw new Error("abc")
-  }
+  // if (inputValue === null || inputValue === undefined) {
+  //   throw new Error("abc")
+  // }
 
   const handleChange = (e) => {
     const { name, value, id } = e.target;

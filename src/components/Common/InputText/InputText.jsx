@@ -11,7 +11,7 @@ const InputText = ({
   readOnly = false,
 }) => {
 
-  //   if (inputValue == "1%") {
+  //   if (inputValue == "2%") {
   //   throw new Error(`Invalid inputValue for ${labelName}`);
   // }
   
