@@ -7,19 +7,23 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getDisbursementInfo, submitDisbursement } from "../../redux/Slices/userProductTestingSlice";
+import {
+  getDisbursementInfo,
+  submitDisbursement,
+} from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
 
 const DisbursementStatus = () => {
-  const { disbursementData, loading, error } = useSelector(state => state.userProductTesting)
-  const dispatch = useDispatch()
+  const { disbursementData, loading, error } = useSelector(
+    (state) => state.userProductTesting
+  );
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     amount: "",
     userloanID: "",
   });
   const navigate = useNavigate(); // Adding useNavigate for navigation
   const { userID } = useParams();
-
 
   useEffect(() => {
     dispatch(getDisbursementInfo({ userID, navigate }));
@@ -51,7 +55,11 @@ const DisbursementStatus = () => {
   }
 
   if (disbursementData.status === 500) {
-    return <ContainerTile className="text-center">No Loan Available for Disbursement</ContainerTile>;
+    return (
+      <ContainerTile className="text-center">
+        No Loan Available for Disbursement
+      </ContainerTile>
+    );
   }
 
   return (
@@ -64,13 +72,13 @@ const DisbursementStatus = () => {
             labelName={"Loan Id"}
             inputName={"userloanID"}
             disabled={true}
-            inputValue={formData.userloanID}
+            inputValue={formData?.userloanID}
             onChange={handleChange}
           />
           <InputNumber
             labelName={"Enter Amount"}
             inputName={"amount"}
-            inputValue={formData.amount}
+            inputValue={formData?.amount}
             onChange={handleChange}
             placeHolder={"5000"}
           />
@@ -78,7 +86,9 @@ const DisbursementStatus = () => {
         <Button
           rectangle={true}
           buttonName={"Submit"}
-          onClick={() => dispatch(submitDisbursement({ userID, formData, navigate}))}
+          onClick={() =>
+            dispatch(submitDisbursement({ userID, formData, navigate }))
+          }
         />
       </ContainerTile>
     </>

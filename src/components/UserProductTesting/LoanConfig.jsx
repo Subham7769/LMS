@@ -11,10 +11,12 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserLoanOptions, submitLoanConfiguration } from "../../redux/Slices/userProductTestingSlice";
+import {
+  getUserLoanOptions,
+  submitLoanConfiguration,
+} from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
 import { useNavigate } from "react-router-dom";
-
 
 const LoanConfig = () => {
   const [loanType, setLoanType] = useState([]);
@@ -23,9 +25,10 @@ const LoanConfig = () => {
   const [sliderContainWidth, setSliderContainWidth] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
-  const { loanOptions, loanConfigData, showModal, loading, error } = useSelector(state => state.userProductTesting)
+  const { loanOptions, loanConfigData, showModal, loading, error } =
+    useSelector((state) => state.userProductTesting);
   const { userID } = useParams();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
 
   useEffect(() => {
@@ -40,9 +43,9 @@ const LoanConfig = () => {
 
   useEffect(() => {
     if (loanConfigData) {
-
       const arrowVis = loanConfigData?.dynamicCashLoanOffers?.length;
-      const width = arrowVis < 4 ? arrowVis * 201 : window.innerWidth < 1280 ? 603 : 804; // Calculate width
+      const width =
+        arrowVis < 4 ? arrowVis * 201 : window.innerWidth < 1280 ? 603 : 804; // Calculate width
       setSettings({
         dots: false,
         infinite: false,
@@ -60,11 +63,11 @@ const LoanConfig = () => {
             },
           },
         ],
-      })
+      });
 
       setSliderContainWidth(`w-[${width}px]`);
     }
-  }, [loanConfigData])
+  }, [loanConfigData]);
 
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
@@ -119,13 +122,13 @@ const LoanConfig = () => {
       transactionId: transactionId,
       contractNumber: "test18monthTenure",
     };
-    console.log(postData)
+    console.log(postData);
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
-        userID +
-        "/loans",
+          userID +
+          "/loans",
         {
           method: "PuT",
           headers: {
@@ -169,11 +172,13 @@ const LoanConfig = () => {
     <tr className="divide-x divide-gray-200 h-[58px]">
       <td className="py-2 text-[14px] text-gray-500 text-center">{label}</td>
     </tr>
-  )
+  );
 
-  const tileClass = "py-2 text-[14px] text-gray-500"
-  const tableDividerStyle = "divide-x divide-gray-200 text-center w-full h-[58px]";
-  const tableSliderStyle = "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
+  const tileClass = "py-2 text-[14px] text-gray-500";
+  const tableDividerStyle =
+    "divide-x divide-gray-200 text-center w-full h-[58px]";
+  const tableSliderStyle =
+    "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -209,32 +214,68 @@ const LoanConfig = () => {
               buttonIcon={CheckCircleIcon}
               rectangle={true}
               buttonName={"Submit"}
-              onClick={() => dispatch(submitLoanConfiguration({ loanType, amount, userID }))}
+              onClick={() =>
+                dispatch(submitLoanConfiguration({ loanType, amount, userID }))
+              }
             />
           </div>
-
         </div>
       </ContainerTile>
       {showModal && (
         <>
           <div className="grid grid-cols-2 gap-5">
             <ContainerTile>
-              <div className="font-semibold text-center -mt-3 mb-3">Profile : </div>
+              <div className="font-semibold text-center -mt-3 mb-3">
+                Profile :{" "}
+              </div>
               <div className="grid grid-cols-2 gap-5 text-[14px]">
-                <InfoRow label="Cash Credit Score" value={loanConfigData.profile.cashCreditScore} />
-                <InfoRow label="Cash TCL" value={loanConfigData.profile.cashTCL} />
-                <InfoRow label="Net Cash TCL" value={loanConfigData.profile.netCashTCL} />
+                <InfoRow
+                  label="Cash Credit Score"
+                  value={loanConfigData?.profile?.cashCreditScore}
+                />
+                <InfoRow
+                  label="Cash TCL"
+                  value={loanConfigData?.profile?.cashTCL}
+                />
+                <InfoRow
+                  label="Net Cash TCL"
+                  value={loanConfigData?.profile?.netCashTCL}
+                />
               </div>
             </ContainerTile>
             <ContainerTile>
-              <div className="font-semibold text-center -mt-3 mb-3">Cash Loan Stats : </div>
+              <div className="font-semibold text-center -mt-3 mb-3">
+                Cash Loan Stats :{" "}
+              </div>
               <div className="grid grid-cols-2 gap-5 text-[14px]">
-                <InfoRow label="Max Loan Amount" value={loanConfigData.cashLoanStats.maxLoanAmount.toFixed(2)} />
-                <InfoRow label="Min Loan Amount" value={loanConfigData.cashLoanStats.minLoanAmount.toFixed(2)} />
-                <InfoRow label="Max Loan Duration Days" value={loanConfigData.cashLoanStats.maxLoanDuration} />
-                <InfoRow label="Min Loan Duration Days" value={loanConfigData.cashLoanStats.minLoanDuration} />
-                <InfoRow label="Max Tenure Months" value={loanConfigData.cashLoanStats.maxTenure} />
-                <InfoRow label="Min Tenure Months" value={loanConfigData.cashLoanStats.minTenure} />
+                <InfoRow
+                  label="Max Loan Amount"
+                  value={loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(
+                    2
+                  )}
+                />
+                <InfoRow
+                  label="Min Loan Amount"
+                  value={loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(
+                    2
+                  )}
+                />
+                <InfoRow
+                  label="Max Loan Duration Days"
+                  value={loanConfigData?.cashLoanStats?.maxLoanDuration}
+                />
+                <InfoRow
+                  label="Min Loan Duration Days"
+                  value={loanConfigData?.cashLoanStats?.minLoanDuration}
+                />
+                <InfoRow
+                  label="Max Tenure Months"
+                  value={loanConfigData?.cashLoanStats?.maxTenure}
+                />
+                <InfoRow
+                  label="Min Tenure Months"
+                  value={loanConfigData?.cashLoanStats?.minTenure}
+                />
               </div>
             </ContainerTile>
           </div>
@@ -288,9 +329,12 @@ const LoanConfig = () => {
             <div className={sliderContainWidth}>
               {/* <div className="w-[804px]"> */}
               <Slider {...settings}>
-                {loanConfigData.dynamicCashLoanOffers.map((ci, index) => {
+                {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => {
                   return (
-                    <table key={index} className="divide-y divide-gray-300 border-r border-gray-300 w-full" >
+                    <table
+                      key={index}
+                      className="divide-y divide-gray-300 border-r border-gray-300 w-full"
+                    >
                       <thead className="bg-gray-50">
                         <tr className="divide-x divide-gray-200 h-[58px]">
                           <th className="py-3.5 text-center">{index + 1}</th>
@@ -300,11 +344,11 @@ const LoanConfig = () => {
                         <tr className={tableDividerStyle}>
                           <td className={tableSliderStyle}>
                             <div
-                              title={ci.transactionId}
+                              title={ci?.transactionId}
                               className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
                             >
                               <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {ci.transactionId}
+                                {ci?.transactionId}
                               </div>
                               <div>
                                 <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
@@ -312,21 +356,25 @@ const LoanConfig = () => {
                             </div>
                           </td>
                         </tr>
-                        <LoanOfferRow label={ci.annualFlatRatePercent} />
-                        <LoanOfferRow label={ci.annualInterestRatePercent} />
-                        <LoanOfferRow label={ci.annualInterestRatePercentWithoutFee} />
-                        <LoanOfferRow label={ci.aprAsPerTenorPercent} />
-                        <LoanOfferRow label={ci.aprPerMonthPercent} />
-                        <LoanOfferRow label={ci.aprWithoutFeePerMonthPercent} />
-                        <LoanOfferRow label={ci.avrageNumberOfenstallment} />
+                        <LoanOfferRow label={ci?.annualFlatRatePercent} />
+                        <LoanOfferRow label={ci?.annualInterestRatePercent} />
+                        <LoanOfferRow
+                          label={ci?.annualInterestRatePercentWithoutFee}
+                        />
+                        <LoanOfferRow label={ci?.aprAsPerTenorPercent} />
+                        <LoanOfferRow label={ci?.aprPerMonthPercent} />
+                        <LoanOfferRow
+                          label={ci?.aprWithoutFeePerMonthPercent}
+                        />
+                        <LoanOfferRow label={ci?.avrageNumberOfenstallment} />
                         <tr className={tableDividerStyle}>
                           <td className={tableSliderStyle}>
                             <div
-                              title={ci.dailyInterestRate}
+                              title={ci?.dailyInterestRate}
                               className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
                             >
                               <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {ci.dailyInterestRate}
+                                {ci?.dailyInterestRate}
                               </div>
                               <div>
                                 <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
@@ -334,10 +382,12 @@ const LoanConfig = () => {
                             </div>
                           </td>
                         </tr>
-                        <LoanOfferRow label={ci.dailyInterestRatePercentWithoutFee} />
-                        <LoanOfferRow label={ci.duration} />
-                        <LoanOfferRow label={ci.durationInMonths} />
-                        <LoanOfferRow label={ci.instalmentsNumber} />
+                        <LoanOfferRow
+                          label={ci?.dailyInterestRatePercentWithoutFee}
+                        />
+                        <LoanOfferRow label={ci?.duration} />
+                        <LoanOfferRow label={ci?.durationInMonths} />
+                        <LoanOfferRow label={ci?.instalmentsNumber} />
                         <tr className={tableDividerStyle}>
                           <td className={tableSliderStyle}>
                             <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
@@ -345,7 +395,7 @@ const LoanConfig = () => {
                                 className="cursor-pointer"
                                 onClick={() =>
                                   handleInstallmentModal(
-                                    ci.installmentSummaryResponse
+                                    ci?.installmentSummaryResponse
                                   )
                                 }
                               >
@@ -354,19 +404,21 @@ const LoanConfig = () => {
                             </div>
                           </td>
                         </tr>
-                        <LoanOfferRow label={ci.loanFlatRate} />
-                        <LoanOfferRow label={ci.monthlyFlatRatePercent} />
-                        <LoanOfferRow label={ci.monthlyInterestRatePercent} />
-                        <LoanOfferRow label={ci.monthlyInterestRatePercentWithoutFee} />
-                        <LoanOfferRow label={ci.principalAmount} />
+                        <LoanOfferRow label={ci?.loanFlatRate} />
+                        <LoanOfferRow label={ci?.monthlyFlatRatePercent} />
+                        <LoanOfferRow label={ci?.monthlyInterestRatePercent} />
+                        <LoanOfferRow
+                          label={ci?.monthlyInterestRatePercentWithoutFee}
+                        />
+                        <LoanOfferRow label={ci?.principalAmount} />
                         <tr className={tableDividerStyle}>
                           <td className={tableSliderStyle}>
                             <div
-                              title={ci.schema}
+                              title={ci?.schema}
                               className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
                             >
                               <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {ci.schema}
+                                {ci?.schema}
                               </div>
                               <div>
                                 <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
@@ -374,17 +426,19 @@ const LoanConfig = () => {
                             </div>
                           </td>
                         </tr>
-                        <LoanOfferRow label={ci.serviceFee} />
-                        <LoanOfferRow label={ci.serviceFeeTax} />
-                        <LoanOfferRow label={ci.totalInterestAmount} />
-                        <LoanOfferRow label={ci.totalLoanAmount} />
-                        <LoanOfferRow label={ci.totalManagementFee} />
-                        <LoanOfferRow label={ci.totalManagementVatFee} />
+                        <LoanOfferRow label={ci?.serviceFee} />
+                        <LoanOfferRow label={ci?.serviceFeeTax} />
+                        <LoanOfferRow label={ci?.totalInterestAmount} />
+                        <LoanOfferRow label={ci?.totalLoanAmount} />
+                        <LoanOfferRow label={ci?.totalManagementFee} />
+                        <LoanOfferRow label={ci?.totalManagementVatFee} />
                         <tr className={tableDividerStyle}>
                           <td className={tableSliderStyle}>
                             <div
                               className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
-                              onClick={() => handleProceed(ci.transactionId, index)}
+                              onClick={() =>
+                                handleProceed(ci.transactionId, index)
+                              }
                             >
                               Proceed
                             </div>

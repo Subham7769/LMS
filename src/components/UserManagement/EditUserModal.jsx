@@ -66,14 +66,14 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
             <InputText
               labelName="First Name"
               inputName="firstname"
-              inputValue={formData.firstname}
+              inputValue={formData?.firstname}
               onChange={handleChange}
               required
             />
             <InputText
               labelName="Last Name"
               inputName="lastname"
-              inputValue={formData.lastname}
+              inputValue={formData?.lastname}
               onChange={handleChange}
               required
             />

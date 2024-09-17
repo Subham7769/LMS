@@ -85,26 +85,26 @@ const DeliquencyEq = () => {
         <div>Deliquency Equation:</div>
         <Button buttonIcon={PlusIcon} onClick={handleAddFields} circle={true} />
       </div>
-      {inputList.map((item, index) => (
+      {inputList?.map((item, index) => (
         <div className="flex gap-2 items-end mt-5" key={index}>
           <InputNumber
             labelName="No. of Late Months From"
             inputName="noOfLateMonths"
-            inputValue={item.noOfLateMonths}
+            inputValue={item?.noOfLateMonths}
             onChange={(e) => handleChange(e, index)}
             placeholder="2"
           />
           <InputNumber
             labelName="To"
             inputName="noOfLateTimes"
-            inputValue={item.noOfLateTimes}
+            inputValue={item?.noOfLateTimes}
             onChange={(e) => handleChange(e, index)}
             placeholder="2"
           />
           <InputNumber
             labelName="Period in Months"
             inputName="periodInMonths"
-            inputValue={item.periodInMonths}
+            inputValue={item?.periodInMonths}
             onChange={(e) => handleChange(e, index)}
             placeholder="3"
           />
@@ -116,7 +116,12 @@ const DeliquencyEq = () => {
         </div>
       ))}
       <div className="text-right mt-5">
-        <Button buttonIcon={CheckCircleIcon} buttonName="Save" onClick={handleAddAllFields} rectangle={true} />
+        <Button
+          buttonIcon={CheckCircleIcon}
+          buttonName="Save"
+          onClick={handleAddAllFields}
+          rectangle={true}
+        />
       </div>
     </div>
   );

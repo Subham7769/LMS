@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { FaInfoCircle } from "react-icons/fa";
 import {
@@ -15,7 +15,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { options } from "../../data/OptionsData";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
-import { Passed } from "../Toasts";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import {
   fetchName,
@@ -29,7 +28,7 @@ import {
 } from "../../redux/Slices/recoverySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecoveryData } from "../../redux/Slices/sidebarSlice";
-import ContainerTile from '../Common/ContainerTile/ContainerTile'
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -59,9 +58,9 @@ const RecoveryConfig = () => {
   useEffect(() => {
     dispatch(fetchName(recoveryEquationTempId));
     dispatch(fetchData(recoveryEquationTempId));
-    dispatch(
-      setData({ ...data, recoveryEquationTempId: recoveryEquationTempId })
-    );
+    // dispatch(
+    //   setData({ ...data, recoveryEquationTempId: recoveryEquationTempId })
+    // );
   }, [dispatch, recoveryEquationTempId]);
 
   const saveSettings = () => {
@@ -124,7 +123,7 @@ const RecoveryConfig = () => {
   }
 
   if (error) {
-    <p>Error: {error}</p>;
+    throw new Error(error);
   }
 
   return (
@@ -134,11 +133,7 @@ const RecoveryConfig = () => {
         <DynamicName initialName={itemName} onSave={handleNameUpdate} />
         <div className="flex items-center gap-4">
           <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={handleDelete}
-            circle={true}
-          />
+          <Button buttonIcon={TrashIcon} onClick={handleDelete} circle={true} />
         </div>
       </div>
       <CloneModal
@@ -153,7 +148,7 @@ const RecoveryConfig = () => {
             <InputNumber
               labelName={"Tenure"}
               inputName={"tenure"}
-              inputValue={data.tenure}
+              inputValue={data?.tenure}
               onChange={handleChangeWrapper}
               placeHolder={"24"}
             />
@@ -162,7 +157,7 @@ const RecoveryConfig = () => {
             <InputSelect
               labelName="Tenure Type"
               inputName="tenureType"
-              inputValue={data.tenureType}
+              inputValue={data?.tenureType}
               inputOptions={options}
               onChange={handleChangeWrapper}
               placeHolder="Select Tenure Type"
@@ -178,7 +173,7 @@ const RecoveryConfig = () => {
                     labelName={"Recovery Equation"}
                     inputName={"recoveryEquation"}
                     rowCount={"3"}
-                    inputValue={data.recoveryEquation}
+                    inputValue={data?.recoveryEquation}
                     onChange={handleChangeWrapper}
                     placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
                   />
@@ -187,7 +182,7 @@ const RecoveryConfig = () => {
                     <InputText
                       labelName={"Recovery Equation"}
                       inputName="recoveryEquation"
-                      inputValue={data.recoveryEquation}
+                      inputValue={data?.recoveryEquation}
                       onChange={handleChangeWrapper}
                       placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
                       readOnly={true}

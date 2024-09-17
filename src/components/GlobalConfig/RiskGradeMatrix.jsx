@@ -96,7 +96,7 @@ const RiskGradeMatrix = () => {
             <InputNumber
               labelName="From"
               inputName="from"
-              inputValue={newRiskGradeForm.from}
+              inputValue={newRiskGradeForm?.from}
               onChange={(e) =>
                 dispatch(
                   handleRiskGradeNewInputChange({
@@ -112,7 +112,7 @@ const RiskGradeMatrix = () => {
             <InputNumber
               labelName="To"
               inputName="to"
-              inputValue={newRiskGradeForm.to}
+              inputValue={newRiskGradeForm?.to}
               onChange={(e) =>
                 dispatch(
                   handleRiskGradeNewInputChange({
@@ -128,7 +128,7 @@ const RiskGradeMatrix = () => {
             <InputText
               labelName="Risk Grade"
               inputName="grade"
-              inputValue={newRiskGradeForm.grade}
+              inputValue={newRiskGradeForm?.grade}
               onChange={(e) =>
                 dispatch(
                   handleRiskGradeNewInputChange({

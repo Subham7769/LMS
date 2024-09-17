@@ -7,6 +7,7 @@ import Sorry from "../../assets/image/sorry.png";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { getBorrowerInfo } from "../../redux/Slices/userProductTestingSlice";
+import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 
 const CommentsModal = ({ closeModal, message }) => {
   console.log(message);
@@ -78,19 +79,19 @@ const EligibilityResults = ({ eligibilityResults }) => {
                 </tr>
               </thead>
               <tbody>
-                {project.loanProducts.map((product, idx) => (
+                {project?.loanProducts?.map((product, idx) => (
                   <tr key={idx} className="border-t border-b border-gray-400">
                     <td className="px-2 md-px-4 py-2 border-r border-gray-400 text-[14px]">
-                      {product.productName}
+                      {product?.productName}
                     </td>
                     <td className="px-2 md-px-4 py-2 text-[14px] text-green-500 font-semibold flex items-center justify-center border-r border-gray-400">
-                      {product.eligibleStatus === "ELIGIBLE" ? (
+                      {product?.eligibleStatus === "ELIGIBLE" ? (
                         <CheckBadgeIcon className="2xl:h-7 2xl:w-7 h-5 w-5" />
                       ) : (
                         <IoMdClose className="2xl:h-7 2xl:w-7 h-5 w-5 text-red-500 rounded-full" />
                       )}
                     </td>
-                    {project.isRegister === true ? (
+                    {project?.isRegister === true ? (
                       <td className="px-2 md-px-4 py-2 text-[14px] text-green-500 font-semibold text-center border-r border-gray-400">
                         <div className="flex items-center justify-center">
                           <CheckBadgeIcon className="2xl:h-7 2xl:w-7 h-5 w-5" />
@@ -103,17 +104,19 @@ const EligibilityResults = ({ eligibilityResults }) => {
                         </div>
                       </td>
                     )}
-                    {product.inEligibilityReasons ? (
+                    {product?.inEligibilityReasons ? (
                       <td
                         className="px-2 md-px-4 py-2 text-[14px] text-center font-semibold underline cursor-pointer"
                         onClick={() =>
-                          handleModalOpen(product.inEligibilityReasons)
+                          handleModalOpen(product?.inEligibilityReasons)
                         }
                       >
                         View
                       </td>
                     ) : (
-                      <td className="px-2 md-px-4 py-2 text-[14px] text-center">N/A</td>
+                      <td className="px-2 md-px-4 py-2 text-[14px] text-center">
+                        N/A
+                      </td>
                     )}
                   </tr>
                 ))}
@@ -137,11 +140,13 @@ const Register = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBorrowerInfo(userID))
-  }, [dispatch, userID])
+    dispatch(getBorrowerInfo(userID));
+  }, [dispatch, userID]);
 
-  const { register, loading, error } = useSelector((state) => state.userProductTesting);
-  console.log(register)
+  const { register, loading, error } = useSelector(
+    (state) => state.userProductTesting
+  );
+  console.log(register);
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -155,13 +160,14 @@ const Register = () => {
             src={Sorry}
             alt="Loading Icon"
           />
-          <p className="text-center font-bold text-xl">
-            {register.message}
-          </p>
+          <p className="text-center font-bold text-xl">{register.message}</p>
         </div>
       </>
     );
-  } else if (register.message === "Something is wrong, please contact system administrator") {
+  } else if (
+    register.message ===
+    "Something is wrong, please contact system administrator"
+  ) {
     return (
       <>
         <div className="min-h-[70vh] w-full flex flex-col items-center justify-center">
@@ -170,9 +176,7 @@ const Register = () => {
             src={Sorry}
             alt="Loading Icon"
           />
-          <p className="text-center font-bold text-xl">
-            {register.message}
-          </p>
+          <p className="text-center font-bold text-xl">{register.message}</p>
         </div>
       </>
     );
@@ -182,7 +186,11 @@ const Register = () => {
     return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
-  return <EligibilityResults eligibilityResults={register} />;
+  return (
+    <SectionErrorBoundary>
+      <EligibilityResults eligibilityResults={register} />
+    </SectionErrorBoundary>
+  );
 };
 
 export default Register;

@@ -6,6 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserEligibility } from "../../redux/Slices/userProductTestingSlice";
+import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 
 const CommentsModal = ({ closeModal, message }) => {
   return (
@@ -49,7 +50,7 @@ const EligibilityResults = ({ eligibilityResults }) => {
         {projects?.map((project, index) => (
           <ContainerTile>
             <h2 className="text-[16px] text-center font-semibold">
-              {project.projectName}
+              {project?.projectName}
             </h2>
             <table className="table-auto w-full border-collapse">
               <thead className="bg-gray-100">
@@ -69,16 +70,16 @@ const EligibilityResults = ({ eligibilityResults }) => {
                 {project?.loanProducts?.map((product, idx) => (
                   <tr key={idx} className="border-t border-b border-gray-400">
                     <td className="px-4 py-2 border-r text-[11px] border-gray-400">
-                      {product.productName}
+                      {product?.productName}
                     </td>
                     <td className="px-4 py-2 text-[11px] text-green-500 font-semibold flex items-center justify-center border-r border-gray-400">
-                      {product.eligibleStatus === "ELIGIBLE" ? (
+                      {product?.eligibleStatus === "ELIGIBLE" ? (
                         <CheckBadgeIcon className="2xl:h-7 2xl:w-7 h-5 w-5" />
                       ) : (
                         <IoMdClose className="2xl:h-7 2xl:w-7 h-5 w-5 text-red-500 rounded-full" />
                       )}
                     </td>
-                    {product.comment ? (
+                    {product?.comment ? (
                       <td
                         className="px-4 py-2 text-[11px] text-center font-semibold underline cursor-pointer"
                         onClick={() => setModalOpen(true)}
@@ -91,7 +92,7 @@ const EligibilityResults = ({ eligibilityResults }) => {
                     {isModalOpen && (
                       <CommentsModal
                         closeModal={() => setModalOpen(false)}
-                        message={product.comment}
+                        message={product?.comment}
                       />
                     )}
                   </tr>
@@ -111,11 +112,13 @@ const UserInfo = () => {
   const url = "/check-eligibility";
 
   useEffect(() => {
-    dispatch(getUserEligibility({ userID, url }))
-  }, [dispatch, userID])
+    dispatch(getUserEligibility({ userID, url }));
+  }, [dispatch, userID]);
 
-  const { eligibility, loading, error } = useSelector((state) => state.userProductTesting);
-  console.log(eligibility)
+  const { eligibility, loading, error } = useSelector(
+    (state) => state.userProductTesting
+  );
+  console.log(eligibility);
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -125,7 +128,6 @@ const UserInfo = () => {
   if (error) {
     return <ContainerTile>Error: {error}</ContainerTile>;
   }
-
 
   return (
     <>
@@ -139,7 +141,9 @@ const UserInfo = () => {
         </div>
         <div className="text-xl">User Id : {userID}</div>
       </div>
-      <EligibilityResults eligibilityResults={eligibility} />
+      <SectionErrorBoundary>
+        <EligibilityResults eligibilityResults={eligibility} />
+      </SectionErrorBoundary>
     </>
   );
 };

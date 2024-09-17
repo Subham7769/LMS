@@ -60,7 +60,7 @@ const LoanProductConfig = () => {
     const value = eventOrValue?.target
       ? eventOrValue.target.value
       : eventOrValue;
-      dispatch(updateInterestTenure({ index: absoluteIndex, field, value }));
+    dispatch(updateInterestTenure({ index: absoluteIndex, field, value }));
   };
 
   const handleSort = (column) => {
@@ -214,7 +214,7 @@ const LoanProductConfig = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center mb-5">
         <DynamicName
-          initialName={formData.productType}
+          initialName={formData?.productType}
           onSave={handleProductNameChange}
         />
         <Button
@@ -257,13 +257,13 @@ const LoanProductConfig = () => {
                   </td>
                 </tr>
               ) : (
-                currentItems.map((item, index) => (
+                currentItems?.map((item, index) => (
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <InputText
                           inputName={`interestRate-${index}`}
-                          inputValue={item.interestRate}
+                          inputValue={item?.interestRate}
                           onChange={(e) =>
                             handleInterestChange(
                               index,
@@ -275,7 +275,7 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.interestRate}
+                          {item?.interestRate}
                         </span>
                       )}
                     </td>
@@ -284,7 +284,7 @@ const LoanProductConfig = () => {
                         <InputSelect
                           inputOptions={options}
                           inputName={`interestPeriodType-${index}`}
-                          inputValue={item.interestPeriodType}
+                          inputValue={item?.interestPeriodType}
                           onChange={(selectedOption) =>
                             handleInterestChange(
                               index,
@@ -295,8 +295,8 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.interestPeriodType
-                            ? item.interestPeriodType
+                          {item?.interestPeriodType
+                            ? item?.interestPeriodType
                             : ""}
                         </span>
                       )}
@@ -305,7 +305,7 @@ const LoanProductConfig = () => {
                       {editingIndex === index ? (
                         <InputNumber
                           inputName={`loanTenure-${index}`}
-                          inputValue={item.loanTenure}
+                          inputValue={item?.loanTenure}
                           onChange={(e) =>
                             handleInterestChange(
                               index,
@@ -317,7 +317,7 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.loanTenure}
+                          {item?.loanTenure}
                         </span>
                       )}
                     </td>
@@ -326,7 +326,7 @@ const LoanProductConfig = () => {
                         <InputSelect
                           inputOptions={tenureTypeOptions}
                           inputName={`loanTenureType-${index}`}
-                          inputValue={item.loanTenureType}
+                          inputValue={item?.loanTenureType}
                           onChange={(selectedOption) =>
                             handleInterestChange(
                               index,
@@ -337,7 +337,7 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.loanTenureType ? item.loanTenureType : ""}
+                          {item?.loanTenureType ? item?.loanTenureType : ""}
                         </span>
                       )}
                     </td>
@@ -345,7 +345,7 @@ const LoanProductConfig = () => {
                       {editingIndex === index ? (
                         <InputNumber
                           inputName={`repaymentTenure-${index}`}
-                          inputValue={item.repaymentTenure}
+                          inputValue={item?.repaymentTenure}
                           onChange={(e) =>
                             handleInterestChange(
                               index,
@@ -357,7 +357,7 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.repaymentTenure}
+                          {item?.repaymentTenure}
                         </span>
                       )}
                     </td>
@@ -366,7 +366,7 @@ const LoanProductConfig = () => {
                         <InputSelect
                           inputOptions={tenureTypeOptions}
                           inputName={`repaymentTenureType-${index}`}
-                          inputValue={item.repaymentTenureType}
+                          inputValue={item?.repaymentTenureType}
                           onChange={(selectedOption) =>
                             handleInterestChange(
                               index,
@@ -377,8 +377,8 @@ const LoanProductConfig = () => {
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.repaymentTenureType
-                            ? item.repaymentTenureType
+                          {item?.repaymentTenureType
+                            ? item?.repaymentTenureType
                             : ""}
                         </span>
                       )}

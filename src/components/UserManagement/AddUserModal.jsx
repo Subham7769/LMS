@@ -74,35 +74,35 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
             <InputText
               labelName="User Name"
               inputName="username"
-              inputValue={formData.username}
+              inputValue={formData?.username}
               onChange={handleChange}
               required
             />
             <InputText
               labelName="First Name"
               inputName="firstname"
-              inputValue={formData.firstname}
+              inputValue={formData?.firstname}
               onChange={handleChange}
               required
             />
             <InputText
               labelName="Last Name"
               inputName="lastname"
-              inputValue={formData.lastname}
+              inputValue={formData?.lastname}
               onChange={handleChange}
               required
             />
             <InputEmail
               labelName="Email"
               inputName="email"
-              inputValue={formData.email}
+              inputValue={formData?.email}
               onChange={handleChange}
               required
             />
             <InputPassword
               labelName="Password"
               inputName="password"
-              inputValue={formData.password}
+              inputValue={formData?.password}
               onChange={handleChange}
               required
             />

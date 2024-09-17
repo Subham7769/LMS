@@ -113,7 +113,7 @@ const LiabilitiesMatrix = () => {
               labelName="Product"
               inputOptions={productOptions}
               inputName="product"
-              inputValue={newLiabilityForm.product}
+              inputValue={newLiabilityForm?.product}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
@@ -122,7 +122,7 @@ const LiabilitiesMatrix = () => {
               labelName="CB Description (CODE)"
               inputName="simahDescriptionCode"
               placeHolder="TMTG"
-              inputValue={newLiabilityForm.simahDescriptionCode}
+              inputValue={newLiabilityForm?.simahDescriptionCode}
               onChange={(e) =>
                 dispatch(
                   handleLiabilityNewInputChange({
@@ -137,7 +137,7 @@ const LiabilitiesMatrix = () => {
               labelName="Issuer"
               inputOptions={issuerOptions}
               inputName="issuer"
-              inputValue={newLiabilityForm.issuer}
+              inputValue={newLiabilityForm?.issuer}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
@@ -147,7 +147,7 @@ const LiabilitiesMatrix = () => {
               <InputCheckbox
                 labelName="Active Rule"
                 inputName="activeRule"
-                inputChecked={newLiabilityForm.activeRule}
+                inputChecked={newLiabilityForm?.activeRule}
                 onChange={(e) =>
                   dispatch(handleLiabilityNewInputChange(e.target))
                 }
@@ -159,7 +159,7 @@ const LiabilitiesMatrix = () => {
               labelName="GDBR (Without Mortgage)"
               inputOptions={gdbrWoMortageOptions}
               inputName="applicabilityGDBR"
-              inputValue={newLiabilityForm.applicabilityGDBR}
+              inputValue={newLiabilityForm?.applicabilityGDBR}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
@@ -169,7 +169,7 @@ const LiabilitiesMatrix = () => {
               labelName="GDBR (including Mortgage)"
               inputOptions={gdbrWMortageOptions}
               inputName="totalExposure"
-              inputValue={newLiabilityForm.totalExposure}
+              inputValue={newLiabilityForm?.totalExposure}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
@@ -179,7 +179,7 @@ const LiabilitiesMatrix = () => {
               labelName="Default considered in CB score"
               inputOptions={defaultScoreOptions}
               inputName="defaultConsideredInSIMAHscore"
-              inputValue={newLiabilityForm.defaultConsideredInSIMAHscore}
+              inputValue={newLiabilityForm?.defaultConsideredInSIMAHscore}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
@@ -190,7 +190,7 @@ const LiabilitiesMatrix = () => {
         </ContainerTile>
         <ContainerTile>
           {allLiabilityData.length > 0 ? (
-            allLiabilityData.map((item, index) => (
+            allLiabilityData?.map((item, index) => (
               <div
                 key={index}
                 className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
@@ -200,14 +200,14 @@ const LiabilitiesMatrix = () => {
                     labelName="Product"
                     inputOptions={productOptions}
                     inputName="product"
-                    inputValue={item.product}
+                    inputValue={item?.product}
                     onChange={(e) => handleInputChange(e, index)}
                     disabled
                   />
                   <InputText
                     labelName="CB Description (CODE)"
                     inputName="simahDescriptionCode"
-                    inputValue={item.simahDescriptionCode}
+                    inputValue={item?.simahDescriptionCode}
                     placeHolder="TMTG"
                     onChange={(e) => handleInputChange(e, index)}
                   />
@@ -215,43 +215,43 @@ const LiabilitiesMatrix = () => {
                     labelName="Issuer"
                     inputOptions={issuerOptions}
                     inputName="issuer"
-                    inputValue={item.issuer}
+                    inputValue={item?.issuer}
                     onChange={(e) => handleInputChange(e, index)}
                   />
                   <div className="mb-2">
                     <InputCheckbox
                       labelName="Active Rule"
                       inputName="activeRule"
-                      inputChecked={item.activeRule === "YES" ? true : false}
+                      inputChecked={item?.activeRule === "YES" ? true : false}
                       onChange={(e) => handleInputChange(e, index)}
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
+                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 item?s-end">
                   <InputSelect
                     labelName="GDBR (Without Mortgage)"
                     inputOptions={gdbrWoMortageOptions}
                     inputName="applicabilityGDBR"
-                    inputValue={item.applicabilityGDBR}
+                    inputValue={item?.applicabilityGDBR}
                     onChange={(e) => handleInputChange(e, index)}
                   />
                   <InputSelect
                     labelName="GDBR (including Mortgage)"
                     inputOptions={gdbrWMortageOptions}
                     inputName="totalExposure"
-                    inputValue={item.totalExposure}
+                    inputValue={item?.totalExposure}
                     onChange={(e) => handleInputChange(e, index)}
                   />
                   <InputSelect
                     labelName="Default considered in CB score"
                     inputOptions={defaultScoreOptions}
                     inputName="defaultConsideredInSIMAHscore"
-                    inputValue={item.defaultConsideredInSIMAHscore}
+                    inputValue={item?.defaultConsideredInSIMAHscore}
                     onChange={(e) => handleInputChange(e, index)}
                   />
                   <Button
                     buttonIcon={TrashIcon}
-                    onClick={() => handleDeleteRow(item.simahDescriptionCode)}
+                    onClick={() => handleDeleteRow(item?.simahDescriptionCode)}
                     circle={true}
                   />
                 </div>

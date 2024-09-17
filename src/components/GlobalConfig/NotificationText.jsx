@@ -70,7 +70,7 @@ const NotificationText = () => {
         </b>
       </h2>
       <ContainerTile>
-        {notificationInputList.map((notdata) => (
+        {notificationInputList?.map((notdata) => (
           <div
             key={notdata.id}
             className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
@@ -79,29 +79,29 @@ const NotificationText = () => {
               <InputText
                 labelName="Notification Type"
                 inputName="notificationType"
-                id={`notificationType_${notdata.id}`}
-                inputValue={notdata.notificationType}
+                id={`notificationType_${notdata?.id}`}
+                inputValue={notdata?.notificationType}
                 disabled
                 placeHolder="REMINDER_EMI"
               />
               <InputText
                 labelName="Notification Display Name"
                 inputName="notificationDisplayName"
-                id={`notificationDisplayName_${notdata.id}`}
-                inputValue={notdata.notificationDisplayName}
+                id={`notificationDisplayName_${notdata?.id}`}
+                inputValue={notdata?.notificationDisplayName}
                 disabled
                 placeHolder="Installment reminder"
               />
               <InputSelect
                 labelName="Notification Channel"
                 inputOptions={notiChannelOptions}
-                inputId={notdata.id}
+                inputId={notdata?.id}
                 inputName="notificationChannel"
-                inputValue={notdata.notificationChannel}
+                inputValue={notdata?.notificationChannel}
                 onChange={(e) =>
                   dispatch(
                     handleNotificationChange({
-                      id: notdata.id,
+                      id: notdata?.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
@@ -114,12 +114,12 @@ const NotificationText = () => {
                 labelName="Notification Message En"
                 rowCount={2}
                 inputName="notificationMessageEn"
-                inputId={notdata.id}
-                inputValue={notdata.notificationMessageEn}
+                inputId={notdata?.id}
+                inputValue={notdata?.notificationMessageEn}
                 onChange={(e) =>
                   dispatch(
                     handleNotificationChange({
-                      id: notdata.id,
+                      id: notdata?.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
@@ -131,12 +131,12 @@ const NotificationText = () => {
                 labelName="Notification Message Hi"
                 rowCount={2}
                 inputName="notificationMessageAr"
-                inputId={notdata.id}
-                inputValue={notdata.notificationMessageAr}
+                inputId={notdata?.id}
+                inputValue={notdata?.notificationMessageAr}
                 onChange={(e) =>
                   dispatch(
                     handleNotificationChange({
-                      id: notdata.id,
+                      id: notdata?.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
@@ -148,8 +148,8 @@ const NotificationText = () => {
                 labelName="Notification Description"
                 rowCount={2}
                 inputName="notificationDescription"
-                inputId={`notificationDescription_${notdata.id}`}
-                inputValue={notdata.notificationDescription}
+                inputId={`notificationDescription_${notdata?.id}`}
+                inputValue={notdata?.notificationDescription}
                 disabled
                 placeHolder="2 days before the upcoming installment"
               />
@@ -157,7 +157,7 @@ const NotificationText = () => {
                 <Button
                   buttonIcon={CheckCircleIcon}
                   buttonName={""}
-                  onClick={() => handleSave(notdata.id)}
+                  onClick={() => handleSave(notdata?.id)}
                   rectangle={true}
                 />
               </div>

@@ -66,42 +66,42 @@ export default function Table({
             </td>
           </tr>
         ) : (
-          currentItems.map((rule, index) => (
+          currentItems?.map((rule, index) => (
             <tr key={rule.ruleName || index}>
               {[
                 {
-                  value: rule.startNetIncomeBracketInSARule?.trim(),
+                  value: rule?.startNetIncomeBracketInSARule?.trim(),
                   type: "number",
                   name: "startNetIncomeBracketInSARule",
                 },
                 {
-                  value: rule.endNetIncomeBracketInSARule?.trim(),
+                  value: rule?.endNetIncomeBracketInSARule?.trim(),
                   type: "number",
                   name: "endNetIncomeBracketInSARule",
                 },
                 {
-                  value: rule.productLevel.trim(),
+                  value: rule?.productLevel?.trim(),
                   type: "text",
                   name: "productLevel",
                 },
                 {
-                  value: rule.consumerDBR.trim(),
+                  value: rule?.consumerDBR?.trim(),
                   type: "text",
                   name: "consumerDBR",
                 },
                 {
-                  value: rule.gdbrWithoutMTG.trim(),
+                  value: rule?.gdbrWithoutMTG?.trim(),
                   type: "text",
                   name: "gdbrWithoutMTG",
                 },
                 {
-                  value: rule.employerRetired,
+                  value: rule?.employerRetired,
                   type: "select",
                   name: "employerRetired",
                   options: empOptions,
                 },
                 {
-                  value: rule.gdbrWithMTG.trim(),
+                  value: rule?.gdbrWithMTG?.trim(),
                   type: "text",
                   name: "gdbrWithMTG",
                 },

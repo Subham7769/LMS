@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import {
+  MagnifyingGlassIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/20/solid";
 import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
 
@@ -40,7 +44,9 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
 
   useEffect(() => {
     setFilteredData(
-      ListItem.filter((entry) => entry.userId.toString().includes(borrowerIdQuery))
+      ListItem.filter((entry) =>
+        entry.userId.toString().includes(borrowerIdQuery)
+      )
     );
     setCurrentPage(1);
   }, [borrowerIdQuery, ListItem]);
@@ -54,33 +60,32 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   const customSelectStyles = {
     control: (provided) => ({
       ...provided,
-      minHeight: '48px',
-      borderRadius: '0.375rem',
-      borderColor: '#D1D5DB',
-      boxShadow: 'none',
+      minHeight: "48px",
+      borderRadius: "0.375rem",
+      borderColor: "#D1D5DB",
+      boxShadow: "none",
     }),
     valueContainer: (provided) => ({
       ...provided,
-      padding: '0 0.75rem',
+      padding: "0 0.75rem",
     }),
     indicatorsContainer: (provided) => ({
       ...provided,
-      height: '48px',
+      height: "48px",
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      padding: '0 8px',
+      padding: "0 8px",
     }),
     clearIndicator: (provided) => ({
       ...provided,
-      padding: '0 8px',
+      padding: "0 8px",
     }),
   };
 
   return (
     <div className="bg-gray-100 py-10 rounded-xl flex flex-col items-center w-full">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
-
         {/* Search */}
         <div className="flex gap-4 mb-5 w-1/2">
           <div className="">
@@ -89,7 +94,10 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 id="search"
@@ -122,7 +130,9 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
         {/* Table Name */}
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              {ListName}
+            </h1>
           </div>
         </div>
 
@@ -131,7 +141,10 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300" ref={tableRef}>
+                <table
+                  className="min-w-full divide-y divide-gray-300"
+                  ref={tableRef}
+                >
                   <thead className="bg-gray-50">
                     <tr>
                       {ListHeader.map((header, index) => (
@@ -152,22 +165,26 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
                           {item.accounts.map((accountItem, idx) => (
                             <tr key={`${item.id}-${idx}`}>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {convertDate(accountItem.transactionDate)}
+                                {convertDate(accountItem?.transactionDate)}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem.entryId}
+                                {accountItem?.entryId}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem.entryName}
+                                {accountItem?.entryName}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
                                 {item.userId}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem.debitValue === 0 ? '-' : accountItem.debitValue}
+                                {accountItem?.debitValue === 0
+                                  ? "-"
+                                  : accountItem?.debitValue}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem.creditValue === 0 ? '-' : accountItem.creditValue}
+                                {accountItem?.creditValue === 0
+                                  ? "-"
+                                  : accountItem?.creditValue}
                               </td>
                             </tr>
                           ))}
@@ -192,35 +209,38 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
       </div>
 
       {/* Pagination */}
-      {
-        currentData.length !== 0
-          ? (
-            <div ref={paginationRef} className="mt-6 flex justify-center gap-5 items-center">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`flex items-center px-2 py-2 rounded-md ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
-                  }`}
-              >
-                <ChevronLeftIcon className="w-5 h-5" />
-              </button>
-              <span className="text-sm text-gray-700">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`flex items-center px-2 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
-                  }`}
-              >
-                <ChevronRightIcon className="w-5 h-5" />
-              </button>
-            </div>
-          )
-          : null
-      }
-
-
+      {currentData.length !== 0 ? (
+        <div
+          ref={paginationRef}
+          className="mt-6 flex justify-center gap-5 items-center"
+        >
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`flex items-center px-2 py-2 rounded-md ${
+              currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+            }`}
+          >
+            <ChevronLeftIcon className="w-5 h-5" />
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`flex items-center px-2 py-2 rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+            }`}
+          >
+            <ChevronRightIcon className="w-5 h-5" />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };

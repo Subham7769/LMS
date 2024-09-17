@@ -302,7 +302,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputSelect
               labelName="Min Net"
-              inputValue={operators.firstNetIncomeBracketInSARuleOperator}
+              inputValue={operators?.firstNetIncomeBracketInSARuleOperator}
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="firstNetIncomeBracketInSARuleOperator"
@@ -311,7 +311,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputNumber
               inputName={`startNetIncomeBracketInSARule`}
-              inputValue={formData.startNetIncomeBracketInSARule}
+              inputValue={formData?.startNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="10000"
             />
@@ -319,7 +319,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputSelect
               labelName="Max Net"
-              inputValue={operators.secondNetIncomeBracketInSARuleOperator}
+              inputValue={operators?.secondNetIncomeBracketInSARuleOperator}
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="secondNetIncomeBracketInSARuleOperator"
@@ -328,7 +328,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputNumber
               inputName={`endNetIncomeBracketInSARule`}
-              inputValue={formData.endNetIncomeBracketInSARule}
+              inputValue={formData?.endNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="20000"
             />
@@ -337,7 +337,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="Product Level"
               inputName={`productLevel`}
-              inputValue={formData.productLevel}
+              inputValue={formData?.productLevel}
               onChange={handleInputChange}
               placeHolder="33%"
             />
@@ -346,7 +346,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="Consumer DBR"
               inputName={`consumerDBR`}
-              inputValue={formData.consumerDBR}
+              inputValue={formData?.consumerDBR}
               onChange={handleInputChange}
               placeHolder="65%"
             />
@@ -355,7 +355,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="GDBR (Without MTG)"
               inputName={`gdbrWithoutMTG`}
-              inputValue={formData.gdbrWithoutMTG}
+              inputValue={formData?.gdbrWithoutMTG}
               onChange={handleInputChange}
               placeHolder="65%"
             />
@@ -364,7 +364,7 @@ const DebtBurdenConfig = () => {
             <InputSelect
               labelName="Employer Retired"
               inputName={`employerRetired`}
-              inputValue={formData.employerRetired}
+              inputValue={formData?.employerRetired}
               onChange={handleInputChange}
               inputOptions={empOptions}
             />
@@ -373,7 +373,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="GDBR (including MTG)"
               inputName={`gdbrWithMTG`}
-              inputValue={formData.gdbrWithMTG}
+              inputValue={formData?.gdbrWithMTG}
               onChange={handleInputChange}
               placeHolder="65%"
             />

@@ -129,7 +129,7 @@ const CityCard = ({ cityData }) => {
     }
   };
 
-  console.log(cityFormData);
+  // console.log(cityFormData);
 
   return (
     <ContainerTile className={"w-full"}>

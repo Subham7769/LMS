@@ -132,7 +132,7 @@ const MinimumExpense = () => {
             <InputText
               labelName="Expenses"
               inputName="expensesName"
-              inputValue={expenseForm.expensesName}
+              inputValue={expenseForm?.expensesName}
               onChange={handleInputChange}
               placeHolder="Food and Living"
             />
@@ -140,20 +140,20 @@ const MinimumExpense = () => {
               labelName="Type"
               inputOptions={typeOptions}
               inputName="dependantType"
-              inputValue={expenseForm.dependantType}
+              inputValue={expenseForm?.dependantType}
               onChange={handleInputChange}
             />
             <InputSelect
               labelName="Expenses Frequency"
               inputOptions={frequencyOptions}
               inputName="expensesFrequency"
-              inputValue={expenseForm.expensesFrequency}
+              inputValue={expenseForm?.expensesFrequency}
               onChange={handleInputChange}
             />
             <InputNumber
               labelName="Bare Min Expense Per Person"
               inputName="bareMinimum"
-              inputValue={expenseForm.bareMinimum}
+              inputValue={expenseForm?.bareMinimum}
               onChange={handleInputChange}
               placeHolder="200"
             />
@@ -165,7 +165,7 @@ const MinimumExpense = () => {
           </div>
         </ContainerTile>
         <ContainerTile>
-          {allExpenseData.map((expdata) => (
+          {allExpenseData?.map((expdata) => (
             <div
               key={expdata.id}
               className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end border-b border-b-gray-400 py-10"
@@ -173,21 +173,21 @@ const MinimumExpense = () => {
               <InputText
                 labelName="Expenses"
                 inputName="expensesName"
-                id={`expense_${expdata.id}`}
-                inputValue={expdata.expensesName}
-                onChange={(e) => handleChange(e, expdata.id)}
+                id={`expense_${expdata?.id}`}
+                inputValue={expdata?.expensesName}
+                onChange={(e) => handleChange(e, expdata?.id)}
                 placeHolder="Food and Living"
               />
               <InputSelectNew
                 labelName="Type"
                 inputOptions={typeOptions}
-                id={`type_${expdata.id}`}
+                id={`type_${expdata?.id}`}
                 inputName="dependantType"
-                inputValue={expdata.dependantType}
+                inputValue={expdata?.dependantType}
                 onChange={(selectedOption) =>
                   handleChange(
                     null,
-                    expdata.id,
+                    expdata?.id,
                     "dependantType",
                     selectedOption
                   )
@@ -196,13 +196,13 @@ const MinimumExpense = () => {
               <InputSelectNew
                 labelName="Expenses Frequency"
                 inputOptions={frequencyOptions}
-                id={`frequency_${expdata.id}`}
+                id={`frequency_${expdata?.id}`}
                 inputName="expensesFrequency"
-                inputValue={expdata.expensesFrequency}
+                inputValue={expdata?.expensesFrequency}
                 onChange={(selectedOption) =>
                   handleChange(
                     null,
-                    expdata.id,
+                    expdata?.id,
                     "expensesFrequency",
                     selectedOption
                   )
@@ -211,20 +211,20 @@ const MinimumExpense = () => {
               <InputNumber
                 labelName="Bare Min Expense Per Person"
                 inputName="bareMinimum"
-                inputId={`minExpense_${expdata.id}`}
-                inputValue={expdata.bareMinimum}
-                onChange={(e) => handleChange(e, expdata.id)}
+                inputId={`minExpense_${expdata?.id}`}
+                inputValue={expdata?.bareMinimum}
+                onChange={(e) => handleChange(e, expdata?.id)}
                 placeHolder="200"
               />
               <div className="flex items-center gap-4">
                 <Button
                   buttonIcon={CheckCircleIcon}
-                  onClick={() => handleSave(expdata.id)}
+                  onClick={() => handleSave(expdata?.id)}
                   circle={true}
                 />
                 <Button
                   buttonIcon={TrashIcon}
-                  onClick={() => handleDelete(expdata.id)}
+                  onClick={() => handleDelete(expdata?.id)}
                   circle={true}
                 />
               </div>

@@ -28,7 +28,6 @@ import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { Passed, Warning } from "../Toasts";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -212,229 +211,6 @@ const RiskBasedPricing = () => {
     }
   };
 
-  const Content = () => (
-    <table className="w-full divide-y divide-gray-200">
-      <thead className="bg-gray-50">
-        <tr>
-          <th scope="col" onClick={() => handleSort("firstRiskBasedPricing")}>
-            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-              Minimum Risk Based Pricing {getSortIcon("firstRiskBasedPricing")}
-            </div>
-          </th>
-          <th scope="col" onClick={() => handleSort("secondRiskBasedPricing")}>
-            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-              Maximum Risk Based Pricing {getSortIcon("secondRiskBasedPricing")}
-            </div>
-          </th>
-          <th scope="col" onClick={() => handleSort("interestRate")}>
-            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-              Simple Interest {getSortIcon("interestRate")}
-            </div>
-          </th>
-          <th scope="col" onClick={() => handleSort("interestPeriodType")}>
-            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-              PER {getSortIcon("interestPeriodType")}
-            </div>
-          </th>
-          <th
-            scope="col"
-            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        {currentItems.length === 0 ? (
-          <tr>
-            <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
-              No Data To Show Yet
-            </td>
-          </tr>
-        ) : (
-          currentItems.map((item, index) => (
-            <tr key={index}>
-              <td className="p-4 whitespace-nowrap">
-                {editingIndex === index ? (
-                  <div className="flex gap-4">
-                    <Select
-                      className="min-w-20"
-                      options={operatorOptions}
-                      value={[
-                        {
-                          label:
-                            riskBasedPricing?.operators
-                              ?.firstRiskBasedPricingOperator,
-                          value:
-                            riskBasedPricing?.operators
-                              ?.firstRiskBasedPricingOperator,
-                        },
-                      ]}
-                      onChange={(selectedOption) =>
-                        handleChangeRBP(
-                          {
-                            target: {
-                              name: "firstRiskBasedPricingOperator",
-                              value: selectedOption.value,
-                            },
-                          },
-                          index
-                        )
-                      }
-                      isSearchable={false}
-                    />
-                    <input
-                      type="number"
-                      name="firstRiskBasedPricing"
-                      value={item.firstRiskBasedPricing}
-                      onChange={(e) => handleChangeRBP(e, index)}
-                      placeholder={"0.5"}
-                      className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-start ml-20 gap-5">
-                    <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {
-                        riskBasedPricing?.operators
-                          ?.firstRiskBasedPricingOperator
-                      }
-                    </span>
-                    <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {item.firstRiskBasedPricing}
-                    </span>
-                  </div>
-                )}
-              </td>
-              <td className="p-4 whitespace-nowrap">
-                {editingIndex === index ? (
-                  <div className="flex gap-4">
-                    <Select
-                      className="min-w-20"
-                      options={operatorOptions}
-                      value={[
-                        {
-                          label:
-                            riskBasedPricing?.operators
-                              ?.secondRiskBasedPricingOperator,
-                          value:
-                            riskBasedPricing?.operators
-                              ?.secondRiskBasedPricingOperator,
-                        },
-                      ]}
-                      onChange={(selectedOption) =>
-                        handleChangeRBP(
-                          {
-                            target: {
-                              name: "secondRiskBasedPricingOperator",
-                              value: selectedOption.value,
-                            },
-                          },
-                          index
-                        )
-                      }
-                      isSearchable={false}
-                    />
-                    <input
-                      type="number"
-                      name="secondRiskBasedPricing"
-                      value={item.secondRiskBasedPricing}
-                      onChange={(e) => handleChangeRBP(e, index)}
-                      placeholder={"2"}
-                      className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-start ml-20 gap-5">
-                    <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {
-                        riskBasedPricing?.operators
-                          ?.secondRiskBasedPricingOperator
-                      }
-                    </span>
-                    <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {item.secondRiskBasedPricing}
-                    </span>
-                  </div>
-                )}
-              </td>
-              <td className="p-4 whitespace-nowrap">
-                {editingIndex === index ? (
-                  <input
-                    type="number"
-                    name="interestRate"
-                    value={item.interestRate}
-                    onChange={(e) => handleChangeRBP(e, index)}
-                    className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="4000"
-                  />
-                ) : (
-                  <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                    {item.interestRate}
-                  </span>
-                )}
-              </td>
-              <td className="p-4 whitespace-nowrap">
-                {editingIndex === index ? (
-                  <Select
-                    className="w-32"
-                    options={options}
-                    name="interestPeriodType"
-                    value={[
-                      {
-                        label: item.interestPeriodType,
-                        value: item.interestPeriodType,
-                      },
-                    ]}
-                    onChange={(selectedOption) =>
-                      handleChangeRBP(
-                        {
-                          target: {
-                            name: "interestPeriodType",
-                            value: selectedOption.value,
-                          },
-                        },
-                        index
-                      )
-                    }
-                    isSearchable={false}
-                  />
-                ) : (
-                  <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                    {item.interestPeriodType}
-                  </span>
-                )}
-              </td>
-              <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                <button onClick={() => toggleEdit(index)} type="button">
-                  {editingIndex === index ? (
-                    <div
-                      onClick={informUser}
-                      className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                      <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                      <PencilIcon className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                  )}
-                </button>
-                <button
-                  onClick={() => handleDeleteRBP(item.ruleName)}
-                  type="button"
-                  className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                >
-                  <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </td>
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
-  );
-
   return (
     <>
       <ContainerTile>
@@ -499,9 +275,237 @@ const RiskBasedPricing = () => {
             />
           </div>
         </div>
-        <SectionErrorBoundary>
-          <Content />
-        </SectionErrorBoundary>
+        <table className="w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                onClick={() => handleSort("firstRiskBasedPricing")}
+              >
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  Minimum Risk Based Pricing{" "}
+                  {getSortIcon("firstRiskBasedPricing")}
+                </div>
+              </th>
+              <th
+                scope="col"
+                onClick={() => handleSort("secondRiskBasedPricing")}
+              >
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  Maximum Risk Based Pricing{" "}
+                  {getSortIcon("secondRiskBasedPricing")}
+                </div>
+              </th>
+              <th scope="col" onClick={() => handleSort("interestRate")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  Simple Interest {getSortIcon("interestRate")}
+                </div>
+              </th>
+              <th scope="col" onClick={() => handleSort("interestPeriodType")}>
+                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
+                  PER {getSortIcon("interestPeriodType")}
+                </div>
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {currentItems.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                  No Data To Show Yet
+                </td>
+              </tr>
+            ) : (
+              currentItems.map((item, index) => (
+                <tr key={index}>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <div className="flex gap-4">
+                        <Select
+                          className="min-w-20"
+                          options={operatorOptions}
+                          value={[
+                            {
+                              label:
+                                riskBasedPricing?.operators
+                                  ?.firstRiskBasedPricingOperator,
+                              value:
+                                riskBasedPricing?.operators
+                                  ?.firstRiskBasedPricingOperator,
+                            },
+                          ]}
+                          onChange={(selectedOption) =>
+                            handleChangeRBP(
+                              {
+                                target: {
+                                  name: "firstRiskBasedPricingOperator",
+                                  value: selectedOption.value,
+                                },
+                              },
+                              index
+                            )
+                          }
+                          isSearchable={false}
+                        />
+                        <input
+                          type="number"
+                          name="firstRiskBasedPricing"
+                          value={item.firstRiskBasedPricing}
+                          onChange={(e) => handleChangeRBP(e, index)}
+                          placeholder={"0.5"}
+                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-start ml-20 gap-5">
+                        <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {
+                            riskBasedPricing?.operators
+                              ?.firstRiskBasedPricingOperator
+                          }
+                        </span>
+                        <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {item.firstRiskBasedPricing}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <div className="flex gap-4">
+                        <Select
+                          className="min-w-20"
+                          options={operatorOptions}
+                          value={[
+                            {
+                              label:
+                                riskBasedPricing?.operators
+                                  ?.secondRiskBasedPricingOperator,
+                              value:
+                                riskBasedPricing?.operators
+                                  ?.secondRiskBasedPricingOperator,
+                            },
+                          ]}
+                          onChange={(selectedOption) =>
+                            handleChangeRBP(
+                              {
+                                target: {
+                                  name: "secondRiskBasedPricingOperator",
+                                  value: selectedOption.value,
+                                },
+                              },
+                              index
+                            )
+                          }
+                          isSearchable={false}
+                        />
+                        <input
+                          type="number"
+                          name="secondRiskBasedPricing"
+                          value={item.secondRiskBasedPricing}
+                          onChange={(e) => handleChangeRBP(e, index)}
+                          placeholder={"2"}
+                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-start ml-20 gap-5">
+                        <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {
+                            riskBasedPricing?.operators
+                              ?.secondRiskBasedPricingOperator
+                          }
+                        </span>
+                        <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                          {item.secondRiskBasedPricing}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <input
+                        type="number"
+                        name="interestRate"
+                        value={item.interestRate}
+                        onChange={(e) => handleChangeRBP(e, index)}
+                        className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="4000"
+                      />
+                    ) : (
+                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        {item.interestRate}
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    {editingIndex === index ? (
+                      <Select
+                        className="w-32"
+                        options={options}
+                        name="interestPeriodType"
+                        value={[
+                          {
+                            label: item.interestPeriodType,
+                            value: item.interestPeriodType,
+                          },
+                        ]}
+                        onChange={(selectedOption) =>
+                          handleChangeRBP(
+                            {
+                              target: {
+                                name: "interestPeriodType",
+                                value: selectedOption.value,
+                              },
+                            },
+                            index
+                          )
+                        }
+                        isSearchable={false}
+                      />
+                    ) : (
+                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                        {item.interestPeriodType}
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                    <button onClick={() => toggleEdit(index)} type="button">
+                      {editingIndex === index ? (
+                        <div
+                          onClick={informUser}
+                          className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                          <CheckCircleIcon
+                            className="h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                          <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                        </div>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteRBP(item.ruleName)}
+                      type="button"
+                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    >
+                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
         <div className="mt-4 w-full flex justify-center gap-5 items-center">
           <button
             onClick={() => handlePageChange(currentPage - 1)}

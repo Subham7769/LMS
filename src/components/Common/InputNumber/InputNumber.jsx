@@ -10,10 +10,9 @@ const InputNumber = ({
   placeHolder,
   disabled = false,
 }) => {
-
-  // if (inputValue === null || inputValue === undefined) {
-  //   throw new Error("abc")
-  // }
+  if (inputValue === null || inputValue === undefined) {
+    throw new Error("value undefined");
+  }
 
   const handleChange = (e) => {
     const { name, value, id } = e.target;
@@ -50,7 +49,6 @@ const InputNumber = ({
     </div>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

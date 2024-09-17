@@ -116,7 +116,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
       label: name,
     }));
   }
-  useEffect(() => { }, [
+  useEffect(() => {}, [
     DBRConfigInfo,
     ProjectDataInfo,
     BEDataInfo,
@@ -133,7 +133,9 @@ const ProductInputFields = ({ formData, handleChange }) => {
             inputOptions={tenureOptions}
             inputName="eligibleCustomerType"
             inputValue={
-              formData.eligibleCustomerType ? formData.eligibleCustomerType : ""
+              formData?.eligibleCustomerType
+                ? formData?.eligibleCustomerType
+                : ""
             }
             onChange={handleChange}
           />
@@ -141,28 +143,28 @@ const ProductInputFields = ({ formData, handleChange }) => {
             labelName="RAC"
             inputOptions={formateDataDropDown("/rac/", RACDataInfo)}
             inputName="racId"
-            inputValue={formData.racId}
+            inputValue={formData?.racId}
             onChange={handleChange}
           />
           <InputSelect
             labelName="Project"
             inputOptions={formateDataDropDown("/project/", ProjectDataInfo)}
             inputName="projectId"
-            inputValue={formData.projectId}
+            inputValue={formData?.projectId}
             onChange={handleChange}
           />
           <InputSelect
             labelName="TCL"
             inputOptions={formateDataDropDown("/tcl/", TCLDataInfo)}
             inputName="tclFileId"
-            inputValue={formData.tclFileId}
+            inputValue={formData?.tclFileId}
             onChange={handleChange}
           />
           <InputSelect
             inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
             labelName="Recovery Type"
             inputName="recoveryEquationTempId"
-            inputValue={formData.recoveryEquationTempId}
+            inputValue={formData?.recoveryEquationTempId}
             onChange={handleChange}
           />
         </div>
@@ -171,28 +173,28 @@ const ProductInputFields = ({ formData, handleChange }) => {
             labelName="DBR Config"
             inputOptions={formateDataDropDown("/dbr-config/", DBRConfigInfo)}
             inputName="dbcTempId"
-            inputValue={formData.dbcTempId}
+            inputValue={formData?.dbcTempId}
             onChange={handleChange}
           />
           <InputSelect
             labelName="Blocked Employer"
             inputOptions={formateDataDropDown("/blocked-employer/", BEDataInfo)}
             inputName="blockEmployersTempId"
-            inputValue={formData.blockEmployersTempId}
+            inputValue={formData?.blockEmployersTempId}
             onChange={handleChange}
           />
           <InputSelect
             labelName="Rule Policy"
             inputOptions={formateDataDropDown("/rule-policy/", RPDataInfo)}
             inputName="rulePolicyTempId"
-            inputValue={formData.rulePolicyTempId}
+            inputValue={formData?.rulePolicyTempId}
             onChange={handleChange}
           />
           <InputSelect
             labelName="Credit Score"
             inputOptions={formateDataDropDown("/credit-score/", CSDataInfo)}
             inputName="creditScoreEqTempId"
-            inputValue={formData.creditScoreEqTempId}
+            inputValue={formData?.creditScoreEqTempId}
             onChange={handleChange}
           />
           <InputSelect
@@ -202,7 +204,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               CSETDataInfo
             )}
             inputName="creditScoreEtTempId"
-            inputValue={formData.creditScoreEtTempId}
+            inputValue={formData?.creditScoreEtTempId}
             onChange={handleChange}
           />
         </div>
@@ -210,21 +212,21 @@ const ProductInputFields = ({ formData, handleChange }) => {
           <InputText
             labelName="Processing Fee"
             inputName="fee"
-            inputValue={formData.fee}
+            inputValue={formData?.fee}
             onChange={handleChange}
             placeHolder="1%"
           />
           <InputText
             labelName="Management Fee Vat"
             inputName="managementFeeVat"
-            inputValue={formData.managementFeeVat}
+            inputValue={formData?.managementFeeVat}
             onChange={handleChange}
             placeHolder="15%"
           />
           <InputNumber
             labelName="No. of Installments For Early Settlement"
             inputName="numberOfEmisForEarlySettlement"
-            inputValue={formData.numberOfEmisForEarlySettlement}
+            inputValue={formData?.numberOfEmisForEarlySettlement}
             onChange={handleChange}
             placeHolder="3"
           />
@@ -232,32 +234,31 @@ const ProductInputFields = ({ formData, handleChange }) => {
           <div className="col-span-5 grid grid-cols-5 gap-5 items-end border-t-2 ">
             <InputCheckbox
               labelName="Overdraft"
-              inputChecked={formData.overdraft}
+              inputChecked={formData?.overdraft}
               onChange={handleChange}
               inputName="overdraft"
             />
 
             <InputCheckbox
               labelName="Refinanced With"
-              inputChecked={formData.refinancedWith}
+              inputChecked={formData?.refinancedWith}
               onChange={handleChange}
               inputName="refinancedWith"
             />
             <InputCheckbox
               labelName="Disable RAC"
-              inputChecked={formData.disableRac}
+              inputChecked={formData?.disableRac}
               onChange={handleChange}
               inputName="disableRac"
             />
-
           </div>
           {/* Newly added fields */}
-          {formData.overdraft && (
+          {formData?.overdraft && (
             <>
               <InputNumber
                 labelName="Max. Overdraft Principle Limit"
                 inputName="maxOverdraftPrincipalLimit"
-                inputValue={formData.maxOverdraftPrincipalLimit}
+                inputValue={formData?.maxOverdraftPrincipalLimit}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -265,7 +266,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputNumber
                 labelName="Min. Overdraft Principle Limit"
                 inputName="minOverdraftPrincipalLimit"
-                inputValue={formData.minOverdraftPrincipalLimit}
+                inputValue={formData?.minOverdraftPrincipalLimit}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -273,7 +274,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputText
                 labelName="Annual Fee"
                 inputName="annualFee"
-                inputValue={formData.annualFee}
+                inputValue={formData?.annualFee}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -281,7 +282,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputNumber
                 labelName="Overdraft Product Period"
                 inputName="overdraftProductPeriod"
-                inputValue={formData.overdraftProductPeriod}
+                inputValue={formData?.overdraftProductPeriod}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -289,19 +290,19 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputNumber
                 labelName="Overdraft Payment Principle Percentage"
                 inputName="overDraftPaymentPrinciplePercentage"
-                inputValue={formData.overDraftPaymentPrinciplePercentage}
+                inputValue={formData?.overDraftPaymentPrinciplePercentage}
                 onChange={handleChange}
                 placeHolder="3"
               />
-            </>)}
-
+            </>
+          )}
         </div>
       </div>
       <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
         <InputText
           labelName="Simple Interest"
           inputName="interestRate"
-          inputValue={interestEligibleTenure.interestRate}
+          inputValue={interestEligibleTenure?.interestRate}
           onChange={handleChangeInterestEligibleTenure}
           placeHolder="2%"
         />
@@ -309,19 +310,19 @@ const ProductInputFields = ({ formData, handleChange }) => {
           labelName="Per"
           inputOptions={options}
           inputName="interestPeriodType"
-          inputValue={interestEligibleTenure.interestPeriodType}
+          inputValue={interestEligibleTenure?.interestPeriodType}
           onChange={handleChangeInterestEligibleTenure}
         />
         <InputNumber
           labelName="Tenure"
           inputName="loanTenure"
-          inputValue={interestEligibleTenure.loanTenure}
+          inputValue={interestEligibleTenure?.loanTenure}
           onChange={handleChangeInterestEligibleTenure}
           placeHolder="3"
         />
         <InputSelect
           labelName="Tenure Type"
-          inputValue={interestEligibleTenure.loanTenureType}
+          inputValue={interestEligibleTenure?.loanTenureType}
           inputOptions={tenureTypeOptions}
           inputName="loanTenureType"
           onChange={handleChangeInterestEligibleTenure}
@@ -329,7 +330,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
         <InputNumber
           labelName="Repayment Tenure"
           inputName="repaymentTenure"
-          inputValue={interestEligibleTenure.repaymentTenure}
+          inputValue={interestEligibleTenure?.repaymentTenure}
           onChange={handleChangeInterestEligibleTenure}
           placeHolder="0"
         />
@@ -337,7 +338,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
           labelName="Repayment Tenure Type"
           inputName="repaymentTenureType"
           inputOptions={tenureTypeOptions}
-          inputValue={interestEligibleTenure.repaymentTenureType}
+          inputValue={interestEligibleTenure?.repaymentTenureType}
           onChange={handleChangeInterestEligibleTenure}
         />
         <div className="flex justify-center align-middle">

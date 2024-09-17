@@ -67,8 +67,7 @@ const InstallmentSummery = ({ isOpen, onClose, installDataProp }) => {
       </>
     );
   }
-  const arrowVis =
-    installmentConfigData.length;
+  const arrowVis = installmentConfigData.length;
   const settings = {
     dots: false,
     infinite: false,
@@ -82,205 +81,176 @@ const InstallmentSummery = ({ isOpen, onClose, installDataProp }) => {
   const width = arrowVis < 3 ? arrowVis * 201 : 603; // Calculate width
   const sliderContainWidth = `w-[${width}px]`;
 
-  const installTableDividerStyle = "divide-x divide-gray-200 text-center w-full h-[58px]"
-  const installTableColor = "py-2 text-gray-500"
+  const installTableDividerStyle =
+    "divide-x divide-gray-200 text-center w-full h-[58px]";
+  const installTableColor = "py-2 text-gray-500";
   return (
     <>
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="relative bg-white flex flex-col w-fit rounded-lg shadow-lg ">
-        <div onClick={onClose} className="h-9 w-9 cursor-pointer rounded-full text-white absolute -top-3 -right-3 self-end">
-          <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)"/>
-        </div>
-        <div className="flex items-start h-[600px] overflow-y-auto p-6">
-          <div className="w-[330px]">
-            <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
-              <thead>
-                <tr className={installTableDividerStyle}>
-                  <th className="py-3.5  text-center ">
-                    Installment Summary Response
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Closing Amount
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Early Settlement Fee
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Installment Date
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Installment Value
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Interest Value
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Management Fee
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Principal Outstanding Amount
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Principal Value
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Saved Fee
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Saved Fee Percent
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Term Cost
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Third Party Cost
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Total Outsanding Amount
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Total Required Amount
-                  </td>
-                </tr>
-                <tr className={installTableDividerStyle}>
-                  <td className={installTableColor}>
-                    Vat Fee
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
+        <div className="relative bg-white flex flex-col w-fit rounded-lg shadow-lg ">
+          <div
+            onClick={onClose}
+            className="h-9 w-9 cursor-pointer rounded-full text-white absolute -top-3 -right-3 self-end"
+          >
+            <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)" />
           </div>
-          <div className={sliderContainWidth}>
-            <Slider {...settings}>
-              {installmentConfigData.map((ci, index) => {
-                return (
-                  <table
-                    key={index}
-                    className="divide-y divide-gray-300 border-r border-gray-300 w-full"
-                  >
-                    <thead>
-                      <tr className="divide-x divide-gray-200 h-[58px]">
-                        <th className="py-3.5 text-center">
-                          <div className="w-[198px]">{index + 1}</div>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.closingAmount}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.earlySettlementFee}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.installmentDate}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.installmentValue}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.interestValue}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.managementFee}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.principalOutstandingAmount}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.principalValue}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.savedFee}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.savedFeePercent}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.termCost}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.thirdPartyCost}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.totalOutsandingAmount}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.totalRequiredAmount}
-                        </td>
-                      </tr>
-                      <tr className={installTableDividerStyle}>
-                        <td className={installTableColor}>
-                          {ci.vatFee}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                );
-              })}
-            </Slider>
+          <div className="flex items-start h-[600px] overflow-y-auto p-6">
+            <div className="w-[330px]">
+              <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
+                <thead>
+                  <tr className={installTableDividerStyle}>
+                    <th className="py-3.5  text-center ">
+                      Installment Summary Response
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Closing Amount</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Early Settlement Fee</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Installment Date</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Installment Value</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Interest Value</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Management Fee</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>
+                      Principal Outstanding Amount
+                    </td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Principal Value</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Saved Fee</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Saved Fee Percent</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Term Cost</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Third Party Cost</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>
+                      Total Outsanding Amount
+                    </td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Total Required Amount</td>
+                  </tr>
+                  <tr className={installTableDividerStyle}>
+                    <td className={installTableColor}>Vat Fee</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className={sliderContainWidth}>
+              <Slider {...settings}>
+                {installmentConfigData?.map((ci, index) => {
+                  return (
+                    <table
+                      key={index}
+                      className="divide-y divide-gray-300 border-r border-gray-300 w-full"
+                    >
+                      <thead>
+                        <tr className="divide-x divide-gray-200 h-[58px]">
+                          <th className="py-3.5 text-center">
+                            <div className="w-[198px]">{index + 1}</div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.closingAmount}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.earlySettlementFee}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.installmentDate}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.installmentValue}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.interestValue}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.managementFee}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.principalOutstandingAmount}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.principalValue}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>{ci?.savedFee}</td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.savedFeePercent}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>{ci?.termCost}</td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.thirdPartyCost}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.totalOutsandingAmount}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>
+                            {ci?.totalRequiredAmount}
+                          </td>
+                        </tr>
+                        <tr className={installTableDividerStyle}>
+                          <td className={installTableColor}>{ci?.vatFee}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  );
+                })}
+              </Slider>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-      
     </>
   );
 };

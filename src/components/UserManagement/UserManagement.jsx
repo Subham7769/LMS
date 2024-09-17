@@ -74,18 +74,18 @@ const UserManagement = ({ role }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {allUsersInfo.map((item) => (
+                {allUsersInfo?.map((item) => (
                   <tr
-                    key={item.username}
+                    key={item?.username}
                     className="divide-x divide-gray-200 text-center"
                   >
-                    <td className="p-4 text-gray-500">{item.username}</td>
+                    <td className="p-4 text-gray-500">{item?.username}</td>
                     <td className="p-4 text-gray-500">
-                      {item.active ? "Active" : "Suspended"}
+                      {item?.active ? "Active" : "Suspended"}
                     </td>
                     <td className="p-4 text-gray-500">
                       {new Intl.DateTimeFormat("en-GB", options).format(
-                        item.creationDate
+                        item?.creationDate
                       )}
                     </td>
                     <td className="p-4 text-gray-500">

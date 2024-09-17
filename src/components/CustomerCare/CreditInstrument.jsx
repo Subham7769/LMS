@@ -46,7 +46,9 @@ const TableRow = ({ children }) => (
 );
 
 const CreditInstrument = () => {
-  const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
+  const { CreditBureauDetails, loading, error } = useSelector(
+    (state) => state.customerCare
+  );
 
   if (loading) {
     return <LoadingState />;
@@ -85,79 +87,82 @@ const CreditInstrument = () => {
     "Last Payment Date",
     "As Of Date",
     "Summary",
-  ]
+  ];
 
-  const cidetail = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.cidetails?.cidetail;
+  const cidetail =
+    CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]
+      ?.cidetails?.cidetail;
 
   return (
     <ContainerTile>
-    <div className="flex items-start shadow-md bg-gray-100 mt-4">
-      <table className="divide-y divide-gray-300 border-r border-gray-200 w-full text-[14px]">
-        <TableHeader />
-        <tbody className="divide-y divide-gray-200 bg-white">
-          {headerList.map((header, index) => (
-            <TableRow key={index}>{header}</TableRow>
-          ))}
-        </tbody>
-      </table>
-      <div className="w-[984px]">
-        <Slider {...settings}>
-          {cidetail.map((ci, index) => (
-            <table
-              key={index}
-              className="divide-y divide-gray-300  w-[200px] text-[14px]"
-            >
-              <thead className="bg-gray-50">
-                <tr className="divide-x divide-gray-200">
-                  <th className="py-3.5 px-4 text-center">{index + 1}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                <TableRow>{ci.cicrdtr}</TableRow>
-                <TableRow>{ci.ciprd}</TableRow>
-                <TableRow>
-                  <div
-                    title={ci.ciaccno}
-                    className="w-[165px] cursor-pointer flex mx-auto hover:text-gray-900"
-                  >
-                    <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                      {ci.ciaccno}
+      <div className="flex items-start shadow-md bg-gray-100 mt-4">
+        <table className="divide-y divide-gray-300 border-r border-gray-200 w-full text-[14px]">
+          <TableHeader />
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {headerList.map((header, index) => (
+              <TableRow key={index}>{header}</TableRow>
+            ))}
+          </tbody>
+        </table>
+        <div className="w-[984px]">
+          <Slider {...settings}>
+            {cidetail?.map((ci, index) => (
+              <table
+                key={index}
+                className="divide-y divide-gray-300  w-[200px] text-[14px]"
+              >
+                <thead className="bg-gray-50">
+                  <tr className="divide-x divide-gray-200">
+                    <th className="py-3.5 px-4 text-center">{index + 1}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  <TableRow>{ci?.cicrdtr}</TableRow>
+                  <TableRow>{ci?.ciprd}</TableRow>
+                  <TableRow>
+                    <div
+                      title={ci?.ciaccno}
+                      className="w-[165px] cursor-pointer flex mx-auto hover:text-gray-900"
+                    >
+                      <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
+                        {ci?.ciaccno}
+                      </div>
+                      <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
                     </div>
-                    <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-                  </div>
-                </TableRow>
-                <TableRow>{ci.cilimit}</TableRow>
-                <TableRow>{ci.ciissudt}</TableRow>
-                <TableRow>{ci.ciprodexpdt ? ci.ciprodexpdt : '-'}</TableRow>
-                <TableRow>{ci.cistatus}</TableRow>
-                <TableRow>{ci.ciclsddt ? ci.ciclsddt : "-"}</TableRow>
-                <TableRow>{ci.citnr}</TableRow>
-                <TableRow>{ci.cifrq}</TableRow>
-                <TableRow>{ci.ciinstl}</TableRow>
-                <TableRow>{ci.cisal}</TableRow>
-                <TableRow>{ci.cisec}</TableRow>
-                <TableRow>{ci.cicub}</TableRow>
-                <TableRow>{ci.ciodb}</TableRow>
-                <TableRow>{ci.cilastamtpd}</TableRow>
-                <TableRow>{ci.cilastpaydt}</TableRow>
-                <TableRow>{ci.ciasofdt}</TableRow>
-                <TableRow>
-                  <div
-                    title={ci.cisummry}
-                    className="w-[165px] cursor-pointer flex mx-auto hover:text-gray-900"
-                  >
-                    <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                      {ci.cisummry}
+                  </TableRow>
+                  <TableRow>{ci?.cilimit}</TableRow>
+                  <TableRow>{ci?.ciissudt}</TableRow>
+                  <TableRow>{ci?.ciprodexpdt ? ci?.ciprodexpdt : "-"}</TableRow>
+                  <TableRow>{ci?.cistatus}</TableRow>
+                  <TableRow>{ci?.ciclsddt ? ci?.ciclsddt : "-"}</TableRow>
+                  <TableRow>{ci?.citnr}</TableRow>
+                  <TableRow>{ci?.cifrq}</TableRow>
+                  <TableRow>{ci?.ciinstl}</TableRow>
+                  <TableRow>{ci?.cisal}</TableRow>
+                  <TableRow>{ci?.cisec}</TableRow>
+                  <TableRow>{ci?.cicub}</TableRow>
+                  <TableRow>{ci?.ciodb}</TableRow>
+                  <TableRow>{ci?.cilastamtpd}</TableRow>
+                  <TableRow>{ci?.cilastpaydt}</TableRow>
+                  <TableRow>{ci?.ciasofdt}</TableRow>
+                  <TableRow>
+                    <div
+                      title={ci?.cisummry}
+                      className="w-[165px] cursor-pointer flex mx-auto hover:text-gray-900"
+                    >
+                      <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
+                        {ci?.cisummry}
+                      </div>
+                      <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
                     </div>
-                    <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-                  </div>
-                </TableRow>
-              </tbody>
-            </table>
-          ))}
-        </Slider>
+                  </TableRow>
+                </tbody>
+              </table>
+            ))}
+          </Slider>
+        </div>
       </div>
-    </div></ContainerTile>
+    </ContainerTile>
   );
 };
 

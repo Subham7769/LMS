@@ -8,16 +8,21 @@ import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getBorrowerDetails, updateEmploymentDetailsField, updateEmploymentDetails } from "../../redux/Slices/userProductTestingSlice";
-
+import {
+  getBorrowerDetails,
+  updateEmploymentDetailsField,
+  updateEmploymentDetails,
+} from "../../redux/Slices/userProductTestingSlice";
 
 function EmploymentDetails() {
   const { userID } = useParams();
   const dispatch = useDispatch();
-  const { EmploymentDetails, loading, error } = useSelector(state => state.userProductTesting)
+  const { EmploymentDetails, loading, error } = useSelector(
+    (state) => state.userProductTesting
+  );
 
   useEffect(() => {
-    dispatch(getBorrowerDetails(userID))
+    dispatch(getBorrowerDetails(userID));
   }, [dispatch, userID]);
 
   const handleChange = (e) => {
@@ -48,7 +53,7 @@ function EmploymentDetails() {
             labelName="Full Name"
             inputName="fullName"
             placeHolder="John Doe"
-            inputValue={EmploymentDetails.fullName}
+            inputValue={EmploymentDetails?.fullName}
             onChange={handleChange}
             required
           />
@@ -57,7 +62,7 @@ function EmploymentDetails() {
             labelName="Basic Wage"
             inputName="basicWage"
             placeHolder="4000"
-            inputValue={EmploymentDetails.basicWage}
+            inputValue={EmploymentDetails?.basicWage}
             onChange={handleChange}
             required
           />
@@ -66,7 +71,7 @@ function EmploymentDetails() {
             labelName="Housing Allowance"
             inputName="housingAllowance"
             placeHolder="1000"
-            inputValue={EmploymentDetails.housingAllowance}
+            inputValue={EmploymentDetails?.housingAllowance}
             onChange={handleChange}
             required
           />
@@ -75,7 +80,7 @@ function EmploymentDetails() {
             labelName="Employer Name"
             inputName="employerName"
             placeHolder="John"
-            inputValue={EmploymentDetails.employerName}
+            inputValue={EmploymentDetails?.employerName}
             onChange={handleChange}
             required
           />
@@ -84,7 +89,7 @@ function EmploymentDetails() {
             labelName="Working Months"
             inputName="workingMonths"
             placeHolder="24"
-            inputValue={EmploymentDetails.workingMonths}
+            inputValue={EmploymentDetails?.workingMonths}
             onChange={handleChange}
             required
           />
@@ -93,7 +98,7 @@ function EmploymentDetails() {
             labelName="Employment Status"
             inputName="employmentStatus"
             placeHolder="Unemployed"
-            inputValue={EmploymentDetails.employmentStatus}
+            inputValue={EmploymentDetails?.employmentStatus}
             onChange={handleChange}
             required
           />
@@ -102,13 +107,20 @@ function EmploymentDetails() {
             labelName="Establishment Activity"
             inputName="establishmentActivity"
             placeHolder="Developer"
-            inputValue={EmploymentDetails.establishmentActivity}
+            inputValue={EmploymentDetails?.establishmentActivity}
             onChange={handleChange}
             required
           />
         </form>
         <div className="flex items-center justify-end gap-4 mt-4">
-          <Button buttonIcon={CheckCircleIcon} buttonName={"Update"} onClick={()=>dispatch(updateEmploymentDetails({ EmploymentDetails, userID }))} rectangle={true} />
+          <Button
+            buttonIcon={CheckCircleIcon}
+            buttonName={"Update"}
+            onClick={() =>
+              dispatch(updateEmploymentDetails({ EmploymentDetails, userID }))
+            }
+            rectangle={true}
+          />
         </div>
       </ContainerTile>
     </>
