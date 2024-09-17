@@ -9,7 +9,7 @@ const postData = {
   firstNameAr: "محمد",
   lastNameAr: "عبيد ابراهيم",
   middleNameAr: "محمود",
-  gender: "M",
+  gender: "MALE",
   dateOfBirth: "1983-07-29",
   idType: "IQAMA ID",
   idNumber: "",
@@ -31,7 +31,7 @@ const postData = {
     residentialType: "VILLA",
   },
   maritalDetails: {
-    maritalStatus: "Married",
+    maritalStatus: "MARRIED",
     noOfDomesticWorkers: 0,
     noOfChildren: 3,
     totalDependent: 5,

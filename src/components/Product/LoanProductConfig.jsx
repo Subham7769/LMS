@@ -56,10 +56,11 @@ const LoanProductConfig = () => {
   };
 
   const handleInterestChange = (index, field, eventOrValue) => {
+    const absoluteIndex = index + indexOfFirstItem;
     const value = eventOrValue?.target
       ? eventOrValue.target.value
       : eventOrValue;
-    dispatch(updateInterestTenure({ index, field, value }));
+      dispatch(updateInterestTenure({ index: absoluteIndex, field, value }));
   };
 
   const handleSort = (column) => {
