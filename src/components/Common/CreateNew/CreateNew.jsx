@@ -17,7 +17,7 @@ const CreateNew = ({ placeholder, buttonName, createFunction, menuTitle, editabl
     };
     function dispatchType(menuTitle) {
         switch (menuTitle) {
-            case 'RAC':
+            case 'RAC' : case 'Dynamic RAC':
                 return fetchRACData;
             case 'DBR Config':
                 return fetchDBRData;

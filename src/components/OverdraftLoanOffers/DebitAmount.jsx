@@ -23,14 +23,11 @@ const DebitAmount = () => {
     transactionId: "test-test-test-test",
   });
 
-  if (!accountNumberList) {
-    useEffect(() => {
-      if (userID) {
-        dispatch(getOverdraftAccountNumberList(userID))
-      }
-    }, [dispatch, userID]);
-  }
-
+  useEffect(() => {
+    if (!accountNumberList) {
+      dispatch(getOverdraftAccountNumberList(userID))
+    }
+  }, [dispatch, userID, accountNumberList]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -262,6 +262,26 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
-
-  // { title: "TestComponent", href: "/test", icon: "BeakerIcon", current: false },
+  { 
+    title: "Dynamic RAC", 
+    href: "/dynamicRAC", 
+    icon: "ClipboardDocumentCheckIcon", 
+    current: false,
+    submenu: true,
+    createButton: true, 
+    editable: true, 
+    createFunction: "createNewRac",
+    buttonName: "Create RAC", 
+    placeholder: "Enter Name", 
+    navigateSuccess: "/rac/", 
+    navigateFail: "/login", 
+    submenuItems: [],
+    isOpen: false, 
+  },
+  // { 
+  //   title: "Test Component", 
+  //   href: "/test", 
+  //   icon: "BeakerIcon", 
+  //   current: false,
+  // }
 ];

@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import { activateOverdraftLoanAccount, cancelOverdraftLoanAccount, closeOverdraftLoanAccount, getAccountDetails,updateAccountNumber } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { activateOverdraftLoanAccount,getOverdraftAccountNumberList, cancelOverdraftLoanAccount, closeOverdraftLoanAccount, getAccountDetails,updateAccountNumber } from "../../redux/Slices/overdraftLoanOffersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import ListTable from "../Common/ListTable/ListTable";
@@ -19,10 +19,10 @@ function AccountDetails() {
   console.log(accountDetails)
 
   useEffect(() => {
-    if (accountNumberList.length > 0) {
-      dispatch(getAccountDetails(accountNumberList[0].value));
+    if(!accountNumberList){
+      dispatch(getOverdraftAccountNumberList(userID))
     }
-  }, [accountNumberList, dispatch]);
+  }, [accountNumberList,userID, dispatch]);
 
   useEffect(() => {
     if (accountNumber) {
@@ -116,7 +116,7 @@ function AccountDetails() {
       </div>
       <ContainerTile>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
-          <InfoRow label="Account Number" value={accountNumber?accountNumber:accountNumberList[0].value} />
+          <InfoRow label="Account Number" value={accountNumber} />
           <InfoRow label="Account Type" value={accountType} />
           <InfoRow label="Balance Amount" value={balanceAmount} />
           <InfoRow label="Currency" value={currency?.name} />

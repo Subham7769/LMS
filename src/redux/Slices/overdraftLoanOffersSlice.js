@@ -488,6 +488,7 @@ const overdraftLoanOffersSlice = createSlice({
           //   }
           // ],
         };
+        state.accountNumber=action.payload.accountNumber;
       })
       .addCase(createOverdraft.rejected, (state, action) => {
         state.loading = false;
@@ -626,7 +627,10 @@ const overdraftLoanOffersSlice = createSlice({
               label: accountNumber,
               value: accountNumber,
             })
-          )
+          );
+          if(!state.accountNumber){
+            state.accountNumber=action.payload.accountNumberList[0];
+          }
       })
       .addCase(getOverdraftAccountNumberList.rejected, (state, action) => {
         state.loading = false;

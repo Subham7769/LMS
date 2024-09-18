@@ -32,8 +32,8 @@ const DisbursementStatus = () => {
   useEffect(() => {
     console.log(disbursementData);
     setFormData({
-      userloanID: disbursementData.loanId,
-      amount: disbursementData.principleAmount,
+      userloanID: disbursementData.loanId || "",
+      amount: disbursementData.principleAmount || "",
     });
   }, [disbursementData]);
 
@@ -72,13 +72,13 @@ const DisbursementStatus = () => {
             labelName={"Loan Id"}
             inputName={"userloanID"}
             disabled={true}
-            inputValue={formData?.userloanID}
+            inputValue={formData?.userloanID || ""}
             onChange={handleChange}
           />
           <InputNumber
             labelName={"Enter Amount"}
             inputName={"amount"}
-            inputValue={formData?.amount}
+            inputValue={formData?.amount || ""}
             onChange={handleChange}
             placeHolder={"5000"}
           />

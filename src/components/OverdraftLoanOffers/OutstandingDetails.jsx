@@ -1,13 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getOverdraftLoanAccountOutstanding } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { getOverdraftLoanAccountOutstanding,getOverdraftAccountNumberList } from "../../redux/Slices/overdraftLoanOffersSlice";
 import { useEffect } from 'react';
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import convertToReadableString from '../../utils/convertToReadableString'
 import LoadingState from "../LoadingState/LoadingState";
+import { useParams } from 'react-router-dom';
 
 
 const OutstandingDetails = () => {
+  const { userID } = useParams();
   const dispatch = useDispatch();
   const { accountOutstanding,accountNumberList, accountNumber, loading, error } = useSelector(state => state.overdraftLoanOffers)
 
@@ -19,12 +21,12 @@ const OutstandingDetails = () => {
       <div className="col-span-2">{value || "N/A"}</div>
     </div>
   );
-
+  
   useEffect(() => {
-    if (accountNumberList.length > 0) {
-      dispatch(getOverdraftLoanAccountOutstanding(accountNumberList[0].value));
+    if(!accountNumberList){
+      dispatch(getOverdraftAccountNumberList(userID))
     }
-  }, [accountNumberList, dispatch]);
+  }, [accountNumberList,userID, dispatch]);
 
   useEffect(() => {
     if (accountNumber) {

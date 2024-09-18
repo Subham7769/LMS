@@ -1,13 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getOverdraftLoanAccountPIF } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { getOverdraftLoanAccountPIF,getOverdraftAccountNumberList } from "../../redux/Slices/overdraftLoanOffersSlice";
 import { useEffect } from 'react';
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import convertToReadableString from '../../utils/convertToReadableString'
 import LoadingState from "../LoadingState/LoadingState";
+import { useParams } from 'react-router-dom';
 
 
 const PIFDetails = () => {
+  const { userID } = useParams();
   const dispatch = useDispatch();
   const { accountPIF,accountNumberList,accountNumber, loading, error } = useSelector(state => state.overdraftLoanOffers)
 
@@ -20,11 +22,12 @@ const PIFDetails = () => {
     </div>
   );
 
+
   useEffect(() => {
-    if (accountNumberList.length > 0) {
-      dispatch(getOverdraftLoanAccountPIF(accountNumberList[0].value));
+    if(!accountNumberList){
+      dispatch(getOverdraftAccountNumberList(userID))
     }
-  }, [accountNumberList, dispatch]);
+  }, [accountNumberList,userID, dispatch]);
 
   useEffect(() => {
     if (accountNumber) {

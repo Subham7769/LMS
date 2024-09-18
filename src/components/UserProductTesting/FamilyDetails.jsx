@@ -21,6 +21,7 @@ function FamilyDetails() {
   );
   const { userID } = useParams();
   const dispatch = useDispatch();
+  console.log(familyDetails)
 
   useEffect(() => {
     dispatch(getBorrowerDetails(userID));

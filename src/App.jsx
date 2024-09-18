@@ -24,6 +24,7 @@ const TestComponent = lazy(() =>  import("./components/TestComponent/TestCompone
 // RAC Imports
 const RacPage = lazy(() => import("./pages/RacPage"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
+const DynamicRAC = lazy(() =>  import("./components/DynamicRAC/DynamicRAC"));
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -177,6 +178,7 @@ const routes = [
       { path: "/global-config/risk-grading-matrix", element: <RiskGradeMatrix />, errorElement: <RouteErrorBoundary /> },
       { path: "/global-config/min-expense", element: <MinimumExpense />, errorElement: <RouteErrorBoundary /> },
       { path: "/global-config/notification-text", element: <NotificationText />, errorElement: <RouteErrorBoundary /> },
+      { path: "/dynamicRAC", element: <DynamicRAC/>, errorElement: <RouteErrorBoundary /> },
       
       
       // Accessing All New Created Child Components

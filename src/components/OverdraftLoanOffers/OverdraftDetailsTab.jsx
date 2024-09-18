@@ -3,7 +3,8 @@ import React, { useState, Suspense, useEffect } from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import { useDispatch, useSelector } from "react-redux";
-import { getOverdraftLoanAccount,updateAccountNumber } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { getOverdraftLoanAccount,updateAccountNumber,getOverdraftAccountNumberList } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { useParams } from "react-router-dom";
 
 const GeneralDetails = React.lazy(() => import("./GeneralDetails"));
 const OutstandingDetails = React.lazy(() => import("./OutstandingDetails"));
@@ -37,6 +38,7 @@ const Tab = ({ id, label, activeTab, setActiveTab }) => (
 
 
 const OverdraftDetailsTab = () => {
+  const { userID } = useParams();
   const dispatch = useDispatch();
   const { accountNumberList,accountNumber } = useSelector(state => state.overdraftLoanOffers)
   const [activeTab, setActiveTab] = useState("general-details");
@@ -48,9 +50,18 @@ const OverdraftDetailsTab = () => {
     dispatch(getOverdraftLoanAccount(value))
   };
 
-  useEffect(()=>{
-    dispatch(getOverdraftLoanAccount(accountNumberList[0].value))
-  },[accountNumberList, dispatch, accountNumber ])
+
+  useEffect(() => {
+    if(!accountNumberList){
+      dispatch(getOverdraftAccountNumberList(userID))
+    }
+  }, [accountNumberList,userID, dispatch]);
+
+  useEffect(() => {
+    if (accountNumber) {
+      dispatch(getOverdraftLoanAccount(accountNumber));
+    }
+  }, [accountNumber, dispatch]);
 
 
   return (

@@ -6,7 +6,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { payOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
+import { payOverdraftLoanAccount,getOverdraftAccountNumberList } from "../../redux/Slices/overdraftLoanOffersSlice";
 import LoadingState from "../LoadingState/LoadingState";
 import convertToReadableString from '../../utils/convertToReadableString'
 
@@ -17,15 +17,12 @@ const PayAmount = () => {
   const { userID } = useParams();
   const { payAmount, accountNumberList, loading, error } = useSelector(state => state.overdraftLoanOffers)
 
+  useEffect(() => {
+    if (!accountNumberList) {
+      dispatch(getOverdraftAccountNumberList(userID))
+    }
+  }, [dispatch, userID,accountNumberList]);
 
-  if (!accountNumberList) {
-    useEffect(() => {
-      if (userID) {
-        dispatch(getOverdraftAccountNumberList(userID))
-      }
-    }, [dispatch, userID]);
-  }
-  
   const getCurrentFormattedDate = () => {
     const now = new Date();
 
