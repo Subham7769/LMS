@@ -3,7 +3,7 @@ import { TrashIcon } from '@heroicons/react/20/solid';
 import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
 const Button = ({ buttonIcon: ButtonIcon, buttonName, onClick, rectangle = false, circle = false, className }) => {
-  const rectangleClass = 'rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5';
+  const rectangleClass = 'rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 text-center';
   const circleClass = 'rounded-full h-9 w-9 p-2 px-2.5';
 
   return (

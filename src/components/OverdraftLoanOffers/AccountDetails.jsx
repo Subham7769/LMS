@@ -140,7 +140,7 @@ function AccountDetails() {
             buttonName={"Activate"}
             onClick={() => handleActivateOverdraftLoanAccount(accountNumber, supplementaryAccountsList)}
             rectangle={true}
-            className={"bg-green-500"}
+            className={"bg-green-600 hover:bg-green-500"}
           />
           <Button
             buttonName={"Cancel"}
@@ -154,7 +154,7 @@ function AccountDetails() {
               accountNumber, supplementaryAccountsList)
             }
             rectangle={true}
-            className={"bg-yellow-500"}
+            className={"bg-yellow-500 hover:bg-yellow-400"}
           />
 
         </div>

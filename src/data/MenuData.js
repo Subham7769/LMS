@@ -270,18 +270,18 @@ export const MenusInitial = [
     submenu: true,
     createButton: true, 
     editable: true, 
-    createFunction: "createNewRac",
+    createFunction: "createNewDynamicRac",
     buttonName: "Create RAC", 
     placeholder: "Enter Name", 
-    navigateSuccess: "/rac/", 
+    navigateSuccess: "#", 
     navigateFail: "/login", 
     submenuItems: [],
     isOpen: false, 
   },
-  // { 
-  //   title: "Test Component", 
-  //   href: "/test", 
-  //   icon: "BeakerIcon", 
-  //   current: false,
-  // }
+  { 
+    title: "Test Component", 
+    href: "/test", 
+    icon: "BeakerIcon", 
+    current: false,
+  }
 ];
