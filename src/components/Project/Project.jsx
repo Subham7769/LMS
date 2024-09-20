@@ -89,8 +89,11 @@ const Project = () => {
     fields.forEach((field) => {
       initialValidationError[field] = false; // Set all fields to false initially
     });
-    dispatch(clearValidationError());
     dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, projectId]);
 
   // console.log(formData);
@@ -686,9 +689,8 @@ const Project = () => {
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
-                  className={`flex-1 w-full ${
-                    formData?.loanType === "cash" && "hidden"
-                  }`}
+                  className={`flex-1 w-full ${formData?.loanType === "cash" && "hidden"
+                    }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}

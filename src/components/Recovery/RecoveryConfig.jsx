@@ -71,8 +71,11 @@ const RecoveryConfig = () => {
     fields.forEach((field) => {
       initialValidationError[field] = false; // Set all fields to false initially
     });
-    dispatch(clearValidationError());
     dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, recoveryEquationTempId]);
 
   const saveSettings = () => {
