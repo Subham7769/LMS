@@ -684,7 +684,7 @@ const initialState = {
   },
   occupationFormData: {
     name: "Occupation",
-    city: "",
+    occupation: "",
     points: "",
     ruleName: "0",
     rulePolicyTempId: "",

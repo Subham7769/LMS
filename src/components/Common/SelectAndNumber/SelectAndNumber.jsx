@@ -15,6 +15,8 @@ const SelectAndNumber = ({
   inputNumberValue,
   onChangeNumber,
   placeHolderNumber,
+  showError = false, // New prop to indicate error
+  onFocus, // New onFocus handler to reset error
 
   inputSelect2Name,
   inputSelect2Value,
@@ -27,10 +29,11 @@ const SelectAndNumber = ({
   inputNumber2Value,
   onChangeNumber2,
   placeHolderNumber2,
+  showError2 = false, // New prop to indicate error
+  onFocus2, // New onFocus handler to reset error
 }) => {
-
   if (inputSelectValue === null || inputSelectValue === undefined) {
-    throw new console.error("abc");
+    throw new Error(`Invalid inputValue for ${labelName}`);
   }
 
   const handleSelectChange = (selectedOption) => {
@@ -75,12 +78,16 @@ const SelectAndNumber = ({
 
   return (
     <div>
-      <label
-        className="block text-gray-700 px-1 text-[14px]"
-        htmlFor={inputSelectName}
-      >
-        {labelName}
-      </label>
+      {labelName && (
+        <label
+          className={`block ${
+            showError || showError2 ? "text-red-600" : "text-gray-700"
+          } px-1 text-[14px]`}
+          htmlFor={inputSelectName}
+        >
+          {showError || showError2 ? "Field required" : labelName}
+        </label>
+      )}
       <div className="flex items-center space-x-2">
         <Select
           name={inputSelectName}
@@ -103,8 +110,15 @@ const SelectAndNumber = ({
           id={inputNumberId}
           value={inputNumberValue}
           onChange={handleNumberChange}
+          onFocus={onFocus}
           placeholder={placeHolderNumber}
-          className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 py-1"
+          className={`block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
+          ${
+            showError
+              ? "ring-red-600 focus:ring-red-600"
+              : "ring-gray-300 focus:ring-indigo-600"
+          } 
+          focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1`}
         />
         {inputSelect2Name && (
           <>
@@ -128,8 +142,15 @@ const SelectAndNumber = ({
               id={inputNumber2Id}
               value={inputNumber2Value}
               onChange={handleNumber2Change}
+              onFocus={onFocus2}
               placeholder={placeHolderNumber2}
-              className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 py-1"
+              className={`block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
+          ${
+            showError2
+              ? "ring-red-600 focus:ring-red-600"
+              : "ring-gray-300 focus:ring-indigo-600"
+          } 
+          focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1`}
             />
           </>
         )}
@@ -137,7 +158,6 @@ const SelectAndNumber = ({
     </div>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

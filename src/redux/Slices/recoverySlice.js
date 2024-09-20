@@ -225,8 +225,6 @@ const recoverySlice = createSlice({
         ...state.data,
         [name]: value,
       };
-
-      console.log(state.data);
     },
   },
   extraReducers: (builder) => {
@@ -299,10 +297,9 @@ const recoverySlice = createSlice({
           toast.error("Session expired. Please log in again.");
         } else {
           toast.error("Failed to create clone.");
-        state.error = action.error.message;
+          state.error = action.error.message;
         }
         state.error = action.error.message;
-
       })
       .addCase(updateRecoveryName.fulfilled, (state, action) => {
         state.itemName = action.payload;

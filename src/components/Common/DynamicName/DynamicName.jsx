@@ -28,6 +28,7 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
         <div className="flex items-center space-x-2">
           <InputText
             inputValue={name}
+            inputName={name}
             onChange={(e) => setName(e.target.value)}
           />
           <button
@@ -56,7 +57,6 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
     </div>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

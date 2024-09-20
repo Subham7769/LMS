@@ -14,7 +14,13 @@ const InputSelect = ({
   hidden = false,
   isMulti = false,
   searchable = false,
+  showError = false, // New prop to indicate error
+  onFocus, // New onFocus handler to reset error
 }) => {
+  if (inputValue === null || inputValue === undefined) {
+    throw new Error(`Invalid inputValue for ${labelName}`);
+  }
+
   const handleChange = (selectedOption) => {
     onChange({
       target: {
@@ -29,10 +35,12 @@ const InputSelect = ({
     <div className="flex flex-col">
       {labelName && (
         <label
-          className="block text-gray-700 px-1 text-[14px]"
+          className={`block ${
+            showError ? "text-red-600" : "text-gray-700"
+          } px-1 text-[14px]`}
           htmlFor={inputName}
         >
-          {labelName}
+          {showError ? "Field required" : labelName}
         </label>
       )}
       <Select
@@ -48,6 +56,7 @@ const InputSelect = ({
         onChange={handleChange}
         isSearchable={searchable}
         placeholder={placeHolder}
+        onFocus={onFocus} // Call onFocus to reset the error state
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}
@@ -55,7 +64,6 @@ const InputSelect = ({
     </div>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

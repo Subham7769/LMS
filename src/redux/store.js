@@ -18,10 +18,11 @@ import rulePolicySlice from "./Slices/rulePolicySlice";
 import overdraftLoanOffersSlice from "./Slices/overdraftLoanOffersSlice";
 import globalConfigSlice from "./Slices/globalConfigSlice";
 import racSlice from "./Slices/racSlice";
+import validationSlice from "./Slices/validationSlice";
 
 const store = configureStore({
   reducer: {
-    rac:racSlice,
+    rac: racSlice,
     sidebar: sidebarReducer,
     recovery: recoverySlice,
     tcl: tclSlice,
@@ -39,7 +40,7 @@ const store = configureStore({
     userProductTesting: userProductTestingSlice,
     globalConfig: globalConfigSlice,
     overdraftLoanOffers: overdraftLoanOffersSlice,
-
+    validation: validationSlice,
   },
 });
 

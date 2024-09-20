@@ -25,10 +25,16 @@ import {
   deleteRecovery,
   createClone,
   updateRecoveryName,
+  // setValidationError,
 } from "../../redux/Slices/recoverySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecoveryData } from "../../redux/Slices/sidebarSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -38,7 +44,9 @@ const RecoveryConfig = () => {
   const { itemName, data, loading, error } = useSelector(
     (state) => state.recovery
   );
+  const { validationError } = useSelector((state) => state.validation);
   const [isEditingEquation, setIsEditingEquation] = useState(false);
+  const fields = ["tenure", "tenureType", "recoveryEquation"];
 
   const handleChangeWrapper = (e) => {
     const { name, value } = e.target;
@@ -58,9 +66,13 @@ const RecoveryConfig = () => {
   useEffect(() => {
     dispatch(fetchName(recoveryEquationTempId));
     dispatch(fetchData(recoveryEquationTempId));
-    // dispatch(
-    //   setData({ ...data, recoveryEquationTempId: recoveryEquationTempId })
-    // );
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(clearValidationError());
+    dispatch(setValidationError(initialValidationError));
   }, [dispatch, recoveryEquationTempId]);
 
   const saveSettings = () => {
@@ -70,12 +82,16 @@ const RecoveryConfig = () => {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    dispatch(
-      updateOrPostData({
-        formData: data,
-        isUpdate: data.length > 0,
-      })
-    );
+    const isValid = validateFormFields(fields, data, dispatch);
+
+    if (isValid) {
+      dispatch(
+        updateOrPostData({
+          formData: data,
+          isUpdate: data.id ? true : false,
+        })
+      );
+    }
   };
 
   const handleDelete = async () => {
@@ -126,6 +142,8 @@ const RecoveryConfig = () => {
     throw new Error(error);
   }
 
+  console.log(validationError);
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -151,6 +169,12 @@ const RecoveryConfig = () => {
               inputValue={data?.tenure}
               onChange={handleChangeWrapper}
               placeHolder={"24"}
+              showError={validationError?.tenure}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, tenure: false })
+                )
+              }
             />
           </div>
           <div className="flex-1">
@@ -161,6 +185,12 @@ const RecoveryConfig = () => {
               inputOptions={options}
               onChange={handleChangeWrapper}
               placeHolder="Select Tenure Type"
+              showError={validationError.tenureType}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, tenureType: false })
+                )
+              }
             />
           </div>
         </div>
@@ -186,6 +216,15 @@ const RecoveryConfig = () => {
                       onChange={handleChangeWrapper}
                       placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
                       readOnly={true}
+                      showError={validationError.recoveryEquation} // Apply error from centralized state
+                      onFocus={() =>
+                        dispatch(
+                          setValidationError({
+                            ...validationError,
+                            recoveryEquation: false,
+                          })
+                        )
+                      }
                     />
                   </div>
                 )}

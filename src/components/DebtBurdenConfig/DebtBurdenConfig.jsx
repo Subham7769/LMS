@@ -22,6 +22,7 @@ import {
   PencilIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed, Warning } from "../Toasts";
@@ -53,12 +54,19 @@ const DebtBurdenConfig = () => {
   const formData = useSelector((state) => state.dbrConfig.formData);
 
   const [editingIndex, setEditingIndex] = useState(null);
+  const [dbrRules, setDbrRules] = useState([]);
   const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(fetchRules(dbcTempId));
     dispatch(fetchName(dbcTempId));
   }, [dbcTempId, dispatch]);
+
+  useEffect(() => {
+    if (rules.length != 0) {
+      setDbrRules(rules);
+    }
+  }, [rules]);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -200,8 +208,8 @@ const DebtBurdenConfig = () => {
     }
   };
 
-  const handleTableChange = (index, field, value) => {
-    dispatch(updateRule({ index, field, value, rules, operators, dbcTempId }))
+  const handleTableChange = () => {
+    dispatch(updateRule({ dbrRules, operators, dbcTempId }))
       .unwrap()
       .then((updatedRules) => {
         // Log the successful update or perform any other action with the updated rules
@@ -220,6 +228,13 @@ const DebtBurdenConfig = () => {
         console.error("Failed to update rule:", error);
         toast.error("Failed to update the item. Please try again.");
       });
+  };
+
+  const handleChangeDBC = (index, field, value) => {
+    const absoluteIndex = indexOfFirstItem + index;
+    const newRules = JSON.parse(JSON.stringify(rules));
+    newRules[absoluteIndex][field] = value;
+    setDbrRules(newRules);
   };
 
   function informUser() {
@@ -255,7 +270,7 @@ const DebtBurdenConfig = () => {
     return <FaSort className="ml-2" title="Sort Data" />;
   };
 
-  const sortedItems = [...rules].sort((a, b) => {
+  const sortedItems = [...dbrRules].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -271,7 +286,7 @@ const DebtBurdenConfig = () => {
   const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
 
   // Determine total number of pages
-  const totalPages = Math.ceil(rules.length / itemsPerPage);
+  const totalPages = Math.ceil(dbrRules.length / itemsPerPage);
 
   if (loading) {
     return <LoadingState />;
@@ -385,7 +400,7 @@ const DebtBurdenConfig = () => {
         <div>
           <div className="w-full">
             <Table
-              handleChange={handleTableChange}
+              handleChange={handleChangeDBC}
               handleDelete={handleItemDelete}
               handleSort={handleSort}
               toggleEdit={toggleEdit}
@@ -425,6 +440,16 @@ const DebtBurdenConfig = () => {
               }`}
             >
               <ChevronRightIcon className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="text-right ">
+            <button
+              type="button"
+              onClick={handleTableChange}
+              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+              Save
             </button>
           </div>
         </div>

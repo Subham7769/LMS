@@ -161,7 +161,7 @@ export const createProject = createAsyncThunk(
       "emiRepaymentGracePeriod",
       "loanGracePeriod",
       "rollOverGracePeriod",
-      "rollOverPenaltyFee",
+      // "rollOverPenaltyFee",
       "lateEmiPenaltyFactor",
       "name",
       "managementFee",
@@ -293,7 +293,7 @@ const projectInitialState = {
     loanGracePeriod: "",
     rollOverGracePeriod: "",
     rollOverPenaltyFactor: "",
-    rollOverPenaltyFee: "",
+    // rollOverPenaltyFee: "",
     rollOverInterestRate: "",
     lateEmiPenaltyFactor: "",
     maxPaymetAttemps: "",
@@ -329,6 +329,7 @@ const projectInitialState = {
   },
   loading: false,
   error: null,
+  validationError: {},
 };
 
 const projectSlice = createSlice({
@@ -347,6 +348,12 @@ const projectSlice = createSlice({
     },
     setError: (state, action) => {
       state.error = action.error.message;
+    },
+    setValidationError: (state, action) => {
+      state.validationError = {
+        ...state.validationError,
+        ...action.payload,
+      };
     },
     handleChangeInFormData: (state, action) => {
       const { name, value, checked, type } = action.payload;
@@ -396,6 +403,7 @@ const projectSlice = createSlice({
         }
         state.loading = false;
         state.formData = {
+          ...state.formData,
           ...action.payload,
           minLoanOperator: results.loanAmount?.[0]?.operator || "",
           minLoanAmount: results.loanAmount?.[0]?.amount || "",
@@ -472,6 +480,7 @@ export const {
   resetFormData,
   setError,
   parseCriteria,
+  setValidationError,
   handleChangeInFormData,
 } = projectSlice.actions;
 export default projectSlice.reducer;

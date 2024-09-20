@@ -28,6 +28,7 @@ import {
   resetFormData,
   handleChangeInFormData,
   createProject,
+  setValidationError,
 } from "../../redux/Slices/projectSlice";
 
 const CreateNewProject = () => {
@@ -36,7 +37,9 @@ const CreateNewProject = () => {
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
   const dispatch = useDispatch();
-  const { formData, loading, error } = useSelector((state) => state.project);
+  const { formData, loading, error, validationError } = useSelector(
+    (state) => state.project
+  );
 
   useEffect(() => {
     setFilteredLocations(locationOptions[formData.country] || []);
@@ -45,7 +48,7 @@ const CreateNewProject = () => {
   useEffect(() => {
     if (projectName) {
       dispatch(resetFormData());
-      dispatch(setFormData({ name:'name' ,value: projectName }));
+      dispatch(setFormData({ name: "name", value: projectName }));
     }
   }, [dispatch, projectName]);
 
@@ -56,17 +59,71 @@ const CreateNewProject = () => {
     dispatch(handleChangeInFormData({ name, value, checked, type })); // Passing only the serializable data
   };
 
+  const validateFields = () => {
+    let isValid = true;
+    const fields = [
+      "projectDescription",
+      "country",
+      "location",
+      "currencyName",
+      "loanType",
+      "flatInterestRate",
+      "interestPeriodUnit",
+      "interestRatePeriod",
+      "downRepaymentGracePeriod",
+      "emiRepaymentGracePeriod",
+      "loanGracePeriod",
+      "rollOverGracePeriod",
+      "rollOverInterestRate",
+      "lateEmiPenaltyFactor",
+      "maxPaymetAttemps",
+      "startDate",
+      "endDate",
+      "lateRepaymentPenalty",
+      "earlyRepaymentDiscount",
+      "rollOverPenaltyFactor",
+      "minLoanAmount",
+      "maxLoanAmount",
+      "minInstallmentsAmount",
+      "maxInstallmentsAmount",
+      "tclAmount",
+      "openLoanAmount",
+      "serviceFee",
+      "managementFee",
+      "vatFee",
+    ];
+
+    // Create an object to hold validation errors
+    const errors = {};
+
+    fields.forEach((field) => {
+      if (!formData[field] || formData[field] === "") {
+        errors[field] = true;
+        isValid = false;
+      }
+    });
+
+    // Dispatch the errors if there are any
+    if (Object.keys(errors).length > 0) {
+      dispatch(setValidationError(errors));
+    }
+
+    return isValid;
+  };
+
   const createNewProject = async (event) => {
     event.preventDefault();
-    try {
-      const Details = await dispatch(
-        createProject({ formData, clientIdsString })
-      ).unwrap();
-      dispatch(fetchProjectData());
-      navigate("/project/" + Details.projectId);
-    } catch (err) {
-      if (err === "Unauthorized") {
-        navigate("/login");
+    if (validateFields()) {
+      try {
+        const Details = await dispatch(
+          createProject({ formData, clientIdsString })
+        ).unwrap();
+        dispatch(fetchProjectData());
+        navigate("/project/" + Details.projectId);
+      } catch (err) {
+        if (err === "Unauthorized") {
+          navigate("/login");
+        }
       }
     }
   };
@@ -103,6 +160,15 @@ const CreateNewProject = () => {
               inputValue={formData.name}
               onChange={handleChange}
               placeHolder={"Project Name"}
+              showError={validationError.name}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    name: false,
+                  })
+                )
+              }
             />
 
             {/* Description */}
@@ -112,6 +178,15 @@ const CreateNewProject = () => {
               inputValue={formData.projectDescription}
               onChange={handleChange}
               placeHolder={"Description"}
+              showError={validationError.projectDescription}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    projectDescription: false,
+                  })
+                )
+              }
             />
 
             {/* Country */}
@@ -119,8 +194,14 @@ const CreateNewProject = () => {
               labelName={"Country"}
               inputName={"country"}
               inputOptions={countryOptions}
-              inputValue={formData.country}
+              inputValue={formData?.country}
               onChange={handleChange}
+              showError={validationError.country}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, country: false })
+                )
+              }
             />
 
             {/* Location */}
@@ -128,8 +209,14 @@ const CreateNewProject = () => {
               labelName={"Location"}
               inputName={"location"}
               inputOptions={filteredLocations}
-              inputValue={formData.location}
+              inputValue={formData?.location}
               onChange={handleChange}
+              showError={validationError.location}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, location: false })
+                )
+              }
             />
 
             {/* Loan Scheme Currency */}
@@ -137,8 +224,17 @@ const CreateNewProject = () => {
               labelName={"Loan Scheme Currency"}
               inputName={"currencyName"}
               inputOptions={currencyOptions}
-              inputValue={formData.currencyName}
+              inputValue={formData?.currencyName}
               onChange={handleChange}
+              showError={validationError.currencyName}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    currencyName: false,
+                  })
+                )
+              }
             />
 
             {/* Loan Scheme Type */}
@@ -146,17 +242,35 @@ const CreateNewProject = () => {
               labelName={"Loan Scheme Type"}
               inputName={"loanType"}
               inputOptions={loanTypeOptions}
-              inputValue={formData.loanType}
+              inputValue={formData?.loanType}
               onChange={handleChange}
+              showError={validationError.loanType}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    loanType: false,
+                  })
+                )
+              }
             />
 
             {/* Flat Interest Rate */}
             <InputNumber
               labelName={"Flat Interest Rate"}
               inputName={"flatInterestRate"}
-              inputValue={formData.flatInterestRate}
+              inputValue={formData?.flatInterestRate}
               onChange={handleChange}
               placeHolder={"6"}
+              showError={validationError.flatInterestRate}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    flatInterestRate: false,
+                  })
+                )
+              }
             />
 
             {/* Interest Period Unit */}
@@ -164,89 +278,170 @@ const CreateNewProject = () => {
               labelName={"Interest Period Unit"}
               inputName={"interestPeriodUnit"}
               inputOptions={interestPeriodOptions}
-              inputValue={formData.interestPeriodUnit}
+              inputValue={formData?.interestPeriodUnit}
               onChange={handleChange}
+              showError={validationError.interestPeriodUnit}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    interestPeriodUnit: false,
+                  })
+                )
+              }
             />
 
             {/* Interest Rate Period */}
             <InputNumber
               labelName={"Interest Rate Period"}
               inputName={"interestRatePeriod"}
-              inputValue={formData.interestRatePeriod}
+              inputValue={formData?.interestRatePeriod}
               onChange={handleChange}
               placeHolder={"30"}
+              showError={validationError.interestRatePeriod}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    interestRatePeriod: false,
+                  })
+                )
+              }
             />
 
             {/* Grace Period For Down Payment (Days) */}
             <InputNumber
               labelName={"Down Payment Grace Period (Days)"}
               inputName={"downRepaymentGracePeriod"}
-              inputValue={formData.downRepaymentGracePeriod}
+              inputValue={formData?.downRepaymentGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
+              showError={validationError.downRepaymentGracePeriod}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    downRepaymentGracePeriod: false,
+                  })
+                )
+              }
             />
 
             {/* Grace Period For EMIs (Days) */}
             <InputNumber
               labelName={"EMIs Grace Period (Days)"}
               inputName={"emiRepaymentGracePeriod"}
-              inputValue={formData.emiRepaymentGracePeriod}
+              inputValue={formData?.emiRepaymentGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
+              showError={validationError.emiRepaymentGracePeriod}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    emiRepaymentGracePeriod: false,
+                  })
+                )
+              }
             />
 
             {/* Loan Grace Period (Days) */}
             <InputNumber
               labelName={"Loan Grace Period (Days)"}
               inputName={"loanGracePeriod"}
-              inputValue={formData.loanGracePeriod}
+              inputValue={formData?.loanGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
+              showError={validationError.loanGracePeriod}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    loanGracePeriod: false,
+                  })
+                )
+              }
             />
 
             {/* Roll Over Period (Days) */}
             <InputNumber
               labelName={"Roll Over Period (Days)"}
               inputName={"rollOverGracePeriod"}
-              inputValue={formData.rollOverGracePeriod}
+              inputValue={formData?.rollOverGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
+              showError={validationError.rollOverGracePeriod}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    rollOverGracePeriod: false,
+                  })
+                )
+              }
             />
 
             {/* Roll Over Fees */}
-            <InputText
+            {/* <InputText
               labelName={"Roll Over Fees"}
               inputName={"rollOverPenaltyFee"}
               inputValue={formData.rollOverPenaltyFee}
               onChange={handleChange}
               placeHolder={"xxxx /-"}
-            />
+            /> */}
 
             {/* Roll Over Interest Rate */}
             <InputNumber
               labelName={"Roll Over Interest Rate"}
               inputName={"rollOverInterestRate"}
-              inputValue={formData.rollOverInterestRate}
+              inputValue={formData?.rollOverInterestRate}
               onChange={handleChange}
               placeHolder={"6"}
+              showError={validationError.rollOverInterestRate}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    rollOverInterestRate: false,
+                  })
+                )
+              }
             />
 
             {/* Late EMI Penalty */}
             <InputText
               labelName={"Late EMI Penalty"}
               inputName={"lateEmiPenaltyFactor"}
-              inputValue={formData.lateEmiPenaltyFactor}
+              inputValue={formData?.lateEmiPenaltyFactor}
               onChange={handleChange}
               placeHolder={"6"}
+              showError={validationError.lateEmiPenaltyFactor}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    lateEmiPenaltyFactor: false,
+                  })
+                )
+              }
             />
 
             {/* Max. Payment Attempt */}
             <InputNumber
               labelName={"Max. Payment Attempt"}
               inputName={"maxPaymetAttemps"}
-              inputValue={formData.maxPaymetAttemps}
+              inputValue={formData?.maxPaymetAttemps}
               onChange={handleChange}
               placeHolder={"2"}
+              showError={validationError.maxPaymetAttemps}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    maxPaymetAttemps: false,
+                  })
+                )
+              }
             />
 
             {/* Start Date */}
@@ -254,8 +449,17 @@ const CreateNewProject = () => {
               <InputDate
                 labelName={"Start Date"}
                 inputName={"startDate"}
-                inputValue={formData.startDate}
+                inputValue={formData?.startDate}
                 onChange={handleChange}
+                showError={validationError.startDate}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      startDate: false,
+                    })
+                  )
+                }
               />
             </div>
 
@@ -264,8 +468,17 @@ const CreateNewProject = () => {
               <InputDate
                 labelName={"End Date"}
                 inputName={"endDate"}
-                inputValue={formData.endDate}
+                inputValue={formData?.endDate}
                 onChange={handleChange}
+                showError={validationError.endDate}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      endDate: false,
+                    })
+                  )
+                }
               />
             </div>
 
@@ -273,30 +486,58 @@ const CreateNewProject = () => {
             <InputText
               labelName={"Late Repayment Penalty"}
               inputName={"lateRepaymentPenalty"}
-              inputValue={formData.lateRepaymentPenalty}
+              inputValue={formData?.lateRepaymentPenalty}
               onChange={handleChange}
               placeHolder={"10%"}
+              showError={validationError.lateRepaymentPenalty}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    lateRepaymentPenalty: false,
+                  })
+                )
+              }
             />
 
             {/* Early Repayment Discount */}
             <InputText
               labelName={"Early Repayment Discount"}
               inputName={"earlyRepaymentDiscount"}
-              inputValue={formData.earlyRepaymentDiscount}
+              inputValue={formData?.earlyRepaymentDiscount}
               onChange={handleChange}
               placeHolder={"0"}
+              showError={validationError.earlyRepaymentDiscount}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    earlyRepaymentDiscount: false,
+                  })
+                )
+              }
             />
 
             {/* RollOver Penalty Factor */}
             <InputText
               labelName={"RollOver Penalty Factor"}
               inputName={"rollOverPenaltyFactor"}
-              inputValue={formData.rollOverPenaltyFactor}
+              inputValue={formData?.rollOverPenaltyFactor}
               onChange={handleChange}
               placeHolder={"0"}
+              showError={validationError.rollOverPenaltyFactor}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    rollOverPenaltyFactor: false,
+                  })
+                )
+              }
             />
           </div>
         </ContainerTile>
+
         <ContainerTile>
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
@@ -306,24 +547,42 @@ const CreateNewProject = () => {
                 labelName={"Loan Amount"}
                 inputSelectName={"minLoanOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData.minLoanOperator}
+                inputSelectValue={formData?.minLoanOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"minLoanAmount"}
-                inputNumberValue={formData.minLoanAmount}
+                inputNumberValue={formData?.minLoanAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Min"}
+                showError={validationError.minLoanAmount}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      minLoanAmount: false,
+                    })
+                  )
+                }
                 inputSelect2Name={"maxLoanOperator"}
                 inputSelect2Options={signsOptions}
-                inputSelect2Value={formData.maxLoanOperator}
+                inputSelect2Value={formData?.maxLoanOperator}
                 onChangeSelect2={handleChange}
                 disabledSelect2={false}
                 hiddenSelect2={false}
                 inputNumber2Name={"maxLoanAmount"}
-                inputNumber2Value={formData.maxLoanAmount}
+                inputNumber2Value={formData?.maxLoanAmount}
                 onChangeNumber2={handleChange}
                 placeHolderNumber2={"Max"}
+                showError2={validationError.maxLoanAmount}
+                onFocus2={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      maxLoanAmount: false,
+                    })
+                  )
+                }
               />
             </div>
 
@@ -333,24 +592,42 @@ const CreateNewProject = () => {
                 labelName={"No. of Installments"}
                 inputSelectName={"minInstallmentsOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData.minInstallmentsOperator}
+                inputSelectValue={formData?.minInstallmentsOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"minInstallmentsAmount"}
-                inputNumberValue={formData.minInstallmentsAmount}
+                inputNumberValue={formData?.minInstallmentsAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Min"}
+                showError={validationError.minInstallmentsAmount}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      minInstallmentsAmount: false,
+                    })
+                  )
+                }
                 inputSelect2Name={"maxInstallmentsOperator"}
                 inputSelect2Options={signsOptions}
-                inputSelect2Value={formData.maxInstallmentsOperator}
+                inputSelect2Value={formData?.maxInstallmentsOperator}
                 onChangeSelect2={handleChange}
                 disabledSelect2={false}
                 hiddenSelect2={false}
                 inputNumber2Name={"maxInstallmentsAmount"}
-                inputNumber2Value={formData.maxInstallmentsAmount}
+                inputNumber2Value={formData?.maxInstallmentsAmount}
                 onChangeNumber2={handleChange}
                 placeHolderNumber2={"Max"}
+                showError2={validationError.maxInstallmentsAmount}
+                onFocus2={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      maxInstallmentsAmount: false,
+                    })
+                  )
+                }
               />
             </div>
           </div>
@@ -363,28 +640,46 @@ const CreateNewProject = () => {
                 labelName={"Loan Scheme TCL"}
                 inputSelectName={"tclOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData.tclOperator}
+                inputSelectValue={formData?.tclOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"tclAmount"}
-                inputNumberValue={formData.tclAmount}
+                inputNumberValue={formData?.tclAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"TCL"}
+                showError={validationError.tclAmount}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      tclAmount: false,
+                    })
+                  )
+                }
               />
 
               <SelectAndNumber
                 labelName={"Total Open Loans"}
                 inputSelectName={"openLoanOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData.openLoanOperator}
+                inputSelectValue={formData?.openLoanOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"openLoanAmount"}
-                inputNumberValue={formData.openLoanAmount}
+                inputNumberValue={formData?.openLoanAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Total Open Loans"}
+                showError={validationError.openLoanAmount}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      openLoanAmount: false,
+                    })
+                  )
+                }
               />
             </div>
 
@@ -447,16 +742,34 @@ const CreateNewProject = () => {
                 <InputText
                   labelName={"Service Fee"}
                   inputName={"serviceFee"}
-                  inputValue={formData.serviceFee}
+                  inputValue={formData?.serviceFee}
                   onChange={handleChange}
                   placeHolder={"Service Fee"}
+                  showError={validationError.serviceFee}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        serviceFee: false,
+                      })
+                    )
+                  }
                 />
                 <InputText
                   labelName={"Management Fee"}
                   inputName={"managementFee"}
-                  inputValue={formData.managementFee}
+                  inputValue={formData?.managementFee}
                   onChange={handleChange}
                   placeHolder={"14%"}
+                  showError={validationError.managementFee}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        managementFee: false,
+                      })
+                    )
+                  }
                 />
               </div>
             </div>
@@ -465,9 +778,18 @@ const CreateNewProject = () => {
                 <InputText
                   labelName={"Vat Fee"}
                   inputName={"vatFee"}
-                  inputValue={formData.vatFee}
+                  inputValue={formData?.vatFee}
                   onChange={handleChange}
                   placeHolder={"15%"}
+                  showError={validationError.vatFee}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        vatFee: false,
+                      })
+                    )
+                  }
                 />
               </div>
             </div>

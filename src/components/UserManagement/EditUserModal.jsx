@@ -5,6 +5,7 @@ import SelectInput from "../Common/DynamicSelect/DynamicSelect";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed } from "../Toasts";
 import {
+  clearFormData,
   setFormData,
   setUserRole,
   updateUser,
@@ -91,6 +92,7 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
               buttonName={"Cancel"}
               onClick={() => {
                 onClose();
+                dispatch(clearFormData());
               }}
               className={" bg-gray-600 text-white hover:bg-gray-500 self-end"}
               rectangle={true}

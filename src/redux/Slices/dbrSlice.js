@@ -235,16 +235,13 @@ export const deleteRule = createAsyncThunk(
 
 export const updateRule = createAsyncThunk(
   "dbr/updateRule",
-  async (
-    { index, field, value, rules, operators, dbcTempId },
-    { rejectWithValue }
-  ) => {
+  async ({ dbrRules, operators, dbcTempId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
 
       // Create a deep copy of the rules array to avoid mutating the original state
-      const newRules = JSON.parse(JSON.stringify(rules));
-      newRules[index][field] = value; // Update the specific field
+      // const newRules = JSON.parse(JSON.stringify(rules));
+      // newRules[index][field] = value; // Update the specific field
 
       // Make the PUT request with the updated rules
       const response = await fetch(`${import.meta.env.VITE_DBR_UPDATE}`, {
@@ -253,7 +250,7 @@ export const updateRule = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ operators, dbrRules: newRules }),
+        body: JSON.stringify({ operators, dbrRules: dbrRules }),
       });
 
       if (!response.ok) {
@@ -265,7 +262,7 @@ export const updateRule = createAsyncThunk(
       }
 
       // Return the updated rules array if the request was successful
-      return newRules;
+      return dbrRules;
     } catch (error) {
       return rejectWithValue(error.message);
     }

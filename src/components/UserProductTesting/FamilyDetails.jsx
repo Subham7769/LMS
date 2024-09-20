@@ -42,8 +42,6 @@ function FamilyDetails() {
     return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
-  console.log(familyDetails);
-
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -99,11 +97,10 @@ function FamilyDetails() {
             onChange={handleChange}
             placeHolder="2"
           />
-          {/* Dependents in Public School */}
           <InputNumber
             labelName="Dependents in Public School"
-            name="noOfDependentsInPublicSchools"
-            value={familyDetails?.noOfDependentsInPublicSchools}
+            inputName="noOfDependentsInPublicSchools"
+            inputValue={familyDetails?.noOfDependentsInPublicSchools}
             onChange={handleChange}
             placeHolder="2"
           />

@@ -204,7 +204,10 @@ const productGroupSlice = createSlice({
       })
       .addCase(fetchPGroups.fulfilled, (state, action) => {
         state.loading = false;
-        state.productGroupData = action.payload;
+        state.productGroupData = {
+          ...state.productGroupData,
+          ...action.payload,
+        };
         const formattedTags = state.productGroupData.activeLoansCount.map(
           (item) => ({
             product: item.productType,

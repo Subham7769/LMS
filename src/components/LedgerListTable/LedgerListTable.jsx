@@ -6,6 +6,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
+import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 
 const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   const tableRef = useRef(null);
@@ -83,6 +84,67 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
     }),
   };
 
+  const Content = () => (
+    <table className="min-w-full divide-y divide-gray-300" ref={tableRef}>
+      <thead className="bg-gray-50">
+        <tr>
+          {ListHeader.map((header, index) => (
+            <th
+              key={index}
+              scope="col"
+              className="px-3 py-3.5 w-1/6 text-center text-sm font-medium text-gray-900"
+            >
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-200 bg-white">
+        {currentData.length !== 0 ? (
+          currentData.map((item) => (
+            <React.Fragment key={item.id}>
+              {item.accounts.map((accountItem, idx) => (
+                <tr key={`${item.id}-${idx}`}>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {convertDate(accountItem?.transactionDate)}
+                  </td>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {accountItem?.entryId}
+                  </td>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {accountItem?.entryName}
+                  </td>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {item?.userId}
+                  </td>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {accountItem?.debitValue === 0
+                      ? "-"
+                      : accountItem?.debitValue}
+                  </td>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {accountItem?.creditValue === 0
+                      ? "-"
+                      : accountItem?.creditValue}
+                  </td>
+                </tr>
+              ))}
+            </React.Fragment>
+          ))
+        ) : (
+          <tr>
+            <td
+              colSpan={ListHeader.length}
+              className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500"
+            >
+              No Data Found
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  );
+
   return (
     <div className="bg-gray-100 py-10 rounded-xl flex flex-col items-center w-full">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
@@ -141,67 +203,9 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                <table
-                  className="min-w-full divide-y divide-gray-300"
-                  ref={tableRef}
-                >
-                  <thead className="bg-gray-50">
-                    <tr>
-                      {ListHeader.map((header, index) => (
-                        <th
-                          key={index}
-                          scope="col"
-                          className="px-3 py-3.5 w-1/6 text-center text-sm font-medium text-gray-900"
-                        >
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {currentData.length !== 0 ? (
-                      currentData.map((item) => (
-                        <React.Fragment key={item.id}>
-                          {item.accounts.map((accountItem, idx) => (
-                            <tr key={`${item.id}-${idx}`}>
-                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {convertDate(accountItem?.transactionDate)}
-                              </td>
-                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem?.entryId}
-                              </td>
-                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem?.entryName}
-                              </td>
-                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {item.userId}
-                              </td>
-                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem?.debitValue === 0
-                                  ? "-"
-                                  : accountItem?.debitValue}
-                              </td>
-                              <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem?.creditValue === 0
-                                  ? "-"
-                                  : accountItem?.creditValue}
-                              </td>
-                            </tr>
-                          ))}
-                        </React.Fragment>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan={ListHeader.length}
-                          className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500"
-                        >
-                          No Data Found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                <SectionErrorBoundary>
+                  <Content />
+                </SectionErrorBoundary>
               </div>
             </div>
           </div>

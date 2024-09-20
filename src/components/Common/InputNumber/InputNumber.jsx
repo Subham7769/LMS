@@ -7,11 +7,30 @@ const InputNumber = ({
   inputValue,
   inputId,
   onChange,
-  placeHolder,
+  placeHolder = "",
   disabled = false,
+  showError = false, // New prop to indicate error
+  onFocus, // New onFocus handler to reset error
 }) => {
   if (inputValue === null || inputValue === undefined) {
-    throw new Error("value undefined");
+    throw new Error(`Invalid inputValue for ${labelName}`);
+  }
+
+  if (!inputName || (!disabled && typeof onChange !== "function")) {
+    let errorMessage = "";
+
+    if (!inputName) {
+      errorMessage += "inputName is required";
+    }
+
+    if (!disabled && typeof onChange !== "function") {
+      if (errorMessage) {
+        errorMessage += ", "; // Add a separator if there is already an error message
+      }
+      errorMessage += "onChange (should be a function) is required";
+    }
+
+    throw new Error(errorMessage);
   }
 
   const handleChange = (e) => {
@@ -29,10 +48,12 @@ const InputNumber = ({
     <div className="w-full">
       {labelName && (
         <label
-          className="block text-gray-700 px-1 text-[14px]"
+          className={`block ${
+            showError ? "text-red-600" : "text-gray-700"
+          } px-1 text-[14px]`}
           htmlFor={inputName}
         >
-          {labelName}
+          {showError ? "Field required" : labelName}
         </label>
       )}
       <input
@@ -41,8 +62,15 @@ const InputNumber = ({
         name={inputName}
         value={inputValue}
         onChange={handleChange}
+        onFocus={onFocus} // Call onFocus to reset the error state
         placeholder={placeHolder}
-        className="flex-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 py-1"
+        className={`flex-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
+          ${
+            showError
+              ? "ring-red-600 focus:ring-red-600"
+              : "ring-gray-300 focus:ring-indigo-600"
+          } 
+          focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1`} // Conditionally apply red or indigo focus ring
         required
         disabled={disabled}
       />

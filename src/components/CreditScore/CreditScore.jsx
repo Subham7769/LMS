@@ -258,7 +258,7 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules[0]?.rules?.[0]?.ruleName}
+                  inputId={formData?.dependentsRules?.rules?.[0]?.ruleName}
                   inputValue={formData?.dependentsRules?.rules?.[0]?.value}
                   onChange={handleChange}
                   placeHolder={"0.54"}

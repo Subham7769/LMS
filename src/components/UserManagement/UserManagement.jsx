@@ -35,6 +35,8 @@ const UserManagement = ({ role }) => {
     dispatch(setSelectedUserData(data));
   };
 
+  console.log(selectedUserData);
+
   const options = { day: "2-digit", month: "short", year: "numeric" };
 
   return (

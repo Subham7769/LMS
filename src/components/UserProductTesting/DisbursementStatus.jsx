@@ -27,7 +27,7 @@ const DisbursementStatus = () => {
 
   useEffect(() => {
     dispatch(getDisbursementInfo({ userID, navigate }));
-  }, []);
+  }, [dispatch, userID]);
 
   useEffect(() => {
     console.log(disbursementData);
@@ -61,6 +61,8 @@ const DisbursementStatus = () => {
       </ContainerTile>
     );
   }
+
+  console.log(formData.userloanID + "formData");
 
   return (
     <>

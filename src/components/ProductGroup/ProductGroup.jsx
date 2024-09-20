@@ -73,7 +73,7 @@ const ProductGroup = () => {
     return <LoadingState />;
   }
 
-  // console.log(formData);
+  console.log(productGroupData);
 
   return (
     <>

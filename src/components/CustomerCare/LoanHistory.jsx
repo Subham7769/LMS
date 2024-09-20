@@ -9,22 +9,27 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import { loanStatusOptions } from "../../data/OptionsData";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBorrowerData,downloadClearanceLetter } from "../../redux/Slices/borrowerSlice";
+import {
+  fetchBorrowerData,
+  downloadClearanceLetter,
+} from "../../redux/Slices/borrowerSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LoanHistory = () => {
   const { subID } = useParams();
   const dispatch = useDispatch();
-  const {loanHistory, downloadLoading, downloadError,error, loading} = useSelector(state => state.customerCare);
+  const { loanHistory, downloadLoading, downloadError, error, loading } =
+    useSelector((state) => state.customerCare);
   const url = "/loans";
   const [showModal, setShowModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchBorrowerData({ subID, url }))
-  }, [dispatch])
+    dispatch(fetchBorrowerData({ subID, url }));
+  }, [dispatch]);
 
-  const [loansarr, setLoansarr] = useState(loanHistory.map((loan) => ({
+  const [loansarr, setLoansarr] = useState(
+    loanHistory.map((loan) => ({
       ...loan,
       formattedSubmitDate: "",
       formattedPaidDate: "",
@@ -71,7 +76,9 @@ const LoanHistory = () => {
   }, [loanHistory]);
 
   const [filteredLoansarr, setFilteredLoansarr] = useState(loansarr);
-  const [selectedOption, setSelctedOption] = useState(loanStatusOptions[0].value);
+  const [selectedOption, setSelctedOption] = useState(
+    loanStatusOptions[0].value
+  );
 
   const handleChange = (event) => {
     const selectedOption = event.target.value;
@@ -106,7 +113,7 @@ const LoanHistory = () => {
     "Outstanding Principal",
     "Missed Installments Number",
     "Clearance Letter",
-  ]
+  ];
 
   const itemList = filteredLoansarr.map((loan) => ({
     loanId: loan.loanId,
@@ -135,12 +142,14 @@ const LoanHistory = () => {
     clearanceLetter: (
       <Button
         buttonName={"PDF"}
-        onClick={()=>dispatch(downloadClearanceLetter({ subID, loanId:loan.loanId }))}
+        onClick={() =>
+          dispatch(downloadClearanceLetter({ subID, loanId: loan.loanId }))
+        }
         rectangle={true}
         className={"text-[10px] py-0 px-0"}
       />
     ),
-  }))
+  }));
 
   // Conditional rendering starts after hooks have been defined
   if (loading) {
@@ -154,14 +163,7 @@ const LoanHistory = () => {
   return (
     <>
       <div className="flex items-center  w-full justify-between">
-
-        <div className="w-1/3 flex  items-center justify-start mt-4">
-          <InputText inputName="search" placeHolder="Search" />
-          <MagnifyingGlassIcon
-            className="h-5 w-5 text-gray-400 -ml-8 "
-            aria-hidden="true"
-          />
-        </div>
+        <div className="w-1/3">&nbsp;</div>
         <div className="w-1/3">&nbsp;</div>
         <div className="w-1/3 flex items-center justify-end">
           <div className="w-full">
@@ -177,12 +179,15 @@ const LoanHistory = () => {
         </div>
       </div>
       {filteredLoansarr.length === 0 ? (
-        <div className="text-center shadow-md bg-gray-100 border-gray-300 border py-5 rounded-xl mt-4 px-5">No Loan Data</div>
+        <div className="text-center shadow-md bg-gray-100 border-gray-300 border py-5 rounded-xl mt-4 px-5">
+          No Loan Data
+        </div>
       ) : (
         <ListTable
           ListHeader={headerList}
           ListItem={itemList}
           Divider={true}
+          Searchable={true}
         />
       )}
     </>
