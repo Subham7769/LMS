@@ -15,8 +15,9 @@ import toast from "react-hot-toast";
 import { Failed } from "../Toasts";
 import { useDispatch, useSelector } from "react-redux";
 import { addInterestTenure } from "../../redux/Slices/productSlice";
+import { setValidationError } from "../../redux/Slices/validationSlice";
 
-const ProductInputFields = ({ formData, handleChange }) => {
+const ProductInputFields = ({ productData, handleChange }) => {
   // Sidebar Redux Data
   const RACDataInfo = useSelector(
     (state) =>
@@ -62,6 +63,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
       state.sidebar.menus.filter((item) => item.title === "Recovery")[0]
         .submenuItems
   );
+  const { validationError } = useSelector((state) => state.validation);
 
   const dispatch = useDispatch();
 
@@ -133,39 +135,84 @@ const ProductInputFields = ({ formData, handleChange }) => {
             inputOptions={tenureOptions}
             inputName="eligibleCustomerType"
             inputValue={
-              formData?.eligibleCustomerType
-                ? formData?.eligibleCustomerType
+              productData?.eligibleCustomerType
+                ? productData?.eligibleCustomerType
                 : ""
             }
             onChange={handleChange}
+            showError={validationError.eligibleCustomerType}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  eligibleCustomerType: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="RAC"
             inputOptions={formateDataDropDown("/rac/", RACDataInfo)}
             inputName="racId"
-            inputValue={formData?.racId}
+            inputValue={productData?.racId}
             onChange={handleChange}
+            showError={validationError.racId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  racId: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="Project"
             inputOptions={formateDataDropDown("/project/", ProjectDataInfo)}
             inputName="projectId"
-            inputValue={formData?.projectId}
+            inputValue={productData?.projectId}
             onChange={handleChange}
+            showError={validationError.projectId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  projectId: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="TCL"
             inputOptions={formateDataDropDown("/tcl/", TCLDataInfo)}
             inputName="tclFileId"
-            inputValue={formData?.tclFileId}
+            inputValue={productData?.tclFileId}
             onChange={handleChange}
+            showError={validationError.tclFileId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  tclFileId: false,
+                })
+              )
+            }
           />
           <InputSelect
             inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
             labelName="Recovery Type"
             inputName="recoveryEquationTempId"
-            inputValue={formData?.recoveryEquationTempId}
+            inputValue={productData?.recoveryEquationTempId}
             onChange={handleChange}
+            showError={validationError.recoveryEquationTempId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  recoveryEquationTempId: false,
+                })
+              )
+            }
           />
         </div>
         <div className="grid grid-cols-5 gap-5 items-end mb-4">
@@ -173,29 +220,65 @@ const ProductInputFields = ({ formData, handleChange }) => {
             labelName="DBR Config"
             inputOptions={formateDataDropDown("/dbr-config/", DBRConfigInfo)}
             inputName="dbcTempId"
-            inputValue={formData?.dbcTempId}
+            inputValue={productData?.dbcTempId}
             onChange={handleChange}
+            showError={validationError.dbcTempId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  dbcTempId: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="Blocked Employer"
             inputOptions={formateDataDropDown("/blocked-employer/", BEDataInfo)}
             inputName="blockEmployersTempId"
-            inputValue={formData?.blockEmployersTempId}
+            inputValue={productData?.blockEmployersTempId}
             onChange={handleChange}
+            showError={validationError.blockEmployersTempId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  blockEmployersTempId: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="Rule Policy"
             inputOptions={formateDataDropDown("/rule-policy/", RPDataInfo)}
             inputName="rulePolicyTempId"
-            inputValue={formData?.rulePolicyTempId}
+            inputValue={productData?.rulePolicyTempId}
             onChange={handleChange}
+            showError={validationError.rulePolicyTempId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  rulePolicyTempId: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="Credit Score"
             inputOptions={formateDataDropDown("/credit-score/", CSDataInfo)}
             inputName="creditScoreEqTempId"
-            inputValue={formData?.creditScoreEqTempId}
+            inputValue={productData?.creditScoreEqTempId}
             onChange={handleChange}
+            showError={validationError.creditScoreEqTempId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  creditScoreEqTempId: false,
+                })
+              )
+            }
           />
           <InputSelect
             labelName="Eligible Tenure"
@@ -204,61 +287,97 @@ const ProductInputFields = ({ formData, handleChange }) => {
               CSETDataInfo
             )}
             inputName="creditScoreEtTempId"
-            inputValue={formData?.creditScoreEtTempId}
+            inputValue={productData?.creditScoreEtTempId}
             onChange={handleChange}
+            howError={validationError.creditScoreEtTempId}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  creditScoreEtTempId: false,
+                })
+              )
+            }
           />
         </div>
         <div className="grid grid-cols-5 gap-5 items-end">
           <InputText
             labelName="Processing Fee"
             inputName="fee"
-            inputValue={formData?.fee}
+            inputValue={productData?.fee}
             onChange={handleChange}
             placeHolder="1%"
+            showError={validationError.fee}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  fee: false,
+                })
+              )
+            }
           />
           <InputText
             labelName="Management Fee Vat"
             inputName="managementFeeVat"
-            inputValue={formData?.managementFeeVat}
+            inputValue={productData?.managementFeeVat}
             onChange={handleChange}
             placeHolder="15%"
+            showError={validationError.managementFeeVat}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  managementFeeVat: false,
+                })
+              )
+            }
           />
           <InputNumber
             labelName="No. of Installments For Early Settlement"
             inputName="numberOfEmisForEarlySettlement"
-            inputValue={formData?.numberOfEmisForEarlySettlement}
+            inputValue={productData?.numberOfEmisForEarlySettlement}
             onChange={handleChange}
             placeHolder="3"
+            showError={validationError.numberOfEmisForEarlySettlement}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  numberOfEmisForEarlySettlement: false,
+                })
+              )
+            }
           />
 
           <div className="col-span-5 grid grid-cols-5 gap-5 items-end border-t-2 ">
             <InputCheckbox
               labelName="Overdraft"
-              inputChecked={formData?.overdraft}
+              inputChecked={productData?.overdraft}
               onChange={handleChange}
               inputName="overdraft"
             />
 
             <InputCheckbox
               labelName="Refinanced With"
-              inputChecked={formData?.refinancedWith}
+              inputChecked={productData?.refinancedWith}
               onChange={handleChange}
               inputName="refinancedWith"
             />
             <InputCheckbox
               labelName="Disable RAC"
-              inputChecked={formData?.disableRac}
+              inputChecked={productData?.disableRac}
               onChange={handleChange}
               inputName="disableRac"
             />
           </div>
           {/* Newly added fields */}
-          {formData?.overdraft && (
+          {productData?.overdraft && (
             <>
               <InputNumber
                 labelName="Max. Overdraft Principle Limit"
                 inputName="maxOverdraftPrincipalLimit"
-                inputValue={formData?.maxOverdraftPrincipalLimit}
+                inputValue={productData?.maxOverdraftPrincipalLimit}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -266,7 +385,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputNumber
                 labelName="Min. Overdraft Principle Limit"
                 inputName="minOverdraftPrincipalLimit"
-                inputValue={formData?.minOverdraftPrincipalLimit}
+                inputValue={productData?.minOverdraftPrincipalLimit}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -274,7 +393,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputText
                 labelName="Annual Fee"
                 inputName="annualFee"
-                inputValue={formData?.annualFee}
+                inputValue={productData?.annualFee}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -282,7 +401,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputNumber
                 labelName="Overdraft Product Period"
                 inputName="overdraftProductPeriod"
-                inputValue={formData?.overdraftProductPeriod}
+                inputValue={productData?.overdraftProductPeriod}
                 onChange={handleChange}
                 placeHolder="3"
               />
@@ -290,7 +409,7 @@ const ProductInputFields = ({ formData, handleChange }) => {
               <InputNumber
                 labelName="Overdraft Payment Principle Percentage"
                 inputName="overDraftPaymentPrinciplePercentage"
-                inputValue={formData?.overDraftPaymentPrinciplePercentage}
+                inputValue={productData?.overDraftPaymentPrinciplePercentage}
                 onChange={handleChange}
                 placeHolder="3"
               />

@@ -216,7 +216,8 @@ export const deleteTCLFile = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        return rejectWithValue("Failed to delete item");
+        const errorData = await response.json(); // Parse the error message from the server
+        return rejectWithValue(errorData.message || "Failed to delete item");
       }
       return tclFileId;
     } catch (error) {
@@ -229,6 +230,7 @@ const tclInitialState = {
   itemName: "",
   tableData: [],
   data: [],
+  tableDataHistory: {}, // New field for storing table data per tclId
   loading: false,
   error: null,
 };
@@ -246,8 +248,17 @@ const tclSlice = createSlice({
     setError: (state, action) => {
       state.error = action.error.message;
     },
-    clearTableData: (state) => {
+    clearTableData: (state, action) => {
+      // Store current tableData in history before clearing it
+      const { tclId } = action.payload;
+      if (tclId && state.tableData.length > 0) {
+        state.tableDataHistory[tclId] = state.tableData;
+      }
       state.tableData = [];
+    },
+    restoreTableData: (state, action) => {
+      const { tclId } = action.payload;
+      state.tableData = state.tableDataHistory[tclId] || [];
     },
     removeTableDataByIndex: (state, action) => {
       state.tableData = state.tableData.filter((_, i) => i !== action.payload);
@@ -300,7 +311,7 @@ const tclSlice = createSlice({
         state.loading = true;
       })
       .addCase(deleteTCL.fulfilled, (state, action) => {
-        toast.success("Recovery configuration deleted successfully!");
+        toast.success("TCL deleted successfully!");
       })
       .addCase(deleteTCL.rejected, (state, action) => {
         state.error = action.error.message;
@@ -335,6 +346,7 @@ export const {
   setData,
   setError,
   clearTableData,
+  restoreTableData,
   removeTableDataByIndex,
 } = tclSlice.actions;
 export default tclSlice.reducer;

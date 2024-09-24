@@ -5,7 +5,6 @@ import { Failed, Passed } from "../Toasts";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import DynamicName from "../Common/DynamicName/DynamicName";
-import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +22,11 @@ import {
 } from "../../redux/Slices/beSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import TagInput from "../TagInput/TagInput";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const BlockedEmployer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,12 +37,25 @@ const BlockedEmployer = () => {
   const blockEmployer = useSelector(
     (state) => state.blockedEmployer.blockEmployer
   );
+  const { validationError } = useSelector((state) => state.validation);
   const { itemName, cloneSuccess } = blockEmployer;
+
+  const fields = ["name"];
 
   useEffect(() => {
     dispatch(setBlockEmployersTempId(blockEmployersTempId));
     dispatch(fetchBlockedEmployerData(blockEmployersTempId));
     dispatch(fetchBlockedEmployerName(blockEmployersTempId));
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [blockEmployersTempId, dispatch]);
 
   useEffect(() => {
@@ -116,28 +133,31 @@ const BlockedEmployer = () => {
 
   const handlePostItem = (e) => {
     e.preventDefault();
-    dispatch(addBlockedEmployerEntry()).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Item Added"}
-            message={"Item was added successfully"}
-          />
-        ));
-        dispatch(fetchBlockedEmployerData(blockEmployersTempId));
-      } else if (action.type.endsWith("rejected")) {
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Adding Failed"}
-            message={action.payload || "Failed to add item"}
-          />
-        ));
-      }
-    });
+    const isValid = validateFormFields(fields, blockEmployer, dispatch);
+    if (isValid) {
+      dispatch(addBlockedEmployerEntry()).then((action) => {
+        if (action.type.endsWith("fulfilled")) {
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Item Added"}
+              message={"Item was added successfully"}
+            />
+          ));
+          dispatch(fetchBlockedEmployerData(blockEmployersTempId));
+        } else if (action.type.endsWith("rejected")) {
+          toast.custom((t) => (
+            <Failed
+              t={t}
+              toast={toast}
+              title={"Adding Failed"}
+              message={action.payload || "Failed to add item"}
+            />
+          ));
+        }
+      });
+    }
   };
 
   const createCloneBE = (cloneBEName) => {
@@ -196,6 +216,10 @@ const BlockedEmployer = () => {
           inputTextLabel={"Add Blocked Employer"}
           addTag={handlePostItem}
           deleteTag={handleDeleteItem}
+          showError={validationError.name}
+          onFocus={() =>
+            dispatch(setValidationError({ ...validationError, name: false }))
+          }
         />
       </ContainerTile>
     </>

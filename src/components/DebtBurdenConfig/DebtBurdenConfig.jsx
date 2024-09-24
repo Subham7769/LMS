@@ -37,6 +37,11 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -57,9 +62,29 @@ const DebtBurdenConfig = () => {
   const [dbrRules, setDbrRules] = useState([]);
   const itemsPerPage = 5;
 
+  const fields = [
+    "startNetIncomeBracketInSARule",
+    "endNetIncomeBracketInSARule",
+    "productLevel",
+    "consumerDBR",
+    "gdbrWithoutMTG",
+    "employerRetired",
+    "gdbrWithMTG",
+  ];
+
   useEffect(() => {
     dispatch(fetchRules(dbcTempId));
     dispatch(fetchName(dbcTempId));
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dbcTempId, dispatch]);
 
   useEffect(() => {
@@ -129,7 +154,23 @@ const DebtBurdenConfig = () => {
   };
 
   const toggleEdit = (index) => {
-    setEditingIndex(editingIndex === index ? null : index);
+    const absoluteIndex = index + indexOfFirstItem;
+    if (editingIndex !== null) {
+      const isValid = validateFormFields(
+        fields,
+        dbrRules[absoluteIndex],
+        dispatch
+      );
+      if (isValid) {
+        informUser();
+        setEditingIndex(editingIndex === index ? null : index);
+      } else {
+        return;
+      }
+    } else {
+      setEditingIndex(editingIndex === index ? null : index);
+      informUser1();
+    }
   };
 
   const handleInputChange = (e) => {
@@ -407,8 +448,6 @@ const DebtBurdenConfig = () => {
               editingIndex={editingIndex}
               currentItems={currentItems}
               getSortIcon={getSortIcon}
-              informUser={informUser}
-              informUser1={informUser1}
               TrashIcon={TrashIcon}
               PencilIcon={PencilIcon}
               empOptions={empOptions}

@@ -1,10 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import {
   MagnifyingGlassIcon,
-  TrashIcon,
-  PlusIcon,
   CheckCircleIcon,
-  PencilIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
@@ -13,6 +10,8 @@ import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import InputNumber from "../InputNumber/InputNumber";
 import SectionErrorBoundary from "../../ErrorBoundary/SectionErrorBoundary";
+import { useDispatch, useSelector } from "react-redux";
+import { setValidationError } from "../../../redux/Slices/validationSlice";
 
 const ListTable = ({
   ListName,
@@ -39,6 +38,8 @@ const ListTable = ({
   const [pageSize, setPageSize] = useState(PageSize);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [editingButtonIndex, setEditingButtonIndex] = useState(null);
+  const dispatch = useDispatch();
+  const { validationError } = useSelector((state) => state.validation);
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
@@ -170,7 +171,6 @@ const ListTable = ({
   const indexOfLastItem = currentPage * PageSize;
   const indexOfFirstItem = indexOfLastItem - PageSize;
 
-
   return (
     <div
       className={
@@ -253,9 +253,21 @@ const ListTable = ({
                             inputName={key}
                             inputValue={product[key]}
                             onChange={(e) =>
-                              handleEditableFields(e, indexOfFirstItem + rowIndex)
+                              handleEditableFields(
+                                e,
+                                indexOfFirstItem + rowIndex
+                              )
                             }
                             placeHolder="3"
+                            showError={validationError[key]}
+                            onFocus={() =>
+                              dispatch(
+                                setValidationError({
+                                  ...validationError,
+                                  [key]: false,
+                                })
+                              )
+                            }
                           />
                         </>
                       ) : product[key] ? (
@@ -285,9 +297,9 @@ const ListTable = ({
                               ? editingRowIndex === indexOfFirstItem + rowIndex
                                 ? item.action(indexOfFirstItem + rowIndex)
                                 : toggleEdit(
-                                  indexOfFirstItem + rowIndex,
-                                  buttonIndex
-                                )
+                                    indexOfFirstItem + rowIndex,
+                                    buttonIndex
+                                  )
                               : item.action(indexOfFirstItem + rowIndex) // Keep original action for the other button
                         }
                         circle={item.circle}
@@ -307,10 +319,11 @@ const ListTable = ({
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`flex items-center px-2 py-2 rounded-md ${currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-indigo-500 text-white cursor-pointer"
-              }`}
+            className={`flex items-center px-2 py-2 rounded-md ${
+              currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+            }`}
           >
             <ChevronLeftIcon className="w-5 h-5" />
           </button>
@@ -320,10 +333,11 @@ const ListTable = ({
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`flex items-center px-2 py-2 rounded-md ${currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-indigo-500 text-white cursor-pointer"
-              }`}
+            className={`flex items-center px-2 py-2 rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+            }`}
           >
             <ChevronRightIcon className="w-5 h-5" />
           </button>
@@ -332,7 +346,6 @@ const ListTable = ({
     </div>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

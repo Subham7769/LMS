@@ -24,9 +24,9 @@ import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
-  setFormData,
-  resetFormData,
-  handleChangeInFormData,
+  setProjectData,
+  resetProjectData,
+  handleChangeInProjectData,
   createProject,
   setValidationError,
 } from "../../redux/Slices/projectSlice";
@@ -37,26 +37,26 @@ const CreateNewProject = () => {
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
   const dispatch = useDispatch();
-  const { formData, loading, error, validationError } = useSelector(
+  const { projectData, loading, error, validationError } = useSelector(
     (state) => state.project
   );
 
   useEffect(() => {
-    setFilteredLocations(locationOptions[formData.country] || []);
-  }, [formData.country]);
+    setFilteredLocations(locationOptions[projectData.country] || []);
+  }, [projectData.country]);
 
   useEffect(() => {
     if (projectName) {
-      dispatch(resetFormData());
-      dispatch(setFormData({ name: "name", value: projectName }));
+      dispatch(resetProjectData());
+      dispatch(setProjectData({ name: "name", value: projectName }));
     }
   }, [dispatch, projectName]);
 
-  console.log(formData);
+  console.log(projectData);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target; // Extracting only the name and value properties
-    dispatch(handleChangeInFormData({ name, value, checked, type })); // Passing only the serializable data
+    dispatch(handleChangeInProjectData({ name, value, checked, type })); // Passing only the serializable data
   };
 
   const validateFields = () => {
@@ -97,7 +97,7 @@ const CreateNewProject = () => {
     const errors = {};
 
     fields.forEach((field) => {
-      if (!formData[field] || formData[field] === "") {
+      if (!projectData[field] || projectData[field] === "") {
         errors[field] = true;
         isValid = false;
       }
@@ -116,7 +116,7 @@ const CreateNewProject = () => {
     if (validateFields()) {
       try {
         const Details = await dispatch(
-          createProject({ formData, clientIdsString })
+          createProject({ projectData, clientIdsString })
         ).unwrap();
         dispatch(fetchProjectData());
         navigate("/project/" + Details.projectId);
@@ -157,7 +157,7 @@ const CreateNewProject = () => {
             <InputText
               labelName={"Name"}
               inputName={"name"}
-              inputValue={formData.name}
+              inputValue={projectData.name}
               onChange={handleChange}
               placeHolder={"Project Name"}
               showError={validationError.name}
@@ -175,7 +175,7 @@ const CreateNewProject = () => {
             <InputText
               labelName={"Description"}
               inputName={"projectDescription"}
-              inputValue={formData.projectDescription}
+              inputValue={projectData.projectDescription}
               onChange={handleChange}
               placeHolder={"Description"}
               showError={validationError.projectDescription}
@@ -194,7 +194,7 @@ const CreateNewProject = () => {
               labelName={"Country"}
               inputName={"country"}
               inputOptions={countryOptions}
-              inputValue={formData?.country}
+              inputValue={projectData?.country}
               onChange={handleChange}
               showError={validationError.country}
               onFocus={() =>
@@ -209,7 +209,7 @@ const CreateNewProject = () => {
               labelName={"Location"}
               inputName={"location"}
               inputOptions={filteredLocations}
-              inputValue={formData?.location}
+              inputValue={projectData?.location}
               onChange={handleChange}
               showError={validationError.location}
               onFocus={() =>
@@ -224,7 +224,7 @@ const CreateNewProject = () => {
               labelName={"Loan Scheme Currency"}
               inputName={"currencyName"}
               inputOptions={currencyOptions}
-              inputValue={formData?.currencyName}
+              inputValue={projectData?.currencyName}
               onChange={handleChange}
               showError={validationError.currencyName}
               onFocus={() =>
@@ -242,7 +242,7 @@ const CreateNewProject = () => {
               labelName={"Loan Scheme Type"}
               inputName={"loanType"}
               inputOptions={loanTypeOptions}
-              inputValue={formData?.loanType}
+              inputValue={projectData?.loanType}
               onChange={handleChange}
               showError={validationError.loanType}
               onFocus={() =>
@@ -259,7 +259,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Flat Interest Rate"}
               inputName={"flatInterestRate"}
-              inputValue={formData?.flatInterestRate}
+              inputValue={projectData?.flatInterestRate}
               onChange={handleChange}
               placeHolder={"6"}
               showError={validationError.flatInterestRate}
@@ -278,7 +278,7 @@ const CreateNewProject = () => {
               labelName={"Interest Period Unit"}
               inputName={"interestPeriodUnit"}
               inputOptions={interestPeriodOptions}
-              inputValue={formData?.interestPeriodUnit}
+              inputValue={projectData?.interestPeriodUnit}
               onChange={handleChange}
               showError={validationError.interestPeriodUnit}
               onFocus={() =>
@@ -295,7 +295,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Interest Rate Period"}
               inputName={"interestRatePeriod"}
-              inputValue={formData?.interestRatePeriod}
+              inputValue={projectData?.interestRatePeriod}
               onChange={handleChange}
               placeHolder={"30"}
               showError={validationError.interestRatePeriod}
@@ -313,7 +313,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Down Payment Grace Period (Days)"}
               inputName={"downRepaymentGracePeriod"}
-              inputValue={formData?.downRepaymentGracePeriod}
+              inputValue={projectData?.downRepaymentGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
               showError={validationError.downRepaymentGracePeriod}
@@ -331,7 +331,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"EMIs Grace Period (Days)"}
               inputName={"emiRepaymentGracePeriod"}
-              inputValue={formData?.emiRepaymentGracePeriod}
+              inputValue={projectData?.emiRepaymentGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
               showError={validationError.emiRepaymentGracePeriod}
@@ -349,7 +349,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Loan Grace Period (Days)"}
               inputName={"loanGracePeriod"}
-              inputValue={formData?.loanGracePeriod}
+              inputValue={projectData?.loanGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
               showError={validationError.loanGracePeriod}
@@ -367,7 +367,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Roll Over Period (Days)"}
               inputName={"rollOverGracePeriod"}
-              inputValue={formData?.rollOverGracePeriod}
+              inputValue={projectData?.rollOverGracePeriod}
               onChange={handleChange}
               placeHolder={"30"}
               showError={validationError.rollOverGracePeriod}
@@ -385,7 +385,7 @@ const CreateNewProject = () => {
             {/* <InputText
               labelName={"Roll Over Fees"}
               inputName={"rollOverPenaltyFee"}
-              inputValue={formData.rollOverPenaltyFee}
+              inputValue={projectData.rollOverPenaltyFee}
               onChange={handleChange}
               placeHolder={"xxxx /-"}
             /> */}
@@ -394,7 +394,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Roll Over Interest Rate"}
               inputName={"rollOverInterestRate"}
-              inputValue={formData?.rollOverInterestRate}
+              inputValue={projectData?.rollOverInterestRate}
               onChange={handleChange}
               placeHolder={"6"}
               showError={validationError.rollOverInterestRate}
@@ -412,7 +412,7 @@ const CreateNewProject = () => {
             <InputText
               labelName={"Late EMI Penalty"}
               inputName={"lateEmiPenaltyFactor"}
-              inputValue={formData?.lateEmiPenaltyFactor}
+              inputValue={projectData?.lateEmiPenaltyFactor}
               onChange={handleChange}
               placeHolder={"6"}
               showError={validationError.lateEmiPenaltyFactor}
@@ -430,7 +430,7 @@ const CreateNewProject = () => {
             <InputNumber
               labelName={"Max. Payment Attempt"}
               inputName={"maxPaymetAttemps"}
-              inputValue={formData?.maxPaymetAttemps}
+              inputValue={projectData?.maxPaymetAttemps}
               onChange={handleChange}
               placeHolder={"2"}
               showError={validationError.maxPaymetAttemps}
@@ -449,7 +449,7 @@ const CreateNewProject = () => {
               <InputDate
                 labelName={"Start Date"}
                 inputName={"startDate"}
-                inputValue={formData?.startDate}
+                inputValue={projectData?.startDate}
                 onChange={handleChange}
                 showError={validationError.startDate}
                 onFocus={() =>
@@ -468,7 +468,7 @@ const CreateNewProject = () => {
               <InputDate
                 labelName={"End Date"}
                 inputName={"endDate"}
-                inputValue={formData?.endDate}
+                inputValue={projectData?.endDate}
                 onChange={handleChange}
                 showError={validationError.endDate}
                 onFocus={() =>
@@ -486,7 +486,7 @@ const CreateNewProject = () => {
             <InputText
               labelName={"Late Repayment Penalty"}
               inputName={"lateRepaymentPenalty"}
-              inputValue={formData?.lateRepaymentPenalty}
+              inputValue={projectData?.lateRepaymentPenalty}
               onChange={handleChange}
               placeHolder={"10%"}
               showError={validationError.lateRepaymentPenalty}
@@ -504,7 +504,7 @@ const CreateNewProject = () => {
             <InputText
               labelName={"Early Repayment Discount"}
               inputName={"earlyRepaymentDiscount"}
-              inputValue={formData?.earlyRepaymentDiscount}
+              inputValue={projectData?.earlyRepaymentDiscount}
               onChange={handleChange}
               placeHolder={"0"}
               showError={validationError.earlyRepaymentDiscount}
@@ -522,7 +522,7 @@ const CreateNewProject = () => {
             <InputText
               labelName={"RollOver Penalty Factor"}
               inputName={"rollOverPenaltyFactor"}
-              inputValue={formData?.rollOverPenaltyFactor}
+              inputValue={projectData?.rollOverPenaltyFactor}
               onChange={handleChange}
               placeHolder={"0"}
               showError={validationError.rollOverPenaltyFactor}
@@ -537,7 +537,6 @@ const CreateNewProject = () => {
             />
           </div>
         </ContainerTile>
-
         <ContainerTile>
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
@@ -547,12 +546,12 @@ const CreateNewProject = () => {
                 labelName={"Loan Amount"}
                 inputSelectName={"minLoanOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData?.minLoanOperator}
+                inputSelectValue={projectData?.minLoanOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"minLoanAmount"}
-                inputNumberValue={formData?.minLoanAmount}
+                inputNumberValue={projectData?.minLoanAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Min"}
                 showError={validationError.minLoanAmount}
@@ -566,12 +565,12 @@ const CreateNewProject = () => {
                 }
                 inputSelect2Name={"maxLoanOperator"}
                 inputSelect2Options={signsOptions}
-                inputSelect2Value={formData?.maxLoanOperator}
+                inputSelect2Value={projectData?.maxLoanOperator}
                 onChangeSelect2={handleChange}
                 disabledSelect2={false}
                 hiddenSelect2={false}
                 inputNumber2Name={"maxLoanAmount"}
-                inputNumber2Value={formData?.maxLoanAmount}
+                inputNumber2Value={projectData?.maxLoanAmount}
                 onChangeNumber2={handleChange}
                 placeHolderNumber2={"Max"}
                 showError2={validationError.maxLoanAmount}
@@ -592,12 +591,12 @@ const CreateNewProject = () => {
                 labelName={"No. of Installments"}
                 inputSelectName={"minInstallmentsOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData?.minInstallmentsOperator}
+                inputSelectValue={projectData?.minInstallmentsOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"minInstallmentsAmount"}
-                inputNumberValue={formData?.minInstallmentsAmount}
+                inputNumberValue={projectData?.minInstallmentsAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Min"}
                 showError={validationError.minInstallmentsAmount}
@@ -611,12 +610,12 @@ const CreateNewProject = () => {
                 }
                 inputSelect2Name={"maxInstallmentsOperator"}
                 inputSelect2Options={signsOptions}
-                inputSelect2Value={formData?.maxInstallmentsOperator}
+                inputSelect2Value={projectData?.maxInstallmentsOperator}
                 onChangeSelect2={handleChange}
                 disabledSelect2={false}
                 hiddenSelect2={false}
                 inputNumber2Name={"maxInstallmentsAmount"}
-                inputNumber2Value={formData?.maxInstallmentsAmount}
+                inputNumber2Value={projectData?.maxInstallmentsAmount}
                 onChangeNumber2={handleChange}
                 placeHolderNumber2={"Max"}
                 showError2={validationError.maxInstallmentsAmount}
@@ -640,12 +639,12 @@ const CreateNewProject = () => {
                 labelName={"Loan Scheme TCL"}
                 inputSelectName={"tclOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData?.tclOperator}
+                inputSelectValue={projectData?.tclOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"tclAmount"}
-                inputNumberValue={formData?.tclAmount}
+                inputNumberValue={projectData?.tclAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"TCL"}
                 showError={validationError.tclAmount}
@@ -663,12 +662,12 @@ const CreateNewProject = () => {
                 labelName={"Total Open Loans"}
                 inputSelectName={"openLoanOperator"}
                 inputSelectOptions={signsOptions}
-                inputSelectValue={formData?.openLoanOperator}
+                inputSelectValue={projectData?.openLoanOperator}
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"openLoanAmount"}
-                inputNumberValue={formData?.openLoanAmount}
+                inputNumberValue={projectData?.openLoanAmount}
                 onChangeNumber={handleChange}
                 placeHolderNumber={"Total Open Loans"}
                 showError={validationError.openLoanAmount}
@@ -688,26 +687,28 @@ const CreateNewProject = () => {
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
                   className={`flex-1 w-full ${
-                    formData.loanType === "cash" && "hidden"
+                    (projectData.loanType === "cash" ||
+                      projectData.loanType === "") &&
+                    "hidden"
                   }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}
                     inputName={"hasDownPayment"}
-                    inputChecked={formData.hasDownPayment}
+                    inputChecked={projectData.hasDownPayment}
                     onChange={handleChange}
-                    disabled={formData.loanType === "asset" ? false : true}
+                    disabled={projectData.loanType === "asset" ? false : true}
                   />
                 </div>
                 {/* <div className="flex-1">
-                  {formData.hasDownPayment &&
+                  {projectData.hasDownPayment &&
                     <InputSelect
                       // labelName={"Fixed or %"}
                       inputName={"downPaymentWay"} inputOptions={[
                         { value: "fixed", label: "Fixed" },
                         { value: "%", label: "%" }
                       ]}
-                      inputValue={formData.downPaymentWay}
+                      inputValue={projectData.downPaymentWay}
                       onChange={handleChange}
                       defaultValue={{ value: "fixed", label: "Fixed" }}
                     />
@@ -716,20 +717,21 @@ const CreateNewProject = () => {
               </div>
 
               <div className="flex items-center justify-center gap-2 w-full">
-                {formData.hasDownPayment && (
-                  <SelectAndNumber
-                    inputSelectName={"downPaymentOperator"}
-                    inputSelectOptions={signsOptions}
-                    inputSelectValue={formData.downPaymentOperator}
-                    onChangeSelect={handleChange}
-                    disabledSelect={false}
-                    hiddenSelect={false}
-                    inputNumberName={"downPaymentPercentage"}
-                    inputNumberValue={formData.downPaymentPercentage}
-                    onChangeNumber={handleChange}
-                    placeHolderNumber={"Amount"}
-                  />
-                )}
+                {projectData.hasDownPayment &&
+                  projectData.loanType === "asset" && (
+                    <SelectAndNumber
+                      inputSelectName={"downPaymentOperator"}
+                      inputSelectOptions={signsOptions}
+                      inputSelectValue={projectData.downPaymentOperator}
+                      onChangeSelect={handleChange}
+                      disabledSelect={false}
+                      hiddenSelect={false}
+                      inputNumberName={"downPaymentPercentage"}
+                      inputNumberValue={projectData.downPaymentPercentage}
+                      onChangeNumber={handleChange}
+                      placeHolderNumber={"Amount"}
+                    />
+                  )}
               </div>
             </div>
           </div>
@@ -742,7 +744,7 @@ const CreateNewProject = () => {
                 <InputText
                   labelName={"Service Fee"}
                   inputName={"serviceFee"}
-                  inputValue={formData?.serviceFee}
+                  inputValue={projectData?.serviceFee}
                   onChange={handleChange}
                   placeHolder={"Service Fee"}
                   showError={validationError.serviceFee}
@@ -758,7 +760,7 @@ const CreateNewProject = () => {
                 <InputText
                   labelName={"Management Fee"}
                   inputName={"managementFee"}
-                  inputValue={formData?.managementFee}
+                  inputValue={projectData?.managementFee}
                   onChange={handleChange}
                   placeHolder={"14%"}
                   showError={validationError.managementFee}
@@ -778,7 +780,7 @@ const CreateNewProject = () => {
                 <InputText
                   labelName={"Vat Fee"}
                   inputName={"vatFee"}
-                  inputValue={formData?.vatFee}
+                  inputValue={projectData?.vatFee}
                   onChange={handleChange}
                   placeHolder={"15%"}
                   showError={validationError.vatFee}
@@ -811,25 +813,25 @@ const CreateNewProject = () => {
               <InputCheckbox
                 labelName={"Has Early Late Payment"}
                 inputName={"hasEarlyLateRepayment"}
-                inputChecked={formData.hasEarlyLateRepayment}
+                inputChecked={projectData.hasEarlyLateRepayment}
                 onChange={handleChange}
               />
               <InputCheckbox
                 labelName={"Calculate Interest"}
                 inputName={"calculateInterest"}
-                inputChecked={formData.calculateInterest}
+                inputChecked={projectData.calculateInterest}
                 onChange={handleChange}
               />
               <InputCheckbox
                 labelName={"TCL Include Fee"}
                 inputName={"tclIncludeFee"}
-                inputChecked={formData.tclIncludeFee}
+                inputChecked={projectData.tclIncludeFee}
                 onChange={handleChange}
               />
               <InputCheckbox
                 labelName={"TCL Include Interest"}
                 inputName={"tclIncludeInterest"}
-                inputChecked={formData.tclIncludeInterest}
+                inputChecked={projectData.tclIncludeInterest}
                 onChange={handleChange}
               />
             </div>

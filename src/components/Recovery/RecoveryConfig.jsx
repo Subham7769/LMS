@@ -86,7 +86,7 @@ const RecoveryConfig = () => {
   const handleUpdate = (e) => {
     e.preventDefault();
     const isValid = validateFormFields(fields, data, dispatch);
-
+    console.log(isValid);
     if (isValid) {
       dispatch(
         updateOrPostData({
@@ -209,6 +209,14 @@ const RecoveryConfig = () => {
                     inputValue={data?.recoveryEquation}
                     onChange={handleChangeWrapper}
                     placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
+                    onFocus={() =>
+                      dispatch(
+                        setValidationError({
+                          ...validationError,
+                          recoveryEquation: false,
+                        })
+                      )
+                    }
                   />
                 ) : (
                   <div className="flex items-center space-x-2 w-full">

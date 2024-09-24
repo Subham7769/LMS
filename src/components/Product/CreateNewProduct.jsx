@@ -10,8 +10,8 @@ import { fetchProductData } from "../../redux/Slices/sidebarSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
   deleteInterestTenure,
-  setFormData,
-  updateFormField,
+  setProductData,
+  updateProductDataField,
   createProductData,
 } from "../../redux/Slices/productSlice";
 import LoadingState from "../LoadingState/LoadingState";
@@ -20,17 +20,17 @@ const CreateNewProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
   const dispatch = useDispatch();
-  const { formData, loading, error } = useSelector((state) => state.product);
+  const { productData, loading, error } = useSelector((state) => state.product);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
-    dispatch(updateFormField({ name, value: fieldValue }));
+    dispatch(updateProductDataField({ name, value: fieldValue }));
   };
 
   useEffect(() => {
     if (productName) {
-      dispatch(setFormData({ productType: productName }));
+      dispatch(setProductData({ productType: productName }));
     }
   }, [dispatch, productName]);
 
@@ -40,7 +40,7 @@ const CreateNewProduct = () => {
 
   const handleCreateProduct = async () => {
     try {
-      await dispatch(createProductData(formData)).unwrap();
+      await dispatch(createProductData(productData)).unwrap();
       dispatch(fetchProductData());
       navigate("/product/");
     } catch (error) {
@@ -57,7 +57,7 @@ const CreateNewProduct = () => {
     <p>Error: {error}</p>;
   }
 
-  console.log(formData);
+  console.log(productData);
 
   return (
     <>
@@ -71,7 +71,10 @@ const CreateNewProduct = () => {
         </b>
       </h2>
       <ContainerTile>
-        <ProductInputFields formData={formData} handleChange={handleChange} />
+        <ProductInputFields
+          productData={productData}
+          handleChange={handleChange}
+        />
         <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -96,7 +99,7 @@ const CreateNewProduct = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {formData?.interestEligibleTenure?.length < 1 ? (
+              {productData?.interestEligibleTenure?.length < 1 ? (
                 <tr>
                   <td
                     colSpan="7"
@@ -106,7 +109,7 @@ const CreateNewProduct = () => {
                   </td>
                 </tr>
               ) : (
-                formData?.interestEligibleTenure?.map((item, index) => (
+                productData?.interestEligibleTenure?.map((item, index) => (
                   <tr
                     key={index}
                     className="text-gray-900 text-sm sm:text-sm sm:leading-6 text-center"

@@ -11,7 +11,7 @@ import ListTable from "../Common/ListTable/ListTable";
 import {
   fetchCreditScore,
   updateCreditScore,
-  setFormData,
+  setcreditScoreData,
 } from "../../redux/Slices/creditScoreSlice";
 import {
   CreditScoreHeaderList,
@@ -20,6 +20,12 @@ import {
   ResidentialScoreHeaderList,
 } from "../../data/CreditScoreEqData";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+  validateFormFieldsRule,
+} from "../../redux/Slices/validationSlice";
 
 const options = [
   { value: "==", label: "==" },
@@ -33,9 +39,28 @@ const CreditScore = () => {
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { creditScoreData, formData, loading } = useSelector(
+  const { creditScoreData, loading } = useSelector(
     (state) => state.creditScore
   );
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = [
+    "aweightage",
+    "bweightage",
+    "cweightage",
+    "dweightage",
+    "eweightage",
+    "fweightage",
+    "residentsCreditScore",
+    "expatriatesCreditScore",
+    "rentStatusScore",
+    "ownStatusScore",
+    "marriedStatusScore",
+    "singleStatusScore",
+    "divorcedStatusScore",
+    "widowedStatusScore",
+    "separatedStatusScore",
+    "unknownStatusScore",
+  ];
 
   useEffect(() => {
     dispatch(fetchCreditScore(creditScoreId))
@@ -45,29 +70,43 @@ const CreditScore = () => {
           navigate("/login");
         }
       });
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [creditScoreId, dispatch, navigate]);
 
   const handleChange = (e) => {
     const { name, value, id } = e.target;
-    dispatch(setFormData({ name, value, id }));
+    dispatch(setcreditScoreData({ name, value, id }));
   };
 
   const handleAddFields = async () => {
-    dispatch(updateCreditScore({ creditScoreId, formData }))
-      .unwrap()
-      .then(() => {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
-      })
-      .catch((error) => {
-        if (error === "Unexpected end of JSON input") {
+    const isValid = validateFormFields(fields, creditScoreData, dispatch);
+    const isValid2 = validateFormFieldsRule(creditScoreData, dispatch);
+    if (isValid && isValid2) {
+      dispatch(updateCreditScore({ creditScoreId, creditScoreData }))
+        .unwrap()
+        .then(() => {
           toast.custom((t) => <RowChanged t={t} toast={toast} />);
-        } else {
-          toast.error(error);
-        }
-      });
+        })
+        .catch((error) => {
+          if (error === "Unexpected end of JSON input") {
+            toast.custom((t) => <RowChanged t={t} toast={toast} />);
+          } else {
+            toast.error(error);
+          }
+        });
+    }
   };
 
-  // console.log(formData);
+  // console.log(creditScoreData);
 
   if (loading) {
     return <LoadingState />;
@@ -78,17 +117,17 @@ const CreditScore = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="my-5">
         <ListTable
-          ListName={formData?.equation}
+          ListName={creditScoreData?.equation}
           ListNameAlign={"center"}
           ListHeader={CreditScoreHeaderList}
           ListItem={[
             {
-              aweightage: formData?.aweightage,
-              bweightage: formData?.bweightage,
-              cweightage: formData?.cweightage,
-              dweightage: formData?.dweightage,
-              eweightage: formData?.eweightage,
-              fweightage: formData?.fweightage,
+              aweightage: creditScoreData?.aweightage,
+              bweightage: creditScoreData?.bweightage,
+              cweightage: creditScoreData?.cweightage,
+              dweightage: creditScoreData?.dweightage,
+              eweightage: creditScoreData?.eweightage,
+              fweightage: creditScoreData?.fweightage,
             },
           ]}
           Editable={true}
@@ -103,8 +142,8 @@ const CreditScore = () => {
           ListHeader={NationalityScoreHeaderList}
           ListItem={[
             {
-              residentsCreditScore: formData?.residentsCreditScore,
-              expatriatesCreditScore: formData?.expatriatesCreditScore,
+              residentsCreditScore: creditScoreData?.residentsCreditScore,
+              expatriatesCreditScore: creditScoreData?.expatriatesCreditScore,
             },
           ]}
           Editable={true}
@@ -117,8 +156,8 @@ const CreditScore = () => {
           ListHeader={ResidentialScoreHeaderList}
           ListItem={[
             {
-              rentStatusScore: formData?.rentStatusScore,
-              ownStatusScore: formData?.ownStatusScore,
+              rentStatusScore: creditScoreData?.rentStatusScore,
+              ownStatusScore: creditScoreData?.ownStatusScore,
             },
           ]}
           Editable={true}
@@ -133,12 +172,12 @@ const CreditScore = () => {
           ListHeader={MaritialScoreHeaderList}
           ListItem={[
             {
-              marriedStatusScore: formData?.marriedStatusScore,
-              singleStatusScore: formData?.singleStatusScore,
-              divorcedStatusScore: formData?.divorcedStatusScore,
-              widowedStatusScore: formData?.widowedStatusScore,
-              separatedStatusScore: formData?.separatedStatusScore,
-              unknownStatusScore: formData?.unknownStatusScore,
+              marriedStatusScore: creditScoreData?.marriedStatusScore,
+              singleStatusScore: creditScoreData?.singleStatusScore,
+              divorcedStatusScore: creditScoreData?.divorcedStatusScore,
+              widowedStatusScore: creditScoreData?.widowedStatusScore,
+              separatedStatusScore: creditScoreData?.separatedStatusScore,
+              unknownStatusScore: creditScoreData?.unknownStatusScore,
             },
           ]}
           Editable={true}
@@ -157,18 +196,30 @@ const CreditScore = () => {
                 inputSelectName={"firstDependentsOperator"}
                 inputSelectOptions={options}
                 inputSelectValue={
-                  formData?.dependentsRules?.operators?.firstDependentsOperator
+                  creditScoreData?.dependentsRules?.operators
+                    ?.firstDependentsOperator
                 }
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
-                inputNumberId={formData?.dependentsRules?.rules?.[0]?.ruleName}
+                inputNumberId={
+                  creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
+                }
                 inputNumberValue={
-                  formData?.dependentsRules?.rules?.[0]?.firstDependent
+                  creditScoreData?.dependentsRules?.rules?.[0]?.firstDependent
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
+                showError={validationError[`firstDependent_0`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      [`firstDependent_0`]: false,
+                    })
+                  )
+                }
               />
             </div>
             <div className="mb-3">
@@ -176,18 +227,30 @@ const CreditScore = () => {
                 inputSelectName={"firstDependentsOperator"}
                 inputSelectOptions={options}
                 inputSelectValue={
-                  formData?.dependentsRules?.operators?.firstDependentsOperator
+                  creditScoreData?.dependentsRules?.operators
+                    ?.firstDependentsOperator
                 }
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules?.[1]?.firstDependent
+                  creditScoreData?.dependentsRules?.rules?.[1]?.firstDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules?.[1]?.ruleName}
+                inputNumberId={
+                  creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
+                }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
+                showError={validationError[`firstDependent_1`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      [`firstDependent_1`]: false,
+                    })
+                  )
+                }
               />
             </div>
             <div className="mb-3">
@@ -195,18 +258,30 @@ const CreditScore = () => {
                 inputSelectName={"firstDependentsOperator"}
                 inputSelectOptions={options}
                 inputSelectValue={
-                  formData?.dependentsRules?.operators?.firstDependentsOperator
+                  creditScoreData?.dependentsRules?.operators
+                    ?.firstDependentsOperator
                 }
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"firstDependent"}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules?.[2]?.firstDependent
+                  creditScoreData?.dependentsRules?.rules?.[2]?.firstDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules?.[2]?.ruleName}
+                inputNumberId={
+                  creditScoreData?.dependentsRules?.rules?.[2]?.ruleName
+                }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
+                showError={validationError[`firstDependent_2`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      [`firstDependent_2`]: false,
+                    })
+                  )
+                }
               />
             </div>
           </div>
@@ -216,18 +291,30 @@ const CreditScore = () => {
                 inputSelectName={"secondDependentsOperator"}
                 inputSelectOptions={options}
                 inputSelectValue={
-                  formData?.dependentsRules?.operators?.secondDependentsOperator
+                  creditScoreData?.dependentsRules?.operators
+                    ?.secondDependentsOperator
                 }
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"secondDependent"}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules[0]?.secondDependent
+                  creditScoreData?.dependentsRules?.rules[0]?.secondDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules?.[0]?.ruleName}
+                inputNumberId={
+                  creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
+                }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
+                showError={validationError[`secondDependent_0`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      [`secondDependent_0`]: false,
+                    })
+                  )
+                }
               />
             </div>
             <div className="mb-3">
@@ -235,18 +322,30 @@ const CreditScore = () => {
                 inputSelectName={"secondDependentsOperator"}
                 inputSelectOptions={options}
                 inputSelectValue={
-                  formData?.dependentsRules?.operators?.secondDependentsOperator
+                  creditScoreData?.dependentsRules?.operators
+                    ?.secondDependentsOperator
                 }
                 onChangeSelect={handleChange}
                 disabledSelect={false}
                 hiddenSelect={false}
                 inputNumberName={"secondDependent"}
                 inputNumberValue={
-                  formData?.dependentsRules?.rules?.[1]?.secondDependent
+                  creditScoreData?.dependentsRules?.rules?.[1]?.secondDependent
                 }
-                inputNumberId={formData?.dependentsRules?.rules?.[1]?.ruleName}
+                inputNumberId={
+                  creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
+                }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
+                showError={validationError[`secondDependent_1`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({
+                      ...validationError,
+                      [`secondDependent_1`]: false,
+                    })
+                  )
+                }
               />
             </div>
           </div>
@@ -258,10 +357,23 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules?.rules?.[0]?.ruleName}
-                  inputValue={formData?.dependentsRules?.rules?.[0]?.value}
+                  inputId={
+                    creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
+                  }
+                  inputValue={
+                    creditScoreData?.dependentsRules?.rules?.[0]?.value
+                  }
                   onChange={handleChange}
                   placeHolder={"0.54"}
+                  showError={validationError[`value_0`]}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        [`value_0`]: false,
+                      })
+                    )
+                  }
                 />
               </div>
             </div>
@@ -272,10 +384,23 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules?.rules?.[1]?.ruleName}
-                  inputValue={formData?.dependentsRules?.rules?.[1]?.value}
+                  inputId={
+                    creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
+                  }
+                  inputValue={
+                    creditScoreData?.dependentsRules?.rules?.[1]?.value
+                  }
                   onChange={handleChange}
                   placeHolder={"0.54"}
+                  showError={validationError[`value_1`]}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        [`value_1`]: false,
+                      })
+                    )
+                  }
                 />
               </div>
             </div>
@@ -286,10 +411,23 @@ const CreditScore = () => {
               <div>
                 <InputNumber
                   inputName={"value"}
-                  inputId={formData?.dependentsRules?.rules?.[2]?.ruleName}
-                  inputValue={formData?.dependentsRules?.rules?.[2]?.value}
+                  inputId={
+                    creditScoreData?.dependentsRules?.rules?.[2]?.ruleName
+                  }
+                  inputValue={
+                    creditScoreData?.dependentsRules?.rules?.[2]?.value
+                  }
                   onChange={handleChange}
                   placeHolder={"0.54"}
+                  showError={validationError[`value_2`]}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        [`value_2`]: false,
+                      })
+                    )
+                  }
                 />
               </div>
             </div>

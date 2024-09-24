@@ -1,10 +1,10 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import Select from "react-select";
 import Button from "../Common/Button/Button";
+import { setValidationError } from "../../redux/Slices/validationSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Table({
-  informUser,
-  informUser1,
   getSortIcon,
   handleSort,
   handleChange,
@@ -16,6 +16,8 @@ export default function Table({
   toggleEdit,
   empOptions,
 }) {
+  const dispatch = useDispatch();
+  const { validationError } = useSelector((state) => state.validation);
   return (
     <table className="w-full table-auto">
       <thead className="bg-gray-50">
@@ -125,12 +127,26 @@ export default function Table({
                         type={col.type}
                         name={`${col.name}${index}`}
                         id={`${col.name}${index}`}
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
+          ${
+            validationError[col.name]
+              ? "ring-red-600 focus:ring-red-600"
+              : "ring-gray-300 focus:ring-indigo-600"
+          } 
+          sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
                         value={col.value}
                         onChange={(e) =>
                           handleChange(index, col.name, e.target.value)
                         }
                         placeholder="Enter value"
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              [col.name]: false,
+                            })
+                          )
+                        }
                       />
                     )
                   ) : (
@@ -146,7 +162,7 @@ export default function Table({
                     buttonIcon={
                       editingIndex === index ? CheckCircleIcon : PencilIcon
                     }
-                    onClick={editingIndex === index ? informUser : informUser1}
+                    // onClick={editingIndex === index ? informUser : informUser1}
                     circle={true}
                   />
                 </div>

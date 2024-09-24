@@ -31,7 +31,7 @@ export const fetchData = createAsyncThunk(
 
 export const saveProductData = createAsyncThunk(
   "product/saveData",
-  async ({ loanProId, formData }, { rejectWithValue }) => {
+  async ({ loanProId, productData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -42,7 +42,7 @@ export const saveProductData = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(productData),
         }
       );
 
@@ -62,7 +62,10 @@ export const updateProductName = createAsyncThunk(
   async ({ loanProId, newName }, { getState, rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const formData = { ...getState().product.formData, productType: newName };
+      const productData = {
+        ...getState().product.productData,
+        productType: newName,
+      };
 
       const response = await fetch(
         `${import.meta.env.VITE_PRODUCT_UPDATE}${loanProId}`,
@@ -72,7 +75,7 @@ export const updateProductName = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(productData),
         }
       );
 
@@ -117,13 +120,13 @@ export const deleteLoanProduct = createAsyncThunk(
 
 export const createProductData = createAsyncThunk(
   "product/createProductData",
-  async (formData, { rejectWithValue }) => {
+  async (productData, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
 
     try {
       // Filter out objects with empty fields
       const filteredInterestEligibleTenure =
-        formData.interestEligibleTenure.filter(
+        productData.interestEligibleTenure.filter(
           (item) =>
             item.interestRate &&
             item.interestPeriodType &&
@@ -133,9 +136,9 @@ export const createProductData = createAsyncThunk(
             item.repaymentTenureType
         );
 
-      // Create a copy of formData with filtered interestEligibleTenure
-      const filteredFormData = {
-        ...formData,
+      // Create a copy of productData with filtered interestEligibleTenure
+      const filteredproductData = {
+        ...productData,
         interestEligibleTenure: filteredInterestEligibleTenure,
       };
 
@@ -147,14 +150,14 @@ export const createProductData = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(filteredFormData),
+          body: JSON.stringify(filteredproductData),
         }
       );
 
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       }
-      return filteredFormData;
+      return filteredproductData;
       // Assuming the server responds with the newly created product data
     } catch (error) {
       return rejectWithValue(error.message);
@@ -163,7 +166,7 @@ export const createProductData = createAsyncThunk(
 );
 
 const productInitialState = {
-  formData: {
+  productData: {
     loanProductId: "",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
@@ -183,11 +186,11 @@ const productInitialState = {
     rulePolicyTempId: "",
     tclFileId: "",
     recoveryEquationTempId: "",
-    annualFee:"",
-    overdraftProductPeriod:"",
-    overDraftPaymentPrinciplePercentage:"",
-    maxOverdraftPrincipalLimit:"",
-    minOverdraftPrincipalLimit:"",
+    annualFee: "",
+    overdraftProductPeriod: "",
+    overDraftPaymentPrinciplePercentage: "",
+    maxOverdraftPrincipalLimit: "",
+    minOverdraftPrincipalLimit: "",
   },
   loading: false,
   error: null,
@@ -200,31 +203,31 @@ const productSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
-    setFormData: (state, action) => {
+    setProductData: (state, action) => {
       const { productType } = action.payload;
-      state.formData = {
-        ...productInitialState.formData, // Reset to initial state
+      state.productData = {
+        ...productInitialState.productData, // Reset to initial state
         ...action.payload, // Apply the new changes
-        productType: productType || state.formData.productType, // Ensure name field is set
+        productType: productType || state.productData.productType, // Ensure name field is set
       };
     },
     setError: (state, action) => {
       state.error = action.error.message;
     },
-    updateFormField: (state, action) => {
+    updateProductDataField: (state, action) => {
       const { name, value } = action.payload;
-      state.formData[name] = value;
+      state.productData[name] = value;
     },
     updateInterestTenure: (state, action) => {
       const { index, field, value } = action.payload;
-      state.formData.interestEligibleTenure[index][field] = value;
+      state.productData.interestEligibleTenure[index][field] = value;
     },
     deleteInterestTenure: (state, action) => {
       const { index } = action.payload;
-      state.formData.interestEligibleTenure.splice(index, 1);
+      state.productData.interestEligibleTenure.splice(index, 1);
     },
     addInterestTenure: (state, action) => {
-      state.formData.interestEligibleTenure.push(action.payload);
+      state.productData.interestEligibleTenure.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -234,7 +237,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchData.fulfilled, (state, action) => {
         state.loading = false;
-        state.formData = action.payload;
+        state.productData = action.payload;
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
@@ -245,7 +248,7 @@ const productSlice = createSlice({
       })
       .addCase(saveProductData.fulfilled, (state, action) => {
         state.loading = false;
-        state.formData = action.payload; // Update formData with the response data
+        state.productData = action.payload; // Update productData with the response data
       })
       .addCase(saveProductData.rejected, (state, action) => {
         state.loading = false;
@@ -256,7 +259,7 @@ const productSlice = createSlice({
       })
       .addCase(updateProductName.fulfilled, (state, action) => {
         state.loading = false;
-        state.formData.productType = action.payload; // Update the formData with the new product name
+        state.productData.productType = action.payload; // Update the productData with the new product name
       })
       .addCase(updateProductName.rejected, (state, action) => {
         state.loading = false;
@@ -288,9 +291,9 @@ const productSlice = createSlice({
 
 export const {
   setLoading,
-  setFormData,
+  setProductData,
   setError,
-  updateFormField,
+  updateProductDataField,
   updateInterestTenure,
   deleteInterestTenure,
   addInterestTenure,

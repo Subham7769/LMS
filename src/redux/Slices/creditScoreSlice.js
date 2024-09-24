@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
-  creditScoreData: [],
-  formData: {
+  creditScoreData: {
     aweightage: "",
     bweightage: "",
     creditScoreEqTempId: "",
@@ -47,7 +46,7 @@ const initialState = {
           fieldType: "Employer",
           creditScoreEqTempId: "",
           firstDependent: "",
-          secondDependent: "",
+          secondDependent: "1",
           value: "",
         },
       ],
@@ -89,7 +88,7 @@ export const fetchCreditScore = createAsyncThunk(
 // Update Credit Score
 export const updateCreditScore = createAsyncThunk(
   "creditScore/updateCreditScore",
-  async ({ creditScoreId, formData }, { rejectWithValue }) => {
+  async ({ creditScoreId, creditScoreData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -100,7 +99,7 @@ export const updateCreditScore = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(creditScoreData),
         }
       );
 
@@ -205,27 +204,26 @@ export const deleteCreditScore = createAsyncThunk(
 
 const creditScoreSlice = createSlice({
   name: "creditScore",
-  creditScoreData: [],
   initialState,
   reducers: {
-    setFormData: (state, action) => {
+    setcreditScoreData: (state, action) => {
       const { name, value, id } = action.payload;
 
       const isOperator =
-        state.formData.dependentsRules.operators.hasOwnProperty(name);
-      const isRuleField = state.formData.dependentsRules.rules.some(
+        state.creditScoreData.dependentsRules.operators.hasOwnProperty(name);
+      const isRuleField = state.creditScoreData.dependentsRules.rules.some(
         (rule) => rule.ruleName === id && rule.hasOwnProperty(name)
       );
 
       if (isOperator) {
-        state.formData.dependentsRules.operators[name] = value;
+        state.creditScoreData.dependentsRules.operators[name] = value;
       } else if (isRuleField) {
-        state.formData.dependentsRules.rules =
-          state.formData.dependentsRules.rules.map((rule) =>
+        state.creditScoreData.dependentsRules.rules =
+          state.creditScoreData.dependentsRules.rules.map((rule) =>
             rule.ruleName === id ? { ...rule, [name]: value } : rule
           );
       } else {
-        state.formData[name] = value;
+        state.creditScoreData[name] = value;
       }
     },
   },
@@ -236,11 +234,10 @@ const creditScoreSlice = createSlice({
       })
       .addCase(fetchCreditScore.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
 
         // Check if action.payload is empty or null
         if (!action.payload.id) {
-          state.formData = {
+          state.creditScoreData = {
             aweightage: "",
             bweightage: "",
             creditScoreEqTempId: action.meta.arg,
@@ -292,12 +289,11 @@ const creditScoreSlice = createSlice({
             },
           };
         } else {
-          // If not empty, update formData with the payload
-          state.formData = {
-            ...state.formData,
+          // If not empty, update creditScoreData with the payload
+          state.creditScoreData = {
+            ...state.creditScoreData,
             ...action.payload,
           };
-          console.log(state.formData);
         }
       })
       .addCase(fetchCreditScore.rejected, (state, action) => {
@@ -319,10 +315,6 @@ const creditScoreSlice = createSlice({
       })
       .addCase(cloneCreditScore.fulfilled, (state, action) => {
         state.loading = false;
-        // Ensure the payload is an array before assigning it
-        state.creditScoreData = Array.isArray(action.payload)
-          ? action.payload
-          : [];
       })
       .addCase(cloneCreditScore.rejected, (state, action) => {
         state.loading = false;
@@ -333,10 +325,6 @@ const creditScoreSlice = createSlice({
       })
       .addCase(renameCreditScore.fulfilled, (state, action) => {
         state.loading = false;
-        // Ensure the payload is an array before assigning it
-        state.creditScoreData = Array.isArray(action.payload)
-          ? action.payload
-          : [];
       })
       .addCase(renameCreditScore.rejected, (state, action) => {
         state.loading = false;
@@ -347,9 +335,6 @@ const creditScoreSlice = createSlice({
       })
       .addCase(deleteCreditScore.fulfilled, (state, action) => {
         state.loading = false;
-        state.creditScoreData = state.creditScoreData.filter(
-          (item) => item.id !== action.payload
-        );
       })
       .addCase(deleteCreditScore.rejected, (state, action) => {
         state.loading = false;
@@ -358,6 +343,6 @@ const creditScoreSlice = createSlice({
   },
 });
 
-export const { setFormData } = creditScoreSlice.actions;
+export const { setcreditScoreData } = creditScoreSlice.actions;
 
 export default creditScoreSlice.reducer;

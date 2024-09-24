@@ -13,6 +13,7 @@ import {
   updateTCL,
   deleteTCL,
   clearTableData,
+  restoreTableData,
   removeTableDataByIndex,
   deleteTCLFile,
   uploadTCLFile,
@@ -30,9 +31,8 @@ const TCLViewList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
-  const { itemName, data, tableData, loading, error } = useSelector(
-    (state) => state.tcl
-  );
+  const { itemName, data, tableData, loading, error, tableDataHistory } =
+    useSelector((state) => state.tcl);
 
   const handleChange = (selectedOption) => {
     setFileSelectedOption(selectedOption);
@@ -49,7 +49,7 @@ const TCLViewList = () => {
       // dispatch(removeTCLById(tclFileId)); // Remove from tableData
     } catch (err) {
       console.error("Failed to delete:", err);
-      setMessage("Failed to delete item. Please try again.");
+      setMessage(err); // Display the error message from the server
     }
   };
 
@@ -97,11 +97,21 @@ const TCLViewList = () => {
       });
   };
 
+  console.log(tableDataHistory);
+
   useEffect(() => {
-    dispatch(fetchName(tclId));
-    dispatch(fetchData(tclId));
-    dispatch(clearTableData());
-    setFileSelectedOption(null);
+    if (tclId) {
+      dispatch(fetchName(tclId));
+      dispatch(fetchData(tclId));
+      dispatch(restoreTableData({ tclId })); // Restore table data if available
+      setFileSelectedOption(null);
+      setMessage("");
+    }
+
+    // Clear table data when unmounting or tclId changes
+    return () => {
+      dispatch(clearTableData({ tclId }));
+    };
   }, [dispatch, tclId]);
 
   const handleDeleteTCL = () => {
@@ -132,7 +142,7 @@ const TCLViewList = () => {
 
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
-  console.log(tableDataWithoutId);
+  // console.log(tableDataWithoutId);
 
   const handleFileClick = () => {
     fileInputRef.current.click();

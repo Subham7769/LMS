@@ -22,8 +22,7 @@ import ProductInputFields from "./ProductInputFields";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
 import {
   fetchData,
-  setFormData,
-  updateFormField,
+  updateProductDataField,
   updateInterestTenure,
   deleteInterestTenure,
   saveProductData,
@@ -32,6 +31,11 @@ import {
 } from "../../redux/Slices/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -43,16 +47,51 @@ const LoanProductConfig = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const { formData, loading, error } = useSelector((state) => state.product);
+  const { productData, loading, error } = useSelector((state) => state.product);
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = [
+    "eligibleCustomerType",
+    "racId",
+    "projectId",
+    "tclFileId",
+    "recoveryEquationTempId",
+    "dbcTempId",
+    "blockEmployersTempId",
+    "rulePolicyTempId",
+    "creditScoreEqTempId",
+    "creditScoreEtTempId",
+    "fee",
+    "managementFeeVat",
+    "numberOfEmisForEarlySettlement",
+  ];
+
+  const fields2 = [
+    "interestRate",
+    "interestPeriodType",
+    "loanTenure",
+    "loanTenureType",
+    "repaymentTenure",
+    "repaymentTenureType",
+  ];
 
   useEffect(() => {
     dispatch(fetchData(productType));
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, productType]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
-    dispatch(updateFormField({ name, value: fieldValue }));
+    dispatch(updateProductDataField({ name, value: fieldValue }));
   };
 
   const handleInterestChange = (index, field, eventOrValue) => {
@@ -74,10 +113,25 @@ const LoanProductConfig = () => {
   };
 
   const toggleEdit = (index) => {
-    setEditingIndex(editingIndex === index ? null : index);
+    const absoluteIndex = index + indexOfFirstItem;
+    if (editingIndex !== null) {
+      const isValid = validateFormFields(
+        fields2,
+        productData.interestEligibleTenure[absoluteIndex],
+        dispatch
+      );
+      if (isValid) {
+        informUser();
+        setEditingIndex(editingIndex === index ? null : index);
+      } else {
+        return;
+      }
+    } else {
+      setEditingIndex(editingIndex === index ? null : index);
+    }
   };
 
-  console.log(formData);
+  console.log(validationError);
 
   const handleDelete = (indexInPage) => {
     const absoluteIndex = indexOfFirstItem + indexInPage;
@@ -94,12 +148,16 @@ const LoanProductConfig = () => {
   };
 
   const handleSave = async () => {
-    try {
-      // Dispatch the saveProductData thunk with necessary parameters
-      dispatch(saveProductData({ loanProId, formData }));
-      toast.custom((t) => <RowChanged t={t} toast={toast} />);
-    } catch (error) {
-      console.error("Failed to update data:", error);
+    const isValid = validateFormFields(fields, productData, dispatch);
+    // setIsVaildFlag(isValid);
+    if (isValid) {
+      try {
+        // Dispatch the saveProductData thunk with necessary parameters
+        dispatch(saveProductData({ loanProId, productData }));
+        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+      } catch (error) {
+        console.error("Failed to update data:", error);
+      }
     }
   };
 
@@ -166,7 +224,7 @@ const LoanProductConfig = () => {
   };
 
   // Sort the items based on sortConfig
-  const sortedItems = [...formData?.interestEligibleTenure].sort((a, b) => {
+  const sortedItems = [...productData?.interestEligibleTenure].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -214,7 +272,7 @@ const LoanProductConfig = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center mb-5">
         <DynamicName
-          initialName={formData?.productType}
+          initialName={productData?.productType}
           onSave={handleProductNameChange}
         />
         <Button
@@ -224,7 +282,10 @@ const LoanProductConfig = () => {
         />
       </div>
       <ContainerTile>
-        <ProductInputFields formData={formData} handleChange={handleChange} />
+        <ProductInputFields
+          productData={productData}
+          handleChange={handleChange}
+        />
         <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -272,6 +333,15 @@ const LoanProductConfig = () => {
                             )
                           }
                           placeHolder="2%"
+                          showError={validationError.interestRate}
+                          onFocus={() =>
+                            dispatch(
+                              setValidationError({
+                                ...validationError,
+                                interestRate: false,
+                              })
+                            )
+                          }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -290,6 +360,15 @@ const LoanProductConfig = () => {
                               index,
                               "interestPeriodType",
                               selectedOption
+                            )
+                          }
+                          showError={validationError.interestPeriodType}
+                          onFocus={() =>
+                            dispatch(
+                              setValidationError({
+                                ...validationError,
+                                interestPeriodType: false,
+                              })
                             )
                           }
                         />
@@ -314,6 +393,15 @@ const LoanProductConfig = () => {
                             )
                           }
                           placeHolder="3"
+                          showError={validationError.loanTenure}
+                          onFocus={() =>
+                            dispatch(
+                              setValidationError({
+                                ...validationError,
+                                loanTenure: false,
+                              })
+                            )
+                          }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -332,6 +420,15 @@ const LoanProductConfig = () => {
                               index,
                               "loanTenureType",
                               selectedOption
+                            )
+                          }
+                          showError={validationError.loanTenureType}
+                          onFocus={() =>
+                            dispatch(
+                              setValidationError({
+                                ...validationError,
+                                loanTenureType: false,
+                              })
                             )
                           }
                         />
@@ -354,6 +451,15 @@ const LoanProductConfig = () => {
                             )
                           }
                           placeHolder="3"
+                          showError={validationError.repaymentTenure}
+                          onFocus={() =>
+                            dispatch(
+                              setValidationError({
+                                ...validationError,
+                                repaymentTenure: false,
+                              })
+                            )
+                          }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -374,6 +480,15 @@ const LoanProductConfig = () => {
                               selectedOption
                             )
                           }
+                          showError={validationError.repaymentTenureType}
+                          onFocus={() =>
+                            dispatch(
+                              setValidationError({
+                                ...validationError,
+                                repaymentTenureType: false,
+                              })
+                            )
+                          }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -387,7 +502,7 @@ const LoanProductConfig = () => {
                       <button onClick={() => toggleEdit(index)} type="button">
                         {editingIndex === index ? (
                           <div
-                            onClick={informUser}
+                            // onClick={informUser}
                             className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                           >
                             <CheckCircleIcon

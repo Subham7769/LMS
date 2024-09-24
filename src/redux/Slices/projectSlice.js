@@ -38,11 +38,11 @@ export const fetchData = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   "project/updateProject",
-  async ({ formData, projectId, clientIdsString }, { rejectWithValue }) => {
+  async ({ projectData, projectId, clientIdsString }, { rejectWithValue }) => {
     const formattedStartDate =
-      new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
+      new Date(projectData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const formattedEndDate =
-      new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
+      new Date(projectData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const startDateObj = new Date(formattedStartDate);
     const endDateObj = new Date(formattedEndDate);
 
@@ -70,31 +70,33 @@ export const updateProject = createAsyncThunk(
       downPaymentPercentage,
       openLoanAmount,
       entityCreationDate,
-      ...filteredFormData
-    } = formData;
+      ...filteredprojectData
+    } = projectData;
 
     const postData = {
-      ...filteredFormData,
+      ...filteredprojectData,
       clientIds: clientIdsString.split(","),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
-      projectTimeZone: formData.projectTimeZone,
-      paymentOption: formData.paymentOption,
-      bearers: formData.bearers,
+      projectTimeZone: projectData.projectTimeZone,
+      paymentOption: projectData.paymentOption,
+      bearers: projectData.bearers,
       projectId: projectId,
-      criteria: `tcl ${formData.tclOperator} ${
-        formData.tclAmount
-      } and loanAmount ${formData.minLoanOperator} ${
-        formData.minLoanAmount
-      } and loanAmount ${formData.maxLoanOperator} ${
-        formData.maxLoanAmount
-      } and numberOfInstallments ${formData.minInstallmentsOperator} ${
-        formData.minInstallmentsAmount
-      } and numberOfInstallments ${formData.maxInstallmentsOperator} ${
-        formData.maxInstallmentsAmount
-      } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${
-        formData.loanType === "asset"
-          ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
+      criteria: `tcl ${projectData.tclOperator} ${
+        projectData.tclAmount
+      } and loanAmount ${projectData.minLoanOperator} ${
+        projectData.minLoanAmount
+      } and loanAmount ${projectData.maxLoanOperator} ${
+        projectData.maxLoanAmount
+      } and numberOfInstallments ${projectData.minInstallmentsOperator} ${
+        projectData.minInstallmentsAmount
+      } and numberOfInstallments ${projectData.maxInstallmentsOperator} ${
+        projectData.maxInstallmentsAmount
+      } and freqCap ${projectData.openLoanOperator} ${
+        projectData.openLoanAmount
+      }${
+        projectData.loanType === "asset"
+          ? ` and downPaymentPercentage ${projectData.downPaymentOperator} ${projectData.downPaymentPercentage}`
           : ""
       }`,
     };
@@ -128,11 +130,11 @@ export const updateProject = createAsyncThunk(
 
 export const createProject = createAsyncThunk(
   "project/createProject",
-  async ({ formData, clientIdsString }, { rejectWithValue, dispatch }) => {
+  async ({ projectData, clientIdsString }, { rejectWithValue, dispatch }) => {
     const formattedStartDate =
-      new Date(formData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
+      new Date(projectData.startDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const formattedEndDate =
-      new Date(formData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
+      new Date(projectData.endDate).toISOString().slice(0, 10) + ` 00:00:00`;
     const startDateObj = new Date(formattedStartDate);
     const endDateObj = new Date(formattedEndDate);
 
@@ -169,7 +171,7 @@ export const createProject = createAsyncThunk(
     ];
 
     for (const field of requiredFields) {
-      if (!formData[field]) {
+      if (!projectData[field]) {
         toast.error(
           `Please fill in ${field.replace(/([A-Z])/g, " $1").trim()}.`
         );
@@ -193,30 +195,32 @@ export const createProject = createAsyncThunk(
       openLoanOperator,
       downPaymentPercentage,
       openLoanAmount,
-      ...filteredFormData
-    } = formData;
+      ...filteredprojectData
+    } = projectData;
 
     const postData = {
-      ...filteredFormData,
+      ...filteredprojectData,
       clientIds: clientIdsString.split(","),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       projectTimeZone: "GMT-180",
       paymentOption: ["mobile wallet", "top up", "credit card"],
       bearers: ["SMS", "USSD"],
-      criteria: `tcl ${formData.tclOperator} ${
-        formData.tclAmount
-      } and loanAmount ${formData.minLoanOperator} ${
-        formData.minLoanAmount
-      } and loanAmount ${formData.maxLoanOperator} ${
-        formData.maxLoanAmount
-      } and numberOfInstallments ${formData.minInstallmentsOperator} ${
-        formData.minInstallmentsAmount
-      } and numberOfInstallments ${formData.maxInstallmentsOperator} ${
-        formData.maxInstallmentsAmount
-      } and freqCap ${formData.openLoanOperator} ${formData.openLoanAmount}${
-        formData.loanType === "asset"
-          ? ` and downPaymentPercentage ${formData.downPaymentOperator} ${formData.downPaymentPercentage}`
+      criteria: `tcl ${projectData.tclOperator} ${
+        projectData.tclAmount
+      } and loanAmount ${projectData.minLoanOperator} ${
+        projectData.minLoanAmount
+      } and loanAmount ${projectData.maxLoanOperator} ${
+        projectData.maxLoanAmount
+      } and numberOfInstallments ${projectData.minInstallmentsOperator} ${
+        projectData.minInstallmentsAmount
+      } and numberOfInstallments ${projectData.maxInstallmentsOperator} ${
+        projectData.maxInstallmentsAmount
+      } and freqCap ${projectData.openLoanOperator} ${
+        projectData.openLoanAmount
+      }${
+        projectData.loanType === "asset"
+          ? ` and downPaymentPercentage ${projectData.downPaymentOperator} ${projectData.downPaymentPercentage}`
           : ""
       }`,
     };
@@ -278,7 +282,7 @@ export const deleteProject = createAsyncThunk(
 );
 
 const projectInitialState = {
-  formData: {
+  projectData: {
     name: "",
     projectDescription: "",
     country: "",
@@ -329,7 +333,6 @@ const projectInitialState = {
   },
   loading: false,
   error: null,
-  validationError: {},
 };
 
 const projectSlice = createSlice({
@@ -339,23 +342,17 @@ const projectSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
-    setFormData: (state, action) => {
+    setProjectData: (state, action) => {
       const { name, value } = action.payload;
-      state.formData[name] = value;
+      state.projectData[name] = value;
     },
-    resetFormData: (state) => {
-      state.formData = projectInitialState.formData;
+    resetProjectData: (state) => {
+      state.projectData = projectInitialState.projectData;
     },
     setError: (state, action) => {
       state.error = action.error.message;
     },
-    setValidationError: (state, action) => {
-      state.validationError = {
-        ...state.validationError,
-        ...action.payload,
-      };
-    },
-    handleChangeInFormData: (state, action) => {
+    handleChangeInProjectData: (state, action) => {
       const { name, value, checked, type } = action.payload;
       const positiveIntegerFields = [
         "interestRatePeriod",
@@ -379,7 +376,7 @@ const projectSlice = createSlice({
         updatedValue = value;
       }
 
-      state.formData[name] = updatedValue;
+      state.projectData[name] = updatedValue;
     },
   },
   extraReducers: (builder) => {
@@ -402,8 +399,8 @@ const projectSlice = createSlice({
           results[field].push({ operator, amount });
         }
         state.loading = false;
-        state.formData = {
-          ...state.formData,
+        state.projectData = {
+          ...state.projectData,
           ...action.payload,
           minLoanOperator: results.loanAmount?.[0]?.operator || "",
           minLoanAmount: results.loanAmount?.[0]?.amount || "",
@@ -437,7 +434,7 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.fulfilled, (state, action) => {
         state.loading = false;
-        state.formData = action.payload;
+        state.projectData = action.payload;
       })
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;
@@ -463,7 +460,7 @@ const projectSlice = createSlice({
       })
       .addCase(createProject.fulfilled, (state, action) => {
         state.loading = false;
-        state.formData = action.payload;
+        state.projectData = action.payload;
 
         // Update state with created project details if needed
       })
@@ -476,11 +473,10 @@ const projectSlice = createSlice({
 
 export const {
   setLoading,
-  setFormData,
-  resetFormData,
+  setProjectData,
+  resetProjectData,
   setError,
   parseCriteria,
-  setValidationError,
-  handleChangeInFormData,
+  handleChangeInProjectData,
 } = projectSlice.actions;
 export default projectSlice.reducer;
