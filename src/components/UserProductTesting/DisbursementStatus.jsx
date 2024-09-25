@@ -9,6 +9,7 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDisbursementInfo,
+  updateDisbursementData,
   submitDisbursement,
 } from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
@@ -27,6 +28,15 @@ const DisbursementStatus = () => {
 
   useEffect(() => {
     dispatch(getDisbursementInfo({ userID, navigate }));
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, userID]);
 
   useEffect(() => {
@@ -74,15 +84,27 @@ const DisbursementStatus = () => {
             labelName={"Loan Id"}
             inputName={"userloanID"}
             disabled={true}
-            inputValue={formData?.userloanID || ""}
-            onChange={handleChange}
+            inputValue={disbursementData?.userloanID || ""}
+            onChange={(e) => dispatch(updateDisbursementData(e))}
+            showError={validationError.loanType}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, loanType: false })
+              )
+            }
           />
           <InputNumber
             labelName={"Enter Amount"}
             inputName={"amount"}
-            inputValue={formData?.amount || ""}
+            inputValue={disbursementData?.amount || ""}
             onChange={handleChange}
             placeHolder={"5000"}
+            showError={validationError.loanType}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, loanType: false })
+              )
+            }
           />
         </div>
         <Button

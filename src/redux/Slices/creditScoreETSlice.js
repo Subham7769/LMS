@@ -70,8 +70,25 @@ export const fetchCreditScoreETName = createAsyncThunk(
 // Thunk for saving the Credit Score ET
 export const saveCreditScoreET = createAsyncThunk(
   "creditScoreET/saveCreditScoreET",
-  async (creditScoreET, { rejectWithValue, dispatch }) => {
+  async (creditScoreETId, { rejectWithValue, dispatch, getState }) => {
     const token = localStorage.getItem("authToken");
+
+    // Access current state of creditScoreET
+    const { creditScoreET } = getState().creditScoreET;
+    console.log(creditScoreETId);
+    // Structure the data as per the API requirement
+    const postData = {
+      operators: { ...creditScoreET.operators },
+      rules: creditScoreET.rules.map((rule) => ({
+        creditScoreEtTempId: creditScoreETId,
+        fieldType: rule.fieldType,
+        firstCreditScore: rule.firstCreditScore,
+        ruleName: rule.ruleName,
+        secondCreditScore: rule.secondCreditScore,
+        tenure: rule.tenure,
+      })),
+    };
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_UPDATE}`,
@@ -81,16 +98,63 @@ export const saveCreditScoreET = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(creditScoreET),
+          body: JSON.stringify(postData), // Send the structured postData
         }
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       // Optionally, refetch the data to update the store
-      dispatch(
-        fetchCreditScoreETInfo(creditScoreET.rules[0].creditScoreEtTempId)
+      dispatch(fetchCreditScoreETInfo(creditScoreETId));
+    } catch (error) {
+      console.log("Failed to update data:", error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Thunk for saving the Credit Score ET Add NewRange
+export const AddNewRange = createAsyncThunk(
+  "creditScoreET/AddNewRange",
+  async (creditScoreETId, { rejectWithValue, dispatch, getState }) => {
+    const token = localStorage.getItem("authToken");
+
+    // Access current state of creditScoreET
+    const { creditScoreET, newRangeData } = getState().creditScoreET;
+
+    // Structure the data as per the API requirement
+    const postData = {
+      operators: { ...creditScoreET.operators },
+      rules: [
+        ...newRangeData.rules.map((newRule) => ({
+          creditScoreEtTempId: creditScoreETId,
+          fieldType: newRule.fieldType,
+          firstCreditScore: newRule.firstCreditScore,
+          ruleName: newRule.ruleName,
+          secondCreditScore: newRule.secondCreditScore,
+          tenure: newRule.tenure,
+        })),
+      ],
+    };
+
+    try {
+      const response = await fetch(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/credit-score-eligible-tenure`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData), // Send the structured postData
+        }
       );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      // Optionally, refetch the data to update the store
+      dispatch(fetchCreditScoreETInfo(creditScoreETId));
     } catch (error) {
       console.error("Failed to update data:", error);
       return rejectWithValue(error.message);
@@ -135,7 +199,9 @@ export const updateCreditScoreETName = createAsyncThunk(
 // Thunk for creating a clone of the Credit Score ET
 export const createCloneCSET = createAsyncThunk(
   "creditScoreET/createCloneCSET",
-  async ({ creditScoreETId, cloneCSETName }, { rejectWithValue, dispatch }) => {
+  async ({ cloneCSETName }, { rejectWithValue, dispatch, getState }) => {
+    // Access current state of creditScoreET
+    const creditScoreETId = getState().creditScoreET.creditScoreETId;
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -150,17 +216,6 @@ export const createCloneCSET = createAsyncThunk(
           },
         }
       );
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        navigate("/login");
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error("Failed to clone Credit Score ET");
-      }
-
       const csetDetails = await response.json();
       dispatch(fetchCreditScoreEligibleTenureData());
       return csetDetails;
@@ -175,6 +230,7 @@ export const createCloneCSET = createAsyncThunk(
 export const handleDeleteCSET = createAsyncThunk(
   "creditScoreET/handleDeleteCSET",
   async (creditScoreETId, { rejectWithValue, dispatch }) => {
+    // Access current state of creditScoreET
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -202,6 +258,36 @@ export const handleDeleteCSET = createAsyncThunk(
   }
 );
 
+// Thunk for deleting a Credit Score ET Range by ruleName
+export const handleDeleteRange = createAsyncThunk(
+  "creditScoreET/handleDeleteCSET",
+  async ({ ruleName }, { rejectWithValue, dispatch, getState }) => {
+    const creditScoreETId = getState().creditScoreET.creditScoreETId;
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/credit-score-eligible-tenure/${creditScoreETId}/${ruleName}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete Credit Score ET");
+      }
+      // Optionally, refetch the data to update the store
+      dispatch(fetchCreditScoreETInfo(creditScoreETId));
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Initial state
 const creditScoreETInitialState = {
   creditScoreET: {
@@ -216,12 +302,31 @@ const creditScoreETInitialState = {
         creditScoreEtTempId: "",
         ruleName: "0",
         fieldType: "Employer",
+        tenureValue: "",
         tenure: [],
+        tags: [],
       },
     ],
-    tags: [],
-    tenure: "",
   },
+  newRangeData: {
+    operators: {
+      firstCreditScoreOperator: "",
+      secondCreditScoreOperator: "",
+    },
+    rules: [
+      {
+        firstCreditScore: "",
+        secondCreditScore: "",
+        creditScoreEtTempId: "",
+        ruleName: "0",
+        fieldType: "Employer",
+        tenureValue: "",
+        tenure: [],
+        tags: [],
+      },
+    ],
+  },
+  creditScoreETId: "",
   creditScoreETName: "",
   loading: false,
   error: null,
@@ -237,38 +342,110 @@ const creditScoreETSlice = createSlice({
     setCreditScoreETName: (state, action) => {
       state.creditScoreETName = action.payload;
     },
-    handleChangeDispatch: (state, action) => {
-      const { name, value } = action.payload;
+    updateCreditScoreETId: (state, action) => {
+      state.creditScoreETId = action.payload;
+      state.creditScoreET.rules = state.creditScoreET.rules.map((rule) => ({
+        ...rule,
+        creditScoreEtTempId: action.payload,
+      }));
+      state.newRangeData.rules[0].creditScoreEtTempId = action.payload;
+    },
+    updateCreditScoreET: (state, action) => {
+      const { name, value, ruleIndex } = action.payload;
+
+      // Check if the field being updated is inside `operators`
       const isOperator = state.creditScoreET.operators.hasOwnProperty(name);
-      const isRuleField = state.creditScoreET.rules[0].hasOwnProperty(name);
+
+      // Check if the field being updated is inside the specified rule
+      const isRuleField =
+        ruleIndex !== undefined &&
+        state.creditScoreET.rules[ruleIndex]?.hasOwnProperty(name);
 
       if (isOperator) {
+        // Update the `operators` part of the state
+        state.creditScoreET.operators[name] = value;
+        state.newRangeData.operators[name] = value;
+      } else if (isRuleField) {
+        // Update the specific field inside the specified rule
+        state.creditScoreET.rules[ruleIndex][name] = value;
+      }
+    },
+    updateNewRange: (state, action) => {
+      const { name, value } = action.payload;
+
+      // Check if the field being updated is inside `operators`
+      const isOperator = state.newRangeData.operators.hasOwnProperty(name);
+
+      // Check if the field being updated is inside the specified rule
+      const isRuleField = state.newRangeData.rules[0]?.hasOwnProperty(name);
+
+      if (isOperator) {
+        // Update the `operators` part of the state
+        state.newRangeData.operators[name] = value;
         state.creditScoreET.operators[name] = value;
       } else if (isRuleField) {
-        state.creditScoreET.rules[0][name] = value;
-      } else {
-        state.creditScoreET = { ...state.creditScoreET, ...action.payload };
+        // Update the specific field inside the specified rule
+        state.newRangeData.rules[0][name] = value;
       }
     },
     setTenure: (state, action) => {
-      state.creditScoreET = { ...state.creditScoreET, ...action.payload };
+      const { name, value, ruleIndex } = action.payload;
+      if (ruleIndex !== undefined && state.creditScoreET.rules[ruleIndex]) {
+        state.creditScoreET.rules[ruleIndex][name] = value;
+      }
+    },
+    setNewRangeTenure: (state, action) => {
+      const { name, value } = action.payload;
+      state.newRangeData.rules[0][name] = value;
     },
     addTenure: (state, action) => {
-      state.creditScoreET.rules[0].tenure.push(action.payload);
-      state.creditScoreET.tags.push({
-        index: state.creditScoreET.tags.length, // Use the current length of the tags array as the latest index
-        tenure: action.payload,
+      const { ruleIndex } = action.payload;
+      state.creditScoreET.rules[ruleIndex].tags.push({
+        index: state.creditScoreET.rules[ruleIndex].tags.length,
+        tenureValue: state.creditScoreET.rules[ruleIndex].tenureValue,
       });
-      state.creditScoreET.tenure = "";
+      state.creditScoreET.rules[ruleIndex].tenure.push(
+        state.creditScoreET.rules[ruleIndex].tenureValue
+      );
+      state.creditScoreET.rules[ruleIndex].tenureValue = "";
+    },
+    addNewRangeTenure: (state, action) => {
+      state.newRangeData.rules[0].tags.push({
+        index: state.newRangeData.rules[0].tags.length,
+        tenureValue: state.newRangeData.rules[0].tenureValue,
+      });
+      state.newRangeData.rules[0].tenure.push(
+        state.newRangeData.rules[0].tenureValue
+      );
+      state.newRangeData.rules[0].tenureValue = "";
     },
     deleteTenure: (state, action) => {
+      console.log(action.payload);
+      const { ruleIndex, tag } = action.payload;
+      const { index, tenureValue } = tag;
       // Delete the tenure from the rules array
-      state.creditScoreET.rules[0].tenure.splice(action.payload, 1);
-
-      // Delete the corresponding entry from the tags array based on the index
-      state.creditScoreET.tags = state.creditScoreET.tags
-        .filter((tag) => tag.index !== action.payload)
-        .map((tag, index) => ({ ...tag, index })); // Update the indices in tags to maintain consistency
+      state.creditScoreET.rules[ruleIndex].tags = state.creditScoreET.rules[
+        ruleIndex
+      ].tags.filter(
+        (tag) => tag.index !== index && tag.tenureValue !== tenureValue
+      );
+      state.creditScoreET.rules[ruleIndex].tenure = state.creditScoreET.rules[
+        ruleIndex
+      ].tenure.filter((tenure) => tenure !== tenureValue);
+    },
+    deleteNewRangeTenure: (state, action) => {
+      console.log(action.payload);
+      const { tag } = action.payload;
+      const { index, tenureValue } = tag;
+      // Delete the tenure from the rules array
+      state.newRangeData.rules[0].tags =
+        state.newRangeData.rules[0].tags.filter(
+          (tag) => tag.index !== index && tag.tenureValue !== tenureValue
+        );
+      state.newRangeData.rules[0].tenure =
+        state.newRangeData.rules[0].tenure.filter(
+          (tenure) => tenure !== tenureValue
+        );
     },
   },
   extraReducers: (builder) => {
@@ -278,30 +455,21 @@ const creditScoreETSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchCreditScoreETInfo.fulfilled, (state, action) => {
-        state.loading = false;
         if (action.payload.operators) {
           state.creditScoreET.operators = action.payload.operators;
-          state.creditScoreET.rules = action.payload.rules;
-          // state.creditScoreET.tags = action.payload.rules[0].tenure;
-          state.creditScoreET.tags = action.payload.rules.flatMap((item) =>
-            item.tenure.map((tenure, index) => ({
-              // ruleName: item.ruleName, // Include ruleName from each payload item
+          state.newRangeData.operators = action.payload.operators;
+          state.creditScoreET.rules = action.payload.rules.map((rule) => ({
+            ...rule, // Spread existing rule properties
+            tenureValue: "",
+            tags: rule.tenure.map((tenureValue, index) => ({
               index,
-              tenure: tenure, // Include each blockEmployersName as name
-            }))
-          );
-        } else {
-          state.creditScoreET = {
-            ...creditScoreETInitialState.creditScoreET,
-            rules: [
-              {
-                ...creditScoreETInitialState.creditScoreET.rules[0],
-                creditScoreEtTempId: action.meta.arg,
-              },
-            ],
-          };
-          // state.creditScoreET.operators = action.payload.operators || creditScoreETInitialState.creditScoreET.operators;
+              tenureValue, // Create an object with index and tenure
+            })),
+          }));
+        }else{
+          state.creditScoreET.rules=null;
         }
+        state.loading = false;
       })
       .addCase(fetchCreditScoreETInfo.rejected, (state, action) => {
         state.loading = false;
@@ -326,6 +494,31 @@ const creditScoreETSlice = createSlice({
         state.loading = false;
       })
       .addCase(saveCreditScoreET.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(AddNewRange.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(AddNewRange.fulfilled, (state) => {
+        state.loading = false;
+        state.newRangeData = {
+          operators: { ...state.creditScoreET.operators },
+          rules: [
+            {
+              firstCreditScore: "",
+              secondCreditScore: "",
+              creditScoreEtTempId: "",
+              ruleName: "0",
+              fieldType: "Employer",
+              tenureValue: "",
+              tenure: [],
+              tags: [],
+            },
+          ],
+        };
+      })
+      .addCase(AddNewRange.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -364,11 +557,16 @@ const creditScoreETSlice = createSlice({
 
 export const {
   setFormData,
+  updateCreditScoreETId,
   setCreditScoreETName,
-  handleChangeDispatch,
+  updateCreditScoreET,
+  updateNewRange,
+  setNewRangeTenure,
   addTenure,
+  addNewRangeTenure,
   setTenure,
   deleteTenure,
+  deleteNewRangeTenure,
 } = creditScoreETSlice.actions;
 
 export default creditScoreETSlice.reducer;

@@ -12,7 +12,7 @@ const CreditScoreETPage = () => {
     <>
       <StatContainer stats={CreditScoreETStats} />
       <ListTable
-        ListName={"Credit Score Eligible Tenure List"}
+        ListName={"Eligible Tenure List"}
         ListHeader={HeaderList}
         ListItem={CreditScoreETList}
         Searchable={true}

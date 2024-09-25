@@ -187,6 +187,43 @@ export const submitLoanConfiguration = createAsyncThunk(
   }
 );
 
+// Define the asyncThunk
+export const handleProceed = createAsyncThunk(
+  'loan/handleProceed',
+  async ({ transactionId, userID }, { rejectWithValue }) => {
+    const postData = {
+      transactionId: transactionId,
+      contractNumber: "test18monthTenure",
+    };
+    
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/${userID}/loans`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
+
+      if (response.status === 400) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);  // Handle error with a reject
+      }
+
+      const loanData = await response.json();
+      return loanData.loanId;  // Return loanId on success
+    } catch (error) {
+      return rejectWithValue(error.message);  // Handle fetch or network errors
+    }
+  }
+);
+
+
 // Async Thunk for getting disbursement info
 export const getDisbursementInfo = createAsyncThunk(
   "disbursement/getDisbursementInfo",
@@ -262,7 +299,6 @@ export const submitDisbursement = createAsyncThunk(
         }, 1000);
         return "Disbursement done Successfully !!";
       }
-      
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -314,7 +350,7 @@ export const getRepaymentInfo = createAsyncThunk(
 // AsyncThunk for handling repayment
 export const submitRepayment = createAsyncThunk(
   "repayment/submitRepayment",
-  async ({ userloanID, amount, userID,navigate }, { rejectWithValue }) => {
+  async ({ userloanID, amount, userID, navigate }, { rejectWithValue }) => {
     const RtransID = "MANUAL_" + userloanID;
     const RinstID = userloanID + "-1";
     const postData = {
@@ -457,20 +493,26 @@ export const updateEmploymentDetails = createAsyncThunk(
       // Dispatch to fetch updated family details after successful update
       await dispatch(getBorrowerDetails(userID));
 
-      return await response.json();  // Return updated data or any success message
+      return await response.json(); // Return updated data or any success message
     } catch (error) {
-      return rejectWithValue(error.message);  // Handle error in rejected case
+      return rejectWithValue(error.message); // Handle error in rejected case
     }
   }
 );
-
 
 const initialState = {
   eligibility: {},
   register: {},
   loanOptions: [],
+  loanConfigFields: {
+    loanType: "",
+    amount: "",
+  },
   loanConfigData: {},
-  disbursementData: {},
+  disbursementData: {
+    amount: "",
+    userloanID: "",
+  },
   repaymentData: [],
   loanIdOptions: [],
   familyDetails: {
@@ -491,6 +533,7 @@ const initialState = {
     employmentStatus: "",
     establishmentActivity: "",
   },
+  loanId:'',
   showModal: false,
   loading: false,
   error: null,
@@ -500,6 +543,14 @@ const userProductTestingSlice = createSlice({
   name: "userProductTesting",
   initialState,
   reducers: {
+    updateLoanConfigFieldsField: (state, action) => {
+      const { name, value } = action.payload;
+      state.loanConfigFields[name] = value; // Dynamically update the field in loanConfigFields
+    },
+    updateDisbursementData: (state, action) => {
+      const { name, value } = action.payload;
+      state.loanConfigFields[name] = value; // Dynamically update the field in loanConfigFields
+    },
     updateFamilyDetailsField: (state, action) => {
       const { name, value } = action.payload;
       state.familyDetails[name] = value;
@@ -566,6 +617,18 @@ const userProductTestingSlice = createSlice({
       .addCase(submitLoanConfiguration.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(handleProceed.pending, (state) => {
+        state.loading = true;
+        state.error = null;  // Clear any previous errors
+      })
+      .addCase(handleProceed.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanId = action.payload;  // Set loanId from the successful request
+      })
+      .addCase(handleProceed.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";  // Set error message
       })
       .addCase(getDisbursementInfo.pending, (state) => {
         state.loading = true;
@@ -650,11 +713,11 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(updateFamilyDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message; 
+        state.error = action.error.message;
       });
   },
 });
 
-export const { updateFamilyDetailsField, updateEmploymentDetailsField } =
+export const { updateLoanConfigFieldsField,updateDisbursementData, updateFamilyDetailsField, updateEmploymentDetailsField } =
   userProductTestingSlice.actions;
 export default userProductTestingSlice.reducer;

@@ -262,7 +262,7 @@ const ROLE_CREDITOR_ADMIN = [
   "TCL",
   "Project",
   "Product",
-  "Credit Score Eligible Tenure",
+  "Eligible Tenure",
   "DBR Config",
   "Blocked Employer",
   "Credit Score",
@@ -568,7 +568,7 @@ const sidebarSlice = createSlice({
           state.loading = false;
           const submenuItems = action.payload;
           const updatedMenus = state.menus.map((menu) => {
-            if (menu.title === "Credit Score Eligible Tenure") {
+            if (menu.title === "Eligible Tenure") {
               return { ...menu, submenuItems };
             }
             return menu;

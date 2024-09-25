@@ -37,7 +37,7 @@ const CreateNew = ({ placeholder, buttonName, createFunction, menuTitle, editabl
                 return fetchProdGroupData;
               case 'Recovery':
                 return fetchRecoveryData;
-              case 'Credit Score Eligible Tenure':
+              case 'Eligible Tenure':
                 return fetchCreditScoreEligibleTenureData;
             default:
                 return null;

@@ -261,6 +261,7 @@ const CreateNewProject = () => {
               inputName={"flatInterestRate"}
               inputValue={projectData?.flatInterestRate}
               onChange={handleChange}
+              inputValuePercentage={true}
               placeHolder={"6"}
               showError={validationError.flatInterestRate}
               onFocus={() =>
@@ -396,6 +397,7 @@ const CreateNewProject = () => {
               inputName={"rollOverInterestRate"}
               inputValue={projectData?.rollOverInterestRate}
               onChange={handleChange}
+              inputValuePercentage={true}
               placeHolder={"6"}
               showError={validationError.rollOverInterestRate}
               onFocus={() =>

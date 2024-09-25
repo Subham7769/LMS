@@ -87,7 +87,7 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "Credit Score Eligible Tenure",
+    title: "Eligible Tenure",
     href: "/credit-score-eligible-tenure",
     icon: "CalculatorIcon",
     current: false,

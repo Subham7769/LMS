@@ -19,15 +19,21 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchCreditScoreETInfo,
   fetchCreditScoreETName,
-  handleChangeDispatch,
+  setTenure,
   addTenure,
   deleteTenure,
+  updateCreditScoreET,
   saveCreditScoreET,
+  updateCreditScoreETId,
   updateCreditScoreETName,
+  AddNewRange,
+  updateNewRange,
+  setNewRangeTenure,
+  addNewRangeTenure,
+  deleteNewRangeTenure,
   createCloneCSET,
   handleDeleteCSET,
-  setFormData,
-  setTenure,
+  handleDeleteRange,
 } from "../../redux/Slices/creditScoreETSlice";
 import TagInput from "../TagInput/TagInput";
 
@@ -37,49 +43,20 @@ const CreditScoreET = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { creditScoreET, creditScoreETName, loading, error } = useSelector(
+  const { creditScoreET, newRangeData, creditScoreETName, loading, error } = useSelector(
     (state) => state.creditScoreET
   );
 
   useEffect(() => {
-    dispatch(fetchCreditScoreETInfo(creditScoreETId));
-    dispatch(fetchCreditScoreETName(creditScoreETId));
-    dispatch(
-      setFormData({ ...creditScoreET, creditScoreEtTempId: creditScoreETId })
-    );
+    dispatch(fetchCreditScoreETInfo(creditScoreETId))
+      .then(() => dispatch(fetchCreditScoreETName(creditScoreETId)))
+      .then(() => dispatch(updateCreditScoreETId(creditScoreETId)));
   }, [creditScoreETId, dispatch]);
+  
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(handleChangeDispatch({ name, value }));
-  };
-
-  const handleAddET = () => {
-    dispatch(addTenure(creditScoreET.tenure));
-    // console.log(tenure);
-  };
-
-  const handleSaveET = async () => {
-    await dispatch(saveCreditScoreET(creditScoreET)).unwrap();
+  const handleSaveET = async (creditScoreETId) => {
+    await dispatch(saveCreditScoreET(creditScoreETId)).unwrap();
     toast.custom((t) => <RowChanged t={t} toast={toast} />);
-  };
-
-  const handleDelete = ({ index }) => {
-    console.log(index);
-    dispatch(deleteTenure(index));
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Not Yet Deleted!"}
-        message={"Please click the save button to confirm removal of entry"}
-      />
-    ));
-  };
-
-  const handleChangeTenure = (e) => {
-    const { name, value } = e.target;
-    dispatch(setTenure({ [name]: value }));
   };
 
   const handleUpdateCSET = async (updatecsetName) => {
@@ -100,8 +77,9 @@ const CreditScoreET = () => {
   const onCreateClone = async (cloneCSETName) => {
     setIsModalOpen(false);
     const details = await dispatch(
-      createCloneCSET({ creditScoreETId, cloneCSETName })
+      createCloneCSET({ cloneCSETName })
     ).unwrap();
+
     toast.custom((t) => (
       <Passed
         t={t}
@@ -113,9 +91,54 @@ const CreditScoreET = () => {
     navigate("/credit-score-eligible-tenure/" + details.creditScoreEtTempId);
   };
 
-  const onDeleteCSET = async () => {
+  const onDeleteCSET = async (creditScoreETId) => {
     await dispatch(handleDeleteCSET(creditScoreETId)).unwrap();
     navigate("/credit-score-eligible-tenure");
+  };
+
+  const DeleteRange = async ({ ruleName }) => {
+    await dispatch(handleDeleteRange({ ruleName }))
+  };
+
+  const handleChange = (e, ruleIndex) => {
+    const { name, value } = e.target;
+    dispatch(updateCreditScoreET({ name, value, ruleIndex }));
+  };
+
+  const handleChangeTenure = (e, ruleIndex) => {
+    const { name, value } = e.target;
+    dispatch(setTenure({ name, value, ruleIndex }));
+  };
+
+  const handleDelete = (tag, ruleIndex) => {
+    dispatch(deleteTenure({ tag, ruleIndex }));  // Dispatch with ruleIndex and tag
+    toast.custom((t) => (
+      <Warning
+        t={t}
+        toast={toast}
+        title={"Not Yet Deleted!"}
+        message={"Please click the save button to confirm removal of entry"}
+      />
+    ));
+  };
+
+  const handleNewRangeDelete = (tag) => {
+    dispatch(deleteNewRangeTenure({ tag }));  // Dispatch with ruleIndex and tag
+  };
+
+  const handleAddNewRange = async (creditScoreETId) => {
+    await dispatch(AddNewRange(creditScoreETId)).unwrap();
+    toast.custom((t) => <RowChanged t={t} toast={toast} />);
+  };
+
+  const handleChangeRange = (e) => {
+    const { name, value } = e.target;
+    dispatch(updateNewRange({ name, value }));
+  };
+
+  const handleChangeNewRangeTenure = (e) => {
+    const { name, value } = e.target;
+    dispatch(setNewRangeTenure({ name, value }));
   };
 
   if (loading) {
@@ -125,7 +148,6 @@ const CreditScoreET = () => {
   if (error) {
     <p>Error: {error}</p>;
   }
-
   console.log(creditScoreET);
   return (
     <>
@@ -155,49 +177,108 @@ const CreditScoreET = () => {
           <InputSelect
             labelName={"Minimum Credit Score"}
             inputName={"firstCreditScoreOperator"}
-            inputValue={creditScoreET?.operators?.firstCreditScoreOperator}
+            inputValue={newRangeData?.operators?.firstCreditScoreOperator}
             inputOptions={operatorOptions}
-            onChange={handleChange}
+            onChange={handleChangeRange}
           />
           <InputNumber
             inputName={"firstCreditScore"}
-            inputValue={creditScoreET?.rules[0]?.firstCreditScore}
-            onChange={handleChange}
+            inputValue={newRangeData.rules?.[0]?.firstCreditScore}
+            onChange={handleChangeRange}
             placeHolder="0"
           />
           <InputSelect
             labelName={"Maximum Credit Score"}
             inputName={"secondCreditScoreOperator"}
-            inputValue={creditScoreET?.operators?.secondCreditScoreOperator}
+            inputValue={newRangeData?.operators?.secondCreditScoreOperator}
             inputOptions={operatorOptions}
-            onChange={handleChange}
+            onChange={handleChangeRange}
           />
           <InputNumber
             inputName={"secondCreditScore"}
-            inputValue={creditScoreET?.rules[0]?.secondCreditScore}
-            onChange={handleChange}
+            inputValue={newRangeData.rules?.[0]?.secondCreditScore}
+            onChange={handleChangeRange}
             placeHolder="2"
           />
         </div>
         <TagInput
-          formData={creditScoreET}
-          handleChange={handleChangeTenure}
-          inputTextName={"tenure"}
+          formData={newRangeData.rules[0]}
+          handleChange={handleChangeNewRangeTenure}
+          inputTextName={"tenureValue"}
           inputTextLabel={"Eligible Tenure"}
-          addTag={handleAddET}
-          deleteTag={handleDelete}
+          addTag={() => dispatch(addNewRangeTenure())}
+          deleteTag={(tag) => handleNewRangeDelete(tag)}
         />
-        <div className="text-right">
-          <button
-            type="button"
-            onClick={handleSaveET}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Save
-          </button>
+
+        <div className="flex gap-4 justify-end items-center">
+          <Button
+            buttonName={"Add Range"}
+            onClick={()=>handleAddNewRange(creditScoreETId)}
+            rectangle={true}
+          />
         </div>
+
       </ContainerTile>
+      {creditScoreET && <div className="flex flex-col gap-5 mt-5">
+        {
+          creditScoreET?.rules?.map((rule, index) => {
+            return (
+              <ContainerTile>
+                <div className="grid grid-cols-4 gap-2 mb-5 items-end">
+                  <InputSelect
+                    labelName={"Minimum Credit Score"}
+                    inputName={"firstCreditScoreOperator"}
+                    inputValue={creditScoreET?.operators?.firstCreditScoreOperator}
+                    inputOptions={operatorOptions}
+                    onChange={(e) => handleChange(e, index)}
+                  />
+                  <InputNumber
+                    inputName={"firstCreditScore"}
+                    inputValue={rule?.firstCreditScore}
+                    onChange={(e) => handleChange(e, index)}
+                    placeHolder="0"
+                  />
+                  <InputSelect
+                    labelName={"Maximum Credit Score"}
+                    inputName={"secondCreditScoreOperator"}
+                    inputValue={creditScoreET?.operators?.secondCreditScoreOperator}
+                    inputOptions={operatorOptions}
+                    onChange={(e) => handleChange(e, index)}
+                  />
+                  <InputNumber
+                    inputName={"secondCreditScore"}
+                    inputValue={rule?.secondCreditScore}
+                    onChange={(e) => handleChange(e, index)}
+                    placeHolder="2"
+                  />
+                </div>
+                <TagInput
+                  formData={rule}
+                  handleChange={(e) => handleChangeTenure(e, index)}
+                  inputTextName={"tenureValue"}
+                  inputTextLabel={"Eligible Tenure"}
+                  addTag={() => dispatch(addTenure({ ruleIndex: index }))}
+                  deleteTag={(tag) => handleDelete(tag, index)}
+                />
+
+                <div className="flex gap-4 justify-end items-center mt-1">
+                  <Button
+                    buttonName={"Save"}
+                    onClick={()=>handleSaveET(creditScoreETId)}
+                    rectangle={true}
+                  />
+                  <Button
+                    buttonIcon={TrashIcon}
+                    onClick={() => DeleteRange({ ruleName: rule.ruleName })}
+                    circle={true}
+                  />
+                </div>
+
+              </ContainerTile>
+            )
+          })
+        }
+      </div>}
     </>
   );
 };

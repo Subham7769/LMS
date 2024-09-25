@@ -46,7 +46,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   const CSETDataInfo = useSelector(
     (state) =>
       state.sidebar.menus.filter(
-        (item) => item.title === "Credit Score Eligible Tenure"
+        (item) => item.title === "Eligible Tenure"
       )[0].submenuItems
   );
   const ProjectDataInfo = useSelector(
@@ -305,6 +305,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             labelName="Processing Fee"
             inputName="fee"
             inputValue={productData?.fee}
+            inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="1%"
             showError={validationError.fee}

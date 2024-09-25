@@ -14,32 +14,48 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getUserLoanOptions,
   submitLoanConfiguration,
+  updateLoanConfigFieldsField,
+  handleProceed,
 } from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
 import { useNavigate } from "react-router-dom";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const LoanConfig = () => {
-  const [loanType, setLoanType] = useState([]);
-  const [amount, setAmount] = useState("");
   const [settings, setSettings] = useState({});
   const [sliderContainWidth, setSliderContainWidth] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
-  const { loanOptions, loanConfigData, showModal, loading, error } =
-    useSelector((state) => state.userProductTesting);
+  const { loanOptions, loanConfigFields, loanConfigData, showModal, loading, error } = useSelector((state) => state.userProductTesting);
+  const { validationError } = useSelector((state) => state.validation);
   const { userID } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const fields = ["loanType", "amount"];
+console.log(loanConfigFields)
 
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, userID]);
 
   useEffect(() => {
-    if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanType)) {
-      setAmount("");
+    if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType)) {
+      dispatch(updateLoanConfigFieldsField({ name:'amount', value:'' }));
     }
-  }, [loanType]);
+  }, [loanConfigFields.loanType]);
 
   useEffect(() => {
     if (loanConfigData) {
@@ -117,38 +133,16 @@ const LoanConfig = () => {
     );
   }
 
-  const handleProceed = async (transactionId, index) => {
-    const postData = {
-      transactionId: transactionId,
-      contractNumber: "test18monthTenure",
-    };
-    console.log(postData);
-    try {
-      const token = localStorage.getItem("authToken");
-      const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/" +
-          userID +
-          "/loans",
-        {
-          method: "PuT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-      if (data.status === 400) {
-        const errorData = await data.json();
-        console.log(errorData.message);
-        return; // Stop further execution
-      }
-      const loanId = await data.json();
-      console.log(loanId.loanId);
-      navigate("/customer-care/" + userID + "/loan-payment-history");
-    } catch (error) {
-      console.error(error);
-    }
+  const SubmitProceed = async (transactionId, index) => {
+    dispatch(handleProceed({ transactionId, userID }))
+      .unwrap() // Unwrap the result for error handling
+      .then((loanId) => {
+        console.log("Loan ID:", loanId);
+        navigate("/customer-care/" + userID + "/loan-payment-history");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleInstallmentModal = (data) => {
@@ -160,6 +154,19 @@ const LoanConfig = () => {
     setIsModalOpen(false);
     setSelectedInstallmentData(null); // Clear the data when closing the modal
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // Dispatch the action to update the state
+    dispatch(updateLoanConfigFieldsField({ name, value }));
+  };
+
+  const handleSubmit = () => {
+    const isValid = validateFormFields(fields, loanConfigFields, dispatch);
+    if (isValid) {
+      dispatch(submitLoanConfiguration({ loanType:loanConfigFields.loanType, amount:loanConfigFields.amount, userID }))
+    }
+  }
 
   const InfoRow = ({ label, value }) => (
     <div className="grid grid-cols-3 py-2">
@@ -197,16 +204,28 @@ const LoanConfig = () => {
             labelName={"Loan Type"}
             inputName={"loanType"}
             inputOptions={loanOptions}
-            inputValue={loanType}
-            onChange={(e) => setLoanType(e.target.value)}
+            inputValue={loanConfigFields.loanType}
+            onChange={handleChange}
+            showError={validationError.loanType}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, loanType: false })
+              )
+            }
           />
-          {["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanType) && (
+          {["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType) && (
             <InputNumber
               labelName={"Amount"}
               inputName={"amount"}
-              inputValue={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              inputValue={loanConfigFields.amount}
+              onChange={handleChange}
               placeHolder={"5000"}
+              showError={validationError?.amount}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, amount: false })
+                )
+              }
             />
           )}
           <div>
@@ -214,9 +233,7 @@ const LoanConfig = () => {
               buttonIcon={CheckCircleIcon}
               rectangle={true}
               buttonName={"Submit"}
-              onClick={() =>
-                dispatch(submitLoanConfiguration({ loanType, amount, userID }))
-              }
+              onClick={handleSubmit}
             />
           </div>
         </div>
@@ -437,7 +454,7 @@ const LoanConfig = () => {
                             <div
                               className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
                               onClick={() =>
-                                handleProceed(ci.transactionId, index)
+                                SubmitProceed(ci.transactionId, index)
                               }
                             >
                               Proceed
