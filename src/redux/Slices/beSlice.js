@@ -1,7 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchBEData } from "./sidebarSlice";
+import { HeaderList, BlockedEmployerList } from "../../data/BlockEmployerData";
 
 const initialState = {
+  beStatsData: {
+    HeaderList,
+    BlockedEmployerList,
+  },
   blockEmployer: {
     itemName: "",
     cloneSuccess: null,
@@ -16,6 +21,18 @@ const initialState = {
   loading: false, // Loading state
   error: null, // Error messages
 };
+
+export const fetchList = createAsyncThunk(
+  "blockedEmployer/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Blocked Employer"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
 
 const getToken = () => localStorage.getItem("authToken");
 
@@ -254,6 +271,32 @@ const beSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          employerId: newListItem.name,
+          href: newListItem.href,
+          blockedOn: BlockedEmployerList[index]?.blockedOn || "14/09/2022",
+          reasonForBlocking:
+            BlockedEmployerList[index]?.reasonForBlocking ||
+            "Fraudulent Activities",
+          totalBlockedDuration:
+            BlockedEmployerList[index]?.totalBlockedDuration || "8 months",
+          status: BlockedEmployerList[index]?.status || "Inactive",
+        }));
+
+        // Assign the updatedList to BlockedEmployerList
+        state.beStatsData.BlockedEmployerList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       // Fetch Blocked Employer Data
       .addCase(fetchBlockedEmployerData.pending, (state) => {
         state.loading = true;

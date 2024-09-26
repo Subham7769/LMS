@@ -36,7 +36,7 @@ export const HeaderList = [
   "Status",
 ];
 
-export const ProductList = [
+export const DebtBurdenList = [
   {
     caseId: "Debt Plan A",
     openedOn: "01/02/2023",

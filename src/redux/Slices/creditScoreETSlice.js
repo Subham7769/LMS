@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
+import { HeaderList, CreditScoreETList } from "../../data/CreditScoreETData";
 
 // Thunks for fetching Credit Score ET Info
 export const fetchCreditScoreETInfo = createAsyncThunk(
@@ -288,6 +289,18 @@ export const handleDeleteRange = createAsyncThunk(
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "creditScoreET/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Eligible Tenure"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 // Initial state
 const creditScoreETInitialState = {
   creditScoreET: {
@@ -330,6 +343,10 @@ const creditScoreETInitialState = {
   creditScoreETName: "",
   loading: false,
   error: null,
+  creditScoreETData: {
+    HeaderList,
+    CreditScoreETList,
+  },
 };
 
 const creditScoreETSlice = createSlice({
@@ -450,6 +467,30 @@ const creditScoreETSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: CreditScoreETList[index]?.createdOn || "14/09/2022",
+          openLoans: CreditScoreETList[index]?.openLoans || "1490",
+          totalDisbursedPrincipal:
+            CreditScoreETList[index]?.totalDisbursedPrincipal || "$750M",
+          status: CreditScoreETList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to CreditScoreETList
+        state.creditScoreETData.CreditScoreETList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchCreditScoreETInfo.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -466,8 +507,8 @@ const creditScoreETSlice = createSlice({
               tenureValue, // Create an object with index and tenure
             })),
           }));
-        }else{
-          state.creditScoreET.rules=null;
+        } else {
+          state.creditScoreET.rules = null;
         }
         state.loading = false;
       })

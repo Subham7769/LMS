@@ -1,6 +1,7 @@
 // redux/slices/recoverySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+import { RecoveryHeaderList, RecoveryList } from "../../data/RecoveryData";
 
 // Define async thunks for fetching data and performing actions
 export const fetchName = createAsyncThunk(
@@ -181,8 +182,53 @@ export const updateRecoveryName = createAsyncThunk(
   }
 );
 
+export const updateRec = createAsyncThunk(
+  "recovery/updateRecoveryName",
+  async ({ recoveryEquationTempId, newName }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${
+      import.meta.env.VITE_RECOVERY_NAME_UPDATE
+    }${recoveryEquationTempId}/name/${newName}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.clear();
+        return rejectWithValue("Unauthorized");
+      } else if (response.ok) {
+        return newName;
+      } else {
+        return rejectWithValue("Failed to update name");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchList = createAsyncThunk(
+  "recovery/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find((menu) => menu.title === "Recovery");
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 const recoveryInitialState = {
   itemName: "",
+  recoveryStatsData: {
+    RecoveryHeaderList,
+    RecoveryList,
+  },
   data: {
     id: "",
     recoveryEquationId: "",
@@ -229,6 +275,28 @@ const recoverySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than TCLList, only map action.payload
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          openedOn: RecoveryList[index]?.openedOn || "14/09/2022",
+          recoveredAmount: RecoveryList[index]?.recoveredAmount || "$50M",
+          outstandingAmount: RecoveryList[index]?.outstandingAmount || "$20M",
+          status: RecoveryList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to RecoveryList
+        state.recoveryStatsData.RecoveryList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
       })

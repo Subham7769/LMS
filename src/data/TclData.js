@@ -39,7 +39,7 @@ export const HeaderList = [
   "Status",
 ];
 
-export const ProductList = [
+export const TCLList = [
   {
     name: "TCL 1",
     createdOn: "07/06/2021",
@@ -106,5 +106,3 @@ export const TclViewListHeaderList = [
   "Total Rows",
   "Actions",
 ];
-
-

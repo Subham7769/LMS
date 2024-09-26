@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { convertDate } from "../../utils/convertDate";
 import { fetchTCLData } from "../../redux/Slices/sidebarSlice";
+import { HeaderList, TCLList } from "../../data/TclData";
 
 // Define async thunks for fetching data and performing actions
 export const fetchName = createAsyncThunk(
@@ -226,7 +227,21 @@ export const deleteTCLFile = createAsyncThunk(
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "tcl/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find((menu) => menu.title === "TCL");
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 const tclInitialState = {
+  tclStatsData: {
+    HeaderList,
+    TCLList,
+  },
   itemName: "",
   tableData: [],
   data: [],
@@ -266,6 +281,30 @@ const tclSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than TCLList, only map action.payload
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: TCLList[index]?.createdOn || "14/09/2022",
+          openLoans: TCLList[index]?.openLoans || "1490",
+          totalDisbursedPrincipal:
+            TCLList[index]?.totalDisbursedPrincipal || "$750M",
+          status: TCLList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to TCLList
+        state.tclStatsData.TCLList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
       })

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { HeaderList, RulePolicyList } from "../../data/RulePolicyData";
 
 // Async thunk to fetch data
 export const fetchRulePolicyData = createAsyncThunk(
@@ -602,6 +603,18 @@ export const deleteRulePolicy = createAsyncThunk(
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "rulePolicy/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Rule Policy"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 const initialState = {
   itemName: "",
   cityData: [],
@@ -695,6 +708,10 @@ const initialState = {
   sortConfig: { key: "", direction: "asc" },
   loading: false,
   error: null,
+  rulePolicyStatsData: {
+    HeaderList,
+    RulePolicyList,
+  },
 };
 
 // RulePolicy slice
@@ -817,6 +834,30 @@ const rulePolicySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: RulePolicyList[index]?.createdOn || "14/09/2022",
+          openLoans: RulePolicyList[index]?.openLoans || "2367",
+          totalDisbursedPrincipal:
+            RulePolicyList[index]?.totalDisbursedPrincipal || "$234M",
+          status: RulePolicyList[index]?.status || "Inactive",
+        }));
+
+        // Assign the updatedList to RulePolicyList
+        state.rulePolicyStatsData.RulePolicyList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchRulePolicyData.pending, (state) => {
         state.loading = true;
       })

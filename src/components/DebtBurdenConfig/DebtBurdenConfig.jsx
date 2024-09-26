@@ -13,7 +13,8 @@ import {
   setCurrentPage,
   deleteRule,
   updateOperator,
-  resetFormData,
+  updateDbrRules,
+  resetdbrData,
   updateRule,
 } from "../../redux/Slices/dbrSlice";
 import {
@@ -50,16 +51,10 @@ const DebtBurdenConfig = () => {
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
 
   // Redux state selectors
-  const rules = useSelector((state) => state.dbrConfig.rules);
-  const operators = useSelector((state) => state.dbrConfig.operators);
-  const name = useSelector((state) => state.dbrConfig.name);
-  const loading = useSelector((state) => state.dbrConfig.loading);
-  const currentPage = useSelector((state) => state.dbrConfig.currentPage);
-  const isModalOpen = useSelector((state) => state.dbrConfig.isModalOpen);
-  const formData = useSelector((state) => state.dbrConfig.formData);
+  const { name, loading, currentPage, isModalOpen, dbrData, allDBRData } =
+    useSelector((state) => state.dbrConfig);
 
   const [editingIndex, setEditingIndex] = useState(null);
-  const [dbrRules, setDbrRules] = useState([]);
   const itemsPerPage = 5;
 
   const fields = [
@@ -86,12 +81,6 @@ const DebtBurdenConfig = () => {
       dispatch(clearValidationError());
     };
   }, [dbcTempId, dispatch]);
-
-  useEffect(() => {
-    if (rules.length != 0) {
-      setDbrRules(rules);
-    }
-  }, [rules]);
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -122,7 +111,7 @@ const DebtBurdenConfig = () => {
 
   const handleItemDelete = (index) => {
     const authToken = localStorage.getItem("authToken");
-    const ruleToDelete = rules[indexOfFirstItem + index];
+    const ruleToDelete = allDBRData?.dbrRules[indexOfFirstItem + index];
 
     if (!ruleToDelete) {
       console.error("No rule found to delete at this index.");
@@ -141,6 +130,7 @@ const DebtBurdenConfig = () => {
         console.error("Error deleting rule:", response.error);
       } else {
         console.log("Rule deleted successfully.");
+        dispatch(fetchRules(dbcTempId));
         toast.custom((t) => (
           <Passed
             t={t}
@@ -158,7 +148,7 @@ const DebtBurdenConfig = () => {
     if (editingIndex !== null) {
       const isValid = validateFormFields(
         fields,
-        dbrRules[absoluteIndex],
+        allDBRData.dbrRules[absoluteIndex],
         dispatch
       );
       if (isValid) {
@@ -213,7 +203,8 @@ const DebtBurdenConfig = () => {
   };
 
   const addNewRule = () => {
-    dispatch(addRule({ operators, formData, dbcTempId }))
+    const operators = allDBRData?.operators;
+    dispatch(addRule({ operators, dbrData, dbcTempId }))
       .unwrap()
       .then((response) => {
         console.log("Rule added successfully:", response);
@@ -225,7 +216,7 @@ const DebtBurdenConfig = () => {
             message={"The item was added successfully"}
           />
         ));
-        dispatch(resetFormData());
+        dispatch(resetdbrData());
       })
       .catch((error) => {
         console.error("Failed to add rule:", error);
@@ -250,11 +241,12 @@ const DebtBurdenConfig = () => {
   };
 
   const handleTableChange = () => {
-    dispatch(updateRule({ dbrRules, operators, dbcTempId }))
+    dispatch(updateRule(allDBRData))
       .unwrap()
       .then((updatedRules) => {
         // Log the successful update or perform any other action with the updated rules
         console.log("Update successful:", updatedRules);
+        dispatch(fetchRules(dbcTempId));
         toast.custom((t) => (
           <Passed
             t={t}
@@ -273,9 +265,10 @@ const DebtBurdenConfig = () => {
 
   const handleChangeDBC = (index, field, value) => {
     const absoluteIndex = indexOfFirstItem + index;
-    const newRules = JSON.parse(JSON.stringify(rules));
+    const newRules = JSON.parse(JSON.stringify(allDBRData?.dbrRules));
     newRules[absoluteIndex][field] = value;
-    setDbrRules(newRules);
+    console.log(newRules);
+    dispatch(updateDbrRules(newRules));
   };
 
   function informUser() {
@@ -311,7 +304,7 @@ const DebtBurdenConfig = () => {
     return <FaSort className="ml-2" title="Sort Data" />;
   };
 
-  const sortedItems = [...dbrRules].sort((a, b) => {
+  const sortedItems = [...allDBRData.dbrRules].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -327,11 +320,13 @@ const DebtBurdenConfig = () => {
   const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
 
   // Determine total number of pages
-  const totalPages = Math.ceil(dbrRules.length / itemsPerPage);
+  const totalPages = Math.ceil(allDBRData.dbrRules.length / itemsPerPage);
 
   if (loading) {
     return <LoadingState />;
   }
+
+  // console.log(dbrData);
 
   return (
     <>
@@ -358,7 +353,9 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputSelect
               labelName="Min Net"
-              inputValue={operators?.firstNetIncomeBracketInSARuleOperator}
+              inputValue={
+                allDBRData?.operators?.firstNetIncomeBracketInSARuleOperator
+              }
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="firstNetIncomeBracketInSARuleOperator"
@@ -367,7 +364,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputNumber
               inputName={`startNetIncomeBracketInSARule`}
-              inputValue={formData?.startNetIncomeBracketInSARule}
+              inputValue={dbrData?.startNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="10000"
             />
@@ -375,7 +372,9 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputSelect
               labelName="Max Net"
-              inputValue={operators?.secondNetIncomeBracketInSARuleOperator}
+              inputValue={
+                allDBRData?.operators?.secondNetIncomeBracketInSARuleOperator
+              }
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="secondNetIncomeBracketInSARuleOperator"
@@ -384,7 +383,7 @@ const DebtBurdenConfig = () => {
           <div className="relative">
             <InputNumber
               inputName={`endNetIncomeBracketInSARule`}
-              inputValue={formData?.endNetIncomeBracketInSARule}
+              inputValue={dbrData?.endNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="20000"
             />
@@ -393,7 +392,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="Product Level"
               inputName={`productLevel`}
-              inputValue={formData?.productLevel}
+              inputValue={dbrData?.productLevel}
               onChange={handleInputChange}
               placeHolder="33%"
             />
@@ -402,7 +401,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="Consumer DBR"
               inputName={`consumerDBR`}
-              inputValue={formData?.consumerDBR}
+              inputValue={dbrData?.consumerDBR}
               onChange={handleInputChange}
               placeHolder="65%"
             />
@@ -411,7 +410,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="GDBR (Without MTG)"
               inputName={`gdbrWithoutMTG`}
-              inputValue={formData?.gdbrWithoutMTG}
+              inputValue={dbrData?.gdbrWithoutMTG}
               onChange={handleInputChange}
               placeHolder="65%"
             />
@@ -420,7 +419,7 @@ const DebtBurdenConfig = () => {
             <InputSelect
               labelName="Employer Retired"
               inputName={`employerRetired`}
-              inputValue={formData?.employerRetired}
+              inputValue={dbrData?.employerRetired}
               onChange={handleInputChange}
               inputOptions={empOptions}
             />
@@ -429,7 +428,7 @@ const DebtBurdenConfig = () => {
             <InputText
               labelName="GDBR (including MTG)"
               inputName={`gdbrWithMTG`}
-              inputValue={formData?.gdbrWithMTG}
+              inputValue={dbrData?.gdbrWithMTG}
               onChange={handleInputChange}
               placeHolder="65%"
             />

@@ -79,16 +79,4 @@ const WithErrorBoundary = (props) => {
 
 export default WithErrorBoundary;
 
-// Adding PropTypes validation
-InputText.propTypes = {
-  labelName: PropTypes.string.isRequired,
-  inputName: PropTypes.string.isRequired,
-  inputValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
-  onChange: PropTypes.func.isRequired,
-  placeHolder: PropTypes.string,
-  disabled: PropTypes.bool,
-  readOnly: PropTypes.bool,
-};
-
 // export default InputText;

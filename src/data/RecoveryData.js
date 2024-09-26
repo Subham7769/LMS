@@ -1,7 +1,4 @@
-import {
-  CurrencyDollarIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
+import { CurrencyDollarIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { ArrowDownCircleIcon } from "@heroicons/react/20/solid";
 
 export const RecoveryStats = [
@@ -39,7 +36,7 @@ export const RecoveryHeaderList = [
   "Status",
 ];
 
-export const RecoveryProductList = [
+export const RecoveryList = [
   {
     caseId: "Recovery Plan A",
     openedOn: "10/01/2022",
@@ -65,7 +62,6 @@ export const RecoveryProductList = [
     href: "/recovery/3",
   },
 ];
-
 
 export const RecoveryViewListData = [
   {

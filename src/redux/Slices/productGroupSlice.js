@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { HeaderList, ProductGroupList } from "../../data/GroupData";
 
 export const fetchPGroups = createAsyncThunk(
   "productGroup/fetchPGroups",
@@ -61,7 +62,7 @@ export const fetchLoanProducts = createAsyncThunk(
 );
 
 export const updateProductGroup = createAsyncThunk(
-  "creditScoreET/updateProductGroup",
+  "productGroup/updateProductGroup",
   async (productGroupData, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("authToken");
     const { tags, ...formDataWithoutTags } = productGroupData;
@@ -85,6 +86,18 @@ export const updateProductGroup = createAsyncThunk(
       console.error("Failed to update data:", error);
       return rejectWithValue(error.message);
     }
+  }
+);
+
+export const fetchList = createAsyncThunk(
+  "productGroup/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Product Group"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
   }
 );
 
@@ -124,6 +137,10 @@ const initialState = {
   productTypeOptions: [],
   loading: false,
   error: null,
+  productGroupStatsData: {
+    HeaderList,
+    ProductGroupList,
+  },
 };
 
 const productGroupSlice = createSlice({
@@ -198,6 +215,30 @@ const productGroupSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: ProductGroupList[index]?.createdOn || "14/09/2022",
+          openLoans: ProductGroupList[index]?.openLoans || "2367",
+          totalDisbursedPrincipal:
+            ProductGroupList[index]?.totalDisbursedPrincipal || "$234M",
+          status: ProductGroupList[index]?.status || "Inactive",
+        }));
+
+        // Assign the updatedList to ProductGroupList
+        state.productGroupStatsData.ProductGroupList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchPGroups.pending, (state) => {
         state.loading = true;
         state.error = null;

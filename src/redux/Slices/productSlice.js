@@ -1,5 +1,6 @@
 // redux/slices/productSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { HeaderList, ProductList } from "../../data/ProductData";
 
 // Define async thunks for fetching data and performing actions
 export const fetchData = createAsyncThunk(
@@ -165,7 +166,21 @@ export const createProductData = createAsyncThunk(
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "product/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find((menu) => menu.title === "Product");
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 const productInitialState = {
+  productStatsData: {
+    HeaderList,
+    ProductList,
+  },
   productData: {
     loanProductId: "",
     blockEmployersTempId: "",
@@ -232,6 +247,30 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: ProductList[index]?.createdOn || "14/09/2022",
+          openLoans: ProductList[index]?.openLoans || "1490",
+          totalDisbursedPrincipal:
+            ProductList[index]?.totalDisbursedPrincipal || "$750M",
+          status: ProductList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to ProductList
+        state.productStatsData.ProductList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
       })

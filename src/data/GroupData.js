@@ -39,7 +39,7 @@ export const HeaderList = [
   "Status",
 ];
 
-export const ProductList = [
+export const ProductGroupList = [
   {
     name: "Group 1",
     createdOn: "07/06/2021",

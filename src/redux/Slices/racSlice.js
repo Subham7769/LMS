@@ -1,5 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import { HeaderList, RACList } from "../../data/RacData";
+
+export const fetchList = createAsyncThunk(
+  "rac/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find((menu) => menu.title === "RAC");
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
 
 export const racSlice = createSlice({
   name: "rac",
@@ -17,6 +28,10 @@ export const racSlice = createSlice({
     },
     loading: false,
     error: null,
+    racStatsData: {
+      HeaderList,
+      RACList,
+    },
   },
   reducers: {
     // Create a new tab
@@ -37,7 +52,9 @@ export const racSlice = createSlice({
 
     // Duplicate a tab
     duplicateTab: (state, action) => {
-      const tabToDuplicate = state.tabs.find((tab) => tab.id === action.payload);
+      const tabToDuplicate = state.tabs.find(
+        (tab) => tab.id === action.payload
+      );
       if (tabToDuplicate) {
         const newTab = {
           ...tabToDuplicate,
@@ -90,6 +107,32 @@ export const racSlice = createSlice({
     updateGlobalConfig: (state, action) => {
       state.config = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          caseId: newListItem.name,
+          href: newListItem.href,
+          createdOn: RACList[index]?.createdOn || "14/09/2022",
+          approved: RACList[index]?.approved || "40%",
+          totalProcessed: RACList[index]?.totalProcessed || "2367",
+          status: RACList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to RACList
+        state.racStatsData.RACList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 

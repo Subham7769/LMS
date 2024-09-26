@@ -187,7 +187,6 @@ const BlockedEmployer = () => {
   if (loading) {
     return <LoadingState />;
   }
-  console.log(blockEmployer);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />

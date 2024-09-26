@@ -1,60 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-const initialState = {
-  creditScoreData: {
-    aweightage: "",
-    bweightage: "",
-    creditScoreEqTempId: "",
-    cweightage: "",
-    dweightage: "",
-    eweightage: "",
-    fweightage: "",
-    residentsCreditScore: "",
-    expatriatesCreditScore: "",
-    rentStatusScore: "",
-    ownStatusScore: "",
-    marriedStatusScore: "",
-    singleStatusScore: "",
-    divorcedStatusScore: "",
-    widowedStatusScore: "",
-    separatedStatusScore: "",
-    unknownStatusScore: "",
-    dependentsRules: {
-      operators: {
-        firstDependentsOperator: "",
-        secondDependentsOperator: "",
-      },
-      rules: [
-        {
-          ruleName: "1",
-          fieldType: "Employer",
-          creditScoreEqTempId: "",
-          firstDependent: "",
-          secondDependent: "",
-          value: "",
-        },
-        {
-          ruleName: "2",
-          fieldType: "Employer",
-          creditScoreEqTempId: "",
-          firstDependent: "",
-          secondDependent: "",
-          value: "",
-        },
-        {
-          ruleName: "3",
-          fieldType: "Employer",
-          creditScoreEqTempId: "",
-          firstDependent: "",
-          secondDependent: "1",
-          value: "",
-        },
-      ],
-    },
-  },
-  error: null,
-  loading: false,
-};
+import { HeaderList, CreditScoreEqList } from "../../data/CreditScoreEqData";
 
 export const fetchCreditScore = createAsyncThunk(
   "creditScore/fetchCreditScore",
@@ -202,6 +147,78 @@ export const deleteCreditScore = createAsyncThunk(
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "creditScore/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Credit Score"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
+const initialState = {
+  creditScoreStatsData: {
+    HeaderList,
+    CreditScoreEqList,
+  },
+  creditScoreData: {
+    aweightage: "",
+    bweightage: "",
+    creditScoreEqTempId: "",
+    cweightage: "",
+    dweightage: "",
+    eweightage: "",
+    fweightage: "",
+    residentsCreditScore: "",
+    expatriatesCreditScore: "",
+    rentStatusScore: "",
+    ownStatusScore: "",
+    marriedStatusScore: "",
+    singleStatusScore: "",
+    divorcedStatusScore: "",
+    widowedStatusScore: "",
+    separatedStatusScore: "",
+    unknownStatusScore: "",
+    dependentsRules: {
+      operators: {
+        firstDependentsOperator: "",
+        secondDependentsOperator: "",
+      },
+      rules: [
+        {
+          ruleName: "1",
+          fieldType: "Employer",
+          creditScoreEqTempId: "",
+          firstDependent: "",
+          secondDependent: "",
+          value: "",
+        },
+        {
+          ruleName: "2",
+          fieldType: "Employer",
+          creditScoreEqTempId: "",
+          firstDependent: "",
+          secondDependent: "",
+          value: "",
+        },
+        {
+          ruleName: "3",
+          fieldType: "Employer",
+          creditScoreEqTempId: "",
+          firstDependent: "",
+          secondDependent: "1",
+          value: "",
+        },
+      ],
+    },
+  },
+  error: null,
+  loading: false,
+};
+
 const creditScoreSlice = createSlice({
   name: "creditScore",
   initialState,
@@ -229,6 +246,30 @@ const creditScoreSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: CreditScoreEqList[index]?.createdOn || "14/09/2022",
+          openLoans: CreditScoreEqList[index]?.openLoans || "2367",
+          totalDisbursedPrincipal:
+            CreditScoreEqList[index]?.totalDisbursedPrincipal || "$234M",
+          status: CreditScoreEqList[index]?.status || "Inactive",
+        }));
+
+        // Assign the updatedList to CreditScoreEqList
+        state.creditScoreStatsData.CreditScoreEqList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchCreditScore.pending, (state) => {
         state.loading = true;
       })

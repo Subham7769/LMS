@@ -28,8 +28,13 @@ import {
   resetProjectData,
   handleChangeInProjectData,
   createProject,
-  setValidationError,
 } from "../../redux/Slices/projectSlice";
+
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const CreateNewProject = () => {
   const navigate = useNavigate();
@@ -37,9 +42,40 @@ const CreateNewProject = () => {
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
   const dispatch = useDispatch();
-  const { projectData, loading, error, validationError } = useSelector(
-    (state) => state.project
-  );
+  const { projectData, loading, error } = useSelector((state) => state.project);
+
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = [
+    "projectDescription",
+    "country",
+    "location",
+    "currencyName",
+    "loanType",
+    "flatInterestRate",
+    "interestPeriodUnit",
+    "interestRatePeriod",
+    "downRepaymentGracePeriod",
+    "emiRepaymentGracePeriod",
+    "loanGracePeriod",
+    "rollOverGracePeriod",
+    "rollOverInterestRate",
+    "lateEmiPenaltyFactor",
+    "maxPaymetAttemps",
+    "startDate",
+    "endDate",
+    "lateRepaymentPenalty",
+    "earlyRepaymentDiscount",
+    "rollOverPenaltyFactor",
+    "minLoanAmount",
+    "maxLoanAmount",
+    "minInstallmentsAmount",
+    "maxInstallmentsAmount",
+    "tclAmount",
+    "openLoanAmount",
+    "serviceFee",
+    "managementFee",
+    "vatFee",
+  ];
 
   useEffect(() => {
     setFilteredLocations(locationOptions[projectData.country] || []);
@@ -50,6 +86,16 @@ const CreateNewProject = () => {
       dispatch(resetProjectData());
       dispatch(setProjectData({ name: "name", value: projectName }));
     }
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, projectName]);
 
   console.log(projectData);
@@ -59,61 +105,10 @@ const CreateNewProject = () => {
     dispatch(handleChangeInProjectData({ name, value, checked, type })); // Passing only the serializable data
   };
 
-  const validateFields = () => {
-    let isValid = true;
-    const fields = [
-      "projectDescription",
-      "country",
-      "location",
-      "currencyName",
-      "loanType",
-      "flatInterestRate",
-      "interestPeriodUnit",
-      "interestRatePeriod",
-      "downRepaymentGracePeriod",
-      "emiRepaymentGracePeriod",
-      "loanGracePeriod",
-      "rollOverGracePeriod",
-      "rollOverInterestRate",
-      "lateEmiPenaltyFactor",
-      "maxPaymetAttemps",
-      "startDate",
-      "endDate",
-      "lateRepaymentPenalty",
-      "earlyRepaymentDiscount",
-      "rollOverPenaltyFactor",
-      "minLoanAmount",
-      "maxLoanAmount",
-      "minInstallmentsAmount",
-      "maxInstallmentsAmount",
-      "tclAmount",
-      "openLoanAmount",
-      "serviceFee",
-      "managementFee",
-      "vatFee",
-    ];
-
-    // Create an object to hold validation errors
-    const errors = {};
-
-    fields.forEach((field) => {
-      if (!projectData[field] || projectData[field] === "") {
-        errors[field] = true;
-        isValid = false;
-      }
-    });
-
-    // Dispatch the errors if there are any
-    if (Object.keys(errors).length > 0) {
-      dispatch(setValidationError(errors));
-    }
-
-    return isValid;
-  };
-
   const createNewProject = async (event) => {
     event.preventDefault();
-    if (validateFields()) {
+    const isValid = validateFormFields(fields, projectData, dispatch);
+    if (isValid) {
       try {
         const Details = await dispatch(
           createProject({ projectData, clientIdsString })

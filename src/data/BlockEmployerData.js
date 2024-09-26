@@ -28,7 +28,7 @@ export const BlockedEmployerStats = [
   },
 ];
 
-export const BlockedEmployerHeaderList = [
+export const HeaderList = [
   "Employer ID",
   "Blocked On",
   "Reason for Blocking",

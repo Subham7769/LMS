@@ -1,6 +1,7 @@
 // redux/slices/projectSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+import { HeaderList, ProjectList } from "../../data/ProjectData";
 
 const formattedDate = (date) => {
   return date.substring(0, 10);
@@ -281,7 +282,23 @@ export const deleteProject = createAsyncThunk(
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "project/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const projectMenu = sideBarState?.menus.find(
+      (menu) => menu.title === "Project"
+    );
+    const submenuItems = projectMenu ? projectMenu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 const projectInitialState = {
+  projectStatsData: {
+    HeaderList,
+    ProjectList,
+  },
   projectData: {
     name: "",
     projectDescription: "",
@@ -381,6 +398,30 @@ const projectSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: ProjectList[index]?.createdOn || "14/09/2022",
+          openLoans: ProjectList[index]?.openLoans || "1490",
+          totalDisbursedPrincipal:
+            ProjectList[index]?.totalDisbursedPrincipal || "$750M",
+          status: ProjectList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to ProjectList
+        state.projectStatsData.ProjectList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
       })

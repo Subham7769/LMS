@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchDBRData } from "./sidebarSlice";
+import { HeaderList, DebtBurdenList } from "../../data/DebtBurdenData";
 
 export const fetchRules = createAsyncThunk(
   "dbr/fetchRules",
@@ -134,12 +135,12 @@ export const createCloneDBC = createAsyncThunk(
 
 export const addRule = createAsyncThunk(
   "dbr/addRule",
-  async ({ operators, formData, dbcTempId }, { rejectWithValue, dispatch }) => {
+  async ({ operators, dbrData, dbcTempId }, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
 
-      const updatedFormData = {
-        ...formData,
+      const updateddbrData = {
+        ...dbrData,
         dbcTempId, // Add or update the dbcTempId property
       };
 
@@ -149,7 +150,7 @@ export const addRule = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ operators, dbrRules: [updatedFormData] }),
+        body: JSON.stringify({ operators, dbrRules: [updateddbrData] }),
       });
 
       if (!response.ok) {
@@ -235,7 +236,7 @@ export const deleteRule = createAsyncThunk(
 
 export const updateRule = createAsyncThunk(
   "dbr/updateRule",
-  async ({ dbrRules, operators, dbcTempId }, { rejectWithValue }) => {
+  async (allDBRData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
 
@@ -250,7 +251,7 @@ export const updateRule = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ operators, dbrRules: dbrRules }),
+        body: JSON.stringify(allDBRData),
       });
 
       if (!response.ok) {
@@ -262,17 +263,33 @@ export const updateRule = createAsyncThunk(
       }
 
       // Return the updated rules array if the request was successful
-      return dbrRules;
+      return allDBRData.dbrRules;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
+export const fetchList = createAsyncThunk(
+  "dbr/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "DBR Config"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 export const dbrSlice = createSlice({
   name: "dbrConfig",
   initialState: {
-    formData: {
+    debtBurdenStatsData: {
+      HeaderList,
+      DebtBurdenList,
+    },
+    dbrData: {
       ruleName: "0",
       dbcTempId: "",
       employerRetired: "",
@@ -283,11 +300,12 @@ export const dbrSlice = createSlice({
       gdbrWithoutMTG: "",
       gdbrWithMTG: "",
     },
-    rules: [],
-    debtBurdenData: [],
-    operators: {
-      firstNetIncomeBracketInSARuleOperator: "",
-      secondNetIncomeBracketInSARuleOperator: "",
+    allDBRData: {
+      operators: {
+        firstNetIncomeBracketInSARuleOperator: "",
+        secondNetIncomeBracketInSARuleOperator: "",
+      },
+      dbrRules: [],
     },
     name: "Fetching Name...",
     currentPage: 1,
@@ -298,16 +316,16 @@ export const dbrSlice = createSlice({
     handleChange: (state, action) => {
       const { name, value, checked, type } = action.payload;
       if (type === "checkbox") {
-        state.formData[name] = checked;
+        state.dbrData[name] = checked;
       } else {
-        state.formData[name] = value;
+        state.dbrData[name] = value;
       }
     },
-    resetFormData: (state) => {
-      state.formData = {
+    resetdbrData: (state) => {
+      state.dbrData = {
         ruleName: "0",
         dbcTempId: "",
-        employerRetired: null,
+        employerRetired: "",
         startNetIncomeBracketInSARule: "",
         endNetIncomeBracketInSARule: "",
         productLevel: "",
@@ -318,10 +336,13 @@ export const dbrSlice = createSlice({
     },
     updateOperator: (state, action) => {
       const { name, value } = action.payload;
-      state.operators = {
-        ...state.operators,
+      state.allDBRData.operators = {
+        ...state.allDBRData.operators,
         [name]: value,
       };
+    },
+    updateDbrRules: (state, action) => {
+      state.allDBRData.dbrRules = action.payload;
     },
     toggleModal: (state) => {
       state.isModalOpen = !state.isModalOpen;
@@ -332,87 +353,108 @@ export const dbrSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRules.fulfilled, (state, action) => {
-        state.debtBurdenData = action.payload;
-        state.rules = action.payload?.dbrRules || [];
-        state.operators = action.payload?.operators || [];
-        state.loading = false;
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
       })
-      .addCase(fetchRules.pending, (state) => {
-        state.loading = true;
+      .addCase(fetchList.fulfilled, (state, action) => {
+        // If action.payload has fewer or equal objects than ProjectList, only map action.payload
+
+        const updatedList = action.payload.map((newListItem, index) => ({
+          caseId: newListItem.name,
+          href: newListItem.href,
+          openedOn: DebtBurdenList[index]?.openedOn || "14/09/2022",
+          debtAmount: DebtBurdenList[index]?.debtAmount || "$100M",
+          outstandingAmount: DebtBurdenList[index]?.outstandingAmount || "$50M",
+          status: DebtBurdenList[index]?.status || "Active",
+        }));
+
+        // Assign the updatedList to DebtBurdenList
+        state.debtBurdenStatsData.DebtBurdenList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchRules.rejected, (state) => {
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(fetchName.fulfilled, (state, action) => {
-        state.name = action.payload;
+      .addCase(fetchRules.fulfilled, (state, action) => {
+        // state.rules = action.payload?.dbrRules || [];
+        // state.operators = action.payload?.operators || [];
+        state.allDBRData = action.payload;
         state.loading = false;
       })
-      .addCase(deleteRule.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(deleteRule.fulfilled, (state, action) => {
-        state.rules.splice(action.payload, 1);
-        state.status = "succeeded";
-      })
-      .addCase(deleteRule.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
+      .addCase(fetchRules.pending, (state) => {
+        state.loading = true;
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(fetchName.fulfilled, (state, action) => {
+        state.name = action.payload;
+        state.loading = false;
       })
       .addCase(fetchName.rejected, (state) => {
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(updateName.fulfilled, (state) => {
+      .addCase(deleteRule.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteRule.fulfilled, (state, action) => {
         state.loading = false;
+      })
+      .addCase(deleteRule.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(updateName.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(updateName.fulfilled, (state) => {
+        state.loading = false;
       })
       .addCase(updateName.rejected, (state) => {
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(createCloneDBC.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(createCloneDBC.fulfilled, (state, action) => {
         state.currentPage = 1;
         state.loading = false;
-      })
-      .addCase(createCloneDBC.pending, (state) => {
-        state.loading = true;
       })
       .addCase(createCloneDBC.rejected, (state) => {
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(addRule.fulfilled, (state) => {
-        state.loading = false;
-      })
       .addCase(addRule.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(addRule.fulfilled, (state) => {
+        state.loading = false;
       })
       .addCase(addRule.rejected, (state) => {
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(deleteDBC.fulfilled, (state) => {
-        state.loading = false;
-      })
       .addCase(deleteDBC.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(deleteDBC.fulfilled, (state) => {
+        state.loading = false;
       })
       .addCase(deleteDBC.rejected, (state) => {
         state.loading = false;
         state.error = action.error.message;
       })
       .addCase(updateRule.pending, (state) => {
-        state.loading = false;
+        state.loading = true;
       })
       .addCase(updateRule.fulfilled, (state, action) => {
-        state.rules = action.payload;
         state.loading = false;
       })
       .addCase(updateRule.rejected, (state, action) => {
@@ -428,7 +470,8 @@ export const {
   setCurrentPage,
   handleSort,
   updateOperator,
-  resetFormData,
+  updateDbrRules,
+  resetdbrData,
 } = dbrSlice.actions;
 
 export default dbrSlice.reducer;
