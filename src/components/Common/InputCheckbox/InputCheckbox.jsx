@@ -1,7 +1,7 @@
 import React from 'react';
 import ElementErrorBoundary from '../../ErrorBoundary/ElementErrorBoundary';
 
-const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled = false }) => {
+const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled = false, className }) => {
     const handleChange = (e) => {
         onChange({
             target: {
@@ -13,7 +13,7 @@ const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled 
     };
 
     return (
-        <label className="flex items-center space-x-4 mt-3 w-full">
+        <label className={`flex items-center  mt-3 w-full  ${className} gap-3`}>
             <input
                 type="checkbox"
                 name={inputName}
@@ -22,7 +22,7 @@ const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled 
                 className="form-checkbox rounded-md p-2"
                 disabled={disabled}
             />
-            <span className='text-xs w-full'>{labelName}</span>
+            <span className={`text-xs w-full  ${className}`}>{labelName}</span>
         </label>
     );
 };

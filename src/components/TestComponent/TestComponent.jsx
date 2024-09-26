@@ -5,8 +5,8 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
-import { TrashIcon } from "@heroicons/react/20/solid";
-import { CheckCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import HoverButton from "../Common/HoverButton/HoverButton";
+import { CheckCircleIcon, PlusCircleIcon, PlusIcon, Cog6ToothIcon, TrashIcon, XMarkIcon, ArrowUpOnSquareIcon, PencilSquareIcon, ViewfinderCircleIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 
 const TestComponent = () => {
   const [sections, setSections] = useState([]);
@@ -63,21 +63,6 @@ const TestComponent = () => {
     setSections([...sections, newSection]);
   };
 
-  const addField = (sectionId, fieldConfig) => {
-    const newField = {
-      id: `field-${Date.now()}`,
-      ...fieldConfig,
-    };
-    setSections(
-      sections.map((section) => {
-        if (section.id === sectionId) {
-          return { ...section, fields: [...section.fields, newField] };
-        }
-        return section;
-      })
-    );
-  };
-
   const updateSection = (sectionId, updates) => {
     setSections(
       sections.map((section) =>
@@ -97,9 +82,8 @@ const TestComponent = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${
-      formConfig.title !== "" ? formConfig.title : "New Dynamic Form"
-    }.json`;
+    a.download = `${formConfig.title !== "" ? formConfig.title : "New Dynamic Form"
+      }.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -233,34 +217,70 @@ const TestComponent = () => {
     }
   };
 
-  const FieldComponent = ({ field, isEditorMode }) => {
+  const FieldComponent = ({ field, fieldId, isEditorMode, sectionId }) => {
     switch (field.fieldType) {
       case "NUMBER":
         return (
-          <InputNumber
-            labelName={field.name}
-            inputName={field.name}
-            inputValue={formData[field.name] || ""}
-            onChange={(e) => handleInputChange(e, field)}
-            disabled={isEditorMode}
-          />
+          <div className="flex justify-between items-center gap-2 ">
+            <InputNumber
+              labelName={field.name}
+              inputName={field.name}
+              inputValue={formData[field.name] || ""}
+              onChange={(e) => handleInputChange(e, field)}
+              disabled={isEditorMode}
+            />
+            {isEditorMode && (
+              <TrashIcon onClick={() =>
+                removeField(sectionId, fieldId)
+              }
+                className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer" />
+            )}
+          </div>
         );
       case "STRING":
         return (
-          <InputText
-            labelName={field.name}
-            inputName={field.name}
-            inputValue={formData[field.name] || ""}
-            onChange={(e) => handleInputChange(e, field)}
-            disabled={isEditorMode}
-          />
+          <div className="flex justify-between items-center gap-2 ">
+            <InputText
+              labelName={field.name}
+              inputName={field.name}
+              inputValue={formData[field.name] || ""}
+              onChange={(e) => handleInputChange(e, field)}
+              disabled={isEditorMode}
+            />
+            {isEditorMode && (
+              <TrashIcon onClick={() =>
+                removeField(sectionId, fieldId)
+              }
+                className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer" />
+            )}
+          </div>
         );
       default:
         return null;
     }
   };
 
-  const Toolbox = ({ sectionId }) => {
+  const addField = (sectionId, fieldConfig) => {
+    if (!sectionId) {
+      return;
+    } else {
+      const newField = {
+        id: `field-${Date.now()}`,
+        ...fieldConfig,
+      };
+      setSections(
+        sections.map((section) => {
+          if (section.id === sectionId) {
+            return { ...section, fields: [...section.fields, newField] };
+          }
+          return section;
+        })
+      );
+    }
+  };
+
+  const Toolbox = () => {
+    const [sectionId, setSectionId] = useState("");
     const [fieldConfig, setFieldConfig] = useState({
       fieldType: "",
       criteriaType: "",
@@ -335,9 +355,20 @@ const TestComponent = () => {
     };
 
     return (
-      <div className="border-2 rounded-lg py-5 mt-4">
-        <div className="grid grid-cols-1 gap-4 flex-1">
-          <div className={`grid gap-5 px-5 grid-cols-3`}>
+      <div className="border-2 rounded-lg py-5 basis-1/4 flex-grow max-h-[550px] overflow-y-scroll">
+        <div className="grid grid-cols-1 gap-3 flex-1">
+          <div className={`grid gap-2 px-2 grid-cols-1`}>
+            <InputSelect
+              labelName="Section"
+              inputOptions={sections.map((section) => ({
+                label: section.name,
+                value: section.id
+              })
+              )}
+              inputName="sectionId"
+              inputValue={sectionId}
+              onChange={(e) => setSectionId(e.target.value)}
+            />
             <InputSelect
               labelName="Field Type"
               inputOptions={[
@@ -368,85 +399,82 @@ const TestComponent = () => {
               onChange={handleChange}
             />
           </div>
-          <div className={`grid gap-5 px-5 grid-cols-3`}>
+          <div className={`grid gap-3 px-5 grid-cols-1 text-[12px]`}>
             <InputCheckbox
               labelName="REGISTRATION"
               inputChecked={fieldConfig.ruleUsageMap.REGISTRATION}
               onChange={handleChange}
               inputName="REGISTRATION"
+              className={"text-[10px]"}
             />
             <InputCheckbox
               labelName="ELIGIBILITY"
               inputChecked={fieldConfig.ruleUsageMap.ELIGIBILITY}
               onChange={handleChange}
               inputName="ELIGIBILITY"
+              className={"text-[10px]"}
             />
             <InputCheckbox
               labelName="BORROWER_OFFERS"
               inputChecked={fieldConfig.ruleUsageMap.BORROWER_OFFERS}
               onChange={handleChange}
               inputName="BORROWER_OFFERS"
+              className={"text-[10px]"}
             />
           </div>
-          <div className={`grid gap-5 px-5 grid-cols-3 border-b-2 pb-5`}>
+          {fieldConfig.fieldType === "NUMBER" && (
+            <div className="flex justify-start flex-wrap gap-2 py-2 mx-1">
+              {fieldConfig.numberCriteriaRangeList.map((range, index) => (
+                <div
+                  key={index}
+                  className="grid gap-1 p-2 grid-cols-3 border-2 rounded-xl min-w-[25%] w-fit max-w-[100%] relative"
+                >
+                  <InputNumber
+                    labelName="Minimum"
+                    inputName="minimum"
+                    inputValue={range.minimum}
+                    onChange={(e) => handleRangeChange(e, index)}
+                    placeHolder="0"
+                  />
+                  <InputNumber
+                    labelName="Maximum"
+                    inputName="maximum"
+                    inputValue={range.maximum}
+                    onChange={(e) => handleRangeChange(e, index)}
+                    placeHolder="0"
+                  />
+                  <InputCheckbox
+                    labelName="Resident"
+                    inputChecked={range.resident}
+                    onChange={(e) => handleRangeChange(e, index)}
+                    inputName="resident"
+                  />
+                  <div
+                    className="flex justify-center items-center absolute -top-0 right-0  hover:cursor-pointer"
+                    onClick={() => deleteRangeEntry(index)}
+                  ><XMarkIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className={`grid gap-2 px-5 grid-cols-2 `}>
             {fieldConfig.fieldType === "NUMBER" && (
               <Button
                 buttonName="+ Add Range"
                 onClick={addRangeEntry}
                 rectangle={true}
+                className="bg-yellow-500 hover:bg-yellow-400"
               />
             )}
-            <Button
-              buttonName="+ Add Section"
-              onClick={addSection}
-              rectangle={true}
-              className="bg-yellow-500 hover:bg-yellow-400"
-            />
             <Button
               buttonName="+ Add Field"
               onClick={() => addField(sectionId, fieldConfig)}
               rectangle={true}
-              className="bg-green-500 hover:bg-green-400"
             />
           </div>
         </div>
-        {fieldConfig.fieldType === "NUMBER" && (
-          <div className="flex justify-start flex-wrap gap-5 p-5">
-            {fieldConfig.numberCriteriaRangeList.map((range, index) => (
-              <div
-                key={index}
-                className="grid gap-3 p-2 grid-cols-3 border-2 rounded-xl min-w-[250px] w-fit max-w-[400px] relative"
-              >
-                <InputNumber
-                  labelName="Minimum"
-                  inputName="minimum"
-                  inputValue={range.minimum}
-                  onChange={(e) => handleRangeChange(e, index)}
-                  placeHolder="0"
-                />
-                <InputNumber
-                  labelName="Maximum"
-                  inputName="maximum"
-                  inputValue={range.maximum}
-                  onChange={(e) => handleRangeChange(e, index)}
-                  placeHolder="0"
-                />
-                <InputCheckbox
-                  labelName="Resident"
-                  inputChecked={range.resident}
-                  onChange={(e) => handleRangeChange(e, index)}
-                  inputName="resident"
-                />
-                <div
-                  className="flex justify-center items-center absolute -top-3 -right-2 px-2 bg-red-500 rounded-xl font-bold hover:bg-red-400 hover:cursor-pointer"
-                  onClick={() => deleteRangeEntry(index)}
-                >
-                  x
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+
       </div>
     );
   };
@@ -467,9 +495,8 @@ const TestComponent = () => {
 
     return (
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${
-          showSectionSettings ? "" : "hidden"
-        }`}
+        className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${showSectionSettings ? "" : "hidden"
+          }`}
       >
         <div className="bg-white p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-4">Section Settings</h2>
@@ -523,9 +550,8 @@ const TestComponent = () => {
 
     return (
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${
-          showFormConfig ? "" : "hidden"
-        }`}
+        className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${showFormConfig ? "" : "hidden"
+          }`}
       >
         <div className="bg-white p-6 rounded-lg w-2/3">
           <h2 className="text-xl font-bold mb-4">Form Configuration</h2>
@@ -678,170 +704,178 @@ const TestComponent = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-zinc-50">
-      <h1 className="text-3xl font-bold mb-4">
-        {formConfig.title || "New Dynamic Form"}
-      </h1>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center space-x-2">
-          <InputCheckbox
-            labelName={isEditorMode ? "Editor Mode" : "Usage Mode"}
-            inputChecked={isEditorMode}
-            onChange={(e) => setIsEditorMode(e.target.checked)}
-            inputName={isEditorMode ? "Editor Mode" : "Usage Mode"}
-          />
-        </div>
-        {isEditorMode && (
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setShowFormConfig(true)}
-              buttonName="Form Config"
-              rectangle={true}
-            />
-            <Button
-              onClick={downloadConfig}
-              buttonName="Download Config"
-              rectangle={true}
-            />
-            <Button
-              buttonName="Load Config"
-              rectangle={true}
-              onClick={() => fileInputRef.current.click()}
-            />
+    <div className="flex flex-col gap-3">
+      <div className="flex justify-between items-center w-full">
+        <h1 className="text-3xl font-bold  flex-1">
+          {formConfig.title || "New Dynamic Form"}
+        </h1>
+        <div className="flex justify-center items-center -mt-4">
+          <label className="flex items-center cursor-pointer mt-3">
             <input
-              ref={fileInputRef}
-              type="file"
-              accept=".json"
-              style={{ display: "none" }}
-              onChange={loadConfig}
+              type="checkbox"
+              checked={isEditorMode}
+              onChange={(e) => setIsEditorMode(e.target.checked)}
+              className="hidden" // Hide the checkbox visually
             />
+            <div className="flex justify-between items-center gap-1 hover:cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 rounded-lg border-2 px-2 py-1">
+              {isEditorMode ? <ViewfinderCircleIcon className="h-5 w-5" /> : <PencilSquareIcon className="h-5 w-5" />}
+              <span className="text-sm mt-1font-bold">{isEditorMode ? "View Mode" : "Editor Mode"}</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div className="flex justify-between items-center">
+        {isEditorMode && (
+          <div className="flex justify-between gap-5 w-full">
+            <div className="flex gap-2">
+              <HoverButton
+                icon={Cog6ToothIcon}
+                text="Form Config"
+                color="indigo" // Automatically sets hover and background colors
+                onClick={() => setShowFormConfig(true)}
+              />
+              <HoverButton
+                icon={PlusIcon}
+                text="Add Section"
+                color="green" // Automatically sets hover and background colors
+                onClick={() => addSection()}
+              />
+            </div>
+            <div className="flex gap-2 items-end">
+              <HoverButton
+                icon={ArrowDownOnSquareIcon}
+                text="Download Config"
+                color="yellow" // Automatically sets hover and background colors
+                onClick={() => downloadConfig()}
+              />
+              <HoverButton
+                icon={ArrowUpOnSquareIcon}
+                text="Upload Config"
+                color="green" // Automatically sets hover and background colors
+                onClick={() => fileInputRef.current.click()}
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json"
+                style={{ display: "none" }}
+                onChange={loadConfig}
+              />
+            </div>
           </div>
         )}
       </div>
-      {isEditorMode && (
-        <Button
-          onClick={addSection}
-          className="mb-4"
-          buttonName="Add Section"
-          rectangle={true}
-        />
-      )}
-      <form onSubmit={handleSubmit}>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className="grid gap-4">
-            {sections.map((section) => (
-              <Droppable key={section.id} droppableId={section.id}>
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={`shadow-md bg-gray-100 border-gray-300 border rounded-xl pb-8 pt-6 px-5 ${
-                      section.size === "full"
+      <div className="flex items-start max-h-[550px] gap-3">
+        {isEditorMode && <Toolbox />}
+        <form
+          onSubmit={handleSubmit}
+          className={`basis-3/4 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden`}
+        >
+          <DragDropContext onDragEnd={onDragEnd} >
+            <div className="grid gap-4" >
+              {sections.map((section) => (
+                <Droppable key={section.id} droppableId={section.id}>
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className={`shadow-md border-gray-300 border rounded-xl p-5 ${section.size === "full"
                         ? "col-span-3"
                         : section.size === "half"
-                        ? "col-span-2"
-                        : "col-span-1"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <h2 className="text-xl font-semibold">{section.name}</h2>
-                      {isEditorMode && (
-                        <div className="flex space-x-2">
-                          <Button
-                            onClick={() => {
-                              setCurrentSection(section);
-                              setShowSectionSettings(true);
-                            }}
-                            buttonName="Settings"
-                            rectangle={true}
-                          />
-                          <Button
-                            onClick={() => removeSection(section.id)}
-                            buttonName="Remove"
-                            rectangle={true}
-                          />
-                        </div>
-                      )}
-                    </div>
-                    {section.fields.map((field, index) => (
-                      <Draggable
-                        key={field.id}
-                        draggableId={field.id}
-                        index={index}
-                        isDragDisabled={!isEditorMode}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="mb-4"
-                          >
-                            <FieldComponent
-                              field={field}
-                              isEditorMode={isEditorMode}
+                          ? "col-span-2"
+                          : "col-span-1"
+                        }`}
+                    >
+
+                      <div className="flex justify-between items-center mb-2">
+                        <h2 className="text-xl font-semibold">{section.name}</h2>
+                        {isEditorMode && (
+                          <div className="flex justify-between items-center gap-2">
+                            <Cog6ToothIcon
+                              onClick={() => {
+                                setCurrentSection(section);
+                                setShowSectionSettings(true);
+                              }}
+                              className="h-6 w-6 hover:text-green-500"
                             />
-                            {isEditorMode && (
-                              <div className="pt-2">
-                                <Button
-                                  onClick={() =>
-                                    removeField(section.id, field.id)
-                                  }
-                                  buttonName="Remove Field"
-                                  rectangle={true}
-                                />
-                              </div>
-                            )}
+                            <TrashIcon
+                              onClick={() => removeSection(section.id)}
+                              className="h-6 w-6 hover:text-red-500"
+                            />
                           </div>
                         )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                    {isEditorMode && <Toolbox sectionId={section.id} />}
-                  </div>
-                )}
-              </Droppable>
-            ))}
+                      </div>
+
+                      {section.fields.map((field, index) => (
+                        <Draggable
+                          key={field.id}
+                          draggableId={field.id}
+                          index={index}
+                          isDragDisabled={!isEditorMode}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className="mb-4"
+                            >
+                              <FieldComponent
+                                field={field}
+                                fieldId={field.id}
+                                isEditorMode={isEditorMode}
+                                sectionId={section.id}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              ))}
+            </div>
+          </DragDropContext>
+          <div className="flex justify-center items-center gap-5">
+            {!isEditorMode && formConfig.showAddButton && (
+              <Button
+                className="mt-4"
+                buttonIcon={PlusCircleIcon}
+                buttonName="Add"
+                rectangle={true}
+              />
+            )}
+
+            {!isEditorMode && formConfig.showSaveButton && (
+              <Button
+                className="mt-4"
+                buttonIcon={CheckCircleIcon}
+                buttonName="Save"
+                rectangle={true}
+              />
+            )}
+
+            {!isEditorMode && formConfig.showUpdateButton && (
+              <Button
+                className="mt-4"
+                buttonIcon={CheckCircleIcon}
+                buttonName="Update"
+                rectangle={true}
+              />
+            )}
+
+            {!isEditorMode && formConfig.showDeleteButton && (
+              <Button
+                className="mt-4"
+                buttonIcon={TrashIcon}
+                rectangle={true}
+                buttonName="Delete"
+              />
+            )}
           </div>
-        </DragDropContext>
-        <div className="flex space-x-2">
-          {!isEditorMode && formConfig.showAddButton && (
-            <Button
-              className="mt-4"
-              buttonIcon={PlusCircleIcon}
-              buttonName="Add"
-              rectangle={true}
-            />
-          )}
-
-          {!isEditorMode && formConfig.showSaveButton && (
-            <Button
-              className="mt-4"
-              buttonIcon={CheckCircleIcon}
-              buttonName="Save"
-              rectangle={true}
-            />
-          )}
-
-          {!isEditorMode && formConfig.showUpdateButton && (
-            <Button
-              className="mt-4"
-              buttonIcon={CheckCircleIcon}
-              buttonName="Update"
-              rectangle={true}
-            />
-          )}
-
-          {!isEditorMode && formConfig.showDeleteButton && (
-            <Button
-              className="mt-4"
-              buttonIcon={TrashIcon}
-              rectangle={true}
-              buttonName="Delete"
-            />
-          )}
-        </div>
-      </form>
+        </form>
+      </div>
       <SectionSettings />
       <FormConfigModal />
     </div>
