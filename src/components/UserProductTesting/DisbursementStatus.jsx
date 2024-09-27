@@ -7,24 +7,25 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
+import LoadingState from "../LoadingState/LoadingState";
 import {
   getDisbursementInfo,
   updateDisbursementData,
   submitDisbursement,
 } from "../../redux/Slices/userProductTestingSlice";
-import LoadingState from "../LoadingState/LoadingState";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const DisbursementStatus = () => {
-  const { disbursementData, loading, error } = useSelector(
-    (state) => state.userProductTesting
-  );
+  const { validationError } = useSelector((state) => state.validation);
+  const { disbursementData, loading, error } = useSelector((state) => state.userProductTesting);
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    amount: "",
-    userloanID: "",
-  });
   const navigate = useNavigate(); // Adding useNavigate for navigation
   const { userID } = useParams();
+  const fields = ["loanId", "principleAmount"];
 
   useEffect(() => {
     dispatch(getDisbursementInfo({ userID, navigate }));
@@ -39,70 +40,49 @@ const DisbursementStatus = () => {
     };
   }, [dispatch, userID]);
 
-  useEffect(() => {
-    console.log(disbursementData);
-    setFormData({
-      userloanID: disbursementData.loanId || "",
-      amount: disbursementData.principleAmount || "",
-    });
-  }, [disbursementData]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const handleSubmit = ({ userID, disbursementData, navigate }) => {
+    const isValid = validateFormFields(fields, disbursementData, dispatch);
+    if (isValid) {
+      dispatch(submitDisbursement({ userID, disbursementData, navigate }))
+    }
+
+  }
 
   // Conditional rendering based on loading and error states
   if (loading) {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
-  if (disbursementData.status === 500) {
-    return (
-      <ContainerTile className="text-center">
-        No Loan Available for Disbursement
-      </ContainerTile>
-    );
-  }
-
-  console.log(formData.userloanID + "formData");
-
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
         <div className="text-lg">Proceed for disbursement</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputText
             labelName={"Loan Id"}
-            inputName={"userloanID"}
+            inputName={"loanId"}
             disabled={true}
-            inputValue={disbursementData?.userloanID || ""}
+            inputValue={disbursementData?.loanId || ""}
             onChange={(e) => dispatch(updateDisbursementData(e))}
-            showError={validationError.loanType}
+            showError={validationError.loanId}
             onFocus={() =>
               dispatch(
-                setValidationError({ ...validationError, loanType: false })
+                setValidationError({ ...validationError, loanId: false })
               )
             }
           />
           <InputNumber
             labelName={"Enter Amount"}
-            inputName={"amount"}
-            inputValue={disbursementData?.amount || ""}
-            onChange={handleChange}
+            inputName={"principleAmount"}
+            inputValue={disbursementData?.principleAmount || ""}
+            onChange={(e) => dispatch(updateDisbursementData(e))}
             placeHolder={"5000"}
-            showError={validationError.loanType}
+            showError={validationError.principleAmount}
             onFocus={() =>
               dispatch(
-                setValidationError({ ...validationError, loanType: false })
+                setValidationError({ ...validationError, principleAmount: false })
               )
             }
           />
@@ -110,12 +90,14 @@ const DisbursementStatus = () => {
         <Button
           rectangle={true}
           buttonName={"Submit"}
-          onClick={() =>
-            dispatch(submitDisbursement({ userID, formData, navigate }))
+          onClick={() => handleSubmit({ userID, disbursementData, navigate })
           }
         />
       </ContainerTile>
-    </>
+      {/* Render error message if `error` is present */}
+      {disbursementData.status === 500 && <ContainerTile className="text-center">No Loan Available for Disbursement</ContainerTile>}
+      {error && <ContainerTile>Error: {error}</ContainerTile>}
+    </div>
   );
 };
 

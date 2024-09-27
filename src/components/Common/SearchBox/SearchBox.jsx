@@ -1,15 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Button from "../Button/Button";
 import InputText from "../InputText/InputText";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../../redux/Slices/validationSlice";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const SearchBox = () => {
   const location = useLocation();
   const [borrowerID, setBorrowerID] = useState("3333333361");
   const [borrowerNotFound, setBorrowerNotFound] = useState(false);
   const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const dispatch = useDispatch();
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["borrowerID"];
+
+  useEffect(() => {
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
+
 
   async function checkBorrowerInfoCustomerCare(borrowerID) {
     try {
@@ -83,7 +106,9 @@ const SearchBox = () => {
   }
 
   const handleClick = () => {
-    {
+    const isValid = validateFormFields(fields, {borrowerID}, dispatch);
+    console.log(isValid)
+    if (isValid) {
       if (location.pathname === "/customer-care") {
         checkBorrowerInfoCustomerCare(borrowerID);
       } else if (location.pathname === "/user-product-testing") {
@@ -92,6 +117,10 @@ const SearchBox = () => {
         checkBorrowerInfoOverdraftLoanOffer(borrowerID);
       }
     }
+    else{
+      return;
+    }
+
   };
 
   return (
@@ -110,6 +139,12 @@ const SearchBox = () => {
               setBorrowerID(e.target.value);
             }}
             placeHolder="1234567890"
+            showError={validationError?.borrowerID}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, borrowerID: false })
+                )
+              }
           />
         </div>
         <div>

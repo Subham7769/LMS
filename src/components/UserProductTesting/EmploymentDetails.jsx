@@ -13,6 +13,11 @@ import {
   updateEmploymentDetailsField,
   updateEmploymentDetails,
 } from "../../redux/Slices/userProductTestingSlice";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 function EmploymentDetails() {
   const { userID } = useParams();
@@ -20,9 +25,21 @@ function EmploymentDetails() {
   const { EmploymentDetails, loading, error } = useSelector(
     (state) => state.userProductTesting
   );
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["fullName", "basicWage","housingAllowance","employerName","workingMonths","employmentStatus","establishmentActivity"];
+
 
   useEffect(() => {
     dispatch(getBorrowerDetails(userID));
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, userID]);
 
   const handleChange = (e) => {
@@ -30,6 +47,13 @@ function EmploymentDetails() {
     // Dispatch the action to update the state
     dispatch(updateEmploymentDetailsField({ name, value }));
   };
+
+  const handleUpdate = ({ EmploymentDetails, userID }) =>{
+    const isValid = validateFormFields(fields, EmploymentDetails, dispatch);
+    if (isValid) {
+      dispatch(updateEmploymentDetails({ EmploymentDetails, userID }))
+    }
+  }
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -56,6 +80,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.fullName}
             onChange={handleChange}
             required
+            showError={validationError.fullName}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, fullName: false })
+              )
+            }
           />
           {/* Basic Wage */}
           <InputNumber
@@ -65,6 +95,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.basicWage}
             onChange={handleChange}
             required
+            showError={validationError.basicWage}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, basicWage: false })
+              )
+            }
           />
           {/* Housing Allowance */}
           <InputNumber
@@ -74,6 +110,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.housingAllowance}
             onChange={handleChange}
             required
+            showError={validationError.housingAllowance}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, housingAllowance: false })
+              )
+            }
           />
           {/* Employer Name */}
           <InputText
@@ -83,6 +125,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.employerName}
             onChange={handleChange}
             required
+            showError={validationError.employerName}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, employerName: false })
+              )
+            }
           />
           {/* Working Months */}
           <InputNumber
@@ -92,6 +140,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.workingMonths}
             onChange={handleChange}
             required
+            showError={validationError.workingMonths}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, workingMonths: false })
+              )
+            }
           />
           {/* Employment Status */}
           <InputText
@@ -101,6 +155,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.employmentStatus}
             onChange={handleChange}
             required
+            showError={validationError.employmentStatus}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, employmentStatus: false })
+              )
+            }
           />
           {/* Establishment Activity */}
           <InputText
@@ -110,6 +170,12 @@ function EmploymentDetails() {
             inputValue={EmploymentDetails?.establishmentActivity}
             onChange={handleChange}
             required
+            showError={validationError.establishmentActivity}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, establishmentActivity: false })
+              )
+            }
           />
         </form>
         <div className="flex items-center justify-end gap-4 mt-4">
@@ -117,7 +183,7 @@ function EmploymentDetails() {
             buttonIcon={CheckCircleIcon}
             buttonName={"Update"}
             onClick={() =>
-              dispatch(updateEmploymentDetails({ EmploymentDetails, userID }))
+              handleUpdate({ EmploymentDetails, userID })
             }
             rectangle={true}
           />

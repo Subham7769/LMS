@@ -36,7 +36,6 @@ const LoanConfig = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const fields = ["loanType", "amount"];
-console.log(loanConfigFields)
 
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
@@ -53,7 +52,7 @@ console.log(loanConfigFields)
 
   useEffect(() => {
     if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType)) {
-      dispatch(updateLoanConfigFieldsField({ name:'amount', value:'' }));
+      dispatch(updateLoanConfigFieldsField({ name: 'amount', value: '' }));
     }
   }, [loanConfigFields.loanType]);
 
@@ -162,9 +161,16 @@ console.log(loanConfigFields)
   };
 
   const handleSubmit = () => {
-    const isValid = validateFormFields(fields, loanConfigFields, dispatch);
+    let isValid = false;
+    if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType)) {
+       isValid = validateFormFields(fields, loanConfigFields, dispatch);
+    }else{
+      isValid = validateFormFields(["loanType"], loanConfigFields, dispatch);
+    }
+    
+    console.log(isValid)
     if (isValid) {
-      dispatch(submitLoanConfiguration({ loanType:loanConfigFields.loanType, amount:loanConfigFields.amount, userID }))
+      dispatch(submitLoanConfiguration({ loanType: loanConfigFields.loanType, amount: loanConfigFields.amount, userID }))
     }
   }
 
@@ -190,10 +196,6 @@ console.log(loanConfigFields)
   // Conditional rendering based on loading and error states
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   return (
@@ -238,6 +240,8 @@ console.log(loanConfigFields)
           </div>
         </div>
       </ContainerTile>
+      {/* Render error message if `error` is present */}
+      {error && <ContainerTile>Error: {error}</ContainerTile>}
       {showModal && (
         <>
           <div className="grid grid-cols-2 gap-5">

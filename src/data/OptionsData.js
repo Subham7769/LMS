@@ -23,6 +23,12 @@ export const productTypeOptions = [
   { value: "Overdraft", label: "Overdraft" },
 ];
 
+export const productTypeOptions2 = [
+  { value: "CASH LOAN V1", label: "CASH LOAN V1" },
+  { value: "BNPL LOAN", label: "BNPL LOAN" },
+  { value: "OVERDRAFT LOAN", label: "OVERDRAFT LOAN" },
+];
+
 export const recoveryOptions = [
   { value: "R1", label: "Recovery 1" },
   { value: "R2", label: "Recovery 2" },
@@ -75,10 +81,11 @@ export const operatorOptions = [
 ];
 
 export const maritalOptions = [
-  { value: "Single", label: "Single" },
-  { value: "Married", label: "Married" },
-  { value: "Divorced", label: "Divorced" },
+  { value: "SINGLE", label: "SINGLE" },
+  { value: "MARRIED", label: "MARRIED" },
+  { value: "DIVORCED", label: "DIVORCED" },
 ];
+
 
 export const booleanOptions = [
   { value: true, label: "true" },

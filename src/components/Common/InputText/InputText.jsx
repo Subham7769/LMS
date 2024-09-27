@@ -1,6 +1,5 @@
 import React from "react";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
-import PropTypes from "prop-types";
 
 const InputText = ({
   labelName,

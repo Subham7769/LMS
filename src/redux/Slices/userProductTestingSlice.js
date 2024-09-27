@@ -223,7 +223,6 @@ export const handleProceed = createAsyncThunk(
   }
 );
 
-
 // Async Thunk for getting disbursement info
 export const getDisbursementInfo = createAsyncThunk(
   "disbursement/getDisbursementInfo",
@@ -260,15 +259,15 @@ export const getDisbursementInfo = createAsyncThunk(
 // Async Thunk for handling disbursement status update
 export const submitDisbursement = createAsyncThunk(
   "disbursement/submitDisbursement",
-  async ({ userID, formData, navigate }, { rejectWithValue }) => {
-    const transID = formData.userloanID + "-reactivate";
+  async ({ userID, disbursementData, navigate }, { rejectWithValue }) => {
+    const transID = disbursementData.loanId + "-reactivate";
     const postData = {
-      loanId: formData.userloanID,
+      loanId: disbursementData.loanId,
       status: true,
       transactionId: transID,
       activationType: 2,
       processDate: "2024-05-09 15:18:00",
-      amount: formData.amount,
+      amount: disbursementData.principleAmount,
       reconciliationMethod: "mobile wallet",
     };
 
@@ -510,8 +509,8 @@ const initialState = {
   },
   loanConfigData: {},
   disbursementData: {
-    amount: "",
-    userloanID: "",
+    loanId: "",
+    principleAmount: "",
   },
   repaymentData: [],
   loanIdOptions: [],
@@ -636,7 +635,9 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getDisbursementInfo.fulfilled, (state, action) => {
         state.loading = false;
-        state.disbursementData = action.payload;
+        if(action.payload.status !== 500){
+          state.disbursementData = action.payload;
+        }
       })
       .addCase(getDisbursementInfo.rejected, (state, action) => {
         state.loading = false;
