@@ -26,8 +26,6 @@ const UserManagementPage = () => {
         const filteredRoles = formattedRoleData.filter(
           (item) => item.label != "ROLE_SUPERADMIN"
         );
-        console.log(formattedRoleData);
-        console.log(filteredRoles);
         setRolesData(filteredRoles);
       } catch (error) {
         console.log(error);

@@ -83,6 +83,8 @@ const RecoveryConfig = () => {
     toggleEditEquation();
   };
 
+  console.log(validationError);
+
   const handleUpdate = (e) => {
     e.preventDefault();
     const isValid = validateFormFields(fields, data, dispatch);
@@ -144,8 +146,6 @@ const RecoveryConfig = () => {
   if (error) {
     throw new Error(error);
   }
-
-  console.log(validationError);
 
   return (
     <>

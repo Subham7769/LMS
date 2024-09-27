@@ -118,7 +118,7 @@ export const racSlice = createSlice({
         // If action.payload has fewer or equal objects than ProjectList, only map action.payload
 
         const updatedList = action.payload.map((newListItem, index) => ({
-          caseId: newListItem.name,
+          name: newListItem.name,
           href: newListItem.href,
           createdOn: RACList[index]?.createdOn || "14/09/2022",
           approved: RACList[index]?.approved || "40%",

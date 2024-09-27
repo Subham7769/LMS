@@ -282,7 +282,7 @@ const recoverySlice = createSlice({
       .addCase(fetchList.fulfilled, (state, action) => {
         // If action.payload has fewer or equal objects than TCLList, only map action.payload
         const updatedList = action.payload.map((newListItem, index) => ({
-          name: newListItem.name,
+          caseId: newListItem.name,
           href: newListItem.href,
           openedOn: RecoveryList[index]?.openedOn || "14/09/2022",
           recoveredAmount: RecoveryList[index]?.recoveredAmount || "$50M",

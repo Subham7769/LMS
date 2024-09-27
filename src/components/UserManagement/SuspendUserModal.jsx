@@ -4,39 +4,53 @@ import { Failed, Passed } from "../Toasts";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import {
-  fetchUsers,
   suspendUser,
+  clearFormData,
 } from "../../redux/Slices/userManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { setValidationError } from "../../redux/Slices/validationSlice";
 
 const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
   const [suspensionReason, setSuspensionReason] = useState("");
   const dispatch = useDispatch();
+  const { validationError } = useSelector((state) => state.validation);
 
   const handleSuspendUser = async (e) => {
     e.preventDefault();
-    try {
-      await dispatch(
-        suspendUser({
-          userName: userDetails.username,
-          reason: suspensionReason,
-        })
-      ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Success"}
-          message={"User Suspended Successfully !!"}
-        />
-      ));
-      onClose();
-    } catch (error) {
-      toast.custom((t) => (
-        <Failed t={t} toast={toast} title={"Failed"} message={error} />
-      ));
+    let isValid = true;
+    if (suspensionReason === "") {
+      dispatch(
+        setValidationError({ ...validationError, suspensionReason: true })
+      );
+      isValid = false;
+    }
+    if (isValid) {
+      try {
+        await dispatch(
+          suspendUser({
+            userName: userDetails.username,
+            reason: suspensionReason,
+          })
+        ).unwrap();
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Success"}
+            message={"User Suspended Successfully !!"}
+          />
+        ));
+        onClose();
+        dispatch(clearFormData());
+      } catch (error) {
+        toast.custom((t) => (
+          <Failed t={t} toast={toast} title={"Failed"} message={error} />
+        ));
+      }
     }
   };
+
+  console.log(validationError);
 
   if (!isOpen) return null;
 
@@ -52,6 +66,15 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
               inputValue={suspensionReason}
               onChange={(e) => setSuspensionReason(e.target.value)}
               required
+              showError={validationError?.suspensionReason}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    suspensionReason: false,
+                  })
+                )
+              }
             />
           </form>
           <div className="flex gap-3 justify-center md:justify-end">

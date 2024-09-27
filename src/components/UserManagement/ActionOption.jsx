@@ -11,6 +11,7 @@ import {
   fetchUsers,
   generatePassword,
   deleteUser,
+  clearFormData,
 } from "../../redux/Slices/userManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -40,6 +41,7 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
         message="The user was deleted successfully"
       />
     ));
+    dispatch(clearFormData());
   };
 
   const handleEditUser = () => {
@@ -60,6 +62,8 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
       position: "bottom-center",
     });
     await dispatch(activateUser(userDataProp.username)).unwrap();
+    await dispatch(fetchUsers()).unwrap();
+    dispatch(clearFormData());
     toast.custom((t) => (
       <Passed
         t={t}
@@ -68,7 +72,6 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
         message="The user was activated successfully"
       />
     ));
-    dispatch(fetchUsers());
   };
 
   const handleGeneratePassword = async () => {
@@ -85,7 +88,7 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
         message="New Password generated successfully"
       />
     ));
-    dispatch(fetchUsers());
+    dispatch(clearFormData());
   };
 
   const closeSuspendModal = () => {

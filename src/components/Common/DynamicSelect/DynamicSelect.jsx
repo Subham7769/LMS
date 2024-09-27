@@ -14,16 +14,20 @@ const SelectInput = ({
   isSearchable,
   isMulti,
   defaultValue,
+  showError = false, // New prop to indicate error
+  onFocus, // New onFocus handler to reset error
 }) => {
   return (
     <>
       <div className="flex flex-col">
         {labelName && (
           <label
-            className="block text-gray-700 px-1 text-[14px]"
+            className={`block ${
+              showError ? "text-red-600" : "text-gray-700"
+            } px-1 text-[14px]`}
             htmlFor={inputName}
           >
-            {labelName}
+            {showError ? "Field required" : labelName}
           </label>
         )}
         <Select
@@ -35,6 +39,7 @@ const SelectInput = ({
           onChange={onChange}
           placeholder={placeHolder}
           isSearchable={isSearchable}
+          onFocus={onFocus} // Call onFocus to reset the error state
           isDisabled={isDisabled}
           isMulti={isMulti}
         />
@@ -53,4 +58,3 @@ const WithErrorBoundary = (props) => {
 };
 
 export default WithErrorBoundary;
-

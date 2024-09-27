@@ -5,6 +5,7 @@ import {
   fetchUsers,
   setSelectedUserData,
   setIsModalOpen,
+  clearFormData,
 } from "../../redux/Slices/userManagementSlice";
 import { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
@@ -25,6 +26,7 @@ const UserManagement = ({ role }) => {
 
   const handleAddUser = () => {
     dispatch(setIsModalOpen(true));
+    dispatch(clearFormData());
   };
 
   const closeModal = () => {
@@ -35,7 +37,7 @@ const UserManagement = ({ role }) => {
     dispatch(setSelectedUserData(data));
   };
 
-  console.log(selectedUserData);
+  // console.log(selectedUserData);
 
   const options = { day: "2-digit", month: "short", year: "numeric" };
 
