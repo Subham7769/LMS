@@ -27,7 +27,14 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
     (state) => state.userManagement
   );
   const { validationError } = useSelector((state) => state.validation);
-  const fields = ["username", "firstname", "lastname", "email", "password"];
+  const fields = [
+    "username",
+    "firstname",
+    "lastname",
+    "email",
+    "password",
+    "confirmPassword",
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,15 +57,15 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
     dispatch(setUserRole(selectedUserRole));
   };
 
+  console.log(userRole);
   console.log(validationError);
 
   const updateData = async (e) => {
     e.preventDefault();
     const isValid = validateFormFields(
       fields,
-      formData,
-      dispatch,
-      confirmPassword
+      { ...formData, confirmPassword },
+      dispatch
     );
     const isValid2 = validateUserRole(userRole, dispatch);
     if (isValid && isValid2) {
@@ -189,7 +196,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
             />
             <SelectInput
               labelName="Roles"
-              inputName="roles"
+              inputName="userRole"
               inputOptions={role}
               isMulti={true}
               inputValue={userRole}

@@ -20,6 +20,10 @@ const TagInput = ({
   productTypeOptions,
   showError = false, // New prop to indicate error
   onFocus, // New onFocus handler to reset error
+  showError2 = false,
+  onFocus2,
+  showError3 = false,
+  onFocus3,
 }) => {
   return (
     <>
@@ -31,8 +35,8 @@ const TagInput = ({
             inputOptions={productTypeOptions}
             inputValue={formData[inputSelectName]}
             onChange={handleChange}
-            showError={showError}
-            onFocus={onFocus}
+            showError={showError3}
+            onFocus={onFocus3}
           />
         )}
         {inputTextName && (
@@ -53,8 +57,8 @@ const TagInput = ({
             inputValue={formData[inputNumberName]}
             onChange={handleChange}
             placeHolder={"2"}
-            showError={showError}
-            onFocus={onFocus}
+            showError={showError2}
+            onFocus={onFocus2}
           />
         )}
         <div className="">

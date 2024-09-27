@@ -24,12 +24,7 @@ export const { setValidationError, clearValidationError } =
   validationSlice.actions;
 export default validationSlice.reducer;
 
-export const validateFormFields = (
-  fields,
-  formData,
-  dispatch,
-  confirmPassword = null
-) => {
+export const validateFormFields = (fields, formData, dispatch) => {
   let isValid = true;
   const errors = {};
 
@@ -39,12 +34,6 @@ export const validateFormFields = (
       isValid = false;
     }
   });
-
-  // Check confirmPassword separately
-  if (confirmPassword !== null && confirmPassword === "") {
-    errors.confirmPassword = true;
-    isValid = false;
-  }
 
   dispatch(setValidationError({ ...errors }));
 
