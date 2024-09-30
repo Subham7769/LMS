@@ -15,38 +15,61 @@ import {
   handleNotificationChange,
   saveNotificationData,
 } from "../../redux/Slices/globalConfigSlice";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const NotificationText = () => {
   const dispatch = useDispatch();
-  const { notificationInputList, loading, error } = useSelector(
-    (state) => state.globalConfig
-  );
+  const { notificationInputList, loading, error } = useSelector((state) => state.globalConfig);
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["notificationType", "notificationDisplayName", "notificationChannel", "notificationMessageEn", "notificationMessageAr", "notificationDescription"];
 
   useEffect(() => {
     dispatch(fetchNotificationData());
+    if (notificationInputList?.length) {
+      const initialValidationError = {};
+      notificationInputList.forEach((_, index) => {
+        fields.forEach((field) => {
+          // Create validation keys dynamically based on the index
+          initialValidationError[`${field}_${index}`] = false;
+        });
+      });
+      dispatch(setValidationError(initialValidationError));
+    }
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch]);
 
-  const handleSave = async (id) => {
-    try {
-      await dispatch(saveNotificationData(id)).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Updated Successfully"}
-          message={"Data has been updated successfully"}
-        />
-      ));
-    } catch (error) {
-      // Handle the error here if needed
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Edit Failed"}
-          message={`${error.message}`}
-        />
-      ));
+  const handleSave = async (id, index) => {
+    const isValid = validateFormFields(fields, notificationInputList[index], dispatch, null, index);
+    console.log(notificationInputList[index])
+    console.log(isValid)
+    if (isValid) {
+      try {
+        await dispatch(saveNotificationData(id)).unwrap();
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Updated Successfully"}
+            message={"Data has been updated successfully"}
+          />
+        ));
+      } catch (error) {
+        // Handle the error here if needed
+        toast.custom((t) => (
+          <Failed
+            t={t}
+            toast={toast}
+            title={"Edit Failed"}
+            message={`${error.message}`}
+          />
+        ));
+      }
     }
   };
 
@@ -59,7 +82,7 @@ const NotificationText = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <Toaster position="top-center" reverseOrder={false} />
       <h2 className="mb-6">
         <b
@@ -69,42 +92,60 @@ const NotificationText = () => {
           Notification Text
         </b>
       </h2>
-      <ContainerTile>
-        {notificationInputList?.map((notdata) => (
+      {notificationInputList?.map((notificationData, index) => (
+        <ContainerTile>
           <div
-            key={notdata.id}
-            className="flex flex-col gap-y-6 mb-10 border-b border-gray-300 pb-8"
+            key={notificationData.id}
+            className="flex flex-col gap-y-6 "
           >
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputText
                 labelName="Notification Type"
                 inputName="notificationType"
-                id={`notificationType_${notdata?.id}`}
-                inputValue={notdata?.notificationType}
+                id={`notificationType_${notificationData?.id}`}
+                inputValue={notificationData?.notificationType}
                 disabled
                 placeHolder="REMINDER_EMI"
+                showError={validationError[`notificationType_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`notificationType_${index}`]: false })
+                  )
+                }
               />
               <InputText
                 labelName="Notification Display Name"
                 inputName="notificationDisplayName"
-                id={`notificationDisplayName_${notdata?.id}`}
-                inputValue={notdata?.notificationDisplayName}
+                id={`notificationDisplayName_${notificationData?.id}`}
+                inputValue={notificationData?.notificationDisplayName}
                 disabled
-                placeHolder="Installment reminder"
+                place showError={validationError[`notificationDisplayName_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`notificationDisplayName_${index}`]: false })
+                  )
+                } Holder="Installment reminder"
+
               />
               <InputSelect
                 labelName="Notification Channel"
                 inputOptions={notiChannelOptions}
-                inputId={notdata?.id}
+                inputId={notificationData?.id}
                 inputName="notificationChannel"
-                inputValue={notdata?.notificationChannel}
+                inputValue={notificationData?.notificationChannel}
                 onChange={(e) =>
                   dispatch(
                     handleNotificationChange({
-                      id: notdata?.id,
+                      id: notificationData?.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
+                  )
+                }
+                showError={validationError[`notificationChannel_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`notificationChannel_${index}`]: false })
                   )
                 }
               />
@@ -114,58 +155,76 @@ const NotificationText = () => {
                 labelName="Notification Message En"
                 rowCount={2}
                 inputName="notificationMessageEn"
-                inputId={notdata?.id}
-                inputValue={notdata?.notificationMessageEn}
+                inputId={notificationData?.id}
+                inputValue={notificationData?.notificationMessageEn}
                 onChange={(e) =>
                   dispatch(
                     handleNotificationChange({
-                      id: notdata?.id,
+                      id: notificationData?.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
                   )
                 }
                 placeHolder="This is the emi reminder message, last payment amount is"
+                showError={validationError[`notificationMessageEn_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`notificationMessageEn_${index}`]: false })
+                  )
+                }
               />
               <InputTextarea
                 labelName="Notification Message Hi"
                 rowCount={2}
                 inputName="notificationMessageAr"
-                inputId={notdata?.id}
-                inputValue={notdata?.notificationMessageAr}
+                inputId={notificationData?.id}
+                inputValue={notificationData?.notificationMessageAr}
                 onChange={(e) =>
                   dispatch(
                     handleNotificationChange({
-                      id: notdata?.id,
+                      id: notificationData?.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
                   )
                 }
                 placeHolder="This is the emi reminder message, last payment amount is"
+                showError={validationError[`notificationMessageAr_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`notificationMessageAr_${index}`]: false })
+                  )
+                }
               />
               <InputTextarea
                 labelName="Notification Description"
                 rowCount={2}
                 inputName="notificationDescription"
-                inputId={`notificationDescription_${notdata?.id}`}
-                inputValue={notdata?.notificationDescription}
+                inputId={`notificationDescription_${notificationData?.id}`}
+                inputValue={notificationData?.notificationDescription}
                 disabled
                 placeHolder="2 days before the upcoming installment"
+                showError={validationError[`notificationDescription_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`notificationDescription_${index}`]: false })
+                  )
+                }
               />
               <div>
                 <Button
                   buttonIcon={CheckCircleIcon}
                   buttonName={""}
-                  onClick={() => handleSave(notdata?.id)}
+                  onClick={() => handleSave(notificationData?.id, index)}
                   rectangle={true}
                 />
               </div>
             </div>
           </div>
-        ))}
-      </ContainerTile>
-    </>
+        </ContainerTile>
+      ))}
+    </div>
   );
 };
 

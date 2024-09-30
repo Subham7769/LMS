@@ -46,6 +46,7 @@ import { createNewCreditScoreEq } from "../../../utils/createNewCreditScoreEq";
 import { createNewRulePolicy } from "../../../utils/createNewRulePolicy";
 import { createNewTCL } from "../../../utils/createNewTCL";
 import { createNewCreditScoreET } from "../../../utils/createNewCreditScoreET";
+import { createNewRac as createNewDynamicRac } from "../../../utils/createNewDynamicRac";
 
 import CreateNew from '../CreateNew/CreateNew';
 
@@ -87,6 +88,7 @@ const SideBar = () => {
     createNewCreditScoreEq,
     createNewRulePolicy,
     createNewTCL,
+    createNewDynamicRac,
     createNewCreditScoreET,
   }
 

@@ -185,3 +185,27 @@ export const notiChannelOptions = [
   { value: "SMS", label: "SMS" },
   { value: "BOTH", label: "Both" },
 ];
+
+export const StringArray = [
+  { label: "nationality", value: "nationality" },
+  { label: "gender", value: "gender" },
+  { label: "maritalStatus", value: "maritalStatus" },
+  { label: "occupation", value: "occupation" },
+  { label: "region", value: "region" },
+  { label: "sector", value: "sector" },
+  { label: "panVerified", value: "panVerified" },
+  { label: "panStatus", value: "panStatus" },
+];
+
+export const NumberArray = [
+  { label: "grossSalary", value: "grossSalary" },
+  { label: "age", value: "age" },
+  { label: "creditScore", value: "creditScore" },
+  { label: "dependents", value: "dependents" },
+  { label: "disposableIncome", value: "disposableIncome" },
+  { label: "basicToGross", value: "basicToGross" },
+  { label: "lengthOfService", value: "lengthOfService" },
+  { label: "simahScore", value: "simahScore" },
+  { label: "writeOff", value: "writeOff" },
+  { label: "activeRule", value: "activeRule" },
+];

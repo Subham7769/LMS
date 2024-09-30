@@ -188,12 +188,12 @@ const LiabilitiesMatrix = () => {
             <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
           </div>
         </ContainerTile>
-        <ContainerTile>
-          {allLiabilityData.length > 0 ? (
-            allLiabilityData?.map((item, index) => (
+        {allLiabilityData.length > 0 ? (
+          allLiabilityData?.map((item, index) => (
+            <ContainerTile>
               <div
                 key={index}
-                className="flex flex-col gap-y-6 mt-6 border-b border-gray-300 pb-6"
+                className="flex flex-col gap-y-6 "
               >
                 <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
                   <InputSelect
@@ -256,15 +256,15 @@ const LiabilitiesMatrix = () => {
                   />
                 </div>
               </div>
-            ))
-          ) : (
-            <p className="text-center">No data available</p>
-          )}
-          <div className="absolute bottom-1 left-2 text-xs text-gray-500">
+            </ContainerTile>
+          ))
+        ) : (
+          <p className="text-center">No data available</p>
+        )}
+          <div className="absolute -bottom-7 left-2 text-xs  text-gray-500">
             *CB - Credit Bureau
-          </div>
-        </ContainerTile>
       </div>
+    </div >
     </>
   );
 };

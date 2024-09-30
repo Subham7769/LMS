@@ -19,12 +19,18 @@ const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 const LoadingState = lazy(() =>  import("./components/LoadingState/LoadingState"));
 const Notifications = lazy(() =>  import("./components/Notifications/Notifications"));
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
-const TestComponent = lazy(() =>  import("./components/TestComponent/TestComponent"));
 
 // RAC Imports
 const RacPage = lazy(() => import("./pages/RacPage"));
+const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
+
+
+// *******************************************************************************************
+const TestComponent = lazy(() =>  import("./components/TestComponent/TestComponent"));
 const DynamicRAC = lazy(() =>  import("./components/DynamicRAC/DynamicRAC"));
+// *******************************************************************************************
+
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -138,6 +144,7 @@ const routes = [
       // Accessing All Page Components
       { path: "/", element: <HomePage />, errorElement: <RouteErrorBoundary /> },
       { path: "/rac", element: <RacPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "/dynamic-rac", element: <DynamicRacPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/recovery", element: <RecoveryPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/tcl", element: <TclPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/project", element: <ProjectPage />, errorElement: <RouteErrorBoundary /> },
@@ -178,7 +185,7 @@ const routes = [
       { path: "/global-config/risk-grading-matrix", element: <RiskGradeMatrix />, errorElement: <RouteErrorBoundary /> },
       { path: "/global-config/min-expense", element: <MinimumExpense />, errorElement: <RouteErrorBoundary /> },
       { path: "/global-config/notification-text", element: <NotificationText />, errorElement: <RouteErrorBoundary /> },
-      { path: "/dynamicRAC", element: <DynamicRAC/>, errorElement: <RouteErrorBoundary /> },
+      { path: "/dynamic-rac/:racId", element: <DynamicRAC/>, errorElement: <RouteErrorBoundary /> },
       
       
       // Accessing All New Created Child Components

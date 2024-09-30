@@ -264,24 +264,24 @@ export const MenusInitial = [
   },
   { 
     title: "Dynamic RAC", 
-    href: "/dynamicRAC", 
+    href: "/dynamic-rac", 
     icon: "ClipboardDocumentCheckIcon", 
-    current: false,
     submenu: true,
     createButton: true, 
     editable: true, 
     createFunction: "createNewDynamicRac",
     buttonName: "Create RAC", 
     placeholder: "Enter Name", 
-    navigateSuccess: "#", 
+    navigateSuccess: "/dynamic-rac/", 
     navigateFail: "/login", 
     submenuItems: [],
     isOpen: false, 
+    current: false,
   },
   { 
     title: "Test Component", 
     href: "/test", 
     icon: "BeakerIcon", 
     current: false,
-  }
+  },
 ];

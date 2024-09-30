@@ -28,17 +28,30 @@ export const validateFormFields = (
   fields,
   formData,
   dispatch,
-  confirmPassword = null
+  confirmPassword = null,
+  index=null,
 ) => {
   let isValid = true;
   const errors = {};
 
-  fields.forEach((field) => {
+  if(index !== null){
+    fields.forEach((field) => {
+      if (formData[field] === "") {
+        errors[`${field}_${index}`] = true; // Include index in the key
+        isValid = false;
+      } else {
+        errors[`${field}_${index}`] = false; // Clear the specific index error if the field is valid
+      }
+    });
+  }else{
+      fields.forEach((field) => {
     if (formData[field] === "") {
       errors[field] = true;
       isValid = false;
     }
   });
+  }
+
 
   // Check confirmPassword separately
   if (confirmPassword !== null && confirmPassword === "") {

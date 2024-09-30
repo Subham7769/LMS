@@ -20,42 +20,69 @@ import {
   handleRiskGradeNewInputChange,
   handleRiskGradeExistingInputChange,
 } from "../../redux/Slices/globalConfigSlice";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
-  const { allRiskGradeData, newRiskGradeForm, loading } = useSelector(
-    (state) => state.globalConfig
-  );
+  const { allRiskGradeData, newRiskGradeForm, loading } = useSelector((state) => state.globalConfig);
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["from", "to", "grade"];
 
   useEffect(() => {
     dispatch(fetchRiskGrades());
+    if (allRiskGradeData?.length) {
+      const initialValidationError = {};
+      allRiskGradeData.forEach((_, index) => {
+        fields.forEach((field) => {
+          // Create validation keys dynamically based on the index
+          initialValidationError[`${field}_${index}`] = false;
+        });
+      });
+      dispatch(setValidationError(initialValidationError));
+    }
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch]);
 
   const handleAddFields = () => {
-    dispatch(addRiskGrade(newRiskGradeForm)).then(() =>
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Added Successfully"}
-          message={"Item has been added successfully"}
-        />
-      ))
-    );
+    const { from, to, grade } = newRiskGradeForm;
+    const isValid = validateFormFields(fields, { from, to, grade }, dispatch);
+    console.log(isValid)
+    if (isValid) {
+      dispatch(addRiskGrade(newRiskGradeForm)).then(() =>
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Added Successfully"}
+            message={"Item has been added successfully"}
+          />
+        ))
+      );
+    }
   };
 
-  const handleSave = (id) => {
-    const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
-    dispatch(updateRiskGrade(itemToUpdate)).then(() =>
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Updated Successfully"}
-          message={"Data has been updated successfully"}
-        />
-      ))
-    );
+  const handleSave = (id, index) => {
+    const isValid = validateFormFields(fields, allRiskGradeData[index], dispatch, null, index);
+    console.log(isValid)
+    if (isValid) {
+      const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
+      dispatch(updateRiskGrade(itemToUpdate)).then(() =>
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Updated Successfully"}
+            message={"Data has been updated successfully"}
+          />
+        ))
+      );
+    }
   };
 
   const handleDelete = (id) => {
@@ -75,9 +102,9 @@ const RiskGradeMatrix = () => {
     return <LoadingState />;
   }
 
-  const sortedRiskGradeData = [...allRiskGradeData].sort(
-    (a, b) => a.from - b.from
-  );
+  // const sortedRiskGradeData = [...allRiskGradeData].sort(
+  //   (a, b) => a.from - b.from
+  // );
 
   return (
     <>
@@ -108,6 +135,12 @@ const RiskGradeMatrix = () => {
                 )
               }
               placeHolder="10"
+              showError={validationError.from}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, from: false })
+                )
+              }
             />
             <InputNumber
               labelName="To"
@@ -124,6 +157,12 @@ const RiskGradeMatrix = () => {
                 )
               }
               placeHolder="30"
+              showError={validationError.to}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, to: false })
+                )
+              }
             />
             <InputText
               labelName="Risk Grade"
@@ -140,6 +179,12 @@ const RiskGradeMatrix = () => {
                 )
               }
               placeHolder="R1"
+              showError={validationError.grade}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, grade: false })
+                )
+              }
             />
             <div className="mt-4">
               <Button
@@ -150,69 +195,87 @@ const RiskGradeMatrix = () => {
             </div>
           </div>
         </ContainerTile>
-        <ContainerTile>
-          {sortedRiskGradeData.map((rgdata) => (
+        {allRiskGradeData.map((riskGradingData, index) => (
+          <ContainerTile>
             <div
-              key={rgdata.id}
-              className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4 py-5"
+              key={riskGradingData.id}
+              className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4"
             >
               <InputNumber
                 labelName="From"
                 inputName="from"
-                inputValue={rgdata.from}
+                inputValue={riskGradingData.from}
                 onChange={(e) =>
                   dispatch(
                     handleRiskGradeExistingInputChange({
-                      id: rgdata.id,
+                      id: riskGradingData.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
+                  )
+                }
+                showError={validationError[`from_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`from_${index}`]: false })
                   )
                 }
               />
               <InputNumber
                 labelName="To"
                 inputName="to"
-                inputValue={rgdata.to}
+                inputValue={riskGradingData.to}
                 onChange={(e) =>
                   dispatch(
                     handleRiskGradeExistingInputChange({
-                      id: rgdata.id,
+                      id: riskGradingData.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
+                  )
+                }
+                showError={validationError[`to_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`to_${index}`]: false })
                   )
                 }
               />
               <InputText
                 labelName="Risk Grade"
                 inputName="grade"
-                inputValue={rgdata.grade}
+                inputValue={riskGradingData.grade}
                 onChange={(e) =>
                   dispatch(
                     handleRiskGradeExistingInputChange({
-                      id: rgdata.id,
+                      id: riskGradingData.id,
                       name: e.target.name,
                       value: e.target.value,
                     })
                   )
                 }
+                showError={validationError[`grade_${index}`]}
+                onFocus={() =>
+                  dispatch(
+                    setValidationError({ ...validationError, [`grade_${index}`]: false })
+                  )
+                }
               />
-              <div className="flex items-center gap-4 mt-4">
+              <div className="flex items-center gap-2 mt-4">
                 <Button
-                  onClick={() => handleSave(rgdata.id)}
+                  onClick={() => handleSave(riskGradingData.id, index)}
                   buttonIcon={CheckCircleIcon}
                   circle={true}
                 />
                 <Button
-                  onClick={() => handleDelete(rgdata.id)}
+                  onClick={() => handleDelete(riskGradingData.id)}
                   buttonIcon={TrashIcon}
                   circle={true}
                 />
               </div>
             </div>
-          ))}
-        </ContainerTile>
+          </ContainerTile>
+        ))}
       </div>
     </>
   );

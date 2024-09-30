@@ -5,7 +5,7 @@ import StatContainer from "../components/Common/StatContainer/StatContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchList } from "../redux/Slices/DynamicRacSlice";
 
-const RacPage = () => {
+const DynamicRacPage = () => {
   const { HeaderList, RACList } = useSelector(
     (state) => state.dynamicRac.racStatsData
   );
@@ -19,7 +19,7 @@ const RacPage = () => {
     <>
       <StatContainer stats={RacStats} />
       <ListTable
-        ListName="RAC List"
+        ListName="Dynamic RAC List"
         ListHeader={HeaderList}
         ListItem={RACList}
         Searchable={true}
@@ -29,4 +29,4 @@ const RacPage = () => {
   );
 };
 
-export default RacPage;
+export default DynamicRacPage;

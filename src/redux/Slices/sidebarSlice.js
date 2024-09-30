@@ -366,9 +366,6 @@ const sidebarSlice = createSlice({
           if (menu.title === "RAC") {
             return { ...menu, submenuItems };
           }
-          if (menu.title === "Dynamic RAC") {
-            return { ...menu, submenuItems };
-          }
           return menu;
         });
         state.menus = updatedMenus;
