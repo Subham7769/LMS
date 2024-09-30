@@ -28,7 +28,6 @@ export const validateFormFields = (
   fields,
   formData,
   dispatch,
-  confirmPassword = null,
   index=null,
 ) => {
   let isValid = true;
@@ -52,15 +51,7 @@ export const validateFormFields = (
   });
   }
 
-
-  // Check confirmPassword separately
-  if (confirmPassword !== null && confirmPassword === "") {
-    errors.confirmPassword = true;
-    isValid = false;
-  }
-
   dispatch(setValidationError({ ...errors }));
-
   return isValid;
 };
 

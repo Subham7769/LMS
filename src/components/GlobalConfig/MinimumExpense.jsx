@@ -107,7 +107,7 @@ const MinimumExpense = () => {
   };
 
   const handleSave = async (id, index) => {
-    const isValid = validateFormFields(fields, allExpenseData[index], dispatch, null, index);
+    const isValid = validateFormFields(fields, allExpenseData[index], dispatch,  index);
     console.log(isValid)
     if (isValid) {
       // Find the item to be update

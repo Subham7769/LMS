@@ -6,15 +6,20 @@ import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 const DynamicName = ({ initialName, onSave, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(initialName);
+  const [isValidationError, setIsValidationError] = useState(false);
 
   const handleEdit = () => {
     setName(initialName);
     setIsEditing(true);
   };
-
   const handleSave = () => {
-    onSave(name); // Trigger the onSave function passed as prop
-    setIsEditing(false);
+    if (name === "") {
+      setIsValidationError(true);
+    }
+    if (!isValidationError && name != "") {
+      onSave(name); // Trigger the onSave function passed as prop
+      setIsEditing(false);
+    }
   };
 
   const handleCancel = () => {
@@ -28,8 +33,10 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
         <div className="flex items-center space-x-2">
           <InputText
             inputValue={name}
-            inputName={name}
+            inputName="name"
             onChange={(e) => setName(e.target.value)}
+            showError={isValidationError}
+            onFocus={() => setIsValidationError(false)}
           />
           <button
             onClick={handleSave}

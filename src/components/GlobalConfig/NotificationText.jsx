@@ -45,7 +45,7 @@ const NotificationText = () => {
   }, [dispatch]);
 
   const handleSave = async (id, index) => {
-    const isValid = validateFormFields(fields, notificationInputList[index], dispatch, null, index);
+    const isValid = validateFormFields(fields, notificationInputList[index], dispatch,  index);
     console.log(notificationInputList[index])
     console.log(isValid)
     if (isValid) {

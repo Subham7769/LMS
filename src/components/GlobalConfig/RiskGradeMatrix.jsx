@@ -68,7 +68,7 @@ const RiskGradeMatrix = () => {
   };
 
   const handleSave = (id, index) => {
-    const isValid = validateFormFields(fields, allRiskGradeData[index], dispatch, null, index);
+    const isValid = validateFormFields(fields, allRiskGradeData[index], dispatch,  index);
     console.log(isValid)
     if (isValid) {
       const itemToUpdate = allRiskGradeData.find((item) => item.id === id);

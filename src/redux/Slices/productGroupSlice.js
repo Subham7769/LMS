@@ -191,6 +191,9 @@ const productGroupSlice = createSlice({
 
       // Add tag to activeList.inList array
       state.productGroupData.activeList.inList.push(newTag.product);
+
+      state.productGroupData.product = "";
+      state.productGroupData.limit = "";
     },
     deleteProductTag: (state, action) => {
       const tag = action.payload;
