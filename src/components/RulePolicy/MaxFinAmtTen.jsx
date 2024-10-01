@@ -1,8 +1,5 @@
 import { useEffect } from "react";
-import {
-  PlusIcon,
-  TrashIcon,PencilIcon 
-} from "@heroicons/react/20/solid";
+import { PlusIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import { useParams } from "react-router-dom";
@@ -21,6 +18,10 @@ import {
 } from "../../redux/Slices/rulePolicySlice";
 import ListTable from "../Common/ListTable/ListTable";
 import { MaxFinAmtHeaderList } from "../../data/RulePolicyData";
+import {
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const MaxFinAmtTen = ({ FAWTData }) => {
   const { rulePolicyId } = useParams();
@@ -29,6 +30,9 @@ const MaxFinAmtTen = ({ FAWTData }) => {
   const maxFinAmtRules = useSelector(
     (state) => state.rulePolicy.maxFinAmtRules
   );
+  const { validationError } = useSelector((state) => state.validation);
+  const fields2 = ["inputfinanceAmount", "inputtenure"];
+  const fields = ["financeAmount", "tenure"];
 
   useEffect(() => {
     const filteredData = FAWTData.filter(
@@ -48,7 +52,6 @@ const MaxFinAmtTen = ({ FAWTData }) => {
     const { name, value } = e.target;
     dispatch(updateInputListItem({ index, name, value })); // Dispatch the update action
   };
-
 
   const handleDelete = async (index) => {
     const ruleToDelete = inputList[index];
@@ -73,40 +76,55 @@ const MaxFinAmtTen = ({ FAWTData }) => {
     }
   };
 
-  const handleUpdate = async () => {
-    try {
-      await dispatch(updateFinanceAmountWithTenureRules(inputList)).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Update Successful"}
-          message={"The item was updated successfully"}
-        />
-      ));
-      dispatch(fetchRulePolicyData(rulePolicyId));
-    } catch (error) {
-      console.error("Error during update:", error);
+  const handleUpdate = async (index) => {
+    const isValid = validateFormFields(
+      fields,
+      tableDataWithoutId[index],
+      dispatch
+    );
+    if (isValid) {
+      try {
+        await dispatch(updateFinanceAmountWithTenureRules(inputList)).unwrap();
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Update Successful"}
+            message={"The item was updated successfully"}
+          />
+        ));
+        dispatch(fetchRulePolicyData(rulePolicyId));
+      } catch (error) {
+        console.error("Error during update:", error);
+      }
     }
   };
 
   const CreateEntry = async () => {
-    try {
-      await dispatch(createMaxFinAmtEntry()).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Create Successful"}
-          message={"The item was created successfully"}
-        />
-      ));
-      dispatch(fetchRulePolicyData(rulePolicyId));
-    } catch (error) {
-      console.error("Error during create:", error);
+    const inputfinanceAmount = maxFinAmtRules?.financeAmount;
+    const inputtenure = maxFinAmtRules?.tenure;
+    const isValid = validateFormFields(
+      fields2,
+      { inputfinanceAmount, inputtenure },
+      dispatch
+    );
+    if (isValid) {
+      try {
+        await dispatch(createMaxFinAmtEntry()).unwrap();
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Create Successful"}
+            message={"The item was created successfully"}
+          />
+        ));
+        dispatch(fetchRulePolicyData(rulePolicyId));
+      } catch (error) {
+        console.error("Error during create:", error);
+      }
     }
   };
-
 
   const ActionList = [
     {
@@ -137,6 +155,15 @@ const MaxFinAmtTen = ({ FAWTData }) => {
             inputValue={maxFinAmtRules.financeAmount}
             onChange={handleRuleChange}
             placeHolder={"999"}
+            showError={validationError?.inputfinanceAmount}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  inputfinanceAmount: false,
+                })
+              )
+            }
           />
           <InputNumber
             labelName={"Tenure"}
@@ -144,6 +171,15 @@ const MaxFinAmtTen = ({ FAWTData }) => {
             inputValue={maxFinAmtRules.tenure}
             onChange={handleRuleChange}
             placeHolder={"6"}
+            showError={validationError?.inputtenure}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  inputtenure: false,
+                })
+              )
+            }
           />
           <Button buttonIcon={PlusIcon} onClick={CreateEntry} circle={true} />
         </div>
@@ -154,7 +190,7 @@ const MaxFinAmtTen = ({ FAWTData }) => {
             ListAction={ActionList}
             handleEditableFields={handleChange}
             Sortable={true}
-            PageSize = {5}
+            PageSize={5}
           />
         </div>
       </ContainerTile>

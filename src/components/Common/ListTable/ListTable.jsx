@@ -37,7 +37,6 @@ const ListTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PageSize);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
-  const [editingButtonIndex, setEditingButtonIndex] = useState(null);
   const dispatch = useDispatch();
   const { validationError } = useSelector((state) => state.validation);
 
@@ -51,7 +50,6 @@ const ListTable = ({
     // Toggle only the PencilIcon (index 0) and ignore the TrashIcon (index 1)
     if (buttonIndex === 0) {
       setEditingRowIndex(editingRowIndex === rowIndex ? null : rowIndex);
-      setEditingButtonIndex(editingButtonIndex === rowIndex ? null : rowIndex);
     }
   };
 

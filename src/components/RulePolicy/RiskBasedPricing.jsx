@@ -3,7 +3,6 @@ import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
-import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchRulePolicyData,
@@ -28,6 +27,10 @@ import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { Passed, Warning } from "../Toasts";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import {
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -51,6 +54,21 @@ const RiskBasedPricing = () => {
     useSelector((state) => state.rulePolicy);
   const [editingIndex, setEditingIndex] = useState(null);
   const itemsPerPage = 5;
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = [
+    "firstRiskBasedPricingOperator",
+    "firstRiskBasedPricing",
+    "secondRiskBasedPricingOperator",
+    "secondRiskBasedPricing",
+    "interestRate",
+    "interestPeriodType",
+  ];
+
+  const fields2 = [
+    "tablefirstRiskBasedPricing",
+    "tablesecondRiskBasedPricing",
+    "tableinterestRate",
+  ];
 
   const handleRiskBasedPricingChange = (e) => {
     const { name, value } = e.target;
@@ -86,7 +104,35 @@ const RiskBasedPricing = () => {
   };
 
   const toggleEdit = (index) => {
-    setEditingIndex(editingIndex === index ? null : index);
+    const absoluteIndex = index + indexOfFirstItem;
+    const tablefirstRiskBasedPricing =
+      riskBasedPricing.riskBasedPricingRules[absoluteIndex]
+        .firstRiskBasedPricing;
+    const tablesecondRiskBasedPricing =
+      riskBasedPricing.riskBasedPricingRules[absoluteIndex]
+        .secondRiskBasedPricing;
+    const tableinterestRate =
+      riskBasedPricing.riskBasedPricingRules[absoluteIndex].interestRate;
+    if (editingIndex !== null) {
+      const isValid = validateFormFields(
+        fields2,
+        {
+          tablefirstRiskBasedPricing,
+          tablesecondRiskBasedPricing,
+          tableinterestRate,
+        },
+        dispatch
+      );
+      if (isValid) {
+        console.log("Entered");
+        setEditingIndex(editingIndex === index ? null : index);
+        handleUpdateRBP();
+      } else {
+        return;
+      }
+    } else {
+      setEditingIndex(editingIndex === index ? null : index);
+    }
   };
 
   const handlePageChange = (newPage) => {
@@ -101,17 +147,6 @@ const RiskBasedPricing = () => {
       />
     ));
   };
-
-  function informUser() {
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Not Yet Saved"}
-        message={"Please click the save button to confirm changes"}
-      />
-    ));
-  }
 
   const sortedItems = [...riskBasedPricing.riskBasedPricingRules].sort(
     (a, b) => {
@@ -136,29 +171,40 @@ const RiskBasedPricing = () => {
   );
 
   const handleAddFieldsRBP = () => {
-    dispatch(addRiskBasedPricingRule(rulePolicyId))
-      .unwrap()
-      .then(() => {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"The item has been added successfully"}
-          />
-        ));
-        dispatch(fetchRulePolicyData(rulePolicyId));
-      })
-      .catch((error) => {
-        toast.custom((t) => (
-          <Warning
-            t={t}
-            toast={toast}
-            title={"Failed to Add"}
-            message={`Failed to add: ${error.message}`}
-          />
-        ));
-      });
+    const operators = riskBasedPricingInput.operators;
+    const riskBasedPricingRules =
+      riskBasedPricingInput.riskBasedPricingRules[0];
+    const isValid = validateFormFields(fields, operators, dispatch);
+    const isValid2 = validateFormFields(
+      fields,
+      riskBasedPricingRules,
+      dispatch
+    );
+    if (isValid && isValid2) {
+      dispatch(addRiskBasedPricingRule(rulePolicyId))
+        .unwrap()
+        .then(() => {
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Added Successfully"}
+              message={"The item has been added successfully"}
+            />
+          ));
+          dispatch(fetchRulePolicyData(rulePolicyId));
+        })
+        .catch((error) => {
+          toast.custom((t) => (
+            <Warning
+              t={t}
+              toast={toast}
+              title={"Failed to Add"}
+              message={`Failed to add: ${error.message}`}
+            />
+          ));
+        });
+    }
   };
 
   const handleDeleteRBP = async (ruleName) => {
@@ -231,6 +277,24 @@ const RiskBasedPricing = () => {
             }
             onChangeNumber={handleRiskBasedPricingChange}
             placeHolder={"0.5"}
+            showError={validationError?.firstRiskBasedPricing}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  firstRiskBasedPricing: false,
+                })
+              )
+            }
+            showError1={validationError?.firstRiskBasedPricingOperator}
+            onFocus1={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  firstRiskBasedPricingOperator: false,
+                })
+              )
+            }
           />
           <SelectAndNumber
             labelName={"Maximum Risk Based Pricing"}
@@ -247,6 +311,24 @@ const RiskBasedPricing = () => {
             }
             onChangeNumber={handleRiskBasedPricingChange}
             placeHolder={"0.5"}
+            showError={validationError?.secondRiskBasedPricing}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  secondRiskBasedPricing: false,
+                })
+              )
+            }
+            showError1={validationError?.secondRiskBasedPricingOperator}
+            onFocus1={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  secondRiskBasedPricingOperator: false,
+                })
+              )
+            }
           />
           <InputNumber
             labelName={"Simple Interest"}
@@ -256,6 +338,12 @@ const RiskBasedPricing = () => {
             }
             onChange={handleRiskBasedPricingChange}
             placeHolder={"4000"}
+            showError={validationError?.interestRate}
+            onFocus={() =>
+              dispatch(
+                setValidationError({ ...validationError, interestRate: false })
+              )
+            }
           />
           <InputSelect
             labelName={"PER"}
@@ -266,6 +354,15 @@ const RiskBasedPricing = () => {
                 ?.interestPeriodType
             }
             onChange={handleRiskBasedPricingChange}
+            showError={validationError?.interestPeriodType}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  interestPeriodType: false,
+                })
+              )
+            }
           />
           <div>
             <Button
@@ -326,42 +423,30 @@ const RiskBasedPricing = () => {
                 <tr key={index}>
                   <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <div className="flex gap-4">
-                        <Select
-                          className="min-w-20"
-                          options={operatorOptions}
-                          value={[
-                            {
-                              label:
-                                riskBasedPricing?.operators
-                                  ?.firstRiskBasedPricingOperator,
-                              value:
-                                riskBasedPricing?.operators
-                                  ?.firstRiskBasedPricingOperator,
-                            },
-                          ]}
-                          onChange={(selectedOption) =>
-                            handleChangeRBP(
-                              {
-                                target: {
-                                  name: "firstRiskBasedPricingOperator",
-                                  value: selectedOption.value,
-                                },
-                              },
-                              index
-                            )
-                          }
-                          isSearchable={false}
-                        />
-                        <input
-                          type="number"
-                          name="firstRiskBasedPricing"
-                          value={item.firstRiskBasedPricing}
-                          onChange={(e) => handleChangeRBP(e, index)}
-                          placeholder={"0.5"}
-                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
+                      <SelectAndNumber
+                        inputSelectName={"firstRiskBasedPricingOperator"}
+                        inputSelectValue={
+                          riskBasedPricing?.operators
+                            ?.firstRiskBasedPricingOperator
+                        }
+                        inputSelectOptions={operatorOptions}
+                        onChangeSelect={(selectedOption) =>
+                          handleChangeRBP(selectedOption, index)
+                        }
+                        inputNumberName={"firstRiskBasedPricing"}
+                        inputNumberValue={item.firstRiskBasedPricing}
+                        onChangeNumber={(e) => handleChangeRBP(e, index)}
+                        placeHolder={"0.5"}
+                        showError={validationError?.tablefirstRiskBasedPricing}
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              tablefirstRiskBasedPricing: false,
+                            })
+                          )
+                        }
+                      />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
                         <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -378,42 +463,30 @@ const RiskBasedPricing = () => {
                   </td>
                   <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <div className="flex gap-4">
-                        <Select
-                          className="min-w-20"
-                          options={operatorOptions}
-                          value={[
-                            {
-                              label:
-                                riskBasedPricing?.operators
-                                  ?.secondRiskBasedPricingOperator,
-                              value:
-                                riskBasedPricing?.operators
-                                  ?.secondRiskBasedPricingOperator,
-                            },
-                          ]}
-                          onChange={(selectedOption) =>
-                            handleChangeRBP(
-                              {
-                                target: {
-                                  name: "secondRiskBasedPricingOperator",
-                                  value: selectedOption.value,
-                                },
-                              },
-                              index
-                            )
-                          }
-                          isSearchable={false}
-                        />
-                        <input
-                          type="number"
-                          name="secondRiskBasedPricing"
-                          value={item.secondRiskBasedPricing}
-                          onChange={(e) => handleChangeRBP(e, index)}
-                          placeholder={"2"}
-                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
+                      <SelectAndNumber
+                        inputSelectName={"secondRiskBasedPricingOperator"}
+                        inputSelectValue={
+                          riskBasedPricing?.operators
+                            ?.secondRiskBasedPricingOperator
+                        }
+                        inputSelectOptions={operatorOptions}
+                        onChangeSelect={(selectedOption) =>
+                          handleChangeRBP(selectedOption, index)
+                        }
+                        inputNumberName={"secondRiskBasedPricing"}
+                        inputNumberValue={item.secondRiskBasedPricing}
+                        onChangeNumber={(e) => handleChangeRBP(e, index)}
+                        placeHolder={"2"}
+                        showError={validationError?.tablesecondRiskBasedPricing}
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              tablesecondRiskBasedPricing: false,
+                            })
+                          )
+                        }
+                      />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
                         <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -430,13 +503,24 @@ const RiskBasedPricing = () => {
                   </td>
                   <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <input
-                        type="number"
-                        name="interestRate"
-                        value={item.interestRate}
+                      <InputNumber
+                        inputName={"interestRate"}
+                        inputValue={item.interestRate}
                         onChange={(e) => handleChangeRBP(e, index)}
-                        className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="4000"
+                        placeHolder={"0.4"}
+                        showError={validationError.tableinterestRate}
+                        // showError={
+                        //   validationError[`tableinterestRate_${index}`]
+                        // }
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              // [`tableinterestRate_${index}`]: false,
+                              tableinterestRate: false,
+                            })
+                          )
+                        }
                       />
                     ) : (
                       <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -446,28 +530,13 @@ const RiskBasedPricing = () => {
                   </td>
                   <td className="p-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <Select
-                        className="w-32"
-                        options={options}
-                        name="interestPeriodType"
-                        value={[
-                          {
-                            label: item.interestPeriodType,
-                            value: item.interestPeriodType,
-                          },
-                        ]}
+                      <InputSelect
+                        inputOptions={options}
+                        inputName={"interestPeriodType"}
+                        inputValue={item?.interestPeriodType}
                         onChange={(selectedOption) =>
-                          handleChangeRBP(
-                            {
-                              target: {
-                                name: "interestPeriodType",
-                                value: selectedOption.value,
-                              },
-                            },
-                            index
-                          )
+                          handleChangeRBP(selectedOption, index)
                         }
-                        isSearchable={false}
                       />
                     ) : (
                       <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -478,10 +547,7 @@ const RiskBasedPricing = () => {
                   <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                     <button onClick={() => toggleEdit(index)} type="button">
                       {editingIndex === index ? (
-                        <div
-                          onClick={informUser}
-                          className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
+                        <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                           <CheckCircleIcon
                             className="h-5 w-5"
                             aria-hidden="true"
@@ -531,16 +597,6 @@ const RiskBasedPricing = () => {
             }`}
           >
             <ChevronRightIcon className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="text-right ">
-          <button
-            type="button"
-            onClick={handleUpdateRBP}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Save
           </button>
         </div>
       </ContainerTile>

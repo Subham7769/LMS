@@ -13,6 +13,11 @@ import { useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import { TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
+import Button from "../Common/Button/Button";
+import {
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const RiskBasedPricingEquation = () => {
   const dispatch = useDispatch();
@@ -20,6 +25,8 @@ const RiskBasedPricingEquation = () => {
   const { riskBasedPricingEquation, rules } = useSelector(
     (state) => state.rulePolicy
   );
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["a_Weight", "b_Weight", "c_Weight", "d_Weight"];
 
   const handleRuleChange = (e) => {
     const { name, value } = e.target;
@@ -40,40 +47,49 @@ const RiskBasedPricingEquation = () => {
   };
 
   const handleAddRBPE = async () => {
-    try {
-      await dispatch(addRiskBasedPricingEquationRule()).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Added Successfully"}
-          message={"The item has been added successfully"}
-        />
-      ));
-    } catch (error) {
-      console.error("Failed to add RBPE:", error);
+    const isValid = validateFormFields(fields, rules, dispatch);
+    if (isValid) {
+      try {
+        await dispatch(addRiskBasedPricingEquationRule()).unwrap();
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Added Successfully"}
+            message={"The item has been added successfully"}
+          />
+        ));
+      } catch (error) {
+        console.error("Failed to add RBPE:", error);
+      }
     }
   };
 
   const handleUpdateRBPE = async (index) => {
-    try {
-      await dispatch(
-        updateRBPE({
-          index,
-          updatedRule: riskBasedPricingEquation.rules[index],
-        })
-      ).unwrap();
-      dispatch(fetchRulePolicyData(rulePolicyId));
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Update Successful"}
-          message={"The item was updated successfully"}
-        />
-      ));
-    } catch (error) {
-      console.error("Failed to update RBPE:", error);
+    const rulesData = riskBasedPricingEquation?.rules[index];
+
+    const isValid = validateFormFields(fields, rulesData, dispatch, index);
+
+    if (isValid) {
+      try {
+        await dispatch(
+          updateRBPE({
+            index,
+            updatedRule: riskBasedPricingEquation.rules[index],
+          })
+        ).unwrap();
+        dispatch(fetchRulePolicyData(rulePolicyId));
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Update Successful"}
+            message={"The item was updated successfully"}
+          />
+        ));
+      } catch (error) {
+        console.error("Failed to update RBPE:", error);
+      }
     }
   };
 
@@ -121,6 +137,15 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.a_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
+                  showError={validationError.a_Weight}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        a_Weight: false,
+                      })
+                    )
+                  }
                 />
               </td>
               <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -129,6 +154,15 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.b_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
+                  showError={validationError.b_Weight}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        b_Weight: false,
+                      })
+                    )
+                  }
                 />
               </td>
               <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -137,6 +171,15 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.c_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
+                  showError={validationError.c_Weight}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        c_Weight: false,
+                      })
+                    )
+                  }
                 />
               </td>
               <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -145,20 +188,24 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.d_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
+                  showError={validationError.d_Weight}
+                  onFocus={() =>
+                    dispatch(
+                      setValidationError({
+                        ...validationError,
+                        d_Weight: false,
+                      })
+                    )
+                  }
                 />
               </td>
               <td>
-                <button
-                  type="button"
+                <Button
+                  buttonIcon={CheckCircleIcon}
+                  buttonName={"Add"}
                   onClick={handleAddRBPE}
-                  className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  <CheckCircleIcon
-                    className="-ml-0.5 h-5 w-5"
-                    aria-hidden="true"
-                  />
-                  Add
-                </button>
+                  rectangle={true}
+                />
               </td>
             </tr>
             {riskBasedPricingEquation?.rules?.map((item, index) => (
@@ -173,6 +220,15 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.a_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
+                    showError={validationError[`a_Weight_${index}`]}
+                    onFocus={() =>
+                      dispatch(
+                        setValidationError({
+                          ...validationError,
+                          [`a_Weight_${index}`]: false,
+                        })
+                      )
+                    }
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -182,6 +238,15 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.b_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
+                    showError={validationError[`b_Weight_${index}`]}
+                    onFocus={() =>
+                      dispatch(
+                        setValidationError({
+                          ...validationError,
+                          [`b_Weight_${index}`]: false,
+                        })
+                      )
+                    }
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -191,6 +256,15 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.c_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
+                    showError={validationError[`c_Weight_${index}`]}
+                    onFocus={() =>
+                      dispatch(
+                        setValidationError({
+                          ...validationError,
+                          [`c_Weight_${index}`]: false,
+                        })
+                      )
+                    }
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -200,23 +274,28 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.d_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
+                    showError={validationError[`d_Weight_${index}`]}
+                    onFocus={() =>
+                      dispatch(
+                        setValidationError({
+                          ...validationError,
+                          [`d_Weight_${index}`]: false,
+                        })
+                      )
+                    }
                   />
                 </td>
                 <td className="py-4 flex gap-2 px-4">
-                  <button
-                    type="button"
+                  <Button
+                    buttonIcon={CheckCircleIcon}
                     onClick={() => handleUpdateRBPE(index)}
-                    className="block w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-60"
-                  >
-                    <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                  <button
-                    type="button"
+                    circle={true}
+                  />
+                  <Button
+                    buttonIcon={TrashIcon}
                     onClick={() => handleDeleteRBPE(item.ruleName)}
-                    className="block w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                  >
-                    <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
+                    circle={true}
+                  />
                 </td>
               </tr>
             ))}

@@ -9,6 +9,10 @@ import {
   fetchRulePolicyData,
   setOccupationFormData,
 } from "../../redux/Slices/rulePolicySlice";
+import {
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 import toast from "react-hot-toast";
 import { Passed } from "../Toasts";
@@ -18,6 +22,8 @@ const OccupationCard = ({ occupationData }) => {
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
   const { occupationFormData } = useSelector((state) => state.rulePolicy);
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["occupation", "occPoints"];
 
   useEffect(() => {
     if (occupationData) {
@@ -47,51 +53,60 @@ const OccupationCard = ({ occupationData }) => {
   };
 
   const addTag = async () => {
-    if (occupationFormData.occupation) {
-      if (isSimilarTag(occupationFormData.occupation)) {
-        alert("occupation already exists");
-        return;
-      }
+    const occupation = occupationFormData.occupation;
+    const occPoints = occupationFormData.points;
+    const isValid = validateFormFields(
+      fields,
+      { occupation, occPoints },
+      dispatch
+    );
+    if (isValid) {
+      if (occupationFormData.occupation) {
+        if (isSimilarTag(occupationFormData.occupation)) {
+          alert("occupation already exists");
+          return;
+        }
 
-      // Extract the latest values from formData
-      const { occupation, points, ruleName, rulePolicyTempId, fieldType } =
-        occupationFormData;
+        // Extract the latest values from formData
+        const { occupation, points, ruleName, rulePolicyTempId, fieldType } =
+          occupationFormData;
 
-      dispatch(
-        setOccupationFormData({
-          name: "tags",
-          value: [
-            ...tags,
-            { occupation, points, ruleName, rulePolicyTempId, fieldType },
+        dispatch(
+          setOccupationFormData({
+            name: "tags",
+            value: [
+              ...tags,
+              { occupation, points, ruleName, rulePolicyTempId, fieldType },
+            ],
+          })
+        );
+
+        const occupationPostData = {
+          employmentSectorRules: [
+            {
+              ruleName: "0",
+              fieldType: "Employer",
+              rulePolicyTempId: rulePolicyTempId,
+              employmentSectorName: occupation,
+              point: points,
+            },
           ],
-        })
-      );
+        };
 
-      const occupationPostData = {
-        employmentSectorRules: [
-          {
-            ruleName: "0",
-            fieldType: "Employer",
-            rulePolicyTempId: rulePolicyTempId,
-            employmentSectorName: occupation,
-            point: points,
-          },
-        ],
-      };
-
-      try {
-        await dispatch(addOccupationTagRule(occupationPostData)).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"The item has been added successfully"}
-          />
-        ));
-        dispatch(fetchRulePolicyData(rulePolicyId));
-      } catch (error) {
-        console.error("Failed to update data:", error);
+        try {
+          await dispatch(addOccupationTagRule(occupationPostData)).unwrap();
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Added Successfully"}
+              message={"The item has been added successfully"}
+            />
+          ));
+          dispatch(fetchRulePolicyData(rulePolicyId));
+        } catch (error) {
+          console.error("Failed to update data:", error);
+        }
       }
     }
   };
@@ -130,19 +145,37 @@ const OccupationCard = ({ occupationData }) => {
   };
 
   return (
-      <ContainerTile className={"w-full"}>
-        <div className="text-lg mb-3">Occupation</div>
-        <TagInput
-          formData={occupationFormData}
-          handleChange={handleChange}
-          inputTextName={"occupation"}
-          inputTextLabel={"Add Occupation"}
-          addTag={addTag}
-          deleteTag={deleteTag}
-          inputNumberName={"points"}
-          inputNumberLabel={"Add Points"}
-        />
-      </ContainerTile>
+    <ContainerTile className={"w-full"}>
+      <div className="text-lg mb-3">Occupation</div>
+      <TagInput
+        formData={occupationFormData}
+        handleChange={handleChange}
+        inputTextName={"occupation"}
+        inputTextLabel={"Add Occupation"}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        inputNumberName={"points"}
+        inputNumberLabel={"Add Points"}
+        showError={validationError?.occupation}
+        onFocus={() =>
+          dispatch(
+            setValidationError({
+              ...validationError,
+              occupation: false,
+            })
+          )
+        }
+        showError2={validationError?.occPoints}
+        onFocus2={() =>
+          dispatch(
+            setValidationError({
+              ...validationError,
+              occPoints: false,
+            })
+          )
+        }
+      />
+    </ContainerTile>
   );
 };
 

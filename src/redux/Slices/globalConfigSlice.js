@@ -154,7 +154,8 @@ export const fetchRiskGrades = createAsyncThunk(
         return rejectWithValue("Unauthorized");
       }
       const data = await response.json();
-      return data;
+      const sorteddata = [...data].sort((a, b) => a.from - b.from);
+      return sorteddata;
     } catch (error) {
       return rejectWithValue(error.message);
     }

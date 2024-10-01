@@ -53,6 +53,7 @@ const DebtBurdenConfig = () => {
   // Redux state selectors
   const { name, loading, currentPage, isModalOpen, dbrData, allDBRData } =
     useSelector((state) => state.dbrConfig);
+  const { validationError } = useSelector((state) => state.validation);
 
   const [editingIndex, setEditingIndex] = useState(null);
   const itemsPerPage = 5;
@@ -65,6 +66,18 @@ const DebtBurdenConfig = () => {
     "gdbrWithoutMTG",
     "employerRetired",
     "gdbrWithMTG",
+  ];
+
+  const fields2 = [
+    "firstNetIncomeBracketInSARuleOperator",
+    "inputstartNetIncomeBracketInSARule",
+    "secondNetIncomeBracketInSARuleOperator",
+    "inputendNetIncomeBracketInSARule",
+    "inputproductLevel",
+    "inputconsumerDBR",
+    "inputgdbrWithoutMTG",
+    "inputemployerRetired",
+    "inputgdbrWithMTG",
   ];
 
   useEffect(() => {
@@ -204,23 +217,50 @@ const DebtBurdenConfig = () => {
 
   const addNewRule = () => {
     const operators = allDBRData?.operators;
-    dispatch(addRule({ operators, dbrData, dbcTempId }))
-      .unwrap()
-      .then((response) => {
-        console.log("Rule added successfully:", response);
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Adding Successful"}
-            message={"The item was added successfully"}
-          />
-        ));
-        dispatch(resetdbrData());
-      })
-      .catch((error) => {
-        console.error("Failed to add rule:", error);
-      });
+    const inputstartNetIncomeBracketInSARule =
+      dbrData?.startNetIncomeBracketInSARule;
+    const inputendNetIncomeBracketInSARule =
+      dbrData?.endNetIncomeBracketInSARule;
+    const inputproductLevel = dbrData?.productLevel;
+    const inputconsumerDBR = dbrData?.consumerDBR;
+    const inputgdbrWithoutMTG = dbrData?.gdbrWithoutMTG;
+    const inputemployerRetired = dbrData?.employerRetired;
+    const inputgdbrWithMTG = dbrData?.gdbrWithMTG;
+
+    const isValid = validateFormFields(
+      fields2,
+      {
+        operators,
+        inputstartNetIncomeBracketInSARule,
+        inputendNetIncomeBracketInSARule,
+        inputproductLevel,
+        inputconsumerDBR,
+        inputgdbrWithoutMTG,
+        inputemployerRetired,
+        inputgdbrWithMTG,
+      },
+      dispatch
+    );
+    const isValid2 = validateFormFields(fields2, operators, dispatch);
+    if (isValid & isValid2) {
+      dispatch(addRule({ operators, dbrData, dbcTempId }))
+        .unwrap()
+        .then((response) => {
+          console.log("Rule added successfully:", response);
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Adding Successful"}
+              message={"The item was added successfully"}
+            />
+          ));
+          dispatch(resetdbrData());
+        })
+        .catch((error) => {
+          console.error("Failed to add rule:", error);
+        });
+    }
   };
 
   const deleteCurrentDBC = async () => {
@@ -304,7 +344,7 @@ const DebtBurdenConfig = () => {
     return <FaSort className="ml-2" title="Sort Data" />;
   };
 
-  const sortedItems = [...allDBRData.dbrRules].sort((a, b) => {
+  const sortedItems = [...allDBRData?.dbrRules].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -320,13 +360,13 @@ const DebtBurdenConfig = () => {
   const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
 
   // Determine total number of pages
-  const totalPages = Math.ceil(allDBRData.dbrRules.length / itemsPerPage);
+  const totalPages = Math.ceil(allDBRData?.dbrRules.length / itemsPerPage);
 
   if (loading) {
     return <LoadingState />;
   }
 
-  // console.log(dbrData);
+  console.log(validationError);
 
   return (
     <>
@@ -359,6 +399,15 @@ const DebtBurdenConfig = () => {
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="firstNetIncomeBracketInSARuleOperator"
+              showError={validationError?.firstNetIncomeBracketInSARuleOperator}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    firstNetIncomeBracketInSARuleOperator: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -367,6 +416,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.startNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="10000"
+              showError={validationError?.inputstartNetIncomeBracketInSARule}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputstartNetIncomeBracketInSARule: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -378,6 +436,17 @@ const DebtBurdenConfig = () => {
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="secondNetIncomeBracketInSARuleOperator"
+              showError={
+                validationError?.secondNetIncomeBracketInSARuleOperator
+              }
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    secondNetIncomeBracketInSARuleOperator: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -386,6 +455,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.endNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="20000"
+              showError={validationError?.inputendNetIncomeBracketInSARule}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputendNetIncomeBracketInSARule: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -395,6 +473,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.productLevel}
               onChange={handleInputChange}
               placeHolder="33%"
+              showError={validationError?.inputproductLevel}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputproductLevel: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -404,6 +491,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.consumerDBR}
               onChange={handleInputChange}
               placeHolder="65%"
+              showError={validationError?.inputconsumerDBR}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputconsumerDBR: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -413,6 +509,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.gdbrWithoutMTG}
               onChange={handleInputChange}
               placeHolder="65%"
+              showError={validationError?.inputgdbrWithoutMTG}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputgdbrWithoutMTG: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -422,6 +527,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.employerRetired}
               onChange={handleInputChange}
               inputOptions={empOptions}
+              showError={validationError?.inputemployerRetired}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputemployerRetired: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="relative">
@@ -431,6 +545,15 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.gdbrWithMTG}
               onChange={handleInputChange}
               placeHolder="65%"
+              showError={validationError?.inputgdbrWithMTG}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    inputgdbrWithMTG: false,
+                  })
+                )
+              }
             />
           </div>
           <div className="w-8">
@@ -452,7 +575,6 @@ const DebtBurdenConfig = () => {
               empOptions={empOptions}
             />
           </div>
-
           <div className="mt-4 w-full flex justify-center gap-5 items-center">
             <button
               onClick={() => handlePageChange(currentPage - 1)}

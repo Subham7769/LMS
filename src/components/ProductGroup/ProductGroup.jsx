@@ -126,8 +126,6 @@ const ProductGroup = () => {
   if (loading) {
     return <LoadingState />;
   }
-  console.log(validationError);
-  console.log(productGroupData);
 
   return (
     <>
