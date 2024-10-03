@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import {
-  CheckCircleIcon,
-  PlusIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
@@ -74,10 +72,10 @@ const CreditScoreET = () => {
     setIsModalOpen(false);
   };
 
-  const onCreateClone = async (cloneCSETName) => {
+  const onCreateClone = async (creditScoreETId,cloneCSETName) => {
     setIsModalOpen(false);
     const details = await dispatch(
-      createCloneCSET({ cloneCSETName })
+      createCloneCSET({ creditScoreETId,cloneCSETName })
     ).unwrap();
 
     toast.custom((t) => (
@@ -96,8 +94,8 @@ const CreditScoreET = () => {
     navigate("/credit-score-eligible-tenure");
   };
 
-  const DeleteRange = async ({ ruleName }) => {
-    await dispatch(handleDeleteRange({ ruleName }))
+  const DeleteRange = async ({ creditScoreETId,ruleName }) => {
+    await dispatch(handleDeleteRange({ creditScoreETId,ruleName }))
   };
 
   const handleChange = (e, ruleIndex) => {
@@ -169,7 +167,7 @@ const CreditScoreET = () => {
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onCreateClone={onCreateClone}
+        onCreateClone={(cloneCSETName)=>onCreateClone(creditScoreETId,cloneCSETName)}
         initialName={creditScoreETName}
       />
       <ContainerTile>
@@ -260,7 +258,6 @@ const CreditScoreET = () => {
                   addTag={() => dispatch(addTenure({ ruleIndex: index }))}
                   deleteTag={(tag) => handleDelete(tag, index)}
                 />
-
                 <div className="flex gap-4 justify-end items-center mt-1">
                   <Button
                     buttonName={"Save"}
@@ -269,11 +266,10 @@ const CreditScoreET = () => {
                   />
                   <Button
                     buttonIcon={TrashIcon}
-                    onClick={() => DeleteRange({ ruleName: rule.ruleName })}
+                    onClick={() => DeleteRange({ creditScoreETId, ruleName: rule.ruleName })}
                     circle={true}
                   />
                 </div>
-
               </ContainerTile>
             )
           })

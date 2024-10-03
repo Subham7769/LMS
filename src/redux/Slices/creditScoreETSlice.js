@@ -200,9 +200,8 @@ export const updateCreditScoreETName = createAsyncThunk(
 // Thunk for creating a clone of the Credit Score ET
 export const createCloneCSET = createAsyncThunk(
   "creditScoreET/createCloneCSET",
-  async ({ cloneCSETName }, { rejectWithValue, dispatch, getState }) => {
-    // Access current state of creditScoreET
-    const creditScoreETId = getState().creditScoreET.creditScoreETId;
+  async ({ creditScoreETId, cloneCSETName }, { rejectWithValue, dispatch }) => {
+
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -262,8 +261,7 @@ export const handleDeleteCSET = createAsyncThunk(
 // Thunk for deleting a Credit Score ET Range by ruleName
 export const handleDeleteRange = createAsyncThunk(
   "creditScoreET/handleDeleteCSET",
-  async ({ ruleName }, { rejectWithValue, dispatch, getState }) => {
-    const creditScoreETId = getState().creditScoreET.creditScoreETId;
+  async ({ creditScoreETId,ruleName }, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(

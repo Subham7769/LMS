@@ -34,9 +34,7 @@ const BlockedEmployer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.blockedEmployer);
-  const blockEmployer = useSelector(
-    (state) => state.blockedEmployer.blockEmployer
-  );
+  const blockEmployer = useSelector(    (state) => state.blockedEmployer.blockEmployer  );
   const { validationError } = useSelector((state) => state.validation);
   const { itemName, cloneSuccess } = blockEmployer;
 

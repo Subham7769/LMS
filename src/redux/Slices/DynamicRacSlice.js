@@ -11,24 +11,12 @@ export const fetchList = createAsyncThunk(
   }
 );
 
+export const deleteDynamicRac = createAsyncThunk("rac/deleteDynamicRac");
+export const cloneDynamicRac = createAsyncThunk("rac/cloneDynamicRac");
+
 const initialState = {
-  formConfig: {
-    title: "",
-    description: "",
-    submitEndpoint: "",
-    getEndpoint: "",
-    updateEndpoint: "",
-    deleteEndpoint: "",
-    showAddButton: false,
-    showSaveButton: false,
-    showDeleteButton: false,
-    showUpdateButton: false,
-  },
-  sections: [],
-  currentSection: null,
-  showSectionSettings: false,
-  showFormConfig: false,
-  isEditorMode: false,
+  racConfig: { id: "", name: "abc", racId: "", sections: [] },
+  isEditorMode: true,
   racStatsData: {
     HeaderList,
     RACList,
@@ -41,17 +29,9 @@ const DynamicRacSlice = createSlice({
   name: "DynamicRac",
   initialState,
   reducers: {
-    setFormConfig(state, action) {
-      state.formConfig = action.payload;
-    },
-    updateFormConfig: (state, action) => {
-      const { name, value } = action.payload;
-      state.formConfig[name] = value;
-    },
     downloadConfig: (state) => {
       const config = {
-        formConfig: state.formConfig,
-        sections: state.sections,
+        sections: state.racConfig.sections,
       };
       const blob = new Blob([JSON.stringify(config, null, 2)], {
         type: "application/json",
@@ -60,9 +40,7 @@ const DynamicRacSlice = createSlice({
       const a = document.createElement("a");
       a.href = url;
       a.download = `${
-        state.formConfig.title !== ""
-          ? state.formConfig.title
-          : "New Dynamic Form"
+        state.racConfig.name !== "" ? state.racConfig.name : "New Dynamic Form"
       }.json`;
       document.body.appendChild(a);
       a.click();
@@ -70,32 +48,38 @@ const DynamicRacSlice = createSlice({
       URL.revokeObjectURL(url);
     },
     uploadConfig(state, action) {
-      const { formConfig, sections } = action.payload;
-      state.formConfig = formConfig;
-      state.sections = sections;
+      const { sections } = action.payload;
+      state.racConfig.sections = sections;
+    },
+    updateRacConfigName(state, action) {
+      const { name } = action.payload;
+      state.racConfig = {
+        ...state.racConfig,
+        name: name,
+      };
     },
     setSection(state, action) {
       const { newSections } = action.payload;
-      state.sections = newSections;
+      state.racConfig.sections = newSections;
     },
     addSection(state, action) {
       const newSection = {
         id: `section-${Date.now()}`,
-        name: `New Section ${state.sections.length + 1}`,
+        name: `New Section ${state.racConfig.sections.length + 1}`,
         size: "full",
         fields: [],
       };
-      state.sections.push(newSection);
+      state.racConfig.sections.push(newSection);
     },
     updateSection(state, action) {
-      const { sectionId, updates } = action.payload;
-      state.sections = state.sections.map((section) =>
-        section.id === sectionId ? { ...section, ...updates } : section
+      const { sectionId, name } = action.payload;
+      state.racConfig.sections = state.racConfig.sections.map((section) =>
+        section.id === sectionId ? { ...section, name: name } : section
       );
     },
     removeSection(state, action) {
       const { sectionId } = action.payload;
-      state.sections = state.sections.filter(
+      state.racConfig.sections = state.racConfig.sections.filter(
         (section) => section.id !== sectionId
       );
     },
@@ -106,7 +90,12 @@ const DynamicRacSlice = createSlice({
         // Create new field with a unique id
         let newField = {};
         if (fieldConfig.fieldType === "STRING") {
-          const {numberCriteriaRangeList,firstOperator,secondOperator, ...restfieldConfig } = fieldConfig;
+          const {
+            numberCriteriaRangeList,
+            firstOperator,
+            secondOperator,
+            ...restfieldConfig
+          } = fieldConfig;
           newField = {
             id: `field-${Date.now()}`,
             ...restfieldConfig,
@@ -119,7 +108,7 @@ const DynamicRacSlice = createSlice({
         }
 
         // Find the section and add the new field
-        state.sections = state.sections.map((section) => {
+        state.racConfig.sections = state.racConfig.sections.map((section) => {
           if (section.id === sectionId) {
             return {
               ...section,
@@ -132,7 +121,7 @@ const DynamicRacSlice = createSlice({
     },
     removeField(state, action) {
       const { sectionId, fieldId } = action.payload;
-      state.sections = state.sections.map((section) => {
+      state.racConfig.sections = state.racConfig.sections.map((section) => {
         if (section.id === sectionId) {
           return {
             ...section,
@@ -141,6 +130,63 @@ const DynamicRacSlice = createSlice({
         }
         return section;
       });
+    },
+    handleChangeNumberField(state, action) {
+      const { sectionId, fieldId, name, value } = action.payload;
+      const stringValue = value.toString();
+      console.log(stringValue)
+      state.racConfig.sections = state.racConfig.sections.map((section) => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            fields: section.fields.map((field) => {
+              if (field.id === fieldId) {
+                return {
+                  ...field,
+                  criteriaValues: [stringValue],
+                };
+              }
+              return field;
+            }),
+          };
+        }
+        return section;
+      });
+    },
+    handleChangeStringField(state, action) {
+      const { sectionId, fieldId, values } = action.payload;
+      // Ensure we're updating the correct section and field
+      state.racConfig.sections = state.racConfig.sections.map((section) => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            fields: section.fields.map((field) => {
+              if (field.id === fieldId) {
+                return {
+                  ...field,
+                  // Update criteriaValues with the new values
+                  criteriaValues: [...values],
+                };
+              }
+              return field;
+            }),
+          };
+        }
+        return section;
+      });
+      console.log(values)
+    },
+    removeTag: (state, action) => {
+      const { sectionId, fieldId, tagToRemove } = action.payload;
+
+      // Find the section and field
+      const section = state.racConfig.sections.find(section => section.id === sectionId);
+      const field = section.fields.find(field => field.id === fieldId);
+
+      // Remove the tag from criteriaValues
+      if (field && field.criteriaValues) {
+        field.criteriaValues = field.criteriaValues.filter(tag => tag !== tagToRemove);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -163,20 +209,44 @@ const DynamicRacSlice = createSlice({
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(deleteDynamicRac.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDynamicRac.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteDynamicRac.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(cloneDynamicRac.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(cloneDynamicRac.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(cloneDynamicRac.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
 export const {
-  setFormConfig,
-  updateFormConfig,
   downloadConfig,
   uploadConfig,
+  updateRacConfigName,
   setSection,
   addSection,
   removeSection,
   updateSection,
   addField,
   removeField,
+  handleChangeNumberField,
+  handleChangeStringField,
+  removeTag,
 } = DynamicRacSlice.actions;
 export default DynamicRacSlice.reducer;

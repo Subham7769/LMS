@@ -1,47 +1,26 @@
 import React, { useState, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
+import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import InputText from "../Common/InputText/InputText";
+import DynamicName from "../Common/DynamicName/DynamicName";
 import HoverButton from "../Common/HoverButton/HoverButton";
-import { CheckCircleIcon, PlusCircleIcon, PlusIcon, Cog6ToothIcon, TrashIcon,  ArrowUpOnSquareIcon, PencilSquareIcon, ViewfinderCircleIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, PlusIcon, ArrowUpOnSquareIcon, PencilSquareIcon, ViewfinderCircleIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { useSelector } from "react-redux";
-import { downloadConfig, uploadConfig, addSection,setSection, updateSection, removeSection,  removeField } from '../../redux/Slices/DynamicRacSlice'
+import { downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
 import { useDispatch } from "react-redux";
 import Toolbox from './ToolBox'
+import FieldComponent from './FieldComponent'
+import { useParams } from "react-router-dom";
 
 const TestComponent = () => {
-  // const [sections, setSections] = useState([]);
-  const [currentSection, setCurrentSection] = useState(null);
-  const [showSectionSettings, setShowSectionSettings] = useState(false);
-  const [showFormConfig, setShowFormConfig] = useState(false);
-  const [formConfig, setFormConfig] = useState({
-    title: "",
-    description: "",
-    submitEndpoint: "",
-    getEndpoint: "",
-    updateEndpoint: "",
-    deleteEndpoint: "",
-    showAddButton: true,
-    showSaveButton: true,
-    showDeleteButton: true,
-    showUpdateButton: true,
-  });
-  const [isEditorMode, setIsEditorMode] = useState(true);
-  const {sections} = useSelector((state)=>state.dynamicRac)
-
+  const { racId } = useParams();
   const dispatch = useDispatch()
-  const [formData, setFormData] = useState({});
   const fileInputRef = useRef(null);
-
-  const HandleAddSection = () => {
-    dispatch(addSection())
-  };
-
-  const HandleUpdateSection = (sectionId, updates) => {
-    dispatch(updateSection({ sectionId, updates }))
-  };
+  const [isEditorMode, setIsEditorMode] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { racConfig } = useSelector((state) => state.dynamicRac)
+  const { sections, name } = racConfig;
 
   const handleUploadConfig = (event) => {
     const file = event.target.files[0];
@@ -50,8 +29,7 @@ const TestComponent = () => {
       reader.onload = (e) => {
         try {
           const config = JSON.parse(e.target.result);
-          setFormConfig(config.formConfig);
-          dispatch(uploadConfig({ formConfig: config.formConfig, sections: config.sections }));
+          dispatch(uploadConfig({ sections: config.sections }));
         } catch (error) {
           console.error("Error parsing JSON:", error);
           alert("Failed to load configuration. Please check the file format.");
@@ -59,14 +37,6 @@ const TestComponent = () => {
       };
       reader.readAsText(file);
     }
-  };
-
-  const hanldleRemoveSection = (sectionId) => {
-    dispatch(removeSection({ sectionId }))
-  };
-
-  const handleRemoveField = (sectionId, fieldId) => {
-    dispatch(removeField({ sectionId, fieldId }))
   };
 
   const onDragEnd = (result) => {
@@ -110,315 +80,60 @@ const TestComponent = () => {
     }
   };
 
-  const handleInputChange = (e, field) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isEditorMode) {
-      console.log("Form data:", formData);
-      return;
-    }
-    try {
-      const response = await fetch(formConfig.submitEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        alert("Form submitted successfully!");
-        setFormData({});
-      } else {
-        alert("Form submission failed. Please try again.");
+  const createCloneDynamicRac = (racName) => {
+    dispatch(cloneDynamicRac({ racId, racName })).then(
+      (action) => {
+        if (action.type.endsWith("fulfilled")) {
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Clone Created"}
+              message={"Clone has been created successfully"}
+            />
+          ));
+        }
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("An error occurred while submitting the form. Please try again.");
-    }
-  };
-
-  const FieldComponent = ({ field, fieldId, isEditorMode, sectionId }) => {
-    switch (field.fieldType) {
-      case "NUMBER":
-        return (
-          <div className="flex justify-between items-center gap-2 ">
-            <InputNumber
-              labelName={field.name}
-              inputName={field.name}
-              inputValue={formData[field.name] || ""}
-              onChange={(e) => handleInputChange(e, field)}
-              disabled={isEditorMode}
-            />
-            {isEditorMode && (
-              <TrashIcon onClick={() =>
-                handleRemoveField(sectionId, fieldId)
-              }
-                className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer" />
-            )}
-          </div>
-        );
-      case "STRING":
-        return (
-          <div className="flex justify-between items-center gap-2 ">
-            <InputText
-              labelName={field.name}
-              inputName={field.name}
-              inputValue={formData[field.name] || ""}
-              onChange={(e) => handleInputChange(e, field)}
-              disabled={isEditorMode}
-            />
-            {isEditorMode && (
-              <TrashIcon onClick={() =>
-                handleRemoveField(sectionId, fieldId)
-              }
-                className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer" />
-            )}
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const SectionSettings = () => {
-    if (!currentSection) return null;
-
-    const [sectionConfig, setSectionConfig] = useState(currentSection);
-
-    const updateSectionConfig = (updates) => {
-      setSectionConfig((prev) => ({ ...prev, ...updates }));
-    };
-
-    const saveSectionConfig = () => {
-      HandleUpdateSection(currentSection.id, sectionConfig);
-      setShowSectionSettings(false);
-    };
-
-    return (
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${showSectionSettings ? "" : "hidden"
-          }`}
-      >
-        <div className="bg-white p-6 rounded-lg">
-          <h2 className="text-xl font-bold mb-4">Section Settings</h2>
-          <div className="mb-4">
-            <label className="block mb-2">Name</label>
-            <input
-              type="text"
-              value={sectionConfig.name}
-              onChange={(e) => updateSectionConfig({ name: e.target.value })}
-              className="w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">Size</label>
-            <select
-              value={sectionConfig.size}
-              onChange={(e) => updateSectionConfig({ size: e.target.value })}
-              className="w-full border rounded px-2 py-1"
-            >
-              <option value="full">Full</option>
-              <option value="half">Half</option>
-              <option value="third">Third</option>
-            </select>
-          </div>
-          <div className="flex justify-end">
-            <button
-              onClick={saveSectionConfig}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-            <button
-              onClick={() => setShowSectionSettings(false)}
-              className="ml-2 bg-gray-300 px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
     );
   };
 
-  const FormConfigModal = () => {
-    const [localFormConfig, setLocalFormConfig] = useState(formConfig);
+  const handleDelete = () => {
+    dispatch(deleteDynamicRac(racId)).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
+        dispatch(fetchBEData());
+        navigate("/dynamic-rac");
+      }
+    });
+  };
 
-    const handleSave = () => {
-      setFormConfig(localFormConfig);
-      setShowFormConfig(false);
-    };
+  const handleClone = () => {
+    setIsModalOpen(true);
+  };
 
-    return (
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${showFormConfig ? "" : "hidden"
-          }`}
-      >
-        <div className="bg-white p-6 rounded-lg w-2/3">
-          <h2 className="text-xl font-bold mb-4">Form Configuration</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <InputText
-                inputValue={localFormConfig.title}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    title: e.target.value,
-                  })
-                }
-                labelName="Title"
-                inputName="title"
-              />
-            </div>
-            <div>
-              <InputText
-                inputValue={localFormConfig.description}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    description: e.target.value,
-                  })
-                }
-                labelName="Description"
-                inputName="description"
-              />
-            </div>
-            <div>
-              <InputText
-                inputValue={localFormConfig.submitEndpoint}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    submitEndpoint: e.target.value,
-                  })
-                }
-                labelName="Submit Endpoint"
-                inputName="submitEndpoint"
-              />
-            </div>
-            <div>
-              <InputText
-                inputValue={localFormConfig.getEndpoint}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    getEndpoint: e.target.value,
-                  })
-                }
-                labelName="Get Endpoint"
-                inputName="getEndpoint"
-              />
-            </div>
-            <div>
-              <InputText
-                inputValue={localFormConfig.updateEndpoint}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    updateEndpoint: e.target.value,
-                  })
-                }
-                labelName="Update Endpoint"
-                inputName="updateEndpoint"
-              />
-            </div>
-            <div>
-              <InputText
-                inputValue={localFormConfig.deleteEndpoint}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    deleteEndpoint: e.target.value,
-                  })
-                }
-                labelName="Delete Endpoint"
-                inputName="deleteEndpoint"
-              />
-            </div>
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <div>
-              <InputCheckbox
-                labelName="Show Add Button"
-                inputChecked={localFormConfig.showAddButton}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    showAddButton: e.target.checked,
-                  })
-                }
-                inputName="Show Add Button"
-              />
-            </div>
-            <div>
-              <InputCheckbox
-                labelName="Show Save Button"
-                inputChecked={localFormConfig.showSaveButton}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    showSaveButton: e.target.checked,
-                  })
-                }
-                inputName="Show Save Button"
-              />
-            </div>
-            <div>
-              <InputCheckbox
-                labelName="Show Delete Button"
-                inputChecked={localFormConfig.showDeleteButton}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    showDeleteButton: e.target.checked,
-                  })
-                }
-                inputName="Show Delete Button"
-              />
-            </div>
-            <div>
-              <InputCheckbox
-                labelName="Show Update Button"
-                inputChecked={localFormConfig.showUpdateButton}
-                onChange={(e) =>
-                  setLocalFormConfig({
-                    ...localFormConfig,
-                    showUpdateButton: e.target.checked,
-                  })
-                }
-                inputName="Show Update Button"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end mt-4">
-            <Button onClick={handleSave} buttonName="Save" rectangle={true} />
-            <Button
-              onClick={() => setShowFormConfig(false)}
-              className="ml-2 !bg-gray-300 !text-black"
-              rectangle={true}
-              buttonName="Cancel"
-            />
-          </div>
-        </div>
-      </div>
-    );
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex justify-between items-center w-full">
-        <h1 className="text-3xl font-bold  flex-1">
-          {formConfig.title || "New Dynamic Form"}
-        </h1>
-        <div className="flex justify-center items-center -mt-4">
-          <label className="flex items-center cursor-pointer mt-3">
+      <div className="flex justify-between items-center w-full mb-4">
+        <div className="flex-1 flex items-center justify-between mr-5">
+          <DynamicName initialName={name} onSave={(name) => dispatch(updateRacConfigName({ name }))} />
+          <div className="flex gap-4">
+            <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
+            <Button buttonIcon={TrashIcon} onClick={handleDelete} circle={true} />
+          </div>
+        </div>
+
+        <CloneModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onCreateClone={createCloneDynamicRac}
+          initialName={name}
+        />
+
+        <div className="flex justify-center items-center">
+          <label className="flex items-center cursor-pointer">
             <input
               type="checkbox"
               checked={isEditorMode}
@@ -426,7 +141,7 @@ const TestComponent = () => {
               className="hidden" // Hide the checkbox visually
             />
             <div className="flex justify-between items-center gap-1 hover:cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 rounded-lg border-2 px-2 py-1">
-              {isEditorMode ? <ViewfinderCircleIcon className="h-5 w-5" /> : <PencilSquareIcon className="h-5 w-5" />}
+              {isEditorMode ? <ViewfinderCircleIcon className="h-4 w-4" /> : <PencilSquareIcon className="h-4 w-4" />}
               <span className="text-sm mt-1font-bold">{isEditorMode ? "View Mode" : "Editor Mode"}</span>
             </div>
           </label>
@@ -437,16 +152,10 @@ const TestComponent = () => {
           <div className="flex justify-between gap-5 w-full">
             <div className="flex gap-2">
               <HoverButton
-                icon={Cog6ToothIcon}
-                text="Form Config"
-                color="indigo" // Automatically sets hover and background colors
-                onClick={() => setShowFormConfig(true)}
-              />
-              <HoverButton
                 icon={PlusIcon}
                 text="Add Section"
                 color="green" // Automatically sets hover and background colors
-                onClick={() => HandleAddSection()}
+                onClick={() => dispatch(addSection())}
               />
             </div>
             <div className="flex gap-2 items-end">
@@ -475,13 +184,10 @@ const TestComponent = () => {
       </div>
       <div className="flex items-start max-h-[550px] gap-3">
         {isEditorMode && <Toolbox />}
-        <form
-          onSubmit={handleSubmit}
-          className={`basis-3/4 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden`}
-        >
+        <form className={`basis-3/4 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden`}>
           <DragDropContext onDragEnd={onDragEnd} >
-            <div className="grid gap-4" >
-              {sections.map((section) => (
+            <div className="flex flex-col justify-center " >
+              {sections?.map((section) => (
                 <Droppable key={section.id} droppableId={section.id}>
                   {(provided) => (
                     <div
@@ -496,25 +202,26 @@ const TestComponent = () => {
                     >
 
                       <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-xl font-semibold">{section.name}</h2>
+                        {/* <h2 className="text-xl font-semibold">{section.name}</h2> */}
+                        <DynamicName initialName={section.name} onSave={(name) => dispatch(updateSection({ sectionId: section.id, name }))} />
                         {isEditorMode && (
                           <div className="flex justify-between items-center gap-2">
-                            <Cog6ToothIcon
+                            {/* <Cog6ToothIcon
                               onClick={() => {
-                                setCurrentSection(section);
+                                dispatch(setCurrentSection(section));
                                 setShowSectionSettings(true);
                               }}
-                              className="h-6 w-6 hover:text-green-500"
-                            />
+                              className="h-5 w-5 hover:text-green-500"
+                            /> */}
                             <TrashIcon
-                              onClick={() => hanldleRemoveSection(section.id)}
-                              className="h-6 w-6 hover:text-red-500"
+                              onClick={() => dispatch(removeSection({ sectionId: section.id }))}
+                              className="h-5 w-5 hover:text-red-500"
                             />
                           </div>
                         )}
                       </div>
 
-                      {section.fields.map((field, index) => (
+                      {section?.fields?.map((field, index) => (
                         <Draggable
                           key={field.id}
                           draggableId={field.id}
@@ -545,47 +252,22 @@ const TestComponent = () => {
               ))}
             </div>
           </DragDropContext>
-          <div className="flex justify-center items-center gap-5">
-            {!isEditorMode && formConfig.showAddButton && (
-              <Button
-                className="mt-4"
-                buttonIcon={PlusCircleIcon}
-                buttonName="Add"
-                rectangle={true}
-              />
-            )}
+          {
+            sections.length > 0 ? (
+              <div className="flex justify-end items-center gap-5">
+                <Button
+                  className="mt-4"
+                  buttonIcon={CheckCircleIcon}
+                  buttonName="Save"
+                  rectangle={true}
+                />
+              </div>
+            )
+              : ""
+          }
 
-            {!isEditorMode && formConfig.showSaveButton && (
-              <Button
-                className="mt-4"
-                buttonIcon={CheckCircleIcon}
-                buttonName="Save"
-                rectangle={true}
-              />
-            )}
-
-            {!isEditorMode && formConfig.showUpdateButton && (
-              <Button
-                className="mt-4"
-                buttonIcon={CheckCircleIcon}
-                buttonName="Update"
-                rectangle={true}
-              />
-            )}
-
-            {!isEditorMode && formConfig.showDeleteButton && (
-              <Button
-                className="mt-4"
-                buttonIcon={TrashIcon}
-                rectangle={true}
-                buttonName="Delete"
-              />
-            )}
-          </div>
         </form>
       </div>
-      <SectionSettings />
-      <FormConfigModal />
     </div>
   );
 };

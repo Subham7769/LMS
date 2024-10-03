@@ -15,7 +15,8 @@ const Toolbox = () => {
   const { racId } = useParams();
   const dispatch = useDispatch()
   const [sectionId, setSectionId] = useState("");
-  const { sections } = useSelector((state) => state.dynamicRac)
+  const { racConfig } = useSelector((state) => state.dynamicRac)
+  const { sections } = racConfig;
 
   const initialState = {
     fieldType: "",
@@ -35,8 +36,6 @@ const Toolbox = () => {
   }
 
   const [fieldConfig, setFieldConfig] = useState(initialState);
-
-
 
   const handleChange = (e) => {
     const { name, checked, type, value } = e.target;
