@@ -24,15 +24,39 @@ import {
   updateLiabilityItem,
   deleteLiabilityItem,
 } from "../../redux/Slices/globalConfigSlice";
+import {
+  clearValidationError,
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const LiabilitiesMatrix = () => {
   const dispatch = useDispatch();
   const { allLiabilityData, newLiabilityForm, loading } = useSelector(
     (state) => state.globalConfig
   );
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = [
+    "product",
+    "simahDescriptionCode",
+    "issuer",
+    "applicabilityGDBR",
+    "totalExposure",
+    "defaultConsideredInSIMAHscore",
+  ];
 
   useEffect(() => {
     dispatch(fetchLiabilityData());
+
+    const initialValidationError = {};
+    fields.forEach((field) => {
+      initialValidationError[field] = false; // Set all fields to false initially
+    });
+    dispatch(setValidationError(initialValidationError));
+    // Cleanup function to clear validation errors on unmount
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch]);
 
   const handleInputChange = async (e, index) => {
@@ -80,15 +104,18 @@ const LiabilitiesMatrix = () => {
   };
 
   const handleAdd = async () => {
-    await dispatch(addNewLiabilityItem(newLiabilityForm)).unwrap();
-    toast.custom((t) => (
-      <Passed
-        t={t}
-        toast={toast}
-        title={"Added Successfully"}
-        message={"The item has been added successfully"}
-      />
-    ));
+    const isValid = validateFormFields(fields, newLiabilityForm, dispatch);
+    if (isValid) {
+      await dispatch(addNewLiabilityItem(newLiabilityForm)).unwrap();
+      toast.custom((t) => (
+        <Passed
+          t={t}
+          toast={toast}
+          title={"Added Successfully"}
+          message={"The item has been added successfully"}
+        />
+      ));
+    }
   };
 
   if (loading) {
@@ -117,6 +144,12 @@ const LiabilitiesMatrix = () => {
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
+              showError={validationError.product}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({ ...validationError, product: false })
+                )
+              }
             />
             <InputText
               labelName="CB Description (CODE)"
@@ -131,6 +164,15 @@ const LiabilitiesMatrix = () => {
                   })
                 )
               }
+              showError={validationError.simahDescriptionCode}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    simahDescriptionCode: false,
+                  })
+                )
+              }
             />
 
             <InputSelect
@@ -140,6 +182,15 @@ const LiabilitiesMatrix = () => {
               inputValue={newLiabilityForm?.issuer}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
+              }
+              showError={validationError.issuer}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    issuer: false,
+                  })
+                )
               }
             />
 
@@ -163,6 +214,15 @@ const LiabilitiesMatrix = () => {
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
+              showError={validationError.applicabilityGDBR}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    applicabilityGDBR: false,
+                  })
+                )
+              }
             />
 
             <InputSelect
@@ -172,6 +232,15 @@ const LiabilitiesMatrix = () => {
               inputValue={newLiabilityForm?.totalExposure}
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
+              }
+              showError={validationError.totalExposure}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    totalExposure: false,
+                  })
+                )
               }
             />
 
@@ -183,6 +252,15 @@ const LiabilitiesMatrix = () => {
               onChange={(e) =>
                 dispatch(handleLiabilityNewInputChange(e.target))
               }
+              showError={validationError.defaultConsideredInSIMAHscore}
+              onFocus={() =>
+                dispatch(
+                  setValidationError({
+                    ...validationError,
+                    defaultConsideredInSIMAHscore: false,
+                  })
+                )
+              }
             />
 
             <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
@@ -191,10 +269,7 @@ const LiabilitiesMatrix = () => {
         {allLiabilityData.length > 0 ? (
           allLiabilityData?.map((item, index) => (
             <ContainerTile>
-              <div
-                key={index}
-                className="flex flex-col gap-y-6 "
-              >
+              <div key={index} className="flex flex-col gap-y-6 ">
                 <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
                   <InputSelect
                     labelName="Product"
@@ -261,10 +336,10 @@ const LiabilitiesMatrix = () => {
         ) : (
           <p className="text-center">No data available</p>
         )}
-          <div className="absolute -bottom-1 left-2 text-xs  text-gray-500">
-            *CB - Credit Bureau
+        <div className="absolute -bottom-1 left-2 text-xs  text-gray-500">
+          *CB - Credit Bureau
+        </div>
       </div>
-    </div >
     </>
   );
 };

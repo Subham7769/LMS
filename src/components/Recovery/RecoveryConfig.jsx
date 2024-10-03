@@ -83,12 +83,12 @@ const RecoveryConfig = () => {
     toggleEditEquation();
   };
 
-  console.log(validationError);
+  // console.log(validationError);
 
   const handleUpdate = (e) => {
     e.preventDefault();
     const isValid = validateFormFields(fields, data, dispatch);
-    console.log(isValid);
+    // console.log(isValid);
     if (isValid) {
       dispatch(
         updateOrPostData({

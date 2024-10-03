@@ -7,7 +7,6 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
-import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed, Warning } from "../Toasts";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
@@ -25,6 +24,10 @@ import {
   updateLOSInputList,
 } from "../../redux/Slices/rulePolicySlice";
 import { useParams } from "react-router-dom";
+import {
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -45,6 +48,20 @@ const LengthofService = () => {
   const { LOSInputList, lengthOfService } = useSelector(
     (state) => state.rulePolicy
   );
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = [
+    "firstLengthOfServiceOperator",
+    "firstLengthOfService",
+    "secondLengthOfServiceOperator",
+    "secondLengthOfService",
+    "point",
+  ];
+
+  const fields2 = [
+    "tablefirstLengthOfService",
+    "tablesecondLengthOfService",
+    "tablepoint",
+  ];
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -68,33 +85,61 @@ const LengthofService = () => {
   };
 
   const toggleEdit = (index) => {
-    setEditingIndex(editingIndex === index ? null : index);
+    const absoluteIndex = index + indexOfFirstItem;
+    const tablefirstLengthOfService =
+      LOSInputList.lengthOfServiceRules[absoluteIndex].firstLengthOfService;
+    const tablesecondLengthOfService =
+      LOSInputList.lengthOfServiceRules[absoluteIndex].secondLengthOfService;
+    const tablepoint = LOSInputList.lengthOfServiceRules[absoluteIndex].point;
+    if (editingIndex !== null) {
+      const isValid = validateFormFields(
+        fields2,
+        { tablefirstLengthOfService, tablesecondLengthOfService, tablepoint },
+        dispatch
+      );
+      if (isValid) {
+        setEditingIndex(editingIndex === index ? null : index);
+        handleSave();
+      } else {
+        return;
+      }
+    } else {
+      setEditingIndex(editingIndex === index ? null : index);
+    }
   };
 
+  console.log(validationError);
+
   const handleAddFields = () => {
-    dispatch(addLengthOfServiceRule())
-      .unwrap()
-      .then(() => {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"The item has been added successfully"}
-          />
-        ));
-        dispatch(fetchRulePolicyData(rulePolicyId));
-      })
-      .catch((error) => {
-        toast.custom((t) => (
-          <Warning
-            t={t}
-            toast={toast}
-            title={"Failed to Add"}
-            message={`Failed to add: ${error.message}`}
-          />
-        ));
-      });
+    const operators = lengthOfService.operators;
+    const lengthOfServiceRules = lengthOfService.lengthOfServiceRules[0];
+    const isValid = validateFormFields(fields, operators, dispatch);
+    const isValid2 = validateFormFields(fields, lengthOfServiceRules, dispatch);
+    if (isValid && isValid2) {
+      dispatch(addLengthOfServiceRule())
+        .unwrap()
+        .then(() => {
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Added Successfully"}
+              message={"The item has been added successfully"}
+            />
+          ));
+          dispatch(fetchRulePolicyData(rulePolicyId));
+        })
+        .catch((error) => {
+          toast.custom((t) => (
+            <Warning
+              t={t}
+              toast={toast}
+              title={"Failed to Add"}
+              message={`Failed to add: ${error.message}`}
+            />
+          ));
+        });
+    }
   };
 
   const handleChange = (e, index) => {
@@ -210,6 +255,24 @@ const LengthofService = () => {
             }
             onChangeNumber={handleRuleChange}
             placeHolder={"0.5"}
+            showError={validationError?.firstLengthOfService}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  firstLengthOfService: false,
+                })
+              )
+            }
+            showError1={validationError?.firstLengthOfServiceOperator}
+            onFocus1={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  firstLengthOfServiceOperator: false,
+                })
+              )
+            }
           />
           <SelectAndNumber
             labelName={"Maximum Length Of Service"}
@@ -225,6 +288,24 @@ const LengthofService = () => {
             }
             onChangeNumber={handleRuleChange}
             placeHolder={"0.5"}
+            showError={validationError?.secondLengthOfService}
+            onFocus={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  secondLengthOfService: false,
+                })
+              )
+            }
+            showError1={validationError?.secondLengthOfServiceOperator}
+            onFocus1={() =>
+              dispatch(
+                setValidationError({
+                  ...validationError,
+                  secondLengthOfServiceOperator: false,
+                })
+              )
+            }
           />
           <InputNumber
             labelName={"Point"}
@@ -232,6 +313,10 @@ const LengthofService = () => {
             inputValue={lengthOfService?.lengthOfServiceRules[0]?.point}
             onChange={handleRuleChange}
             placeHolder={"4000"}
+            showError={validationError?.point}
+            onFocus={() =>
+              dispatch(setValidationError({ ...validationError, point: false }))
+            }
           />
           <div>
             <Button
@@ -287,43 +372,29 @@ const LengthofService = () => {
                 <tr key={index}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <div className="flex gap-4">
-                        <Select
-                          className="min-w-20"
-                          options={operatorOptions}
-                          value={[
-                            {
-                              label:
-                                LOSInputList?.operators
-                                  ?.firstLengthOfServiceOperator,
-                              value:
-                                LOSInputList?.operators
-                                  ?.firstLengthOfServiceOperator,
-                            },
-                          ]}
-                          onChange={(selectedOption) =>
-                            handleChange(
-                              {
-                                target: {
-                                  name: "firstLengthOfServiceOperator",
-                                  value: selectedOption.value,
-                                },
-                              },
-                              index
-                            )
-                          }
-                          isSearchable={false}
-                        />
-                        <input
-                          type="number"
-                          name="firstLengthOfService"
-                          id="firstLengthOfService"
-                          value={item.firstLengthOfService}
-                          onChange={(e) => handleChange(e, index)}
-                          placeholder={"1"}
-                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
+                      <SelectAndNumber
+                        inputSelectName={"firstLengthOfServiceOperator"}
+                        inputSelectValue={
+                          LOSInputList?.operators?.firstLengthOfServiceOperator
+                        }
+                        inputSelectOptions={operatorOptions}
+                        onChangeSelect={(selectedOption) =>
+                          handleChange(selectedOption, index)
+                        }
+                        inputNumberName={"firstLengthOfService"}
+                        inputNumberValue={item.firstLengthOfService}
+                        onChangeNumber={(e) => handleChange(e, index)}
+                        placeHolder={"0.5"}
+                        showError={validationError?.tablefirstLengthOfService}
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              tablefirstLengthOfService: false,
+                            })
+                          )
+                        }
+                      />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
                         <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -340,43 +411,29 @@ const LengthofService = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <div className="flex gap-4">
-                        <Select
-                          className="min-w-20"
-                          options={operatorOptions}
-                          value={[
-                            {
-                              label:
-                                LOSInputList?.operators
-                                  ?.secondLengthOfServiceOperator,
-                              value:
-                                LOSInputList?.operators
-                                  ?.secondLengthOfServiceOperator,
-                            },
-                          ]}
-                          onChange={(selectedOption) =>
-                            handleChange(
-                              {
-                                target: {
-                                  name: "secondLengthOfServiceOperator",
-                                  value: selectedOption.value,
-                                },
-                              },
-                              index
-                            )
-                          }
-                          isSearchable={false}
-                        />
-                        <input
-                          type="number"
-                          name="secondLengthOfService"
-                          id="secondLengthOfService"
-                          value={item.secondLengthOfService}
-                          onChange={(e) => handleChange(e, index)}
-                          placeholder={"4"}
-                          className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
+                      <SelectAndNumber
+                        inputSelectName={"secondLengthOfServiceOperator"}
+                        inputSelectValue={
+                          LOSInputList?.operators?.secondLengthOfServiceOperator
+                        }
+                        inputSelectOptions={operatorOptions}
+                        onChangeSelect={(selectedOption) =>
+                          handleChange(selectedOption, index)
+                        }
+                        inputNumberName={"secondLengthOfService"}
+                        inputNumberValue={item.secondLengthOfService}
+                        onChangeNumber={(e) => handleChange(e, index)}
+                        placeHolder={"0.5"}
+                        showError={validationError?.tablesecondLengthOfService}
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              tablesecondLengthOfService: false,
+                            })
+                          )
+                        }
+                      />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
                         <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -393,13 +450,20 @@ const LengthofService = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingIndex === index ? (
-                      <input
-                        type="number"
-                        name="point"
-                        value={item.point}
+                      <InputNumber
+                        inputName={"point"}
+                        inputValue={item.point}
                         onChange={(e) => handleChange(e, index)}
-                        className="block w-32 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="0.4"
+                        placeHolder={"0.4"}
+                        showError={validationError.tablepoint}
+                        onFocus={() =>
+                          dispatch(
+                            setValidationError({
+                              ...validationError,
+                              tablepoint: false,
+                            })
+                          )
+                        }
                       />
                     ) : (
                       <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -411,7 +475,7 @@ const LengthofService = () => {
                     <button onClick={() => toggleEdit(index)} type="button">
                       {editingIndex === index ? (
                         <div
-                          onClick={handleSave}
+                          // onClick={handleSave}
                           className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                           <CheckCircleIcon

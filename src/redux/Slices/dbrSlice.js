@@ -376,9 +376,8 @@ export const dbrSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(fetchRules.rejected, (state) => {
-        state.loading = false;
-        state.error = action.error.message;
+      .addCase(fetchRules.pending, (state) => {
+        state.loading = true;
       })
       .addCase(fetchRules.fulfilled, (state, action) => {
         // state.rules = action.payload?.dbrRules || [];
@@ -386,8 +385,9 @@ export const dbrSlice = createSlice({
         state.allDBRData = action.payload;
         state.loading = false;
       })
-      .addCase(fetchRules.pending, (state) => {
-        state.loading = true;
+      .addCase(fetchRules.rejected, (state) => {
+        state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;

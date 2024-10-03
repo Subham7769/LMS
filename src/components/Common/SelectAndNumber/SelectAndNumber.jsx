@@ -17,6 +17,8 @@ const SelectAndNumber = ({
   placeHolderNumber,
   showError = false, // New prop to indicate error
   onFocus, // New onFocus handler to reset error
+  showError1 = false,
+  onFocus1,
 
   inputSelect2Name,
   inputSelect2Value,
@@ -81,11 +83,13 @@ const SelectAndNumber = ({
       {labelName && (
         <label
           className={`block ${
-            showError || showError2 ? "text-red-600" : "text-gray-700"
+            showError || showError1 || showError2
+              ? "text-red-600"
+              : "text-gray-700"
           } px-1 text-[14px]`}
           htmlFor={inputSelectName}
         >
-          {showError || showError2 ? "Field required" : labelName}
+          {showError || showError1 || showError2 ? "Field required" : labelName}
         </label>
       )}
       <div className="flex items-center space-x-2">
@@ -103,6 +107,7 @@ const SelectAndNumber = ({
           isDisabled={disabledSelect}
           isHidden={hiddenSelect}
           isSearchable={false}
+          onFocus={onFocus1}
         />
         <input
           type="number"

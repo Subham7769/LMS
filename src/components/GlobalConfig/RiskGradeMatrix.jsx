@@ -28,7 +28,9 @@ import {
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
-  const { allRiskGradeData, newRiskGradeForm, loading } = useSelector((state) => state.globalConfig);
+  const { allRiskGradeData, newRiskGradeForm, loading } = useSelector(
+    (state) => state.globalConfig
+  );
   const { validationError } = useSelector((state) => state.validation);
   const fields = ["from", "to", "grade"];
 
@@ -52,7 +54,7 @@ const RiskGradeMatrix = () => {
   const handleAddFields = () => {
     const { from, to, grade } = newRiskGradeForm;
     const isValid = validateFormFields(fields, { from, to, grade }, dispatch);
-    console.log(isValid)
+    console.log(isValid);
     if (isValid) {
       dispatch(addRiskGrade(newRiskGradeForm)).then(() =>
         toast.custom((t) => (
@@ -68,8 +70,13 @@ const RiskGradeMatrix = () => {
   };
 
   const handleSave = (id, index) => {
-    const isValid = validateFormFields(fields, allRiskGradeData[index], dispatch,  index);
-    console.log(isValid)
+    const isValid = validateFormFields(
+      fields,
+      allRiskGradeData[index],
+      dispatch,
+      index
+    );
+    console.log(isValid);
     if (isValid) {
       const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
       dispatch(updateRiskGrade(itemToUpdate)).then(() =>
@@ -101,10 +108,6 @@ const RiskGradeMatrix = () => {
   if (loading) {
     return <LoadingState />;
   }
-
-  // const sortedRiskGradeData = [...allRiskGradeData].sort(
-  //   (a, b) => a.from - b.from
-  // );
 
   return (
     <>
@@ -159,9 +162,7 @@ const RiskGradeMatrix = () => {
               placeHolder="30"
               showError={validationError.to}
               onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, to: false })
-                )
+                dispatch(setValidationError({ ...validationError, to: false }))
               }
             />
             <InputText
@@ -217,7 +218,10 @@ const RiskGradeMatrix = () => {
                 showError={validationError[`from_${index}`]}
                 onFocus={() =>
                   dispatch(
-                    setValidationError({ ...validationError, [`from_${index}`]: false })
+                    setValidationError({
+                      ...validationError,
+                      [`from_${index}`]: false,
+                    })
                   )
                 }
               />
@@ -237,7 +241,10 @@ const RiskGradeMatrix = () => {
                 showError={validationError[`to_${index}`]}
                 onFocus={() =>
                   dispatch(
-                    setValidationError({ ...validationError, [`to_${index}`]: false })
+                    setValidationError({
+                      ...validationError,
+                      [`to_${index}`]: false,
+                    })
                   )
                 }
               />
@@ -257,7 +264,10 @@ const RiskGradeMatrix = () => {
                 showError={validationError[`grade_${index}`]}
                 onFocus={() =>
                   dispatch(
-                    setValidationError({ ...validationError, [`grade_${index}`]: false })
+                    setValidationError({
+                      ...validationError,
+                      [`grade_${index}`]: false,
+                    })
                   )
                 }
               />

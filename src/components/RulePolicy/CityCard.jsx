@@ -9,6 +9,10 @@ import {
   fetchRulePolicyData,
   setCityFormData,
 } from "../../redux/Slices/rulePolicySlice";
+import {
+  setValidationError,
+  validateFormFields,
+} from "../../redux/Slices/validationSlice";
 
 import toast from "react-hot-toast";
 import { Passed } from "../Toasts";
@@ -18,6 +22,8 @@ const CityCard = ({ cityData }) => {
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
   const { cityFormData } = useSelector((state) => state.rulePolicy);
+  const { validationError } = useSelector((state) => state.validation);
+  const fields = ["city", "points"];
 
   useEffect(() => {
     if (cityData) {
@@ -47,51 +53,54 @@ const CityCard = ({ cityData }) => {
   };
 
   const addTag = async () => {
-    if (cityFormData.city) {
-      if (isSimilarTag(cityFormData.city)) {
-        alert("city already exists");
-        return;
-      }
+    const isValid = validateFormFields(fields, cityFormData, dispatch);
+    if (isValid) {
+      if (cityFormData.city) {
+        if (isSimilarTag(cityFormData.city)) {
+          alert("city already exists");
+          return;
+        }
 
-      // Extract the latest values from formData
-      const { city, points, ruleName, rulePolicyTempId, fieldType } =
-        cityFormData;
+        // Extract the latest values from formData
+        const { city, points, ruleName, rulePolicyTempId, fieldType } =
+          cityFormData;
 
-      dispatch(
-        setCityFormData({
-          name: "tags",
-          value: [
-            ...tags,
-            { city, points, ruleName, rulePolicyTempId, fieldType },
+        dispatch(
+          setCityFormData({
+            name: "tags",
+            value: [
+              ...tags,
+              { city, points, ruleName, rulePolicyTempId, fieldType },
+            ],
+          })
+        );
+
+        const cityPostData = {
+          cityRules: [
+            {
+              ruleName: "0",
+              fieldType: "Employer",
+              rulePolicyTempId: rulePolicyTempId,
+              cityName: city,
+              point: points,
+            },
           ],
-        })
-      );
+        };
 
-      const cityPostData = {
-        cityRules: [
-          {
-            ruleName: "0",
-            fieldType: "Employer",
-            rulePolicyTempId: rulePolicyTempId,
-            cityName: city,
-            point: points,
-          },
-        ],
-      };
-
-      try {
-        await dispatch(addCityTagRule(cityPostData)).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"The item has been added successfully"}
-          />
-        ));
-        dispatch(fetchRulePolicyData(rulePolicyId));
-      } catch (error) {
-        console.error("Failed to update data:", error);
+        try {
+          await dispatch(addCityTagRule(cityPostData)).unwrap();
+          toast.custom((t) => (
+            <Passed
+              t={t}
+              toast={toast}
+              title={"Added Successfully"}
+              message={"The item has been added successfully"}
+            />
+          ));
+          dispatch(fetchRulePolicyData(rulePolicyId));
+        } catch (error) {
+          console.error("Failed to update data:", error);
+        }
       }
     }
   };
@@ -145,6 +154,24 @@ const CityCard = ({ cityData }) => {
         deleteTag={deleteTag}
         inputNumberName={"points"}
         inputNumberLabel={"Add Points"}
+        showError={validationError?.city}
+        onFocus={() =>
+          dispatch(
+            setValidationError({
+              ...validationError,
+              city: false,
+            })
+          )
+        }
+        showError2={validationError?.points}
+        onFocus2={() =>
+          dispatch(
+            setValidationError({
+              ...validationError,
+              points: false,
+            })
+          )
+        }
       />
     </ContainerTile>
   );
