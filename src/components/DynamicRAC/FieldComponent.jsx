@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { removeField, handleChangeNumberField, handleChangeStringField } from '../../redux/Slices/DynamicRacSlice';
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
-import { TrashIcon } from '@heroicons/react/20/solid';
+import { TrashIcon, EllipsisVerticalIcon,ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
 const FieldComponent = ({ field, fieldId, isEditorMode, sectionId }) => {
   const dispatch = useDispatch();
@@ -22,6 +21,9 @@ const FieldComponent = ({ field, fieldId, isEditorMode, sectionId }) => {
     case "NUMBER":
       return (
         <div className="flex justify-between items-center gap-2 ">
+          {isEditorMode && (
+            <ChevronUpDownIcon className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer" />
+          )}
           <InputNumber
             labelName={field.name}
             inputName={field.name}
@@ -32,7 +34,7 @@ const FieldComponent = ({ field, fieldId, isEditorMode, sectionId }) => {
           {isEditorMode && (
             <TrashIcon
               onClick={() => dispatch(removeField({ sectionId, fieldId }))}
-              className="h-4 w-4 mt-4 hover:text-red-500 hover:cursor-pointer"
+              className="h-4 w-4 mt-4 hover:text-indigo-500 hover:cursor-pointer"
             />
           )}
         </div>
@@ -41,11 +43,17 @@ const FieldComponent = ({ field, fieldId, isEditorMode, sectionId }) => {
     case "STRING":
       return (
         <div className="flex justify-between items-center gap-2">
+          {isEditorMode && (
+            <ChevronUpDownIcon className="h-5 w-5 mt-4 hover:text-indigo-500 hover:cursor-pointer" />
+          )}
+
           <InputTextMulti
+            label={field.name}
             tag={field?.criteriaValues}
             setTag={(newValues) => handleStringInputChange(newValues)}
             sectionId={sectionId}
             fieldId={fieldId}
+            disabled={isEditorMode}
           />
           {isEditorMode && (
             <TrashIcon

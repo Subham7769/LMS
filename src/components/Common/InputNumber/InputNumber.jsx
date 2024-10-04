@@ -91,7 +91,7 @@ const InputNumber = ({
                 ? "ring-red-600 focus:ring-red-600"
                 : "ring-gray-300 focus:ring-indigo-600"
             } 
-            focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1`} // Conditionally apply red or indigo focus ring
+            focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`} // Conditionally apply red or indigo focus ring
           required
           disabled={disabled}
         />

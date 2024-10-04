@@ -41,45 +41,73 @@ const TestComponent = () => {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-
+  
     const { source, destination } = result;
-
+  
+    console.log("Source: ", source);
+    console.log("Destination: ", destination);
+    console.log("Sections before update: ", sections);
+  
+    const newSections = [...sections]; // Clone sections array
+  
     if (source.droppableId === destination.droppableId) {
       // Reordering within the same section
-      const sectionId = source.droppableId;
-      const sectionIndex = sections.findIndex((s) => s.id === sectionId);
-      const newFields = Array.from(sections[sectionIndex].fields);
-      const [reorderedField] = newFields.splice(source.index, 1);
-      newFields.splice(destination.index, 0, reorderedField);
-
-      const newSections = [...sections];
+      const sectionIndex = newSections.findIndex(
+        (s) => s.id === source.droppableId
+      );
+  
+      if (sectionIndex === -1) return; // Validate section index
+  
+      const newFields = Array.from(newSections[sectionIndex].fields); // Clone fields
+      const [reorderedField] = newFields.splice(source.index, 1); // Remove from old position
+      newFields.splice(destination.index, 0, reorderedField); // Insert at new position
+  
       newSections[sectionIndex] = {
         ...newSections[sectionIndex],
         fields: newFields,
       };
-      dispatch(setSection({ newSections }))
+  
+      console.log("Sections after reorder: ", newSections);
+      dispatch(setSection({ newSections }));
+  
     } else {
-      // Moving field between sections
-      const sourceSectionIndex = sections.findIndex(
+      // Moving field between different sections
+      const sourceSectionIndex = newSections.findIndex(
         (s) => s.id === source.droppableId
       );
-      const destSectionIndex = sections.findIndex(
+      const destSectionIndex = newSections.findIndex(
         (s) => s.id === destination.droppableId
       );
-      const newSections = [...sections];
-      const [movedField] = newSections[sourceSectionIndex].fields.splice(
-        source.index,
-        1
-      );
-      newSections[destSectionIndex].fields.splice(
-        destination.index,
-        0,
-        movedField
-      );
-      dispatch(setSection({ newSections }))
+  
+      if (sourceSectionIndex === -1 || destSectionIndex === -1) return; // Validate indices
+  
+      // Clone source and destination fields
+      const sourceFields = Array.from(newSections[sourceSectionIndex]?.fields || []);
+      const destFields = Array.from(newSections[destSectionIndex]?.fields || []);
+  
+      if (sourceFields.length === 0 || source.index >= sourceFields.length) return; // Validate source field
+  
+      // Remove field from source
+      const [movedField] = sourceFields.splice(source.index, 1);
+  
+      // Insert field into destination
+      destFields.splice(destination.index, 0, movedField);
+  
+      newSections[sourceSectionIndex] = {
+        ...newSections[sourceSectionIndex],
+        fields: sourceFields,
+      };
+      newSections[destSectionIndex] = {
+        ...newSections[destSectionIndex],
+        fields: destFields,
+      };
+  
+      console.log("Sections after move: ", newSections);
+      dispatch(setSection({ newSections }));
     }
   };
-
+  
+  
   const createCloneDynamicRac = (racName) => {
     dispatch(cloneDynamicRac({ racId, racName })).then(
       (action) => {
@@ -115,8 +143,8 @@ const TestComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex justify-between items-center w-full mb-4">
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center w-full">
         <div className="flex-1 flex items-center justify-between mr-5">
           <DynamicName initialName={name} onSave={(name) => dispatch(updateRacConfigName({ name }))} />
           <div className="flex gap-4">
@@ -182,11 +210,11 @@ const TestComponent = () => {
           </div>
         )}
       </div>
-      <div className="flex items-start max-h-[550px] gap-3">
+      <div className="flex items-start max-h-[550px]">
         {isEditorMode && <Toolbox />}
-        <form className={`basis-3/4 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden`}>
+        <div className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden`}>
           <DragDropContext onDragEnd={onDragEnd} >
-            <div className="flex flex-col justify-center " >
+            <div className="flex flex-col justify-center gap-5" >
               {sections?.map((section) => (
                 <Droppable key={section.id} droppableId={section.id}>
                   {(provided) => (
@@ -202,17 +230,9 @@ const TestComponent = () => {
                     >
 
                       <div className="flex justify-between items-center mb-2">
-                        {/* <h2 className="text-xl font-semibold">{section.name}</h2> */}
                         <DynamicName initialName={section.name} onSave={(name) => dispatch(updateSection({ sectionId: section.id, name }))} />
                         {isEditorMode && (
                           <div className="flex justify-between items-center gap-2">
-                            {/* <Cog6ToothIcon
-                              onClick={() => {
-                                dispatch(setCurrentSection(section));
-                                setShowSectionSettings(true);
-                              }}
-                              className="h-5 w-5 hover:text-green-500"
-                            /> */}
                             <TrashIcon
                               onClick={() => dispatch(removeSection({ sectionId: section.id }))}
                               className="h-5 w-5 hover:text-red-500"
@@ -266,7 +286,7 @@ const TestComponent = () => {
               : ""
           }
 
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -105,7 +105,7 @@ const Toolbox = () => {
 
 
   return (
-    <div className="border-2 rounded-lg py-5 basis-1/4 flex-grow max-h-[550px] overflow-y-scroll">
+    <div className="border-2 rounded-lg py-5 basis-1/5 flex-grow max-h-[550px] overflow-y-scroll">
       <div className="grid grid-cols-1 gap-3 flex-1">
         <div className={`grid gap-2 px-2 grid-cols-1`}>
           <InputSelect
@@ -118,6 +118,7 @@ const Toolbox = () => {
             inputName="sectionId"
             inputValue={sectionId}
             onChange={(e) => setSectionId(e.target.value)}
+            dropdownTextSize={"small"}
           />
           <InputSelect
             labelName="Field Type"
@@ -128,6 +129,7 @@ const Toolbox = () => {
             inputName="fieldType"
             inputValue={fieldConfig.fieldType}
             onChange={handleChange}
+            dropdownTextSize={"small"}
           />
           <InputSelect
             labelName="Criteria Type"
@@ -138,6 +140,7 @@ const Toolbox = () => {
             inputName="criteriaType"
             inputValue={fieldConfig.criteriaType}
             onChange={handleChange}
+            dropdownTextSize={"small"}
           />
           <InputSelect
             labelName="Name"
@@ -147,6 +150,7 @@ const Toolbox = () => {
             inputName="name"
             inputValue={fieldConfig.name}
             onChange={handleChange}
+            dropdownTextSize={"small"}
           />
         </div>
         <div className={`grid gap-3 px-5 grid-cols-1 text-[12px]`}>
@@ -177,14 +181,14 @@ const Toolbox = () => {
             <div className="grid gap-1 p-2 grid-cols-2 border-2 rounded-xl w-full"
             >
               <InputSelect
-                labelName="First Operator"
+                labelName="First"
                 inputOptions={operatorOptions}
                 inputName="firstOperator"
                 inputValue={fieldConfig.firstOperator}
                 onChange={handleChange}
               />
               <InputSelect
-                labelName="Second Operator"
+                labelName="Second"
                 inputOptions={operatorOptions}
                 inputName="secondOperator"
                 inputValue={fieldConfig.secondOperator}
@@ -194,17 +198,17 @@ const Toolbox = () => {
             {fieldConfig.numberCriteriaRangeList.map((range, index) => (
               <div
                 key={index}
-                className="grid gap-1 p-2 grid-cols-[30%_30%_40%] border-2 rounded-xl min-w-[25%] w-fit max-w-[100%] relative"
+                className="grid gap-1 p-2 grid-cols-[27%_27%_46%] border-2 rounded-xl min-w-[25%] w-fit max-w-[100%] relative"
               >
                 <InputNumber
-                  labelName="Minimum"
+                  labelName="Min"
                   inputName="minimum"
                   inputValue={range.minimum}
                   onChange={(e) => handleRangeChange(e, index)}
                   placeHolder="0"
                 />
                 <InputNumber
-                  labelName="Maximum"
+                  labelName="Max"
                   inputName="maximum"
                   inputValue={range.maximum}
                   onChange={(e) => handleRangeChange(e, index)}
@@ -225,14 +229,14 @@ const Toolbox = () => {
             ))}
           </div>
         )}
-        <div className={`grid grid-cols-2 px-2 gap-3`}>
+        <div className={`flex flex-col items-center gap-3`}>
           {fieldConfig.fieldType === "NUMBER" && (
             <Button
             buttonIcon={PlusIcon}
               buttonName="Add Range"
               onClick={addRangeEntry}
               rectangle={true}
-              className="bg-yellow-500 hover:bg-yellow-400 text-[12px]"
+              className="bg-yellow-500 hover:bg-yellow-400 text-[12px] w-[80%]"
             />
           )}
           <Button
@@ -240,7 +244,7 @@ const Toolbox = () => {
             buttonName="Add Field"
             onClick={() => handleAddField(sectionId, fieldConfig)}
             rectangle={true}
-            className="text-[12px]"
+            className="text-[12px] w-[80%]"
           />
         </div>
       </div>

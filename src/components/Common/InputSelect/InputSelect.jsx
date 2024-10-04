@@ -14,8 +14,9 @@ const InputSelect = ({
   hidden = false,
   isMulti = false,
   searchable = false,
-  showError = false, // New prop to indicate error
-  onFocus, // New onFocus handler to reset error
+  showError = false,
+  onFocus,
+  dropdownTextSize = "medium", // New prop to control dropdown text size
 }) => {
   if (inputValue === null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
@@ -31,13 +32,36 @@ const InputSelect = ({
     });
   };
 
+  // Define custom styles based on dropdownTextSize prop
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      fontSize: dropdownTextSize === "small" ? "12px" : dropdownTextSize === "large" ? "16px" : "14px", // Change font size
+      padding: 10,
+    }),
+    control: (provided) => ({
+      ...provided,
+      border: "1px solid #ccc",
+      boxShadow: "none",
+      "&:hover": {
+        border: "1px solid #aaa",
+      },
+    }),
+    menu: (provided) => ({
+      ...provided,
+      zIndex: 9999, // Ensure menu appears above other elements
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      fontSize: dropdownTextSize === "small" ? "12px" : dropdownTextSize === "large" ? "16px" : "14px", // Same font size as options
+    }),
+  };
+
   return (
     <div className="flex flex-col">
       {labelName && (
         <label
-          className={`block ${
-            showError ? "text-red-600" : "text-gray-700"
-          } px-1 text-[14px]`}
+          className={`block ${showError ? "text-red-600" : "text-gray-700"} px-1 text-[14px]`}
           htmlFor={inputName}
         >
           {showError ? "Field required" : labelName}
@@ -45,7 +69,7 @@ const InputSelect = ({
       )}
       <Select
         name={inputName}
-        className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm "
+        styles={customStyles} // Apply custom styles
         options={inputOptions}
         value={
           isMulti
@@ -56,7 +80,7 @@ const InputSelect = ({
         onChange={handleChange}
         isSearchable={searchable}
         placeholder={placeHolder}
-        onFocus={onFocus} // Call onFocus to reset the error state
+        onFocus={onFocus}
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}
@@ -65,7 +89,7 @@ const InputSelect = ({
   );
 };
 
-// Now wrap the entire component with ElementErrorBoundary where it's being used
+// Wrap the entire component with ElementErrorBoundary
 const WithErrorBoundary = (props) => {
   return (
     <ElementErrorBoundary>
