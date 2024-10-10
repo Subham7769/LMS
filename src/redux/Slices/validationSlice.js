@@ -2,58 +2,78 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const validationInitialState = {
   validationError: {},
+  fields: [],
+  isValid: true,
 };
 
 const validationSlice = createSlice({
   name: "validation",
   initialState: validationInitialState,
   reducers: {
+    addFields: (state, action) => {
+      const { inputName } = action.payload;
+      state.fields.push(inputName);
+      state.validationError[inputName] = false; // Set all fields to false initially
+    },
     setValidationError: (state, action) => {
+      const inputName = action.payload;
       state.validationError = {
         ...state.validationError,
-        ...action.payload,
+        [inputName]: false,
+      };
+    },
+    updateValidationError: (state, action) => {
+      const newErrors = action.payload;
+      state.validationError = {
+        ...state.validationError,
+        ...newErrors,
       };
     },
     clearValidationError: (state, action) => {
       state.validationError = {};
+      state.fields = [];
+    },
+    validateForm: (state, action) => {
+      const errors = {};
+      const formData = action.payload;
+      state.isValid = true;
+
+      if (formData.dataIndex) {
+        state.fields.forEach((field) => {
+          if (formData[field] === "") {
+            errors[`${field}_${formData.dataIndex}`] = true;
+            state.isValid = false;
+          } else {
+            errors[`${field}_${formData.dataIndex}`] = false;
+          }
+        });
+      } else {
+        state.fields.forEach((field) => {
+          if (formData[field] === "") {
+            errors[field] = true;
+            state.isValid = false;
+          } else {
+            errors[field] = false;
+          }
+        });
+      }
+
+      state.validationError = {
+        ...state.validationError,
+        ...errors,
+      };
     },
   },
 });
 
-export const { setValidationError, clearValidationError } =
-  validationSlice.actions;
+export const {
+  addFields,
+  setValidationError,
+  updateValidationError,
+  clearValidationError,
+  validateForm,
+} = validationSlice.actions;
 export default validationSlice.reducer;
-
-export const validateFormFields = (
-  fields,
-  formData,
-  dispatch,
-  index=null,
-) => {
-  let isValid = true;
-  const errors = {};
-
-  if(index !== null){
-    fields.forEach((field) => {
-      if (formData[field] === "") {
-        errors[`${field}_${index}`] = true; // Include index in the key
-        isValid = false;
-      } else {
-        errors[`${field}_${index}`] = false; // Clear the specific index error if the field is valid
-      }
-    });
-  }else{
-      fields.forEach((field) => {
-    if (formData[field] === "") {
-      errors[field] = true;
-      isValid = false;
-    }
-  });
-  }
-
-  dispatch(setValidationError({ ...errors }));
-  return isValid;
-};
 
 export const validateUserRole = (userRole, dispatch) => {
   let isValid = true;
@@ -64,7 +84,7 @@ export const validateUserRole = (userRole, dispatch) => {
     isValid = false;
   }
 
-  dispatch(setValidationError({ ...errors }));
+  dispatch(updateValidationError({ ...errors }));
 
   return isValid;
 };
@@ -102,14 +122,12 @@ export const validateFormFieldsRule = (formData, dispatch) => {
     });
 
     // Update the state only once
-    dispatch(setValidationError({ ...validationErrors }));
+    dispatch(updateValidationError({ ...validationErrors }));
   } else {
     // Handle the case when dependentsRules or rules array is not defined
     isValid = false;
   }
 
   console.log(isValid);
-
-  // dispatch(setValidationError(validationErrors));
   return isValid;
 };

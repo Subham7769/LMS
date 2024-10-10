@@ -7,31 +7,29 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getRepaymentInfo, submitRepayment } from "../../redux/Slices/userProductTestingSlice";
+import {
+  getRepaymentInfo,
+  submitRepayment,
+} from "../../redux/Slices/userProductTestingSlice";
 import LoadingState from "../LoadingState/LoadingState";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const BackendRepayment = () => {
   const { userID } = useParams();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const dispatch = useDispatch();
   const [amount, setamount] = useState("");
-  const [userloanID, setuserloanID] = useState('');
-  const { loanIdOptions, repaymentData, loading, error } = useSelector(state => state.userProductTesting)
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["amount", "userloanID"];
+  const [userloanID, setuserloanID] = useState("");
+  const { loanIdOptions, repaymentData, loading, error } = useSelector(
+    (state) => state.userProductTesting
+  );
 
   useEffect(() => {
-    dispatch(getRepaymentInfo({ userID, navigate }))
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
+    dispatch(getRepaymentInfo({ userID, navigate }));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -40,19 +38,26 @@ const BackendRepayment = () => {
 
   const handleLoanIdChange = (selectedOption) => {
     setuserloanID(selectedOption);
-    const selectedLoan = repaymentData.find((loan) => loan.loanId === selectedOption);
+    const selectedLoan = repaymentData.find(
+      (loan) => loan.loanId === selectedOption
+    );
     if (selectedLoan) {
       setamount(selectedLoan.closureAmount);
     }
   };
 
-  
-  const handleSubmit = ({ userloanID, amount, userID, navigate }) => {
-    const isValid = validateFormFields(fields, {amount,userloanID}, dispatch);
+  const handleSubmit = async ({ userloanID, amount, userID, navigate }) => {
+    const dataToValidate = {
+      amount,
+      userloanID,
+    };
+    await dispatch(validateForm(dataToValidate));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(submitRepayment({ userloanID, amount, userID, navigate }))
+      dispatch(submitRepayment({ userloanID, amount, userID, navigate }));
     }
-  }
+  };
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -60,11 +65,17 @@ const BackendRepayment = () => {
   }
 
   if (error) {
-    return <ContainerTile className="text-center">Error: {error}</ContainerTile>;
+    return (
+      <ContainerTile className="text-center">Error: {error}</ContainerTile>
+    );
   }
 
   if (repaymentData.length === 0) {
-    return <ContainerTile className="text-center">No Open Loans to Pay</ContainerTile>;
+    return (
+      <ContainerTile className="text-center">
+        No Open Loans to Pay
+      </ContainerTile>
+    );
   }
 
   return (
@@ -79,12 +90,7 @@ const BackendRepayment = () => {
             inputValue={userloanID}
             inputOptions={loanIdOptions}
             onChange={(e) => handleLoanIdChange(e.target.value)}
-            showError={validationError.userloanID}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, userloanID: false })
-              )
-            }
+            isValidation={true}
             searchable={false}
           />
           <InputNumber
@@ -93,12 +99,7 @@ const BackendRepayment = () => {
             inputValue={amount}
             onChange={(e) => setamount(e.target.value)}
             placeHolder={"5000"}
-            showError={validationError.amount}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, amount: false })
-              )
-            }
+            isValidation={true}
           />
         </div>
         <Button

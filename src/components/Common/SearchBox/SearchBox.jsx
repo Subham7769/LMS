@@ -6,11 +6,10 @@ import InputText from "../InputText/InputText";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../../redux/Slices/validationSlice";
-import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import store from "../../../redux/store";
 
 const SearchBox = () => {
   const location = useLocation();
@@ -18,21 +17,18 @@ const SearchBox = () => {
   const [borrowerNotFound, setBorrowerNotFound] = useState(false);
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const dispatch = useDispatch();
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["borrowerID"];
 
   useEffect(() => {
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
+    // const initialValidationError = {};
+    // fields.forEach((field) => {
+    //   initialValidationError[field] = false; // Set all fields to false initially
+    // });
+    // dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
-
 
   async function checkBorrowerInfoCustomerCare(borrowerID) {
     try {
@@ -105,9 +101,10 @@ const SearchBox = () => {
     navigate(`/overdraft-loan-offers/${borrowerID}/overdraft-offer`);
   }
 
-  const handleClick = () => {
-    const isValid = validateFormFields(fields, {borrowerID}, dispatch);
-    console.log(isValid)
+  const handleClick = async () => {
+    await dispatch(validateForm({ borrowerID }));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       if (location.pathname === "/customer-care") {
         checkBorrowerInfoCustomerCare(borrowerID);
@@ -116,11 +113,9 @@ const SearchBox = () => {
       } else {
         checkBorrowerInfoOverdraftLoanOffer(borrowerID);
       }
-    }
-    else{
+    } else {
       return;
     }
-
   };
 
   return (
@@ -139,12 +134,7 @@ const SearchBox = () => {
               setBorrowerID(e.target.value);
             }}
             placeHolder="1234567890"
-            showError={validationError?.borrowerID}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, borrowerID: false })
-                )
-              }
+            isValidation={true}
           />
         </div>
         <div>
@@ -163,7 +153,6 @@ const SearchBox = () => {
     </>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

@@ -14,13 +14,14 @@ import {
   updateProductDataField,
   createProductData,
 } from "../../redux/Slices/productSlice";
-import LoadingState from "../LoadingState/LoadingState";
+import store from "../../redux/store";
+import { validateForm } from "../../redux/Slices/validationSlice";
 
 const CreateNewProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
   const dispatch = useDispatch();
-  const { productData, loading, error } = useSelector((state) => state.product);
+  const { productData, error } = useSelector((state) => state.product);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -39,19 +40,20 @@ const CreateNewProduct = () => {
   };
 
   const handleCreateProduct = async () => {
-    try {
-      await dispatch(createProductData(productData)).unwrap();
-      dispatch(fetchProductData());
-      navigate("/product/");
-    } catch (error) {
-      console.error("Failed to create product:", error);
-      // Optionally, you could use a toast notification here to notify the user of the error
+    await dispatch(validateForm(productData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      try {
+        await dispatch(createProductData(productData)).unwrap();
+        dispatch(fetchProductData());
+        navigate("/product/");
+      } catch (error) {
+        console.error("Failed to create product:", error);
+        // Optionally, you could use a toast notification here to notify the user of the error
+      }
     }
   };
-
-  if (loading) {
-    return <LoadingState />;
-  }
 
   if (error) {
     <p>Error: {error}</p>;

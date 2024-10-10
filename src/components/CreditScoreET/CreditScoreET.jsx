@@ -34,10 +34,10 @@ import {
 import TagInput from "../TagInput/TagInput";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
@@ -47,32 +47,36 @@ const CreditScoreET = () => {
 
   const { creditScoreET, newRangeData, creditScoreETName, loading, error } =
     useSelector((state) => state.creditScoreET);
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["firstCreditScore", "secondCreditScore"];
-  const fields2 = ["tenureValue"];
 
   useEffect(() => {
     dispatch(fetchCreditScoreETInfo(creditScoreETId))
       .then(() => dispatch(fetchCreditScoreETName(creditScoreETId)))
       .then(() => dispatch(updateCreditScoreETId(creditScoreETId)));
-
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
-    // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
   }, [creditScoreETId, dispatch]);
 
   const handleSaveET = async (creditScoreETId, index) => {
-    const data = creditScoreET?.rules[index];
-    const isValid = validateFormFields(fields, data, dispatch, index);
+    const { firstCreditScore, secondCreditScore } = creditScoreET?.rules[index];
+    const dataToValidate = {
+      firstCreditScore,
+      secondCreditScore,
+    };
+    await dispatch(validateForm(dataToValidate));
+
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+
     if (isValid) {
-      await dispatch(saveCreditScoreET(creditScoreETId)).unwrap();
-      toast.custom((t) => <RowChanged t={t} toast={toast} />);
+      try {
+        await dispatch(saveCreditScoreET(creditScoreETId)).unwrap();
+        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    } else {
+      console.log("Form validation failed. No API call made.");
     }
   };
 
@@ -145,24 +149,34 @@ const CreditScoreET = () => {
 
   const addTag = async () => {
     const data = newRangeData.rules[0];
-    const isValid = validateFormFields(fields2, data, dispatch);
+    await dispatch(validateForm(data));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(addNewRangeTenure());
     }
   };
 
-  const handleAddTenure = (index) => {
+  const handleAddTenure = async (index) => {
     const tenureValue = creditScoreET?.rules[index];
-    const isValid = validateFormFields(fields2, tenureValue, dispatch, index);
+    await dispatch(validateForm(tenureValue));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(addTenure({ ruleIndex: index }));
     }
   };
 
   const handleAddNewRange = async (creditScoreETId) => {
-    const data = newRangeData.rules[0];
+    const { firstCreditScore, secondCreditScore } = newRangeData.rules[0];
+    const dataToValidate = {
+      firstCreditScore,
+      secondCreditScore,
+    };
     const tenure = newRangeData?.rules[0].tenure;
-    const isValid = validateFormFields(fields, data, dispatch);
+    await dispatch(validateForm(dataToValidate));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(tenure, dispatch);
     if (!isValid2) {
       toast.custom((t) => (
@@ -197,7 +211,6 @@ const CreditScoreET = () => {
   if (error) {
     <p>Error: {error}</p>;
   }
-  // console.log(newRangeData);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -237,15 +250,7 @@ const CreditScoreET = () => {
             inputValue={newRangeData.rules?.[0]?.firstCreditScore}
             onChange={handleChangeRange}
             placeHolder="0"
-            showError={validationError?.firstCreditScore}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  firstCreditScore: false,
-                })
-              )
-            }
+            isValidation={true}
           />
           <InputSelect
             labelName={"Maximum Credit Score"}
@@ -259,15 +264,7 @@ const CreditScoreET = () => {
             inputValue={newRangeData.rules?.[0]?.secondCreditScore}
             onChange={handleChangeRange}
             placeHolder="2"
-            showError={validationError?.secondCreditScore}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  secondCreditScore: false,
-                })
-              )
-            }
+            isValidation={true}
           />
         </div>
         <TagInput
@@ -277,17 +274,8 @@ const CreditScoreET = () => {
           inputTextLabel={"Eligible Tenure"}
           addTag={addTag}
           deleteTag={(tag) => handleNewRangeDelete(tag)}
-          showError={validationError?.tenureValue}
-          onFocus={() =>
-            dispatch(
-              setValidationError({
-                ...validationError,
-                tenureValue: false,
-              })
-            )
-          }
+          isValidation={true}
         />
-
         <div className="flex gap-4 justify-end items-center">
           <Button
             buttonName={"Add Range"}
@@ -316,15 +304,8 @@ const CreditScoreET = () => {
                     inputValue={rule?.firstCreditScore}
                     onChange={(e) => handleChange(e, index)}
                     placeHolder="0"
-                    showError={validationError[`firstCreditScore_${index}`]}
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          [`firstCreditScore_${index}`]: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
+                    isIndex={rule?.dataIndex}
                   />
                   <InputSelect
                     labelName={"Maximum Credit Score"}
@@ -340,15 +321,8 @@ const CreditScoreET = () => {
                     inputValue={rule?.secondCreditScore}
                     onChange={(e) => handleChange(e, index)}
                     placeHolder="2"
-                    showError={validationError[`secondCreditScore_${index}`]}
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          [`secondCreditScore_${index}`]: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
+                    isIndex={rule?.dataIndex}
                   />
                 </div>
                 <TagInput
@@ -358,15 +332,8 @@ const CreditScoreET = () => {
                   inputTextLabel={"Eligible Tenure"}
                   addTag={() => handleAddTenure(index)}
                   deleteTag={(tag) => handleDelete(tag, index)}
-                  showError={validationError[`tenureValue_${index}`]}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        [`tenureValue_${index}`]: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
+                  isIndex={rule?.dataIndex}
                 />
                 <div className="flex gap-4 justify-end items-center mt-1">
                   <Button

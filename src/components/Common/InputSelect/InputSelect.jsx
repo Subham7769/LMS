@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addFields,
+  setValidationError,
+} from "../../../redux/Slices/validationSlice";
 
 const InputSelect = ({
   labelName,
@@ -14,10 +19,13 @@ const InputSelect = ({
   hidden = false,
   isMulti = false,
   searchable = false,
-  showError = false,
-  onFocus,
   dropdownTextSize = "medium", // New prop to control dropdown text size
+  isValidation = false,
+  isIndex,
 }) => {
+  const dispatch = useDispatch();
+  const { fields, validationError } = useSelector((state) => state.validation);
+
   if (inputValue === null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -36,7 +44,12 @@ const InputSelect = ({
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
-      fontSize: dropdownTextSize === "small" ? "12px" : dropdownTextSize === "large" ? "16px" : "14px", // Change font size
+      fontSize:
+        dropdownTextSize === "small"
+          ? "12px"
+          : dropdownTextSize === "large"
+          ? "16px"
+          : "14px", // Change font size
       padding: 10,
     }),
     control: (provided) => ({
@@ -53,18 +66,33 @@ const InputSelect = ({
     }),
     singleValue: (provided) => ({
       ...provided,
-      fontSize: dropdownTextSize === "small" ? "12px" : dropdownTextSize === "large" ? "16px" : "14px", // Same font size as options
+      fontSize:
+        dropdownTextSize === "small"
+          ? "12px"
+          : dropdownTextSize === "large"
+          ? "16px"
+          : "14px", // Same font size as options
     }),
   };
+  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  if (isValidation) {
+    useEffect(() => {
+      if (!fields.includes(inputName)) {
+        dispatch(addFields({ inputName }));
+      }
+    }, [inputName, dispatch]);
+  }
 
   return (
     <div className="flex flex-col">
       {labelName && (
         <label
-          className={`block ${showError ? "text-red-600" : "text-gray-700"} px-1 text-[14px]`}
+          className={`block ${
+            validationError[validationKey] ? "text-red-600" : "text-gray-700"
+          } px-1 text-[14px]`}
           htmlFor={inputName}
         >
-          {showError ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}
         </label>
       )}
       <Select
@@ -80,7 +108,7 @@ const InputSelect = ({
         onChange={handleChange}
         isSearchable={searchable}
         placeholder={placeHolder}
-        onFocus={onFocus}
+        onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}

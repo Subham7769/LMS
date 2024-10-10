@@ -189,13 +189,13 @@ export const submitLoanConfiguration = createAsyncThunk(
 
 // Define the asyncThunk
 export const handleProceed = createAsyncThunk(
-  'loan/handleProceed',
+  "loan/handleProceed",
   async ({ transactionId, userID }, { rejectWithValue }) => {
     const postData = {
       transactionId: transactionId,
       contractNumber: "test18monthTenure",
     };
-    
+
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -212,13 +212,13 @@ export const handleProceed = createAsyncThunk(
 
       if (response.status === 400) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);  // Handle error with a reject
+        return rejectWithValue(errorData.message); // Handle error with a reject
       }
 
       const loanData = await response.json();
-      return loanData.loanId;  // Return loanId on success
+      return loanData.loanId; // Return loanId on success
     } catch (error) {
-      return rejectWithValue(error.message);  // Handle fetch or network errors
+      return rejectWithValue(error.message); // Handle fetch or network errors
     }
   }
 );
@@ -532,7 +532,7 @@ const initialState = {
     employmentStatus: "",
     establishmentActivity: "",
   },
-  loanId:'',
+  loanId: "",
   showModal: false,
   loading: false,
   error: null,
@@ -548,7 +548,7 @@ const userProductTestingSlice = createSlice({
     },
     updateDisbursementData: (state, action) => {
       const { name, value } = action.payload;
-      state.loanConfigFields[name] = value; // Dynamically update the field in loanConfigFields
+      state.disbursementData[name] = value; // Dynamically update the field in loanConfigFields
     },
     updateFamilyDetailsField: (state, action) => {
       const { name, value } = action.payload;
@@ -619,15 +619,15 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(handleProceed.pending, (state) => {
         state.loading = true;
-        state.error = null;  // Clear any previous errors
+        state.error = null; // Clear any previous errors
       })
       .addCase(handleProceed.fulfilled, (state, action) => {
         state.loading = false;
-        state.loanId = action.payload;  // Set loanId from the successful request
+        state.loanId = action.payload; // Set loanId from the successful request
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Something went wrong";  // Set error message
+        state.error = action.payload || "Something went wrong"; // Set error message
       })
       .addCase(getDisbursementInfo.pending, (state) => {
         state.loading = true;
@@ -635,7 +635,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getDisbursementInfo.fulfilled, (state, action) => {
         state.loading = false;
-        if(action.payload.status !== 500){
+        if (action.payload.status !== 500) {
           state.disbursementData = action.payload;
         }
       })
@@ -719,6 +719,10 @@ const userProductTestingSlice = createSlice({
   },
 });
 
-export const { updateLoanConfigFieldsField,updateDisbursementData, updateFamilyDetailsField, updateEmploymentDetailsField } =
-  userProductTestingSlice.actions;
+export const {
+  updateLoanConfigFieldsField,
+  updateDisbursementData,
+  updateFamilyDetailsField,
+  updateEmploymentDetailsField,
+} = userProductTestingSlice.actions;
 export default userProductTestingSlice.reducer;

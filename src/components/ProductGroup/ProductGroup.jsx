@@ -21,36 +21,20 @@ import {
 import { fetchProdGroupData } from "../../redux/Slices/sidebarSlice";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const ProductGroup = () => {
   const dispatch = useDispatch();
   const { productGroupData, productTypeOptions, loading } = useSelector(
     (state) => state.productGroup
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = [
-    "percentageFromEmi",
-    "hardLimit",
-    "renewInDays",
-    "userRole",
-    "limit",
-    "product",
-  ];
 
   useEffect(() => {
     dispatch(fetchPGroups());
     dispatch(fetchLoanProducts());
-
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
-    // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
@@ -70,11 +54,12 @@ const ProductGroup = () => {
     dispatch(setFormData({ name, value }));
   };
 
-  const addTag = () => {
-    // console.log(tag);
+  const addTag = async () => {
     const limit = productGroupData.limit;
     const product = productGroupData.product;
-    const isValid = validateFormFields(fields, { limit, product }, dispatch);
+    await dispatch(validateForm(productGroupData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       const newTag = { product, limit };
       if (
@@ -101,11 +86,14 @@ const ProductGroup = () => {
     const hardLimit = productGroupData?.financeHardLimit?.hardLimit;
     const renewInDays = productGroupData?.renewCreditReport?.renewInDays;
     const activeLoansCount = productGroupData?.activeLoansCount;
-    const isValid = validateFormFields(
-      fields,
-      { percentageFromEmi, hardLimit, renewInDays },
-      dispatch
-    );
+    const dataToValidate = {
+      percentageFromEmi,
+      hardLimit,
+      renewInDays,
+    };
+    await dispatch(validateForm(dataToValidate));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(activeLoansCount, dispatch);
     if (!isValid2) {
       toast.custom((t) => (
@@ -143,39 +131,21 @@ const ProductGroup = () => {
             inputName="percentageFromEmi"
             inputValue={productGroupData?.overDuePercentage?.percentageFromEmi}
             onChange={handleInputChange}
-            showError={validationError?.percentageFromEmi}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  percentageFromEmi: false,
-                })
-              )
-            }
+            isValidation={true}
           />
           <InputNumber
             labelName="Finance Hard Limit"
             inputName="hardLimit"
             inputValue={productGroupData?.financeHardLimit?.hardLimit}
             onChange={handleInputChange}
-            showError={validationError?.hardLimit}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, hardLimit: false })
-              )
-            }
+            isValidation={true}
           />
           <InputNumber
             labelName="Renew Credit Report"
             inputName="renewInDays"
             inputValue={productGroupData?.renewCreditReport?.renewInDays}
             onChange={handleInputChange}
-            showError={validationError?.renewInDays}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, renewInDays: false })
-              )
-            }
+            isValidation={true}
           />
         </div>
         <div className="border-b pb-4 mb-2">
@@ -189,24 +159,8 @@ const ProductGroup = () => {
             productTypeOptions={productTypeOptions}
             inputNumberName={"limit"}
             inputNumberLabel={"Max Product Limit"}
-            showError2={validationError?.limit}
-            onFocus2={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  limit: false,
-                })
-              )
-            }
-            showError3={validationError?.product}
-            onFocus3={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  product: false,
-                })
-              )
-            }
+            isValidation2={true}
+            isValidation3={true}
           />
         </div>
         <div className="text-center md:text-right mt-5">

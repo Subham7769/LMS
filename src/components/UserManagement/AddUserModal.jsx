@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import InputEmail from "../Common/InputEmail/InputEmail";
@@ -16,25 +16,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const AddUserModal = ({ isOpen, onClose, role }) => {
   const dispatch = useDispatch();
   const { formData, confirmPassword, userRole } = useSelector(
     (state) => state.userManagement
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = [
-    "username",
-    "firstname",
-    "lastname",
-    "email",
-    "password",
-    "confirmPassword",
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,11 +33,6 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
   };
 
   useEffect(() => {
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -57,16 +43,12 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
     dispatch(setUserRole(selectedUserRole));
   };
 
-  console.log(userRole);
-  console.log(validationError);
-
   const updateData = async (e) => {
     e.preventDefault();
-    const isValid = validateFormFields(
-      fields,
-      { ...formData, confirmPassword },
-      dispatch
-    );
+    const dataToValidate = { ...formData, confirmPassword };
+    await dispatch(validateForm(dataToValidate));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(userRole, dispatch);
     if (isValid && isValid2) {
       if (confirmPassword === formData.password) {
@@ -119,12 +101,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               inputValue={formData?.username}
               onChange={handleChange}
               required
-              showError={validationError?.username}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, username: false })
-                )
-              }
+              isValidation={true}
             />
             <InputText
               labelName="First Name"
@@ -132,12 +109,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               inputValue={formData?.firstname}
               onChange={handleChange}
               required
-              showError={validationError?.firstname}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, firstname: false })
-                )
-              }
+              isValidation={true}
             />
             <InputText
               labelName="Last Name"
@@ -145,12 +117,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               inputValue={formData?.lastname}
               onChange={handleChange}
               required
-              showError={validationError?.lastname}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, lastname: false })
-                )
-              }
+              isValidation={true}
             />
             <InputEmail
               labelName="Email"
@@ -158,12 +125,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               inputValue={formData?.email}
               onChange={handleChange}
               required
-              showError={validationError?.email}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, email: false })
-                )
-              }
+              isValidation={true}
             />
             <InputPassword
               labelName="Password"
@@ -171,12 +133,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               inputValue={formData?.password}
               onChange={handleChange}
               required
-              showError={validationError?.password}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, password: false })
-                )
-              }
+              isValidation={true}
             />
             <InputPassword
               labelName="Confirm Password"
@@ -184,15 +141,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               inputValue={confirmPassword}
               onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
               required
-              showError={validationError?.confirmPassword}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    confirmPassword: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
             <SelectInput
               labelName="Roles"
@@ -201,15 +150,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               isMulti={true}
               inputValue={userRole}
               onChange={handleRoles}
-              showError={validationError?.userRole}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    userRole: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </form>
           <div className="flex gap-3 justify-center md:justify-end">

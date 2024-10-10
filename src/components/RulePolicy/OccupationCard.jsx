@@ -9,21 +9,17 @@ import {
   fetchRulePolicyData,
   setOccupationFormData,
 } from "../../redux/Slices/rulePolicySlice";
-import {
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { validateForm } from "../../redux/Slices/validationSlice";
 
 import toast from "react-hot-toast";
 import { Passed } from "../Toasts";
+import store from "../../redux/store";
 
 const OccupationCard = ({ occupationData }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
   const { occupationFormData } = useSelector((state) => state.rulePolicy);
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["occupation", "occPoints"];
 
   useEffect(() => {
     if (occupationData) {
@@ -32,7 +28,7 @@ const OccupationCard = ({ occupationData }) => {
           .filter((data) => data.rulePolicyTempId === rulePolicyId)
           .map((data) => ({
             occupation: data.employmentSectorName,
-            points: data.point,
+            occpoints: data.point,
             ruleName: data.ruleName,
             rulePolicyTempId: data.rulePolicyTempId,
             fieldType: data.fieldType,
@@ -53,13 +49,9 @@ const OccupationCard = ({ occupationData }) => {
   };
 
   const addTag = async () => {
-    const occupation = occupationFormData.occupation;
-    const occPoints = occupationFormData.points;
-    const isValid = validateFormFields(
-      fields,
-      { occupation, occPoints },
-      dispatch
-    );
+    await dispatch(validateForm(occupationFormData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       if (occupationFormData.occupation) {
         if (isSimilarTag(occupationFormData.occupation)) {
@@ -68,7 +60,7 @@ const OccupationCard = ({ occupationData }) => {
         }
 
         // Extract the latest values from formData
-        const { occupation, points, ruleName, rulePolicyTempId, fieldType } =
+        const { occupation, occpoints, ruleName, rulePolicyTempId, fieldType } =
           occupationFormData;
 
         dispatch(
@@ -76,7 +68,7 @@ const OccupationCard = ({ occupationData }) => {
             name: "tags",
             value: [
               ...tags,
-              { occupation, points, ruleName, rulePolicyTempId, fieldType },
+              { occupation, occpoints, ruleName, rulePolicyTempId, fieldType },
             ],
           })
         );
@@ -88,7 +80,7 @@ const OccupationCard = ({ occupationData }) => {
               fieldType: "Employer",
               rulePolicyTempId: rulePolicyTempId,
               employmentSectorName: occupation,
-              point: points,
+              point: occpoints,
             },
           ],
         };
@@ -154,26 +146,10 @@ const OccupationCard = ({ occupationData }) => {
         inputTextLabel={"Add Occupation"}
         addTag={addTag}
         deleteTag={deleteTag}
-        inputNumberName={"points"}
+        inputNumberName={"occpoints"}
         inputNumberLabel={"Add Points"}
-        showError={validationError?.occupation}
-        onFocus={() =>
-          dispatch(
-            setValidationError({
-              ...validationError,
-              occupation: false,
-            })
-          )
-        }
-        showError2={validationError?.occPoints}
-        onFocus2={() =>
-          dispatch(
-            setValidationError({
-              ...validationError,
-              occPoints: false,
-            })
-          )
-        }
+        isValidation={true}
+        isValidation2={true}
       />
     </ContainerTile>
   );

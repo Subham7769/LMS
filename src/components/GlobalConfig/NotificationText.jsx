@@ -17,37 +17,27 @@ import {
 } from "../../redux/Slices/globalConfigSlice";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const NotificationText = () => {
   const dispatch = useDispatch();
-  const { notificationInputList, loading, error } = useSelector((state) => state.globalConfig);
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["notificationType", "notificationDisplayName", "notificationChannel", "notificationMessageEn", "notificationMessageAr", "notificationDescription"];
+  const { notificationInputList, loading, error } = useSelector(
+    (state) => state.globalConfig
+  );
 
   useEffect(() => {
     dispatch(fetchNotificationData());
-    if (notificationInputList?.length) {
-      const initialValidationError = {};
-      notificationInputList.forEach((_, index) => {
-        fields.forEach((field) => {
-          // Create validation keys dynamically based on the index
-          initialValidationError[`${field}_${index}`] = false;
-        });
-      });
-      dispatch(setValidationError(initialValidationError));
-    }
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
 
   const handleSave = async (id, index) => {
-    const isValid = validateFormFields(fields, notificationInputList[index], dispatch,  index);
-    console.log(notificationInputList[index])
-    console.log(isValid)
+    await dispatch(validateForm(notificationInputList[index]));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       try {
         await dispatch(saveNotificationData(id)).unwrap();
@@ -94,10 +84,7 @@ const NotificationText = () => {
       </h2>
       {notificationInputList?.map((notificationData, index) => (
         <ContainerTile>
-          <div
-            key={notificationData.id}
-            className="flex flex-col gap-y-6 "
-          >
+          <div key={notificationData.id} className="flex flex-col gap-y-6 ">
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputText
                 labelName="Notification Type"
@@ -106,12 +93,6 @@ const NotificationText = () => {
                 inputValue={notificationData?.notificationType}
                 disabled
                 placeHolder="REMINDER_EMI"
-                showError={validationError[`notificationType_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`notificationType_${index}`]: false })
-                  )
-                }
               />
               <InputText
                 labelName="Notification Display Name"
@@ -119,13 +100,6 @@ const NotificationText = () => {
                 id={`notificationDisplayName_${notificationData?.id}`}
                 inputValue={notificationData?.notificationDisplayName}
                 disabled
-                place showError={validationError[`notificationDisplayName_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`notificationDisplayName_${index}`]: false })
-                  )
-                } Holder="Installment reminder"
-
               />
               <InputSelect
                 labelName="Notification Channel"
@@ -140,12 +114,6 @@ const NotificationText = () => {
                       name: e.target.name,
                       value: e.target.value,
                     })
-                  )
-                }
-                showError={validationError[`notificationChannel_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`notificationChannel_${index}`]: false })
                   )
                 }
               />
@@ -167,12 +135,8 @@ const NotificationText = () => {
                   )
                 }
                 placeHolder="This is the emi reminder message, last payment amount is"
-                showError={validationError[`notificationMessageEn_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`notificationMessageEn_${index}`]: false })
-                  )
-                }
+                isValidation={true}
+                isIndex={notificationData.dataIndex}
               />
               <InputTextarea
                 labelName="Notification Message Hi"
@@ -190,12 +154,8 @@ const NotificationText = () => {
                   )
                 }
                 placeHolder="This is the emi reminder message, last payment amount is"
-                showError={validationError[`notificationMessageAr_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`notificationMessageAr_${index}`]: false })
-                  )
-                }
+                isValidation={true}
+                isIndex={notificationData.dataIndex}
               />
               <InputTextarea
                 labelName="Notification Description"
@@ -205,12 +165,6 @@ const NotificationText = () => {
                 inputValue={notificationData?.notificationDescription}
                 disabled
                 placeHolder="2 days before the upcoming installment"
-                showError={validationError[`notificationDescription_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`notificationDescription_${index}`]: false })
-                  )
-                }
               />
               <div>
                 <Button

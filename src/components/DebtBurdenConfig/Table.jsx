@@ -75,37 +75,44 @@ export default function Table({
                   value: rule?.startNetIncomeBracketInSARule?.trim(),
                   type: "number",
                   name: "startNetIncomeBracketInSARule",
+                  dataIndex: rule?.dataIndex,
                 },
                 {
                   value: rule?.endNetIncomeBracketInSARule?.trim(),
                   type: "number",
                   name: "endNetIncomeBracketInSARule",
+                  dataIndex: rule?.dataIndex,
                 },
                 {
                   value: rule?.productLevel?.trim(),
                   type: "text",
                   name: "productLevel",
+                  dataIndex: rule?.dataIndex,
                 },
                 {
                   value: rule?.consumerDBR?.trim(),
                   type: "text",
                   name: "consumerDBR",
+                  dataIndex: rule?.dataIndex,
                 },
                 {
                   value: rule?.gdbrWithoutMTG?.trim(),
                   type: "text",
                   name: "gdbrWithoutMTG",
+                  dataIndex: rule?.dataIndex,
                 },
                 {
                   value: rule?.employerRetired,
                   type: "select",
                   name: "employerRetired",
                   options: empOptions,
+                  dataIndex: rule?.dataIndex,
                 },
                 {
                   value: rule?.gdbrWithMTG?.trim(),
                   type: "text",
                   name: "gdbrWithMTG",
+                  dataIndex: rule?.dataIndex,
                 },
               ].map((col, idx) => (
                 <td key={idx} className="px-4 py-2 text-sm text-gray-900">
@@ -129,7 +136,7 @@ export default function Table({
                         id={`${col.name}${index}`}
                         className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
           ${
-            validationError[col.name]
+            validationError[`${col.name}_${col.dataIndex}`]
               ? "ring-red-600 focus:ring-red-600"
               : "ring-gray-300 focus:ring-indigo-600"
           } 
@@ -141,10 +148,7 @@ export default function Table({
                         placeholder="Enter value"
                         onFocus={() =>
                           dispatch(
-                            setValidationError({
-                              ...validationError,
-                              [col.name]: false,
-                            })
+                            setValidationError(`${col.name}_${col.dataIndex}`)
                           )
                         }
                       />

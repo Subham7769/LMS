@@ -2,23 +2,28 @@ import React, { useState } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import InputText from "../InputText/InputText";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch } from "react-redux";
+import { updateValidationError } from "../../../redux/Slices/validationSlice";
 
 const DynamicName = ({ initialName, onSave, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(initialName);
-  const [isValidationError, setIsValidationError] = useState(false);
+  const dispatch = useDispatch();
 
   const handleEdit = () => {
     setName(initialName);
     setIsEditing(true);
   };
-  const handleSave = () => {
+  const handleSave = async () => {
+    let isValidationError = false;
     if (name === "") {
-      setIsValidationError(true);
+      isValidationError = true;
+      dispatch(updateValidationError({ name: true }));
     }
     if (!isValidationError && name != "") {
       onSave(name); // Trigger the onSave function passed as prop
       setIsEditing(false);
+      dispatch(updateValidationError({ name: false }));
     }
   };
 
@@ -35,8 +40,7 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
             inputValue={name}
             inputName="name"
             onChange={(e) => setName(e.target.value)}
-            showError={isValidationError}
-            onFocus={() => setIsValidationError(false)}
+            isValidation={true}
           />
           <button
             onClick={handleSave}

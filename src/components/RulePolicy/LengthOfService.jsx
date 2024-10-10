@@ -8,7 +8,7 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed, Warning } from "../Toasts";
+import { Failed, Passed, Warning } from "../Toasts";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import InputNumber from "../Common/InputNumber/InputNumber";
@@ -24,10 +24,8 @@ import {
   updateLOSInputList,
 } from "../../redux/Slices/rulePolicySlice";
 import { useParams } from "react-router-dom";
-import {
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { validateForm } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -48,20 +46,6 @@ const LengthofService = () => {
   const { LOSInputList, lengthOfService } = useSelector(
     (state) => state.rulePolicy
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = [
-    "firstLengthOfServiceOperator",
-    "firstLengthOfService",
-    "secondLengthOfServiceOperator",
-    "secondLengthOfService",
-    "point",
-  ];
-
-  const fields2 = [
-    "tablefirstLengthOfService",
-    "tablesecondLengthOfService",
-    "tablepoint",
-  ];
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -84,19 +68,13 @@ const LengthofService = () => {
     return <FaSort className="ml-2" title="Sort Data" />;
   };
 
-  const toggleEdit = (index) => {
+  const toggleEdit = async (index) => {
     const absoluteIndex = index + indexOfFirstItem;
-    const tablefirstLengthOfService =
-      LOSInputList.lengthOfServiceRules[absoluteIndex].firstLengthOfService;
-    const tablesecondLengthOfService =
-      LOSInputList.lengthOfServiceRules[absoluteIndex].secondLengthOfService;
-    const tablepoint = LOSInputList.lengthOfServiceRules[absoluteIndex].point;
+    const dataToValidate = LOSInputList.lengthOfServiceRules[absoluteIndex];
     if (editingIndex !== null) {
-      const isValid = validateFormFields(
-        fields2,
-        { tablefirstLengthOfService, tablesecondLengthOfService, tablepoint },
-        dispatch
-      );
+      await dispatch(validateForm(dataToValidate));
+      const state = store.getState();
+      const isValid = state.validation.isValid;
       if (isValid) {
         setEditingIndex(editingIndex === index ? null : index);
         handleSave();
@@ -108,14 +86,26 @@ const LengthofService = () => {
     }
   };
 
-  console.log(validationError);
-
-  const handleAddFields = () => {
+  const handleAddFields = async () => {
     const operators = lengthOfService.operators;
     const lengthOfServiceRules = lengthOfService.lengthOfServiceRules[0];
-    const isValid = validateFormFields(fields, operators, dispatch);
-    const isValid2 = validateFormFields(fields, lengthOfServiceRules, dispatch);
-    if (isValid && isValid2) {
+    await dispatch(validateForm(operators));
+    const stateAfterOp = store.getState();
+    const isValidOp = stateAfterOp.validation.isValid;
+    await dispatch(validateForm(lengthOfServiceRules));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (!isValidOp) {
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Alert"}
+          message={"Please fill Length of Service operators!!"}
+        />
+      ));
+    }
+    if (isValid && isValidOp) {
       dispatch(addLengthOfServiceRule())
         .unwrap()
         .then(() => {
@@ -235,6 +225,8 @@ const LengthofService = () => {
     LOSInputList.lengthOfServiceRules.length / itemsPerPage
   );
 
+  // console.log(LOSInputList);
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -255,24 +247,8 @@ const LengthofService = () => {
             }
             onChangeNumber={handleRuleChange}
             placeHolder={"0.5"}
-            showError={validationError?.firstLengthOfService}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  firstLengthOfService: false,
-                })
-              )
-            }
-            showError1={validationError?.firstLengthOfServiceOperator}
-            onFocus1={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  firstLengthOfServiceOperator: false,
-                })
-              )
-            }
+            isValidation={true}
+            isValidation1={true}
           />
           <SelectAndNumber
             labelName={"Maximum Length Of Service"}
@@ -288,24 +264,8 @@ const LengthofService = () => {
             }
             onChangeNumber={handleRuleChange}
             placeHolder={"0.5"}
-            showError={validationError?.secondLengthOfService}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  secondLengthOfService: false,
-                })
-              )
-            }
-            showError1={validationError?.secondLengthOfServiceOperator}
-            onFocus1={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  secondLengthOfServiceOperator: false,
-                })
-              )
-            }
+            isValidation={true}
+            isValidation1={true}
           />
           <InputNumber
             labelName={"Point"}
@@ -313,10 +273,7 @@ const LengthofService = () => {
             inputValue={lengthOfService?.lengthOfServiceRules[0]?.point}
             onChange={handleRuleChange}
             placeHolder={"4000"}
-            showError={validationError?.point}
-            onFocus={() =>
-              dispatch(setValidationError({ ...validationError, point: false }))
-            }
+            isValidation={true}
           />
           <div>
             <Button
@@ -385,15 +342,8 @@ const LengthofService = () => {
                         inputNumberValue={item.firstLengthOfService}
                         onChangeNumber={(e) => handleChange(e, index)}
                         placeHolder={"0.5"}
-                        showError={validationError?.tablefirstLengthOfService}
-                        onFocus={() =>
-                          dispatch(
-                            setValidationError({
-                              ...validationError,
-                              tablefirstLengthOfService: false,
-                            })
-                          )
-                        }
+                        isValidation={true}
+                        isIndex={item.dataIndex}
                       />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
@@ -424,15 +374,8 @@ const LengthofService = () => {
                         inputNumberValue={item.secondLengthOfService}
                         onChangeNumber={(e) => handleChange(e, index)}
                         placeHolder={"0.5"}
-                        showError={validationError?.tablesecondLengthOfService}
-                        onFocus={() =>
-                          dispatch(
-                            setValidationError({
-                              ...validationError,
-                              tablesecondLengthOfService: false,
-                            })
-                          )
-                        }
+                        isValidation={true}
+                        isIndex={item.dataIndex}
                       />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
@@ -455,15 +398,8 @@ const LengthofService = () => {
                         inputValue={item.point}
                         onChange={(e) => handleChange(e, index)}
                         placeHolder={"0.4"}
-                        showError={validationError.tablepoint}
-                        onFocus={() =>
-                          dispatch(
-                            setValidationError({
-                              ...validationError,
-                              tablepoint: false,
-                            })
-                          )
-                        }
+                        isValidation={true}
+                        isIndex={item.dataIndex}
                       />
                     ) : (
                       <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">

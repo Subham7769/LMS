@@ -18,10 +18,8 @@ import {
 } from "../../redux/Slices/rulePolicySlice";
 import ListTable from "../Common/ListTable/ListTable";
 import { MaxFinAmtHeaderList } from "../../data/RulePolicyData";
-import {
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { validateForm } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const MaxFinAmtTen = ({ FAWTData }) => {
   const { rulePolicyId } = useParams();
@@ -30,9 +28,6 @@ const MaxFinAmtTen = ({ FAWTData }) => {
   const maxFinAmtRules = useSelector(
     (state) => state.rulePolicy.maxFinAmtRules
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields2 = ["inputfinanceAmount", "inputtenure"];
-  const fields = ["financeAmount", "tenure"];
 
   useEffect(() => {
     const filteredData = FAWTData.filter(
@@ -77,11 +72,10 @@ const MaxFinAmtTen = ({ FAWTData }) => {
   };
 
   const handleUpdate = async (index) => {
-    const isValid = validateFormFields(
-      fields,
-      tableDataWithoutId[index],
-      dispatch
-    );
+    const dataToValidate = tableDataWithoutId[index];
+    await dispatch(validateForm(dataToValidate));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       try {
         await dispatch(updateFinanceAmountWithTenureRules(inputList)).unwrap();
@@ -101,13 +95,9 @@ const MaxFinAmtTen = ({ FAWTData }) => {
   };
 
   const CreateEntry = async () => {
-    const inputfinanceAmount = maxFinAmtRules?.financeAmount;
-    const inputtenure = maxFinAmtRules?.tenure;
-    const isValid = validateFormFields(
-      fields2,
-      { inputfinanceAmount, inputtenure },
-      dispatch
-    );
+    await dispatch(validateForm(maxFinAmtRules));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       try {
         await dispatch(createMaxFinAmtEntry()).unwrap();
@@ -155,15 +145,8 @@ const MaxFinAmtTen = ({ FAWTData }) => {
             inputValue={maxFinAmtRules.financeAmount}
             onChange={handleRuleChange}
             placeHolder={"999"}
-            showError={validationError?.inputfinanceAmount}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  inputfinanceAmount: false,
-                })
-              )
-            }
+            isValidation={true}
+            isIndex={maxFinAmtRules.dataIndex}
           />
           <InputNumber
             labelName={"Tenure"}
@@ -171,15 +154,8 @@ const MaxFinAmtTen = ({ FAWTData }) => {
             inputValue={maxFinAmtRules.tenure}
             onChange={handleRuleChange}
             placeHolder={"6"}
-            showError={validationError?.inputtenure}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  inputtenure: false,
-                })
-              )
-            }
+            isValidation={true}
+            isIndex={maxFinAmtRules.dataIndex}
           />
           <Button buttonIcon={PlusIcon} onClick={CreateEntry} circle={true} />
         </div>

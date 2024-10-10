@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch } from "react-redux";
+import {
+  addFields,
+  setValidationError,
+} from "../../../redux/Slices/validationSlice";
+import { useSelector } from "react-redux";
 
 const SelectAndNumber = ({
   labelName,
@@ -15,10 +21,10 @@ const SelectAndNumber = ({
   inputNumberValue,
   onChangeNumber,
   placeHolderNumber,
-  showError = false, // New prop to indicate error
-  onFocus, // New onFocus handler to reset error
-  showError1 = false,
-  onFocus1,
+  isValidation = false,
+  isIndex,
+  isValidation1 = false,
+  isIndex1,
 
   inputSelect2Name,
   inputSelect2Value,
@@ -31,9 +37,12 @@ const SelectAndNumber = ({
   inputNumber2Value,
   onChangeNumber2,
   placeHolderNumber2,
-  showError2 = false, // New prop to indicate error
-  onFocus2, // New onFocus handler to reset error
+  isValidation2 = false,
+  isIndex2,
 }) => {
+  const dispatch = useDispatch();
+  const { fields, validationError } = useSelector((state) => state.validation);
+
   if (inputSelectValue === null || inputSelectValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -77,19 +86,58 @@ const SelectAndNumber = ({
       },
     });
   };
+  // console.log(validationError);
+  const validationKey = isIndex
+    ? `${inputNumberName}_${isIndex}`
+    : inputNumberName;
+  if (isValidation) {
+    useEffect(() => {
+      if (!fields.includes(inputNumberName)) {
+        dispatch(addFields({ inputName: inputNumberName }));
+      }
+    }, [inputNumberName, dispatch]);
+  }
+
+  const validationKey1 = isIndex1
+    ? `${inputSelectName}_${isIndex}`
+    : inputSelectName;
+  if (isValidation1) {
+    useEffect(() => {
+      if (!fields.includes(inputSelectName)) {
+        dispatch(addFields({ inputName: inputSelectName }));
+      }
+    }, [inputSelectName, dispatch]);
+  }
+
+  const validationKey2 = isIndex2
+    ? `${inputNumber2Name}_${isIndex}`
+    : inputNumber2Name;
+  if (isValidation2) {
+    useEffect(() => {
+      if (!fields.includes(inputNumber2Name)) {
+        dispatch(addFields({ inputName: inputNumber2Name }));
+      }
+    }, [inputNumber2Name, dispatch]);
+  }
 
   return (
     <div>
       {labelName && (
         <label
           className={`block ${
-            showError || showError1 || showError2
+            validationError[validationKey] ||
+            validationError[validationKey1] ||
+            validationError[validationKey2]
               ? "text-red-600"
               : "text-gray-700"
           } px-1 text-[14px]`}
           htmlFor={inputSelectName}
         >
-          {showError || showError1 || showError2 ? "Field required" : labelName}
+          {validationError[validationKey] ||
+          validationError[validationKey1] ||
+          validationError[validationKey2]
+            ? "Field required"
+            : labelName}
         </label>
       )}
       <div className="flex items-center space-x-2">
@@ -107,7 +155,7 @@ const SelectAndNumber = ({
           isDisabled={disabledSelect}
           isHidden={hiddenSelect}
           isSearchable={false}
-          onFocus={onFocus1}
+          onFocus={() => dispatch(setValidationError(validationKey1))}
         />
         <input
           type="number"
@@ -115,11 +163,11 @@ const SelectAndNumber = ({
           id={inputNumberId}
           value={inputNumberValue}
           onChange={handleNumberChange}
-          onFocus={onFocus}
+          onFocus={() => dispatch(setValidationError(validationKey))}
           placeholder={placeHolderNumber}
           className={`block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
           ${
-            showError
+            validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"
               : "ring-gray-300 focus:ring-indigo-600"
           } 
@@ -147,11 +195,11 @@ const SelectAndNumber = ({
               id={inputNumber2Id}
               value={inputNumber2Value}
               onChange={handleNumber2Change}
-              onFocus={onFocus2}
+              onFocus={() => dispatch(setValidationError(validationKey2))}
               placeholder={placeHolderNumber2}
               className={`block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
           ${
-            showError2
+            validationError[validationKey2]
               ? "ring-red-600 focus:ring-red-600"
               : "ring-gray-300 focus:ring-indigo-600"
           } 

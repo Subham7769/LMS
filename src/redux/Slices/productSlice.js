@@ -1,6 +1,7 @@
 // redux/slices/productSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, ProductList } from "../../data/ProductData";
+import { nanoid } from "nanoid";
 
 // Define async thunks for fetching data and performing actions
 export const fetchData = createAsyncThunk(
@@ -276,7 +277,20 @@ const productSlice = createSlice({
       })
       .addCase(fetchData.fulfilled, (state, action) => {
         state.loading = false;
-        state.productData = action.payload;
+
+        // Create a copy of action.payload and add dataIndex for interestEligibleTenure
+        const updatedProductData = {
+          ...action.payload,
+          interestEligibleTenure: action.payload.interestEligibleTenure.map(
+            (tenure) => ({
+              ...tenure,
+              dataIndex: nanoid(), // Assign nanoid() to dataIndex
+            })
+          ),
+        };
+
+        // Update the state with the modified productData
+        state.productData = updatedProductData;
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;

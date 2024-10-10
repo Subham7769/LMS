@@ -24,9 +24,9 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import TagInput from "../TagInput/TagInput";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const BlockedEmployer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,22 +34,21 @@ const BlockedEmployer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.blockedEmployer);
-  const blockEmployer = useSelector(    (state) => state.blockedEmployer.blockEmployer  );
-  const { validationError } = useSelector((state) => state.validation);
+  const blockEmployer = useSelector(
+    (state) => state.blockedEmployer.blockEmployer
+  );
   const { itemName, cloneSuccess } = blockEmployer;
-
-  const fields = ["name"];
 
   useEffect(() => {
     dispatch(setBlockEmployersTempId(blockEmployersTempId));
     dispatch(fetchBlockedEmployerData(blockEmployersTempId));
     dispatch(fetchBlockedEmployerName(blockEmployersTempId));
 
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
+    // const initialValidationError = {};
+    // fields.forEach((field) => {
+    //   initialValidationError[field] = false; // Set all fields to false initially
+    // });
+    // dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -129,9 +128,11 @@ const BlockedEmployer = () => {
     });
   };
 
-  const handlePostItem = (e) => {
+  const handlePostItem = async (e) => {
     e.preventDefault();
-    const isValid = validateFormFields(fields, blockEmployer, dispatch);
+    await dispatch(validateForm(blockEmployer));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(addBlockedEmployerEntry()).then((action) => {
         if (action.type.endsWith("fulfilled")) {
@@ -213,10 +214,7 @@ const BlockedEmployer = () => {
           inputTextLabel={"Add Blocked Employer"}
           addTag={handlePostItem}
           deleteTag={handleDeleteItem}
-          showError={validationError.name}
-          onFocus={() =>
-            dispatch(setValidationError({ ...validationError, name: false }))
-          }
+          isValidation={true}
         />
       </ContainerTile>
     </>

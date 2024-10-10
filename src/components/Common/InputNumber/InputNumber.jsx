@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addFields,
+  setValidationError,
+} from "../../../redux/Slices/validationSlice";
 
 const InputNumber = ({
   labelName,
@@ -10,9 +15,11 @@ const InputNumber = ({
   placeHolder = "",
   inputValuePercentage = false,
   disabled = false,
-  showError = false, // New prop to indicate error
-  onFocus, // New onFocus handler to reset error
+  isValidation = false,
+  isIndex,
 }) => {
+  const dispatch = useDispatch();
+  const { fields, validationError } = useSelector((state) => state.validation);
   if (inputValue === null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -34,6 +41,16 @@ const InputNumber = ({
     throw new Error(errorMessage);
   }
 
+  console.log(validationError);
+  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  if (isValidation) {
+    useEffect(() => {
+      if (!fields.includes(inputName)) {
+        dispatch(addFields({ inputName }));
+      }
+    }, [inputName, dispatch]);
+  }
+
   const handleChange = (e) => {
     const { name, value, id } = e.target;
     onChange({
@@ -50,11 +67,11 @@ const InputNumber = ({
       {labelName && (
         <label
           className={`block ${
-            showError ? "text-red-600" : "text-gray-700"
+            validationError[validationKey] ? "text-red-600" : "text-gray-700"
           } px-1 text-[14px]`}
           htmlFor={inputName}
         >
-          {showError ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}
         </label>
       )}
       <div className="flex justify-center items-center relative">
@@ -80,14 +97,14 @@ const InputNumber = ({
           name={inputName}
           value={inputValue}
           onChange={handleChange}
-          onFocus={onFocus} // Call onFocus to reset the error state
+          onFocus={() => dispatch(setValidationError(validationKey))}
           placeholder={placeHolder}
           style={{
             appearance: "none", // General rule for most modern browsers
           }}
           className={`flex-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
             ${
-              showError
+              validationError[validationKey]
                 ? "ring-red-600 focus:ring-red-600"
                 : "ring-gray-300 focus:ring-indigo-600"
             } 
@@ -96,9 +113,11 @@ const InputNumber = ({
           disabled={disabled}
         />
         {inputValuePercentage && (
-          <span className=" block absolute right-2 text-gray-500">%</span> /* The % symbol */
+          <span className=" block absolute right-2 text-gray-500">
+            %
+          </span> /* The % symbol */
         )}
-      </div> 
+      </div>
     </div>
   );
 };

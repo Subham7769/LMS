@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch } from "react-redux";
+import {
+  addFields,
+  setValidationError,
+} from "../../../redux/Slices/validationSlice";
+import { useSelector } from "react-redux";
 
 const InputTextArea = ({
   labelName,
@@ -10,9 +16,12 @@ const InputTextArea = ({
   onChange,
   placeHolder,
   disabled = false,
-  showError = false, // New prop to indicate error
-  onFocus, // New onFocus handler to reset error
+  isValidation = false,
+  isIndex,
 }) => {
+  const dispatch = useDispatch();
+  const { fields, validationError } = useSelector((state) => state.validation);
+
   if (inputValue == null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -33,16 +42,26 @@ const InputTextArea = ({
 
     throw new Error(errorMessage);
   }
+
+  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  if (isValidation) {
+    useEffect(() => {
+      if (!fields.includes(inputName)) {
+        dispatch(addFields({ inputName }));
+      }
+    }, [inputName, dispatch]);
+  }
+
   return (
     <div className="w-full">
       {labelName && (
         <label
           className={`block ${
-            showError ? "text-red-600" : "text-gray-700"
+            validationError[validationKey] ? "text-red-600" : "text-gray-700"
           } px-1 text-[14px]`}
           htmlFor={inputName}
         >
-          {showError ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}
         </label>
       )}
       <textarea
@@ -50,13 +69,13 @@ const InputTextArea = ({
         rows={rowCount}
         value={inputValue}
         onChange={onChange}
-        onFocus={onFocus} // Call onFocus to reset the error state
+        onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state
         placeholder={placeHolder}
         id={inputId}
         disabled={disabled}
         className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
           ${
-            showError
+            validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"
               : "ring-gray-300 focus:ring-indigo-600"
           } 

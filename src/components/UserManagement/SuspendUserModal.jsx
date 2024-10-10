@@ -8,7 +8,7 @@ import {
   clearFormData,
 } from "../../redux/Slices/userManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setValidationError } from "../../redux/Slices/validationSlice";
+import { updateValidationError } from "../../redux/Slices/validationSlice";
 
 const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
   const [suspensionReason, setSuspensionReason] = useState("");
@@ -20,7 +20,7 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
     let isValid = true;
     if (suspensionReason === "") {
       dispatch(
-        setValidationError({ ...validationError, suspensionReason: true })
+        updateValidationError({ ...validationError, suspensionReason: true })
       );
       isValid = false;
     }
@@ -66,15 +66,7 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
               inputValue={suspensionReason}
               onChange={(e) => setSuspensionReason(e.target.value)}
               required
-              showError={validationError?.suspensionReason}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    suspensionReason: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </form>
           <div className="flex gap-3 justify-center md:justify-end">

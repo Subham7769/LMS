@@ -21,29 +21,30 @@ import LoadingState from "../LoadingState/LoadingState";
 import { useNavigate } from "react-router-dom";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const LoanConfig = () => {
   const [settings, setSettings] = useState({});
   const [sliderContainWidth, setSliderContainWidth] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
-  const { loanOptions, loanConfigFields, loanConfigData, showModal, loading, error } = useSelector((state) => state.userProductTesting);
+  const {
+    loanOptions,
+    loanConfigFields,
+    loanConfigData,
+    showModal,
+    loading,
+    error,
+  } = useSelector((state) => state.userProductTesting);
   const { validationError } = useSelector((state) => state.validation);
   const { userID } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
-  const fields = ["loanType", "amount"];
 
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -52,7 +53,7 @@ const LoanConfig = () => {
 
   useEffect(() => {
     if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType)) {
-      dispatch(updateLoanConfigFieldsField({ name: 'amount', value: '' }));
+      dispatch(updateLoanConfigFieldsField({ name: "amount", value: "" }));
     }
   }, [loanConfigFields.loanType]);
 
@@ -160,19 +161,22 @@ const LoanConfig = () => {
     dispatch(updateLoanConfigFieldsField({ name, value }));
   };
 
-  const handleSubmit = () => {
-    let isValid = false;
-    if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType)) {
-       isValid = validateFormFields(fields, loanConfigFields, dispatch);
-    }else{
-      isValid = validateFormFields(["loanType"], loanConfigFields, dispatch);
-    }
-    
-    console.log(isValid)
+  const handleSubmit = async () => {
+    await dispatch(validateForm(loanConfigFields));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(submitLoanConfiguration({ loanType: loanConfigFields.loanType, amount: loanConfigFields.amount, userID }))
+      dispatch(
+        submitLoanConfiguration({
+          loanType: loanConfigFields.loanType,
+          amount: loanConfigFields.amount,
+          userID,
+        })
+      );
     }
-  }
+  };
+
+  console.log(validationError);
 
   const InfoRow = ({ label, value }) => (
     <div className="grid grid-cols-3 py-2">
@@ -208,26 +212,18 @@ const LoanConfig = () => {
             inputOptions={loanOptions}
             inputValue={loanConfigFields.loanType}
             onChange={handleChange}
-            showError={validationError.loanType}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, loanType: false })
-              )
-            }
+            isValidation={true}
           />
-          {["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType) && (
+          {["CASH_LOAN_V1", "BNPL_LOAN"].includes(
+            loanConfigFields.loanType
+          ) && (
             <InputNumber
               labelName={"Amount"}
               inputName={"amount"}
               inputValue={loanConfigFields.amount}
               onChange={handleChange}
               placeHolder={"5000"}
-              showError={validationError?.amount}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, amount: false })
-                )
-              }
+              isValidation={true}
             />
           )}
           <div>

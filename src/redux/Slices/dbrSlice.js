@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchDBRData } from "./sidebarSlice";
 import { HeaderList, DebtBurdenList } from "../../data/DebtBurdenData";
+import { nanoid } from "nanoid";
 
 export const fetchRules = createAsyncThunk(
   "dbr/fetchRules",
@@ -382,7 +383,14 @@ export const dbrSlice = createSlice({
       .addCase(fetchRules.fulfilled, (state, action) => {
         // state.rules = action.payload?.dbrRules || [];
         // state.operators = action.payload?.operators || [];
-        state.allDBRData = action.payload;
+        const updatedAllDBRData = {
+          ...action.payload,
+          dbrRules: action.payload.dbrRules.map((rules) => ({
+            ...rules,
+            dataIndex: nanoid(), // Assign nanoid() to dataIndex
+          })),
+        };
+        state.allDBRData = updatedAllDBRData;
         state.loading = false;
       })
       .addCase(fetchRules.rejected, (state) => {

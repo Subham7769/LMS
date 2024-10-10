@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch } from "react-redux";
+import {
+  addFields,
+  setValidationError,
+} from "../../../redux/Slices/validationSlice";
+import { useSelector } from "react-redux";
 
 const InputDate = ({
   labelName,
   inputName,
   inputValue,
   onChange,
-  showError = false,
-  onFocus,
+  isValidation = false,
+  isIndex,
 }) => {
+  const dispatch = useDispatch();
+  const { fields, validationError } = useSelector((state) => state.validation);
+
   if (inputValue == null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -29,16 +38,26 @@ const InputDate = ({
 
     throw new Error(errorMessage);
   }
+
+  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  if (isValidation) {
+    useEffect(() => {
+      if (!fields.includes(inputName)) {
+        dispatch(addFields({ inputName }));
+      }
+    }, [inputName, dispatch]);
+  }
+
   return (
     <>
       {labelName && (
         <label
           className={`block ${
-            showError ? "text-red-600" : "text-gray-700"
+            validationError[validationKey] ? "text-red-600" : "text-gray-700"
           } px-1 text-[14px]`}
           htmlFor={inputName}
         >
-          {showError ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}
         </label>
       )}
       <input
@@ -46,10 +65,10 @@ const InputDate = ({
         name={inputName}
         value={inputValue}
         onChange={onChange}
-        onFocus={onFocus}
+        onFocus={() => dispatch(setValidationError(validationKey))}
         className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
           ${
-            showError
+            validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"
               : "ring-gray-300 focus:ring-indigo-600"
           } 

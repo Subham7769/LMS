@@ -24,13 +24,11 @@ import {
 } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import { Passed, Warning } from "../Toasts";
+import { Failed, Passed, Warning } from "../Toasts";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import {
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { validateForm } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -54,21 +52,6 @@ const RiskBasedPricing = () => {
     useSelector((state) => state.rulePolicy);
   const [editingIndex, setEditingIndex] = useState(null);
   const itemsPerPage = 5;
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = [
-    "firstRiskBasedPricingOperator",
-    "firstRiskBasedPricing",
-    "secondRiskBasedPricingOperator",
-    "secondRiskBasedPricing",
-    "interestRate",
-    "interestPeriodType",
-  ];
-
-  const fields2 = [
-    "tablefirstRiskBasedPricing",
-    "tablesecondRiskBasedPricing",
-    "tableinterestRate",
-  ];
 
   const handleRiskBasedPricingChange = (e) => {
     const { name, value } = e.target;
@@ -103,26 +86,14 @@ const RiskBasedPricing = () => {
     return <FaSort className="ml-2" title="Sort Data" />;
   };
 
-  const toggleEdit = (index) => {
+  const toggleEdit = async (index) => {
     const absoluteIndex = index + indexOfFirstItem;
-    const tablefirstRiskBasedPricing =
-      riskBasedPricing.riskBasedPricingRules[absoluteIndex]
-        .firstRiskBasedPricing;
-    const tablesecondRiskBasedPricing =
-      riskBasedPricing.riskBasedPricingRules[absoluteIndex]
-        .secondRiskBasedPricing;
-    const tableinterestRate =
-      riskBasedPricing.riskBasedPricingRules[absoluteIndex].interestRate;
+    const dataToValidate =
+      riskBasedPricing.riskBasedPricingRules[absoluteIndex];
     if (editingIndex !== null) {
-      const isValid = validateFormFields(
-        fields2,
-        {
-          tablefirstRiskBasedPricing,
-          tablesecondRiskBasedPricing,
-          tableinterestRate,
-        },
-        dispatch
-      );
+      await dispatch(validateForm(dataToValidate));
+      const state = store.getState();
+      const isValid = state.validation.isValid;
       if (isValid) {
         console.log("Entered");
         setEditingIndex(editingIndex === index ? null : index);
@@ -170,17 +141,27 @@ const RiskBasedPricing = () => {
     riskBasedPricing.riskBasedPricingRules.length / itemsPerPage
   );
 
-  const handleAddFieldsRBP = () => {
+  const handleAddFieldsRBP = async () => {
     const operators = riskBasedPricingInput.operators;
     const riskBasedPricingRules =
       riskBasedPricingInput.riskBasedPricingRules[0];
-    const isValid = validateFormFields(fields, operators, dispatch);
-    const isValid2 = validateFormFields(
-      fields,
-      riskBasedPricingRules,
-      dispatch
-    );
-    if (isValid && isValid2) {
+    await dispatch(validateForm(operators));
+    const stateAfterOp = store.getState();
+    const isValidOp = stateAfterOp.validation.isValid;
+    await dispatch(validateForm(riskBasedPricingRules));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (!isValidOp) {
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Alert"}
+          message={"Please fill Risk Pricing operators!!"}
+        />
+      ));
+    }
+    if (isValid && isValidOp) {
       dispatch(addRiskBasedPricingRule(rulePolicyId))
         .unwrap()
         .then(() => {
@@ -277,24 +258,8 @@ const RiskBasedPricing = () => {
             }
             onChangeNumber={handleRiskBasedPricingChange}
             placeHolder={"0.5"}
-            showError={validationError?.firstRiskBasedPricing}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  firstRiskBasedPricing: false,
-                })
-              )
-            }
-            showError1={validationError?.firstRiskBasedPricingOperator}
-            onFocus1={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  firstRiskBasedPricingOperator: false,
-                })
-              )
-            }
+            isValidation={true}
+            isValidation1={true}
           />
           <SelectAndNumber
             labelName={"Maximum Risk Based Pricing"}
@@ -311,24 +276,8 @@ const RiskBasedPricing = () => {
             }
             onChangeNumber={handleRiskBasedPricingChange}
             placeHolder={"0.5"}
-            showError={validationError?.secondRiskBasedPricing}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  secondRiskBasedPricing: false,
-                })
-              )
-            }
-            showError1={validationError?.secondRiskBasedPricingOperator}
-            onFocus1={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  secondRiskBasedPricingOperator: false,
-                })
-              )
-            }
+            isValidation={true}
+            isValidation1={true}
           />
           <InputNumber
             labelName={"Simple Interest"}
@@ -338,12 +287,7 @@ const RiskBasedPricing = () => {
             }
             onChange={handleRiskBasedPricingChange}
             placeHolder={"4000"}
-            showError={validationError?.interestRate}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, interestRate: false })
-              )
-            }
+            isValidation={true}
           />
           <InputSelect
             labelName={"PER"}
@@ -354,15 +298,7 @@ const RiskBasedPricing = () => {
                 ?.interestPeriodType
             }
             onChange={handleRiskBasedPricingChange}
-            showError={validationError?.interestPeriodType}
-            onFocus={() =>
-              dispatch(
-                setValidationError({
-                  ...validationError,
-                  interestPeriodType: false,
-                })
-              )
-            }
+            isValidation={true}
           />
           <div>
             <Button
@@ -437,15 +373,8 @@ const RiskBasedPricing = () => {
                         inputNumberValue={item.firstRiskBasedPricing}
                         onChangeNumber={(e) => handleChangeRBP(e, index)}
                         placeHolder={"0.5"}
-                        showError={validationError?.tablefirstRiskBasedPricing}
-                        onFocus={() =>
-                          dispatch(
-                            setValidationError({
-                              ...validationError,
-                              tablefirstRiskBasedPricing: false,
-                            })
-                          )
-                        }
+                        isValidation={true}
+                        isIndex={item.dataIndex}
                       />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
@@ -477,15 +406,8 @@ const RiskBasedPricing = () => {
                         inputNumberValue={item.secondRiskBasedPricing}
                         onChangeNumber={(e) => handleChangeRBP(e, index)}
                         placeHolder={"2"}
-                        showError={validationError?.tablesecondRiskBasedPricing}
-                        onFocus={() =>
-                          dispatch(
-                            setValidationError({
-                              ...validationError,
-                              tablesecondRiskBasedPricing: false,
-                            })
-                          )
-                        }
+                        isValidation={true}
+                        isIndex={item.dataIndex}
                       />
                     ) : (
                       <div className="flex items-center justify-start ml-20 gap-5">
@@ -508,19 +430,8 @@ const RiskBasedPricing = () => {
                         inputValue={item.interestRate}
                         onChange={(e) => handleChangeRBP(e, index)}
                         placeHolder={"0.4"}
-                        showError={validationError.tableinterestRate}
-                        // showError={
-                        //   validationError[`tableinterestRate_${index}`]
-                        // }
-                        onFocus={() =>
-                          dispatch(
-                            setValidationError({
-                              ...validationError,
-                              // [`tableinterestRate_${index}`]: false,
-                              tableinterestRate: false,
-                            })
-                          )
-                        }
+                        isValidation={true}
+                        isIndex={item.dataIndex}
                       />
                     ) : (
                       <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">

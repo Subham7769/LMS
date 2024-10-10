@@ -14,10 +14,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import { TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
-import {
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { validateForm } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const RiskBasedPricingEquation = () => {
   const dispatch = useDispatch();
@@ -25,8 +23,6 @@ const RiskBasedPricingEquation = () => {
   const { riskBasedPricingEquation, rules } = useSelector(
     (state) => state.rulePolicy
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["a_Weight", "b_Weight", "c_Weight", "d_Weight"];
 
   const handleRuleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +43,9 @@ const RiskBasedPricingEquation = () => {
   };
 
   const handleAddRBPE = async () => {
-    const isValid = validateFormFields(fields, rules, dispatch);
+    await dispatch(validateForm(rules));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       try {
         await dispatch(addRiskBasedPricingEquationRule()).unwrap();
@@ -68,7 +66,9 @@ const RiskBasedPricingEquation = () => {
   const handleUpdateRBPE = async (index) => {
     const rulesData = riskBasedPricingEquation?.rules[index];
 
-    const isValid = validateFormFields(fields, rulesData, dispatch, index);
+    await dispatch(validateForm(rulesData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
 
     if (isValid) {
       try {
@@ -137,15 +137,7 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.a_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
-                  showError={validationError.a_Weight}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        a_Weight: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
                 />
               </td>
               <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -154,15 +146,7 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.b_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
-                  showError={validationError.b_Weight}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        b_Weight: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
                 />
               </td>
               <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -171,15 +155,7 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.c_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
-                  showError={validationError.c_Weight}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        c_Weight: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
                 />
               </td>
               <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -188,15 +164,7 @@ const RiskBasedPricingEquation = () => {
                   inputValue={rules.d_Weight}
                   onChange={handleRuleChange}
                   placeHolder={"0.54"}
-                  showError={validationError.d_Weight}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        d_Weight: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
                 />
               </td>
               <td>
@@ -220,15 +188,8 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.a_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                    showError={validationError[`a_Weight_${index}`]}
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          [`a_Weight_${index}`]: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
+                    isIndex={item.dataIndex}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -238,15 +199,8 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.b_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                    showError={validationError[`b_Weight_${index}`]}
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          [`b_Weight_${index}`]: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
+                    isIndex={item.dataIndex}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -256,15 +210,8 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.c_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                    showError={validationError[`c_Weight_${index}`]}
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          [`c_Weight_${index}`]: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
+                    isIndex={item.dataIndex}
                   />
                 </td>
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
@@ -274,15 +221,8 @@ const RiskBasedPricingEquation = () => {
                     inputValue={item.d_Weight}
                     onChange={handleChange}
                     placeHolder={"0.54"}
-                    showError={validationError[`d_Weight_${index}`]}
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          [`d_Weight_${index}`]: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
+                    isIndex={item.dataIndex}
                   />
                 </td>
                 <td className="py-4 flex gap-2 px-4">

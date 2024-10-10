@@ -1,6 +1,6 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -16,24 +16,19 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 function FamilyDetails() {
-  const { familyDetails, loading, error } = useSelector(    (state) => state.userProductTesting  );
-  const { validationError } = useSelector((state) => state.validation);
+  const { familyDetails, loading, error } = useSelector(
+    (state) => state.userProductTesting
+  );
   const { userID } = useParams();
   const dispatch = useDispatch();
-  const fields = ["maritalStatus", "noOfDomesticWorkers","noOfChildren","totalDependent"];
 
   useEffect(() => {
     dispatch(getBorrowerDetails(userID));
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -46,13 +41,14 @@ function FamilyDetails() {
     dispatch(updateFamilyDetailsField({ name, value }));
   };
 
-
-  const handleUpdate = ({ familyDetails, userID }) =>{
-    const isValid = validateFormFields(fields, familyDetails, dispatch);
+  const handleUpdate = async ({ familyDetails, userID }) => {
+    await dispatch(validateForm(familyDetails));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(updateFamilyDetails({ familyDetails, userID }))
+      dispatch(updateFamilyDetails({ familyDetails, userID }));
     }
-  }
+  };
 
   // Conditional rendering based on loading and error states
   if (loading) {
@@ -82,12 +78,7 @@ function FamilyDetails() {
             inputOptions={maritalOptions}
             inputValue={familyDetails?.maritalStatus}
             onChange={handleChange}
-            showError={validationError.maritalStatus}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, maritalStatus: false })
-              )
-            }
+            isValidation={true}
           />
           {/* No. of Domestic Workers */}
           <InputNumber
@@ -97,12 +88,7 @@ function FamilyDetails() {
             onChange={handleChange}
             placeHolder="1"
             required
-            showError={validationError.noOfDomesticWorkers}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, noOfDomesticWorkers: false })
-              )
-            }
+            isValidation={true}
           />
           {/* No. of Children */}
           <InputNumber
@@ -112,12 +98,7 @@ function FamilyDetails() {
             onChange={handleChange}
             placeHolder="3"
             required
-            showError={validationError.noOfChildren}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, noOfChildren: false })
-              )
-            }
+            isValidation={true}
           />
           {/* Total Dependents */}
           <InputNumber
@@ -127,12 +108,7 @@ function FamilyDetails() {
             onChange={handleChange}
             placeHolder="4"
             required
-            showError={validationError.totalDependent}
-            onFocus={() =>
-              dispatch(
-                setValidationError({ ...validationError, totalDependent: false })
-              )
-            }
+            isValidation={true}
           />
           {/* Dependents in Private School */}
           <InputNumber
@@ -141,12 +117,6 @@ function FamilyDetails() {
             inputValue={familyDetails?.noOfDependentsInPrivateSchools}
             onChange={handleChange}
             placeHolder="2"
-            // showError={validationError.totalDependent}
-            // onFocus={() =>
-            //   dispatch(
-            //     setValidationError({ ...validationError, totalDependent: false })
-            //   )
-            // }
           />
           <InputNumber
             labelName="Dependents in Public School"
@@ -154,12 +124,6 @@ function FamilyDetails() {
             inputValue={familyDetails?.noOfDependentsInPublicSchools}
             onChange={handleChange}
             placeHolder="2"
-            // showError={validationError.totalDependent}
-            // onFocus={() =>
-            //   dispatch(
-            //     setValidationError({ ...validationError, totalDependent: false })
-            //   )
-            // }
           />
           {/* Bread Winner */}
           <InputSelect
@@ -168,19 +132,13 @@ function FamilyDetails() {
             inputOptions={booleanOptions}
             inputValue={familyDetails?.breadWinner}
             onChange={handleChange}
-            // showError={validationError.totalDependent}
-            // onFocus={() =>
-            //   dispatch(
-            //     setValidationError({ ...validationError, totalDependent: false })
-            //   )
-            // }
           />
         </form>
         <div className="flex items-center justify-end gap-4 mt-4">
           <Button
             buttonIcon={CheckCircleIcon}
             buttonName={"Update"}
-            onClick={() => handleUpdate({ familyDetails, userID }) }
+            onClick={() => handleUpdate({ familyDetails, userID })}
             rectangle={true}
           />
         </div>

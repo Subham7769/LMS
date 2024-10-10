@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
 import { HeaderList, CreditScoreETList } from "../../data/CreditScoreETData";
+import { nanoid } from "nanoid";
 
 // Thunks for fetching Credit Score ET Info
 export const fetchCreditScoreETInfo = createAsyncThunk(
@@ -201,7 +202,6 @@ export const updateCreditScoreETName = createAsyncThunk(
 export const createCloneCSET = createAsyncThunk(
   "creditScoreET/createCloneCSET",
   async ({ creditScoreETId, cloneCSETName }, { rejectWithValue, dispatch }) => {
-
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -261,7 +261,7 @@ export const handleDeleteCSET = createAsyncThunk(
 // Thunk for deleting a Credit Score ET Range by ruleName
 export const handleDeleteRange = createAsyncThunk(
   "creditScoreET/handleDeleteCSET",
-  async ({ creditScoreETId,ruleName }, { rejectWithValue, dispatch }) => {
+  async ({ creditScoreETId, ruleName }, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -314,6 +314,7 @@ const creditScoreETInitialState = {
         ruleName: "0",
         fieldType: "Employer",
         tenureValue: "",
+        dataIndex: "",
         tenure: [],
         tags: [],
       },
@@ -500,6 +501,7 @@ const creditScoreETSlice = createSlice({
           state.creditScoreET.rules = action.payload.rules.map((rule) => ({
             ...rule, // Spread existing rule properties
             tenureValue: "",
+            dataIndex: nanoid(),
             tags: rule.tenure.map((tenureValue, index) => ({
               index,
               tenureValue, // Create an object with index and tenure

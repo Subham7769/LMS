@@ -26,7 +26,7 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
-import { Passed, Warning } from "../Toasts";
+import { Failed, Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import DynamicName from "../Common/DynamicName/DynamicName";
@@ -40,9 +40,9 @@ import CloneModal from "../Common/CloneModal/CloneModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -53,43 +53,13 @@ const DebtBurdenConfig = () => {
   // Redux state selectors
   const { name, loading, currentPage, isModalOpen, dbrData, allDBRData } =
     useSelector((state) => state.dbrConfig);
-  const { validationError } = useSelector((state) => state.validation);
 
   const [editingIndex, setEditingIndex] = useState(null);
   const itemsPerPage = 5;
 
-  const fields = [
-    "startNetIncomeBracketInSARule",
-    "endNetIncomeBracketInSARule",
-    "productLevel",
-    "consumerDBR",
-    "gdbrWithoutMTG",
-    "employerRetired",
-    "gdbrWithMTG",
-  ];
-
-  const fields2 = [
-    "firstNetIncomeBracketInSARuleOperator",
-    "inputstartNetIncomeBracketInSARule",
-    "secondNetIncomeBracketInSARuleOperator",
-    "inputendNetIncomeBracketInSARule",
-    "inputproductLevel",
-    "inputconsumerDBR",
-    "inputgdbrWithoutMTG",
-    "inputemployerRetired",
-    "inputgdbrWithMTG",
-  ];
-
   useEffect(() => {
     dispatch(fetchRules(dbcTempId));
     dispatch(fetchName(dbcTempId));
-
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
-    // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
@@ -156,14 +126,13 @@ const DebtBurdenConfig = () => {
     });
   };
 
-  const toggleEdit = (index) => {
+  const toggleEdit = async (index) => {
     const absoluteIndex = index + indexOfFirstItem;
     if (editingIndex !== null) {
-      const isValid = validateFormFields(
-        fields,
-        allDBRData.dbrRules[absoluteIndex],
-        dispatch
-      );
+      const dbrTableData = allDBRData.dbrRules[absoluteIndex];
+      await dispatch(validateForm(dbrTableData));
+      const state = store.getState();
+      const isValid = state.validation.isValid;
       if (isValid) {
         informUser();
         setEditingIndex(editingIndex === index ? null : index);
@@ -215,34 +184,26 @@ const DebtBurdenConfig = () => {
     dispatch(updateName({ dbcTempId, newName }));
   };
 
-  const addNewRule = () => {
+  const addNewRule = async () => {
     const operators = allDBRData?.operators;
-    const inputstartNetIncomeBracketInSARule =
-      dbrData?.startNetIncomeBracketInSARule;
-    const inputendNetIncomeBracketInSARule =
-      dbrData?.endNetIncomeBracketInSARule;
-    const inputproductLevel = dbrData?.productLevel;
-    const inputconsumerDBR = dbrData?.consumerDBR;
-    const inputgdbrWithoutMTG = dbrData?.gdbrWithoutMTG;
-    const inputemployerRetired = dbrData?.employerRetired;
-    const inputgdbrWithMTG = dbrData?.gdbrWithMTG;
-
-    const isValid = validateFormFields(
-      fields2,
-      {
-        operators,
-        inputstartNetIncomeBracketInSARule,
-        inputendNetIncomeBracketInSARule,
-        inputproductLevel,
-        inputconsumerDBR,
-        inputgdbrWithoutMTG,
-        inputemployerRetired,
-        inputgdbrWithMTG,
-      },
-      dispatch
-    );
-    const isValid2 = validateFormFields(fields2, operators, dispatch);
-    if (isValid & isValid2) {
+    await dispatch(validateForm(operators));
+    const stateAfterOp = store.getState();
+    const isValidOp = stateAfterOp.validation.isValid;
+    await dispatch(validateForm(dbrData));
+    const stateAfterDbr = store.getState();
+    const isValidDbr = stateAfterDbr.validation.isValid;
+    console.log(isValidDbr + " ---- " + isValidOp);
+    if (!isValidOp) {
+      toast.custom((t) => (
+        <Failed
+          t={t}
+          toast={toast}
+          title={"Alert"}
+          message={"Please fill Net Income operators!!"}
+        />
+      ));
+    }
+    if (isValidDbr && isValidOp) {
       dispatch(addRule({ operators, dbrData, dbcTempId }))
         .unwrap()
         .then((response) => {
@@ -366,8 +327,6 @@ const DebtBurdenConfig = () => {
     return <LoadingState />;
   }
 
-  console.log(validationError);
-
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -399,15 +358,7 @@ const DebtBurdenConfig = () => {
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="firstNetIncomeBracketInSARuleOperator"
-              showError={validationError?.firstNetIncomeBracketInSARuleOperator}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    firstNetIncomeBracketInSARuleOperator: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -416,15 +367,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.startNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="10000"
-              showError={validationError?.inputstartNetIncomeBracketInSARule}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputstartNetIncomeBracketInSARule: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -436,17 +379,7 @@ const DebtBurdenConfig = () => {
               inputOptions={operatorOptions}
               onChange={handleOperatorChange}
               inputName="secondNetIncomeBracketInSARuleOperator"
-              showError={
-                validationError?.secondNetIncomeBracketInSARuleOperator
-              }
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    secondNetIncomeBracketInSARuleOperator: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -455,15 +388,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.endNetIncomeBracketInSARule}
               onChange={handleInputChange}
               placeHolder="20000"
-              showError={validationError?.inputendNetIncomeBracketInSARule}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputendNetIncomeBracketInSARule: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -473,15 +398,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.productLevel}
               onChange={handleInputChange}
               placeHolder="33%"
-              showError={validationError?.inputproductLevel}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputproductLevel: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -491,15 +408,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.consumerDBR}
               onChange={handleInputChange}
               placeHolder="65%"
-              showError={validationError?.inputconsumerDBR}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputconsumerDBR: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -509,15 +418,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.gdbrWithoutMTG}
               onChange={handleInputChange}
               placeHolder="65%"
-              showError={validationError?.inputgdbrWithoutMTG}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputgdbrWithoutMTG: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -527,15 +428,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.employerRetired}
               onChange={handleInputChange}
               inputOptions={empOptions}
-              showError={validationError?.inputemployerRetired}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputemployerRetired: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="relative">
@@ -545,15 +438,7 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.gdbrWithMTG}
               onChange={handleInputChange}
               placeHolder="65%"
-              showError={validationError?.inputgdbrWithMTG}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    inputgdbrWithMTG: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="w-8">

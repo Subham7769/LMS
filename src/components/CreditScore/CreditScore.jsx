@@ -22,10 +22,10 @@ import {
 import InputNumber from "../Common/InputNumber/InputNumber";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
   validateFormFieldsRule,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const options = [
   { value: "==", label: "==" },
@@ -42,25 +42,6 @@ const CreditScore = () => {
   const { creditScoreData, loading } = useSelector(
     (state) => state.creditScore
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = [
-    "aweightage",
-    "bweightage",
-    "cweightage",
-    "dweightage",
-    "eweightage",
-    "fweightage",
-    "residentsCreditScore",
-    "expatriatesCreditScore",
-    "rentStatusScore",
-    "ownStatusScore",
-    "marriedStatusScore",
-    "singleStatusScore",
-    "divorcedStatusScore",
-    "widowedStatusScore",
-    "separatedStatusScore",
-    "unknownStatusScore",
-  ];
 
   useEffect(() => {
     dispatch(fetchCreditScore(creditScoreId))
@@ -71,11 +52,11 @@ const CreditScore = () => {
         }
       });
 
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
+    // const initialValidationError = {};
+    // fields.forEach((field) => {
+    //   initialValidationError[field] = false; // Set all fields to false initially
+    // });
+    // dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -88,7 +69,9 @@ const CreditScore = () => {
   };
 
   const handleAddFields = async () => {
-    const isValid = validateFormFields(fields, creditScoreData, dispatch);
+    await dispatch(validateForm(creditScoreData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     const isValid2 = validateFormFieldsRule(creditScoreData, dispatch);
     if (isValid && isValid2) {
       dispatch(updateCreditScore({ creditScoreId, creditScoreData }))
@@ -105,8 +88,6 @@ const CreditScore = () => {
         });
     }
   };
-
-  // console.log(creditScoreData);
 
   if (loading) {
     return <LoadingState />;
@@ -211,15 +192,8 @@ const CreditScore = () => {
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
-                showError={validationError[`firstDependent_0`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`firstDependent_0`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={"0"}
               />
             </div>
             <div className="mb-3">
@@ -242,15 +216,8 @@ const CreditScore = () => {
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
-                showError={validationError[`firstDependent_1`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`firstDependent_1`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={"1"}
               />
             </div>
             <div className="mb-3">
@@ -273,15 +240,8 @@ const CreditScore = () => {
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
-                showError={validationError[`firstDependent_2`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`firstDependent_2`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={"2"}
               />
             </div>
           </div>
@@ -306,15 +266,17 @@ const CreditScore = () => {
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
-                showError={validationError[`secondDependent_0`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`secondDependent_0`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={"0"}
+                // showError={validationError[`secondDependent_0`]}
+                // onFocus={() =>
+                //   dispatch(
+                //     setValidationError({
+                //       ...validationError,
+                //       [`secondDependent_0`]: false,
+                //     })
+                //   )
+                // }
               />
             </div>
             <div className="mb-3">
@@ -337,15 +299,17 @@ const CreditScore = () => {
                 }
                 onChangeNumber={handleChange}
                 placeHolderNumber={"4"}
-                showError={validationError[`secondDependent_1`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`secondDependent_1`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={"1"}
+                // showError={validationError[`secondDependent_1`]}
+                // onFocus={() =>
+                //   dispatch(
+                //     setValidationError({
+                //       ...validationError,
+                //       [`secondDependent_1`]: false,
+                //     })
+                //   )
+                // }
               />
             </div>
           </div>
@@ -365,15 +329,17 @@ const CreditScore = () => {
                   }
                   onChange={handleChange}
                   placeHolder={"0.54"}
-                  showError={validationError[`value_0`]}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        [`value_0`]: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
+                  isIndex={"0"}
+                  // showError={validationError[`value_0`]}
+                  // onFocus={() =>
+                  //   dispatch(
+                  //     setValidationError({
+                  //       ...validationError,
+                  //       [`value_0`]: false,
+                  //     })
+                  //   )
+                  // }
                 />
               </div>
             </div>
@@ -392,15 +358,17 @@ const CreditScore = () => {
                   }
                   onChange={handleChange}
                   placeHolder={"0.54"}
-                  showError={validationError[`value_1`]}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        [`value_1`]: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
+                  isIndex={"1"}
+                  // showError={validationError[`value_1`]}
+                  // onFocus={() =>
+                  //   dispatch(
+                  //     setValidationError({
+                  //       ...validationError,
+                  //       [`value_1`]: false,
+                  //     })
+                  //   )
+                  // }
                 />
               </div>
             </div>
@@ -419,15 +387,17 @@ const CreditScore = () => {
                   }
                   onChange={handleChange}
                   placeHolder={"0.54"}
-                  showError={validationError[`value_2`]}
-                  onFocus={() =>
-                    dispatch(
-                      setValidationError({
-                        ...validationError,
-                        [`value_2`]: false,
-                      })
-                    )
-                  }
+                  isValidation={true}
+                  isIndex={"2"}
+                  // showError={validationError[`value_2`]}
+                  // onFocus={() =>
+                  //   dispatch(
+                  //     setValidationError({
+                  //       ...validationError,
+                  //       [`value_2`]: false,
+                  //     })
+                  //   )
+                  // }
                 />
               </div>
             </div>

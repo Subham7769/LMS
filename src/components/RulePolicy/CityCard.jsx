@@ -9,21 +9,17 @@ import {
   fetchRulePolicyData,
   setCityFormData,
 } from "../../redux/Slices/rulePolicySlice";
-import {
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { validateForm } from "../../redux/Slices/validationSlice";
 
 import toast from "react-hot-toast";
 import { Passed } from "../Toasts";
+import store from "../../redux/store";
 
 const CityCard = ({ cityData }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
   const { cityFormData } = useSelector((state) => state.rulePolicy);
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["city", "points"];
 
   useEffect(() => {
     if (cityData) {
@@ -53,7 +49,9 @@ const CityCard = ({ cityData }) => {
   };
 
   const addTag = async () => {
-    const isValid = validateFormFields(fields, cityFormData, dispatch);
+    await dispatch(validateForm(cityFormData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       if (cityFormData.city) {
         if (isSimilarTag(cityFormData.city)) {
@@ -138,8 +136,6 @@ const CityCard = ({ cityData }) => {
     }
   };
 
-  // console.log(cityFormData);
-
   return (
     <ContainerTile className={"w-full"}>
       <div className="flex items-center justify-between mb-3">
@@ -154,24 +150,8 @@ const CityCard = ({ cityData }) => {
         deleteTag={deleteTag}
         inputNumberName={"points"}
         inputNumberLabel={"Add Points"}
-        showError={validationError?.city}
-        onFocus={() =>
-          dispatch(
-            setValidationError({
-              ...validationError,
-              city: false,
-            })
-          )
-        }
-        showError2={validationError?.points}
-        onFocus2={() =>
-          dispatch(
-            setValidationError({
-              ...validationError,
-              points: false,
-            })
-          )
-        }
+        isValidation={true}
+        isValidation2={true}
       />
     </ContainerTile>
   );

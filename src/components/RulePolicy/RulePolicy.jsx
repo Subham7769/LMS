@@ -13,11 +13,7 @@ import {
 } from "../../redux/Slices/rulePolicySlice";
 import RiskBasedPricingEquation from "./RiskBaedPricingEquation";
 import RiskBasedPricing from "./RiskBasedPricing";
-import {
-  clearValidationError,
-  setValidationError,
-  validateFormFields,
-} from "../../redux/Slices/validationSlice";
+import { clearValidationError } from "../../redux/Slices/validationSlice";
 
 const CreditPolicy = () => {
   const { rulePolicyId } = useParams();
@@ -25,46 +21,10 @@ const CreditPolicy = () => {
   const { cityData, occupationData, FAWTData, loading, error } = useSelector(
     (state) => state.rulePolicy
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = [
-    "city",
-    "points",
-    "occupation",
-    "occPoints",
-    "firstLengthOfServiceOperator",
-    "firstLengthOfService",
-    "secondLengthOfServiceOperator",
-    "secondLengthOfService",
-    "point",
-    "firstRiskBasedPricingOperator",
-    "firstRiskBasedPricing",
-    "secondRiskBasedPricingOperator",
-    "secondRiskBasedPricing",
-    "interestRate",
-    "interestPeriodType",
-    "firstRiskBasedPricingOperator",
-    "firstRiskBasedPricing",
-    "secondRiskBasedPricingOperator",
-    "secondRiskBasedPricing",
-    "interestRate",
-    "interestPeriodType",
-    "a_Weight",
-    "b_Weight",
-    "c_Weight",
-    "d_Weight",
-    "inputfinanceAmount",
-    "inputtenure",
-  ];
 
   useEffect(() => {
     dispatch(setRulePolicyId(rulePolicyId));
     dispatch(fetchRulePolicyData(rulePolicyId));
-
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());

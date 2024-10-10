@@ -313,7 +313,7 @@ const recoverySlice = createSlice({
       })
       .addCase(fetchData.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.length > 0) {
+        if (action.payload[0] != null) {
           state.data = action.payload[0];
         } else {
           state.data = {
@@ -331,9 +331,13 @@ const recoverySlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(updateOrPostData.pending, (state, action) => {
+        state.loading = true;
+      })
       .addCase(updateOrPostData.fulfilled, (state, action) => {
         state.data = action.payload;
         toast.success("Data updated successfully!");
+        state.loading = false;
       })
       .addCase(updateOrPostData.rejected, (state, action) => {
         state.loading = false;

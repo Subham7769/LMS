@@ -10,8 +10,6 @@ import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import InputNumber from "../InputNumber/InputNumber";
 import SectionErrorBoundary from "../../ErrorBoundary/SectionErrorBoundary";
-import { useDispatch, useSelector } from "react-redux";
-import { setValidationError } from "../../../redux/Slices/validationSlice";
 
 const ListTable = ({
   ListName,
@@ -37,8 +35,6 @@ const ListTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PageSize);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
-  const dispatch = useDispatch();
-  const { validationError } = useSelector((state) => state.validation);
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
@@ -257,15 +253,7 @@ const ListTable = ({
                               )
                             }
                             placeHolder="3"
-                            showError={validationError[key]}
-                            onFocus={() =>
-                              dispatch(
-                                setValidationError({
-                                  ...validationError,
-                                  [key]: false,
-                                })
-                              )
-                            }
+                            isValidation={true}
                           />
                         </>
                       ) : product[key] ? (

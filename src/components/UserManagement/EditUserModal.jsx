@@ -12,16 +12,14 @@ import {
 } from "../../redux/Slices/userManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setValidationError,
-  validateFormFields,
+  validateForm,
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
   const dispatch = useDispatch();
   const { formData, userRole } = useSelector((state) => state.userManagement);
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["firstname", "lastname"];
 
   useEffect(() => {
     dispatch(setFormData(userDetails));
@@ -41,11 +39,11 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
     dispatch(setUserRole(selectedUserRole));
   };
 
-  // console.log(validationError);
-
   const updateData = async (e) => {
     e.preventDefault();
-    const isValid = validateFormFields(fields, formData, dispatch);
+    await dispatch(validateForm(formData));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(userRole, dispatch);
     if (isValid && isValid2) {
       try {
@@ -85,12 +83,7 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
               inputValue={formData?.firstname}
               onChange={handleChange}
               required
-              showError={validationError?.firstname}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, firstname: false })
-                )
-              }
+              isValidation={true}
             />
             <InputText
               labelName="Last Name"
@@ -98,29 +91,16 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
               inputValue={formData?.lastname}
               onChange={handleChange}
               required
-              showError={validationError?.lastname}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, lastname: false })
-                )
-              }
+              isValidation={true}
             />
             <SelectInput
               labelName="Roles"
-              inputName="roles"
+              inputName="userRole"
               inputOptions={role}
               isMulti={true}
               inputValue={userRole}
               onChange={handleRoles}
-              showError={validationError?.userRole}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({
-                    ...validationError,
-                    userRole: false,
-                  })
-                )
-              }
+              isValidation={true}
             />
           </form>
           <div className="flex gap-3 justify-center md:justify-end">

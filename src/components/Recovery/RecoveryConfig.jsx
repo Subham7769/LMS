@@ -19,22 +19,20 @@ import CloneModal from "../Common/CloneModal/CloneModal";
 import {
   fetchName,
   fetchData,
-  setData,
   handleChange,
   updateOrPostData,
   deleteRecovery,
   createClone,
   updateRecoveryName,
-  // setValidationError,
 } from "../../redux/Slices/recoverySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecoveryData } from "../../redux/Slices/sidebarSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -44,9 +42,7 @@ const RecoveryConfig = () => {
   const { itemName, data, loading, error } = useSelector(
     (state) => state.recovery
   );
-  const { validationError } = useSelector((state) => state.validation);
   const [isEditingEquation, setIsEditingEquation] = useState(false);
-  const fields = ["tenure", "tenureType", "recoveryEquation"];
 
   const handleChangeWrapper = (e) => {
     const { name, value } = e.target;
@@ -66,13 +62,6 @@ const RecoveryConfig = () => {
   useEffect(() => {
     dispatch(fetchName(recoveryEquationTempId));
     dispatch(fetchData(recoveryEquationTempId));
-
-    const initialValidationError = {};
-    fields.forEach((field) => {
-      initialValidationError[field] = false; // Set all fields to false initially
-    });
-    dispatch(setValidationError(initialValidationError));
-    // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
@@ -83,12 +72,11 @@ const RecoveryConfig = () => {
     toggleEditEquation();
   };
 
-  // console.log(validationError);
-
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    const isValid = validateFormFields(fields, data, dispatch);
-    // console.log(isValid);
+    await dispatch(validateForm(data));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
         updateOrPostData({
@@ -172,12 +160,7 @@ const RecoveryConfig = () => {
               inputValue={data?.tenure}
               onChange={handleChangeWrapper}
               placeHolder={"24"}
-              showError={validationError?.tenure}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, tenure: false })
-                )
-              }
+              isValidation={true}
             />
           </div>
           <div className="flex-1">
@@ -188,12 +171,7 @@ const RecoveryConfig = () => {
               inputOptions={options}
               onChange={handleChangeWrapper}
               placeHolder="Select Tenure Type"
-              showError={validationError.tenureType}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, tenureType: false })
-                )
-              }
+              isValidation={true}
             />
           </div>
         </div>
@@ -209,14 +187,7 @@ const RecoveryConfig = () => {
                     inputValue={data?.recoveryEquation}
                     onChange={handleChangeWrapper}
                     placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
-                    onFocus={() =>
-                      dispatch(
-                        setValidationError({
-                          ...validationError,
-                          recoveryEquation: false,
-                        })
-                      )
-                    }
+                    isValidation={true}
                   />
                 ) : (
                   <div className="flex items-center space-x-2 w-full">
@@ -227,15 +198,7 @@ const RecoveryConfig = () => {
                       onChange={handleChangeWrapper}
                       placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
                       readOnly={true}
-                      showError={validationError.recoveryEquation} // Apply error from centralized state
-                      onFocus={() =>
-                        dispatch(
-                          setValidationError({
-                            ...validationError,
-                            recoveryEquation: false,
-                          })
-                        )
-                      }
+                      isValidation={true}
                     />
                   </div>
                 )}

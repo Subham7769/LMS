@@ -26,31 +26,18 @@ import {
 } from "../../redux/Slices/globalConfigSlice";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const MinimumExpense = () => {
   const dispatch = useDispatch();
-
-  const { validationError } = useSelector((state) => state.validation);
   const { expenseForm, allExpenseData, loading, error } = useSelector(
     (state) => state.globalConfig
   );
-  const fields = ["expensesName", "dependantType", "expensesFrequency", "bareMinimum"];
 
   useEffect(() => {
     dispatch(fetchExpenseData());
-    if (allExpenseData?.length) {
-      const initialValidationError = {};
-      allExpenseData.forEach((_, index) => {
-        fields.forEach((field) => {
-          // Create validation keys dynamically based on the index
-          initialValidationError[`${field}_${index}`] = false;
-        });
-      });
-      dispatch(setValidationError(initialValidationError));
-    }
     return () => {
       dispatch(clearValidationError());
     };
@@ -62,9 +49,9 @@ const MinimumExpense = () => {
   };
 
   const handleAddFields = async () => {
-    const { expensesName, dependantType, expensesFrequency, bareMinimum } = expenseForm;
-    const isValid = validateFormFields(fields, { expensesName, dependantType, expensesFrequency, bareMinimum }, dispatch);
-    console.log(isValid)
+    await dispatch(validateForm(expenseForm));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       try {
         await dispatch(addExpenseField(expenseForm)).unwrap();
@@ -107,8 +94,9 @@ const MinimumExpense = () => {
   };
 
   const handleSave = async (id, index) => {
-    const isValid = validateFormFields(fields, allExpenseData[index], dispatch,  index);
-    console.log(isValid)
+    await dispatch(validateForm(allExpenseData[index]));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       // Find the item to be update
       dispatch(saveExpenseField(id)).then(() =>
@@ -164,12 +152,7 @@ const MinimumExpense = () => {
               inputValue={expenseForm?.expensesName}
               onChange={handleInputChange}
               placeHolder="Food and Living"
-              showError={validationError.expensesName}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, expensesName: false })
-                )
-              }
+              isValidation={true}
             />
             <InputSelect
               labelName="Type"
@@ -177,12 +160,7 @@ const MinimumExpense = () => {
               inputName="dependantType"
               inputValue={expenseForm?.dependantType}
               onChange={handleInputChange}
-              showError={validationError.dependantType}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, dependantType: false })
-                )
-              }
+              isValidation={true}
             />
             <InputSelect
               labelName="Expenses Frequency"
@@ -190,12 +168,7 @@ const MinimumExpense = () => {
               inputName="expensesFrequency"
               inputValue={expenseForm?.expensesFrequency}
               onChange={handleInputChange}
-              showError={validationError.expensesFrequency}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, expensesFrequency: false })
-                )
-              }
+              isValidation={true}
             />
             <InputNumber
               labelName="Bare Min Expense Per Person"
@@ -203,12 +176,7 @@ const MinimumExpense = () => {
               inputValue={expenseForm?.bareMinimum}
               onChange={handleInputChange}
               placeHolder="200"
-              showError={validationError.bareMinimum}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, bareMinimum: false })
-                )
-              }
+              isValidation={true}
             />
             <Button
               buttonIcon={PlusIcon}
@@ -230,12 +198,8 @@ const MinimumExpense = () => {
                 inputValue={expenseData?.expensesName}
                 onChange={(e) => handleChange(e, expenseData?.id)}
                 placeHolder="Food and Living"
-                showError={validationError[`expensesName_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`expensesName_${index}`]: false })
-                  )
-                }
+                isValidation={true}
+                isIndex={expenseData.dataIndex}
               />
               <InputSelectNew
                 labelName="Type"
@@ -249,12 +213,6 @@ const MinimumExpense = () => {
                     expenseData?.id,
                     "dependantType",
                     selectedOption
-                  )
-                }
-                showError={validationError[`dependantType_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`dependantType_${index}`]: false })
                   )
                 }
               />
@@ -272,12 +230,6 @@ const MinimumExpense = () => {
                     selectedOption
                   )
                 }
-                showError={validationError[`expensesFrequency_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`expensesFrequency_${index}`]: false })
-                  )
-                }
               />
               <InputNumber
                 labelName="Bare Min Expense Per Person"
@@ -286,12 +238,8 @@ const MinimumExpense = () => {
                 inputValue={expenseData?.bareMinimum}
                 onChange={(e) => handleChange(e, expenseData?.id)}
                 placeHolder="200"
-                showError={validationError[`bareMinimum_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({ ...validationError, [`bareMinimum_${index}`]: false })
-                  )
-                }
+                isValidation={true}
+                isIndex={expenseData.dataIndex}
               />
               <div className="flex items-center gap-4">
                 <Button

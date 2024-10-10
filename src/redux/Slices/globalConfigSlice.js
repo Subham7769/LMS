@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 
 // Async thunks for API calls
 export const fetchLiabilityData = createAsyncThunk(
@@ -426,6 +427,7 @@ const initialState = {
     totalExposure: "",
     activeRule: "",
     defaultConsideredInSIMAHscore: "",
+    dataIndex: nanoid(),
   },
   allRiskGradeData: [],
   newRiskGradeForm: {
@@ -562,7 +564,12 @@ export const globalConfigSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchRiskGrades.fulfilled, (state, action) => {
-        state.allRiskGradeData = action.payload;
+        const updatedRiskGradeData = action.payload.map((data) => ({
+          ...data,
+          dataIndex: nanoid(),
+        }));
+
+        state.allRiskGradeData = updatedRiskGradeData;
         state.loading = false;
       })
       .addCase(fetchRiskGrades.rejected, (state, action) => {
@@ -612,7 +619,11 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchExpenseData.fulfilled, (state, action) => {
         state.loading = false;
-        state.allExpenseData = action.payload;
+        const updatedExpenseData = action.payload.map((data) => ({
+          ...data,
+          dataIndex: nanoid(),
+        }));
+        state.allExpenseData = updatedExpenseData;
       })
       .addCase(fetchExpenseData.rejected, (state, action) => {
         state.loading = false;
@@ -653,7 +664,11 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchNotificationData.fulfilled, (state, action) => {
         state.loading = false;
-        state.notificationInputList = action.payload;
+        const updatedNotificationData = action.payload.map((data) => ({
+          ...data,
+          dataIndex: nanoid(),
+        }));
+        state.notificationInputList = updatedNotificationData;
       })
       .addCase(fetchNotificationData.rejected, (state, action) => {
         state.loading = false;

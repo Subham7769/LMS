@@ -22,38 +22,27 @@ import {
 } from "../../redux/Slices/globalConfigSlice";
 import {
   clearValidationError,
-  setValidationError,
-  validateFormFields,
+  validateForm,
 } from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
   const { allRiskGradeData, newRiskGradeForm, loading } = useSelector(
     (state) => state.globalConfig
   );
-  const { validationError } = useSelector((state) => state.validation);
-  const fields = ["from", "to", "grade"];
 
   useEffect(() => {
     dispatch(fetchRiskGrades());
-    if (allRiskGradeData?.length) {
-      const initialValidationError = {};
-      allRiskGradeData.forEach((_, index) => {
-        fields.forEach((field) => {
-          // Create validation keys dynamically based on the index
-          initialValidationError[`${field}_${index}`] = false;
-        });
-      });
-      dispatch(setValidationError(initialValidationError));
-    }
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
 
-  const handleAddFields = () => {
-    const { from, to, grade } = newRiskGradeForm;
-    const isValid = validateFormFields(fields, { from, to, grade }, dispatch);
+  const handleAddFields = async () => {
+    await dispatch(validateForm(newRiskGradeForm));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     console.log(isValid);
     if (isValid) {
       dispatch(addRiskGrade(newRiskGradeForm)).then(() =>
@@ -69,13 +58,10 @@ const RiskGradeMatrix = () => {
     }
   };
 
-  const handleSave = (id, index) => {
-    const isValid = validateFormFields(
-      fields,
-      allRiskGradeData[index],
-      dispatch,
-      index
-    );
+  const handleSave = async (id, index) => {
+    await dispatch(validateForm(allRiskGradeData[index]));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     console.log(isValid);
     if (isValid) {
       const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
@@ -138,12 +124,7 @@ const RiskGradeMatrix = () => {
                 )
               }
               placeHolder="10"
-              showError={validationError.from}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, from: false })
-                )
-              }
+              isValidation={true}
             />
             <InputNumber
               labelName="To"
@@ -160,10 +141,7 @@ const RiskGradeMatrix = () => {
                 )
               }
               placeHolder="30"
-              showError={validationError.to}
-              onFocus={() =>
-                dispatch(setValidationError({ ...validationError, to: false }))
-              }
+              isValidation={true}
             />
             <InputText
               labelName="Risk Grade"
@@ -180,12 +158,7 @@ const RiskGradeMatrix = () => {
                 )
               }
               placeHolder="R1"
-              showError={validationError.grade}
-              onFocus={() =>
-                dispatch(
-                  setValidationError({ ...validationError, grade: false })
-                )
-              }
+              isValidation={true}
             />
             <div className="mt-4">
               <Button
@@ -215,15 +188,8 @@ const RiskGradeMatrix = () => {
                     })
                   )
                 }
-                showError={validationError[`from_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`from_${index}`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={riskGradingData.dataIndex}
               />
               <InputNumber
                 labelName="To"
@@ -238,15 +204,8 @@ const RiskGradeMatrix = () => {
                     })
                   )
                 }
-                showError={validationError[`to_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`to_${index}`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={riskGradingData.dataIndex}
               />
               <InputText
                 labelName="Risk Grade"
@@ -261,15 +220,8 @@ const RiskGradeMatrix = () => {
                     })
                   )
                 }
-                showError={validationError[`grade_${index}`]}
-                onFocus={() =>
-                  dispatch(
-                    setValidationError({
-                      ...validationError,
-                      [`grade_${index}`]: false,
-                    })
-                  )
-                }
+                isValidation={true}
+                isIndex={riskGradingData.dataIndex}
               />
               <div className="flex items-center gap-2 mt-4">
                 <Button

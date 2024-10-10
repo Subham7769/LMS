@@ -18,12 +18,12 @@ const TagInput = ({
   addTag,
   deleteTag,
   productTypeOptions,
-  showError = false, // New prop to indicate error
-  onFocus, // New onFocus handler to reset error
-  showError2 = false,
-  onFocus2,
-  showError3 = false,
-  onFocus3,
+  isValidation = false,
+  isIndex,
+  isValidation2 = false,
+  isIndex2,
+  isValidation3 = false,
+  isIndex3,
 }) => {
   return (
     <>
@@ -35,8 +35,8 @@ const TagInput = ({
             inputOptions={productTypeOptions}
             inputValue={formData[inputSelectName]}
             onChange={handleChange}
-            showError={showError3}
-            onFocus={onFocus3}
+            isValidation={isValidation3}
+            isIndex={isIndex3}
           />
         )}
         {inputTextName && (
@@ -46,8 +46,8 @@ const TagInput = ({
             inputValue={formData[inputTextName]}
             onChange={handleChange}
             placeHolder={inputTextPlaceholder}
-            showError={showError}
-            onFocus={onFocus}
+            isValidation={isValidation}
+            isIndex={isIndex}
           />
         )}
         {inputNumberName && (
@@ -57,8 +57,8 @@ const TagInput = ({
             inputValue={formData[inputNumberName]}
             onChange={handleChange}
             placeHolder={"2"}
-            showError={showError2}
-            onFocus={onFocus2}
+            isValidation={isValidation2}
+            isIndex={isIndex2}
           />
         )}
         <div className="">

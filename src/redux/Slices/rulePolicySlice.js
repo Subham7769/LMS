@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, RulePolicyList } from "../../data/RulePolicyData";
+import { nanoid } from "nanoid";
 
 // Async thunk to fetch data
 export const fetchRulePolicyData = createAsyncThunk(
@@ -627,6 +628,7 @@ const initialState = {
     rulePolicyTempId: null,
     financeAmount: "",
     tenure: "",
+    dataIndex: nanoid(),
   },
   allRuleData: [],
   riskBasedPricingInput: {
@@ -698,7 +700,7 @@ const initialState = {
   occupationFormData: {
     name: "Occupation",
     occupation: "",
-    points: "",
+    occpoints: "",
     ruleName: "0",
     rulePolicyTempId: "",
     fieldType: "Employer",
@@ -867,8 +869,17 @@ const rulePolicySlice = createSlice({
 
         // Set the state based on the fetched data
         state.allRuleData = data;
-        state.riskBasedPricingEquation =
+        const tempriskBasedPricingEquation =
           data.find((rule) => rule.name === "riskBasedPricingEquation") || {};
+        if (tempriskBasedPricingEquation.rules) {
+          tempriskBasedPricingEquation.rules =
+            tempriskBasedPricingEquation.rules.map((ruleData) => ({
+              ...ruleData,
+              dataIndex: nanoid(),
+            }));
+        }
+        state.riskBasedPricingEquation = tempriskBasedPricingEquation;
+
         state.cityData = data.find((rule) => rule.name === "city")?.rules || [];
         state.occupationData =
           data.find((rule) => rule.name === "employmentSector")?.rules || [];
@@ -878,18 +889,20 @@ const rulePolicySlice = createSlice({
         state.riskBasedPricing.riskBasedPricingRules =
           data
             .find((rule) => rule.name === "riskBasedPricing")
-            ?.rules.filter(
-              (item) => item.rulePolicyTempId === state.rules.rulePolicyTempId
-            ) || [];
+            ?.rules.map((rulesData) => ({
+              ...rulesData,
+              dataIndex: nanoid(), // Assign nanoid() to dataIndex
+            })) || [];
         state.riskBasedPricing.operators = data.find(
           (rule) => rule.name === "riskBasedPricing"
         )?.operators;
         state.LOSInputList.lengthOfServiceRules =
           data
             .find((rule) => rule.name === "lengthOfService")
-            ?.rules.filter(
-              (item) => item.rulePolicyTempId === state.rules.rulePolicyTempId
-            ) || [];
+            ?.rules.map((rulesData) => ({
+              ...rulesData,
+              dataIndex: nanoid(), // Assign nanoid() to dataIndex
+            })) || [];
         state.LOSInputList.operators = data.find(
           (rule) => rule.name === "lengthOfService"
         )?.operators;

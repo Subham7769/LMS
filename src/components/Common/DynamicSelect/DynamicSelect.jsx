@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addFields,
+  setValidationError,
+} from "../../../redux/Slices/validationSlice";
 
 const SelectInput = ({
   labelName,
@@ -14,20 +19,31 @@ const SelectInput = ({
   isSearchable,
   isMulti,
   defaultValue,
-  showError = false, // New prop to indicate error
-  onFocus, // New onFocus handler to reset error
+  isValidation = false,
+  isIndex,
 }) => {
+  const dispatch = useDispatch();
+  const { fields, validationError } = useSelector((state) => state.validation);
+
+  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  if (isValidation) {
+    useEffect(() => {
+      if (!fields.includes(inputName)) {
+        dispatch(addFields({ inputName }));
+      }
+    }, [inputName, dispatch]);
+  }
   return (
     <>
       <div className="flex flex-col">
         {labelName && (
           <label
             className={`block ${
-              showError ? "text-red-600" : "text-gray-700"
+              validationError[validationKey] ? "text-red-600" : "text-gray-700"
             } px-1 text-[14px]`}
             htmlFor={inputName}
           >
-            {showError ? "Field required" : labelName}
+            {validationError[validationKey] ? "Field required" : labelName}
           </label>
         )}
         <Select
@@ -39,7 +55,7 @@ const SelectInput = ({
           onChange={onChange}
           placeholder={placeHolder}
           isSearchable={isSearchable}
-          onFocus={onFocus} // Call onFocus to reset the error state
+          onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state
           isDisabled={isDisabled}
           isMulti={isMulti}
         />
