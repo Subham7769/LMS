@@ -255,6 +255,34 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching Dynamic RAC data
+export const fetchDynamicRacData = createAsyncThunk(
+  "fetchDynamicRacData",
+  async (_, { rejectWithValue }) => {
+    const url =
+    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/all-rules";
+    
+    // Function to transform the fetched data
+    const transformData = (data) => {
+      return data.map(( item ) => {
+        const transformedItem = {
+          name: item.racDetails.name.replace(/-/g, " "), // Transform the name if needed
+          href: "/dynamic-rac/" + item.racDetails.racId, // Construct href for navigation
+        };
+        return transformedItem;
+      });
+    };
+
+    try {
+      // Fetch data and transform it
+      const data = await useFetchData(url, transformData);
+      return data; // Transform the fetched data
+    } catch (error) {
+      return rejectWithValue(error.message); // Handle errors
+    }
+  }
+);
+
 const ROLE_CREDITOR_ADMIN = [
   "Home",
   "RAC",
@@ -576,7 +604,26 @@ const sidebarSlice = createSlice({
       .addCase(fetchCreditScoreEligibleTenureData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
+      .addCase(fetchDynamicRacData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDynamicRacData.fulfilled, (state, action) => {
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "Dynamic RAC") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+        state.loading = false;
+      })
+      .addCase(fetchDynamicRacData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 

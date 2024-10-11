@@ -124,6 +124,12 @@ const BusinessRule2 = lazy(() =>  import("./components/BusinessRule/BusinessRule
 const BusinessRule3 = lazy(() =>  import("./components/BusinessRule/BusinessRule3"));
 
 
+// Reporting Config imports
+const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
+const ReportingConfig = lazy(() =>  import("./components/ReportingConfig/ReportingConfig"));
+const CreateNewReportingConfig = lazy(() =>  import("./components/ReportingConfig/CreateNewReportingConfig"));
+
+
 const routes = [
 
   // Accessing All Main Components
@@ -160,6 +166,7 @@ const routes = [
       { path: "/general-ledger", element: <LedgerPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/user-management", element: <UserManagementPage />, errorElement: <RouteErrorBoundary /> },
       { path: "/overdraft-loan-offers", element: <OverdraftLoanOffersPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "/reporting-config", element: <ReportingConfigPage />, errorElement: <RouteErrorBoundary /> },
 
       // Accessing All Misc. Page Components
       { path: "/settings", element: <UploadLogo />, errorElement: <RouteErrorBoundary /> },
@@ -186,6 +193,7 @@ const routes = [
       { path: "/global-config/min-expense", element: <MinimumExpense />, errorElement: <RouteErrorBoundary /> },
       { path: "/global-config/notification-text", element: <NotificationText />, errorElement: <RouteErrorBoundary /> },
       { path: "/dynamic-rac/:racId", element: <DynamicRAC/>, errorElement: <RouteErrorBoundary /> },
+      { path: "/reporting-config/:RCName", element: <ReportingConfig />, errorElement: <RouteErrorBoundary /> },
       
       
       // Accessing All New Created Child Components
@@ -193,6 +201,7 @@ const routes = [
       { path: "/product-group/newProductGroup/:configId", element: <CreateNewProductGroup />, errorElement: <RouteErrorBoundary /> },
       { path: "/project/newProject/:projectName", element: <CreateNewProject />, errorElement: <RouteErrorBoundary /> },
       { path: "/product/newProduct/:productName", element: <CreateNewProduct />, errorElement: <RouteErrorBoundary /> },
+      { path: "/reporting-config/newConfig/:RCName", element: <CreateNewReportingConfig />, errorElement: <RouteErrorBoundary /> },
 
 
       // Accessing All Page Component with it's Child Components

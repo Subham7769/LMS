@@ -84,14 +84,12 @@ const TagInput = ({
                 ]
               }
             </div>
-
             {inputNumberName && (inputTextName || inputSelectName) && (
               <>
                 <div>|</div>
                 <div>{tag[inputNumberName]}</div>
               </>
             )}
-
             <div>
               <XCircleIcon
                 onClick={() => deleteTag(tag)}

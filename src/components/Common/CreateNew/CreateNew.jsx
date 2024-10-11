@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from 'react-router-dom';
-import { fetchRACData, fetchDBRData, fetchBEData, fetchProjectData, fetchProductData, fetchCreditScoreEqData, fetchRulePolicyData, fetchTCLData,fetchProdGroupData,fetchRecoveryData, fetchCreditScoreEligibleTenureData } from '../../../redux/Slices/sidebarSlice'
+import { fetchRACData, fetchDBRData, fetchBEData, fetchProjectData, fetchProductData, fetchCreditScoreEqData, fetchRulePolicyData, fetchTCLData, fetchProdGroupData, fetchRecoveryData, fetchCreditScoreEligibleTenureData,fetchDynamicRacData } from '../../../redux/Slices/sidebarSlice'
 import { useDispatch } from 'react-redux';
 
 
@@ -17,7 +17,7 @@ const CreateNew = ({ placeholder, buttonName, createFunction, menuTitle, editabl
     };
     function dispatchType(menuTitle) {
         switch (menuTitle) {
-            case 'RAC' : case 'Dynamic RAC':
+            case 'RAC':
                 return fetchRACData;
             case 'DBR Config':
                 return fetchDBRData;
@@ -29,16 +29,18 @@ const CreateNew = ({ placeholder, buttonName, createFunction, menuTitle, editabl
                 return fetchProductData;
             case 'Credit Score':
                 return fetchCreditScoreEqData;
-              case 'Rule Policy':
+            case 'Rule Policy':
                 return fetchRulePolicyData;
-              case 'TCL':
+            case 'TCL':
                 return fetchTCLData;
-              case 'Product Group':
+            case 'Product Group':
                 return fetchProdGroupData;
-              case 'Recovery':
+            case 'Recovery':
                 return fetchRecoveryData;
-              case 'Eligible Tenure':
+            case 'Eligible Tenure':
                 return fetchCreditScoreEligibleTenureData;
+            case 'Dynamic RAC':
+                return fetchDynamicRacData;
             default:
                 return null;
         }

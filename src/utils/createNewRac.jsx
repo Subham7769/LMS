@@ -2,14 +2,17 @@ export async function createNewRac(Name, navigate, navigateSuccess, navigateFail
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
-      Name,
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({
+          "description": "string",
+          "name": Name,
+        }),
       }
     );
     if (response.status === 401 || response.status === 403) {

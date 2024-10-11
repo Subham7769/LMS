@@ -16,6 +16,7 @@ import {
   fetchProdGroupData,
   fetchRecoveryData,
   fetchCreditScoreEligibleTenureData,
+  fetchDynamicRacData,
   setMenus
 } from '../../../redux/Slices/sidebarSlice';
 import {
@@ -32,7 +33,7 @@ import {
   BookOpenIcon,
   HeartIcon,
   CalculatorIcon,
-  ClipboardDocumentListIcon, CreditCardIcon, NoSymbolIcon, HandRaisedIcon, UserGroupIcon, MinusCircleIcon, BeakerIcon
+  ClipboardDocumentListIcon, CreditCardIcon, NoSymbolIcon, HandRaisedIcon, UserGroupIcon, MinusCircleIcon, BeakerIcon,ChartBarIcon
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -47,6 +48,7 @@ import { createNewRulePolicy } from "../../../utils/createNewRulePolicy";
 import { createNewTCL } from "../../../utils/createNewTCL";
 import { createNewCreditScoreET } from "../../../utils/createNewCreditScoreET";
 import { createNewRac as createNewDynamicRac } from "../../../utils/createNewDynamicRac";
+import { createNewReportingConfig  } from "../../../utils/createNewReportingConfig";
 
 import CreateNew from '../CreateNew/CreateNew';
 
@@ -74,7 +76,8 @@ const SideBar = () => {
     HandRaisedIcon,
     UserGroupIcon,
     MinusCircleIcon,
-    BeakerIcon
+    BeakerIcon,
+    ChartBarIcon
   };
 
   const functionMapping = {
@@ -90,6 +93,7 @@ const SideBar = () => {
     createNewTCL,
     createNewDynamicRac,
     createNewCreditScoreET,
+    createNewReportingConfig,
   }
 
   useEffect(() => {
@@ -112,8 +116,9 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchCreditScoreEligibleTenureData());
+        dispatch(fetchDynamicRacData());
         break;
-
+        
       case 'ROLE_ADMIN':
         dispatch(fetchRACData());
         dispatch(fetchDBRData());
@@ -126,15 +131,16 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchCreditScoreEligibleTenureData());
+        dispatch(fetchDynamicRacData());
         break;
-
-      case 'ROLE_CUSTOMER_CARE_USER':
         
-        break;
+        case 'ROLE_CUSTOMER_CARE_USER':
+          
+          break;
 
-      case 'ROLE_CREDITOR_ADMIN':
-        dispatch(fetchRACData());
-        dispatch(fetchDBRData());
+          case 'ROLE_CREDITOR_ADMIN':
+            dispatch(fetchRACData());
+            dispatch(fetchDBRData());
         dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
@@ -144,12 +150,13 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchCreditScoreEligibleTenureData());
+        dispatch(fetchDynamicRacData());
         break;
-
-      case 'ROLE_CUSTOMER_CARE_MANAGER':
-        break;
-
-      case 'ROLE_TICKETING_USER':
+        
+        case 'ROLE_CUSTOMER_CARE_MANAGER':
+          break;
+          
+          case 'ROLE_TICKETING_USER':
         break;
 
       case 'ROLE_TICKETING_SUPERVISOR':
@@ -160,8 +167,8 @@ const SideBar = () => {
 
       default:
         break;
-    }
-
+      }
+      
     dispatch(setMenus({ roleName }))
   }, [
     dispatch,

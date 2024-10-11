@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
@@ -7,20 +7,31 @@ import HoverButton from "../Common/HoverButton/HoverButton";
 import { CheckCircleIcon, PlusIcon, ArrowUpOnSquareIcon, PencilSquareIcon, ViewfinderCircleIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { useSelector } from "react-redux";
-import { downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
+import { fetchDynamicRacDetails, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
 import { useDispatch } from "react-redux";
 import Toolbox from './ToolBox'
-import FieldComponent from './FieldComponent'
-import { useParams } from "react-router-dom";
+import RuleComponent from './RuleComponent'
+import { useNavigate, useParams } from "react-router-dom";
+import LoadingState from "../LoadingState/LoadingState";
+import {fetchDynamicRacData} from '../../redux/Slices/sidebarSlice'
 
-const TestComponent = () => {
+
+const DynamicRAC = () => {
   const { racId } = useParams();
   const dispatch = useDispatch()
   const fileInputRef = useRef(null);
   const [isEditorMode, setIsEditorMode] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { racConfig } = useSelector((state) => state.dynamicRac)
-  const { sections, name } = racConfig;
+  const { racConfig, loading, error } = useSelector((state) => state.dynamicRac)
+  const { name } = racConfig.racDetails;
+  const sections = racConfig.sections;
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    dispatch(fetchDynamicRacDetails(racId))
+
+  }, [racId, dispatch]);
 
   const handleUploadConfig = (event) => {
     const file = event.target.files[0];
@@ -29,7 +40,11 @@ const TestComponent = () => {
       reader.onload = (e) => {
         try {
           const config = JSON.parse(e.target.result);
-          dispatch(uploadConfig({ sections: config.sections }));
+          // Dispatch the updated structure with racDetails and sections
+          dispatch(uploadConfig({
+            racDetails: config.racDetails, // Handle racDetails
+            sections: config.sections     // Handle sections
+          }));
         } catch (error) {
           console.error("Error parsing JSON:", error);
           alert("Failed to load configuration. Please check the file format.");
@@ -41,73 +56,72 @@ const TestComponent = () => {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-  
+
     const { source, destination } = result;
-  
+
     console.log("Source: ", source);
     console.log("Destination: ", destination);
     console.log("Sections before update: ", sections);
-  
+
     const newSections = [...sections]; // Clone sections array
-  
+
     if (source.droppableId === destination.droppableId) {
       // Reordering within the same section
       const sectionIndex = newSections.findIndex(
-        (s) => s.id === source.droppableId
+        (s) => s.sectionId === source.droppableId
       );
-  
+
       if (sectionIndex === -1) return; // Validate section index
-  
-      const newFields = Array.from(newSections[sectionIndex].fields); // Clone fields
-      const [reorderedField] = newFields.splice(source.index, 1); // Remove from old position
-      newFields.splice(destination.index, 0, reorderedField); // Insert at new position
-  
+
+      const newRules = Array.from(newSections[sectionIndex].rules); // Clone rules
+      const [reorderedField] = newRules.splice(source.index, 1); // Remove from old position
+      newRules.splice(destination.index, 0, reorderedField); // Insert at new position
+
       newSections[sectionIndex] = {
         ...newSections[sectionIndex],
-        fields: newFields,
+        rules: newRules,
       };
-  
+
       console.log("Sections after reorder: ", newSections);
       dispatch(setSection({ newSections }));
-  
+
     } else {
       // Moving field between different sections
       const sourceSectionIndex = newSections.findIndex(
-        (s) => s.id === source.droppableId
+        (s) => s.sectionId === source.droppableId
       );
       const destSectionIndex = newSections.findIndex(
-        (s) => s.id === destination.droppableId
+        (s) => s.sectionId === destination.droppableId
       );
-  
+
       if (sourceSectionIndex === -1 || destSectionIndex === -1) return; // Validate indices
-  
-      // Clone source and destination fields
-      const sourceFields = Array.from(newSections[sourceSectionIndex]?.fields || []);
-      const destFields = Array.from(newSections[destSectionIndex]?.fields || []);
-  
-      if (sourceFields.length === 0 || source.index >= sourceFields.length) return; // Validate source field
-  
+
+      // Clone source and destination rules
+      const sourceRules = Array.from(newSections[sourceSectionIndex]?.rules || []);
+      const destRules = Array.from(newSections[destSectionIndex]?.rules || []);
+
+      if (sourceRules.length === 0 || source.index >= sourceRules.length) return; // Validate source field
+
       // Remove field from source
-      const [movedField] = sourceFields.splice(source.index, 1);
-  
+      const [movedField] = sourceRules.splice(source.index, 1);
+
       // Insert field into destination
-      destFields.splice(destination.index, 0, movedField);
-  
+      destRules.splice(destination.index, 0, movedField);
+
       newSections[sourceSectionIndex] = {
         ...newSections[sourceSectionIndex],
-        fields: sourceFields,
+        rules: sourceRules,
       };
       newSections[destSectionIndex] = {
         ...newSections[destSectionIndex],
-        fields: destFields,
+        rules: destRules,
       };
-  
+
       console.log("Sections after move: ", newSections);
       dispatch(setSection({ newSections }));
     }
   };
-  
-  
+
   const createCloneDynamicRac = (racName) => {
     dispatch(cloneDynamicRac({ racId, racName })).then(
       (action) => {
@@ -125,14 +139,15 @@ const TestComponent = () => {
     );
   };
 
-  const handleDelete = () => {
-    dispatch(deleteDynamicRac(racId)).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        dispatch(fetchBEData());
-        navigate("/dynamic-rac");
-      }
-    });
-  };
+// Updated handleDelete function
+const handleDelete = (racId) => {
+  dispatch(deleteDynamicRac(racId)).then((action) => {
+    if (action.type.endsWith("fulfilled")) {
+      dispatch(fetchDynamicRacData());
+      navigate("/dynamic-rac");
+    }
+  });
+};
 
   const handleClone = () => {
     setIsModalOpen(true);
@@ -142,6 +157,14 @@ const TestComponent = () => {
     setIsModalOpen(false);
   };
 
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    <p>Error: {error}</p>;
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center w-full">
@@ -149,7 +172,7 @@ const TestComponent = () => {
           <DynamicName initialName={name} onSave={(name) => dispatch(updateRacConfigName({ name }))} />
           <div className="flex gap-4">
             <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-            <Button buttonIcon={TrashIcon} onClick={handleDelete} circle={true} />
+            <Button buttonIcon={TrashIcon} onClick={() => handleDelete(racId)} circle={true} />
           </div>
         </div>
 
@@ -212,11 +235,11 @@ const TestComponent = () => {
       </div>
       <div className="flex items-start max-h-[550px]">
         {isEditorMode && <Toolbox />}
-        <div className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden`}>
+        <div className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden pb-20`}>
           <DragDropContext onDragEnd={onDragEnd} >
             <div className="flex flex-col justify-center gap-5" >
               {sections?.map((section) => (
-                <Droppable key={section.id} droppableId={section.id}>
+                <Droppable key={section.sectionId} droppableId={section.sectionId}>
                   {(provided) => (
                     <div
                       {...provided.droppableProps}
@@ -230,21 +253,21 @@ const TestComponent = () => {
                     >
 
                       <div className="flex justify-between items-center mb-2">
-                        <DynamicName initialName={section.name} onSave={(name) => dispatch(updateSection({ sectionId: section.id, name }))} />
+                        <DynamicName initialName={section.sectionName} onSave={(name) => dispatch(updateSection({ sectionId: section.sectionId, name }))} />
                         {isEditorMode && (
                           <div className="flex justify-between items-center gap-2">
                             <TrashIcon
-                              onClick={() => dispatch(removeSection({ sectionId: section.id }))}
+                              onClick={() => dispatch(removeSection({ sectionId: section.sectionId }))}
                               className="h-5 w-5 hover:text-red-500"
                             />
                           </div>
                         )}
                       </div>
 
-                      {section?.fields?.map((field, index) => (
+                      {section?.rules?.map((rule, index) => (
                         <Draggable
-                          key={field.id}
-                          draggableId={field.id}
+                          key={rule.dynamicRacRuleId}
+                          draggableId={rule.dynamicRacRuleId}
                           index={index}
                           isDragDisabled={!isEditorMode}
                         >
@@ -255,11 +278,11 @@ const TestComponent = () => {
                               {...provided.dragHandleProps}
                               className="mb-4"
                             >
-                              <FieldComponent
-                                field={field}
-                                fieldId={field.id}
+                              <RuleComponent
+                                rule={rule}
+                                dynamicRacRuleId={rule.dynamicRacRuleId}
                                 isEditorMode={isEditorMode}
-                                sectionId={section.id}
+                                sectionId={section.sectionId}
                               />
                             </div>
                           )}
@@ -292,4 +315,4 @@ const TestComponent = () => {
   );
 };
 
-export default TestComponent;
+export default DynamicRAC;

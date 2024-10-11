@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, RACList } from "../../data/RacData";
+import axios from "axios";
 
 export const fetchList = createAsyncThunk(
   "rac/fetchList",
@@ -11,16 +12,77 @@ export const fetchList = createAsyncThunk(
   }
 );
 
-export const deleteDynamicRac = createAsyncThunk("rac/deleteDynamicRac");
+// Define the asyncThunk for fetching dynamicRac details
+export const fetchDynamicRacDetails = createAsyncThunk(
+  "rac/fetchDynamicRacDetails",
+  async (racId , { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    try {
+      const response = await axios.get(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/${racId}/all-rules`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      console.log(response);
+      return response.data; // Assuming the API returns data in the desired format
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Return the error response if the request fails
+    }
+  }
+);
+
+// Define the asyncThunk for updating Dynamic RAC
+export const updateDynamicRac = createAsyncThunk(
+  "rac/updateDynamicRac",
+  async ({ racId, updateData }, { rejectWithValue }) => {
+    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/rule/${racId}`;
+
+    try {
+      const response = await axios.put(url, updateData);
+      return response.data; // Assuming the API returns the updated data
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Return the error response if the request fails
+    }
+  }
+);
+
+// Define the asyncThunk for deleting a Dynamic RAC
+export const deleteDynamicRac = createAsyncThunk(
+  "rac/deleteDynamicRac",
+  async (racId , { rejectWithValue }) => {
+    console.log(racId)
+    const token = localStorage.getItem("authToken");
+    try {
+      const response = await axios.delete(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/${racId}/all-rules`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      return response.data; // Assuming the API returns data in the desired format
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Return the error response if the request fails
+    }
+  }
+);
+
 export const cloneDynamicRac = createAsyncThunk("rac/cloneDynamicRac");
 
 const initialState = {
-  racConfig: { id: "", name: "abc", racId: "", sections: [] },
-  isEditorMode: true,
+  racConfig: {
+    racDetails: { id: "", name: "abc", racId: "", description: null }, // Updated racDetails structure
+    sections: [],
+  },
   racStatsData: {
     HeaderList,
     RACList,
   },
+  isEditorMode: true,
   loading: false,
   error: null,
 };
@@ -40,7 +102,9 @@ const DynamicRacSlice = createSlice({
       const a = document.createElement("a");
       a.href = url;
       a.download = `${
-        state.racConfig.name !== "" ? state.racConfig.name : "New Dynamic Form"
+        state.racConfig.racDetails.name !== ""
+          ? state.racConfig.racDetails.name
+          : "New Dynamic Form"
       }.json`;
       document.body.appendChild(a);
       a.click();
@@ -48,13 +112,19 @@ const DynamicRacSlice = createSlice({
       URL.revokeObjectURL(url);
     },
     uploadConfig(state, action) {
-      const { sections } = action.payload;
-      state.racConfig.sections = sections;
+      const { racDetails, sections } = action.payload;
+
+      // Update both racDetails and sections in the state
+      state.racConfig = {
+        ...state.racConfig,
+        racDetails: racDetails || state.racConfig.racDetails, // Update racDetails, fallback to current state if undefined
+        sections: sections || state.racConfig.sections, // Update sections, fallback to current state if undefined
+      };
     },
     updateRacConfigName(state, action) {
       const { name } = action.payload;
-      state.racConfig = {
-        ...state.racConfig,
+      state.racConfig.racDetails = {
+        ...state.racConfig.racDetails,
         name: name,
       };
     },
@@ -64,128 +134,157 @@ const DynamicRacSlice = createSlice({
     },
     addSection(state, action) {
       const newSection = {
-        id: `section-${Date.now()}`,
-        name: `New Section ${state.racConfig.sections.length + 1}`,
+        sectionId: `section-${Date.now()}`,
+        sectionName: `New Section ${state.racConfig.sections.length + 1}`,
         size: "full",
-        fields: [],
+        rules: [],
       };
       state.racConfig.sections.push(newSection);
     },
     updateSection(state, action) {
       const { sectionId, name } = action.payload;
       state.racConfig.sections = state.racConfig.sections.map((section) =>
-        section.id === sectionId ? { ...section, name: name } : section
+        section.sectionId === sectionId ? { ...section, sectionName: name } : section
       );
     },
     removeSection(state, action) {
       const { sectionId } = action.payload;
       state.racConfig.sections = state.racConfig.sections.filter(
-        (section) => section.id !== sectionId
+        (section) => section.sectionId !== sectionId
       );
     },
-    addField(state, action) {
-      const { sectionId, fieldConfig } = action.payload;
+    addRule(state, action) {
+      const { sectionId, ruleConfig } = action.payload;
 
       if (sectionId) {
-        // Create new field with a unique id
-        let newField = {};
-        if (fieldConfig.fieldType === "STRING") {
+        let newRule = {};
+        if (ruleConfig.fieldType === "STRING") {
           const {
             numberCriteriaRangeList,
             firstOperator,
             secondOperator,
-            ...restfieldConfig
-          } = fieldConfig;
-          newField = {
-            id: `field-${Date.now()}`,
-            ...restfieldConfig,
+            ...restRuleConfig
+          } = ruleConfig;
+          newRule = {
+            dynamicRacRuleId: `Rule-${Date.now()}`,
+            ...restRuleConfig,
           };
         } else {
-          newField = {
-            id: `field-${Date.now()}`,
-            ...fieldConfig,
+          // const { criteriaValues, ...restRuleConfig } = ruleConfig;
+          newRule = {
+            dynamicRacRuleId: `Rule-${Date.now()}`,
+            ...ruleConfig,
           };
         }
 
-        // Find the section and add the new field
         state.racConfig.sections = state.racConfig.sections.map((section) => {
-          if (section.id === sectionId) {
+          if (section.sectionId === sectionId) {
             return {
               ...section,
-              fields: [...section.fields, newField],
+              rules: [...section.rules, newRule],
             };
           }
           return section;
         });
       }
     },
-    removeField(state, action) {
-      const { sectionId, fieldId } = action.payload;
+    removeRule(state, action) {
+      const { sectionId, dynamicRacRuleId } = action.payload;
       state.racConfig.sections = state.racConfig.sections.map((section) => {
-        if (section.id === sectionId) {
+        if (section.sectionId === sectionId) {
           return {
             ...section,
-            fields: section.fields.filter((field) => field.id !== fieldId),
+            rules: section.rules.filter(
+              (rule) => rule.dynamicRacRuleId !== dynamicRacRuleId
+            ),
           };
         }
         return section;
       });
     },
-    handleChangeNumberField(state, action) {
-      const { sectionId, fieldId, name, value } = action.payload;
-      const stringValue = value.toString();
-      console.log(stringValue)
+    // New reducer to update rule properties
+    updateRuleNumberCriteria: (state, action) => {
+      const { sectionId, dynamicRacRuleId, updates, numberCriteriaIndex } =
+        action.payload;
+
       state.racConfig.sections = state.racConfig.sections.map((section) => {
-        if (section.id === sectionId) {
+        if (section.sectionId === sectionId) {
           return {
             ...section,
-            fields: section.fields.map((field) => {
-              if (field.id === fieldId) {
+            rules: section.rules.map((rule) => {
+              if (rule.dynamicRacRuleId === dynamicRacRuleId) {
                 return {
-                  ...field,
+                  ...rule,
+                  ...updates,
+                  numberCriteriaRangeList: rule.numberCriteriaRangeList.map(
+                    (range, index) =>
+                      index === numberCriteriaIndex
+                        ? { ...range, ...updates.numberCriteriaRangeList[0] }
+                        : range
+                  ),
+                };
+              }
+              return rule;
+            }),
+          };
+        }
+        return section;
+      });
+    },
+    handleChangeNumberRule(state, action) {
+      const { sectionId, dynamicRacRuleId, name, value } = action.payload;
+      const stringValue = value.toString();
+      state.racConfig.sections = state.racConfig.sections.map((section) => {
+        if (section.sectionId === sectionId) {
+          return {
+            ...section,
+            rules: section.rules.map((rule) => {
+              if (rule.dynamicRacRuleId === dynamicRacRuleId) {
+                return {
+                  ...rule,
                   criteriaValues: [stringValue],
                 };
               }
-              return field;
+              return rule;
             }),
           };
         }
         return section;
       });
     },
-    handleChangeStringField(state, action) {
-      const { sectionId, fieldId, values } = action.payload;
-      // Ensure we're updating the correct section and field
+    handleChangeStringRule(state, action) {
+      const { sectionId, dynamicRacRuleId, values } = action.payload;
       state.racConfig.sections = state.racConfig.sections.map((section) => {
-        if (section.id === sectionId) {
+        if (section.sectionId === sectionId) {
           return {
             ...section,
-            fields: section.fields.map((field) => {
-              if (field.id === fieldId) {
+            rules: section.rules.map((rule) => {
+              if (rule.dynamicRacRuleId === dynamicRacRuleId) {
                 return {
-                  ...field,
-                  // Update criteriaValues with the new values
+                  ...rule,
                   criteriaValues: [...values],
                 };
               }
-              return field;
+              return rule;
             }),
           };
         }
         return section;
       });
-      console.log(values)
     },
     removeTag: (state, action) => {
-      const { sectionId, fieldId, tagToRemove } = action.payload;
+      const { sectionId, dynamicRacRuleId, tagToRemove } = action.payload;
+      const section = state.racConfig.sections.find(
+        (section) => section.sectionId === sectionId
+      );
+      const rule = section.rules.find(
+        (rule) => rule.dynamicRacRuleId === dynamicRacRuleId
+      );
 
-      // Find the section and field
-      const section = state.racConfig.sections.find(section => section.id === sectionId);
-      const field = section.fields.find(field => field.id === fieldId);
-
-      // Remove the tag from criteriaValues
-      if (field && field.criteriaValues) {
-        field.criteriaValues = field.criteriaValues.filter(tag => tag !== tagToRemove);
+      if (rule && rule.criteriaValues) {
+        rule.criteriaValues = rule.criteriaValues.filter(
+          (tag) => tag !== tagToRemove
+        );
       }
     },
   },
@@ -231,7 +330,23 @@ const DynamicRacSlice = createSlice({
       .addCase(cloneDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
+      .addCase(fetchDynamicRacDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Clear previous errors
+      })
+      .addCase(fetchDynamicRacDetails.fulfilled, (state, action) => {
+        console.log(action.payload)
+        state.racConfig = {
+          ...state.racConfig,
+          sections:action.payload.sections ? action.payload.sections: []
+        }; // Store the fetched data
+        state.loading = false;
+      })
+      .addCase(fetchDynamicRacDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload; // Set the error message
+      })
   },
 });
 
@@ -243,10 +358,11 @@ export const {
   addSection,
   removeSection,
   updateSection,
-  addField,
-  removeField,
-  handleChangeNumberField,
-  handleChangeStringField,
+  addRule,
+  removeRule,
+  updateRuleNumberCriteria,
+  handleChangeNumberRule,
+  handleChangeStringRule,
   removeTag,
 } = DynamicRacSlice.actions;
 export default DynamicRacSlice.reducer;
