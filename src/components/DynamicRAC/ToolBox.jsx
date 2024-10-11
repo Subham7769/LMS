@@ -15,7 +15,7 @@ const Toolbox = () => {
   const { racId } = useParams();
   const dispatch = useDispatch()
   const [sectionId, setSectionId] = useState("");
-  const { racConfig } = useSelector((state) => state.dynamicRac)
+  const { racConfig, optionsList } = useSelector((state) => state.dynamicRac)
   const { sections } = racConfig;
 
   const initialState = {
@@ -111,6 +111,7 @@ const Toolbox = () => {
   };
 
   const handleaddRule = (sectionId, ruleConfig) => {
+    console.log(ruleConfig)
     dispatch(addRule({
       sectionId, ruleConfig: {
         ...ruleConfig, 
@@ -164,7 +165,7 @@ const Toolbox = () => {
           <InputSelect
             labelName="Name"
             inputOptions={
-              ruleConfig.fieldType === "STRING" ? StringArray : NumberArray
+              ruleConfig.criteriaType === "BORROWER_PROFILE" ? optionsList.borrowerProfileAvailableNames : optionsList.calculatedAvailableNames
             }
             inputName="name"
             inputValue={ruleConfig.name}

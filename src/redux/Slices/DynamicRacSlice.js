@@ -15,7 +15,7 @@ export const fetchList = createAsyncThunk(
 // Define the asyncThunk for fetching dynamicRac details
 export const fetchDynamicRacDetails = createAsyncThunk(
   "rac/fetchDynamicRacDetails",
-  async (racId , { rejectWithValue }) => {
+  async (racId, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.get(
@@ -52,8 +52,8 @@ export const updateDynamicRac = createAsyncThunk(
 // Define the asyncThunk for deleting a Dynamic RAC
 export const deleteDynamicRac = createAsyncThunk(
   "rac/deleteDynamicRac",
-  async (racId , { rejectWithValue }) => {
-    console.log(racId)
+  async (racId, { rejectWithValue }) => {
+    console.log(racId);
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.delete(
@@ -115,6 +115,28 @@ export const cloneDynamicRac = createAsyncThunk(
   }
 );
 
+// Define the asyncThunk for fetching option list
+export const fetchOptionList = createAsyncThunk(
+  "rac/fetchOptionList",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await axios.get(
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/3669df8e-db60-4a93-beb4-88daede5b34f/available-names",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Correct placement of headers
+          },
+        }
+      );
+      return response.data; // Return the data from the API response
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message); // Handle errors
+    }
+  }
+);
+
 const initialState = {
   racConfig: {
     racDetails: { id: "", name: "abc", racId: "", description: null }, // Updated racDetails structure
@@ -124,6 +146,7 @@ const initialState = {
     HeaderList,
     RACList,
   },
+  optionsList: {},
   isEditorMode: true,
   loading: false,
   error: null,
@@ -186,7 +209,9 @@ const DynamicRacSlice = createSlice({
     updateSection(state, action) {
       const { sectionId, name } = action.payload;
       state.racConfig.sections = state.racConfig.sections.map((section) =>
-        section.sectionId === sectionId ? { ...section, sectionName: name } : section
+        section.sectionId === sectionId
+          ? { ...section, sectionName: name }
+          : section
       );
     },
     removeSection(state, action) {
@@ -248,7 +273,7 @@ const DynamicRacSlice = createSlice({
     updateRuleNumberCriteria: (state, action) => {
       const { sectionId, dynamicRacRuleId, updates, numberCriteriaIndex } =
         action.payload;
- 
+
       state.racConfig.sections = state.racConfig.sections.map((section) => {
         if (section.sectionId === sectionId) {
           return {
@@ -379,17 +404,17 @@ const DynamicRacSlice = createSlice({
         state.error = null; // Clear previous errors
       })
       .addCase(fetchDynamicRacDetails.fulfilled, (state, action) => {
-        console.log(action.payload)
+        console.log(action.payload);
         state.racConfig = {
           ...state.racConfig,
-          racDetails:action.payload.racDetails,
-          sections:action.payload.sections ? action.payload.sections: []
-        }; 
+          racDetails: action.payload.racDetails,
+          sections: action.payload.sections ? action.payload.sections : [],
+        };
         state.loading = false;
       })
       .addCase(fetchDynamicRacDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; 
+        state.error = action.payload;
       })
       .addCase(saveDynamicRac.pending, (state) => {
         state.loading = true;
@@ -403,6 +428,33 @@ const DynamicRacSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(fetchOptionList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOptionList.fulfilled, (state, action) => {
+        state.loading = false;
+    
+        // Log the entire payload for debugging
+        console.log("Fetched Options:", action.payload);
+    
+        // Update state with the fetched data and map the available names
+        state.optionsList = {
+          borrowerProfileAvailableNames: action.payload.borrowerProfileAvailableNames?.map((item) => ({
+            label: item,
+            value: item
+          })) || [],
+    
+          calculatedAvailableNames: action.payload.calculatedAvailableNames?.map((item) => ({
+            label: item,
+            value: item
+          })) || []
+        };
+      })
+      .addCase(fetchOptionList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload; // Store the error
+      });
   },
 });
 

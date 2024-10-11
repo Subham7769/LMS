@@ -7,7 +7,7 @@ import HoverButton from "../Common/HoverButton/HoverButton";
 import { CheckCircleIcon, PlusIcon, ArrowUpOnSquareIcon, PencilSquareIcon, ViewfinderCircleIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { useSelector } from "react-redux";
-import { fetchDynamicRacDetails, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
+import { fetchDynamicRacDetails,fetchOptionList, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
 import { useDispatch } from "react-redux";
 import Toolbox from './ToolBox'
 import RuleComponent from './RuleComponent'
@@ -30,10 +30,11 @@ const DynamicRAC = () => {
   const sections = racConfig.sections;
   const navigate = useNavigate();
 
+  console.log(fetchOptionList)
 
   useEffect(() => {
     dispatch(fetchDynamicRacDetails(racId))
-
+    dispatch(fetchOptionList(racId))
   }, [racId, dispatch]);
 
   const handleUploadConfig = (event) => {
