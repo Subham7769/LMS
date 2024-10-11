@@ -7,13 +7,16 @@ import HoverButton from "../Common/HoverButton/HoverButton";
 import { CheckCircleIcon, PlusIcon, ArrowUpOnSquareIcon, PencilSquareIcon, ViewfinderCircleIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { useSelector } from "react-redux";
-import { fetchDynamicRacDetails, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
+import { fetchDynamicRacDetails, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
 import { useDispatch } from "react-redux";
 import Toolbox from './ToolBox'
 import RuleComponent from './RuleComponent'
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
-import {fetchDynamicRacData} from '../../redux/Slices/sidebarSlice'
+import { fetchDynamicRacData } from '../../redux/Slices/sidebarSlice'
+import toast, { Toaster } from "react-hot-toast";
+import { Failed, Passed, Warning } from "../Toasts";
+
 
 
 const DynamicRAC = () => {
@@ -122,10 +125,11 @@ const DynamicRAC = () => {
     }
   };
 
-  const createCloneDynamicRac = (racName) => {
+  const createCloneDynamicRac = (racId, racName) => {
     dispatch(cloneDynamicRac({ racId, racName })).then(
       (action) => {
         if (action.type.endsWith("fulfilled")) {
+          dispatch(fetchDynamicRacData());
           toast.custom((t) => (
             <Passed
               t={t}
@@ -139,18 +143,19 @@ const DynamicRAC = () => {
     );
   };
 
-// Updated handleDelete function
-const handleDelete = (racId) => {
-  dispatch(deleteDynamicRac(racId)).then((action) => {
-    if (action.type.endsWith("fulfilled")) {
-      dispatch(fetchDynamicRacData());
-      navigate("/dynamic-rac");
-    }
-  });
-};
+  // Updated handleDelete function
+  const handleDelete = (racId) => {
+    dispatch(deleteDynamicRac(racId)).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
+        dispatch(fetchDynamicRacData());
+        navigate("/dynamic-rac");
+      }
+    });
+  };
 
   const handleClone = () => {
     setIsModalOpen(true);
+
   };
 
   const closeModal = () => {
@@ -179,7 +184,8 @@ const handleDelete = (racId) => {
         <CloneModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          onCreateClone={createCloneDynamicRac}
+          onCreateClone={(racName) =>
+            createCloneDynamicRac(racId, racName)}
           initialName={name}
         />
 
@@ -302,6 +308,7 @@ const handleDelete = (racId) => {
                   className="mt-4"
                   buttonIcon={CheckCircleIcon}
                   buttonName="Save"
+                  onClick={() => dispatch(saveDynamicRac(racConfig))}
                   rectangle={true}
                 />
               </div>

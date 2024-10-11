@@ -6,8 +6,8 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import { StringArray, NumberArray,operatorOptions } from "../../data/OptionsData"
-import { XMarkIcon,PlusIcon } from "@heroicons/react/24/outline";
+import { StringArray, NumberArray, operatorOptions } from "../../data/OptionsData"
+import { XMarkIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 
 
@@ -22,11 +22,23 @@ const Toolbox = () => {
     fieldType: "",
     criteriaType: "",
     name: "",
-    usageList: {
-      REGISTRATION: true,
-      ELIGIBILITY: true,
-      BORROWER_OFFERS: true,
-    },
+    sectionId: "",
+    sectionName: "",
+    displayName:"",
+    usageList: [
+      {
+        "ruleUsage": "BORROWER_OFFERS",
+        "used": true
+      },
+      {
+        "ruleUsage": "REGISTRATION",
+        "used": true
+      },
+      {
+        "ruleUsage": "ELIGIBILITY",
+        "used": true
+      }
+    ],
     displayName: "",
     racId: racId,
     criteriaValues: [],
@@ -36,17 +48,16 @@ const Toolbox = () => {
   }
 
   const [ruleConfig, setRuleConfig] = useState(initialState);
-// console.log(ruleConfig)
+
   const handleChange = (e) => {
     const { name, checked, type, value } = e.target;
 
     if (type === "checkbox") {
       setRuleConfig((prevConfig) => ({
         ...prevConfig,
-        usageList: {
-          ...prevConfig.usageList,
-          [name]: checked,
-        },
+        usageList: prevConfig.usageList.map((item) =>
+          item.ruleUsage === name ? { ...item, used: checked } : item
+        ),
       }));
     } else {
       setRuleConfig((prevConfig) => ({
@@ -55,6 +66,7 @@ const Toolbox = () => {
       }));
     }
   };
+
 
   const handleRangeChange = (e, index) => {
     const { name, checked, type, value } = e.target;
@@ -99,7 +111,14 @@ const Toolbox = () => {
   };
 
   const handleaddRule = (sectionId, ruleConfig) => {
-    dispatch(addRule({ sectionId, ruleConfig }))
+    dispatch(addRule({
+      sectionId, ruleConfig: {
+        ...ruleConfig, 
+        sectionId: sectionId,
+        sectionName: sections.find((item) => item.sectionId === sectionId)?.sectionName || "",
+        displayName:ruleConfig.name,
+      }
+    }))
     setRuleConfig(initialState)
   }
 
@@ -111,7 +130,7 @@ const Toolbox = () => {
           <InputSelect
             labelName="Section"
             inputOptions={sections.map((section) => ({
-              label: section.name,
+              label: section.sectionName,
               value: section.sectionId
             })
             )}
@@ -156,25 +175,28 @@ const Toolbox = () => {
         <div className={`grid gap-3 px-5 grid-cols-1 text-[12px]`}>
           <InputCheckbox
             labelName="REGISTRATION"
-            inputChecked={ruleConfig.usageList.REGISTRATION}
+            inputChecked={ruleConfig.usageList.find(item => item.ruleUsage === "REGISTRATION")?.used || false}
             onChange={handleChange}
             inputName="REGISTRATION"
             className={"text-[10px]"}
           />
+
           <InputCheckbox
             labelName="ELIGIBILITY"
-            inputChecked={ruleConfig.usageList.ELIGIBILITY}
+            inputChecked={ruleConfig.usageList.find(item => item.ruleUsage === "ELIGIBILITY")?.used || false}
             onChange={handleChange}
             inputName="ELIGIBILITY"
             className={"text-[10px]"}
           />
+
           <InputCheckbox
             labelName="BORROWER_OFFERS"
-            inputChecked={ruleConfig.usageList.BORROWER_OFFERS}
+            inputChecked={ruleConfig.usageList.find(item => item.ruleUsage === "BORROWER_OFFERS")?.used || false}
             onChange={handleChange}
             inputName="BORROWER_OFFERS"
             className={"text-[10px]"}
           />
+
         </div>
         {ruleConfig.fieldType === "NUMBER" && (
           <div className="flex justify-start flex-wrap gap-2 py-2 mx-1">
@@ -232,7 +254,7 @@ const Toolbox = () => {
         <div className={`flex flex-col items-center gap-3`}>
           {ruleConfig.fieldType === "NUMBER" && (
             <Button
-            buttonIcon={PlusIcon}
+              buttonIcon={PlusIcon}
               buttonName="Add Range"
               onClick={addRangeEntry}
               rectangle={true}
@@ -240,7 +262,7 @@ const Toolbox = () => {
             />
           )}
           <Button
-          buttonIcon={PlusIcon}
+            buttonIcon={PlusIcon}
             buttonName="Add Field"
             onClick={() => handleaddRule(sectionId, ruleConfig)}
             rectangle={true}
