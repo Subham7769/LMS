@@ -9,10 +9,10 @@ import toast, { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  handleDeleteRC, updateNewReportingConfigField,createReportConfig
-} from "../../redux/Slices/reportingConfigSlice";
+import {  deleteReportingConfig, updateNewReportingConfigField, createReportConfig} from "../../redux/Slices/reportingConfigSlice";
 import { Failed, Passed, Warning } from "../Toasts";
+import { fetchReportingConfigData } from '../../redux/Slices/sidebarSlice';
+import DynamicName from "../Common/DynamicName/DynamicName";
 
 const CreateNewReportingConfig = () => {
   // Local state to hold the key-value inputs
@@ -58,17 +58,28 @@ const CreateNewReportingConfig = () => {
     dispatch(updateNewReportingConfigField({ name, value }));
   };
 
-  const onDeleteRC = async (RCName) => {
-    await dispatch(handleDeleteRC(RCName)).unwrap();
-    navigate("/reporting-config");
+  const onDeleteReportingConfig = async (RCName) => {
+    try {
+      // Step 1: Delete the Reporting Config by its name
+      await dispatch(deleteReportingConfig(RCName)).unwrap();
+  
+      // Step 2: Fetch the updated Reporting Config data after deletion
+      await dispatch(fetchReportingConfigData()).unwrap();
+  
+      // Step 3: Navigate to the /reporting-config page
+      navigate("/reporting-config");
+    } catch (error) {
+      console.error("Error while deleting Reporting Config: ", error);
+    }
   };
+  
 
   const handleCreateReportingConfig = () => {
     dispatch(createReportConfig({ newReportingConfigData })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         // Extract the 'name' from the action.payload
         const configName = action.payload?.name;
-  
+
         // Show success toast notification
         toast.custom((t) => (
           <Passed
@@ -78,7 +89,8 @@ const CreateNewReportingConfig = () => {
             message={"Created successfully"}
           />
         ));
-  
+
+        dispatch(fetchReportingConfigData())
         // Navigate to /reporting-config/{name} if 'name' exists
         if (configName) {
           navigate(`/reporting-config/${configName}`);
@@ -86,7 +98,11 @@ const CreateNewReportingConfig = () => {
       }
     });
   };
-  
+
+  const handleUpdateName =  (newName) => {
+    dispatch(updateNewConfigName( newName ))
+ };
+
 
   if (loading) {
     return <LoadingState />;
@@ -100,16 +116,14 @@ const CreateNewReportingConfig = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
-        <b
-          title="Credit Bureau Liabilities Matrix"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
-        >
-          {newReportingConfigData.name}
-        </b>
+        <DynamicName
+          initialName={newReportingConfigData.name}
+          onSave={handleUpdateName}
+        />
         <div className="flex gap-4">
           <Button
             buttonIcon={TrashIcon}
-            onClick={() => onDeleteRC(RCName)}
+            onClick={() => onDeleteReportingConfig(RCName)}
             circle={true}
           />
         </div>

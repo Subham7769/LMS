@@ -9,9 +9,11 @@ import toast, { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
-import {fetchReportingConfig, handleDeleteRC, updateReportingConfigField,createReportConfig
-} from "../../redux/Slices/reportingConfigSlice";
+import {  fetchReportingConfig, updateReportingConfig, deleteReportingConfig, updateReportingConfigField, updateNewConfigName,} from "../../redux/Slices/reportingConfigSlice";
 import { Failed, Passed, Warning } from "../Toasts";
+import { fetchReportingConfigData } from '../../redux/Slices/sidebarSlice';
+import DynamicName from "../Common/DynamicName/DynamicName";
+
 
 const CreateNewReportingConfig = () => {
   // Local state to hold the key-value inputs
@@ -23,7 +25,7 @@ const CreateNewReportingConfig = () => {
   const { reportingConfigData, loading, error } = useSelector((state) => state.reportingConfig);
 
   useEffect(() => {
-      dispatch(fetchReportingConfig(RCName));
+    dispatch(fetchReportingConfig(RCName));
   }, [RCName]);
 
   // Function to add a binding
@@ -57,35 +59,41 @@ const CreateNewReportingConfig = () => {
     dispatch(updateReportingConfigField({ name, value }));
   };
 
-  const onDeleteRC = async (RCName) => {
-    await dispatch(handleDeleteRC(RCName)).unwrap();
-    navigate("/reporting-config");
+  const onDeleteReportingConfig = async (RCName) => {
+    try {
+      // Step 1: Delete the Reporting Config by its name
+      await dispatch(deleteReportingConfig(RCName)).unwrap();
+
+      // Step 2: Fetch the updated Reporting Config data after deletion
+      await dispatch(fetchReportingConfigData()).unwrap();
+
+      // Step 3: Navigate to the /reporting-config page
+      navigate("/reporting-config");
+    } catch (error) {
+      console.error("Error while deleting Reporting Config: ", error);
+    }
   };
 
+
   const handleUpdateReportingConfig = () => {
-    dispatch(createReportConfig({ reportingConfigData })).then((action) => {
+    dispatch(updateReportingConfig({ RCName, reportingConfigData })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
-        // Extract the 'name' from the action.payload
-        const configName = action.payload?.name;
-  
-        // Show success toast notification
         toast.custom((t) => (
           <Passed
             t={t}
             toast={toast}
-            title={"Created"}
-            message={"Created successfully"}
+            title={"Updated"}
+            message={"Updated successfully"}
           />
         ));
-  
-        // Navigate to /reporting-config/{name} if 'name' exists
-        if (configName) {
-          navigate(`/reporting-config/${configName}`);
-        }
       }
     });
   };
-  
+
+  const handleUpdateName =  (newName) => {
+     dispatch(updateNewConfigName( newName ))
+  };
+
 
   if (loading) {
     return <LoadingState />;
@@ -99,16 +107,14 @@ const CreateNewReportingConfig = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
-        <b
-          title="Credit Bureau Liabilities Matrix"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
-        >
-          {reportingConfigData.name}
-        </b>
+        <DynamicName
+          initialName={reportingConfigData.name}
+          onSave={handleUpdateName}
+        />
         <div className="flex gap-4">
           <Button
             buttonIcon={TrashIcon}
-            onClick={() => onDeleteRC(RCName)}
+            onClick={() => onDeleteReportingConfig(RCName)}
             circle={true}
           />
         </div>

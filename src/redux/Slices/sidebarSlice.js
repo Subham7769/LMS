@@ -255,16 +255,39 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
   }
 );
 
+export const fetchReportingConfigData = createAsyncThunk(
+  "reportingConfig/fetchReportingConfigData",
+  async (_, { rejectWithValue }) => {
+    const url =
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations";
+
+    const transformData = (data) => {
+      return data.map(({ name }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/reporting-config/" + name,
+      }));
+    };
+
+    try {
+      // Call useFetchData to fetch the data and transform it
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      // Handle errors and reject with value
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Async thunk for fetching Dynamic RAC data
 export const fetchDynamicRacData = createAsyncThunk(
   "fetchDynamicRacData",
   async (_, { rejectWithValue }) => {
     const url =
-    "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/all-rules";
-    
+      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/all-rules";
+
     // Function to transform the fetched data
     const transformData = (data) => {
-      return data.map(( item ) => {
+      return data.map((item) => {
         const transformedItem = {
           name: item.racDetails.name.replace(/-/g, " "), // Transform the name if needed
           href: "/dynamic-rac/" + item.racDetails.racId, // Construct href for navigation
@@ -624,6 +647,25 @@ const sidebarSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(fetchReportingConfigData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchReportingConfigData.fulfilled, (state, action) => {
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "Reporting Config") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+        state.loading = false;
+      })
+      .addCase(fetchReportingConfigData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

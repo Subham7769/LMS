@@ -1,32 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Thunk for deleting a Credit Score ET
-export const handleDeleteRC = createAsyncThunk(
-  "creditScoreET/handleDeleteCSET",
-  async (RCName, { rejectWithValue, dispatch }) => {
-    // Access current state of creditScoreET
+// Async thunk for deleting a reporting config by its ID
+export const deleteReportingConfig = createAsyncThunk(
+  "reportingConfig/deleteReportingConfig",
+  async (RCName, { rejectWithValue }) => {
+    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations/${RCName}`;
+    const token = localStorage.getItem("authToken");
+
     try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE}${RCName}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete Credit Score ET");
-      }
-
-      dispatch(fetchCreditScoreEligibleTenureData());
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
-      console.error(error);
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -34,11 +23,11 @@ export const handleDeleteRC = createAsyncThunk(
 // Thunk for creating a new Report Configuration
 export const createReportConfig = createAsyncThunk(
   "reportConfig/createReportConfig",
-  async ({newReportingConfigData}, { rejectWithValue }) => {
+  async ({ newReportingConfigData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken"); // Assuming you're using token-based auth
       const response = await fetch(
-        'https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configuration',
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configuration",
         {
           method: "POST",
           headers: {
@@ -60,7 +49,6 @@ export const createReportConfig = createAsyncThunk(
     }
   }
 );
-
 
 // Define the asyncThunk for fetching Reporting Config data
 export const fetchReportingConfig = createAsyncThunk(
@@ -85,7 +73,30 @@ export const fetchReportingConfig = createAsyncThunk(
   }
 );
 
+// Define the asyncThunk for updating reporting configuration
+export const updateReportingConfig = createAsyncThunk(
+  "reportingConfig/update",
+  async ({ RCName, reportingConfigData }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken"); // Retrieve token from localStorage
 
+    try {
+      // Make a PUT request to update the configuration
+      const response = await axios.put(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations/${RCName}`,
+        reportingConfigData, // Payload with the updated config data
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the auth token in headers
+          },
+        }
+      );
+
+      return response.data; // Return the updated data from the API
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 // Initial state
 const InitialState = {
@@ -123,16 +134,22 @@ const reportingConfigSlice = createSlice({
       const { name, value } = action.payload;
       state.reportingConfigData[name] = value;
     },
+    updateConfigName: (state, action) => {
+      state.reportingConfigData.name = action.payload;
+    },
+    updateNewConfigName: (state, action) => {
+      state.reportingConfigData.name = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(handleDeleteRC.pending, (state) => {
+      .addCase(deleteReportingConfig.pending, (state) => {
         state.loading = true;
       })
-      .addCase(handleDeleteRC.fulfilled, (state) => {
+      .addCase(deleteReportingConfig.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(handleDeleteRC.rejected, (state, action) => {
+      .addCase(deleteReportingConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -142,28 +159,46 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(createReportConfig.fulfilled, (state, action) => {
         state.loading = false;
-        state.reportingConfigData = action.payload; 
+        state.reportingConfigData = action.payload;
       })
       .addCase(createReportConfig.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // Capture the error message
+        state.error = action.payload;
       })
       .addCase(fetchReportingConfig.pending, (state) => {
-        state.loading = true; // Set loading state
-        state.error = null; // Reset any previous error
+        state.loading = true;
+        state.error = null;
       })
       .addCase(fetchReportingConfig.fulfilled, (state, action) => {
-        state.loading = false; // Set loading to false when data is fetched
-        console.log(action.payload)
-        state.reportingConfigData = action.payload; // Store the fetched data in the state
+        state.loading = false;
+        console.log(action.payload);
+        state.reportingConfigData = action.payload;
       })
       .addCase(fetchReportingConfig.rejected, (state, action) => {
-        state.loading = false; // Set loading to false if request fails
-        state.error = action.payload; // Store the error message in the state
+        state.loading = false;
+        state.error = action.payload;
       })
+      .addCase(updateReportingConfig.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateReportingConfig.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload)
+        state.reportingConfigData = action.payload;
+      })
+      .addCase(updateReportingConfig.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error occurred while updating";
+      });
   },
 });
 
-export const { updateNewReportingConfigField,updateReportingConfigField } = reportingConfigSlice.actions;
+export const {
+  updateNewReportingConfigField,
+  updateReportingConfigField,
+  updateConfigName,
+  updateNewConfigName,
+} = reportingConfigSlice.actions;
 
 export default reportingConfigSlice.reducer;
