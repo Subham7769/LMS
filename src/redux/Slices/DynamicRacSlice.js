@@ -26,7 +26,6 @@ export const fetchDynamicRacDetails = createAsyncThunk(
           },
         }
       );
-      console.log(response);
       return response.data; // Assuming the API returns data in the desired format
     } catch (error) {
       return rejectWithValue(error.response.data); // Return the error response if the request fails
@@ -137,6 +136,28 @@ export const fetchOptionList = createAsyncThunk(
   }
 );
 
+// Define the asyncThunk for deleting a rule by its ruleId
+export const deleteRuleById = createAsyncThunk(
+  "rac/deleteRuleById",
+  async (dynamicRacRuleId, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
+
+    try {
+      const response = await axios.delete(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/rule/${dynamicRacRuleId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data; // Returning the success response if deletion was successful
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message); // Returning error if the request fails
+    }
+  }
+);
+
 const initialState = {
   racConfig: {
     racDetails: { id: "", name: "abc", racId: "", description: null }, // Updated racDetails structure
@@ -146,7 +167,7 @@ const initialState = {
     HeaderList,
     RACList,
   },
-  optionsList: {},
+  optionsList: [],
   isEditorMode: true,
   loading: false,
   error: null,
@@ -404,7 +425,6 @@ const DynamicRacSlice = createSlice({
         state.error = null; // Clear previous errors
       })
       .addCase(fetchDynamicRacDetails.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.racConfig = {
           ...state.racConfig,
           racDetails: action.payload.racDetails,
@@ -434,11 +454,6 @@ const DynamicRacSlice = createSlice({
       })
       .addCase(fetchOptionList.fulfilled, (state, action) => {
         state.loading = false;
-    
-        // Log the entire payload for debugging
-        console.log("Fetched Options:", action.payload);
-    
-        // Update state with the fetched data and map the available names
         state.optionsList = {
           borrowerProfileAvailableNames: action.payload.borrowerProfileAvailableNames?.map((item) => ({
             label: item,

@@ -10,15 +10,9 @@ import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  handleDeleteRC, updateReportingConfigField,createReportConfig
+  handleDeleteRC, updateNewReportingConfigField,createReportConfig
 } from "../../redux/Slices/reportingConfigSlice";
-
-import {
-  clearValidationError,
-  setValidationError,
-  validateFormFields,
-  validateUserRole,
-} from "../../redux/Slices/validationSlice";
+import { Failed, Passed, Warning } from "../Toasts";
 
 const CreateNewReportingConfig = () => {
   // Local state to hold the key-value inputs
@@ -27,21 +21,21 @@ const CreateNewReportingConfig = () => {
   const { RCName } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { reportingConfigData, loading, error } = useSelector((state) => state.reportingConfig);
+  const { newReportingConfigData, loading, error } = useSelector((state) => state.reportingConfig);
 
   useEffect(() => {
-    dispatch(updateReportingConfigField({ name: "name", value: RCName }));
+    dispatch(updateNewReportingConfigField({ name: "name", value: RCName }));
   }, [RCName]);
 
   // Function to add a binding
   const handleAddBinding = () => {
     if (bindingKey && bindingValue) {
       const updatedBindings = {
-        ...reportingConfigData.bindings,
+        ...newReportingConfigData.bindings,
         [bindingKey]: bindingValue,
       };
 
-      dispatch(updateReportingConfigField({ name: 'bindings', value: updatedBindings }));
+      dispatch(updateNewReportingConfigField({ name: 'bindings', value: updatedBindings }));
 
       // Clear input fields after adding
       setBindingKey('');
@@ -53,15 +47,15 @@ const CreateNewReportingConfig = () => {
 
   // Function to remove a binding
   const handleRemoveBinding = (key) => {
-    const updatedBindings = { ...reportingConfigData.bindings };
+    const updatedBindings = { ...newReportingConfigData.bindings };
     delete updatedBindings[key];
 
-    dispatch(updateReportingConfigField({ name: 'bindings', value: updatedBindings }));
+    dispatch(updateNewReportingConfigField({ name: 'bindings', value: updatedBindings }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(updateReportingConfigField({ name, value }));
+    dispatch(updateNewReportingConfigField({ name, value }));
   };
 
   const onDeleteRC = async (RCName) => {
@@ -69,22 +63,30 @@ const CreateNewReportingConfig = () => {
     navigate("/reporting-config");
   };
 
-  const handleCreateReportingConfig = () => { 
-    dispatch(createReportConfig({ reportingConfigData })).then(
-      (action) => {
-        if (action.type.endsWith("fulfilled")) {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Created"}
-              message={"Created successfully"}
-            />
-          ));
+  const handleCreateReportingConfig = () => {
+    dispatch(createReportConfig({ newReportingConfigData })).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
+        // Extract the 'name' from the action.payload
+        const configName = action.payload?.name;
+  
+        // Show success toast notification
+        toast.custom((t) => (
+          <Passed
+            t={t}
+            toast={toast}
+            title={"Created"}
+            message={"Created successfully"}
+          />
+        ));
+  
+        // Navigate to /reporting-config/{name} if 'name' exists
+        if (configName) {
+          navigate(`/reporting-config/${configName}`);
         }
       }
-    );
-   }
+    });
+  };
+  
 
   if (loading) {
     return <LoadingState />;
@@ -102,7 +104,7 @@ const CreateNewReportingConfig = () => {
           title="Credit Bureau Liabilities Matrix"
           className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
         >
-          {reportingConfigData.name}
+          {newReportingConfigData.name}
         </b>
         <div className="flex gap-4">
           <Button
@@ -117,14 +119,14 @@ const CreateNewReportingConfig = () => {
           <InputNumber
             labelName="Default Time Range Days"
             inputName="defaultTimeRangeDays"
-            inputValue={reportingConfigData?.defaultTimeRangeDays}
+            inputValue={newReportingConfigData?.defaultTimeRangeDays}
             onChange={handleChange}
             placeHolder="3"
           />
           <InputText
             labelName="API Route"
             inputName="apiRoute"
-            inputValue={reportingConfigData?.apiRoute}
+            inputValue={newReportingConfigData?.apiRoute}
             inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="/api/example"
@@ -132,7 +134,7 @@ const CreateNewReportingConfig = () => {
           <InputText
             labelName="Service IP"
             inputName="serviceIp"
-            inputValue={reportingConfigData?.serviceIp}
+            inputValue={newReportingConfigData?.serviceIp}
             inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="xxx.xxx.xxx.xxx"
@@ -140,7 +142,7 @@ const CreateNewReportingConfig = () => {
           <InputText
             labelName="Service Port"
             inputName="servicePort"
-            inputValue={reportingConfigData?.servicePort}
+            inputValue={newReportingConfigData?.servicePort}
             inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="e.g., 8080"
@@ -152,7 +154,7 @@ const CreateNewReportingConfig = () => {
             labelName={"Query"}
             inputName={"query"}
             rowCount={"3"}
-            inputValue={reportingConfigData?.query}
+            inputValue={newReportingConfigData?.query}
             onChange={handleChange}
             placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
           />
@@ -184,10 +186,10 @@ const CreateNewReportingConfig = () => {
         {/* Display existing bindings with new design */}
         <div className="grid grid-cols-1 gap-2 mb-5 items-center">
           <div className='grid grid-cols-4 gap-2 mb-5 items-center'>
-            {Object.keys(reportingConfigData?.bindings || {}).length === 0 ? (
+            {Object.keys(newReportingConfigData?.bindings || {}).length === 0 ? (
               <p>No bindings added</p>
             ) : (
-              Object.keys(reportingConfigData.bindings).map((key, index) => (
+              Object.keys(newReportingConfigData.bindings).map((key, index) => (
                 <div
                   key={index}
                   className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
@@ -199,7 +201,7 @@ const CreateNewReportingConfig = () => {
 
                   {/* Display the value */}
                   <div>|</div>
-                  <div>{reportingConfigData.bindings[key]}</div>
+                  <div>{newReportingConfigData.bindings[key]}</div>
 
                   {/* Delete icon */}
                   <div>

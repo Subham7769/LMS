@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";
-import { removeRule, handleChangeNumberRule,updateRuleNumberCriteria, handleChangeStringRule } from '../../redux/Slices/DynamicRacSlice';
+import { deleteRuleById, removeRule,fetchDynamicRacDetails,fetchOptionList, handleChangeNumberRule,updateRuleNumberCriteria, handleChangeStringRule } from '../../redux/Slices/DynamicRacSlice';
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
 import { operatorOptions } from "../../data/OptionsData"
 import { TrashIcon, EllipsisVerticalIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-const RuleComponent = ({ rule, dynamicRacRuleId, isEditorMode, sectionId }) => {
+const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }) => {
   const dispatch = useDispatch();
 
   // const handleNumberInputChange = (e) => {
@@ -27,6 +27,31 @@ const RuleComponent = ({ rule, dynamicRacRuleId, isEditorMode, sectionId }) => {
 
     dispatch(updateRuleNumberCriteria({ sectionId, dynamicRacRuleId: rule.dynamicRacRuleId, updates, numberCriteriaIndex: index }));
   };
+
+  const handleRemoveRule = async (sectionId, dynamicRacRuleId) => {
+    try {
+      // First dispatch: removeRule
+      dispatch(removeRule({ sectionId, dynamicRacRuleId }));
+      console.log("removeRule")
+      
+      // Second dispatch: deleteRuleById
+      await dispatch(deleteRuleById(dynamicRacRuleId)).unwrap();
+      console.log("deleteRuleById")
+
+      // Fourth dispatch: fetchOptionList
+      await dispatch(fetchOptionList(racId)).unwrap();
+      console.log("fetchOptionList")
+      
+      // Third dispatch: fetchDynamicRacDetails
+      await dispatch(fetchDynamicRacDetails(racId)).unwrap();
+      console.log("fetchDynamicRacDetails")
+  
+    } catch (error) {
+      console.error("Error while performing operations: ", error);
+    }
+  };
+  
+  
 
   const handleStringInputChange = (newValues) => {
     console.log(newValues)
@@ -83,7 +108,7 @@ const RuleComponent = ({ rule, dynamicRacRuleId, isEditorMode, sectionId }) => {
           </div>
           {isEditorMode && (
             <TrashIcon
-              onClick={() => dispatch(removeRule({ sectionId, dynamicRacRuleId: rule.dynamicRacRuleId }))}
+              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId )}
               className="h-4 w-4 mt-4 hover:text-indigo-500 hover:cursor-pointer"
             />
           )}
@@ -108,7 +133,7 @@ const RuleComponent = ({ rule, dynamicRacRuleId, isEditorMode, sectionId }) => {
           />
           {isEditorMode && (
             <TrashIcon
-              onClick={() => dispatch(removeRule({ sectionId, dynamicRacRuleId }))}
+              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId )}
               className="h-4 w-4 mt-4 hover:text-red-500 hover:cursor-pointer"
             />
           )}

@@ -165,7 +165,7 @@ const Toolbox = () => {
           <InputSelect
             labelName="Name"
             inputOptions={
-              ruleConfig.criteriaType === "BORROWER_PROFILE" ? optionsList.borrowerProfileAvailableNames : optionsList.calculatedAvailableNames
+              ruleConfig.criteriaType === "BORROWER_PROFILE" ? optionsList.borrowerProfileAvailableNames : ruleConfig.criteriaType === "BORROWER_PROFILE" ? optionsList.calculatedAvailableNames : []
             }
             inputName="name"
             inputValue={ruleConfig.name}

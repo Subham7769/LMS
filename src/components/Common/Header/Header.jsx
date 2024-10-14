@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { BellIcon } from "@heroicons/react/24/outline";
+import { BellIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import UserImg from "../../../assets/image/user.png";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
@@ -76,11 +76,12 @@ const Header = () => {
 
       {/* logo */}
       <div className="w-1/3 flex shrink-0 items-center">
-        <img
+        {/* <img
           className={`h-8 ${open ? "w-auto" : "w-10 h-auto"} ml-5`}
           src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
           alt="Your Company"
-        />
+        /> */}
+        <BoltIcon className={`h-8 ${open ? "w-auto" : "w-10 h-auto"} ml-5 text-indigo-500`}/>
       </div>
       <div className="flex justify-center w-1/3">
         <div>

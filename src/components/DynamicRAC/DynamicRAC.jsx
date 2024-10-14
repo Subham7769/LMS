@@ -30,12 +30,25 @@ const DynamicRAC = () => {
   const sections = racConfig.sections;
   const navigate = useNavigate();
 
-  console.log(fetchOptionList)
+  // console.log(fetchOptionList)
 
   useEffect(() => {
-    dispatch(fetchDynamicRacDetails(racId))
-    dispatch(fetchOptionList(racId))
+    const fetchData = async () => {
+      try {
+        // First, fetch the option list
+        await dispatch(fetchOptionList(racId));
+  
+        // After fetching the option list, fetch the dynamic RAC details
+        await dispatch(fetchDynamicRacDetails(racId));
+  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData(); // Call the async function to execute the dispatches one by one
   }, [racId, dispatch]);
+  
 
   const handleUploadConfig = (event) => {
     const file = event.target.files[0];
@@ -212,7 +225,6 @@ const DynamicRAC = () => {
               <HoverButton
                 icon={PlusIcon}
                 text="Add Section"
-                color="green" // Automatically sets hover and background colors
                 onClick={() => dispatch(addSection())}
               />
             </div>
@@ -220,13 +232,10 @@ const DynamicRAC = () => {
               <HoverButton
                 icon={ArrowDownOnSquareIcon}
                 text="Download Config"
-                color="yellow" // Automatically sets hover and background colors
                 onClick={() => dispatch(downloadConfig())}
               />
               <HoverButton
                 icon={ArrowUpOnSquareIcon}
-                text="Upload Config"
-                color="green" // Automatically sets hover and background colors
                 onClick={() => fileInputRef.current.click()}
               />
               <input
@@ -240,9 +249,9 @@ const DynamicRAC = () => {
           </div>
         )}
       </div>
-      <div className="flex items-start max-h-[550px]">
+      <div className={`flex items-start ${isEditorMode ? ' max-h-[550px]':'max-h-screen'}`}>
         {isEditorMode && <Toolbox />}
-        <div className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-[550px] overflow-hidden pb-20`}>
+        <div className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${isEditorMode ? ' max-h-[550px]':'max-h-screen'} overflow-hidden pb-20`}>
           <DragDropContext onDragEnd={onDragEnd} >
             <div className="flex flex-col justify-center gap-5" >
               {sections?.map((section) => (
@@ -287,6 +296,7 @@ const DynamicRAC = () => {
                             >
                               <RuleComponent
                                 rule={rule}
+                                racId={racId}
                                 dynamicRacRuleId={rule.dynamicRacRuleId}
                                 isEditorMode={isEditorMode}
                                 sectionId={section.sectionId}
