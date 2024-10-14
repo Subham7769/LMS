@@ -236,6 +236,7 @@ const DynamicRAC = () => {
               />
               <HoverButton
                 icon={ArrowUpOnSquareIcon}
+                 text="Upload Config"
                 onClick={() => fileInputRef.current.click()}
               />
               <input
