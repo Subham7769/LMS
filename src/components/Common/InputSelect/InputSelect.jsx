@@ -22,6 +22,8 @@ const InputSelect = ({
   dropdownTextSize = "medium", // New prop to control dropdown text size
   isValidation = false,
   isIndex,
+  isSectionId,
+  isRuleId,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -74,7 +76,11 @@ const InputSelect = ({
           : "14px", // Same font size as options
     }),
   };
-  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  let validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+
+  if (isSectionId && isRuleId) {
+    validationKey = `${inputName}_${isSectionId}_${isRuleId}`;
+  }
   if (isValidation) {
     useEffect(() => {
       if (!fields.includes(inputName)) {

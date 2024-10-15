@@ -7,29 +7,29 @@ import { updateValidationError } from "../../../redux/Slices/validationSlice";
 
 const DynamicName = ({ initialName, onSave, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(initialName);
+  const [dynamicSectionName, setDynamicSectionName] = useState(initialName);
   const dispatch = useDispatch();
 
   const handleEdit = () => {
-    setName(initialName);
+    setDynamicSectionName(initialName);
     setIsEditing(true);
   };
   const handleSave = async () => {
     let isValidationError = false;
-    if (name === "") {
+    if (dynamicSectionName === "") {
       isValidationError = true;
-      dispatch(updateValidationError({ name: true }));
+      dispatch(updateValidationError({ dynamicSectionName: true }));
     }
-    if (!isValidationError && name != "") {
-      onSave(name); // Trigger the onSave function passed as prop
+    if (!isValidationError && dynamicSectionName != "") {
+      onSave(dynamicSectionName); // Trigger the onSave function passed as prop
       setIsEditing(false);
-      dispatch(updateValidationError({ name: false }));
+      dispatch(updateValidationError({ dynamicSectionName: false }));
     }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setName(initialName); // Reset to the initial name on cancel
+    setDynamicSectionName(initialName); // Reset to the initial name on cancel
   };
 
   return (
@@ -37,9 +37,9 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
       {isEditing ? (
         <div className="flex items-center space-x-2">
           <InputText
-            inputValue={name}
-            inputName="name"
-            onChange={(e) => setName(e.target.value)}
+            inputValue={dynamicSectionName}
+            inputName="dynamicSectionName"
+            onChange={(e) => setDynamicSectionName(e.target.value)}
             isValidation={true}
           />
           <button

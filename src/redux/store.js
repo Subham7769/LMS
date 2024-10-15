@@ -20,6 +20,7 @@ import globalConfigSlice from "./Slices/globalConfigSlice";
 import DynamicRacSlice from "./Slices/DynamicRacSlice";
 import validationSlice from "./Slices/validationSlice";
 import reportingConfigSlice from "./Slices/reportingConfigSlice";
+import reportsSlice from "./Slices/reportsSlice";
 
 const store = configureStore({
   reducer: {
@@ -42,7 +43,8 @@ const store = configureStore({
     globalConfig: globalConfigSlice,
     overdraftLoanOffers: overdraftLoanOffersSlice,
     validation: validationSlice,
-    reportingConfig:reportingConfigSlice,
+    reportingConfig: reportingConfigSlice,
+    reports: reportsSlice,
   },
 });
 

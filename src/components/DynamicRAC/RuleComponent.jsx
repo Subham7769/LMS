@@ -1,12 +1,30 @@
 import { useDispatch } from "react-redux";
-import { deleteRuleById, removeRule,fetchDynamicRacDetails,fetchOptionList, handleChangeNumberRule,updateRuleNumberCriteria, handleChangeStringRule } from '../../redux/Slices/DynamicRacSlice';
+import {
+  deleteRuleById,
+  removeRule,
+  fetchDynamicRacDetails,
+  fetchOptionList,
+  handleChangeNumberRule,
+  updateRuleNumberCriteria,
+  handleChangeStringRule,
+} from "../../redux/Slices/DynamicRacSlice";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
-import { operatorOptions } from "../../data/OptionsData"
-import { TrashIcon, EllipsisVerticalIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { operatorOptions } from "../../data/OptionsData";
+import {
+  TrashIcon,
+  EllipsisVerticalIcon,
+  ChevronUpDownIcon,
+} from "@heroicons/react/20/solid";
 
-const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }) => {
+const RuleComponent = ({
+  rule,
+  racId,
+  dynamicRacRuleId,
+  isEditorMode,
+  sectionId,
+}) => {
   const dispatch = useDispatch();
 
   // const handleNumberInputChange = (e) => {
@@ -17,45 +35,53 @@ const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }
   const handleInputChange = (inputName, value, index) => {
     const updates = {};
 
-    if (inputName === 'firstOperator' || inputName === 'secondOperator') {
+    if (inputName === "firstOperator" || inputName === "secondOperator") {
       updates[inputName] = value;
-    } else if (inputName === 'minimum' || inputName === 'maximum') {
-      updates.numberCriteriaRangeList = [{
-        [inputName]: value,
-      }];
+    } else if (inputName === "minimum" || inputName === "maximum") {
+      updates.numberCriteriaRangeList = [
+        {
+          [inputName]: value,
+        },
+      ];
     }
 
-    dispatch(updateRuleNumberCriteria({ sectionId, dynamicRacRuleId: rule.dynamicRacRuleId, updates, numberCriteriaIndex: index }));
+    dispatch(
+      updateRuleNumberCriteria({
+        sectionId,
+        dynamicRacRuleId: rule.dynamicRacRuleId,
+        updates,
+        numberCriteriaIndex: index,
+      })
+    );
   };
 
   const handleRemoveRule = async (sectionId, dynamicRacRuleId) => {
     try {
       // First dispatch: removeRule
       dispatch(removeRule({ sectionId, dynamicRacRuleId }));
-      console.log("removeRule")
-      
+      console.log("removeRule");
+
       // Second dispatch: deleteRuleById
       await dispatch(deleteRuleById(dynamicRacRuleId)).unwrap();
-      console.log("deleteRuleById")
+      console.log("deleteRuleById");
 
       // Fourth dispatch: fetchOptionList
       await dispatch(fetchOptionList(racId)).unwrap();
-      console.log("fetchOptionList")
-      
+      console.log("fetchOptionList");
+
       // Third dispatch: fetchDynamicRacDetails
       await dispatch(fetchDynamicRacDetails(racId)).unwrap();
-      console.log("fetchDynamicRacDetails")
-  
+      console.log("fetchDynamicRacDetails");
     } catch (error) {
       console.error("Error while performing operations: ", error);
     }
   };
-  
-  
 
   const handleStringInputChange = (newValues) => {
-    console.log(newValues)
-    dispatch(handleChangeStringRule({ sectionId, dynamicRacRuleId, values: newValues })); // Dispatch to Redux
+    console.log(newValues);
+    dispatch(
+      handleChangeStringRule({ sectionId, dynamicRacRuleId, values: newValues })
+    ); // Dispatch to Redux
   };
 
   switch (rule?.fieldType) {
@@ -66,8 +92,14 @@ const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }
             <ChevronUpDownIcon className="h-5 w-5 hover:text-indigo-500 hover:cursor-pointer hover:bg-slate-200" />
           )}
           <div className="py-2 w-full">
-            <label className={`block text-gray-700" px-1 text-[14px]`}>{rule.name}</label>
-            <div className={`border-2 rounded-xl py-2 ${isEditorMode && 'bg-gray-100'}`}>
+            <label className={`block text-gray-700" px-1 text-[14px]`}>
+              {rule.name}
+            </label>
+            <div
+              className={`border-2 rounded-xl py-2 ${
+                isEditorMode && "bg-gray-100"
+              }`}
+            >
               {rule.numberCriteriaRangeList.map((range, index) => (
                 <div key={index} className="flex-1 grid grid-cols-4 gap-2">
                   <InputSelect
@@ -75,32 +107,62 @@ const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }
                     inputOptions={operatorOptions}
                     inputName="firstOperator"
                     inputValue={rule.firstOperator} // Use range.firstOperator instead of rule.firstOperator
-                    onChange={(e) => handleInputChange('firstOperator', e.target.value, index)}
+                    onChange={(e) =>
+                      handleInputChange("firstOperator", e.target.value, index)
+                    }
                     disabled={isEditorMode}
+                    isValidation={true}
+                    isSectionId={sectionId}
+                    isRuleId={dynamicRacRuleId}
                   />
                   <InputNumber
                     labelName="Min"
                     inputName="minimum"
-                    inputValue={parseInt(range.minimum) || ''} // Use range.minimum instead of rule.numberCriteriaRangeList[index].minimum
-                    onChange={(e) => handleInputChange('minimum', e.target.value, index)}
+                    inputValue={
+                      range.minimum !== null && range.minimum !== undefined
+                        ? parseInt(range.minimum)
+                        : ""
+                    } // Use range.minimum instead of rule.numberCriteriaRangeList[index].minimum
+                    onChange={(e) =>
+                      handleInputChange("minimum", e.target.value, index)
+                    }
                     placeholder="0"
                     disabled={isEditorMode}
+                    isValidation={true}
+                    isSectionId={sectionId}
+                    isRuleId={dynamicRacRuleId}
+                    isRangeIndex={index}
                   />
                   <InputSelect
                     labelName="Second Operator"
                     inputOptions={operatorOptions}
                     inputName="secondOperator"
                     inputValue={rule.secondOperator} // Use range.secondOperator instead of rule.secondOperator
-                    onChange={(e) => handleInputChange('secondOperator', e.target.value, index)}
+                    onChange={(e) =>
+                      handleInputChange("secondOperator", e.target.value, index)
+                    }
                     disabled={isEditorMode}
+                    isValidation={true}
+                    isSectionId={sectionId}
+                    isRuleId={dynamicRacRuleId}
                   />
                   <InputNumber
                     labelName="Max"
                     inputName="maximum"
-                    inputValue={parseInt(range.maximum) || ''} // Use range.maximum instead of rule.numberCriteriaRangeList[index].maximum
-                    onChange={(e) => handleInputChange('maximum', e.target.value, index)}
+                    inputValue={
+                      range.maximum !== null && range.maximum !== undefined
+                        ? parseInt(range.maximum)
+                        : ""
+                    } // Use range.maximum instead of rule.numberCriteriaRangeList[index].maximum
+                    onChange={(e) =>
+                      handleInputChange("maximum", e.target.value, index)
+                    }
                     placeholder="0"
                     disabled={isEditorMode}
+                    isValidation={true}
+                    isSectionId={sectionId}
+                    isRuleId={dynamicRacRuleId}
+                    isRangeIndex={index}
                   />
                 </div>
               ))}
@@ -108,12 +170,11 @@ const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }
           </div>
           {isEditorMode && (
             <TrashIcon
-              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId )}
+              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId)}
               className="h-4 w-4 mt-4 hover:text-indigo-500 hover:cursor-pointer"
             />
           )}
         </div>
-
       );
 
     case "STRING":
@@ -125,15 +186,17 @@ const RuleComponent = ({ rule, racId,dynamicRacRuleId, isEditorMode, sectionId }
 
           <InputTextMulti
             label={rule.name}
+            inputName={rule.name}
             tag={rule?.criteriaValues}
             setTag={(newValues) => handleStringInputChange(newValues)}
             sectionId={sectionId}
             dynamicRacRuleId={dynamicRacRuleId}
             disabled={isEditorMode}
+            isValidation={true}
           />
           {isEditorMode && (
             <TrashIcon
-              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId )}
+              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId)}
               className="h-4 w-4 mt-4 hover:text-red-500 hover:cursor-pointer"
             />
           )}
