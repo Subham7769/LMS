@@ -131,3 +131,80 @@ export const validateFormFieldsRule = (formData, dispatch) => {
   console.log(isValid);
   return isValid;
 };
+
+export const validateRAC = (sections, dispatch) => {
+  let isValid = true;
+  const validationErrors = {};
+
+  sections.forEach((section) => {
+    const sectionId = section.sectionId;
+
+    section.rules.forEach((rule) => {
+      const ruleId = rule.dynamicRacRuleId;
+
+      // Handle STRING fieldType
+      if (rule.fieldType === "STRING") {
+        if (!rule.criteriaValues || rule.criteriaValues.length === 0) {
+          validationErrors[`criteriaValues_${sectionId}_${ruleId}`] = true;
+          isValid = false;
+        } else {
+          validationErrors[`criteriaValues_${sectionId}_${ruleId}`] = false;
+        }
+      }
+
+      // Handle NUMBER fieldType
+      if (rule.fieldType === "NUMBER") {
+        if (!rule.firstOperator || rule.firstOperator === "") {
+          validationErrors[`firstOperator_${sectionId}_${ruleId}`] = true;
+          isValid = false;
+        } else {
+          validationErrors[`firstOperator_${sectionId}_${ruleId}`] = false;
+        }
+
+        if (!rule.secondOperator || rule.secondOperator === "") {
+          validationErrors[`secondOperator_${sectionId}_${ruleId}`] = true;
+          isValid = false;
+        } else {
+          validationErrors[`secondOperator_${sectionId}_${ruleId}`] = false;
+        }
+
+        // Validate numberCriteriaRangeList
+        rule.numberCriteriaRangeList?.forEach((range, rangeIndex) => {
+          if (
+            range.minimum === undefined ||
+            range.minimum === null ||
+            range.minimum === ""
+          ) {
+            validationErrors[
+              `minimum_${sectionId}_${ruleId}_${rangeIndex}`
+            ] = true;
+            isValid = false;
+          } else {
+            validationErrors[
+              `minimum_${sectionId}_${ruleId}_${rangeIndex}`
+            ] = false;
+          }
+
+          if (
+            range.maximum === undefined ||
+            range.maximum === null ||
+            range.maximum === ""
+          ) {
+            validationErrors[
+              `maximum_${sectionId}_${ruleId}_${rangeIndex}`
+            ] = true;
+            isValid = false;
+          } else {
+            validationErrors[
+              `maximum_${sectionId}_${ruleId}_${rangeIndex}`
+            ] = false;
+          }
+        });
+      }
+    });
+  });
+
+  dispatch(updateValidationError({ ...validationErrors }));
+
+  return isValid;
+};

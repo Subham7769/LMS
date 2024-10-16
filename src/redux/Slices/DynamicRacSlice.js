@@ -455,15 +455,17 @@ const DynamicRacSlice = createSlice({
       .addCase(fetchOptionList.fulfilled, (state, action) => {
         state.loading = false;
         state.optionsList = {
-          borrowerProfileAvailableNames: action.payload.borrowerProfileAvailableNames?.map((item) => ({
-            label: item,
-            value: item
-          })) || [],
-    
-          calculatedAvailableNames: action.payload.calculatedAvailableNames?.map((item) => ({
-            label: item,
-            value: item
-          })) || []
+          borrowerProfileAvailableNames:
+            action.payload.borrowerProfileAvailableNames?.map((item) => ({
+              label: item,
+              value: item,
+            })) || [],
+
+          calculatedAvailableNames:
+            action.payload.calculatedAvailableNames?.map((item) => ({
+              label: item,
+              value: item,
+            })) || [],
         };
       })
       .addCase(fetchOptionList.rejected, (state, action) => {

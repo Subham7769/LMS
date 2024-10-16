@@ -17,6 +17,9 @@ const InputNumber = ({
   disabled = false,
   isValidation = false,
   isIndex,
+  isSectionId,
+  isRuleId,
+  isRangeIndex,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -42,7 +45,11 @@ const InputNumber = ({
   }
 
   // console.log(validationError);
-  const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+  let validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+
+  if (isSectionId && isRuleId) {
+    validationKey = `${inputName}_${isSectionId}_${isRuleId}_${isRangeIndex}`;
+  }
   if (isValidation) {
     useEffect(() => {
       if (!fields.includes(inputName)) {
