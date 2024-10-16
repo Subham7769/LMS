@@ -236,7 +236,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             isValidation={true}
           />
           <InputNumber
-            labelName="No. of Installments For Early Settlement"
+            labelName="No. of Early Settlement Installments"
             inputName="numberOfEmisForEarlySettlement"
             inputValue={productData?.numberOfEmisForEarlySettlement}
             onChange={handleChange}

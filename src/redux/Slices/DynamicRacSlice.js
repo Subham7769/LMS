@@ -6,7 +6,7 @@ export const fetchList = createAsyncThunk(
   "rac/fetchList",
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
-    const Menu = sideBarState?.menus.find((menu) => menu.title === "RAC");
+    const Menu = sideBarState?.menus.find((menu) => menu.title === "Dynamic RAC");
     const submenuItems = Menu ? Menu.submenuItems : [];
     return submenuItems;
   }
@@ -19,7 +19,7 @@ export const fetchDynamicRacDetails = createAsyncThunk(
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.get(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/${racId}/all-rules`,
+        `${import.meta.env.VITE_DYNAMIC_RAC_READ}${racId}/all-rules`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -37,7 +37,7 @@ export const fetchDynamicRacDetails = createAsyncThunk(
 export const updateDynamicRac = createAsyncThunk(
   "rac/updateDynamicRac",
   async ({ racId, updateData }, { rejectWithValue }) => {
-    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/rule/${racId}`;
+    const url = `${import.meta.env.VITE_DYNAMIC_RAC_UPDATE}${racId}`;
 
     try {
       const response = await axios.put(url, updateData);
@@ -56,7 +56,7 @@ export const deleteDynamicRac = createAsyncThunk(
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.delete(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${racId}`,
+        `${import.meta.env.VITE_DYNAMIC_RAC_DELETE}${racId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -158,6 +158,72 @@ export const deleteRuleById = createAsyncThunk(
   }
 );
 
+// Define the asyncThunk for updating status
+export const updateStatus = createAsyncThunk(
+  "rac/updateStatus", // action type
+  async ({ dynamicRacRuleId, status }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
+    console.log(dynamicRacRuleId, status);
+    
+    try {
+      // API call with dynamicRacRuleId and status
+      const response = await axios.put(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/rule/${dynamicRacRuleId}/status/${status}`,
+        {}, // No request body, so pass an empty object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      return response.data;
+    } catch (error) {
+      // Handle the error and reject the thunk with a meaningful message
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+// Define the asyncThunk for updating the name
+export const updateRacName = createAsyncThunk(
+  'rac/updateRacName', // Action type
+  async ({ racId, newName }, { rejectWithValue }) => {
+    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+
+    try {
+      // API call to update the name using the racId and newName
+      const response = await axios.put(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${racId}/name`,
+        {
+          "description": newName,
+          "name": newName
+        }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json', // Set content type if needed
+          },
+        }
+      );
+
+      return response.data; // Return the API response data
+    } catch (error) {
+      // Handle error and reject the thunk with a meaningful message
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data); // API error response
+      } else {
+        return rejectWithValue(error.message); // General error
+      }
+    }
+  }
+);
+
+
 const initialState = {
   racConfig: {
     racDetails: { id: "", name: "abc", racId: "", description: null }, // Updated racDetails structure
@@ -208,10 +274,10 @@ const DynamicRacSlice = createSlice({
       };
     },
     updateRacConfigName(state, action) {
-      const { name } = action.payload;
+      const { newName } = action.payload;
       state.racConfig.racDetails = {
         ...state.racConfig.racDetails,
-        name: name,
+        name: newName,
       };
     },
     setSection(state, action) {
@@ -290,7 +356,6 @@ const DynamicRacSlice = createSlice({
         return section;
       });
     },
-    // New reducer to update rule properties
     updateRuleNumberCriteria: (state, action) => {
       const { sectionId, dynamicRacRuleId, updates, numberCriteriaIndex } =
         action.payload;
@@ -422,7 +487,7 @@ const DynamicRacSlice = createSlice({
       })
       .addCase(fetchDynamicRacDetails.pending, (state) => {
         state.loading = true;
-        state.error = null; // Clear previous errors
+        state.error = null;
       })
       .addCase(fetchDynamicRacDetails.fulfilled, (state, action) => {
         state.racConfig = {
@@ -470,7 +535,34 @@ const DynamicRacSlice = createSlice({
       })
       .addCase(fetchOptionList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // Store the error
+        state.error = action.payload;
+      })
+      .addCase(updateStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(updateStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateRacName.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateRacName.fulfilled, (state, action) => {
+        state.racConfig.racDetails = {
+          ...state.racConfig.racDetails,
+          name: action.payload.name,
+        };
+        state.loading = false;
+      })
+      .addCase(updateRacName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
       });
   },
 });

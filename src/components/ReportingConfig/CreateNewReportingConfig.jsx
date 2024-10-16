@@ -141,7 +141,6 @@ const CreateNewReportingConfig = () => {
             labelName="API Route"
             inputName="apiRoute"
             inputValue={newReportingConfigData?.apiRoute}
-            inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="/api/example"
           />
@@ -149,7 +148,6 @@ const CreateNewReportingConfig = () => {
             labelName="Service IP"
             inputName="serviceIp"
             inputValue={newReportingConfigData?.serviceIp}
-            inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="xxx.xxx.xxx.xxx"
           />
@@ -157,7 +155,6 @@ const CreateNewReportingConfig = () => {
             labelName="Service Port"
             inputName="servicePort"
             inputValue={newReportingConfigData?.servicePort}
-            inputValuePercentage={true}
             onChange={handleChange}
             placeHolder="e.g., 8080"
           />

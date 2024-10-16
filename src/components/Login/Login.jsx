@@ -98,6 +98,14 @@ const Login = () => {
               navigate("/customer-care");
               break;
 
+            case "ROLE_MAKER_ADMIN":
+              navigate("/dynamic-rac");
+              break;
+
+            case "CHECKER_ADMIN":
+              navigate("/dynamic-rac");
+              break;
+
             default:
               navigate("/");
               break;

@@ -100,7 +100,7 @@ export const addTCLData = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/files/by-id/${fileSelectedOption.value}`,
+        `${import.meta.env.VITE_TCL_FILE_ADD_DATA}${fileSelectedOption.value}`,
         {
           method: "GET",
           headers: {

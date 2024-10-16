@@ -14,20 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
-import {
-  fetchDynamicRacDetails,
-  fetchOptionList,
-  saveDynamicRac,
-  downloadConfig,
-  uploadConfig,
-  updateRacConfigName,
-  addSection,
-  setSection,
-  cloneDynamicRac,
-  deleteDynamicRac,
-  updateSection,
-  removeSection,
-} from "../../redux/Slices/DynamicRacSlice";
+import { fetchDynamicRacDetails,updateRacName, fetchOptionList, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
 import { useDispatch } from "react-redux";
 import Toolbox from "./ToolBox";
 import RuleComponent from "./RuleComponent";
@@ -173,6 +160,7 @@ const DynamicRAC = () => {
   const createCloneDynamicRac = (racId, racName) => {
     dispatch(cloneDynamicRac({ racId, racName })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
+        navigate(`/dynamic-rac/${action.payload.racId}`);
         dispatch(fetchDynamicRacData());
         toast.custom((t) => (
           <Passed
@@ -186,7 +174,7 @@ const DynamicRAC = () => {
     });
   };
 
-  const handleSaveDynamicRAC = () => {
+  const handleSaveDynamicRAC = async () => {
     // Extract the section names
     const sectionNames = sections.map((section) => section.sectionName);
 
@@ -220,7 +208,17 @@ const DynamicRAC = () => {
     const isValid = validateRAC(sections, dispatch);
     if (isValid) {
       console.log("API call made");
-      dispatch(saveDynamicRac(racConfig));
+      try {
+        const saveAction = await dispatch(saveDynamicRac(racConfig));
+
+        if (saveAction.type.endsWith("fulfilled")) {
+          await dispatch(fetchOptionList(racId));
+
+          await dispatch(fetchDynamicRacDetails(racId));
+        }
+      } catch (error) {
+        console.error("Error during handleSave:", error);
+      }
     }
   };
 
@@ -234,6 +232,7 @@ const DynamicRAC = () => {
     });
   };
 
+
   const handleClone = () => {
     setIsModalOpen(true);
   };
@@ -241,6 +240,28 @@ const DynamicRAC = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleUpdateName = (racId, newName) => {
+    dispatch(updateRacConfigName({ newName }))
+    dispatch(updateRacName({ racId, newName })).then((action)=>{
+      if(action.type.endsWith("fulfilled")){
+        dispatch(fetchDynamicRacData());
+      }
+    })
+  };
+
+  const handleAddSection = () => {
+    dispatch(addSection())
+    toast.custom((t) => (
+      <Passed
+        t={t}
+        toast={toast}
+        title={"Section Added"}
+        message={"Section Added successfully"}
+      />
+    ));
+  };
+  
 
   if (loading) {
     return <LoadingState />;
@@ -258,7 +279,7 @@ const DynamicRAC = () => {
           <div className="flex-1 flex items-center justify-between mr-5">
             <DynamicName
               initialName={name}
-              onSave={(name) => dispatch(updateRacConfigName({ name }))}
+              onSave={(newName) => handleUpdateName(racId, newName)}
             />
             <div className="flex gap-4">
               <Button
@@ -310,7 +331,7 @@ const DynamicRAC = () => {
                   icon={PlusIcon}
                   text="Add Section"
                   color="green" // Automatically sets hover and background colors
-                  onClick={() => dispatch(addSection())}
+                  onClick={() => handleAddSection()}
                 />
               </div>
               <div className="flex gap-2 items-end">
@@ -338,15 +359,13 @@ const DynamicRAC = () => {
           )}
         </div>
         <div
-          className={`flex items-start ${
-            isEditorMode ? " max-h-[550px]" : "max-h-screen"
-          }`}
+          className={`flex items-start ${isEditorMode ? " max-h-[550px]" : "max-h-screen"
+            }`}
         >
           {isEditorMode && <Toolbox />}
           <div
-            className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${
-              isEditorMode ? " max-h-[550px]" : "max-h-screen"
-            } overflow-hidden pb-20`}
+            className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${isEditorMode ? " max-h-[550px]" : "max-h-screen"
+              } overflow-hidden pb-20`}
           >
             <DragDropContext onDragEnd={onDragEnd}>
               <div className="flex flex-col justify-center gap-5">
@@ -359,13 +378,12 @@ const DynamicRAC = () => {
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className={`shadow-md border-gray-300 border rounded-xl p-5 ${
-                          section.size === "full"
+                        className={`shadow-md border-gray-300 border rounded-xl p-5 ${section.size === "full"
                             ? "col-span-3"
                             : section.size === "half"
-                            ? "col-span-2"
-                            : "col-span-1"
-                        }`}
+                              ? "col-span-2"
+                              : "col-span-1"
+                          }`}
                       >
                         <div className="flex justify-between items-center mb-2">
                           <DynamicName

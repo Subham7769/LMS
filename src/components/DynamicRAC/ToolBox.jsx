@@ -6,11 +6,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import {
-  StringArray,
-  NumberArray,
-  operatorOptions,
-} from "../../data/OptionsData";
+import { operatorOptions } from "../../data/OptionsData"
 import { XMarkIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import store from "../../redux/store";
@@ -34,7 +30,8 @@ const Toolbox = () => {
     name: "",
     sectionId: "",
     sectionName: "",
-    displayName: "",
+    status: "CREATED",
+    displayName:"",
     usageList: [
       {
         ruleUsage: "BORROWER_OFFERS",
@@ -209,7 +206,7 @@ const Toolbox = () => {
               inputOptions={
                 ruleConfig.criteriaType === "BORROWER_PROFILE"
                   ? optionsList.borrowerProfileAvailableNames
-                  : ruleConfig.criteriaType === "BORROWER_PROFILE"
+                  : ruleConfig.criteriaType === "CALCULATED"
                   ? optionsList.calculatedAvailableNames
                   : []
               }

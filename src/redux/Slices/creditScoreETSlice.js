@@ -141,7 +141,7 @@ export const AddNewRange = createAsyncThunk(
 
     try {
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/credit-score-eligible-tenure`,
+        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_ADD_RANGE}`,
         {
           method: "POST",
           headers: {
@@ -234,9 +234,7 @@ export const handleDeleteCSET = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${
-          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE
-        }${creditScoreETId}`,
+        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE}${creditScoreETId}`,
         {
           method: "DELETE",
           headers: {
@@ -265,7 +263,7 @@ export const handleDeleteRange = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/credit-score-eligible-tenure/${creditScoreETId}/${ruleName}`,
+        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE_RANGE}${creditScoreETId}/${ruleName}`,
         {
           method: "DELETE",
           headers: {

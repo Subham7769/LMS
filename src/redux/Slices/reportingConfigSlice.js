@@ -1,6 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+export const fetchList = createAsyncThunk(
+  "rac/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Reporting Config"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
+
 // Async thunk for deleting a reporting config by its ID
 export const deleteReportingConfig = createAsyncThunk(
   "reportingConfig/deleteReportingConfig",
@@ -143,6 +155,25 @@ const reportingConfigSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+          createdOn: RACList[index]?.createdOn || "14/09/2022",
+          approved: RACList[index]?.approved || "40%",
+          totalProcessed: RACList[index]?.totalProcessed || "2367",
+          status: RACList[index]?.status || "Active",
+        }));
+        state.racStatsData.RACList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(deleteReportingConfig.pending, (state) => {
         state.loading = true;
       })
@@ -184,7 +215,7 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(updateReportingConfig.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload)
+        console.log(action.payload);
         state.reportingConfigData = action.payload;
       })
       .addCase(updateReportingConfig.rejected, (state, action) => {

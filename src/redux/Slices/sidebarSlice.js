@@ -64,15 +64,14 @@ export const fetchRACData = createAsyncThunk(
   }
 );
 
-export const fetchDBRData = createAsyncThunk(
-  "fetchDBRData",
+export const fetchRecoveryData = createAsyncThunk(
+  "fetchRecoveryData",
   async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dbc-temp/";
+    const url = `${import.meta.env.VITE_RECOVERY_READ_ALL_RECOVERY}`;
     const transformData = (data) => {
-      return data.map(({ name, dbcTempId }) => ({
+      return data.map(({ name, recoveryEquationTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/dbr-config/" + dbcTempId,
+        href: "/recovery/" + recoveryEquationTempId,
       }));
     };
     try {
@@ -83,15 +82,14 @@ export const fetchDBRData = createAsyncThunk(
   }
 );
 
-export const fetchBEData = createAsyncThunk(
-  "fetchBEData",
+export const fetchTCLData = createAsyncThunk(
+  "fetchTCLData",
   async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/be-temp/";
+    const url = `${import.meta.env.VITE_TCL_READ_ALL_TCL}`;
     const transformData = (data) => {
-      return data.map(({ name, blockEmployerTempId }) => ({
-        name: name.replace(/-/g, " "),
-        href: "/blocked-employer/" + blockEmployerTempId,
+      return data.map(({ tclId, tclName }) => ({
+        name: tclName.replace(/_/g, " "),
+        href: "/tcl/" + tclId,
       }));
     };
     try {
@@ -105,9 +103,8 @@ export const fetchBEData = createAsyncThunk(
 export const fetchProjectData = createAsyncThunk(
   "project/fetchProjectData",
   async (_, { rejectWithValue }) => {
-    const url = `https://lms-api-dev.lmscarbon.com/lms-carbon-rule/api/v1/allprojects?limit=10&offset=0`;
-    const tokenUrl =
-      "https://lms-api-dev.lmscarbon.com/lms-carbon-client-registration/api/v1/client/DarwinClient/token";
+    const url = `${import.meta.env.VITE_PROJECT_READ_ALL_PROJECT}`;
+    const tokenUrl = `${import.meta.env.VITE_PROJECT_READ_PROJECT_TOKEN}`;
     const transformData = (data) => {
       return data.map(({ name, projectId }) => ({
         name,
@@ -125,7 +122,7 @@ export const fetchProjectData = createAsyncThunk(
 export const fetchProductData = createAsyncThunk(
   "product/fetchProductData",
   async (_, { rejectWithValue }) => {
-    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/loan-products`;
+    const url = `${import.meta.env.VITE_PRODUCT_READ_ALL_PRODUCT}`;
     const transformData = (data) => {
       return data.map(({ productType, projectId, loanProductId }) => ({
         name: productType.replace(/_/g, " "),
@@ -140,11 +137,66 @@ export const fetchProductData = createAsyncThunk(
   }
 );
 
+export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
+  "fetchCreditScoreEligibleTenureData",
+  async (_, { rejectWithValue }) => {
+    const url = `${
+      import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_READ_ALL_TENURE
+    }`;
+    const transformData = (data) => {
+      return data.map(({ name, creditScoreEtTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/credit-score-eligible-tenure/" + creditScoreEtTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchDBRData = createAsyncThunk(
+  "fetchDBRData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_DBR_READ_ALL_DBR}`;
+    const transformData = (data) => {
+      return data.map(({ name, dbcTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/dbr-config/" + dbcTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchBEData = createAsyncThunk(
+  "fetchBEData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_BLOCKED_EMPLOYER_READ_ALL_BE}`;
+    const transformData = (data) => {
+      return data.map(({ name, blockEmployerTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/blocked-employer/" + blockEmployerTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const fetchCreditScoreEqData = createAsyncThunk(
   "fetchCreditScoreEqData",
   async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp";
+    const url = `${import.meta.env.VITE_CREDIT_SCORE_READ_ALL_CS}`;
     const transformData = (data) => {
       return data.map(({ creditScoreEqTempId, name }) => ({
         name: name.replace(/-/g, " "),
@@ -162,8 +214,7 @@ export const fetchCreditScoreEqData = createAsyncThunk(
 export const fetchRulePolicyData = createAsyncThunk(
   "fetchRulePolicyData",
   async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp";
+    const url = `${import.meta.env.VITE_RULE_POLICY_READ_ALL_RP}`;
     const transformData = (data) => {
       return data.map(({ rulePolicyTempId, name }) => ({
         name: name.replace(/-/g, " "),
@@ -178,30 +229,10 @@ export const fetchRulePolicyData = createAsyncThunk(
   }
 );
 
-export const fetchTCLData = createAsyncThunk(
-  "fetchTCLData",
-  async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/tcl/all-tcl";
-    const transformData = (data) => {
-      return data.map(({ tclId, tclName }) => ({
-        name: tclName.replace(/_/g, " "),
-        href: "/tcl/" + tclId,
-      }));
-    };
-    try {
-      return await useFetchData(url, transformData);
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 export const fetchProdGroupData = createAsyncThunk(
   "fetchProdGroupData",
   async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/concurrent-loans/config";
+    const url = `${import.meta.env.VITE_PRODUCT_GROUP_READ_ALL_PRODUCT_GROUP}`;
     const transformData = (data) => {
       const ProdDetailsArray = Array.isArray(data) ? data : [data];
       return ProdDetailsArray.map(({ configName, configId }) => ({
@@ -217,73 +248,10 @@ export const fetchProdGroupData = createAsyncThunk(
   }
 );
 
-export const fetchRecoveryData = createAsyncThunk(
-  "fetchRecoveryData",
-  async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/recovery-temp";
-    const transformData = (data) => {
-      return data.map(({ name, recoveryEquationTempId }) => ({
-        name: name.replace(/-/g, " "),
-        href: "/recovery/" + recoveryEquationTempId,
-      }));
-    };
-    try {
-      return await useFetchData(url, transformData);
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
-  "fetchCreditScoreEligibleTenureData",
-  async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cset-temp";
-    const transformData = (data) => {
-      return data.map(({ name, creditScoreEtTempId }) => ({
-        name: name.replace(/-/g, " "),
-        href: "/credit-score-eligible-tenure/" + creditScoreEtTempId,
-      }));
-    };
-    try {
-      return await useFetchData(url, transformData);
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const fetchReportingConfigData = createAsyncThunk(
-  "reportingConfig/fetchReportingConfigData",
-  async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations";
-
-    const transformData = (data) => {
-      return data.map(({ name }) => ({
-        name: name.replace(/-/g, " "),
-        href: "/reporting-config/" + name,
-      }));
-    };
-
-    try {
-      // Call useFetchData to fetch the data and transform it
-      return await useFetchData(url, transformData);
-    } catch (error) {
-      // Handle errors and reject with value
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-// Async thunk for fetching Dynamic RAC data
 export const fetchDynamicRacData = createAsyncThunk(
   "fetchDynamicRacData",
   async (_, { rejectWithValue }) => {
-    const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/all-rules";
+    const url = `${import.meta.env.VITE_DYNAMIC_RAC_READ_ALL_RAC}`;
 
     // Function to transform the fetched data
     const transformData = (data) => {
@@ -306,6 +274,28 @@ export const fetchDynamicRacData = createAsyncThunk(
   }
 );
 
+export const fetchReportingConfigData = createAsyncThunk(
+  "reportingConfig/fetchReportingConfigData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_REPORTING_CONFIG_READ_ALL_RAC}`;
+
+    const transformData = (data) => {
+      return data.map(({ name }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/reporting-config/" + name,
+      }));
+    };
+
+    try {
+      // Call useFetchData to fetch the data and transform it
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      // Handle errors and reject with value
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const ROLE_CREDITOR_ADMIN = [
   "Home",
   "RAC",
@@ -321,9 +311,12 @@ const ROLE_CREDITOR_ADMIN = [
   "Product Group",
   "Business Rule",
   "Global Config",
+  "Dynamic RAC",
 ];
 const ROLE_CUSTOMER_CARE_MANAGER = ["Customer Care"];
 const ROLE_CUSTOMER_CARE_USER = ["Customer Care"];
+const ROLE_MAKER_ADMIN = ["Dynamic RAC"];
+const ROLE_CHECKER_ADMIN = ["Dynamic RAC"];
 const ROLE_TECHNICAL = [
   "Customer Care",
   "User Product Testing",
@@ -395,6 +388,18 @@ const sidebarSlice = createSlice({
         case "ROLE_TECHNICAL":
           state.menus = MenusInitial.filter((item) =>
             ROLE_TECHNICAL.includes(item.title)
+          );
+          break;
+
+        case "ROLE_MAKER_ADMIN":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_MAKER_ADMIN.includes(item.title)
+          );
+          break;
+
+        case "ROLE_CHECKER_ADMIN":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_CHECKER_ADMIN.includes(item.title)
           );
           break;
 

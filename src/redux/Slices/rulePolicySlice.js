@@ -494,8 +494,7 @@ export const fetchName = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rule-policy-temp/id/" +
-          rulePolicyId,
+        `${import.meta.env.VITE_RULE_POLICY_NAME_READ}${rulePolicyId}`,
         {
           method: "GET",
           headers: {

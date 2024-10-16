@@ -139,7 +139,6 @@ const SideBar = () => {
         break;
 
       case 'ROLE_CUSTOMER_CARE_USER':
-
         break;
 
       case 'ROLE_CREDITOR_ADMIN':
@@ -168,6 +167,14 @@ const SideBar = () => {
         break;
 
       case 'ROLE_TECHNICAL':
+        break;
+
+      case 'ROLE_MAKER_ADMIN':
+        dispatch(fetchDynamicRacData());
+        break;
+
+      case 'ROLE_CHECKER_ADMIN':
+        dispatch(fetchDynamicRacData());
         break;
 
       default:
