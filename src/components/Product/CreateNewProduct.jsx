@@ -45,9 +45,12 @@ const CreateNewProduct = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       try {
-        await dispatch(createProductData(productData)).unwrap();
+        await dispatch(createProductData(productData)).then((action) => {
+          console.log(action.payload)
+          // navigate(`/product/${action.payload.productType}/${action.payload.projectId}`);
+          navigate(`/product/`);
+        });
         dispatch(fetchProductData());
-        navigate("/product/");
       } catch (error) {
         console.error("Failed to create product:", error);
         // Optionally, you could use a toast notification here to notify the user of the error

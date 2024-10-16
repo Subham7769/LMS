@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { HeaderList, ProductList } from "../../data/reportingConfigData";
+
 import axios from "axios";
 
 export const fetchList = createAsyncThunk(
@@ -130,6 +132,10 @@ const InitialState = {
     query: "",
     bindings: {},
   },
+  reportingConfigStatsData: {
+    HeaderList,
+    ProductList,
+  },
   loading: false,
   error: null,
 };
@@ -163,12 +169,13 @@ const reportingConfigSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: RACList[index]?.createdOn || "14/09/2022",
-          approved: RACList[index]?.approved || "40%",
-          totalProcessed: RACList[index]?.totalProcessed || "2367",
-          status: RACList[index]?.status || "Active",
+          createdOn: ProductList[index]?.createdOn || "14/09/2022",
+          openLoans: ProductList[index]?.openLoans || "2367",
+          totalDisbursedPrincipal:
+            ProductList[index]?.totalDisbursedPrincipal || "2367",
+          status: ProductList[index]?.status || "Active",
         }));
-        state.racStatsData.RACList = updatedList;
+        state.reportingConfigStatsData.ProductList = updatedList;
       })
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;

@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
-import { fetchDynamicRacDetails,updateRacName, fetchOptionList, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection } from '../../redux/Slices/DynamicRacSlice'
+import { fetchDynamicRacDetails, updateRacName, fetchOptionList, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection ,deleteSection} from '../../redux/Slices/DynamicRacSlice'
 import { useDispatch } from "react-redux";
 import Toolbox from "./ToolBox";
 import RuleComponent from "./RuleComponent";
@@ -241,10 +241,20 @@ const DynamicRAC = () => {
     setIsModalOpen(false);
   };
 
+  const handleDeleteSection = ({ racId, sectionId }) => {
+    dispatch(removeSection({ sectionId }))
+    dispatch(deleteSection({ racId, sectionId })).then((action)=>{
+      if (action.type.endsWith("fulfilled")) {
+        dispatch(fetchDynamicRacDetails(racId));
+      }
+    })
+
+  };
+
   const handleUpdateName = (racId, newName) => {
     dispatch(updateRacConfigName({ newName }))
-    dispatch(updateRacName({ racId, newName })).then((action)=>{
-      if(action.type.endsWith("fulfilled")){
+    dispatch(updateRacName({ racId, newName })).then((action) => {
+      if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacData());
       }
     })
@@ -261,7 +271,7 @@ const DynamicRAC = () => {
       />
     ));
   };
-  
+
 
   if (loading) {
     return <LoadingState />;
@@ -379,10 +389,10 @@ const DynamicRAC = () => {
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                         className={`shadow-md border-gray-300 border rounded-xl p-5 ${section.size === "full"
-                            ? "col-span-3"
-                            : section.size === "half"
-                              ? "col-span-2"
-                              : "col-span-1"
+                          ? "col-span-3"
+                          : section.size === "half"
+                            ? "col-span-2"
+                            : "col-span-1"
                           }`}
                       >
                         <div className="flex justify-between items-center mb-2">
@@ -400,13 +410,7 @@ const DynamicRAC = () => {
                           {isEditorMode && (
                             <div className="flex justify-between items-center gap-2">
                               <TrashIcon
-                                onClick={() =>
-                                  dispatch(
-                                    removeSection({
-                                      sectionId: section.sectionId,
-                                    })
-                                  )
-                                }
+                                onClick={() => handleDeleteSection({ racId, sectionId: section.sectionId })}
                                 className="h-5 w-5 hover:text-red-500"
                               />
                             </div>

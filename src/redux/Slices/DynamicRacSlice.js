@@ -223,6 +223,36 @@ export const updateRacName = createAsyncThunk(
   }
 );
 
+// Define the asyncThunk for deleting a section
+export const deleteSection = createAsyncThunk(
+  'rac/deleteSection', // Action type
+  async ({ racId, sectionId }, { rejectWithValue }) => {
+    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+
+    try {
+      // API call to delete the section using racId and sectionId
+      const response = await axios.delete(
+        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/${racId}/section/${sectionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return response.data; // Return the API response data
+    } catch (error) {
+      // Handle error and reject the thunk with a meaningful message
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data); // API error response
+      } else {
+        return rejectWithValue(error.message); // General error
+      }
+    }
+  }
+);
+
 
 const initialState = {
   racConfig: {
@@ -490,6 +520,7 @@ const DynamicRacSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchDynamicRacDetails.fulfilled, (state, action) => {
+        console.log(action.payload)
         state.racConfig = {
           ...state.racConfig,
           racDetails: action.payload.racDetails,
@@ -561,6 +592,17 @@ const DynamicRacSlice = createSlice({
         state.loading = false;
       })
       .addCase(updateRacName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(deleteSection.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteSection.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteSection.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
       });

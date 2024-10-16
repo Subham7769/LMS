@@ -102,7 +102,7 @@ const Login = () => {
               navigate("/dynamic-rac");
               break;
 
-            case "CHECKER_ADMIN":
+            case "ROLE_CHECKER_ADMIN":
               navigate("/dynamic-rac");
               break;
 
