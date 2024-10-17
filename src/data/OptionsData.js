@@ -67,6 +67,13 @@ export const options = [
   { value: "YEARLY", label: "YEARLY" },
 ];
 
+export const tenureDurationOptions = [
+  { value: "DAY", label: "DAY" },
+  { value: "WEEK", label: "WEEK" },
+  { value: "MONTH", label: "MONTH" },
+  { value: "YEAR", label: "YEAR" },
+];
+
 export const empOptions = [
   { value: "true", label: "true" },
   { value: "false", label: "false" },

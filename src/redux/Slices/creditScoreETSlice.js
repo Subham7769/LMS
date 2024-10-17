@@ -88,6 +88,7 @@ export const saveCreditScoreET = createAsyncThunk(
         ruleName: rule.ruleName,
         secondCreditScore: rule.secondCreditScore,
         tenure: rule.tenure,
+        tenureType: rule.tenureType,
       })),
     };
 
@@ -135,6 +136,7 @@ export const AddNewRange = createAsyncThunk(
           ruleName: newRule.ruleName,
           secondCreditScore: newRule.secondCreditScore,
           tenure: newRule.tenure,
+          tenureType: newRule.tenureType,
         })),
       ],
     };
@@ -234,7 +236,9 @@ export const handleDeleteCSET = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE}${creditScoreETId}`,
+        `${
+          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE
+        }${creditScoreETId}`,
         {
           method: "DELETE",
           headers: {
@@ -263,7 +267,9 @@ export const handleDeleteRange = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE_RANGE}${creditScoreETId}/${ruleName}`,
+        `${
+          import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_DELETE_RANGE
+        }${creditScoreETId}/${ruleName}`,
         {
           method: "DELETE",
           headers: {
@@ -312,6 +318,7 @@ const creditScoreETInitialState = {
         ruleName: "0",
         fieldType: "Employer",
         tenureValue: "",
+        tenureType: "",
         dataIndex: "",
         tenure: [],
         tags: [],
@@ -331,6 +338,7 @@ const creditScoreETInitialState = {
         ruleName: "0",
         fieldType: "Employer",
         tenureValue: "",
+        tenureType: "",
         tenure: [],
         tags: [],
       },
@@ -417,6 +425,7 @@ const creditScoreETSlice = createSlice({
       state.creditScoreET.rules[ruleIndex].tags.push({
         index: state.creditScoreET.rules[ruleIndex].tags.length,
         tenureValue: state.creditScoreET.rules[ruleIndex].tenureValue,
+        tenureType: state.creditScoreET.rules[ruleIndex].tenureType,
       });
       state.creditScoreET.rules[ruleIndex].tenure.push(
         state.creditScoreET.rules[ruleIndex].tenureValue
@@ -427,6 +436,7 @@ const creditScoreETSlice = createSlice({
       state.newRangeData.rules[0].tags.push({
         index: state.newRangeData.rules[0].tags.length,
         tenureValue: state.newRangeData.rules[0].tenureValue,
+        tenureType: state.newRangeData.rules[0].tenureType,
       });
       state.newRangeData.rules[0].tenure.push(
         state.newRangeData.rules[0].tenureValue
@@ -499,10 +509,12 @@ const creditScoreETSlice = createSlice({
           state.creditScoreET.rules = action.payload.rules.map((rule) => ({
             ...rule, // Spread existing rule properties
             tenureValue: "",
+            tenureType: rule.tenureType || "MONTH",
             dataIndex: nanoid(),
             tags: rule.tenure.map((tenureValue, index) => ({
               index,
               tenureValue, // Create an object with index and tenure
+              tenureType: rule.tenureType || "MONTH",
             })),
           }));
         } else {

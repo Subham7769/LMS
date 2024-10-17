@@ -1,5 +1,5 @@
 import InputSelect from "../Common/InputSelect/InputSelect";
-import { operatorOptions } from "../../data/OptionsData";
+import { operatorOptions, tenureDurationOptions } from "../../data/OptionsData";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -268,6 +268,9 @@ const CreditScoreET = () => {
           />
         </div>
         <TagInput
+          inputSelectName={"tenureType"}
+          inputSelectLabel={"Tenure Type"}
+          productTypeOptions={tenureDurationOptions}
           formData={newRangeData.rules[0]}
           handleChange={handleChangeNewRangeTenure}
           inputTextName={"tenureValue"}
@@ -326,6 +329,9 @@ const CreditScoreET = () => {
                   />
                 </div>
                 <TagInput
+                  inputSelectName={"tenureType"}
+                  inputSelectLabel={"Tenure Type"}
+                  productTypeOptions={tenureDurationOptions}
                   formData={rule}
                   handleChange={(e) => handleChangeTenure(e, index)}
                   inputTextName={"tenureValue"}
@@ -334,6 +340,7 @@ const CreditScoreET = () => {
                   deleteTag={(tag) => handleDelete(tag, index)}
                   isValidation={true}
                   isIndex={rule?.dataIndex}
+                  orderReverse={true}
                 />
                 <div className="flex gap-4 justify-end items-center mt-1">
                   <Button

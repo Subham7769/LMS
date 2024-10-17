@@ -24,6 +24,7 @@ const TagInput = ({
   isIndex2,
   isValidation3 = false,
   isIndex3,
+  orderReverse = false,
 }) => {
   return (
     <>
@@ -66,40 +67,92 @@ const TagInput = ({
         </div>
       </div>
       <div
-        className={`grid grid-cols-2 ${
-          inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
-        } gap-3 mt-3`}
+        className={`grid grid-cols-2 ${inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
+          } gap-3 mt-3`}
       >
         {formData.tags.map((tag, index) => (
           <div
             key={index}
             className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
           >
-            <div>
-              {
-                tag[
-                  inputSelectName
-                    ? inputSelectName
-                    : inputTextName || inputNumberName
-                ]
-              }
-            </div>
-            {inputNumberName && (inputTextName || inputSelectName) && (
+            <div className="flex-1 flex justify-between align-middle">
               <>
-                <div>|</div>
-                <div>{tag[inputNumberName]}</div>
+                {/* Display inputSelectName and inputTextName, but not inputNumberName */}
+                {inputSelectName && inputTextName && !inputNumberName && (
+                  <>
+                    {orderReverse ? (
+                      <>
+                        <div className="text-xs w-[50%] text-center">{tag[inputTextName]}</div>
+                        <div className="text-xs text-center">|</div>
+                        <div className="text-xs w-[50%] text-center">{tag[inputSelectName]}</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-xs w-[65%] text-left">{tag[inputSelectName]}</div>
+                        <div className="text-xs text-center">|</div>
+                        <div className="text-xs w-[34%] text-right">{tag[inputTextName]}</div>
+                      </>
+                    )}
+                  </>
+                )}
+
+                {/* Display inputSelectName and inputNumberName, but not inputTextName */}
+                {inputSelectName && inputNumberName && !inputTextName && (
+                  <>
+                    {orderReverse ? (
+                      <>
+                        <div className="text-xs w-[50%] text-center">{tag[inputNumberName]}</div>
+                        <div className="text-xs text-center">|</div>
+                        <div className="text-xs w-[50%] text-center">{tag[inputSelectName]}</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-xs w-[65%] text-center">{tag[inputSelectName]}</div>
+                        <div className="text-xs text-center">|</div>
+                        <div className="text-xs w-[34%] text-center">{tag[inputNumberName]}</div>
+                      </>
+                    )}
+                  </>
+                )}
+
+                {/* Display inputTextName and inputNumberName, but not inputSelectName */}
+                {inputTextName && inputNumberName && !inputSelectName && (
+                  <>
+                    {orderReverse ? (
+                      <>
+                        <div className="text-xs w-[50%] text-left">{tag[inputNumberName]}</div>
+                        <div className="text-xs text-center">|</div>
+                        <div className="text-xs w-[50%] text-right">{tag[inputTextName]}</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-xs w-[65%] text-left">{tag[inputTextName]}</div>
+                        <div className="text-xs text-center">|</div>
+                        <div className="text-xs w-[34%] text-right">{tag[inputNumberName]}</div>
+                      </>
+                    )}
+                  </>
+                )}
               </>
-            )}
-            <div>
-              <XCircleIcon
-                onClick={() => deleteTag(tag)}
-                className="block h-5 w-5 cursor-pointer text-gray-900"
-                aria-hidden="true"
-              />
+              {/* Display single items without the | separator */}
+              {!inputTextName && inputSelectName && !inputNumberName && (
+                <div>{tag[inputSelectName]}</div>
+              )}
+              {!inputTextName && !inputSelectName && inputNumberName && (
+                <div>{tag[inputNumberName]}</div>
+              )}
+              {!inputNumberName && inputTextName && !inputSelectName && (
+                <div>{tag[inputTextName]}</div>
+              )}
             </div>
+            <XCircleIcon
+              onClick={() => deleteTag(tag)}
+              className="ml-4 block h-5 w-5 cursor-pointer text-gray-900 hover:text-red-600"
+              aria-hidden="true"
+            />
           </div>
         ))}
-      </div>
+      </div >
     </>
   );
 };
