@@ -18,26 +18,30 @@ export default function Table({
 }) {
   const dispatch = useDispatch();
   const { validationError } = useSelector((state) => state.validation);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
+
+  const tableColumns = [
+    {
+      name: "Min Net Income Bracket",
+      sortKey: "startNetIncomeBracketInSARule",
+    },
+    { name: "Max Net Income Bracket", sortKey: "endNetIncomeBracketInSARule" },
+    { name: "Product Level", sortKey: "productLevel" },
+    { name: "Consumer DBR", sortKey: "consumerDBR" },
+    { name: "GDBR (Without MTG)", sortKey: "gdbrWithoutMTG" },
+    { name: "Employer Retired", sortKey: "employerRetired" },
+    { name: "GDBR (Including MTG)", sortKey: "gdbrWithMTG" },
+  ];
+
+  if (roleName !== "ROLE_VIEWER") {
+    tableColumns.push({ name: "Actions", sortKey: null });
+  }
   return (
     <table className="w-full table-auto">
       <thead className="bg-gray-50">
         <tr>
-          {[
-            {
-              name: "Min Net Income Bracket",
-              sortKey: "startNetIncomeBracketInSARule",
-            },
-            {
-              name: "Max Net Income Bracket",
-              sortKey: "endNetIncomeBracketInSARule",
-            },
-            { name: "Product Level", sortKey: "productLevel" },
-            { name: "Consumer DBR", sortKey: "consumerDBR" },
-            { name: "GDBR (Without MTG)", sortKey: "gdbrWithoutMTG" },
-            { name: "Employer Retired", sortKey: "employerRetired" },
-            { name: "GDBR (Including MTG)", sortKey: "gdbrWithMTG" },
-            { name: "Actions", sortKey: null },
-          ].map((column, idx) => (
+          {tableColumns.map((column, idx) => (
             <th
               key={idx}
               scope="col"
@@ -160,22 +164,26 @@ export default function Table({
                   )}
                 </td>
               ))}
-              <td className="px-4 py-2 text-sm font-medium flex gap-2 justify-center">
-                <div onClick={() => toggleEdit(index)} type="button">
+              {roleName !== "ROLE_VIEWER" ? (
+                <td className="px-4 py-2 text-sm font-medium flex gap-2 justify-center">
+                  <div onClick={() => toggleEdit(index)} type="button">
+                    <Button
+                      buttonIcon={
+                        editingIndex === index ? CheckCircleIcon : PencilIcon
+                      }
+                      // onClick={editingIndex === index ? informUser : informUser1}
+                      circle={true}
+                    />
+                  </div>
                   <Button
-                    buttonIcon={
-                      editingIndex === index ? CheckCircleIcon : PencilIcon
-                    }
-                    // onClick={editingIndex === index ? informUser : informUser1}
+                    buttonIcon={TrashIcon}
+                    onClick={() => handleDelete(index)}
                     circle={true}
                   />
-                </div>
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => handleDelete(index)}
-                  circle={true}
-                />
-              </td>
+                </td>
+              ) : (
+                ""
+              )}
             </tr>
           ))
         )}

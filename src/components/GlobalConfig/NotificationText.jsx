@@ -26,6 +26,8 @@ const NotificationText = () => {
   const { notificationInputList, loading, error } = useSelector(
     (state) => state.globalConfig
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchNotificationData());
@@ -118,7 +120,7 @@ const NotificationText = () => {
                 }
               />
             </div>
-            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
+            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5 items-end">
               <InputTextarea
                 labelName="Notification Message En"
                 rowCount={2}
@@ -166,14 +168,18 @@ const NotificationText = () => {
                 disabled
                 placeHolder="2 days before the upcoming installment"
               />
-              <div>
-                <Button
-                  buttonIcon={CheckCircleIcon}
-                  buttonName={""}
-                  onClick={() => handleSave(notificationData?.id, index)}
-                  rectangle={true}
-                />
-              </div>
+              {roleName !== "ROLE_VIEWER" ? (
+                <div>
+                  <Button
+                    buttonIcon={CheckCircleIcon}
+                    buttonName={""}
+                    onClick={() => handleSave(notificationData?.id, index)}
+                    rectangle={true}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </ContainerTile>

@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { FaInfoCircle } from "react-icons/fa";
-import {
-  PencilIcon,
-  CheckCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
-import DynamicName from "../Common/DynamicName/DynamicName";
+import { PencilIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
@@ -33,6 +28,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -43,6 +39,8 @@ const RecoveryConfig = () => {
     (state) => state.recovery
   );
   const [isEditingEquation, setIsEditingEquation] = useState(false);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleChangeWrapper = (e) => {
     const { name, value } = e.target;
@@ -138,13 +136,12 @@ const RecoveryConfig = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex items-center justify-between mb-5">
-        <DynamicName initialName={itemName} onSave={handleNameUpdate} />
-        <div className="flex items-center gap-4">
-          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button buttonIcon={TrashIcon} onClick={handleDelete} circle={true} />
-        </div>
-      </div>
+      <DynamicHeader
+        itemName={itemName}
+        handleNameUpdate={handleNameUpdate}
+        handleClone={handleClone}
+        handleDelete={handleDelete}
+      />
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -220,18 +217,22 @@ const RecoveryConfig = () => {
                   </ul>
                 </div>
 
-                {isEditingEquation ? (
-                  <Button
-                    buttonIcon={CheckCircleIcon}
-                    onClick={saveSettings}
-                    circle={true}
-                  />
+                {roleName !== "ROLE_VIEWER" ? (
+                  isEditingEquation ? (
+                    <Button
+                      buttonIcon={CheckCircleIcon}
+                      onClick={saveSettings}
+                      circle={true}
+                    />
+                  ) : (
+                    <Button
+                      buttonIcon={PencilIcon}
+                      onClick={toggleEditEquation}
+                      circle={true}
+                    />
+                  )
                 ) : (
-                  <Button
-                    buttonIcon={PencilIcon}
-                    onClick={toggleEditEquation}
-                    circle={true}
-                  />
+                  ""
                 )}
               </div>
             </div>
@@ -241,14 +242,18 @@ const RecoveryConfig = () => {
               </p>
             )}
           </div>
-          <div className="text-right mt-5">
-            <Button
-              buttonIcon={CheckCircleIcon}
-              buttonName={"Update"}
-              onClick={handleUpdate}
-              rectangle={true}
-            />
-          </div>
+          {roleName !== "ROLE_VIEWER" ? (
+            <div className="text-right mt-5">
+              <Button
+                buttonIcon={CheckCircleIcon}
+                buttonName={"Update"}
+                onClick={handleUpdate}
+                rectangle={true}
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </ContainerTile>
     </>

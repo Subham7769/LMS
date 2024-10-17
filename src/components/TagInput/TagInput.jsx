@@ -4,6 +4,7 @@ import Button from "../Common/Button/Button";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
+import { useSelector } from "react-redux";
 
 const TagInput = ({
   inputSelectName,
@@ -25,6 +26,8 @@ const TagInput = ({
   isValidation3 = false,
   isIndex3,
 }) => {
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
@@ -61,9 +64,13 @@ const TagInput = ({
             isIndex={isIndex2}
           />
         )}
-        <div className="">
-          <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
-        </div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="">
+            <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div
         className={`grid grid-cols-2 ${
@@ -90,13 +97,17 @@ const TagInput = ({
                 <div>{tag[inputNumberName]}</div>
               </>
             )}
-            <div>
-              <XCircleIcon
-                onClick={() => deleteTag(tag)}
-                className="block h-5 w-5 cursor-pointer text-gray-900"
-                aria-hidden="true"
-              />
-            </div>
+            {roleName !== "ROLE_VIEWER" ? (
+              <div>
+                <XCircleIcon
+                  onClick={() => deleteTag(tag)}
+                  className="block h-5 w-5 cursor-pointer text-gray-900"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         ))}
       </div>

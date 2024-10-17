@@ -1,16 +1,34 @@
 import { useDispatch } from "react-redux";
-import { deleteRuleById, removeRule, updateStatus, fetchDynamicRacDetails, fetchOptionList, updateRuleNumberCriteria, handleChangeStringRule } from '../../redux/Slices/DynamicRacSlice';
+import {
+  deleteRuleById,
+  removeRule,
+  updateStatus,
+  fetchDynamicRacDetails,
+  fetchOptionList,
+  updateRuleNumberCriteria,
+  handleChangeStringRule,
+} from "../../redux/Slices/DynamicRacSlice";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
-import { operatorOptions } from "../../data/OptionsData"
-import { TrashIcon, XCircleIcon, PlusCircleIcon, CheckCircleIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { operatorOptions } from "../../data/OptionsData";
+import {
+  TrashIcon,
+  XCircleIcon,
+  PlusCircleIcon,
+  CheckCircleIcon,
+  ChevronUpDownIcon,
+} from "@heroicons/react/20/solid";
 
-
-const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId }) => {
+const RuleComponent = ({
+  rule,
+  racId,
+  dynamicRacRuleId,
+  isEditorMode,
+  sectionId,
+}) => {
   const dispatch = useDispatch();
   const roleName = localStorage.getItem("roleName");
-
 
   const handleInputChange = (inputName, value, index) => {
     const updates = {};
@@ -39,7 +57,7 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
     try {
       // First dispatch: removeRule
       dispatch(removeRule({ sectionId, dynamicRacRuleId }));
-      console.log("removeRule")
+      console.log("removeRule");
 
       // Second dispatch: deleteRuleById
       await dispatch(deleteRuleById(dynamicRacRuleId)).unwrap();
@@ -47,12 +65,11 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
 
       // Fourth dispatch: fetchOptionList
       await dispatch(fetchOptionList(racId)).unwrap();
-      console.log("fetchOptionList")
+      console.log("fetchOptionList");
 
       // Third dispatch: fetchDynamicRacDetails
       await dispatch(fetchDynamicRacDetails(racId)).unwrap();
-      console.log("fetchDynamicRacDetails")
-
+      console.log("fetchDynamicRacDetails");
     } catch (error) {
       console.error("Error while performing operations: ", error);
     }
@@ -66,15 +83,14 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
   };
 
   const handleStatusChange = async ({ dynamicRacRuleId, status }) => {
-
     await dispatch(updateStatus({ dynamicRacRuleId, status })).unwrap();
 
     await dispatch(fetchOptionList(racId)).unwrap();
-    console.log("fetchOptionList")
+    console.log("fetchOptionList");
 
     await dispatch(fetchDynamicRacDetails(racId)).unwrap();
-    console.log("fetchDynamicRacDetails")
-  }
+    console.log("fetchDynamicRacDetails");
+  };
 
   switch (rule?.fieldType) {
     case "NUMBER":
@@ -84,8 +100,14 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
             <ChevronUpDownIcon className="h-5 w-5 mt-4 hover:text-indigo-500 hover:cursor-pointer hover:bg-slate-200" />
           )}
           <div className="py-2 w-full">
-            <label className={`block text-gray-700" px-1 text-[14px]`}>{rule.name}</label>
-            <div className={`border-2 rounded-lg py-2 ${isEditorMode && 'bg-gray-100'}`}>
+            <label className={`block text-gray-700" px-1 text-[14px]`}>
+              {rule.name}
+            </label>
+            <div
+              className={`border-2 rounded-lg py-2 ${
+                isEditorMode && "bg-gray-100"
+              }`}
+            >
               {rule.numberCriteriaRangeList.map((range, index) => (
                 <div key={index} className="flex-1 grid grid-cols-4 gap-2">
                   <InputSelect
@@ -96,7 +118,7 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
                     onChange={(e) =>
                       handleInputChange("firstOperator", e.target.value, index)
                     }
-                    disabled={isEditorMode || rule?.status === 'REJECTED'}
+                    disabled={isEditorMode || rule?.status === "REJECTED"}
                     isValidation={true}
                     isSectionId={sectionId}
                     isRuleId={dynamicRacRuleId}
@@ -113,7 +135,7 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
                       handleInputChange("minimum", e.target.value, index)
                     }
                     placeholder="0"
-                    disabled={isEditorMode || rule?.status === 'REJECTED'}
+                    disabled={isEditorMode || rule?.status === "REJECTED"}
                     isValidation={true}
                     isSectionId={sectionId}
                     isRuleId={dynamicRacRuleId}
@@ -127,7 +149,7 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
                     onChange={(e) =>
                       handleInputChange("secondOperator", e.target.value, index)
                     }
-                    disabled={isEditorMode || rule?.status === 'REJECTED'}
+                    disabled={isEditorMode || rule?.status === "REJECTED"}
                     isValidation={true}
                     isSectionId={sectionId}
                     isRuleId={dynamicRacRuleId}
@@ -144,7 +166,7 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
                       handleInputChange("maximum", e.target.value, index)
                     }
                     placeholder="0"
-                    disabled={isEditorMode || rule?.status === 'REJECTED'}
+                    disabled={isEditorMode || rule?.status === "REJECTED"}
                     isValidation={true}
                     isSectionId={sectionId}
                     isRuleId={dynamicRacRuleId}
@@ -155,12 +177,16 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
             </div>
           </div>
 
-          {
-            roleName !== 'ROLE_MAKER_ADMIN' &&
-            (isEditorMode && rule?.status === 'REJECTED' && roleName !== 'ROLE_CHECKER_ADMIN' && (
+          {roleName !== "ROLE_MAKER_ADMIN" &&
+            roleName !== "ROLE_VIEWER" &&
+            isEditorMode &&
+            rule?.status === "REJECTED" &&
+            roleName !== "ROLE_CHECKER_ADMIN" && (
               <div className="relative group">
                 <PlusCircleIcon
-                  onClick={() => handleStatusChange({ dynamicRacRuleId, status: "CREATED" })}
+                  onClick={() =>
+                    handleStatusChange({ dynamicRacRuleId, status: "CREATED" })
+                  }
                   className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
                 />
 
@@ -169,38 +195,50 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
                   CREATE
                 </div>
               </div>
-            ))
-          }
+            )}
 
-          {roleName !== 'ROLE_MAKER_ADMIN' && (isEditorMode && rule?.status === 'CREATED' && (
-            <>
-              <div className="relative group">
-                <CheckCircleIcon
-                  onClick={() => handleStatusChange({ dynamicRacRuleId, status: "APPROVED" })}
-                  className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
-                />
+          {roleName !== "ROLE_MAKER_ADMIN" &&
+            roleName !== "ROLE_VIEWER" &&
+            isEditorMode &&
+            rule?.status === "CREATED" && (
+              <>
+                <div className="relative group">
+                  <CheckCircleIcon
+                    onClick={() =>
+                      handleStatusChange({
+                        dynamicRacRuleId,
+                        status: "APPROVED",
+                      })
+                    }
+                    className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
+                  />
 
-                {/* Tooltip */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                  Approve
+                  {/* Tooltip */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
+                    Approve
+                  </div>
                 </div>
-              </div>
 
-              <div className="relative group">
-                <XCircleIcon
-                  onClick={() => handleStatusChange({ dynamicRacRuleId, status: "REJECTED" })}
-                  className="h-5 w-5 mt-4 text-red-600 hover:text-red-800 hover:cursor-pointer"
-                />
+                <div className="relative group">
+                  <XCircleIcon
+                    onClick={() =>
+                      handleStatusChange({
+                        dynamicRacRuleId,
+                        status: "REJECTED",
+                      })
+                    }
+                    className="h-5 w-5 mt-4 text-red-600 hover:text-red-800 hover:cursor-pointer"
+                  />
 
-                {/* Tooltip */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-red-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                  Reject
+                  {/* Tooltip */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-red-600 text-white text-xs px-2 py-1 rounded shadow-lg">
+                    Reject
+                  </div>
                 </div>
-              </div>
-            </>
-          ))}
+              </>
+            )}
 
-          {isEditorMode && (
+          {isEditorMode && roleName !== "ROLE_VIEWER" && (
             <TrashIcon
               onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId)}
               className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer"
@@ -223,15 +261,19 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
             setTag={(newValues) => handleStringInputChange(newValues)}
             sectionId={sectionId}
             dynamicRacRuleId={dynamicRacRuleId}
-            disabled={isEditorMode || rule?.status === 'REJECTED'}
+            disabled={isEditorMode || rule?.status === "REJECTED"}
             isValidation={true}
           />
-          {
-            roleName !== 'ROLE_MAKER_ADMIN' &&
-            (isEditorMode && rule?.status === 'REJECTED' && roleName !== 'ROLE_CHECKER_ADMIN' && (
+          {roleName !== "ROLE_MAKER_ADMIN" &&
+            roleName !== "ROLE_VIEWER" &&
+            isEditorMode &&
+            rule?.status === "REJECTED" &&
+            roleName !== "ROLE_CHECKER_ADMIN" && (
               <div className="relative group">
                 <PlusCircleIcon
-                  onClick={() => handleStatusChange({ dynamicRacRuleId, status: "CREATED" })}
+                  onClick={() =>
+                    handleStatusChange({ dynamicRacRuleId, status: "CREATED" })
+                  }
                   className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
                 />
 
@@ -240,38 +282,50 @@ const RuleComponent = ({ rule, racId, dynamicRacRuleId, isEditorMode, sectionId 
                   CREATE
                 </div>
               </div>
-            ))
-          }
+            )}
 
-          {roleName !== 'ROLE_MAKER_ADMIN' && (isEditorMode && rule?.status === 'CREATED' && (
-            <>
-              <div className="relative group">
-                <CheckCircleIcon
-                  onClick={() => handleStatusChange({ dynamicRacRuleId, status: "APPROVED" })}
-                  className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
-                />
+          {roleName !== "ROLE_MAKER_ADMIN" &&
+            roleName !== "ROLE_VIEWER" &&
+            isEditorMode &&
+            rule?.status === "CREATED" && (
+              <>
+                <div className="relative group">
+                  <CheckCircleIcon
+                    onClick={() =>
+                      handleStatusChange({
+                        dynamicRacRuleId,
+                        status: "APPROVED",
+                      })
+                    }
+                    className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
+                  />
 
-                {/* Tooltip */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                  Approve
+                  {/* Tooltip */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
+                    Approve
+                  </div>
                 </div>
-              </div>
 
-              <div className="relative group">
-                <XCircleIcon
-                  onClick={() => handleStatusChange({ dynamicRacRuleId, status: "REJECTED" })}
-                  className="h-5 w-5 mt-4 text-red-600 hover:text-red-800 hover:cursor-pointer"
-                />
+                <div className="relative group">
+                  <XCircleIcon
+                    onClick={() =>
+                      handleStatusChange({
+                        dynamicRacRuleId,
+                        status: "REJECTED",
+                      })
+                    }
+                    className="h-5 w-5 mt-4 text-red-600 hover:text-red-800 hover:cursor-pointer"
+                  />
 
-                {/* Tooltip */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-red-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                  Reject
+                  {/* Tooltip */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-red-600 text-white text-xs px-2 py-1 rounded shadow-lg">
+                    Reject
+                  </div>
                 </div>
-              </div>
-            </>
-          ))}
+              </>
+            )}
 
-          {isEditorMode && (
+          {isEditorMode && roleName !== "ROLE_VIEWER" && (
             <TrashIcon
               onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId)}
               className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer"

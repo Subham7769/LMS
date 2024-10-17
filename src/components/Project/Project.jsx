@@ -23,7 +23,6 @@ import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
-import DynamicName from "../Common/DynamicName/DynamicName";
 import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
 import {
   fetchData,
@@ -40,6 +39,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const Project = () => {
   const [clientIdsString, setClientIdsString] = useState("DarwinClient");
@@ -48,7 +48,8 @@ const Project = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { projectData, loading, error } = useSelector((state) => state.project);
-  const { validationError } = useSelector((state) => state.validation);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchData(projectId));
@@ -122,23 +123,16 @@ const Project = () => {
     <p>Error: {error}</p>;
   }
 
-  console.log(validationError);
-
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex justify-between items-center mb-3">
-        <DynamicName
-          initialName={projectData?.name}
-          onSave={updateName}
-          editable={false}
-        />
-        <Button
-          buttonIcon={TrashIcon}
-          onClick={() => handleDelete()}
-          circle={true}
-        />
-      </div>
+      <DynamicHeader
+        itemName={projectData?.name}
+        isEditable={false}
+        handleNameUpdate={updateName}
+        isClonable={false}
+        handleDelete={handleDelete}
+      />
       <form className="flex flex-col gap-8">
         <ContainerTile>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -591,14 +585,18 @@ const Project = () => {
                   })()} */}
           </div>
         </ContainerTile>
-        <div className="flex items-center justify-end gap-4 mt-4">
-          <Button
-            buttonName={"Update"}
-            buttonIcon={CheckCircleIcon}
-            onClick={handleUpdate}
-            rectangle={true}
-          />
-        </div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="flex items-center justify-end gap-4 mt-4">
+            <Button
+              buttonName={"Update"}
+              buttonIcon={CheckCircleIcon}
+              onClick={handleUpdate}
+              rectangle={true}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </form>
     </>
   );

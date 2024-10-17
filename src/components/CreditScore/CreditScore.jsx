@@ -42,6 +42,8 @@ const CreditScore = () => {
   const { creditScoreData, loading } = useSelector(
     (state) => state.creditScore
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchCreditScore(creditScoreId))
@@ -51,12 +53,6 @@ const CreditScore = () => {
           navigate("/login");
         }
       });
-
-    // const initialValidationError = {};
-    // fields.forEach((field) => {
-    //   initialValidationError[field] = false; // Set all fields to false initially
-    // });
-    // dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -404,14 +400,18 @@ const CreditScore = () => {
           </div>
         </div>
       </div>
-      <div className="text-right mt-8">
-        <Button
-          buttonIcon={CheckCircleIcon}
-          buttonName={"Update"}
-          onClick={handleAddFields}
-          rectangle={true}
-        />
-      </div>
+      {roleName !== "ROLE_VIEWER" ? (
+        <div className="text-right mt-8">
+          <Button
+            buttonIcon={CheckCircleIcon}
+            buttonName={"Update"}
+            onClick={handleAddFields}
+            rectangle={true}
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 };

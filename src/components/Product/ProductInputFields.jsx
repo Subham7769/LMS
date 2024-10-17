@@ -63,6 +63,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
 
   const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   // Entries State
   const [interestEligibleTenure, setInterestEligibleTenure] = useState({
@@ -311,57 +313,61 @@ const ProductInputFields = ({ productData, handleChange }) => {
           )}
         </div>
       </div>
-      <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
-        <InputText
-          labelName="Simple Interest"
-          inputName="interestRate"
-          inputValue={interestEligibleTenure?.interestRate}
-          onChange={handleChangeInterestEligibleTenure}
-          placeHolder="2%"
-        />
-        <InputSelect
-          labelName="Per"
-          inputOptions={options}
-          inputName="interestPeriodType"
-          inputValue={interestEligibleTenure?.interestPeriodType}
-          onChange={handleChangeInterestEligibleTenure}
-        />
-        <InputNumber
-          labelName="Tenure"
-          inputName="loanTenure"
-          inputValue={interestEligibleTenure?.loanTenure}
-          onChange={handleChangeInterestEligibleTenure}
-          placeHolder="3"
-        />
-        <InputSelect
-          labelName="Tenure Type"
-          inputValue={interestEligibleTenure?.loanTenureType}
-          inputOptions={tenureTypeOptions}
-          inputName="loanTenureType"
-          onChange={handleChangeInterestEligibleTenure}
-        />
-        <InputNumber
-          labelName="Repayment Tenure"
-          inputName="repaymentTenure"
-          inputValue={interestEligibleTenure?.repaymentTenure}
-          onChange={handleChangeInterestEligibleTenure}
-          placeHolder="0"
-        />
-        <InputSelect
-          labelName="Repayment Tenure Type"
-          inputName="repaymentTenureType"
-          inputOptions={tenureTypeOptions}
-          inputValue={interestEligibleTenure?.repaymentTenureType}
-          onChange={handleChangeInterestEligibleTenure}
-        />
-        <div className="flex justify-center align-middle">
-          <Button
-            buttonIcon={PlusIcon}
-            onClick={handleAddFields}
-            circle={true}
+      {roleName !== "ROLE_VIEWER" ? (
+        <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
+          <InputText
+            labelName="Simple Interest"
+            inputName="interestRate"
+            inputValue={interestEligibleTenure?.interestRate}
+            onChange={handleChangeInterestEligibleTenure}
+            placeHolder="2%"
           />
+          <InputSelect
+            labelName="Per"
+            inputOptions={options}
+            inputName="interestPeriodType"
+            inputValue={interestEligibleTenure?.interestPeriodType}
+            onChange={handleChangeInterestEligibleTenure}
+          />
+          <InputNumber
+            labelName="Tenure"
+            inputName="loanTenure"
+            inputValue={interestEligibleTenure?.loanTenure}
+            onChange={handleChangeInterestEligibleTenure}
+            placeHolder="3"
+          />
+          <InputSelect
+            labelName="Tenure Type"
+            inputValue={interestEligibleTenure?.loanTenureType}
+            inputOptions={tenureTypeOptions}
+            inputName="loanTenureType"
+            onChange={handleChangeInterestEligibleTenure}
+          />
+          <InputNumber
+            labelName="Repayment Tenure"
+            inputName="repaymentTenure"
+            inputValue={interestEligibleTenure?.repaymentTenure}
+            onChange={handleChangeInterestEligibleTenure}
+            placeHolder="0"
+          />
+          <InputSelect
+            labelName="Repayment Tenure Type"
+            inputName="repaymentTenureType"
+            inputOptions={tenureTypeOptions}
+            inputValue={interestEligibleTenure?.repaymentTenureType}
+            onChange={handleChangeInterestEligibleTenure}
+          />
+          <div className="flex justify-center align-middle">
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={handleAddFields}
+              circle={true}
+            />
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
     </>
   );
 };

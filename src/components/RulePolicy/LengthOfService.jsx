@@ -46,6 +46,8 @@ const LengthofService = () => {
   const { LOSInputList, lengthOfService } = useSelector(
     (state) => state.rulePolicy
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -231,58 +233,63 @@ const LengthofService = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
-        <div className="text-lg">Length of Service</div>
-        <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
-          <SelectAndNumber
-            labelName={"Minimum Length Of Service"}
-            inputSelectName={"firstLengthOfServiceOperator"}
-            inputSelectValue={
-              lengthOfService?.operators?.firstLengthOfServiceOperator
-            }
-            inputSelectOptions={operatorOptions}
-            onChangeSelect={handleRuleChange}
-            inputNumberName={"firstLengthOfService"}
-            inputNumberValue={
-              lengthOfService?.lengthOfServiceRules[0]?.firstLengthOfService
-            }
-            onChangeNumber={handleRuleChange}
-            placeHolder={"0.5"}
-            isValidation={true}
-            isValidation1={true}
-          />
-          <SelectAndNumber
-            labelName={"Maximum Length Of Service"}
-            inputSelectName={"secondLengthOfServiceOperator"}
-            inputSelectValue={
-              lengthOfService?.operators?.secondLengthOfServiceOperator
-            }
-            inputSelectOptions={operatorOptions}
-            onChangeSelect={handleRuleChange}
-            inputNumberName={"secondLengthOfService"}
-            inputNumberValue={
-              lengthOfService?.lengthOfServiceRules[0]?.secondLengthOfService
-            }
-            onChangeNumber={handleRuleChange}
-            placeHolder={"0.5"}
-            isValidation={true}
-            isValidation1={true}
-          />
-          <InputNumber
-            labelName={"Point"}
-            inputName={"point"}
-            inputValue={lengthOfService?.lengthOfServiceRules[0]?.point}
-            onChange={handleRuleChange}
-            placeHolder={"4000"}
-            isValidation={true}
-          />
-          <div>
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={handleAddFields}
-              circle={true}
+        <div className="text-lg mb-4">Length of Service</div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
+            <SelectAndNumber
+              labelName={"Minimum Length Of Service"}
+              inputSelectName={"firstLengthOfServiceOperator"}
+              inputSelectValue={
+                lengthOfService?.operators?.firstLengthOfServiceOperator
+              }
+              inputSelectOptions={operatorOptions}
+              onChangeSelect={handleRuleChange}
+              inputNumberName={"firstLengthOfService"}
+              inputNumberValue={
+                lengthOfService?.lengthOfServiceRules[0]?.firstLengthOfService
+              }
+              onChangeNumber={handleRuleChange}
+              placeHolder={"0.5"}
+              isValidation={true}
+              isValidation1={true}
             />
+            <SelectAndNumber
+              labelName={"Maximum Length Of Service"}
+              inputSelectName={"secondLengthOfServiceOperator"}
+              inputSelectValue={
+                lengthOfService?.operators?.secondLengthOfServiceOperator
+              }
+              inputSelectOptions={operatorOptions}
+              onChangeSelect={handleRuleChange}
+              inputNumberName={"secondLengthOfService"}
+              inputNumberValue={
+                lengthOfService?.lengthOfServiceRules[0]?.secondLengthOfService
+              }
+              onChangeNumber={handleRuleChange}
+              placeHolder={"0.5"}
+              isValidation={true}
+              isValidation1={true}
+            />
+            <InputNumber
+              labelName={"Point"}
+              inputName={"point"}
+              inputValue={lengthOfService?.lengthOfServiceRules[0]?.point}
+              onChange={handleRuleChange}
+              placeHolder={"4000"}
+              isValidation={true}
+            />
+            <div>
+              <Button
+                buttonIcon={PlusIcon}
+                onClick={handleAddFields}
+                circle={true}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
+
         <table className="w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -309,12 +316,16 @@ const LengthofService = () => {
                   Point {getSortIcon("point")}
                 </div>
               </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Actions
-              </th>
+              {roleName !== "ROLE_VIEWER" ? (
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              ) : (
+                ""
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -407,30 +418,37 @@ const LengthofService = () => {
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                    <button onClick={() => toggleEdit(index)} type="button">
-                      {editingIndex === index ? (
-                        <div
-                          // onClick={handleSave}
-                          className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                          <CheckCircleIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                          <PencilIcon className="h-5 w-5" aria-hidden="true" />
-                        </div>
-                      )}
-                    </button>
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() => handleDelete(item.ruleName)}
-                      circle={true}
-                    />
-                  </td>
+                  {roleName !== "ROLE_VIEWER" ? (
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                      <button onClick={() => toggleEdit(index)} type="button">
+                        {editingIndex === index ? (
+                          <div
+                            // onClick={handleSave}
+                            className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                          >
+                            <CheckCircleIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <PencilIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </div>
+                        )}
+                      </button>
+                      <Button
+                        buttonIcon={TrashIcon}
+                        onClick={() => handleDelete(item.ruleName)}
+                        circle={true}
+                      />
+                    </td>
+                  ) : (
+                    ""
+                  )}
                 </tr>
               ))
             )}

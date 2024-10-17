@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DynamicName from "../Common/DynamicName/DynamicName";
-import { TrashIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams } from "react-router-dom";
 import RulePolicy from "./RulePolicy";
 import CloneModal from "../Common/CloneModal/CloneModal";
-import Button from "../Common/Button/Button";
 import { fetchRulePolicyData } from "../../redux/Slices/sidebarSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,6 +10,7 @@ import {
   fetchName,
   updateRulePolicyName,
 } from "../../redux/Slices/rulePolicySlice";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const NewRulePolicy = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,17 +73,12 @@ const NewRulePolicy = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <DynamicName initialName={itemName} onSave={handleUpdateRPName} />
-        <div className="flex gap-6">
-          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={() => handleDelete(rulePolicyId)}
-            circle={true}
-          />
-        </div>
-      </div>
+      <DynamicHeader
+        itemName={itemName}
+        handleNameUpdate={handleUpdateRPName}
+        handleClone={handleClone}
+        handleDelete={() => handleDelete(rulePolicyId)}
+      />
       <div className="flex flex-col gap-8 mt-4">
         <CloneModal
           isOpen={isModalOpen}

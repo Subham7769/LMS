@@ -11,6 +11,7 @@ import BG5 from "../../assets/image/6.jpg";
 
 import { setMenus } from "../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
+import { setUserData } from "../../redux/Slices/authSlice";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState("Login");
@@ -26,9 +27,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-
-  }, [])
+  useEffect(() => {}, []);
   // Function to handle login
   const login = (username, password) => {
     setButtonText("Validating User");
@@ -58,8 +57,9 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data?.roles[0]?.name)
-        dispatch(setMenus({ roleName: data?.roles[0]?.name }))
+        console.log(data?.roles[0]?.name);
+        dispatch(setUserData(data));
+        dispatch(setMenus({ roleName: data?.roles[0]?.name }));
         setButtonText("Validated!");
         console.log("Login Successful:", data);
         localStorage.setItem("roleName", data?.roles[0]?.name);
@@ -67,6 +67,10 @@ const Login = () => {
         setTimeout(() => {
           switch (data?.roles[0]?.name) {
             case "ROLE_SUPERADMIN":
+              navigate("/");
+              break;
+
+            case "ROLE_VIEWER":
               navigate("/");
               break;
 
@@ -110,7 +114,6 @@ const Login = () => {
               navigate("/");
               break;
           }
-
         }, 0);
       })
       .catch((error) => {
@@ -197,7 +200,8 @@ const Login = () => {
     pauseOnHover: false,
     beforeChange: (current, next) => setImageIndex(next),
   };
-  const InputStyle = "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
+  const InputStyle =
+    "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-200">
@@ -220,7 +224,11 @@ const Login = () => {
 
       <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-8 max-sm:w-full md:w-full lg:w-1/2 max-w-md mx-auto">
         <h2 className="text-2xl font-bold text-center mb-6">
-          {isSignup === "Login" ? "Welcome Back" : isSignup === "Signup" ? "Create an Account" : "Reset Your Password"}
+          {isSignup === "Login"
+            ? "Welcome Back"
+            : isSignup === "Signup"
+            ? "Create an Account"
+            : "Reset Your Password"}
         </h2>
         <form>
           {isSignup === "Signup" && (
@@ -334,9 +342,7 @@ const Login = () => {
             </>
           )}
           {errorMsg && (
-            <div className="mb-4 text-red-500 text-sm">
-              {errorMsg}
-            </div>
+            <div className="mb-4 text-red-500 text-sm">{errorMsg}</div>
           )}
           <button
             type="button"
@@ -344,7 +350,7 @@ const Login = () => {
               if (isSignup === "Login") {
                 login(username, password);
               } else if (isSignup === "Signup") {
-                const fullName = document.getElementById('fullName').value;
+                const fullName = document.getElementById("fullName").value;
                 signup(username, password, fullName);
               } else if (isSignup === "Forget Password") {
                 resetPassword(email, newPassword, confirmPassword);
@@ -352,9 +358,15 @@ const Login = () => {
             }}
             className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            {(isSignup === "Login" && buttonText !== "Validating User") && "Login"}
-            {(isSignup === "Signup" && buttonText !== "Creating User") && "Create an Account"}
-            {(isSignup === "Forget Password" && buttonText !== "Setting up Password") && "Set New Password"}
+            {isSignup === "Login" &&
+              buttonText !== "Validating User" &&
+              "Login"}
+            {isSignup === "Signup" &&
+              buttonText !== "Creating User" &&
+              "Create an Account"}
+            {isSignup === "Forget Password" &&
+              buttonText !== "Setting up Password" &&
+              "Set New Password"}
             {isSignup === "Login" && buttonText === "Validating User" && (
               <>
                 {buttonText}

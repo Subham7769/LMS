@@ -52,6 +52,8 @@ const RiskBasedPricing = () => {
     useSelector((state) => state.rulePolicy);
   const [editingIndex, setEditingIndex] = useState(null);
   const itemsPerPage = 5;
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleRiskBasedPricingChange = (e) => {
     const { name, value } = e.target;
@@ -241,73 +243,77 @@ const RiskBasedPricing = () => {
   return (
     <>
       <ContainerTile>
-        <div className="text-lg">Risk Based Pricing</div>
-        <div className="grid grid-cols-5 gap-8 my-5 items-end">
-          <SelectAndNumber
-            labelName={"Minimum Risk Based Pricing"}
-            inputSelectName={"firstRiskBasedPricingOperator"}
-            inputSelectValue={
-              riskBasedPricingInput?.operators?.firstRiskBasedPricingOperator
-            }
-            inputSelectOptions={operatorOptions}
-            onChangeSelect={handleRiskBasedPricingChange}
-            inputNumberName={"firstRiskBasedPricing"}
-            inputNumberValue={
-              riskBasedPricingInput?.riskBasedPricingRules[0]
-                ?.firstRiskBasedPricing
-            }
-            onChangeNumber={handleRiskBasedPricingChange}
-            placeHolder={"0.5"}
-            isValidation={true}
-            isValidation1={true}
-          />
-          <SelectAndNumber
-            labelName={"Maximum Risk Based Pricing"}
-            inputSelectName={"secondRiskBasedPricingOperator"}
-            inputSelectValue={
-              riskBasedPricingInput?.operators?.secondRiskBasedPricingOperator
-            }
-            inputSelectOptions={operatorOptions}
-            onChangeSelect={handleRiskBasedPricingChange}
-            inputNumberName={"secondRiskBasedPricing"}
-            inputNumberValue={
-              riskBasedPricingInput?.riskBasedPricingRules[0]
-                ?.secondRiskBasedPricing
-            }
-            onChangeNumber={handleRiskBasedPricingChange}
-            placeHolder={"0.5"}
-            isValidation={true}
-            isValidation1={true}
-          />
-          <InputNumber
-            labelName={"Simple Interest"}
-            inputName={"interestRate"}
-            inputValue={
-              riskBasedPricingInput?.riskBasedPricingRules[0]?.interestRate
-            }
-            onChange={handleRiskBasedPricingChange}
-            placeHolder={"4000"}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName={"PER"}
-            inputOptions={options}
-            inputName={"interestPeriodType"}
-            inputValue={
-              riskBasedPricingInput?.riskBasedPricingRules[0]
-                ?.interestPeriodType
-            }
-            onChange={handleRiskBasedPricingChange}
-            isValidation={true}
-          />
-          <div>
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={handleAddFieldsRBP}
-              circle={true}
+        <div className="text-lg mb-4">Risk Based Pricing</div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="grid grid-cols-5 gap-8 my-5 items-end">
+            <SelectAndNumber
+              labelName={"Minimum Risk Based Pricing"}
+              inputSelectName={"firstRiskBasedPricingOperator"}
+              inputSelectValue={
+                riskBasedPricingInput?.operators?.firstRiskBasedPricingOperator
+              }
+              inputSelectOptions={operatorOptions}
+              onChangeSelect={handleRiskBasedPricingChange}
+              inputNumberName={"firstRiskBasedPricing"}
+              inputNumberValue={
+                riskBasedPricingInput?.riskBasedPricingRules[0]
+                  ?.firstRiskBasedPricing
+              }
+              onChangeNumber={handleRiskBasedPricingChange}
+              placeHolder={"0.5"}
+              isValidation={true}
+              isValidation1={true}
             />
+            <SelectAndNumber
+              labelName={"Maximum Risk Based Pricing"}
+              inputSelectName={"secondRiskBasedPricingOperator"}
+              inputSelectValue={
+                riskBasedPricingInput?.operators?.secondRiskBasedPricingOperator
+              }
+              inputSelectOptions={operatorOptions}
+              onChangeSelect={handleRiskBasedPricingChange}
+              inputNumberName={"secondRiskBasedPricing"}
+              inputNumberValue={
+                riskBasedPricingInput?.riskBasedPricingRules[0]
+                  ?.secondRiskBasedPricing
+              }
+              onChangeNumber={handleRiskBasedPricingChange}
+              placeHolder={"0.5"}
+              isValidation={true}
+              isValidation1={true}
+            />
+            <InputNumber
+              labelName={"Simple Interest"}
+              inputName={"interestRate"}
+              inputValue={
+                riskBasedPricingInput?.riskBasedPricingRules[0]?.interestRate
+              }
+              onChange={handleRiskBasedPricingChange}
+              placeHolder={"4000"}
+              isValidation={true}
+            />
+            <InputSelect
+              labelName={"PER"}
+              inputOptions={options}
+              inputName={"interestPeriodType"}
+              inputValue={
+                riskBasedPricingInput?.riskBasedPricingRules[0]
+                  ?.interestPeriodType
+              }
+              onChange={handleRiskBasedPricingChange}
+              isValidation={true}
+            />
+            <div>
+              <Button
+                buttonIcon={PlusIcon}
+                onClick={handleAddFieldsRBP}
+                circle={true}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
         <table className="w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -339,12 +345,16 @@ const RiskBasedPricing = () => {
                   PER {getSortIcon("interestPeriodType")}
                 </div>
               </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Actions
-              </th>
+              {roleName !== "ROLE_VIEWER" ? (
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              ) : (
+                ""
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -455,29 +465,36 @@ const RiskBasedPricing = () => {
                       </span>
                     )}
                   </td>
-                  <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                    <button onClick={() => toggleEdit(index)} type="button">
-                      {editingIndex === index ? (
-                        <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                          <CheckCircleIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                          <PencilIcon className="h-5 w-5" aria-hidden="true" />
-                        </div>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteRBP(item.ruleName)}
-                      type="button"
-                      className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                    >
-                      <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                  </td>
+                  {roleName !== "ROLE_VIEWER" ? (
+                    <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                      <button onClick={() => toggleEdit(index)} type="button">
+                        {editingIndex === index ? (
+                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <CheckCircleIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <PencilIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </div>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteRBP(item.ruleName)}
+                        type="button"
+                        className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      >
+                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </td>
+                  ) : (
+                    ""
+                  )}
                 </tr>
               ))
             )}

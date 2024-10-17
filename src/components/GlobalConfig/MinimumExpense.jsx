@@ -35,6 +35,8 @@ const MinimumExpense = () => {
   const { expenseForm, allExpenseData, loading, error } = useSelector(
     (state) => state.globalConfig
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchExpenseData());
@@ -144,47 +146,52 @@ const MinimumExpense = () => {
         </b>
       </h2>
       <div className="flex flex-col gap-5">
-        <ContainerTile>
-          <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
-            <InputText
-              labelName="Expenses"
-              inputName="expensesName"
-              inputValue={expenseForm?.expensesName}
-              onChange={handleInputChange}
-              placeHolder="Food and Living"
-              isValidation={true}
-            />
-            <InputSelect
-              labelName="Type"
-              inputOptions={typeOptions}
-              inputName="dependantType"
-              inputValue={expenseForm?.dependantType}
-              onChange={handleInputChange}
-              isValidation={true}
-            />
-            <InputSelect
-              labelName="Expenses Frequency"
-              inputOptions={frequencyOptions}
-              inputName="expensesFrequency"
-              inputValue={expenseForm?.expensesFrequency}
-              onChange={handleInputChange}
-              isValidation={true}
-            />
-            <InputNumber
-              labelName="Bare Min Expense Per Person"
-              inputName="bareMinimum"
-              inputValue={expenseForm?.bareMinimum}
-              onChange={handleInputChange}
-              placeHolder="200"
-              isValidation={true}
-            />
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={handleAddFields}
-              circle={true}
-            />
-          </div>
-        </ContainerTile>
+        {roleName !== "ROLE_VIEWER" ? (
+          <ContainerTile>
+            <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
+              <InputText
+                labelName="Expenses"
+                inputName="expensesName"
+                inputValue={expenseForm?.expensesName}
+                onChange={handleInputChange}
+                placeHolder="Food and Living"
+                isValidation={true}
+              />
+              <InputSelect
+                labelName="Type"
+                inputOptions={typeOptions}
+                inputName="dependantType"
+                inputValue={expenseForm?.dependantType}
+                onChange={handleInputChange}
+                isValidation={true}
+              />
+              <InputSelect
+                labelName="Expenses Frequency"
+                inputOptions={frequencyOptions}
+                inputName="expensesFrequency"
+                inputValue={expenseForm?.expensesFrequency}
+                onChange={handleInputChange}
+                isValidation={true}
+              />
+              <InputNumber
+                labelName="Bare Min Expense Per Person"
+                inputName="bareMinimum"
+                inputValue={expenseForm?.bareMinimum}
+                onChange={handleInputChange}
+                placeHolder="200"
+                isValidation={true}
+              />
+              <Button
+                buttonIcon={PlusIcon}
+                onClick={handleAddFields}
+                circle={true}
+              />
+            </div>
+          </ContainerTile>
+        ) : (
+          ""
+        )}
+
         {allExpenseData?.map((expenseData, index) => (
           <ContainerTile>
             <div
@@ -241,18 +248,22 @@ const MinimumExpense = () => {
                 isValidation={true}
                 isIndex={expenseData.dataIndex}
               />
-              <div className="flex items-center gap-4">
-                <Button
-                  buttonIcon={CheckCircleIcon}
-                  onClick={() => handleSave(expenseData?.id, index)}
-                  circle={true}
-                />
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => handleDelete(expenseData?.id, index)}
-                  circle={true}
-                />
-              </div>
+              {roleName !== "ROLE_VIEWER" ? (
+                <div className="flex items-center gap-4">
+                  <Button
+                    buttonIcon={CheckCircleIcon}
+                    onClick={() => handleSave(expenseData?.id, index)}
+                    circle={true}
+                  />
+                  <Button
+                    buttonIcon={TrashIcon}
+                    onClick={() => handleDelete(expenseData?.id, index)}
+                    circle={true}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </ContainerTile>
         ))}

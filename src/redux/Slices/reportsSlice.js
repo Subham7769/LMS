@@ -5,17 +5,49 @@ export const fetchReportsConfigData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.get(
+      const response = await fetch(
         `${import.meta.env.VITE_REPORTS_CONFIG_READ}`,
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      return response;
+      const responseData = await response.json();
+      return responseData;
     } catch (error) {
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const generateReport = createAsyncThunk(
+  "reports/generateReport",
+  async (reportsData, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = import.meta.env.VITE_GENERATE_REPORT_READ;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(reportsData),
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.clear();
+        return rejectWithValue("Unauthorized");
+      }
+
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -24,7 +56,7 @@ export const fetchReportsConfigData = createAsyncThunk(
 const initialState = {
   reportsData: {
     reportName: "",
-    startDate: 0,
+    startDate: "",
     endDate: "",
   },
   reportConfigData: [],
@@ -35,7 +67,21 @@ const initialState = {
 const reportsSlice = createSlice({
   name: "reports",
   initialState,
-  reducers: {},
+  reducers: {
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.error.message;
+    },
+    handleChangeInReportsData: (state, action) => {
+      const { name, value } = action.payload;
+      state.reportsData = {
+        ...state.reportsData,
+        [name]: value,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchReportsConfigData.pending, (state) => {
@@ -44,6 +90,7 @@ const reportsSlice = createSlice({
       })
       .addCase(fetchReportsConfigData.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload);
         const updatedReportConfigData = action.payload.map((data) => ({
           label: data.name,
           value: data.name,
@@ -57,4 +104,6 @@ const reportsSlice = createSlice({
   },
 });
 
+export const { setLoading, setError, handleChangeInReportsData } =
+  reportsSlice.actions;
 export default reportsSlice.reducer;

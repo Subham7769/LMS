@@ -300,10 +300,10 @@ export const MenusInitial = [
     icon: "BeakerIcon",
     current: false,
   },
-  // {
-  //   title: "Reports",
-  //   href: "/reports",
-  //   icon: "BookOpenIcon",
-  //   current: false,
-  // },
+  {
+    title: "Reports",
+    href: "/reports",
+    icon: "BookOpenIcon",
+    current: false,
+  },
 ];

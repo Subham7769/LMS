@@ -23,6 +23,8 @@ const RiskBasedPricingEquation = () => {
   const { riskBasedPricingEquation, rules } = useSelector(
     (state) => state.rulePolicy
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleRuleChange = (e) => {
     const { name, value } = e.target;
@@ -126,56 +128,67 @@ const RiskBasedPricingEquation = () => {
               <th className="py-3.5 px-2 text-center text-gray-900">B</th>
               <th className="py-3.5 px-2 text-center text-gray-900">C</th>
               <th className="py-3.5 px-2 text-center text-gray-900">D</th>
-              <th className="py-3.5 px-2 text-center text-gray-900">Action</th>
+              {roleName !== "ROLE_VIEWER" ? (
+                <th className="py-3.5 px-2 text-center text-gray-900">
+                  Action
+                </th>
+              ) : (
+                ""
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            <tr className="divide-x divide-gray-200 text-center">
-              <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                <InputNumber
-                  inputName={"a_Weight"}
-                  inputValue={rules.a_Weight}
-                  onChange={handleRuleChange}
-                  placeHolder={"0.54"}
-                  isValidation={true}
-                />
-              </td>
-              <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                <InputNumber
-                  inputName={"b_Weight"}
-                  inputValue={rules.b_Weight}
-                  onChange={handleRuleChange}
-                  placeHolder={"0.54"}
-                  isValidation={true}
-                />
-              </td>
-              <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                <InputNumber
-                  inputName={"c_Weight"}
-                  inputValue={rules.c_Weight}
-                  onChange={handleRuleChange}
-                  placeHolder={"0.54"}
-                  isValidation={true}
-                />
-              </td>
-              <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                <InputNumber
-                  inputName={"d_Weight"}
-                  inputValue={rules.d_Weight}
-                  onChange={handleRuleChange}
-                  placeHolder={"0.54"}
-                  isValidation={true}
-                />
-              </td>
-              <td>
-                <Button
-                  buttonIcon={CheckCircleIcon}
-                  buttonName={"Add"}
-                  onClick={handleAddRBPE}
-                  rectangle={true}
-                />
-              </td>
-            </tr>
+            {roleName !== "ROLE_VIEWER" ? (
+              <tr className="divide-x divide-gray-200 text-center">
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"a_Weight"}
+                    inputValue={rules.a_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"b_Weight"}
+                    inputValue={rules.b_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"c_Weight"}
+                    inputValue={rules.c_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                  />
+                </td>
+                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
+                  <InputNumber
+                    inputName={"d_Weight"}
+                    inputValue={rules.d_Weight}
+                    onChange={handleRuleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                  />
+                </td>
+                <td>
+                  <Button
+                    buttonIcon={CheckCircleIcon}
+                    buttonName={"Add"}
+                    onClick={handleAddRBPE}
+                    rectangle={true}
+                  />
+                </td>
+              </tr>
+            ) : (
+              ""
+            )}
+
             {riskBasedPricingEquation?.rules?.map((item, index) => (
               <tr
                 key={item.ruleName || index}
@@ -225,18 +238,22 @@ const RiskBasedPricingEquation = () => {
                     isIndex={item.dataIndex}
                   />
                 </td>
-                <td className="py-4 flex gap-2 px-4">
-                  <Button
-                    buttonIcon={CheckCircleIcon}
-                    onClick={() => handleUpdateRBPE(index)}
-                    circle={true}
-                  />
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => handleDeleteRBPE(item.ruleName)}
-                    circle={true}
-                  />
-                </td>
+                {roleName !== "ROLE_VIEWER" ? (
+                  <td className="py-4 flex gap-2 px-4">
+                    <Button
+                      buttonIcon={CheckCircleIcon}
+                      onClick={() => handleUpdateRBPE(index)}
+                      circle={true}
+                    />
+                    <Button
+                      buttonIcon={TrashIcon}
+                      onClick={() => handleDeleteRBPE(item.ruleName)}
+                      circle={true}
+                    />
+                  </td>
+                ) : (
+                  ""
+                )}
               </tr>
             ))}
           </tbody>
