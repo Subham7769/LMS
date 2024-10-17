@@ -36,6 +36,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -48,6 +49,8 @@ const LoanProductConfig = () => {
   const itemsPerPage = 5;
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const { productData, loading, error } = useSelector((state) => state.product);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchData(productType));
@@ -222,7 +225,7 @@ const LoanProductConfig = () => {
     ));
   }
 
-  const columns = [
+  let columns = [
     { label: "Simple Interest", key: "interestRate", sortable: true },
     { label: "PER", key: "interestPeriodType", sortable: true },
     { label: "Loan Tenure", key: "LoanTenure", sortable: true },
@@ -233,23 +236,22 @@ const LoanProductConfig = () => {
       key: "RepaymentTenureType",
       sortable: true,
     },
-    { label: "Actions", key: "actions", sortable: false }, // No sorting for actions
   ];
+
+  // Conditionally add the "Actions" column if roleName is not "ROLE_VIEWER"
+  if (roleName !== "ROLE_VIEWER") {
+    columns.push({ label: "Actions", key: "actions", sortable: false });
+  }
 
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex justify-between items-center mb-5">
-        <DynamicName
-          initialName={productData?.productType}
-          onSave={handleProductNameChange}
-        />
-        <Button
-          buttonIcon={TrashIcon}
-          onClick={() => handleDeleteLoanProduct(loanProId)}
-          circle={true}
-        />
-      </div>
+      <DynamicHeader
+        itemName={productData?.productType}
+        handleNameUpdate={handleProductNameChange}
+        isClonable={false}
+        handleDelete={() => handleDeleteLoanProduct(loanProId)}
+      />
       <ContainerTile>
         <ProductInputFields
           productData={productData}
@@ -435,33 +437,37 @@ const LoanProductConfig = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                      <button onClick={() => toggleEdit(index)} type="button">
-                        {editingIndex === index ? (
-                          <div
-                            // onClick={informUser}
-                            className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                          >
-                            <CheckCircleIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            <PencilIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        )}
-                      </button>
-                      <Button
-                        buttonIcon={TrashIcon}
-                        onClick={() => handleDelete(index)}
-                        circle={true}
-                      />
-                    </td>
+                    {roleName !== "ROLE_VIEWER" ? (
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                        <button onClick={() => toggleEdit(index)} type="button">
+                          {editingIndex === index ? (
+                            <div
+                              // onClick={informUser}
+                              className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >
+                              <CheckCircleIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                              <PencilIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          )}
+                        </button>
+                        <Button
+                          buttonIcon={TrashIcon}
+                          onClick={() => handleDelete(index)}
+                          circle={true}
+                        />
+                      </td>
+                    ) : (
+                      ""
+                    )}
                   </tr>
                 ))
               )}
@@ -504,14 +510,18 @@ const LoanProductConfig = () => {
               disabled={currentPage === totalPages || currentItems.length < 1}
             />
           </div>
-          <div className="text-right mt-5">
-            <Button
-              buttonIcon={CheckCircleIcon}
-              buttonName="Save"
-              onClick={handleSave}
-              rectangle={true}
-            />
-          </div>
+          {roleName !== "ROLE_VIEWER" ? (
+            <div className="text-right mt-5">
+              <Button
+                buttonIcon={CheckCircleIcon}
+                buttonName="Save"
+                onClick={handleSave}
+                rectangle={true}
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </ContainerTile>
     </>

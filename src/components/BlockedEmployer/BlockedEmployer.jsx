@@ -27,6 +27,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const BlockedEmployer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,12 +44,6 @@ const BlockedEmployer = () => {
     dispatch(setBlockEmployersTempId(blockEmployersTempId));
     dispatch(fetchBlockedEmployerData(blockEmployersTempId));
     dispatch(fetchBlockedEmployerName(blockEmployersTempId));
-
-    // const initialValidationError = {};
-    // fields.forEach((field) => {
-    //   initialValidationError[field] = false; // Set all fields to false initially
-    // });
-    // dispatch(setValidationError(initialValidationError));
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -189,17 +184,12 @@ const BlockedEmployer = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="mb-4 flex items-center justify-between">
-        <DynamicName initialName={itemName} onSave={handleUpdateName} />
-        <div className="flex gap-4">
-          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={handleDeleteBE}
-            circle={true}
-          />
-        </div>
-      </div>
+      <DynamicHeader
+        itemName={itemName}
+        handleNameUpdate={handleUpdateName}
+        handleClone={handleClone}
+        handleDelete={handleDeleteBE}
+      />
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}

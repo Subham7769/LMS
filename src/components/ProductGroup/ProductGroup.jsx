@@ -25,12 +25,15 @@ import {
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const ProductGroup = () => {
   const dispatch = useDispatch();
   const { productGroupData, productTypeOptions, loading } = useSelector(
     (state) => state.productGroup
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchPGroups());
@@ -118,12 +121,12 @@ const ProductGroup = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex items-center justify-between mb-5">
-        <DynamicName
-          initialName={productGroupData?.configName}
-          onSave={handleUpdatePGName}
-        />
-      </div>
+      <DynamicHeader
+        itemName={productGroupData?.configName}
+        handleNameUpdate={handleUpdatePGName}
+        isClonable={false}
+        isDeleteable={false}
+      />
       <ContainerTile>
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
@@ -163,14 +166,18 @@ const ProductGroup = () => {
             isValidation3={true}
           />
         </div>
-        <div className="text-center md:text-right mt-5">
-          <Button
-            buttonIcon={CheckCircleIcon}
-            buttonName="Save"
-            rectangle={true}
-            onClick={handleUpdate}
-          />
-        </div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="text-center md:text-right mt-5">
+            <Button
+              buttonIcon={CheckCircleIcon}
+              buttonName="Save"
+              rectangle={true}
+              onClick={handleUpdate}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </ContainerTile>
     </>
   );

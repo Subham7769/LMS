@@ -14,7 +14,22 @@ import {
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
-import { fetchDynamicRacDetails, updateRacName, fetchOptionList, saveDynamicRac, downloadConfig, uploadConfig, updateRacConfigName, addSection, setSection, cloneDynamicRac, deleteDynamicRac, updateSection, removeSection ,deleteSection} from '../../redux/Slices/DynamicRacSlice'
+import {
+  fetchDynamicRacDetails,
+  updateRacName,
+  fetchOptionList,
+  saveDynamicRac,
+  downloadConfig,
+  uploadConfig,
+  updateRacConfigName,
+  addSection,
+  setSection,
+  cloneDynamicRac,
+  deleteDynamicRac,
+  updateSection,
+  removeSection,
+  deleteSection,
+} from "../../redux/Slices/DynamicRacSlice";
 import { useDispatch } from "react-redux";
 import Toolbox from "./ToolBox";
 import RuleComponent from "./RuleComponent";
@@ -23,7 +38,6 @@ import LoadingState from "../LoadingState/LoadingState";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed, Warning } from "../Toasts";
-import store from "../../redux/store";
 import {
   clearValidationError,
   validateRAC,
@@ -40,6 +54,8 @@ const DynamicRAC = () => {
   );
   const { name } = racConfig.racDetails;
   const sections = racConfig.sections;
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
   const navigate = useNavigate();
 
   // console.log(fetchOptionList);
@@ -232,7 +248,6 @@ const DynamicRAC = () => {
     });
   };
 
-
   const handleClone = () => {
     setIsModalOpen(true);
   };
@@ -242,26 +257,25 @@ const DynamicRAC = () => {
   };
 
   const handleDeleteSection = ({ racId, sectionId }) => {
-    dispatch(removeSection({ sectionId }))
-    dispatch(deleteSection({ racId, sectionId })).then((action)=>{
+    dispatch(removeSection({ sectionId }));
+    dispatch(deleteSection({ racId, sectionId })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacDetails(racId));
       }
-    })
-
+    });
   };
 
   const handleUpdateName = (racId, newName) => {
-    dispatch(updateRacConfigName({ newName }))
+    dispatch(updateRacConfigName({ newName }));
     dispatch(updateRacName({ racId, newName })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacData());
       }
-    })
+    });
   };
 
   const handleAddSection = () => {
-    dispatch(addSection())
+    dispatch(addSection());
     toast.custom((t) => (
       <Passed
         t={t}
@@ -271,7 +285,6 @@ const DynamicRAC = () => {
       />
     ));
   };
-
 
   if (loading) {
     return <LoadingState />;
@@ -290,21 +303,25 @@ const DynamicRAC = () => {
             <DynamicName
               initialName={name}
               onSave={(newName) => handleUpdateName(racId, newName)}
+              editable={roleName !== "ROLE_VIEWER"}
             />
-            <div className="flex gap-4">
-              <Button
-                buttonName={"Clone"}
-                onClick={handleClone}
-                rectangle={true}
-              />
-              <Button
-                buttonIcon={TrashIcon}
-                onClick={() => handleDelete(racId)}
-                circle={true}
-              />
-            </div>
+            {roleName !== "ROLE_VIEWER" ? (
+              <div className="flex gap-4">
+                <Button
+                  buttonName={"Clone"}
+                  onClick={handleClone}
+                  rectangle={true}
+                />
+                <Button
+                  buttonIcon={TrashIcon}
+                  onClick={() => handleDelete(racId)}
+                  circle={true}
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-
           <CloneModal
             isOpen={isModalOpen}
             onClose={closeModal}
@@ -334,7 +351,7 @@ const DynamicRAC = () => {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          {isEditorMode && (
+          {isEditorMode && roleName !== "ROLE_VIEWER" && (
             <div className="flex justify-between gap-5 w-full">
               <div className="flex gap-2">
                 <HoverButton
@@ -369,13 +386,15 @@ const DynamicRAC = () => {
           )}
         </div>
         <div
-          className={`flex items-start ${isEditorMode ? " max-h-[550px]" : "max-h-screen"
-            }`}
+          className={`flex items-start ${
+            isEditorMode ? " max-h-[550px]" : "max-h-screen"
+          }`}
         >
-          {isEditorMode && <Toolbox />}
+          {isEditorMode && roleName !== "ROLE_VIEWER" && <Toolbox />}
           <div
-            className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${isEditorMode ? " max-h-[550px]" : "max-h-screen"
-              } overflow-hidden pb-20`}
+            className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${
+              isEditorMode ? " max-h-[550px]" : "max-h-screen"
+            } overflow-hidden pb-20`}
           >
             <DragDropContext onDragEnd={onDragEnd}>
               <div className="flex flex-col justify-center gap-5">
@@ -388,16 +407,18 @@ const DynamicRAC = () => {
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className={`shadow-md border-gray-300 border rounded-xl p-5 ${section.size === "full"
-                          ? "col-span-3"
-                          : section.size === "half"
+                        className={`shadow-md border-gray-300 border rounded-xl p-5 ${
+                          section.size === "full"
+                            ? "col-span-3"
+                            : section.size === "half"
                             ? "col-span-2"
                             : "col-span-1"
-                          }`}
+                        }`}
                       >
                         <div className="flex justify-between items-center mb-2">
                           <DynamicName
                             initialName={section.sectionName}
+                            editable={roleName !== "ROLE_VIEWER"}
                             onSave={(name) =>
                               dispatch(
                                 updateSection({
@@ -407,10 +428,15 @@ const DynamicRAC = () => {
                               )
                             }
                           />
-                          {isEditorMode && (
+                          {isEditorMode && roleName !== "ROLE_VIEWER" && (
                             <div className="flex justify-between items-center gap-2">
                               <TrashIcon
-                                onClick={() => handleDeleteSection({ racId, sectionId: section.sectionId })}
+                                onClick={() =>
+                                  handleDeleteSection({
+                                    racId,
+                                    sectionId: section.sectionId,
+                                  })
+                                }
                                 className="h-5 w-5 hover:text-red-500"
                               />
                             </div>
@@ -449,7 +475,7 @@ const DynamicRAC = () => {
                 ))}
               </div>
             </DragDropContext>
-            {sections.length > 0 ? (
+            {sections.length > 0 && roleName !== "ROLE_VIEWER" ? (
               <div className="flex justify-end items-center gap-5">
                 <Button
                   className="mt-4"

@@ -43,6 +43,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -53,6 +54,8 @@ const DebtBurdenConfig = () => {
   // Redux state selectors
   const { name, loading, currentPage, isModalOpen, dbrData, allDBRData } =
     useSelector((state) => state.dbrConfig);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const [editingIndex, setEditingIndex] = useState(null);
   const itemsPerPage = 5;
@@ -330,17 +333,12 @@ const DebtBurdenConfig = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="mb-4 flex items-center justify-between">
-        <DynamicName initialName={name} onSave={updateNameHandler} />
-        <div className="flex gap-4">
-          <Button buttonName={"Clone"} onClick={handleClone} rectangle={true} />
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={() => deleteCurrentDBC(dbcTempId)}
-            circle={true}
-          />
-        </div>
-      </div>
+      <DynamicHeader
+        itemName={name}
+        handleNameUpdate={updateNameHandler}
+        handleClone={handleClone}
+        handleDelete={() => deleteCurrentDBC(dbcTempId)}
+      />
       <CloneModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -348,103 +346,112 @@ const DebtBurdenConfig = () => {
         initialName={name}
       />
       <ContainerTile>
-        <div className="grid grid-cols-10 gap-2 items-end mt-2 border-b pb-5 mb-2">
-          <div className="relative">
-            <InputSelect
-              labelName="Min Net"
-              inputValue={
-                allDBRData?.operators?.firstNetIncomeBracketInSARuleOperator
-              }
-              inputOptions={operatorOptions}
-              onChange={handleOperatorChange}
-              inputName="firstNetIncomeBracketInSARuleOperator"
-              isValidation={true}
-            />
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="grid grid-cols-10 gap-2 items-end mt-2 border-b pb-5 mb-2">
+            <div className="relative">
+              <InputSelect
+                labelName="Min Net"
+                inputValue={
+                  allDBRData?.operators?.firstNetIncomeBracketInSARuleOperator
+                }
+                inputOptions={operatorOptions}
+                onChange={handleOperatorChange}
+                inputName="firstNetIncomeBracketInSARuleOperator"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputNumber
+                inputName={`startNetIncomeBracketInSARule`}
+                inputValue={dbrData?.startNetIncomeBracketInSARule}
+                onChange={handleInputChange}
+                placeHolder="10000"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputSelect
+                labelName="Max Net"
+                inputValue={
+                  allDBRData?.operators?.secondNetIncomeBracketInSARuleOperator
+                }
+                inputOptions={operatorOptions}
+                onChange={handleOperatorChange}
+                inputName="secondNetIncomeBracketInSARuleOperator"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputNumber
+                inputName={`endNetIncomeBracketInSARule`}
+                inputValue={dbrData?.endNetIncomeBracketInSARule}
+                onChange={handleInputChange}
+                placeHolder="20000"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputText
+                labelName="Product Level"
+                inputName={`productLevel`}
+                inputValue={dbrData?.productLevel}
+                onChange={handleInputChange}
+                placeHolder="33%"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputText
+                labelName="Consumer DBR"
+                inputName={`consumerDBR`}
+                inputValue={dbrData?.consumerDBR}
+                onChange={handleInputChange}
+                placeHolder="65%"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputText
+                labelName="GDBR (Without MTG)"
+                inputName={`gdbrWithoutMTG`}
+                inputValue={dbrData?.gdbrWithoutMTG}
+                onChange={handleInputChange}
+                placeHolder="65%"
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputSelect
+                labelName="Employer Retired"
+                inputName={`employerRetired`}
+                inputValue={dbrData?.employerRetired}
+                onChange={handleInputChange}
+                inputOptions={empOptions}
+                isValidation={true}
+              />
+            </div>
+            <div className="relative">
+              <InputText
+                labelName="GDBR (including MTG)"
+                inputName={`gdbrWithMTG`}
+                inputValue={dbrData?.gdbrWithMTG}
+                onChange={handleInputChange}
+                placeHolder="65%"
+                isValidation={true}
+              />
+            </div>
+            <div className="w-8">
+              <Button
+                buttonIcon={PlusIcon}
+                onClick={addNewRule}
+                circle={true}
+              />
+            </div>
           </div>
-          <div className="relative">
-            <InputNumber
-              inputName={`startNetIncomeBracketInSARule`}
-              inputValue={dbrData?.startNetIncomeBracketInSARule}
-              onChange={handleInputChange}
-              placeHolder="10000"
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputSelect
-              labelName="Max Net"
-              inputValue={
-                allDBRData?.operators?.secondNetIncomeBracketInSARuleOperator
-              }
-              inputOptions={operatorOptions}
-              onChange={handleOperatorChange}
-              inputName="secondNetIncomeBracketInSARuleOperator"
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputNumber
-              inputName={`endNetIncomeBracketInSARule`}
-              inputValue={dbrData?.endNetIncomeBracketInSARule}
-              onChange={handleInputChange}
-              placeHolder="20000"
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputText
-              labelName="Product Level"
-              inputName={`productLevel`}
-              inputValue={dbrData?.productLevel}
-              onChange={handleInputChange}
-              placeHolder="33%"
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputText
-              labelName="Consumer DBR"
-              inputName={`consumerDBR`}
-              inputValue={dbrData?.consumerDBR}
-              onChange={handleInputChange}
-              placeHolder="65%"
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputText
-              labelName="GDBR (Without MTG)"
-              inputName={`gdbrWithoutMTG`}
-              inputValue={dbrData?.gdbrWithoutMTG}
-              onChange={handleInputChange}
-              placeHolder="65%"
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputSelect
-              labelName="Employer Retired"
-              inputName={`employerRetired`}
-              inputValue={dbrData?.employerRetired}
-              onChange={handleInputChange}
-              inputOptions={empOptions}
-              isValidation={true}
-            />
-          </div>
-          <div className="relative">
-            <InputText
-              labelName="GDBR (including MTG)"
-              inputName={`gdbrWithMTG`}
-              inputValue={dbrData?.gdbrWithMTG}
-              onChange={handleInputChange}
-              placeHolder="65%"
-              isValidation={true}
-            />
-          </div>
-          <div className="w-8">
-            <Button buttonIcon={PlusIcon} onClick={addNewRule} circle={true} />
-          </div>
-        </div>
+        ) : (
+          ""
+        )}
+
         <div>
           <div className="w-full">
             <Table
@@ -487,16 +494,23 @@ const DebtBurdenConfig = () => {
               <ChevronRightIcon className="w-5 h-5" />
             </button>
           </div>
-          <div className="text-right ">
-            <button
-              type="button"
-              onClick={handleTableChange}
-              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-              Save
-            </button>
-          </div>
+          {roleName !== "ROLE_VIEWER" ? (
+            <div className="text-right ">
+              <button
+                type="button"
+                onClick={handleTableChange}
+                className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <CheckCircleIcon
+                  className="-ml-0.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Save
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </ContainerTile>
     </>

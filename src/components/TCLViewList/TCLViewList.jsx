@@ -21,6 +21,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
@@ -33,6 +34,8 @@ const TCLViewList = () => {
   const fileInputRef = useRef(null);
   const { itemName, data, tableData, loading, error, tableDataHistory } =
     useSelector((state) => state.tcl);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleChange = (selectedOption) => {
     setFileSelectedOption(selectedOption);
@@ -97,7 +100,7 @@ const TCLViewList = () => {
       });
   };
 
-  console.log(tableDataHistory);
+  // console.log(tableDataHistory);
 
   useEffect(() => {
     if (tclId) {
@@ -124,13 +127,16 @@ const TCLViewList = () => {
   };
 
   // actions to be executed in list
-  const ActionList = [
-    {
-      icon: TrashIcon,
-      circle: true,
-      action: handleDelete,
-    },
-  ];
+  const ActionList =
+    roleName !== "ROLE_VIEWER"
+      ? [
+          {
+            icon: TrashIcon,
+            circle: true,
+            action: handleDelete,
+          },
+        ]
+      : [];
 
   if (loading) {
     return <LoadingState />;
@@ -151,14 +157,12 @@ const TCLViewList = () => {
   return (
     <>
       {/* Select & Add to List */}
-      <div className="flex justify-between items-center mb-3">
-        <DynamicName initialName={itemName} onSave={handleUpdateTCL} />
-        <Button
-          buttonIcon={TrashIcon}
-          onClick={() => handleDeleteTCL(tclId)}
-          circle={true}
-        />
-      </div>
+      <DynamicHeader
+        itemName={itemName}
+        handleNameUpdate={handleUpdateTCL}
+        isClonable={false}
+        handleDelete={() => handleDeleteTCL(tclId)}
+      />
       <ContainerTile className={"flex items-center justify-between"}>
         <SelectAndAdd
           ListName={"Select TCL List"}
@@ -168,23 +172,27 @@ const TCLViewList = () => {
           ButtonName={"Add to List"}
           onClick={addData}
         />
-        <div className="w-3/4 flex justify-end items-center gap-5">
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ display: "none" }} // Hide the default input
-          />
-          <FolderPlusIcon
-            className="h-12 w-12 text-indigo-600"
-            onClick={handleFileClick}
-          />
-          <Button
-            buttonName={"Upload"}
-            onClick={handleFileUpload}
-            rectangle={true}
-          />
-        </div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="w-3/4 flex justify-end items-center gap-5">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }} // Hide the default input
+            />
+            <FolderPlusIcon
+              className="h-12 w-12 text-indigo-600"
+              onClick={handleFileClick}
+            />
+            <Button
+              buttonName={"Upload"}
+              onClick={handleFileUpload}
+              rectangle={true}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </ContainerTile>
       {/* Message */}
       {message && <div className="mb-4 text-red-500">{message}</div>}

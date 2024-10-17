@@ -21,6 +21,7 @@ import DynamicRacSlice from "./Slices/DynamicRacSlice";
 import validationSlice from "./Slices/validationSlice";
 import reportingConfigSlice from "./Slices/reportingConfigSlice";
 import reportsSlice from "./Slices/reportsSlice";
+import authSlice from "./Slices/authSlice";
 
 const store = configureStore({
   reducer: {
@@ -45,6 +46,7 @@ const store = configureStore({
     validation: validationSlice,
     reportingConfig: reportingConfigSlice,
     reports: reportsSlice,
+    auth: authSlice,
   },
 });
 

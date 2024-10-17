@@ -4,6 +4,7 @@ import Button from "../Common/Button/Button";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
+import { useSelector } from "react-redux";
 
 const TagInput = ({
   inputSelectName,
@@ -26,10 +27,12 @@ const TagInput = ({
   isIndex3,
   orderReverse = false,
 }) => {
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
-        {inputSelectName && (
+        {inputSelectName && productTypeOptions && (
           <InputSelect
             labelName={inputSelectLabel}
             inputName={inputSelectName}
@@ -62,9 +65,13 @@ const TagInput = ({
             isIndex={isIndex2}
           />
         )}
-        <div className="">
-          <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
-        </div>
+        {roleName !== "ROLE_VIEWER" ? (
+          <div className="">
+            <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div
         className={`grid grid-cols-2 ${inputSelectName ? "md:grid-cols-3" : "md:grid-cols-2"
@@ -145,11 +152,13 @@ const TagInput = ({
                 <div>{tag[inputTextName]}</div>
               )}
             </div>
-            <XCircleIcon
-              onClick={() => deleteTag(tag)}
-              className="ml-4 block h-5 w-5 cursor-pointer text-gray-900 hover:text-red-600"
-              aria-hidden="true"
-            />
+            {roleName !== "ROLE_VIEWER" ? (
+              <XCircleIcon
+                onClick={() => deleteTag(tag)}
+                className="ml-4 block h-5 w-5 cursor-pointer text-gray-900 hover:text-red-600"
+                aria-hidden="true"
+              />
+            ) : ""}
           </div>
         ))}
       </div >

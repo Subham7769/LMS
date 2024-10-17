@@ -88,7 +88,6 @@ export const saveCreditScoreET = createAsyncThunk(
         ruleName: rule.ruleName,
         secondCreditScore: rule.secondCreditScore,
         tenure: rule.tenure,
-        tenureType: rule.tenureType,
       })),
     };
 
@@ -136,7 +135,6 @@ export const AddNewRange = createAsyncThunk(
           ruleName: newRule.ruleName,
           secondCreditScore: newRule.secondCreditScore,
           tenure: newRule.tenure,
-          tenureType: newRule.tenureType,
         })),
       ],
     };
@@ -318,7 +316,7 @@ const creditScoreETInitialState = {
         ruleName: "0",
         fieldType: "Employer",
         tenureValue: "",
-        tenureType: "",
+        tenureType: "MONTHS",
         dataIndex: "",
         tenure: [],
         tags: [],
@@ -338,7 +336,7 @@ const creditScoreETInitialState = {
         ruleName: "0",
         fieldType: "Employer",
         tenureValue: "",
-        tenureType: "",
+        tenureType: "MONTHS",
         tenure: [],
         tags: [],
       },
@@ -509,12 +507,12 @@ const creditScoreETSlice = createSlice({
           state.creditScoreET.rules = action.payload.rules.map((rule) => ({
             ...rule, // Spread existing rule properties
             tenureValue: "",
-            tenureType: rule.tenureType || "MONTH",
+            tenureType: "MONTHS",
             dataIndex: nanoid(),
             tags: rule.tenure.map((tenureValue, index) => ({
               index,
               tenureValue, // Create an object with index and tenure
-              tenureType: rule.tenureType || "MONTH",
+              tenureType: "MONTHS",
             })),
           }));
         } else {

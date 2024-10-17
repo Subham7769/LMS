@@ -182,37 +182,6 @@ export const updateRecoveryName = createAsyncThunk(
   }
 );
 
-export const updateRec = createAsyncThunk(
-  "recovery/updateRecoveryName",
-  async ({ recoveryEquationTempId, newName }, { rejectWithValue }) => {
-    const token = localStorage.getItem("authToken");
-    const url = `${
-      import.meta.env.VITE_RECOVERY_NAME_UPDATE
-    }${recoveryEquationTempId}/name/${newName}`;
-
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      } else if (response.ok) {
-        return newName;
-      } else {
-        return rejectWithValue("Failed to update name");
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 export const fetchList = createAsyncThunk(
   "recovery/fetchList",
   async (_, { getState }) => {

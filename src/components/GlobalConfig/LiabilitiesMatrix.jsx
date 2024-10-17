@@ -35,6 +35,8 @@ const LiabilitiesMatrix = () => {
   const { allLiabilityData, newLiabilityForm, loading } = useSelector(
     (state) => state.globalConfig
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchLiabilityData());
@@ -121,99 +123,104 @@ const LiabilitiesMatrix = () => {
         </b>
       </h2>
       <div className="flex flex-col gap-5 relative">
-        <ContainerTile>
-          <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 max-sm:grid-cols-1 gap-8 items-center">
-            <InputSelect
-              labelName="Product"
-              inputOptions={productOptions}
-              inputName="product"
-              inputValue={newLiabilityForm?.product}
-              onChange={(e) =>
-                dispatch(handleLiabilityNewInputChange(e.target))
-              }
-              isValidation={true}
-              isIndex={newLiabilityForm.dataIndex}
-            />
-            <InputText
-              labelName="CB Description (CODE)"
-              inputName="simahDescriptionCode"
-              placeHolder="TMTG"
-              inputValue={newLiabilityForm?.simahDescriptionCode}
-              onChange={(e) =>
-                dispatch(
-                  handleLiabilityNewInputChange({
-                    name: e.target.name,
-                    value: e.target.value,
-                  })
-                )
-              }
-              isValidation={true}
-              isIndex={newLiabilityForm.dataIndex}
-            />
-
-            <InputSelect
-              labelName="Issuer"
-              inputOptions={issuerOptions}
-              inputName="issuer"
-              inputValue={newLiabilityForm?.issuer}
-              onChange={(e) =>
-                dispatch(handleLiabilityNewInputChange(e.target))
-              }
-              isValidation={true}
-              isIndex={newLiabilityForm.dataIndex}
-            />
-
-            <div className="mt-2">
-              <InputCheckbox
-                labelName="Active Rule"
-                inputName="activeRule"
-                inputChecked={newLiabilityForm?.activeRule}
+        {roleName !== "ROLE_VIEWER" ? (
+          <ContainerTile>
+            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 max-sm:grid-cols-1 gap-8 items-center">
+              <InputSelect
+                labelName="Product"
+                inputOptions={productOptions}
+                inputName="product"
+                inputValue={newLiabilityForm?.product}
                 onChange={(e) =>
                   dispatch(handleLiabilityNewInputChange(e.target))
                 }
+                isValidation={true}
+                isIndex={newLiabilityForm.dataIndex}
               />
+              <InputText
+                labelName="CB Description (CODE)"
+                inputName="simahDescriptionCode"
+                placeHolder="TMTG"
+                inputValue={newLiabilityForm?.simahDescriptionCode}
+                onChange={(e) =>
+                  dispatch(
+                    handleLiabilityNewInputChange({
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  )
+                }
+                isValidation={true}
+                isIndex={newLiabilityForm.dataIndex}
+              />
+
+              <InputSelect
+                labelName="Issuer"
+                inputOptions={issuerOptions}
+                inputName="issuer"
+                inputValue={newLiabilityForm?.issuer}
+                onChange={(e) =>
+                  dispatch(handleLiabilityNewInputChange(e.target))
+                }
+                isValidation={true}
+                isIndex={newLiabilityForm.dataIndex}
+              />
+
+              <div className="mt-2">
+                <InputCheckbox
+                  labelName="Active Rule"
+                  inputName="activeRule"
+                  inputChecked={newLiabilityForm?.activeRule}
+                  onChange={(e) =>
+                    dispatch(handleLiabilityNewInputChange(e.target))
+                  }
+                />
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 gap-8 items-end">
-            <InputSelect
-              labelName="GDBR (Without Mortgage)"
-              inputOptions={gdbrWoMortageOptions}
-              inputName="applicabilityGDBR"
-              inputValue={newLiabilityForm?.applicabilityGDBR}
-              onChange={(e) =>
-                dispatch(handleLiabilityNewInputChange(e.target))
-              }
-              isValidation={true}
-              isIndex={newLiabilityForm.dataIndex}
-            />
+            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 gap-8 items-end">
+              <InputSelect
+                labelName="GDBR (Without Mortgage)"
+                inputOptions={gdbrWoMortageOptions}
+                inputName="applicabilityGDBR"
+                inputValue={newLiabilityForm?.applicabilityGDBR}
+                onChange={(e) =>
+                  dispatch(handleLiabilityNewInputChange(e.target))
+                }
+                isValidation={true}
+                isIndex={newLiabilityForm.dataIndex}
+              />
 
-            <InputSelect
-              labelName="GDBR (including Mortgage)"
-              inputOptions={gdbrWMortageOptions}
-              inputName="totalExposure"
-              inputValue={newLiabilityForm?.totalExposure}
-              onChange={(e) =>
-                dispatch(handleLiabilityNewInputChange(e.target))
-              }
-              isValidation={true}
-              isIndex={newLiabilityForm.dataIndex}
-            />
+              <InputSelect
+                labelName="GDBR (including Mortgage)"
+                inputOptions={gdbrWMortageOptions}
+                inputName="totalExposure"
+                inputValue={newLiabilityForm?.totalExposure}
+                onChange={(e) =>
+                  dispatch(handleLiabilityNewInputChange(e.target))
+                }
+                isValidation={true}
+                isIndex={newLiabilityForm.dataIndex}
+              />
 
-            <InputSelect
-              labelName="Default considered in CB score"
-              inputOptions={defaultScoreOptions}
-              inputName="defaultConsideredInSIMAHscore"
-              inputValue={newLiabilityForm?.defaultConsideredInSIMAHscore}
-              onChange={(e) =>
-                dispatch(handleLiabilityNewInputChange(e.target))
-              }
-              isValidation={true}
-              isIndex={newLiabilityForm.dataIndex}
-            />
+              <InputSelect
+                labelName="Default considered in CB score"
+                inputOptions={defaultScoreOptions}
+                inputName="defaultConsideredInSIMAHscore"
+                inputValue={newLiabilityForm?.defaultConsideredInSIMAHscore}
+                onChange={(e) =>
+                  dispatch(handleLiabilityNewInputChange(e.target))
+                }
+                isValidation={true}
+                isIndex={newLiabilityForm.dataIndex}
+              />
 
-            <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
-          </div>
-        </ContainerTile>
+              <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
+            </div>
+          </ContainerTile>
+        ) : (
+          ""
+        )}
+
         {allLiabilityData.length > 0 ? (
           allLiabilityData?.map((item, index) => (
             <ContainerTile>
@@ -250,7 +257,7 @@ const LiabilitiesMatrix = () => {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 item?s-end">
+                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
                   <InputSelect
                     labelName="GDBR (Without Mortgage)"
                     inputOptions={gdbrWoMortageOptions}
@@ -272,11 +279,17 @@ const LiabilitiesMatrix = () => {
                     inputValue={item?.defaultConsideredInSIMAHscore}
                     onChange={(e) => handleInputChange(e, index)}
                   />
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => handleDeleteRow(item?.simahDescriptionCode)}
-                    circle={true}
-                  />
+                  {roleName !== "ROLE_VIEWER" ? (
+                    <Button
+                      buttonIcon={TrashIcon}
+                      onClick={() =>
+                        handleDeleteRow(item?.simahDescriptionCode)
+                      }
+                      circle={true}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </ContainerTile>

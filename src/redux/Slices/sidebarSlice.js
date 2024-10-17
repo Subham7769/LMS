@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MenusInitial } from "../../data/MenuData";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const useFetchData = async (url, transformData, options = {}) => {
   const {
@@ -322,6 +323,27 @@ const ROLE_TECHNICAL = [
   "User Product Testing",
   "General Ledger",
 ];
+const ROLE_VIEWER = [
+  "Home",
+  "RAC",
+  "Recovery",
+  "TCL",
+  "Project",
+  "Product",
+  "Eligible Tenure",
+  "DBR Config",
+  "Blocked Employer",
+  "Credit Score",
+  "Rule Policy",
+  "Product Group",
+  "Business Rule",
+  "Global Config",
+  "Customer Care",
+  "General Ledger",
+  "Dynamic RAC",
+  "Reporting Config",
+  "Reports",
+];
 
 const initialState = {
   open: JSON.parse(localStorage.getItem("sidebarOpen")) ?? true,
@@ -353,6 +375,13 @@ const sidebarSlice = createSlice({
       switch (roleName) {
         case "ROLE_SUPERADMIN":
           state.menus = MenusInitial;
+          break;
+
+        case "ROLE_VIEWER":
+          state.menus = MenusInitial.map((menu) => ({
+            ...menu, // Spread all the other properties of the menu
+            createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists
+          })).filter((item) => ROLE_VIEWER.includes(item.title));
           break;
 
         case "ROLE_ADMIN":

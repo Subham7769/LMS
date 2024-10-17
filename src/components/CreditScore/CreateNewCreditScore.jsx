@@ -14,6 +14,7 @@ import {
 } from "../../redux/Slices/creditScoreSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const NewCreatedCreditScore = () => {
   const [creditScoreName, setCreditScoreName] = useState("");
@@ -109,21 +110,12 @@ const NewCreatedCreditScore = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="px-3 pt-3">
-        <div className="flex justify-between items-center">
-          <DynamicName initialName={creditScoreName} onSave={handleRename} />
-          <div className="flex items-center gap-2">
-            <Button
-              buttonName={"Clone"}
-              onClick={handleClone}
-              rectangle={true}
-            />
-            <Button
-              buttonIcon={TrashIcon}
-              onClick={handleDelete}
-              circle={true}
-            />
-          </div>
-        </div>
+        <DynamicHeader
+          itemName={creditScoreName}
+          handleNameUpdate={handleRename}
+          handleClone={handleClone}
+          handleDelete={handleDelete}
+        />
         <CreditScore />
         <CloneModal
           isOpen={isModalOpen}
