@@ -38,10 +38,7 @@ const Login = () => {
       body: JSON.stringify({ username, password }),
     };
 
-    fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/login",
-      requestOptions
-    )
+    fetch(`${import.meta.env.VITE_LOGIN}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return response.json().then((errorData) => {

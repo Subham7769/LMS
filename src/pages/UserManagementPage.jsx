@@ -12,7 +12,7 @@ const UserManagementPage = () => {
     const fetchRolesData = async () => {
       try {
         const fetchData = await axios.get(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/roles",
+          `${import.meta.env.VITE_USER_ROLES_READ}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

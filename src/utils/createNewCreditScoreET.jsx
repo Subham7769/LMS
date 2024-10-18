@@ -7,8 +7,7 @@ export async function createNewCreditScoreET(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cset-temp/" +
-        Name,
+      `${import.meta.env.VITE_CREDIT_SCORE_ELIGIBLE_TENURE_CREATE}${Name}`,
       {
         method: "POST",
         headers: {

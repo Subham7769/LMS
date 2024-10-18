@@ -19,6 +19,7 @@ const InputSelect = ({
   hidden = false,
   isMulti = false,
   searchable = false,
+  isClearable = false,
   dropdownTextSize = "medium", // New prop to control dropdown text size
   isValidation = false,
   isIndex,
@@ -112,6 +113,7 @@ const InputSelect = ({
         }
         inputId={inputId}
         onChange={handleChange}
+        isClearable={isClearable}
         isSearchable={searchable}
         placeholder={placeHolder}
         onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state

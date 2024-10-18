@@ -51,7 +51,7 @@ export const fetchBorrowerData = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/${subID}${url}`,
+        `${import.meta.env.VITE_BORROWER_INFO}${subID}${url}`,
         {
           method: "GET",
           headers: {
@@ -70,7 +70,7 @@ export const fetchBorrowerData = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (err) {
-      console.log(err.message)
+      console.log(err.message);
       return rejectWithValue(err.message);
     }
   }
@@ -81,11 +81,9 @@ export const downloadClearanceLetter = createAsyncThunk(
   async ({ subID, loanId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const url =
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/clearance-letter/" +
-        subID +
-        "/" +
-        loanId;
+      const url = `${
+        import.meta.env.VITE_BORROWER_INFO
+      }clearance-letter/${subID}/${loanId}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -122,7 +120,7 @@ export const downloadFile = createAsyncThunk(
   ) => {
     try {
       const token = localStorage.getItem("authToken");
-      const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/${subID}/${endpoint}`;
+      const url = `${import.meta.env.VITE_BORROWER_INFO}${subID}/${endpoint}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -182,7 +180,7 @@ const borrowerSlice = createSlice({
           state.CreditBureauDetails = action.payload;
         } else {
           state.personalInfo = action.payload;
-          console.log(action.payload)
+          console.log(action.payload);
         }
         state.loading = false;
       })
@@ -220,7 +218,7 @@ const borrowerSlice = createSlice({
       })
       .addCase(downloadFile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message; 
+        state.error = action.error.message;
       });
   },
 });

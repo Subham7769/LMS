@@ -163,7 +163,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputName="tclFileId"
             inputValue={productData?.tclFileId}
             onChange={handleChange}
-            isValidation={true}
+            // isValidation={true}
+            isClearable={true}
           />
           <InputSelect
             inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
@@ -171,7 +172,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputName="recoveryEquationTempId"
             inputValue={productData?.recoveryEquationTempId}
             onChange={handleChange}
-            isValidation={true}
+            // isValidation={true}
+            isClearable={true}
           />
         </div>
         <div className="grid grid-cols-5 gap-5 items-end mb-4">
@@ -189,7 +191,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputName="blockEmployersTempId"
             inputValue={productData?.blockEmployersTempId}
             onChange={handleChange}
-            isValidation={true}
+            // isValidation={true}
+            isClearable={true}
           />
           <InputSelect
             labelName="Rule Policy"
@@ -197,7 +200,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputName="rulePolicyTempId"
             inputValue={productData?.rulePolicyTempId}
             onChange={handleChange}
-            isValidation={true}
+            // isValidation={true}
+            isClearable={true}
           />
           <InputSelect
             labelName="Credit Score"

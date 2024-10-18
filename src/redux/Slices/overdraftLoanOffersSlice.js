@@ -20,7 +20,7 @@ export const submitOverdraftOffer = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/offer/${userID}`,
+        `${import.meta.env.VITE_OVERDRAFT_SUBMIT_OFFER}${userID}`,
         {
           method: "POST",
           headers: {
@@ -55,17 +55,14 @@ export const createOverdraft = createAsyncThunk(
 
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/submit",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_OVERDRAFT_CREATE}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(postData),
+      });
 
       // Handle bad request
       if (response.status === 400) {
@@ -92,7 +89,7 @@ export const activateOverdraftLoanAccount = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/activate",
+        `${import.meta.env.VITE_OVERDRAFT_ACTIVATE}`,
         {
           method: "PUT",
           headers: {
@@ -127,17 +124,14 @@ export const cancelOverdraftLoanAccount = createAsyncThunk(
 
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/cancel",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_OVERDRAFT_CANCEL}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(postData),
+      });
 
       // Check for a bad request
       if (response.status === 400) {
@@ -163,17 +157,14 @@ export const closeOverdraftLoanAccount = createAsyncThunk(
 
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/close",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_OVERDRAFT_CLOSE}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(postData),
+      });
 
       // Check for a bad request
       if (response.status === 400) {
@@ -195,7 +186,7 @@ export const getOverdraftLoanAccount = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/${accountNumber}`,
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_GET}${accountNumber}`,
         {
           method: "GET",
           headers: {
@@ -224,7 +215,7 @@ export const getOverdraftLoanAccountOutstanding = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/outstanding/${accountNumber}`,
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_OUTSTANDING}${accountNumber}`,
         {
           method: "GET",
           headers: {
@@ -253,7 +244,7 @@ export const getOverdraftLoanAccountPIF = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/pif/${accountNumber}`,
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_PIF}${accountNumber}`,
         {
           method: "GET",
           headers: {
@@ -282,7 +273,7 @@ export const getOverdraftAccountNumberList = createAsyncThunk(
   async (userID, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/account/${userID}`
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_LIST}${userID}`
       );
       return response.data; // Return the account details on success
     } catch (error) {
@@ -302,7 +293,7 @@ export const debitOverdraftLoanAccount = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/debit",
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_DEBIT}`,
         {
           method: "PUT", // Use POST method for debit API call
           headers: {
@@ -329,16 +320,15 @@ export const debitOverdraftLoanAccount = createAsyncThunk(
   }
 );
 
-
 export const payOverdraftLoanAccount = createAsyncThunk(
-  'overdraft/payOverdraftLoanAccount',
+  "overdraft/payOverdraftLoanAccount",
   async (formData, { rejectWithValue }) => {
-    const postData = {...formData};
+    const postData = { ...formData };
 
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/pay",
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_PAY}`,
         {
           method: "PUT",
           headers: {
@@ -364,18 +354,18 @@ export const payOverdraftLoanAccount = createAsyncThunk(
 );
 
 export const getAccountDetails = createAsyncThunk(
-  'overdraft/getAccountDetails',
+  "overdraft/getAccountDetails",
   async (accountNumber, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    console.log(accountNumber)
+    console.log(accountNumber);
 
     try {
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/overdraft/loan/account/details/${accountNumber}`,
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_DETAILS}${accountNumber}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -394,8 +384,6 @@ export const getAccountDetails = createAsyncThunk(
     }
   }
 );
-
-
 
 const initialState = {
   overdraftOffer: {
@@ -436,7 +424,7 @@ const initialState = {
     accountStatus: null,
   },
   accountNumberList: null,
-  accountNumber:null,
+  accountNumber: null,
   overdraftDetails: {},
   showModal: false,
   loading: false,
@@ -488,7 +476,7 @@ const overdraftLoanOffersSlice = createSlice({
           //   }
           // ],
         };
-        state.accountNumber=action.payload.accountNumber;
+        state.accountNumber = action.payload.accountNumber;
       })
       .addCase(createOverdraft.rejected, (state, action) => {
         state.loading = false;
@@ -593,7 +581,9 @@ const overdraftLoanOffersSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase( getOverdraftLoanAccountOutstanding.fulfilled, (state, action) => {
+      .addCase(
+        getOverdraftLoanAccountOutstanding.fulfilled,
+        (state, action) => {
           state.loading = false;
           console.log(action.payload); // Useful for debugging
           state.accountOutstanding = action.payload;
@@ -622,15 +612,15 @@ const overdraftLoanOffersSlice = createSlice({
       })
       .addCase(getOverdraftAccountNumberList.fulfilled, (state, action) => {
         state.loading = false;
-        state.accountNumberList= action.payload.accountNumberList.map(
-            (accountNumber) => ({
-              label: accountNumber,
-              value: accountNumber,
-            })
-          );
-          if(!state.accountNumber){
-            state.accountNumber=action.payload.accountNumberList[0];
-          }
+        state.accountNumberList = action.payload.accountNumberList.map(
+          (accountNumber) => ({
+            label: accountNumber,
+            value: accountNumber,
+          })
+        );
+        if (!state.accountNumber) {
+          state.accountNumber = action.payload.accountNumberList[0];
+        }
       })
       .addCase(getOverdraftAccountNumberList.rejected, (state, action) => {
         state.loading = false;
@@ -681,5 +671,6 @@ const overdraftLoanOffersSlice = createSlice({
   },
 });
 
-export const { updateAccountNumber, updateOverdraftOfferField } = overdraftLoanOffersSlice.actions;
+export const { updateAccountNumber, updateOverdraftOfferField } =
+  overdraftLoanOffersSlice.actions;
 export default overdraftLoanOffersSlice.reducer;

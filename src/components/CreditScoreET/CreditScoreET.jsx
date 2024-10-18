@@ -8,7 +8,6 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed, RowChanged, Warning } from "../Toasts";
 import Button from "../Common/Button/Button";
-import DynamicName from "../Common/DynamicName/DynamicName";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
@@ -341,6 +340,7 @@ const CreditScoreET = () => {
                   isValidation={true}
                   isIndex={rule?.dataIndex}
                   orderReverse={true}
+                  tagsPerRow={6}
                 />
                 {roleName !== "ROLE_VIEWER" ? (
                   <div className="flex gap-4 justify-end items-center mt-1">

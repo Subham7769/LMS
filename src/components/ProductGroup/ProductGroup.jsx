@@ -164,6 +164,7 @@ const ProductGroup = () => {
             inputNumberLabel={"Max Product Limit"}
             isValidation2={true}
             isValidation3={true}
+            tagsPerRow={3}
           />
         </div>
         {roleName !== "ROLE_VIEWER" ? (

@@ -48,6 +48,8 @@ const DisbursementStatus = () => {
     return <LoadingState />;
   }
 
+  console.log(disbursementData);
+
   return (
     <div className="flex flex-col gap-5">
       <Toaster position="top-center" reverseOrder={false} />

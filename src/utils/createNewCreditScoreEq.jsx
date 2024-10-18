@@ -7,8 +7,7 @@ export async function createNewCreditScoreEq(
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/cse-temp/" +
-        Name,
+      `${import.meta.env.VITE_CREDIT_SCORE_CREATE}${Name}`,
       {
         method: "POST",
         headers: {

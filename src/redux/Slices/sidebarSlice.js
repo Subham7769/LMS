@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MenusInitial } from "../../data/MenuData";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 const useFetchData = async (url, transformData, options = {}) => {
   const {

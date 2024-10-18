@@ -19,12 +19,6 @@ const SearchBox = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const initialValidationError = {};
-    // fields.forEach((field) => {
-    //   initialValidationError[field] = false; // Set all fields to false initially
-    // });
-    // dispatch(setValidationError(initialValidationError));
-    // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
@@ -34,8 +28,7 @@ const SearchBox = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
-          borrowerID,
+        `${import.meta.env.VITE_BORROWER_INFO}${borrowerID}`,
         {
           method: "GET",
           headers: {
@@ -67,9 +60,9 @@ const SearchBox = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
-          borrowerID +
-          "/check-availability/14-11-1981",
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING
+        }${borrowerID}/check-availability/14-11-1981`,
         {
           method: "POST",
           headers: {

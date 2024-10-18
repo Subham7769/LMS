@@ -7,7 +7,7 @@ export const fetchCreditScore = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/${creditScoreId}`,
+        `${import.meta.env.VITE_CREDIT_SCORE_READ}${creditScoreId}`,
         {
           method: "GET",
           headers: {
@@ -37,7 +37,7 @@ export const updateCreditScore = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/configs/credit-score-equation/${creditScoreId}`,
+        `${import.meta.env.VITE_CREDIT_SCORE_READ}${creditScoreId}`,
         {
           method: "PUT",
           headers: {

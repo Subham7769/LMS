@@ -64,7 +64,7 @@ export const getUserEligibility = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await axios({
         method: "POST",
-        url: `https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/${userID}${url}`,
+        url: `${import.meta.env.VITE_USER_PRODUCT_TESTING}/${userID}${url}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ export const getBorrowerInfo = createAsyncThunk(
 
       const response = await axios({
         method: "PUT",
-        url: `https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/${userID}`,
+        url: `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -123,7 +123,7 @@ export const getUserLoanOptions = createAsyncThunk(
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/${userID}`,
+        `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}`,
         {
           method: "PUT",
           headers: {
@@ -163,7 +163,9 @@ export const submitLoanConfiguration = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/${userID}/loans/configurations`,
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS
+        }${userID}/loans/configurations`,
         {
           method: "POST",
           headers: {
@@ -199,7 +201,7 @@ export const handleProceed = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/${userID}/loans`,
+        `${import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS}${userID}/loans`,
         {
           method: "PUT",
           headers: {
@@ -231,7 +233,9 @@ export const getDisbursementInfo = createAsyncThunk(
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/${userID}/disbursement`,
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS
+        }${userID}/disbursement`,
         {
           method: "GET",
           headers: {
@@ -275,7 +279,9 @@ export const submitDisbursement = createAsyncThunk(
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-payment-service/lmscarbon/api/v1/borrowers/${userID}/disbursement-status`,
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING_PAYMENT
+        }${userID}/disbursement-status`,
         {
           method: "POST",
           headers: {
@@ -312,7 +318,9 @@ export const getRepaymentInfo = createAsyncThunk(
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-offers-service/lmscarbon/api/v1/borrowers/${userID}/loans/closure`,
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS
+        }${userID}/loans/closure`,
         {
           method: "GET",
           headers: {
@@ -369,7 +377,9 @@ export const submitRepayment = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-test.lmscarbon.com/carbon-payment-service/lmscarbon/api/v1/borrowers/${userID}/backend-repayments`,
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING_PAYMENT
+        }${userID}/backend-repayments`,
         {
           method: "POST",
           headers: {
@@ -402,7 +412,7 @@ export const getBorrowerDetails = createAsyncThunk(
   "client/getBorrowerDetails",
   async (userID, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/${userID}`;
+    const url = `${import.meta.env.VITE_BORROWER_INFO}${userID}`;
 
     try {
       const response = await fetch(url, {
@@ -429,7 +439,9 @@ export const getBorrowerDetails = createAsyncThunk(
 export const updateFamilyDetails = createAsyncThunk(
   "family/updateFamilyDetails",
   async ({ familyDetails, userID }, { dispatch, rejectWithValue }) => {
-    const url = `https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/${userID}/borrower-profile`;
+    const url = `${
+      import.meta.env.VITE_USER_PRODUCT_TESTING
+    }${userID}/borrower-profile`;
     const token = localStorage.getItem("authToken");
 
     try {
@@ -472,7 +484,9 @@ export const updateEmploymentDetails = createAsyncThunk(
   "client/updateEmploymentDetails",
   async ({ EmploymentDetails, userID }, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("authToken");
-    const url2 = `https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/emp-test-info/${userID}`;
+    const url2 = `${
+      import.meta.env.VITE_USER_PRODUCT_TESTING
+    }emp-test-info/${userID}`;
 
     try {
       const response = await fetch(url2, {
@@ -635,9 +649,9 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getDisbursementInfo.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.status !== 500) {
-          state.disbursementData = action.payload;
-        }
+        // if (action.payload.status !== 500) {
+        state.disbursementData = action.payload;
+        // }
       })
       .addCase(getDisbursementInfo.rejected, (state, action) => {
         state.loading = false;

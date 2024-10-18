@@ -6,7 +6,9 @@ export const fetchList = createAsyncThunk(
   "rac/fetchList",
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
-    const Menu = sideBarState?.menus.find((menu) => menu.title === "Dynamic RAC");
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Dynamic RAC"
+    );
     const submenuItems = Menu ? Menu.submenuItems : [];
     return submenuItems;
   }
@@ -77,7 +79,7 @@ export const saveDynamicRac = createAsyncThunk(
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.put(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/all-rules`,
+        `${import.meta.env.VITE_DYNAMIC_RAC_CREATE}`,
         racConfig, // Pass the data to update here
         {
           headers: {
@@ -99,7 +101,9 @@ export const cloneDynamicRac = createAsyncThunk(
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.post(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${racId}/clone/${racName}`,
+        `${
+          import.meta.env.VITE_DYNAMIC_RAC_CREATE_CLONE
+        }${racId}/clone/${racName}`,
         {},
         {
           headers: {
@@ -144,7 +148,7 @@ export const deleteRuleById = createAsyncThunk(
 
     try {
       const response = await axios.delete(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/rule/${dynamicRacRuleId}`,
+        `${import.meta.env.VITE_DYNAMIC_RAC_DELETE_RULE}${dynamicRacRuleId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -164,11 +168,13 @@ export const updateStatus = createAsyncThunk(
   async ({ dynamicRacRuleId, status }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
     console.log(dynamicRacRuleId, status);
-    
+
     try {
       // API call with dynamicRacRuleId and status
       const response = await axios.put(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/rule/${dynamicRacRuleId}/status/${status}`,
+        `${
+          import.meta.env.VITE_DYNAMIC_RAC_STATUS_UPDATE
+        }${dynamicRacRuleId}/status/${status}`,
         {}, // No request body, so pass an empty object
         {
           headers: {
@@ -176,7 +182,7 @@ export const updateStatus = createAsyncThunk(
           },
         }
       );
-      
+
       return response.data;
     } catch (error) {
       // Handle the error and reject the thunk with a meaningful message
@@ -191,22 +197,22 @@ export const updateStatus = createAsyncThunk(
 
 // Define the asyncThunk for updating the name
 export const updateRacName = createAsyncThunk(
-  'rac/updateRacName', // Action type
+  "rac/updateRacName", // Action type
   async ({ racId, newName }, { rejectWithValue }) => {
-    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+    const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
 
     try {
       // API call to update the name using the racId and newName
       const response = await axios.put(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${racId}/name`,
+        `${import.meta.env.VITE_DYNAMIC_RAC_NAME_UPDATE}${racId}/name`,
         {
-          "description": newName,
-          "name": newName
-        }, 
+          description: newName,
+          name: newName,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json', // Set content type if needed
+            "Content-Type": "application/json", // Set content type if needed
           },
         }
       );
@@ -225,18 +231,20 @@ export const updateRacName = createAsyncThunk(
 
 // Define the asyncThunk for deleting a section
 export const deleteSection = createAsyncThunk(
-  'rac/deleteSection', // Action type
+  "rac/deleteSection", // Action type
   async ({ racId, sectionId }, { rejectWithValue }) => {
-    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+    const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
 
     try {
       // API call to delete the section using racId and sectionId
       const response = await axios.delete(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/${racId}/section/${sectionId}`,
+        `${
+          import.meta.env.VITE_DYNAMIC_RAC_SECTION_DELETE
+        }${racId}/section/${sectionId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -252,7 +260,6 @@ export const deleteSection = createAsyncThunk(
     }
   }
 );
-
 
 const initialState = {
   racConfig: {
@@ -520,7 +527,7 @@ const DynamicRacSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchDynamicRacDetails.fulfilled, (state, action) => {
-        console.log(action.payload)
+        console.log(action.payload);
         state.racConfig = {
           ...state.racConfig,
           racDetails: action.payload.racDetails,

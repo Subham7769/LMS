@@ -17,6 +17,7 @@ const InputText = ({
   readOnly = false,
   isValidation = false,
   isIndex,
+  isAutoFocus,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -79,6 +80,7 @@ const InputText = ({
           sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
         required
         readOnly={readOnly}
+        autoFocus={isAutoFocus}
       />
     </div>
   );
