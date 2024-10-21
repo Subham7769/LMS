@@ -30,7 +30,7 @@ const TagInput = ({
 }) => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
-  const tagsGridCSS = `md:grid-cols-${tagsPerRow}`;
+  const tagsGridCSS = `grid-cols-${tagsPerRow}`;
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">

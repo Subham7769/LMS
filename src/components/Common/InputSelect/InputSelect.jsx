@@ -29,7 +29,7 @@ const InputSelect = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
 
-  if (inputValue === null || inputValue === undefined) {
+  if (inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
 

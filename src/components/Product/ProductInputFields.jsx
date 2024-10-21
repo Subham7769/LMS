@@ -61,7 +61,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
       state.sidebar.menus.filter((item) => item.title === "Recovery")[0]
         .submenuItems
   );
-
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
@@ -112,10 +111,24 @@ const ProductInputFields = ({ productData, handleChange }) => {
 
   // Reusable function for formatting dropdown data
   function formateDataDropDown(replacerString, data) {
-    return data.map(({ name, href }) => ({
+    const formattedData = data.map(({ name, href }) => ({
       value: href.replace(replacerString, ""),
       label: name,
     }));
+
+    // Append the "None" option to the formatted data
+    if (
+      replacerString == "/tcl/" ||
+      replacerString == "/recovery/" ||
+      replacerString == "/blocked-employer/" ||
+      replacerString == "/rule-policy/"
+    )
+      formattedData.push({
+        value: null,
+        label: "None",
+      });
+
+    return formattedData;
   }
   useEffect(() => {}, [
     DBRConfigInfo,
@@ -164,7 +177,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.tclFileId}
             onChange={handleChange}
             // isValidation={true}
-            isClearable={true}
+            // isClearable={true}
           />
           <InputSelect
             inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
@@ -173,7 +186,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.recoveryEquationTempId}
             onChange={handleChange}
             // isValidation={true}
-            isClearable={true}
+            // isClearable={true}
           />
         </div>
         <div className="grid grid-cols-5 gap-5 items-end mb-4">
@@ -192,7 +205,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.blockEmployersTempId}
             onChange={handleChange}
             // isValidation={true}
-            isClearable={true}
+            // isClearable={true}
           />
           <InputSelect
             labelName="Rule Policy"
@@ -201,7 +214,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.rulePolicyTempId}
             onChange={handleChange}
             // isValidation={true}
-            isClearable={true}
+            // isClearable={true}
           />
           <InputSelect
             labelName="Credit Score"

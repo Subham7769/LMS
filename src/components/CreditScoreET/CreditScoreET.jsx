@@ -274,7 +274,7 @@ const CreditScoreET = () => {
             deleteTag={(tag) => handleNewRangeDelete(tag)}
             isValidation={true}
             orderReverse={true}
-
+            tagsPerRow={5}
           />
           <div className="flex gap-4 justify-end items-center">
             <Button
@@ -342,7 +342,7 @@ const CreditScoreET = () => {
                   isValidation={true}
                   isIndex={rule?.dataIndex}
                   orderReverse={true}
-                  tagsPerRow={6}
+                  tagsPerRow={5}
                 />
                 {roleName !== "ROLE_VIEWER" ? (
                   <div className="flex gap-4 justify-end items-center mt-1">
