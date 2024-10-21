@@ -273,6 +273,8 @@ const CreditScoreET = () => {
             addTag={addTag}
             deleteTag={(tag) => handleNewRangeDelete(tag)}
             isValidation={true}
+            orderReverse={true}
+
           />
           <div className="flex gap-4 justify-end items-center">
             <Button
