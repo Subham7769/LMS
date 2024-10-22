@@ -39,7 +39,7 @@ import store from "../../redux/store";
 const CreateNewProject = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
-  const [clientIdsString, setClientIdsString] = useState("DarwinClient");
+  const [clientIdsString, setClientIdsString] = useState("lmsClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
   const dispatch = useDispatch();
   const { projectData, loading, error } = useSelector((state) => state.project);

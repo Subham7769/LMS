@@ -42,7 +42,7 @@ import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const Project = () => {
-  const [clientIdsString, setClientIdsString] = useState("DarwinClient");
+  const [clientIdsString, setClientIdsString] = useState("lmsClient");
   const [filteredLocations, setFilteredLocations] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
