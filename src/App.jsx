@@ -234,13 +234,11 @@ const routes = [
   {
     path: "/",
     element: (
-      <AppErrorBoundary>
+      <PageErrorBoundary>
         <ProtectedRoute>
-          <PageErrorBoundary>
-            <AppLayout />
-          </PageErrorBoundary>
+          <AppLayout />
         </ProtectedRoute>
-      </AppErrorBoundary>
+      </PageErrorBoundary>
     ),
     children: [
       // Accessing All Page Components
