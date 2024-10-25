@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/20/solid";
 import toast, { Toaster } from "react-hot-toast";
 import { Failed, Passed, Warning } from "../Toasts";
-import LoadingState from "../oadingState/LoadingState";
+import LoadingState from "../LoadingState/LoadingState";
 import {
   countryOptions,
   currencyOptions,
