@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import UserImg from "../../../assets/image/user.png";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import useOnline from "../../../utils/useOnline";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify"
 
 const NotificationButton = () => (
   <Link to="/notification">
@@ -76,6 +78,7 @@ const Header = () => {
       className="shadow-md sticky h-14 top-0 left-0 bg-white z-50 flex items-center justify-between"
       id="navBarId"
     >
+      <ToastContainer />
       {/* logo */}
       <div className="w-1/3 flex shrink-0 items-center">
         {/* <img

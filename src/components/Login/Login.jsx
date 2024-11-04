@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
+import {  toast } from "react-toastify"
+
 
 import BG from "../../assets/image/1.webp";
 import BG1 from "../../assets/image/2.webp";
@@ -44,6 +46,7 @@ const Login = () => {
           return response.json().then((errorData) => {
             setButtonText(errorData.message || "Try Again!");
             throw new Error(errorData.message || "Failed to login");
+            toast("Failed to login")
           });
         }
         const authToken = response.headers.get("Authorization");
@@ -61,6 +64,8 @@ const Login = () => {
         console.log("Login Successful:", data);
         localStorage.setItem("roleName", data?.roles[0]?.name);
         localStorage.setItem("username", username);
+        toast("Login Success");
+
         setTimeout(() => {
           switch (data?.roles[0]?.name) {
             case "ROLE_SUPERADMIN":
@@ -115,6 +120,7 @@ const Login = () => {
       })
       .catch((error) => {
         setButtonText("Try Again!");
+        toast("Failed to login:", error.message);
         console.error("Failed to login:", error.message);
         setErrorMsg(error.message);
       });
