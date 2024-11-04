@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 export async function createNewRecovery(
   Name,
   navigate,
@@ -24,6 +25,7 @@ export async function createNewRecovery(
     const RecoveryDetails = await response.json();
     console.log(RecoveryDetails);
     navigate(navigateSuccess + RecoveryDetails.recoveryEquationTempId);
+    toast.success("Recovery Equation created !");
     // window.location.reload();
   } catch (error) {
     console.error(error);

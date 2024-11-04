@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
 import { FaInfoCircle } from "react-icons/fa";
 import { PencilIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -29,6 +28,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { toast } from "react-toastify";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -82,6 +82,7 @@ const RecoveryConfig = () => {
           isUpdate: data.id ? true : false,
         })
       );
+      toast.success("Recovery Equation updated!");
     }
   };
 
@@ -89,6 +90,7 @@ const RecoveryConfig = () => {
     try {
       await dispatch(deleteRecovery(recoveryEquationTempId)).unwrap();
       await dispatch(fetchRecoveryData());
+      toast.success("Recovery Equation deleted!");
       navigate("/recovery");
     } catch (err) {
       if (err === "Unauthorized") {
@@ -105,6 +107,7 @@ const RecoveryConfig = () => {
         createClone({ recoveryEquationTempId, cloneName })
       ).unwrap();
       dispatch(fetchRecoveryData());
+      toast.success("Clone created successfully !");
       navigate("/recovery/" + Details.recoveryEquationTempId);
     } catch (err) {
       if (err === "Unauthorized") {
@@ -135,7 +138,6 @@ const RecoveryConfig = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={itemName}
         handleNameUpdate={handleNameUpdate}

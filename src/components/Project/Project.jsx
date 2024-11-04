@@ -5,8 +5,6 @@ import {
   TrashIcon,
   XCircleIcon,
 } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import {
   countryOptions,
@@ -40,6 +38,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { toast } from "react-toastify";
 
 const Project = () => {
   const [clientIdsString, setClientIdsString] = useState("lmsClient");
@@ -70,14 +69,6 @@ const Project = () => {
   const updateName = (name) => {
     dispatch(setProjectData({ name: "name", value: name }));
     dispatch(fetchProjectData());
-    // toast.custom((t) => (
-    //   <Warning
-    //     t={t}
-    //     toast={toast}
-    //     title={"Not Updated Yet"}
-    //     message={"To confirm the name change click Update button"}
-    //   />
-    // ));
   };
 
   const handleUpdate = async () => {
@@ -105,14 +96,7 @@ const Project = () => {
   };
 
   const addNoEditToast = () => {
-    toast.custom((t) => (
-      <Failed
-        t={t}
-        toast={toast}
-        title={"Not Allowed"}
-        message={"Cannot edit start date"}
-      />
-    ));
+    toast.error("Cannot edit start date");
   };
 
   if (loading) {
@@ -125,7 +109,6 @@ const Project = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={projectData?.name}
         isEditable={false}
@@ -303,7 +286,7 @@ const Project = () => {
                 labelName={"Start Date"}
                 inputName={"startDate"}
                 inputValue={projectData?.startDate}
-                onChange={handleChange}
+                onChange={addNoEditToast}
                 isValidation={true}
               />
             </div>

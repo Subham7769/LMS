@@ -3,7 +3,6 @@ import { TclViewListHeaderList } from "../../data/TclData";
 import ListTable from "../Common/ListTable/ListTable";
 import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 import { useNavigate, useParams } from "react-router-dom";
-import DynamicName from "../Common/DynamicName/DynamicName";
 import { TrashIcon, FolderPlusIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import {
@@ -22,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { toast } from "react-toastify";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
@@ -49,6 +49,7 @@ const TCLViewList = () => {
       dispatch(removeTableDataByIndex(index));
       dispatch(fetchData(tclId));
       setFileSelectedOption(null);
+      toast.success("File Deleted !");
       // dispatch(removeTCLById(tclFileId)); // Remove from tableData
     } catch (err) {
       console.error("Failed to delete:", err);
@@ -94,6 +95,7 @@ const TCLViewList = () => {
       .then((successMessage) => {
         setMessage(successMessage);
         setSelectedFile(null); // Clear the file input
+        toast.success("File Uploaded !");
       })
       .catch((errorMessage) => {
         setMessage(errorMessage);
@@ -122,6 +124,7 @@ const TCLViewList = () => {
       .unwrap()
       .then(() => {
         navigate("/tcl");
+        toast.success("TCL deleted !");
       })
       .catch((err) => console.error(err));
   };

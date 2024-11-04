@@ -14,6 +14,7 @@ const InputDate = ({
   onChange,
   isValidation = false,
   isIndex,
+  isDisabled = false,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -73,6 +74,7 @@ const InputDate = ({
               : "ring-gray-300 focus:ring-indigo-600"
           } 
           sm:text-sm sm:leading-6 `}
+        disabled={isDisabled}
       />
     </>
   );

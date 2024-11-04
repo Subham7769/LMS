@@ -1,8 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
 import {
   countryOptions,
   locationOptions,
@@ -35,6 +33,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { toast } from "react-toastify";
 
 const CreateNewProject = () => {
   const navigate = useNavigate();
@@ -77,6 +76,7 @@ const CreateNewProject = () => {
         ).unwrap();
         dispatch(fetchProjectData());
         navigate("/project/" + Details.projectId);
+        toast.success("Project created");
       } catch (err) {
         if (err === "Unauthorized") {
           navigate("/login");
@@ -86,14 +86,7 @@ const CreateNewProject = () => {
   };
 
   const addNoEditToast = () => {
-    toast.custom((t) => (
-      <Failed
-        t={t}
-        toast={toast}
-        title={"Not Allowed"}
-        message={"Cannot edit start date"}
-      />
-    ));
+    toast.error("Cannot edit start date");
   };
 
   const divStyle = {
@@ -106,7 +99,6 @@ const CreateNewProject = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <form className="flex flex-col gap-8">
         <ContainerTile>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -287,8 +279,9 @@ const CreateNewProject = () => {
                 labelName={"Start Date"}
                 inputName={"startDate"}
                 inputValue={projectData?.startDate}
-                onChange={handleChange}
+                onChange={addNoEditToast}
                 isValidation={true}
+                // isDisabled={true}
               />
             </div>
 

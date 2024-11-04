@@ -1,6 +1,6 @@
 // redux/slices/projectSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import { HeaderList, ProjectList } from "../../data/ProjectData";
 
 const formattedDate = (date) => {
@@ -121,8 +121,7 @@ export const updateProject = createAsyncThunk(
           errorData.message || "Failed to update the project"
         );
       }
-      const responseData = await response.json();
-      return responseData;
+      toast.success("Project details updated");
     } catch (error) {
       return rejectWithValue(error.message || "Failed to update the project");
     }
@@ -268,12 +267,13 @@ export const deleteProject = createAsyncThunk(
       );
 
       if (!response.ok) {
+        toast.error("Failed to delete project");
         const errorData = await response.json();
         return rejectWithValue(
           errorData.message || "Failed to delete the item"
         );
       }
-
+      toast.success("Project deleted successfully!");
       // Optionally, return some data or a status code here
       return projectId;
     } catch (error) {
@@ -473,16 +473,14 @@ const projectSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProject.fulfilled, (state, action) => {
+      .addCase(updateProject.fulfilled, (state) => {
         state.loading = false;
-        state.projectData = action.payload;
       })
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
-        toast.success("Project deleted successfully!");
         state.loading = false;
         state.error = null;
       })
@@ -491,7 +489,6 @@ const projectSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteProject.rejected, (state, action) => {
-        toast.error("Failed to delete project");
         state.loading = false;
         state.error = action.error.message;
       })
