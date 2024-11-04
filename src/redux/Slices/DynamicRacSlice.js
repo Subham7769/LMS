@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, RACList } from "../../data/RacData";
 import axios from "axios";
+import {  toast } from "react-toastify"
 
 export const fetchList = createAsyncThunk(
   "rac/fetchList",
@@ -506,10 +507,12 @@ const DynamicRacSlice = createSlice({
       })
       .addCase(deleteDynamicRac.fulfilled, (state, action) => {
         state.loading = false;
+        toast("Dynamic RAC Deleted.")
       })
       .addCase(deleteDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(cloneDynamicRac.pending, (state) => {
         state.loading = true;
@@ -517,10 +520,13 @@ const DynamicRacSlice = createSlice({
       })
       .addCase(cloneDynamicRac.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Dynamic RAC Cloned.")
+
       })
       .addCase(cloneDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(fetchDynamicRacDetails.pending, (state) => {
         state.loading = true;
@@ -546,10 +552,12 @@ const DynamicRacSlice = createSlice({
       .addCase(saveDynamicRac.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        toast.success("Dynamic RAC Saved.")
       })
       .addCase(saveDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(fetchOptionList.pending, (state) => {
         state.loading = true;
@@ -582,10 +590,12 @@ const DynamicRacSlice = createSlice({
       .addCase(updateStatus.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        toast.success("Dynamic RAC Updated.")
       })
       .addCase(updateStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(updateRacName.pending, (state) => {
         state.loading = true;
@@ -597,10 +607,12 @@ const DynamicRacSlice = createSlice({
           name: action.payload.name,
         };
         state.loading = false;
+        toast.success("Dynamic RAC Updated.")
       })
       .addCase(updateRacName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(deleteSection.pending, (state) => {
         state.loading = true;
@@ -612,6 +624,7 @@ const DynamicRacSlice = createSlice({
       .addCase(deleteSection.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       });
   },
 });

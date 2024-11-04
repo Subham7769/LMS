@@ -277,7 +277,7 @@ export const fetchDynamicRacData = createAsyncThunk(
 export const fetchReportingConfigData = createAsyncThunk(
   "reportingConfig/fetchReportingConfigData",
   async (_, { rejectWithValue }) => {
-    const url = `${import.meta.env.VITE_REPORTING_CONFIG_READ_ALL_RAC}`;
+    const url = `${import.meta.env.VITE_REPORTING_CONFIG_READ_ALL_RC}`;
 
     const transformData = (data) => {
       return data.map(({ name }) => ({

@@ -1,3 +1,4 @@
+import {  toast } from "react-toastify"
 export async function createNewRac(Name, navigate, navigateSuccess, navigateFail) {
   try {
     const token = localStorage.getItem("authToken");
@@ -22,6 +23,7 @@ export async function createNewRac(Name, navigate, navigateSuccess, navigateFail
     }
     const racDetails = await response.json();
     // console.log(racDetails);
+    toast("Dynamic Rac Created.")
     navigate(navigateSuccess + racDetails.racId);
     // window.location.reload();
   } catch (error) {

@@ -104,7 +104,6 @@ const SideBar = () => {
     createNewDynamicRac,
     createNewCreditScoreET,
     createNewReportingConfig,
-    fetchReportingConfigData,
   };
 
   useEffect(() => {

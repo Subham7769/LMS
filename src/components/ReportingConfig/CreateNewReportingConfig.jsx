@@ -3,14 +3,11 @@ import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
 import {  deleteReportingConfig, updateNewReportingConfigField, createReportConfig} from "../../redux/Slices/reportingConfigSlice";
-import { Failed, Passed, Warning } from "../Toasts";
 import { fetchReportingConfigData } from '../../redux/Slices/sidebarSlice';
 import DynamicName from "../Common/DynamicName/DynamicName";
 
@@ -21,7 +18,7 @@ const CreateNewReportingConfig = () => {
   const { RCName } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { newReportingConfigData, loading, error } = useSelector((state) => state.reportingConfig);
+  const { newReportingConfigData } = useSelector((state) => state.reportingConfig);
 
   useEffect(() => {
     dispatch(updateNewReportingConfigField({ name: "name", value: RCName }));
@@ -79,17 +76,6 @@ const CreateNewReportingConfig = () => {
       if (action.type.endsWith("fulfilled")) {
         // Extract the 'name' from the action.payload
         const configName = action.payload?.name;
-
-        // Show success toast notification
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Created"}
-            message={"Created successfully"}
-          />
-        ));
-
         dispatch(fetchReportingConfigData())
         // Navigate to /reporting-config/{name} if 'name' exists
         if (configName) {
@@ -103,18 +89,8 @@ const CreateNewReportingConfig = () => {
     dispatch(updateNewConfigName( newName ))
  };
 
-
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    throw new Error(error);
-  }
-
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
         <DynamicName
           initialName={newReportingConfigData.name}

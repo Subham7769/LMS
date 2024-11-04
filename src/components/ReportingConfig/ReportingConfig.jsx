@@ -5,12 +5,10 @@ import InputText from "../Common/InputText/InputText";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
 import {  fetchReportingConfig, updateReportingConfig, deleteReportingConfig, updateReportingConfigField, updateNewConfigName,} from "../../redux/Slices/reportingConfigSlice";
-import { Failed, Passed, Warning } from "../Toasts";
 import { fetchReportingConfigData } from '../../redux/Slices/sidebarSlice';
 import DynamicName from "../Common/DynamicName/DynamicName";
 
@@ -76,18 +74,7 @@ const CreateNewReportingConfig = () => {
 
 
   const handleUpdateReportingConfig = () => {
-    dispatch(updateReportingConfig({ RCName, reportingConfigData })).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated"}
-            message={"Updated successfully"}
-          />
-        ));
-      }
-    });
+    dispatch(updateReportingConfig({ RCName, reportingConfigData }))
   };
 
   const handleUpdateName =  (newName) => {
@@ -105,7 +92,6 @@ const CreateNewReportingConfig = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-4 flex items-center justify-between">
         <DynamicName
           initialName={reportingConfigData.name}

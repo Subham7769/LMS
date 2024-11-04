@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, ProductList } from "../../data/reportingConfigData";
-
+import {  toast } from "react-toastify"
 import axios from "axios";
 
 export const fetchList = createAsyncThunk(
@@ -186,22 +186,26 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(deleteReportingConfig.fulfilled, (state) => {
         state.loading = false;
+        toast("Reporting Config Deleted.")
       })
       .addCase(deleteReportingConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(createReportConfig.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(createReportConfig.fulfilled, (state, action) => {
-        state.loading = false;
         state.reportingConfigData = action.payload;
+        state.loading = false;
+        toast.success("Reporting Config Created.")
       })
       .addCase(createReportConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(fetchReportingConfig.pending, (state) => {
         state.loading = true;
@@ -224,6 +228,7 @@ const reportingConfigSlice = createSlice({
         state.loading = false;
         console.log(action.payload);
         state.reportingConfigData = action.payload;
+        toast.success("Reporting Config Updated.")
       })
       .addCase(updateReportingConfig.rejected, (state, action) => {
         state.loading = false;

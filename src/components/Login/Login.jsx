@@ -45,8 +45,8 @@ const Login = () => {
         if (!response.ok) {
           return response.json().then((errorData) => {
             setButtonText(errorData.message || "Try Again!");
-            throw new Error(errorData.message || "Failed to login");
             toast("Failed to login")
+            throw new Error(errorData.message || "Failed to login");
           });
         }
         const authToken = response.headers.get("Authorization");
@@ -64,7 +64,7 @@ const Login = () => {
         console.log("Login Successful:", data);
         localStorage.setItem("roleName", data?.roles[0]?.name);
         localStorage.setItem("username", username);
-        toast("Login Success");
+        toast(`Welcome ${username}`);
 
         setTimeout(() => {
           switch (data?.roles[0]?.name) {

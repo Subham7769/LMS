@@ -36,12 +36,11 @@ import RuleComponent from "./RuleComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed, Warning } from "../Toasts";
 import {
   clearValidationError,
   validateRAC,
 } from "../../redux/Slices/validationSlice";
+import {  toast } from "react-toastify"
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -96,7 +95,7 @@ const DynamicRAC = () => {
           );
         } catch (error) {
           console.error("Error parsing JSON:", error);
-          alert("Failed to load configuration. Please check the file format.");
+          toast("Failed to load configuration. Please check the file format.");
         }
       };
       reader.readAsText(file);
@@ -178,14 +177,6 @@ const DynamicRAC = () => {
       if (action.type.endsWith("fulfilled")) {
         navigate(`/dynamic-rac/${action.payload.racId}`);
         dispatch(fetchDynamicRacData());
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Clone Created"}
-            message={"Clone has been created successfully"}
-          />
-        ));
       }
     });
   };
@@ -209,14 +200,7 @@ const DynamicRAC = () => {
 
     if (duplicateSectionName) {
       // Show an alert message if a duplicate section name exists
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Alert"}
-          message={`"${duplicateSectionName}" already exists. Please use unique section names.`}
-        />
-      ));
+      toast(`${duplicateSectionName} already exists. Please use unique section names.`)
       return; // Exit early, preventing further execution
     }
 
@@ -276,14 +260,7 @@ const DynamicRAC = () => {
 
   const handleAddSection = () => {
     dispatch(addSection());
-    toast.custom((t) => (
-      <Passed
-        t={t}
-        toast={toast}
-        title={"Section Added"}
-        message={"Section Added successfully"}
-      />
-    ));
+    toast("Section Added successfully");
   };
 
   if (loading) {
@@ -296,7 +273,6 @@ const DynamicRAC = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center w-full">
           <div className="flex-1 flex items-center justify-between mr-5">
