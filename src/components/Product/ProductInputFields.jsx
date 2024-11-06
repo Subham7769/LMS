@@ -11,8 +11,7 @@ import {
   tenureTypeOptions,
 } from "../../data/OptionsData";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import toast from "react-hot-toast";
-import { Failed } from "../Toasts";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { addInterestTenure } from "../../redux/Slices/productSlice";
 
@@ -97,14 +96,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
       });
       return;
     } else {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Failed"}
-          message={"All Fields Required!"}
-        />
-      ));
+      toast.error("All Fields Required!");
       return;
     }
   };

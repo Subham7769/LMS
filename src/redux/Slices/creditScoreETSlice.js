@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
 import { HeaderList, CreditScoreETList } from "../../data/CreditScoreETData";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 // Thunks for fetching Credit Score ET Info
 export const fetchCreditScoreETInfo = createAsyncThunk(
@@ -104,13 +105,15 @@ export const saveCreditScoreET = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        console.log(errorData);
+        return rejectWithValue(errorData.message);
       }
       // Optionally, refetch the data to update the store
       dispatch(fetchCreditScoreETInfo(creditScoreETId));
     } catch (error) {
       console.log("Failed to update data:", error);
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -153,7 +156,8 @@ export const AddNewRange = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
       }
       // Optionally, refetch the data to update the store
       dispatch(fetchCreditScoreETInfo(creditScoreETId));
@@ -186,7 +190,8 @@ export const updateCreditScoreETName = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
       }
       const csetDetails = await response.json();
       console.log(csetDetails);
@@ -216,6 +221,10 @@ export const createCloneCSET = createAsyncThunk(
           },
         }
       );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
       const csetDetails = await response.json();
       dispatch(fetchCreditScoreEligibleTenureData());
       return csetDetails;
@@ -247,7 +256,8 @@ export const handleDeleteCSET = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete Credit Score ET");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
       }
 
       dispatch(fetchCreditScoreEligibleTenureData());
@@ -260,7 +270,7 @@ export const handleDeleteCSET = createAsyncThunk(
 
 // Thunk for deleting a Credit Score ET Range by ruleName
 export const handleDeleteRange = createAsyncThunk(
-  "creditScoreET/handleDeleteCSET",
+  "creditScoreET/handleDeleteRange",
   async ({ creditScoreETId, ruleName }, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -278,7 +288,10 @@ export const handleDeleteRange = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete Credit Score ET");
+        const errorData = await response.json();
+        return rejectWithValue(
+          errorData.message || "Failed to delete Credit Score ET"
+        );
       }
       // Optionally, refetch the data to update the store
       dispatch(fetchCreditScoreETInfo(creditScoreETId));
@@ -541,10 +554,12 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(saveCreditScoreET.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Data updated successfully!");
       })
       .addCase(saveCreditScoreET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(AddNewRange.pending, (state) => {
         state.loading = true;
@@ -566,40 +581,60 @@ const creditScoreETSlice = createSlice({
             },
           ],
         };
+        toast.success("New Range added successfully!");
       })
       .addCase(AddNewRange.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(updateCreditScoreETName.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateCreditScoreETName.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Name Updated!");
       })
       .addCase(updateCreditScoreETName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(createCloneCSET.pending, (state) => {
         state.loading = true;
       })
       .addCase(createCloneCSET.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Clone Successful!");
       })
       .addCase(createCloneCSET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(handleDeleteCSET.pending, (state) => {
         state.loading = true;
       })
       .addCase(handleDeleteCSET.fulfilled, (state) => {
         state.loading = false;
+        toast("Eligible Tenure Deleted!");
       })
       .addCase(handleDeleteCSET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
+      })
+      .addCase(handleDeleteRange.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(handleDeleteRange.fulfilled, (state) => {
+        state.loading = false;
+        toast("Eligible Tenure Range Deleted!");
+      })
+      .addCase(handleDeleteRange.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       });
   },
 });

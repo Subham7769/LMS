@@ -8,14 +8,11 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { RowChanged, Warning } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import DynamicName from "../Common/DynamicName/DynamicName";
 import Button from "../Common/Button/Button";
 import { tenureTypeOptions, options } from "../../data/OptionsData";
 import ProductInputFields from "./ProductInputFields";
@@ -37,6 +34,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { toast } from "react-toastify";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -107,15 +105,7 @@ const LoanProductConfig = () => {
   const handleDelete = (indexInPage) => {
     const absoluteIndex = indexOfFirstItem + indexInPage;
     dispatch(deleteInterestTenure({ index: absoluteIndex }));
-
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Not Yet Deleted!"}
-        message={"Please click the save button to confirm removal of entry"}
-      />
-    ));
+    toast.warn("Please click the save button to confirm removal of entry");
   };
 
   const handleSave = async () => {
@@ -126,7 +116,6 @@ const LoanProductConfig = () => {
       try {
         // Dispatch the saveProductData thunk with necessary parameters
         dispatch(saveProductData({ loanProId, productData }));
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
       } catch (error) {
         console.error("Failed to update data:", error);
       }
@@ -134,7 +123,6 @@ const LoanProductConfig = () => {
   };
 
   const handleProductNameChange = async (newName) => {
-    toast.loading("Updating name, please wait...", { duration: 3000 });
     try {
       await dispatch(
         updateProductName({
@@ -166,14 +154,7 @@ const LoanProductConfig = () => {
   // Handle page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Page Changed"}
-        message={`You have switched to page: ${newPage}`}
-      />
-    ));
+    toast(`You have switched to page: ${newPage}`);
   };
 
   if (loading) {
@@ -215,14 +196,7 @@ const LoanProductConfig = () => {
   const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
 
   function informUser() {
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Not Yet Saved"}
-        message={"Please click the save button to confirm changes"}
-      />
-    ));
+    toast.warn("Please click the save button to confirm changes");
   }
 
   let columns = [
@@ -245,7 +219,6 @@ const LoanProductConfig = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={productData?.productType}
         handleNameUpdate={handleProductNameChange}

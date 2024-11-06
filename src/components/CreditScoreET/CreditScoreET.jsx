@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed, RowChanged, Warning } from "../Toasts";
+import { toast } from "react-toastify";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
@@ -71,12 +70,7 @@ const CreditScoreET = () => {
     const isValid = state.validation.isValid;
 
     if (isValid) {
-      try {
-        await dispatch(saveCreditScoreET(creditScoreETId)).unwrap();
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
-      } catch (error) {
-        console.error("API call failed:", error);
-      }
+      await dispatch(saveCreditScoreET(creditScoreETId)).unwrap();
     } else {
       console.log("Form validation failed. No API call made.");
     }
@@ -102,15 +96,6 @@ const CreditScoreET = () => {
     const details = await dispatch(
       createCloneCSET({ creditScoreETId, cloneCSETName })
     ).unwrap();
-
-    toast.custom((t) => (
-      <Passed
-        t={t}
-        toast={toast}
-        title="Clone Successful"
-        message="The clone was created successfully"
-      />
-    ));
     navigate("/credit-score-eligible-tenure/" + details.creditScoreEtTempId);
   };
 
@@ -135,14 +120,7 @@ const CreditScoreET = () => {
 
   const handleDelete = (tag, ruleIndex) => {
     dispatch(deleteTenure({ tag, ruleIndex })); // Dispatch with ruleIndex and tag
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Not Yet Deleted!"}
-        message={"Please click the save button to confirm removal of entry"}
-      />
-    ));
+    toast.warn("Please click the save button to confirm removal of entry");
   };
 
   const handleNewRangeDelete = (tag) => {
@@ -181,18 +159,10 @@ const CreditScoreET = () => {
     const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(tenure, dispatch);
     if (!isValid2) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Alert"}
-          message={"Add atleast 1 eligible tenure"}
-        />
-      ));
+      toast.warn("Add atleast 1 eligible tenure");
     }
     if (isValid && isValid2) {
       await dispatch(AddNewRange(creditScoreETId)).unwrap();
-      toast.custom((t) => <RowChanged t={t} toast={toast} />);
     }
   };
 
@@ -210,9 +180,9 @@ const CreditScoreET = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    <p>Error: {error}</p>;
-  }
+  // if (error) {
+  //   <p>Error: {error}</p>;
+  // }
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />

@@ -1,6 +1,6 @@
 // redux/slices/recoverySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import { RecoveryHeaderList, RecoveryList } from "../../data/RecoveryData";
 
 // Define async thunks for fetching data and performing actions
@@ -311,11 +311,13 @@ const recoverySlice = createSlice({
       .addCase(updateOrPostData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(deleteRecovery.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteRecovery.fulfilled, (state, action) => {
+        state.loading = false;
         toast.success("Recovery configuration deleted successfully!");
       })
       .addCase(deleteRecovery.rejected, (state, action) => {

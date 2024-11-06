@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, ProductList } from "../../data/ProductData";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 // Define async thunks for fetching data and performing actions
 export const fetchData = createAsyncThunk(
@@ -51,8 +52,6 @@ export const saveProductData = createAsyncThunk(
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
-      return await response.json(); // Assuming the response contains the updated data
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -299,13 +298,14 @@ const productSlice = createSlice({
       .addCase(saveProductData.pending, (state) => {
         state.loading = true;
       })
-      .addCase(saveProductData.fulfilled, (state, action) => {
+      .addCase(saveProductData.fulfilled, (state) => {
         state.loading = false;
-        state.productData = action.payload; // Update productData with the response data
+        toast.success("Product data updated.");
       })
       .addCase(saveProductData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(updateProductName.pending, (state) => {
         state.loading = true;
@@ -313,20 +313,24 @@ const productSlice = createSlice({
       .addCase(updateProductName.fulfilled, (state, action) => {
         state.loading = false;
         state.productData.productType = action.payload; // Update the productData with the new product name
+        toast.success("Product Name updated.");
       })
       .addCase(updateProductName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(deleteLoanProduct.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteLoanProduct.fulfilled, (state, action) => {
         state.loading = false;
+        toast("Product Deleted.");
       })
       .addCase(deleteLoanProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(createProductData.pending, (state) => {
         state.loading = true;
@@ -334,10 +338,12 @@ const productSlice = createSlice({
       })
       .addCase(createProductData.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Product created");
       })
       .addCase(createProductData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message; // Set the error message if the request fails
+        toast.error(`Error : ${action.error.message}`);
       });
   },
 });

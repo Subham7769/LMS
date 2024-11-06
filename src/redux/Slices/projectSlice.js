@@ -115,13 +115,11 @@ export const updateProject = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`);
         console.log(errorData.message);
         return rejectWithValue(
           errorData.message || "Failed to update the project"
         );
       }
-      toast.success("Project details updated");
     } catch (error) {
       return rejectWithValue(error.message || "Failed to update the project");
     }
@@ -242,8 +240,7 @@ export const createProject = createAsyncThunk(
       }
 
       const data = await response.json();
-
-      return data; // Return data to handle the response in the component if needed
+      return data;
     } catch (error) {
       console.error("Error creating project:", error);
       return rejectWithValue(error.message || "Failed to create project.");
@@ -267,13 +264,11 @@ export const deleteProject = createAsyncThunk(
       );
 
       if (!response.ok) {
-        toast.error("Failed to delete project");
         const errorData = await response.json();
         return rejectWithValue(
           errorData.message || "Failed to delete the item"
         );
       }
-      toast.success("Project deleted successfully!");
       // Optionally, return some data or a status code here
       return projectId;
     } catch (error) {
@@ -475,22 +470,26 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Project details updated");
       })
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(deleteProject.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteProject.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success("Project deleted successfully!");
+      })
       .addCase(deleteProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(createProject.pending, (state) => {
         state.loading = true;
@@ -499,12 +498,13 @@ const projectSlice = createSlice({
       .addCase(createProject.fulfilled, (state, action) => {
         state.loading = false;
         state.projectData = action.payload;
-
+        toast.success("Project created");
         // Update state with created project details if needed
       })
       .addCase(createProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       });
   },
 });

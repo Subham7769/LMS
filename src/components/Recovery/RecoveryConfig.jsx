@@ -82,7 +82,6 @@ const RecoveryConfig = () => {
           isUpdate: data.id ? true : false,
         })
       );
-      toast.success("Recovery Equation updated!");
     }
   };
 
@@ -90,7 +89,6 @@ const RecoveryConfig = () => {
     try {
       await dispatch(deleteRecovery(recoveryEquationTempId)).unwrap();
       await dispatch(fetchRecoveryData());
-      toast.success("Recovery Equation deleted!");
       navigate("/recovery");
     } catch (err) {
       if (err === "Unauthorized") {
@@ -107,7 +105,6 @@ const RecoveryConfig = () => {
         createClone({ recoveryEquationTempId, cloneName })
       ).unwrap();
       dispatch(fetchRecoveryData());
-      toast.success("Clone created successfully !");
       navigate("/recovery/" + Details.recoveryEquationTempId);
     } catch (err) {
       if (err === "Unauthorized") {

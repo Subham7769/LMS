@@ -1,9 +1,9 @@
 // redux/slices/tclSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
 import { convertDate } from "../../utils/convertDate";
 import { fetchTCLData } from "../../redux/Slices/sidebarSlice";
 import { HeaderList, TCLList } from "../../data/TclData";
+import { toast } from "react-toastify";
 
 // Define async thunks for fetching data and performing actions
 export const fetchName = createAsyncThunk(
@@ -304,7 +304,6 @@ const tclSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
       })
@@ -350,19 +349,26 @@ const tclSlice = createSlice({
         state.loading = true;
       })
       .addCase(deleteTCL.fulfilled, (state, action) => {
+        state.loading = false;
         toast.success("TCL deleted successfully!");
       })
       .addCase(deleteTCL.rejected, (state, action) => {
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload}`);
+      })
+      .addCase(deleteTCLFile.pending, (state) => {
+        state.loading = true;
       })
       .addCase(deleteTCLFile.fulfilled, (state, action) => {
+        state.loading = false;
         state.tableData = state.tableData.filter(
           (item) => item.value !== action.payload
         );
+        toast.success("File deleted successfully");
       })
       .addCase(deleteTCLFile.rejected, (state, action) => {
-        toast.error(action.payload);
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(uploadTCLFile.pending, (state) => {
         state.loading = true;
@@ -375,7 +381,7 @@ const tclSlice = createSlice({
       .addCase(uploadTCLFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(action.payload); // Notify the user of the error
+        toast.error(`Error : ${action.payload}`); // Notify the user of the error
       });
   },
 });

@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import Button from "../Common/Button/Button";
 import ProductInputFields from "./ProductInputFields";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,7 +44,7 @@ const CreateNewProduct = () => {
     if (isValid) {
       try {
         await dispatch(createProductData(productData)).then((action) => {
-          console.log(action.payload)
+          console.log(action.payload);
           // navigate(`/product/${action.payload.productType}/${action.payload.projectId}`);
           navigate(`/product/`);
         });
@@ -66,7 +64,6 @@ const CreateNewProduct = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <h2 className="mb-5">
         <b
           title={productName}

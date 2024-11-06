@@ -25,11 +25,9 @@ import {
   ChevronRightIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed, Warning } from "../Toasts";
+import { toast } from "react-toastify";
 import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import DynamicName from "../Common/DynamicName/DynamicName";
 import Table from "./Table";
 import { operatorOptions, empOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
@@ -85,14 +83,7 @@ const DebtBurdenConfig = () => {
 
   const handlePageChange = (newPage) => {
     dispatch(setCurrentPage(newPage));
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Page Changed"}
-        message={`You have switched to page: ${newPage}`}
-      />
-    ));
+    toast.warn(`You have switched to page: ${newPage}`);
   };
 
   const handleItemDelete = (index) => {
@@ -117,14 +108,7 @@ const DebtBurdenConfig = () => {
       } else {
         console.log("Rule deleted successfully.");
         dispatch(fetchRules(dbcTempId));
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Deleting Successful"}
-            message={"The item was deleted successfully"}
-          />
-        ));
+        dispatch(setCurrentPage(1));
       }
     });
   };
@@ -164,23 +148,10 @@ const DebtBurdenConfig = () => {
   };
 
   const createClone = async (cloneDBCName) => {
-    try {
-      const resultAction = await dispatch(
-        createCloneDBC({ dbcTempId, cloneDBCName })
-      );
-
-      if (createCloneDBC.fulfilled.match(resultAction)) {
-        const newDbcTempId = resultAction.payload;
-        navigate("/dbr-config/" + newDbcTempId);
-      } else {
-        console.error(
-          "Failed to create clone:",
-          resultAction.payload || "Unknown error"
-        );
-      }
-    } catch (error) {
-      console.error("Error during clone creation:", error);
-    }
+    const resultAction = await dispatch(
+      createCloneDBC({ dbcTempId, cloneDBCName })
+    ).unwrap();
+    navigate("/dbr-config/" + resultAction);
   };
 
   const updateNameHandler = (newName) => {
@@ -197,51 +168,20 @@ const DebtBurdenConfig = () => {
     const isValidDbr = stateAfterDbr.validation.isValid;
     console.log(isValidDbr + " ---- " + isValidOp);
     if (!isValidOp) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Alert"}
-          message={"Please fill Net Income operators!!"}
-        />
-      ));
+      toast.warn("Please fill Net Income operators!!");
     }
     if (isValidDbr && isValidOp) {
       dispatch(addRule({ operators, dbrData, dbcTempId }))
         .unwrap()
-        .then((response) => {
-          console.log("Rule added successfully:", response);
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Adding Successful"}
-              message={"The item was added successfully"}
-            />
-          ));
+        .then(() => {
           dispatch(resetdbrData());
-        })
-        .catch((error) => {
-          console.error("Failed to add rule:", error);
         });
     }
   };
 
   const deleteCurrentDBC = async () => {
-    try {
-      const resultAction = await dispatch(deleteDBC(dbcTempId));
-
-      if (deleteDBC.fulfilled.match(resultAction)) {
-        navigate("/dbr-config");
-      } else {
-        console.error(
-          "Failed to delete DBC:",
-          resultAction.payload || "Unknown error"
-        );
-      }
-    } catch (error) {
-      console.error("Error during deletion:", error);
-    }
+    await dispatch(deleteDBC(dbcTempId)).unwrap();
+    navigate("/dbr-config");
   };
 
   const handleTableChange = () => {
@@ -251,19 +191,6 @@ const DebtBurdenConfig = () => {
         // Log the successful update or perform any other action with the updated rules
         console.log("Update successful:", updatedRules);
         dispatch(fetchRules(dbcTempId));
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Update Successful"}
-            message={"The item was updated successfully"}
-          />
-        ));
-      })
-      .catch((error) => {
-        // Handle errors that occurred during the update process
-        console.error("Failed to update rule:", error);
-        toast.error("Failed to update the item. Please try again.");
       });
   };
 
@@ -276,25 +203,11 @@ const DebtBurdenConfig = () => {
   };
 
   function informUser() {
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"View Mode"}
-        message={"Switched to View Mode"}
-      />
-    ));
+    toast.warn("Switched to View Mode");
   }
 
   function informUser1() {
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Edit Mode"}
-        message={"Switched to Edit Mode"}
-      />
-    ));
+    toast.warn("Switched to Edit Mode");
   }
 
   const getSortIcon = (column) => {
@@ -332,7 +245,6 @@ const DebtBurdenConfig = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={name}
         handleNameUpdate={updateNameHandler}

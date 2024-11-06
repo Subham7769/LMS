@@ -76,7 +76,6 @@ const CreateNewProject = () => {
         ).unwrap();
         dispatch(fetchProjectData());
         navigate("/project/" + Details.projectId);
-        toast.success("Project created");
       } catch (err) {
         if (err === "Unauthorized") {
           navigate("/login");

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchDBRData } from "./sidebarSlice";
 import { HeaderList, DebtBurdenList } from "../../data/DebtBurdenData";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 export const fetchRules = createAsyncThunk(
   "dbr/fetchRules",
@@ -88,7 +89,8 @@ export const updateName = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to update name");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update name");
       }
 
       dispatch(fetchName(dbcTempId));
@@ -122,7 +124,8 @@ export const createCloneDBC = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to create clone");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to create clone");
       }
 
       const dbcDetails = await response.json();
@@ -159,7 +162,8 @@ export const addRule = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to add rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add rule");
       }
       await dispatch(fetchRules(dbcTempId));
     } catch (error) {
@@ -189,7 +193,8 @@ export const deleteDBC = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to delete item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete item");
       }
 
       dispatch(fetchDBRData());
@@ -221,9 +226,10 @@ export const deleteRule = createAsyncThunk(
         console.error("Failed to delete rule. Status:", response.status);
         if (response.status === 401 || response.status === 403) {
           localStorage.clear();
-          window.location.href = "/login";
+          return rejectWithValue("Unauthorized");
         }
-        return rejectWithValue("Failed to delete rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete rule");
       }
 
       console.log("Deletion successful, returning index:", index);
@@ -260,7 +266,8 @@ export const updateRule = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to update rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update rule");
       }
 
       // Return the updated rules array if the request was successful
@@ -404,7 +411,7 @@ export const dbrSlice = createSlice({
         state.name = action.payload;
         state.loading = false;
       })
-      .addCase(fetchName.rejected, (state) => {
+      .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -413,20 +420,24 @@ export const dbrSlice = createSlice({
       })
       .addCase(deleteRule.fulfilled, (state, action) => {
         state.loading = false;
+        toast("Rule deleted successfully!");
       })
       .addCase(deleteRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(updateName.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateName.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Name updated successfully!");
       })
       .addCase(updateName.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(createCloneDBC.pending, (state) => {
         state.loading = true;
@@ -434,40 +445,48 @@ export const dbrSlice = createSlice({
       .addCase(createCloneDBC.fulfilled, (state, action) => {
         state.currentPage = 1;
         state.loading = false;
+        toast.success("Clone created successfully!");
       })
       .addCase(createCloneDBC.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(addRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(addRule.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Rule added successfully!");
       })
       .addCase(addRule.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteDBC.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteDBC.fulfilled, (state) => {
         state.loading = false;
+        toast("DBC deleted successfully!");
       })
       .addCase(deleteDBC.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateRule.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Rule updated successfully");
       })
       .addCase(updateRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });
