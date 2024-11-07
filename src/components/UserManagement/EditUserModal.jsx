@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import SelectInput from "../Common/DynamicSelect/DynamicSelect";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
 import {
   clearFormData,
   setFormData,
@@ -46,26 +44,9 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
     const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(userRole, dispatch);
     if (isValid && isValid2) {
-      try {
-        await dispatch(
-          updateUser({ userDetails, formData, userRole })
-        ).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Success"}
-            message={"User Details updated Successfully !!"}
-          />
-        ));
-        onClose();
-        dispatch(clearFormData());
-      } catch (error) {
-        console.log(error.message);
-        toast.custom((t) => (
-          <Failed t={t} toast={toast} title={"Error"} message={error.message} />
-        ));
-      }
+      await dispatch(updateUser({ userDetails, formData, userRole })).unwrap();
+      onClose();
+      dispatch(clearFormData());
     }
   };
 
@@ -73,7 +54,6 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
         <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-4/5 ">
           <form className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
@@ -108,7 +88,7 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
               buttonName={"Cancel"}
               onClick={() => {
                 onClose();
-                dispatch(clearFormData());
+                // dispatch(clearFormData());
               }}
               className={" bg-gray-600 text-white hover:bg-gray-500 self-end"}
               rectangle={true}

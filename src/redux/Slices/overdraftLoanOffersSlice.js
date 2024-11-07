@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 // Async thunk to submit OverdraftOffer
 export const submitOverdraftOffer = createAsyncThunk(
-  "loanConfig/submitLoanConfiguration",
+  "loanConfig/submitOverdraftOffer",
   async (userID, { getState, rejectWithValue }) => {
     // Access overdraftOffer from the current state
     const { overdraftOffer } = getState().overdraftLoanOffers;
@@ -31,10 +32,10 @@ export const submitOverdraftOffer = createAsyncThunk(
         }
       );
 
-      // Handle any non-2xx responses as errors
-      if (!response.ok) {
+      // Handle bad request
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const json = await response.json();
@@ -65,9 +66,9 @@ export const createOverdraft = createAsyncThunk(
       });
 
       // Handle bad request
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const loanId = await response.json();
@@ -101,9 +102,9 @@ export const activateOverdraftLoanAccount = createAsyncThunk(
       );
 
       // Check for a bad request
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const responseData = await response.json();
@@ -134,9 +135,9 @@ export const cancelOverdraftLoanAccount = createAsyncThunk(
       });
 
       // Check for a bad request
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const responseData = await response.json();
@@ -167,9 +168,9 @@ export const closeOverdraftLoanAccount = createAsyncThunk(
       });
 
       // Check for a bad request
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const responseData = await response.json();
@@ -196,9 +197,9 @@ export const getOverdraftLoanAccount = createAsyncThunk(
       );
 
       // Check for a bad request
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const responseData = await response.json();
@@ -269,7 +270,7 @@ export const getOverdraftLoanAccountPIF = createAsyncThunk(
 
 // Async thunk for fetching account details by account number
 export const getOverdraftAccountNumberList = createAsyncThunk(
-  "overdraft/getAccountNumber",
+  "overdraft/getOverdraftAccountNumberList",
   async (userID, { rejectWithValue }) => {
     try {
       const response = await axios.get(
@@ -305,9 +306,9 @@ export const debitOverdraftLoanAccount = createAsyncThunk(
       );
 
       // Handle a 400 (bad request) response
-      if (response.status === 400) {
+      if (response.status === 400 || response.status === 500) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message); // Pass the error message from the response
+        return rejectWithValue(errorData); // Pass the error message from the response
       }
 
       // Parse and return the response data if the request was successful
@@ -342,7 +343,7 @@ export const payOverdraftLoanAccount = createAsyncThunk(
       // Check for a bad request
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const responseData = await response.json();
@@ -374,7 +375,7 @@ export const getAccountDetails = createAsyncThunk(
       // Check for a bad request
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const data = await response.json();
@@ -457,6 +458,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(submitOverdraftOffer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(createOverdraft.pending, (state) => {
         state.loading = true;
@@ -477,10 +479,12 @@ const overdraftLoanOffersSlice = createSlice({
           // ],
         };
         state.accountNumber = action.payload.accountNumber;
+        toast.success("Overdraft Created.");
       })
       .addCase(createOverdraft.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(activateOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -493,10 +497,12 @@ const overdraftLoanOffersSlice = createSlice({
           accountNumber: action.payload.accountNumber,
           status: action.payload.status,
         };
+        toast.success("Overdraft Activated.");
       })
       .addCase(activateOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(cancelOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -509,10 +515,12 @@ const overdraftLoanOffersSlice = createSlice({
           accountNumber: action.payload.accountNumber,
           status: action.payload.status,
         };
+        toast.success("Overdraft Cancelled.");
       })
       .addCase(cancelOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(closeOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -525,10 +533,12 @@ const overdraftLoanOffersSlice = createSlice({
           accountNumber: action.payload.accountNumber,
           status: action.payload.status,
         };
+        toast.success("Overdraft Closed.");
       })
       .addCase(closeOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -576,6 +586,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(getOverdraftLoanAccountOutstanding.pending, (state) => {
         state.loading = true;
@@ -592,6 +603,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getOverdraftLoanAccountOutstanding.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(getOverdraftLoanAccountPIF.pending, (state) => {
         state.loading = true;
@@ -605,6 +617,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getOverdraftLoanAccountPIF.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(getOverdraftAccountNumberList.pending, (state) => {
         state.loading = true;
@@ -625,6 +638,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getOverdraftAccountNumberList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch account details";
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(debitOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -636,10 +650,12 @@ const overdraftLoanOffersSlice = createSlice({
           ...state.debitAmount,
           accountStatus: action.payload,
         };
+        toast.success("Amount Debited.");
       })
       .addCase(debitOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(payOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -651,10 +667,13 @@ const overdraftLoanOffersSlice = createSlice({
           ...state.payAmount,
           accountStatus: action.payload,
         };
+        toast.success("Amount Paid.");
       })
       .addCase(payOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        console.log(action.payload);
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(getAccountDetails.pending, (state) => {
         state.loading = true;
@@ -667,6 +686,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getAccountDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.error.message}`);
       });
   },
 });

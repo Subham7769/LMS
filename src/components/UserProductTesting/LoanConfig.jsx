@@ -197,7 +197,7 @@ const LoanConfig = () => {
   const tableSliderStyle =
     "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
 
-  // Conditional rendering based on loading and error states
+  // Conditional rendering based on loading
   if (loading) {
     return <LoadingState />;
   }
@@ -237,7 +237,6 @@ const LoanConfig = () => {
         </div>
       </ContainerTile>
       {/* Render error message if `error` is present */}
-      {error && <ContainerTile>Error: {error}</ContainerTile>}
       {showModal && (
         <>
           <div className="grid grid-cols-2 gap-5">

@@ -1,6 +1,4 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import {
@@ -25,28 +23,12 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
       isValid = false;
     }
     if (isValid) {
-      try {
-        await dispatch(
-          suspendUser({
-            userName: userDetails.username,
-            reason: suspensionReason,
-          })
-        ).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Success"}
-            message={"User Suspended Successfully !!"}
-          />
-        ));
-        onClose();
-        dispatch(clearFormData());
-      } catch (error) {
-        toast.custom((t) => (
-          <Failed t={t} toast={toast} title={"Failed"} message={error} />
-        ));
-      }
+      await dispatch(suspendUser({
+        userName: userDetails.username,
+        reason: suspensionReason,
+      })).unwrap();
+      onClose();
+      dispatch(clearFormData());
     }
   };
 
@@ -56,7 +38,6 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
         <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-4/5 ">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">

@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { Toaster } from "react-hot-toast";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
@@ -52,7 +51,6 @@ const DisbursementStatus = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
         <div className="text-lg">Proceed for disbursement</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
@@ -85,7 +83,7 @@ const DisbursementStatus = () => {
           No Loan Available for Disbursement
         </ContainerTile>
       )}
-      {error && <ContainerTile>Error: {error}</ContainerTile>}
+      {/* {error && <ContainerTile>Error: {error}</ContainerTile>} */}
     </div>
   );
 };

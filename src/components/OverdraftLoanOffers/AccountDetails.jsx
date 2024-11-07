@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
@@ -16,7 +15,7 @@ function AccountDetails() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  console.log(accountDetails)
+  // console.log(accountDetails)
 
   useEffect(() => {
     if(!accountNumberList){
@@ -94,13 +93,12 @@ function AccountDetails() {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
+  // if (error) {
+  //   return <ContainerTile>Error: {error}</ContainerTile>;
+  // }
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer flex justify-between items-center w-full">
         <div className="w-1/4 font-bold">Account Details</div>
         <div className="w-1/4">

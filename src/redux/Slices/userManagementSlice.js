@@ -1,5 +1,5 @@
-// redux/slices/UserManagementSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {  toast } from "react-toastify"
 
 // Async thunk for fetching user data
 export const fetchUsers = createAsyncThunk(
@@ -70,10 +70,10 @@ export const generatePassword = createAsyncThunk(
       );
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -288,36 +288,82 @@ const userManagementSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.loading = false;
+        toast("User Deleted Successfully");
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(suspendUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(suspendUser.fulfilled, (state) => {
         state.loading = false;
+        toast.success("User Suspended Successfully");
       })
       .addCase(suspendUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("User Updated Successfully");
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
+      })
+      .addCase(activateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(activateUser.fulfilled, (state) => {
+        state.loading = false;
+        toast.success("User Activated Successfully");
+      })
+      .addCase(activateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
+      })
+      .addCase(generatePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(generatePassword.fulfilled, (state) => {
+        state.loading = false;
+        toast.success("New Password Generated Successfully");
+      })
+      .addCase(generatePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
+      })
+      .addCase(createUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUser.fulfilled, (state) => {
+        toast.success("User Created successfully");
+        state.loading = false;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       });
   },
 });

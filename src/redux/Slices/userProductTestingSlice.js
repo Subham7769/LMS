@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const postData = {
   msisdn: "966500666496",
@@ -64,7 +65,7 @@ export const getUserEligibility = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await axios({
         method: "POST",
-        url: `${import.meta.env.VITE_USER_PRODUCT_TESTING}/${userID}${url}`,
+        url: `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}${url}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -76,11 +77,14 @@ export const getUserEligibility = createAsyncThunk(
       } else if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
         return rejectWithValue("Unauthorized access");
+      } else if (response.status === 500) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
       }
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -111,7 +115,7 @@ export const getBorrowerInfo = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -146,7 +150,7 @@ export const getUserLoanOptions = createAsyncThunk(
       const json = await response.json();
       return json;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -178,13 +182,13 @@ export const submitLoanConfiguration = createAsyncThunk(
 
       if (response.status === 400) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       const json = await response.json();
       return json;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -214,13 +218,13 @@ export const handleProceed = createAsyncThunk(
 
       if (response.status === 400) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message); // Handle error with a reject
+        return rejectWithValue(errorData); // Handle error with a reject
       }
 
       const loanData = await response.json();
       return loanData.loanId; // Return loanId on success
     } catch (error) {
-      return rejectWithValue(error.message); // Handle fetch or network errors
+      return rejectWithValue(error); // Handle fetch or network errors
     }
   }
 );
@@ -255,7 +259,7 @@ export const getDisbursementInfo = createAsyncThunk(
       const json = await response.json();
       return json; // Return disbursement data
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -295,7 +299,7 @@ export const submitDisbursement = createAsyncThunk(
       // Handle error response
       if (response.status === 400) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       if (response.status === 202) {
@@ -305,7 +309,7 @@ export const submitDisbursement = createAsyncThunk(
         return "Disbursement done Successfully !!";
       }
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -339,7 +343,7 @@ export const getRepaymentInfo = createAsyncThunk(
 
       if (response.status === 404) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       if (response.status === 500) {
@@ -349,7 +353,7 @@ export const getRepaymentInfo = createAsyncThunk(
       const data = await response.json();
       return data; // Successfully return the repayment data
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -392,7 +396,7 @@ export const submitRepayment = createAsyncThunk(
 
       if (response.status === 400 || response.status === 404) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData);
       }
 
       if (response.status === 202) {
@@ -402,7 +406,7 @@ export const submitRepayment = createAsyncThunk(
         return "Repayment done Successfully !!";
       }
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -424,13 +428,14 @@ export const getBorrowerDetails = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -464,7 +469,8 @@ export const updateFamilyDetails = createAsyncThunk(
       }
 
       if (!response.ok) {
-        return rejectWithValue(data || { message: "Failed to update data" });
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
       }
 
       // Dispatch to fetch updated family details after successful update
@@ -474,7 +480,7 @@ export const updateFamilyDetails = createAsyncThunk(
       return data;
     } catch (error) {
       // Catch and return the error
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -500,15 +506,13 @@ export const updateEmploymentDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return rejectWithValue(errorData);
       }
 
       // Dispatch to fetch updated family details after successful update
       await dispatch(getBorrowerDetails(userID));
-
-      return await response.json(); // Return updated data or any success message
     } catch (error) {
-      return rejectWithValue(error.message); // Handle error in rejected case
+      return rejectWithValue(error); // Handle error in rejected case
     }
   }
 );
@@ -585,7 +589,8 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(getUserEligibility.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getBorrowerInfo.pending, (state) => {
         state.loading = true;
@@ -598,6 +603,7 @@ const userProductTestingSlice = createSlice({
       .addCase(getBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
@@ -617,6 +623,7 @@ const userProductTestingSlice = createSlice({
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;
@@ -630,6 +637,7 @@ const userProductTestingSlice = createSlice({
       .addCase(submitLoanConfiguration.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(handleProceed.pending, (state) => {
         state.loading = true;
@@ -642,6 +650,7 @@ const userProductTestingSlice = createSlice({
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong"; // Set error message
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getDisbursementInfo.pending, (state) => {
         state.loading = true;
@@ -656,6 +665,7 @@ const userProductTestingSlice = createSlice({
       .addCase(getDisbursementInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(submitDisbursement.pending, (state) => {
         state.loading = true;
@@ -663,11 +673,12 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(submitDisbursement.fulfilled, (state) => {
         state.loading = false;
-        // console.log(action.payload)
+        toast.success("Disbursement Submitted Successfully");
       })
       .addCase(submitDisbursement.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getRepaymentInfo.pending, (state) => {
         state.loading = true;
@@ -684,6 +695,7 @@ const userProductTestingSlice = createSlice({
       .addCase(getRepaymentInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(submitRepayment.pending, (state) => {
         state.loading = true;
@@ -692,10 +704,12 @@ const userProductTestingSlice = createSlice({
       .addCase(submitRepayment.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
+        toast.success("Repayment Submitted Successfully");
       })
       .addCase(submitRepayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getBorrowerDetails.pending, (state) => {
         state.loading = true;
@@ -717,6 +731,7 @@ const userProductTestingSlice = createSlice({
       .addCase(getBorrowerDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(updateFamilyDetails.pending, (state) => {
         state.loading = true;
@@ -725,10 +740,27 @@ const userProductTestingSlice = createSlice({
       .addCase(updateFamilyDetails.fulfilled, (state, action) => {
         // console.log(action.payload);
         state.loading = false;
+        toast.success("Family Details Updated Successfully");
       })
       .addCase(updateFamilyDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        console.log(action.error.message);
+        toast.error(`Error : ${action.payload.message}`);
+      })
+      .addCase(updateEmploymentDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateEmploymentDetails.fulfilled, (state, action) => {
+        // console.log(action.payload);
+        state.loading = false;
+        toast.success("Employment Details Updated Successfully");
+      })
+      .addCase(updateEmploymentDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       });
   },
 });

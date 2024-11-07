@@ -29,7 +29,7 @@ export const deleteReportingConfig = createAsyncThunk(
         },
       });
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -54,12 +54,14 @@ export const createReportConfig = createAsyncThunk(
 
       if (!response.ok) {
         throw new Error("Failed to create report configuration");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message)
       }
 
       const data = await response.json(); // Assuming response contains some data
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -82,7 +84,7 @@ export const fetchReportingConfig = createAsyncThunk(
       return response.data; // Return the API response data
     } catch (error) {
       // Handle and return error response
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -107,7 +109,7 @@ export const updateReportingConfig = createAsyncThunk(
 
       return response.data; // Return the updated data from the API
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -179,7 +181,7 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
       })
       .addCase(deleteReportingConfig.pending, (state) => {
         state.loading = true;
@@ -190,8 +192,8 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(deleteReportingConfig.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        state.error = action.error;
+         toast.error(`Error : ${action.error.message}` )
       })
       .addCase(createReportConfig.pending, (state) => {
         state.loading = true;
@@ -205,7 +207,7 @@ const reportingConfigSlice = createSlice({
       .addCase(createReportConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.error.message}` )
+         toast.error(`Error : ${action.error.message}` )
       })
       .addCase(fetchReportingConfig.pending, (state) => {
         state.loading = true;
@@ -233,7 +235,8 @@ const reportingConfigSlice = createSlice({
       .addCase(updateReportingConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error occurred while updating";
-      });
+      })
+      
   },
 });
 

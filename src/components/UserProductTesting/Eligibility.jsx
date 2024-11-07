@@ -133,10 +133,6 @@ const UserInfo = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   return (
     <>
       <div className="flex items-center gap-5 mb-5">

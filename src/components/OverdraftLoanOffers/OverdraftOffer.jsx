@@ -166,9 +166,9 @@ const OverdraftOffer = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
+  // if (error) {
+  //   return <ContainerTile>Error: {error}</ContainerTile>;
+  // }
 
   return (
     <div className="flex flex-col gap-5">
@@ -200,6 +200,7 @@ const OverdraftOffer = () => {
           </div>
         </div>
       </ContainerTile>
+
       {showModal && (
         <>
           <ContainerTile className="flex items-start w-full">

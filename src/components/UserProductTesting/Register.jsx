@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
@@ -180,10 +180,6 @@ const Register = () => {
         </div>
       </>
     );
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   return (

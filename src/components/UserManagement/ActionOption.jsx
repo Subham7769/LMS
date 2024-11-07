@@ -2,8 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import EditUserModal from "./EditUserModal";
 import SuspendUserModal from "./SuspendUserModal";
 import {
@@ -13,7 +11,7 @@ import {
   deleteUser,
   clearFormData,
 } from "../../redux/Slices/userManagementSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const ActionOption = ({ userDataProp, getUser, role }) => {
   const [userName, setUserName] = useState("");
@@ -28,19 +26,7 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
   }, [userDataProp]);
 
   const handleDelete = async (userName) => {
-    toast.loading("Deleting...", {
-      duration: 1000,
-      position: "bottom-center",
-    });
-    await dispatch(deleteUser(userName)).unwrap();
-    toast.custom((t) => (
-      <Passed
-        t={t}
-        toast={toast}
-        title="Delete Successful"
-        message="The user was deleted successfully"
-      />
-    ));
+    await dispatch(deleteUser(userName))
     dispatch(clearFormData());
   };
 
@@ -57,37 +43,13 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
   };
 
   const handleActivateUser = async () => {
-    toast.loading("Activating...", {
-      duration: 1000,
-      position: "bottom-center",
-    });
     await dispatch(activateUser(userDataProp.username)).unwrap();
     await dispatch(fetchUsers()).unwrap();
     dispatch(clearFormData());
-    toast.custom((t) => (
-      <Passed
-        t={t}
-        toast={toast}
-        title="Activate Successful"
-        message="The user was activated successfully"
-      />
-    ));
   };
 
   const handleGeneratePassword = async () => {
-    toast.loading("Generating...", {
-      duration: 1000,
-      position: "bottom-center",
-    });
-    await dispatch(generatePassword(userDataProp.username)).unwrap();
-    toast.custom((t) => (
-      <Passed
-        t={t}
-        toast={toast}
-        title="Successful"
-        message="New Password generated successfully"
-      />
-    ));
+    await dispatch(generatePassword(userDataProp.username))
     dispatch(clearFormData());
   };
 

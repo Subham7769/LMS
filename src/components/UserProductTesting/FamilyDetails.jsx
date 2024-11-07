@@ -1,6 +1,5 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
-import { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -55,15 +54,10 @@ function FamilyDetails() {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <h2
-        className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md w-1/5 cursor-pointer"
+        className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md  cursor-pointer"
         title="Family Details"
       >
         <b>Family Details</b>

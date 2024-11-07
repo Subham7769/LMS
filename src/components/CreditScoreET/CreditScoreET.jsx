@@ -1,5 +1,5 @@
 import InputSelect from "../Common/InputSelect/InputSelect";
-import { operatorOptions, tenureDurationOptions } from "../../data/OptionsData";
+import { operatorOptions } from "../../data/OptionsData";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -180,12 +180,8 @@ const CreditScoreET = () => {
     return <LoadingState />;
   }
 
-  // if (error) {
-  //   <p>Error: {error}</p>;
-  // }
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={creditScoreETName}
         handleNameUpdate={handleUpdateCSET}

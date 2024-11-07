@@ -49,9 +49,9 @@ const DebitAmount = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
+  // if (error) {
+  //   return <ContainerTile>Error: {error}</ContainerTile>;
+  // }
 
   if (accountNumberList?.length < 1) {
     return <ContainerTile className="text-center">No Debit Amount Account</ContainerTile>;

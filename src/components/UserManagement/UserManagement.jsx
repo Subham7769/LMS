@@ -1,4 +1,3 @@
-// components/UserManagement.js
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,12 +6,11 @@ import {
   setIsModalOpen,
   clearFormData,
 } from "../../redux/Slices/userManagementSlice";
-import { Toaster } from "react-hot-toast";
 import Button from "../Common/Button/Button";
 import AddUserModal from "./AddUserModal";
 import ActionOption from "./ActionOption";
-import Loader from "../Common/Loader/Loader";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import LoadingState from "../LoadingState/LoadingState";
 
 const UserManagement = ({ role }) => {
   const dispatch = useDispatch();
@@ -40,14 +38,11 @@ const UserManagement = ({ role }) => {
   // console.log(selectedUserData);
 
   const options = { day: "2-digit", month: "short", year: "numeric" };
-
+  if (loading) {
+    return <LoadingState />;
+  }
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
-
-      {loading ? (
-        <Loader />
-      ) : (
         <ContainerTile>
           <div className="flex justify-between mb-5 items-end">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
@@ -106,7 +101,6 @@ const UserManagement = ({ role }) => {
             </table>
           </div>
         </ContainerTile>
-      )}
       <AddUserModal isOpen={isModalOpen} onClose={closeModal} role={role} />
     </>
   );
