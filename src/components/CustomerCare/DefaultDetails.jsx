@@ -1,17 +1,12 @@
 import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useSelector } from "react-redux";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const DefaultDetails = () => {
   const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
 
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   const defaultDet = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.defaults?.default;

@@ -20,7 +20,7 @@ export const fetchName = createAsyncThunk(
       });
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       const data = await response.json();
       return data.tclName;
@@ -47,7 +47,7 @@ export const fetchData = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       const data = await response.json();
       const formattedTCLInfoData = data.map(({ fileName, tclFileId }) => ({
@@ -112,7 +112,7 @@ export const addTCLData = createAsyncThunk(
 
       if (data.status === 401 || data.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       const TCLDetails = await data.json();
@@ -163,7 +163,7 @@ export const updateTCL = createAsyncThunk(
 
       if (data.status === 401 || data.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       const TCLDetails = await data.json();

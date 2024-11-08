@@ -40,7 +40,7 @@ export const generateReport = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       if (response.ok) {

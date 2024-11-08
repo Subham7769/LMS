@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const initialState = {
   personalInfo: {
@@ -65,13 +65,13 @@ export const fetchBorrowerData = createAsyncThunk(
       }
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       const data = await response.json();
       return data;
-    } catch (err) {
-      console.log(err.message);
-      return rejectWithValue(err.message);
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
     }
   }
 );
@@ -96,9 +96,8 @@ export const downloadClearanceLetter = createAsyncThunk(
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("authToken"); // Clear the token
           // You can redirect using another approach, but we can't call navigate directly here
-          return rejectWithValue("Unauthorized");
+          return rejectWithValue({message:"Unauthorized"});
         }
-        throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const blob = await response.blob();
@@ -107,7 +106,7 @@ export const downloadClearanceLetter = createAsyncThunk(
       // Return the download URL to be handled in the component
       return downloadUrl;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -133,7 +132,7 @@ export const downloadFile = createAsyncThunk(
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("authToken");
           // Optionally navigate to login
-          return rejectWithValue("Unauthorized");
+          return rejectWithValue({message:"Unauthorized"});
         }
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -150,7 +149,7 @@ export const downloadFile = createAsyncThunk(
 
       return { success: true };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -188,6 +187,7 @@ const borrowerSlice = createSlice({
         state.loading = false;
         console.error("fetchBorrowerData failed:", action.payload);
         state.error = action.payload;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;
@@ -208,6 +208,7 @@ const borrowerSlice = createSlice({
         state.downloadLoading = false;
         state.downloadError = action.error.message;
         console.error("Download failed:", action.payload);
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(downloadFile.pending, (state) => {
         state.loading = true;
@@ -219,6 +220,7 @@ const borrowerSlice = createSlice({
       .addCase(downloadFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       });
   },
 });

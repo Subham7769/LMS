@@ -73,10 +73,6 @@ const CreditProfile = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   const Content = () => (
     <>
       <DataWithIcon

@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector } from "react-redux";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
+import { useParams } from "react-router-dom";
+import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
+import { useDispatch } from "react-redux";
 
 const InfoRow = ({ label, value }) => (
   <div className="py-2 grid grid-cols-3">
@@ -13,9 +16,19 @@ const InfoRow = ({ label, value }) => (
 
 const KYCDetails = () => {
   // Access state from Redux store
-  const { personalInfo, loading, error } = useSelector(
-    (state) => state.customerCare
-  );
+  const { personalInfo, loading, error } = useSelector((state) => state.customerCare);
+  const { subID } = useParams();
+  const dispatch = useDispatch();
+  
+  // Set the correct URL for the API endpoint
+  const url = ``;
+
+  useEffect(() => {
+    if (!personalInfo.recentGosiData) {
+      // Dispatch the fetchBorrowerData thunk
+      dispatch(fetchBorrowerData({ subID, url }));
+    }
+  }, [dispatch,subID])
 
   const {
     fullName,
@@ -28,15 +41,11 @@ const KYCDetails = () => {
     employmentStatus,
     salaryStartingDate,
     establishmentActivity,
-  } = personalInfo.recentGosiData.employmentStatusInfo[0] || {};
-
+  } = personalInfo?.recentGosiData?.employmentStatusInfo?.[0] || {};
+  
   // Conditional rendering starts after hooks have been defined
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   const Content = () => (

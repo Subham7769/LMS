@@ -1,11 +1,9 @@
 import LoadingState from "../LoadingState/LoadingState";
 import LoanInfoModal from "./LoanInfoModal";
-import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
 import ListTable from "../Common/ListTable/ListTable";
 import { useEffect, useState } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import { loanStatusOptions } from "../../data/OptionsData";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,12 +11,11 @@ import {
   fetchBorrowerData,
   downloadClearanceLetter,
 } from "../../redux/Slices/borrowerSlice";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const LoanHistory = () => {
   const { subID } = useParams();
   const dispatch = useDispatch();
-  const { loanHistory, downloadLoading, downloadError, error, loading } =
+  const { loanHistory, error, loading } =
     useSelector((state) => state.customerCare);
   const url = "/loans";
   const [showModal, setShowModal] = useState(false);
@@ -154,10 +151,6 @@ const LoanHistory = () => {
   // Conditional rendering starts after hooks have been defined
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import { useDispatch } from "react-redux";
 import { downloadFile } from "../../redux/Slices/borrowerSlice";

@@ -62,12 +62,6 @@ const BackendRepayment = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return (
-      <ContainerTile className="text-center">Error: {error}</ContainerTile>
-    );
-  }
-
   if (repaymentData.length === 0) {
     return (
       <ContainerTile className="text-center">

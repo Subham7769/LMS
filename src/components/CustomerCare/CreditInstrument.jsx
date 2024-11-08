@@ -54,10 +54,6 @@ const CreditInstrument = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   const settings = {
     dots: false,
     infinite: false,
@@ -79,7 +75,7 @@ const CreditInstrument = () => {
     "Tenure",
     "Payment Frequency",
     "Instalment Amount",
-    "Consumer Sallary",
+    "Consumer Salary",
     "Security Type",
     "Outstanding Balance",
     "Past Due Balance",

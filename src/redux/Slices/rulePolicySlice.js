@@ -505,7 +505,7 @@ export const fetchName = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       const data = await response.json();
       return data.name;
@@ -534,7 +534,7 @@ export const updateRulePolicyName = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       } else if (response.ok) {
         return updateRPName;
       } else {
@@ -565,7 +565,7 @@ export const createClone = createAsyncThunk(
 
     if (response.status === 401 || response.status === 403) {
       localStorage.clear();
-      return rejectWithValue("Unauthorized");
+      return rejectWithValue({message:"Unauthorized"});
     }
 
     if (!response.ok) {
@@ -594,7 +594,7 @@ export const deleteRulePolicy = createAsyncThunk(
 
     if (response.status === 401 || response.status === 403) {
       localStorage.clear();
-      return rejectWithValue("Unauthorized");
+      return rejectWithValue({message:"Unauthorized"});
     }
 
     if (!response.ok) {

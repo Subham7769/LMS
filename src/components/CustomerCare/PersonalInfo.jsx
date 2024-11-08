@@ -52,10 +52,6 @@ const PersonalInfo = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   const Content = () => (
     <>
       <img
@@ -101,7 +97,7 @@ const PersonalInfo = () => {
       </div>
 
       <div className="text-sm mb-2 font-semibold">Residential Details</div>
-      <div className="grid grid-cols-2 gap-4 border-b border-gray-300 mb-5 text-[14px] pb-2">
+      <div className="grid grid-cols-2 gap-4 border-gray-300 text-[14px]">
         <InfoRow
           label="Address"
           value={`${residenceDetails?.buildingNumber}, ${residenceDetails?.streetName}, ${residenceDetails?.city}`}

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // Define async thunk to fetch ledger data
 export const fetchLedgerData = createAsyncThunk(
@@ -45,6 +46,7 @@ const ledgerSlice = createSlice({
       .addCase(fetchLedgerData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       });
   },
 });

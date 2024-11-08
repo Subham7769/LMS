@@ -236,7 +236,7 @@ const LoanConfig = () => {
           </div>
         </div>
       </ContainerTile>
-      {/* Render error message if `error` is present */}
+
       {showModal && (
         <>
           <div className="grid grid-cols-2 gap-5">

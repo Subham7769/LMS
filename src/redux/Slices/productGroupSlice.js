@@ -19,7 +19,7 @@ export const fetchPGroups = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       const data = await response.json();
@@ -50,7 +50,7 @@ export const fetchLoanProducts = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       const data = await response.json();

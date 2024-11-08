@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 // Async thunks for API calls
 export const fetchLiabilityData = createAsyncThunk(
@@ -22,7 +23,7 @@ export const fetchLiabilityData = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -53,11 +54,12 @@ export const addNewLiabilityItem = createAsyncThunk(
       });
       if (response.ok) {
         dispatch(fetchLiabilityData());
+
       } else {
         throw new Error("Failed to add new item");
       }
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -103,7 +105,7 @@ export const updateLiabilityItem = createAsyncThunk(
 
       dispatch(fetchLiabilityData()); // Re-fetch the data after a successful update
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -131,7 +133,7 @@ export const deleteLiabilityItem = createAsyncThunk(
 
       dispatch(fetchLiabilityData()); // Re-fetch the data after a successful deletion
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -158,7 +160,7 @@ export const fetchRiskGrades = createAsyncThunk(
       const sorteddata = [...data].sort((a, b) => a.from - b.from);
       return sorteddata;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -182,7 +184,7 @@ export const addRiskGrade = createAsyncThunk(
       }
       dispatch(fetchRiskGrades());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -207,7 +209,7 @@ export const updateRiskGrade = createAsyncThunk(
       }
       dispatch(fetchRiskGrades());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -230,7 +232,7 @@ export const deleteRiskGrade = createAsyncThunk(
       }
       dispatch(fetchRiskGrades());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -254,7 +256,7 @@ export const fetchExpenseData = createAsyncThunk(
       const data = await response.json();
       return data.expenses;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -282,7 +284,7 @@ export const addExpenseField = createAsyncThunk(
       dispatch(fetchExpenseData());
       // Reset the form after adding
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -314,7 +316,7 @@ export const saveExpenseField = createAsyncThunk(
 
       dispatch(fetchExpenseData());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -344,7 +346,7 @@ export const deleteExpenseField = createAsyncThunk(
       // Fetch the updated data after deletion
       dispatch(fetchExpenseData());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -371,7 +373,7 @@ export const fetchNotificationData = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -412,7 +414,7 @@ export const saveNotificationData = createAsyncThunk(
 
       // You can return this if you want to handle the result
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -519,7 +521,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchLiabilityData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(addNewLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -538,17 +541,20 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(addNewLiabilityItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(updateLiabilityItem.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateLiabilityItem.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Updated Successfully");
       })
       .addCase(updateLiabilityItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(deleteLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -558,7 +564,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteLiabilityItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(fetchRiskGrades.pending, (state) => {
         state.loading = true;
@@ -574,7 +581,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchRiskGrades.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(addRiskGrade.pending, (state) => {
         state.loading = true;
@@ -590,7 +598,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(addRiskGrade.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       // Update Item Reducers
       .addCase(updateRiskGrade.pending, (state) => {
@@ -601,7 +610,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(updateRiskGrade.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       // Delete Item Reducers
       .addCase(deleteRiskGrade.pending, (state) => {
@@ -612,7 +622,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteRiskGrade.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(fetchExpenseData.pending, (state) => {
         state.loading = true;
@@ -627,7 +638,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchExpenseData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(addExpenseField.pending, (state) => {
         state.loading = true;
@@ -637,17 +649,20 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(addExpenseField.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(saveExpenseField.pending, (state) => {
         state.loading = true;
       })
       .addCase(saveExpenseField.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Saved Successfully");
       })
       .addCase(saveExpenseField.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(deleteExpenseField.pending, (state) => {
         state.loading = true;
@@ -657,7 +672,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteExpenseField.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(fetchNotificationData.pending, (state) => {
         state.loading = true;
@@ -672,7 +688,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchNotificationData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(saveNotificationData.pending, (state) => {
         state.loading = true;
@@ -682,7 +699,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(saveNotificationData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error;
+        toast.error(`Error : ${action.payload.message}`);
       });
   },
 });

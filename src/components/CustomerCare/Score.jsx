@@ -12,11 +12,6 @@ const Score = () => {
   if (loading) {
     return <LoadingState />;
   }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   if (
     CreditBureauDetails.length === 0 ||
     CreditBureauDetails.response.length === 0

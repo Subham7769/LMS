@@ -17,10 +17,7 @@ const LedgerPage = () => {
     if (loading) {
       return <LoadingState />;
     }
-  
-    if (error) {
-      return <ContainerTile>Error: {error}</ContainerTile>;
-    }
+
   return (
         <LedgerListTable
           ListName={"Ledger List"}

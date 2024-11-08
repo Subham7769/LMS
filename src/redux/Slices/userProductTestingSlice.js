@@ -110,7 +110,7 @@ export const getBorrowerInfo = createAsyncThunk(
         return rejectWithValue("User Not Found");
       } else if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       return response.data;
@@ -144,7 +144,7 @@ export const getUserLoanOptions = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
 
       const json = await response.json();
@@ -649,7 +649,7 @@ const userProductTestingSlice = createSlice({
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Something went wrong"; // Set error message
+        state.error = action.payload;
         toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getDisbursementInfo.pending, (state) => {
@@ -745,7 +745,6 @@ const userProductTestingSlice = createSlice({
       .addCase(updateFamilyDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        console.log(action.error.message);
         toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(updateEmploymentDetails.pending, (state) => {

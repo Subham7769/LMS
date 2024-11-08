@@ -81,7 +81,7 @@ export const fetchBlockedEmployerName = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       const data = await response.json();
       if (!response.ok) {
@@ -113,7 +113,7 @@ export const updateBlockedEmployerName = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       if (!response.ok) {
         const data = await response.json();
@@ -245,7 +245,7 @@ export const cloneBlockedEmployer = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized");
+        return rejectWithValue({message:"Unauthorized"});
       }
       const beDetails = await response.json();
       if (!response.ok) {

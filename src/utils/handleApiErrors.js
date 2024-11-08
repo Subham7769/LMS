@@ -1,22 +1,22 @@
-export async function handleApiErrors(response,navigate) {
+export async function handleApiErrors(response, navigate, rejectWithValue) {
   try {
     if (!response.ok) {
       switch (response.status) {
         case 400:
           const badRequestData = await response.json();
-          return Promise.reject(badRequestData);
+          return rejectWithValue(badRequestData);
         case 404:
-          return Promise.reject("User not found");
+          return rejectWithValue("User not found");
         case 401:
         case 403:
           localStorage.removeItem("authToken");
           navigate("/login");
-          return Promise.reject("Unauthorized access");
+          return rejectWithValue("Unauthorized access");
         case 500:
           const serverErrorData = await response.json();
-          return Promise.reject(serverErrorData);
+          return rejectWithValue(serverErrorData);
         default:
-          return Promise.reject("An unknown error occurred");
+          return rejectWithValue("An unknown error occurred");
       }
     }
 
@@ -24,9 +24,12 @@ export async function handleApiErrors(response,navigate) {
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       return await response.json();
-    } 
+    }
+
+    // Default response for success with no content
+    return { message: "Operation successful" };
 
   } catch (error) {
-    return Promise.reject("Failed to parse response");
+    return rejectWithValue("Failed to parse response");
   }
 }
