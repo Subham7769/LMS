@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 export async function createNewCreditScoreEq(
   Name,
   navigate,
@@ -19,11 +20,13 @@ export async function createNewCreditScoreEq(
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem("authToken");
       navigate(navigateFail);
+      toast.error("Token Expirid !");
       return;
     }
     const creditScoreDetails = await response.json();
     console.log(creditScoreDetails);
     navigate(navigateSuccess + creditScoreDetails.creditScoreEqTempId);
+    toast.success("Credit Score created !");
     // window.location.reload();
   } catch (error) {
     console.error(error);

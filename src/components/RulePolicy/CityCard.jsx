@@ -11,8 +11,7 @@ import {
 } from "../../redux/Slices/rulePolicySlice";
 import { validateForm } from "../../redux/Slices/validationSlice";
 
-import toast from "react-hot-toast";
-import { Passed } from "../Toasts";
+import { toast } from "react-toastify";
 import store from "../../redux/store";
 
 const CityCard = ({ cityData }) => {
@@ -55,7 +54,7 @@ const CityCard = ({ cityData }) => {
     if (isValid) {
       if (cityFormData.city) {
         if (isSimilarTag(cityFormData.city)) {
-          alert("city already exists");
+          toast.warn("city already exists");
           return;
         }
 
@@ -87,14 +86,6 @@ const CityCard = ({ cityData }) => {
 
         try {
           await dispatch(addCityTagRule(cityPostData)).unwrap();
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Added Successfully"}
-              message={"The item has been added successfully"}
-            />
-          ));
           dispatch(fetchRulePolicyData(rulePolicyId));
         } catch (error) {
           console.error("Failed to update data:", error);
@@ -122,14 +113,6 @@ const CityCard = ({ cityData }) => {
       await dispatch(
         deleteCityTagRule({ rulePolicyId, tagToDeleteRuleName })
       ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Delete Successful"}
-          message={"The item was deleted successfully"}
-        />
-      ));
       dispatch(fetchRulePolicyData(rulePolicyId));
     } catch (error) {
       console.error(error);

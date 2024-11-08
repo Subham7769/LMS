@@ -61,13 +61,8 @@ const NewRulePolicy = () => {
       await dispatch(deleteRulePolicy(rulePolicyId)).unwrap();
       dispatch(fetchRulePolicyData());
       navigate("/rule-policy");
-      // Refresh the page after navigation
-      // window.location.reload();
-
-      // After deletion, fetch the updated data list
     } catch (error) {
       console.error(error);
-      // Optionally, handle the error in the UI, such as showing an error message
     }
   };
 

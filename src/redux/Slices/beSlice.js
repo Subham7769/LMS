@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchBEData } from "./sidebarSlice";
 import { HeaderList, BlockedEmployerList } from "../../data/BlockEmployerData";
+import { toast } from "react-toastify";
 
 const initialState = {
   beStatsData: {
@@ -9,7 +10,6 @@ const initialState = {
   },
   blockEmployer: {
     itemName: "",
-    cloneSuccess: null,
     blockEmployersTempId: "",
     name: "",
     cloneBEName: "",
@@ -81,7 +81,7 @@ export const fetchBlockedEmployerName = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
       const data = await response.json();
       if (!response.ok) {
@@ -113,11 +113,11 @@ export const updateBlockedEmployerName = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
       if (!response.ok) {
         const data = await response.json();
-        return rejectWithValue(data);
+        return rejectWithValue(data.message || "Failed to update name");
       }
       dispatch(fetchBEData());
       return { newName };
@@ -146,7 +146,7 @@ export const deleteBlockedEmployerEntry = createAsyncThunk(
       );
       if (!response.ok) {
         const data = await response.json();
-        return rejectWithValue(data);
+        return rejectWithValue(data || "Failed to delete entry");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -173,7 +173,9 @@ export const deleteBlockedEmployer = createAsyncThunk(
       );
       if (!response.ok) {
         const data = await response.json();
-        return rejectWithValue(data);
+        return rejectWithValue(
+          data.message || "Failed to delete Blocked Employer"
+        );
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -217,7 +219,7 @@ export const addBlockedEmployerEntry = createAsyncThunk(
       );
       if (!response.ok) {
         const responseData = await response.json();
-        return rejectWithValue(responseData);
+        return rejectWithValue(responseData || "Failed to add employer entry");
       }
       return payload;
     } catch (error) {
@@ -245,11 +247,11 @@ export const cloneBlockedEmployer = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
       const beDetails = await response.json();
       if (!response.ok) {
-        return rejectWithValue(beDetails);
+        return rejectWithValue(beDetails.message || "Failed to create clone");
       }
       return beDetails;
     } catch (error) {
@@ -338,10 +340,12 @@ const beSlice = createSlice({
       .addCase(updateBlockedEmployerName.fulfilled, (state, action) => {
         state.loading = false;
         state.blockEmployer.itemName = action.payload.newName;
+        toast.success("Name updated successfully!");
       })
       .addCase(updateBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
 
       // Delete Blocked Employer Entry
@@ -351,10 +355,12 @@ const beSlice = createSlice({
       })
       .addCase(deleteBlockedEmployerEntry.fulfilled, (state, action) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
 
       // Delete Blocked Employer
@@ -364,10 +370,12 @@ const beSlice = createSlice({
       })
       .addCase(deleteBlockedEmployer.fulfilled, (state) => {
         state.loading = false;
+        toast("Deleted successfully!");
       })
       .addCase(deleteBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
 
       // Add Blocked Employer Entry
@@ -378,10 +386,12 @@ const beSlice = createSlice({
       .addCase(addBlockedEmployerEntry.fulfilled, (state, action) => {
         state.loading = false;
         state.blockEmployer.name = "";
+        toast.success("Employer entry added successfully!");
       })
       .addCase(addBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
 
       // Clone Blocked Employer
@@ -391,11 +401,12 @@ const beSlice = createSlice({
       })
       .addCase(cloneBlockedEmployer.fulfilled, (state, action) => {
         state.loading = false;
-        state.blockEmployer.cloneSuccess = action.payload.blockEmployerTempId;
+        toast.success("Clone created successfully!");
       })
       .addCase(cloneBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });

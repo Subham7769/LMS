@@ -10,10 +10,8 @@ import {
   setOccupationFormData,
 } from "../../redux/Slices/rulePolicySlice";
 import { validateForm } from "../../redux/Slices/validationSlice";
-
-import toast from "react-hot-toast";
-import { Passed } from "../Toasts";
 import store from "../../redux/store";
+import { toast } from "react-toastify";
 
 const OccupationCard = ({ occupationData }) => {
   const { rulePolicyId } = useParams();
@@ -55,7 +53,7 @@ const OccupationCard = ({ occupationData }) => {
     if (isValid) {
       if (occupationFormData.occupation) {
         if (isSimilarTag(occupationFormData.occupation)) {
-          alert("occupation already exists");
+          toast.warn("occupation already exists");
           return;
         }
 
@@ -87,14 +85,6 @@ const OccupationCard = ({ occupationData }) => {
 
         try {
           await dispatch(addOccupationTagRule(occupationPostData)).unwrap();
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Added Successfully"}
-              message={"The item has been added successfully"}
-            />
-          ));
           dispatch(fetchRulePolicyData(rulePolicyId));
         } catch (error) {
           console.error("Failed to update data:", error);
@@ -122,14 +112,6 @@ const OccupationCard = ({ occupationData }) => {
       await dispatch(
         deleteOccupationTagRule({ rulePolicyId, tagToDeleteRuleName })
       ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Delete Successful"}
-          message={"The item was deleted successfully"}
-        />
-      ));
       dispatch(fetchRulePolicyData(rulePolicyId));
     } catch (error) {
       console.error(error);

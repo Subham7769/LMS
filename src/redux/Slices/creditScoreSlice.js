@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, CreditScoreEqList } from "../../data/CreditScoreEqData";
+import { toast } from "react-toastify";
 
 export const fetchCreditScore = createAsyncThunk(
   "creditScore/fetchCreditScore",
@@ -19,7 +20,7 @@ export const fetchCreditScore = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
 
       const data = await response.json();
@@ -49,10 +50,9 @@ export const updateCreditScore = createAsyncThunk(
       );
 
       if (!response.ok) {
-        return rejectWithValue("Failed to Update! Invalid field Dependents");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update");
       }
-
-      return await response.json();
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -79,7 +79,10 @@ export const cloneCreditScore = createAsyncThunk(
       );
 
       if (!response.ok) {
-        return rejectWithValue("Failed to clone credit score");
+        const errorData = await response.json();
+        return rejectWithValue(
+          errorData.message || "Failed to clone credit score"
+        );
       }
 
       return await response.json();
@@ -109,7 +112,10 @@ export const renameCreditScore = createAsyncThunk(
       );
 
       if (!response.ok) {
-        return rejectWithValue("Failed to rename credit score");
+        const errorData = await response.json();
+        return rejectWithValue(
+          errorData.message || "Failed to rename credit score"
+        );
       }
 
       return await response.json();
@@ -137,7 +143,10 @@ export const deleteCreditScore = createAsyncThunk(
       );
 
       if (!response.ok) {
-        return rejectWithValue("Failed to delete credit score");
+        const errorData = await response.json();
+        return rejectWithValue(
+          errorData.message || "Failed to delete credit score"
+        );
       }
 
       return creditScoreId;
@@ -346,40 +355,48 @@ const creditScoreSlice = createSlice({
       })
       .addCase(updateCreditScore.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Details updated successfully!");
       })
       .addCase(updateCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(cloneCreditScore.pending, (state) => {
         state.loading = true;
       })
       .addCase(cloneCreditScore.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Clone created successfully!");
       })
       .addCase(cloneCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(renameCreditScore.pending, (state) => {
         state.loading = true;
       })
       .addCase(renameCreditScore.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Name updated successfully!");
       })
       .addCase(renameCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteCreditScore.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteCreditScore.fulfilled, (state, action) => {
         state.loading = false;
+        toast("Deleted successfully!!");
       })
       .addCase(deleteCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });

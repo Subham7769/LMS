@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 export async function createNewRulePolicy(
   Name,
   navigate,
@@ -19,12 +20,13 @@ export async function createNewRulePolicy(
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem("authToken");
       navigate(navigateFail);
+      toast.error("Token Expirid !");
       return;
     }
     const rulePolicyDetails = await response.json();
     //   console.log(rulePolicyDetails);
     navigate(navigateSuccess + rulePolicyDetails.rulePolicyTempId);
-    // window.location.reload();
+    toast.success("Rule Policy created !");
   } catch (error) {
     console.error(error);
   }

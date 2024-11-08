@@ -83,14 +83,6 @@ const NewCreatedCreditScore = () => {
       ).unwrap();
       setCreditScoreName(updatecseName);
       dispatch(fetchCreditScoreEqData());
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Rename Successful"}
-          message={"The name has been updated"}
-        />
-      ));
     } catch (error) {
       console.error(error);
     }

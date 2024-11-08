@@ -9,7 +9,7 @@ import {
   updateRBPE,
   setRiskBasedPricingEquation,
 } from "../../redux/Slices/rulePolicySlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Passed } from "../Toasts";
 import { TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
@@ -25,6 +25,7 @@ const RiskBasedPricingEquation = () => {
   );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+  const navigate = useNavigate();
 
   const handleRuleChange = (e) => {
     const { name, value } = e.target;
@@ -50,15 +51,7 @@ const RiskBasedPricingEquation = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       try {
-        await dispatch(addRiskBasedPricingEquationRule()).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"The item has been added successfully"}
-          />
-        ));
+        await dispatch(addRiskBasedPricingEquationRule(navigate)).unwrap();
       } catch (error) {
         console.error("Failed to add RBPE:", error);
       }
@@ -81,14 +74,6 @@ const RiskBasedPricingEquation = () => {
           })
         ).unwrap();
         dispatch(fetchRulePolicyData(rulePolicyId));
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Update Successful"}
-            message={"The item was updated successfully"}
-          />
-        ));
       } catch (error) {
         console.error("Failed to update RBPE:", error);
       }
@@ -100,14 +85,6 @@ const RiskBasedPricingEquation = () => {
       await dispatch(
         deleteRiskBasedPricingEquationRule({ rulePolicyId, ruleName })
       ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Delete Successful"}
-          message={"The item was deleted successfully"}
-        />
-      ));
     } catch (error) {
       console.error("Error deleting RBPE:", error);
     }

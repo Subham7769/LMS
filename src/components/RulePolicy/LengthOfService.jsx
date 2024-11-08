@@ -7,8 +7,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed, Warning } from "../Toasts";
+import { toast } from "react-toastify";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import InputNumber from "../Common/InputNumber/InputNumber";
@@ -23,7 +22,7 @@ import {
   updateLengthOfServiceRule,
   updateLOSInputList,
 } from "../../redux/Slices/rulePolicySlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 
@@ -48,6 +47,7 @@ const LengthofService = () => {
   );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+  const navigate = useNavigate();
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -98,38 +98,13 @@ const LengthofService = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (!isValidOp) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Alert"}
-          message={"Please fill Length of Service operators!!"}
-        />
-      ));
+      toast.warn("Please fill Length of Service operators!!");
     }
     if (isValid && isValidOp) {
-      dispatch(addLengthOfServiceRule())
+      dispatch(addLengthOfServiceRule(navigate))
         .unwrap()
         .then(() => {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Added Successfully"}
-              message={"The item has been added successfully"}
-            />
-          ));
           dispatch(fetchRulePolicyData(rulePolicyId));
-        })
-        .catch((error) => {
-          toast.custom((t) => (
-            <Warning
-              t={t}
-              toast={toast}
-              title={"Failed to Add"}
-              message={`Failed to add: ${error.message}`}
-            />
-          ));
         });
     }
   };
@@ -146,14 +121,6 @@ const LengthofService = () => {
       await dispatch(
         deleteLengthOfServiceRule({ rulePolicyId, ruleName })
       ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Delete Successful"}
-          message={"The item was deleted successfully"}
-        />
-      ));
       dispatch(fetchRulePolicyData(rulePolicyId));
     } catch (error) {
       console.error(error);
@@ -165,41 +132,14 @@ const LengthofService = () => {
       operators: LOSInputList?.operators,
       lengthOfServiceRules: LOSInputList?.lengthOfServiceRules,
     };
-
-    try {
-      await dispatch(updateLengthOfServiceRule({ postData })).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Update Successful"}
-          message={"The item was updated successfully"}
-        />
-      ));
-      dispatch(fetchRulePolicyData(rulePolicyId));
-    } catch (error) {
-      toast.custom((t) => (
-        <Warning
-          t={t}
-          toast={toast}
-          title={"Update Failed"}
-          message={`Failed to update: ${error.message}`}
-        />
-      ));
-    }
+    await dispatch(updateLengthOfServiceRule({ postData })).unwrap();
+    dispatch(fetchRulePolicyData(rulePolicyId));
   };
 
   // Handle page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-    toast.custom((t) => (
-      <Warning
-        t={t}
-        toast={toast}
-        title={"Page Changed"}
-        message={`You have switched to page: ${newPage}`}
-      />
-    ));
+    toast.warn(`You have switched to page: ${newPage}`);
   };
 
   const handleRuleChange = (e) => {
@@ -231,7 +171,6 @@ const LengthofService = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
         <div className="text-lg mb-4">Length of Service</div>
         {roleName !== "ROLE_VIEWER" ? (

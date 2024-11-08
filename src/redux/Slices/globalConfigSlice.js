@@ -54,9 +54,9 @@ export const addNewLiabilityItem = createAsyncThunk(
       });
       if (response.ok) {
         dispatch(fetchLiabilityData());
-
       } else {
-        throw new Error("Failed to add new item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add item");
       }
     } catch (error) {
       return rejectWithValue(error);
@@ -100,7 +100,8 @@ export const updateLiabilityItem = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update the item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update item");
       }
 
       dispatch(fetchLiabilityData()); // Re-fetch the data after a successful update
@@ -128,7 +129,8 @@ export const deleteLiabilityItem = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete the item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete item");
       }
 
       dispatch(fetchLiabilityData()); // Re-fetch the data after a successful deletion
@@ -462,6 +464,19 @@ export const globalConfigSlice = createSlice({
         state.newLiabilityForm[name] = value;
       }
     },
+    handleLiabilityInputChange: (state, action) => {
+      const { name, value, checked, type, index } = action.payload;
+      const updatedData = state.allLiabilityData.map((item, idx) => {
+        if (index === idx) {
+          return {
+            ...item,
+            [name]: type === "checkbox" ? (checked ? "YES" : "NO") : value,
+          };
+        }
+        return item;
+      });
+      state.allLiabilityData = updatedData;
+    },
     handleRiskGradeNewInputChange: (state, action) => {
       const { name, value, checked, type } = action.payload;
       if (type === "checkbox") {
@@ -538,11 +553,12 @@ export const globalConfigSlice = createSlice({
           activeRule: "",
           defaultConsideredInSIMAHscore: "",
         };
+        toast.success("Item added successfully!");
       })
       .addCase(addNewLiabilityItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -553,19 +569,20 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(updateLiabilityItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteLiabilityItem.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteLiabilityItem.fulfilled, (state) => {
         state.loading = false;
+        toast("Item deleted successfully!");
       })
       .addCase(deleteLiabilityItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(fetchRiskGrades.pending, (state) => {
         state.loading = true;
@@ -707,6 +724,7 @@ export const globalConfigSlice = createSlice({
 
 export const {
   handleLiabilityNewInputChange,
+  handleLiabilityInputChange,
   handleRiskGradeNewInputChange,
   handleRiskGradeExistingInputChange,
   updateExpenseFormData,

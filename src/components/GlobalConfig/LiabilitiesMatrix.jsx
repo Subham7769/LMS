@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
-import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
+import {
+  CheckCircleIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/20/solid";
 import _ from "lodash";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import {
   productOptions,
@@ -23,6 +25,7 @@ import {
   addNewLiabilityItem,
   updateLiabilityItem,
   deleteLiabilityItem,
+  handleLiabilityInputChange,
 } from "../../redux/Slices/globalConfigSlice";
 import {
   clearValidationError,
@@ -49,26 +52,17 @@ const LiabilitiesMatrix = () => {
   const handleInputChange = async (e, index) => {
     const { name, value, checked, type } = e.target;
 
-    const updatedItem = {
-      ...allLiabilityData[index],
-      [name]: type === "checkbox" ? checked : value,
-    };
+    dispatch(handleLiabilityInputChange({ name, value, checked, type, index }));
+  };
 
+  const handleSave = async (index) => {
+    const updatedItem = allLiabilityData[index];
     const oldSimahDescriptionCode =
       allLiabilityData[index].simahDescriptionCode;
-
     try {
       await dispatch(
         updateLiabilityItem({ updatedItem, oldSimahDescriptionCode })
       ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Updated Successfully"}
-          message={"The item has been updated successfully"}
-        />
-      ));
     } catch (error) {
       console.error(error);
     }
@@ -77,14 +71,6 @@ const LiabilitiesMatrix = () => {
   const handleDeleteRow = async (deleteURL) => {
     try {
       await dispatch(deleteLiabilityItem(deleteURL)).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Delete Successful"}
-          message={"The item has been deleted successfully"}
-        />
-      ));
     } catch (error) {
       console.error(error);
     }
@@ -96,14 +82,6 @@ const LiabilitiesMatrix = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       await dispatch(addNewLiabilityItem(newLiabilityForm)).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Added Successfully"}
-          message={"The item has been added successfully"}
-        />
-      ));
     }
   };
 
@@ -113,7 +91,6 @@ const LiabilitiesMatrix = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <h2 className="mb-6">
         <b
           title="Credit Bureau Liabilities Matrix"
@@ -170,7 +147,9 @@ const LiabilitiesMatrix = () => {
                 <InputCheckbox
                   labelName="Active Rule"
                   inputName="activeRule"
-                  inputChecked={newLiabilityForm?.activeRule}
+                  inputChecked={
+                    newLiabilityForm?.activeRule === "YES" ? true : false
+                  }
                   onChange={(e) =>
                     dispatch(handleLiabilityNewInputChange(e.target))
                   }
@@ -232,7 +211,7 @@ const LiabilitiesMatrix = () => {
                     inputName="product"
                     inputValue={item?.product}
                     onChange={(e) => handleInputChange(e, index)}
-                    disabled
+                    disabled={true}
                   />
                   <InputText
                     labelName="CB Description (CODE)"
@@ -240,6 +219,7 @@ const LiabilitiesMatrix = () => {
                     inputValue={item?.simahDescriptionCode}
                     placeHolder="TMTG"
                     onChange={(e) => handleInputChange(e, index)}
+                    disabled={true}
                   />
                   <InputSelect
                     labelName="Issuer"
@@ -280,13 +260,20 @@ const LiabilitiesMatrix = () => {
                     onChange={(e) => handleInputChange(e, index)}
                   />
                   {roleName !== "ROLE_VIEWER" ? (
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() =>
-                        handleDeleteRow(item?.simahDescriptionCode)
-                      }
-                      circle={true}
-                    />
+                    <div className="flex items-center gap-4">
+                      <Button
+                        buttonIcon={CheckCircleIcon}
+                        onClick={() => handleSave(index)}
+                        circle={true}
+                      />
+                      <Button
+                        buttonIcon={TrashIcon}
+                        onClick={() =>
+                          handleDeleteRow(item?.simahDescriptionCode)
+                        }
+                        circle={true}
+                      />
+                    </div>
                   ) : (
                     ""
                   )}

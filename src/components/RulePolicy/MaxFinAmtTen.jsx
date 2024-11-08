@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { PlusIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import { useParams } from "react-router-dom";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
@@ -58,14 +56,6 @@ const MaxFinAmtTen = ({ FAWTData }) => {
           ruleName: ruleToDelete.ruleName,
         })
       ).unwrap();
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Delete Successful"}
-          message={"The item was deleted successfully"}
-        />
-      ));
       dispatch(fetchRulePolicyData(rulePolicyId));
     } catch (error) {
       console.error("Error deleting data:", error);
@@ -80,14 +70,6 @@ const MaxFinAmtTen = ({ FAWTData }) => {
     if (isValid) {
       try {
         await dispatch(updateFinanceAmountWithTenureRules(inputList)).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Update Successful"}
-            message={"The item was updated successfully"}
-          />
-        ));
         dispatch(fetchRulePolicyData(rulePolicyId));
       } catch (error) {
         console.error("Error during update:", error);
@@ -102,14 +84,6 @@ const MaxFinAmtTen = ({ FAWTData }) => {
     if (isValid) {
       try {
         await dispatch(createMaxFinAmtEntry()).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Create Successful"}
-            message={"The item was created successfully"}
-          />
-        ));
         dispatch(fetchRulePolicyData(rulePolicyId));
       } catch (error) {
         console.error("Error during create:", error);
@@ -144,7 +118,6 @@ const MaxFinAmtTen = ({ FAWTData }) => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
         <div className="text-lg mb-5">Max Finance Amount With Tenure</div>
         {roleName !== "ROLE_VIEWER" ? (

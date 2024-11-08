@@ -2,8 +2,6 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
-import { RowChanged } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
@@ -70,18 +68,7 @@ const CreditScore = () => {
     const isValid = state.validation.isValid;
     const isValid2 = validateFormFieldsRule(creditScoreData, dispatch);
     if (isValid && isValid2) {
-      dispatch(updateCreditScore({ creditScoreId, creditScoreData }))
-        .unwrap()
-        .then(() => {
-          toast.custom((t) => <RowChanged t={t} toast={toast} />);
-        })
-        .catch((error) => {
-          if (error === "Unexpected end of JSON input") {
-            toast.custom((t) => <RowChanged t={t} toast={toast} />);
-          } else {
-            toast.error(error);
-          }
-        });
+      dispatch(updateCreditScore({ creditScoreId, creditScoreData }));
     }
   };
 
@@ -91,7 +78,6 @@ const CreditScore = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="my-5">
         <ListTable
           ListName={creditScoreData?.equation}

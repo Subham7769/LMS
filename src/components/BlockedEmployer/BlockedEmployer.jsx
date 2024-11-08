@@ -1,11 +1,6 @@
-import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
 import React, { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingState from "../LoadingState/LoadingState";
-import DynamicName from "../Common/DynamicName/DynamicName";
-import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBEData } from "../../redux/Slices/sidebarSlice";
@@ -38,7 +33,7 @@ const BlockedEmployer = () => {
   const blockEmployer = useSelector(
     (state) => state.blockedEmployer.blockEmployer
   );
-  const { itemName, cloneSuccess } = blockEmployer;
+  const { itemName } = blockEmployer;
 
   useEffect(() => {
     dispatch(setBlockEmployersTempId(blockEmployersTempId));
@@ -49,26 +44,6 @@ const BlockedEmployer = () => {
       dispatch(clearValidationError());
     };
   }, [blockEmployersTempId, dispatch]);
-
-  useEffect(() => {
-    if (error) {
-      if (error === "Unauthorized") {
-        localStorage.clear();
-        navigate("/login");
-      } else {
-        toast.custom((t) => (
-          <Failed t={t} toast={toast} title={"Error"} message={error} />
-        ));
-      }
-    }
-  }, [error, navigate]);
-
-  useEffect(() => {
-    if (cloneSuccess) {
-      dispatch(fetchBEData());
-      navigate(`/blocked-employer/${cloneSuccess}`);
-    }
-  }, [cloneSuccess, dispatch, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,34 +59,13 @@ const BlockedEmployer = () => {
       })
     ).then((action) => {
       if (action.type.endsWith("fulfilled")) {
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Item Deleted"}
-            message={"Item has been deleted successfully"}
-          />
-        ));
         dispatch(fetchBlockedEmployerData(blockEmployersTempId));
       }
     });
   };
 
   const handleUpdateName = (newName) => {
-    dispatch(updateBlockedEmployerName({ blockEmployersTempId, newName })).then(
-      (action) => {
-        if (action.type.endsWith("fulfilled")) {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Update Successful"}
-              message={"The name was updated successfully"}
-            />
-          ));
-        }
-      }
-    );
+    dispatch(updateBlockedEmployerName({ blockEmployersTempId, newName }));
   };
 
   const handleDeleteBE = () => {
@@ -131,44 +85,18 @@ const BlockedEmployer = () => {
     if (isValid) {
       dispatch(addBlockedEmployerEntry()).then((action) => {
         if (action.type.endsWith("fulfilled")) {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Item Added"}
-              message={"Item was added successfully"}
-            />
-          ));
           dispatch(fetchBlockedEmployerData(blockEmployersTempId));
-        } else if (action.type.endsWith("rejected")) {
-          toast.custom((t) => (
-            <Failed
-              t={t}
-              toast={toast}
-              title={"Adding Failed"}
-              message={action.payload || "Failed to add item"}
-            />
-          ));
         }
       });
     }
   };
 
-  const createCloneBE = (cloneBEName) => {
-    dispatch(cloneBlockedEmployer({ blockEmployersTempId, cloneBEName })).then(
-      (action) => {
-        if (action.type.endsWith("fulfilled")) {
-          toast.custom((t) => (
-            <Passed
-              t={t}
-              toast={toast}
-              title={"Clone Created"}
-              message={"Clone has been created successfully"}
-            />
-          ));
-        }
-      }
-    );
+  const createCloneBE = async (cloneBEName) => {
+    const beDetails = await dispatch(
+      cloneBlockedEmployer({ blockEmployersTempId, cloneBEName })
+    ).unwrap();
+    dispatch(fetchBEData());
+    navigate(`/blocked-employer/${beDetails.blockEmployerTempId}`);
   };
 
   const handleClone = () => {
@@ -183,7 +111,6 @@ const BlockedEmployer = () => {
   }
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={itemName}
         handleNameUpdate={handleUpdateName}

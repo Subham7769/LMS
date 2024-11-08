@@ -3,12 +3,10 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
-import DynamicName from "../Common/DynamicName/DynamicName";
 import LoadingState from "../Common/Loader/Loader";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed, Warning } from "../Toasts";
+import { toast } from "react-toastify";
 import {
   fetchLoanProducts,
   fetchPGroups,
@@ -70,9 +68,7 @@ const ProductGroup = () => {
           (existingTag) => existingTag.product === newTag.product
         )
       ) {
-        toast.custom((t) => (
-          <Warning t={t} toast={toast} title={"This product already exists!"} />
-        ));
+        toast.warn("This product already exists!");
       } else {
         dispatch(addProductTag(newTag));
       }
@@ -99,14 +95,7 @@ const ProductGroup = () => {
     const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(activeLoansCount, dispatch);
     if (!isValid2) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Alert"}
-          message={"Add atleast 1 product"}
-        />
-      ));
+      toast.warn("Add atleast 1 product");
     }
     if (isValid && isValid2) {
       await dispatch(updateProductGroup(productGroupData)).unwrap();
@@ -120,7 +109,6 @@ const ProductGroup = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <DynamicHeader
         itemName={productGroupData?.configName}
         handleNameUpdate={handleUpdatePGName}

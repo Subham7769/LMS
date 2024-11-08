@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, ProductGroupList } from "../../data/GroupData";
+import { toast } from "react-toastify";
 
 export const fetchPGroups = createAsyncThunk(
   "productGroup/fetchPGroups",
@@ -19,7 +20,7 @@ export const fetchPGroups = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
 
       const data = await response.json();
@@ -50,7 +51,7 @@ export const fetchLoanProducts = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
 
       const data = await response.json();
@@ -79,7 +80,8 @@ export const updateProductGroup = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update");
       }
       // Optionally, refetch the data to update the store
     } catch (error) {
@@ -289,10 +291,12 @@ const productGroupSlice = createSlice({
       })
       .addCase(updateProductGroup.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Details updated successfully!");
       })
       .addCase(updateProductGroup.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });

@@ -22,7 +22,7 @@ export const fetchData = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
       const data = await response.json();
       return data;

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, RulePolicyList } from "../../data/RulePolicyData";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 // Async thunk to fetch data
 export const fetchRulePolicyData = createAsyncThunk(
@@ -48,7 +49,8 @@ export const updateFinanceAmountWithTenureRules = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update entry");
       }
     } catch (error) {
       console.error("Error updating data:", error);
@@ -82,7 +84,8 @@ export const createMaxFinAmtEntry = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add entry");
       }
 
       dispatch(fetchRulePolicyData(maxFinAmtRules.rulePolicyTempId));
@@ -112,7 +115,8 @@ export const deleteMaxFinAmtEntry = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete entry");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -123,7 +127,7 @@ export const deleteMaxFinAmtEntry = createAsyncThunk(
 // Thunk for adding a new Risk-Based Pricing Equation Rule
 export const addRiskBasedPricingEquationRule = createAsyncThunk(
   "rulePolicy/addRiskBasedPricingEquationRule",
-  async (_, { getState, rejectWithValue, dispatch }) => {
+  async (navigate, { getState, rejectWithValue, dispatch }) => {
     const state = getState().rulePolicy;
     const token = localStorage.getItem("authToken");
 
@@ -149,7 +153,8 @@ export const addRiskBasedPricingEquationRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add entry");
       }
 
       // Dispatch fetchRulePolicyData to refresh the data after successful addition
@@ -184,7 +189,8 @@ export const updateRBPE = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update data");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update entry");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -211,7 +217,8 @@ export const deleteRiskBasedPricingEquationRule = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to delete the rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete entry");
       }
       dispatch(fetchRulePolicyData(rulePolicyId));
     } catch (error) {
@@ -222,7 +229,7 @@ export const deleteRiskBasedPricingEquationRule = createAsyncThunk(
 
 export const addRiskBasedPricingRule = createAsyncThunk(
   "rulePolicy/addRiskBasedPricingRule",
-  async (rulePolicyId, { getState }) => {
+  async ({ rulePolicyId, navigate }, { getState }) => {
     const { riskBasedPricingInput } = getState().rulePolicy;
     const token = localStorage.getItem("authToken");
     const response = await fetch(
@@ -238,14 +245,15 @@ export const addRiskBasedPricingRule = createAsyncThunk(
     );
 
     if (!response.ok) {
-      throw new Error("Failed to add risk-based pricing rule");
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message || "Failed to add entry");
     }
   }
 );
 
 export const deleteRiskBasedPricingRule = createAsyncThunk(
   "rulePolicy/deleteRiskBasedPricingRule",
-  async ({ rulePolicyId, ruleName }, { rejectWithValue }) => {
+  async ({ rulePolicyId, ruleName, navigate }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -262,7 +270,8 @@ export const deleteRiskBasedPricingRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Delete request failed");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete entry");
       }
 
       return ruleName; // Return the deleted rule name as the payload
@@ -274,7 +283,7 @@ export const deleteRiskBasedPricingRule = createAsyncThunk(
 
 export const updateRiskBasedPricingRules = createAsyncThunk(
   "rulePolicy/updateRiskBasedPricingRules",
-  async ({ rulePolicyId, postData }, { rejectWithValue }) => {
+  async ({ rulePolicyId, postData, navigate }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
@@ -291,7 +300,7 @@ export const updateRiskBasedPricingRules = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData.message || "Failed to update entry");
       }
     } catch (error) {
       return rejectWithValue({ message: error.message });
@@ -301,7 +310,7 @@ export const updateRiskBasedPricingRules = createAsyncThunk(
 
 export const addLengthOfServiceRule = createAsyncThunk(
   "rulePolicy/addLengthOfServiceRule",
-  async (_, { getState }) => {
+  async (navigate, { getState }) => {
     const { lengthOfService } = getState().rulePolicy;
     const token = localStorage.getItem("authToken");
     const response = await fetch(
@@ -317,7 +326,8 @@ export const addLengthOfServiceRule = createAsyncThunk(
     );
 
     if (!response.ok) {
-      throw new Error("Failed to add length of service rule");
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message || "Failed to add entry");
     }
   }
 );
@@ -341,7 +351,8 @@ export const deleteLengthOfServiceRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Delete request failed");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete entry");
       }
 
       return ruleName; // Return the deleted rule name as the payload
@@ -370,7 +381,7 @@ export const updateLengthOfServiceRule = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData.message || "Failed to update entry");
       }
     } catch (error) {
       return rejectWithValue({ message: error.message });
@@ -396,7 +407,8 @@ export const addCityTagRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add length of service rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add entry");
       }
     } catch (error) {
       console.error("Error updating data:", error);
@@ -424,7 +436,8 @@ export const deleteCityTagRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add length of service rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete entry");
       }
     } catch (error) {
       console.error("Error updating data:", error);
@@ -451,7 +464,8 @@ export const addOccupationTagRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add length of service rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add entry");
       }
     } catch (error) {
       console.error("Error updating data:", error);
@@ -479,7 +493,8 @@ export const deleteOccupationTagRule = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add length of service rule");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete entry");
       }
     } catch (error) {
       console.error("Error updating data:", error);
@@ -505,7 +520,7 @@ export const fetchName = createAsyncThunk(
       );
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       }
       const data = await response.json();
       return data.name;
@@ -534,11 +549,12 @@ export const updateRulePolicyName = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue("Unauthorized");
       } else if (response.ok) {
         return updateRPName;
       } else {
-        return rejectWithValue("Failed to update name");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update name");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -565,11 +581,12 @@ export const createClone = createAsyncThunk(
 
     if (response.status === 401 || response.status === 403) {
       localStorage.clear();
-      return rejectWithValue({message:"Unauthorized"});
+      return rejectWithValue("Unauthorized");
     }
 
     if (!response.ok) {
-      return rejectWithValue("Failed to create clone");
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message || "Failed to create clone");
     }
 
     const data = await response.json();
@@ -594,11 +611,14 @@ export const deleteRulePolicy = createAsyncThunk(
 
     if (response.status === 401 || response.status === 403) {
       localStorage.clear();
-      return rejectWithValue({message:"Unauthorized"});
+      return rejectWithValue("Unauthorized");
     }
 
     if (!response.ok) {
-      return rejectWithValue("Failed to delete");
+      const errorData = await response.json();
+      return rejectWithValue(
+        errorData.message || "Failed to delete rule Policy"
+      );
     }
   }
 );
@@ -915,10 +935,11 @@ const rulePolicySlice = createSlice({
       })
       .addCase(updateFinanceAmountWithTenureRules.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Entry updated successfully!");
       })
       .addCase(updateFinanceAmountWithTenureRules.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(createMaxFinAmtEntry.pending, (state) => {
         state.loading = true;
@@ -926,19 +947,24 @@ const rulePolicySlice = createSlice({
       .addCase(createMaxFinAmtEntry.fulfilled, (state) => {
         state.loading = false;
         state.maxFinAmtRules = initialState.maxFinAmtRules;
+        toast.success("Entry added successfully!");
       })
       .addCase(createMaxFinAmtEntry.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteMaxFinAmtEntry.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteMaxFinAmtEntry.fulfilled, (state) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteMaxFinAmtEntry.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(addRiskBasedPricingEquationRule.pending, (state) => {
         state.loading = true;
@@ -954,29 +980,36 @@ const rulePolicySlice = createSlice({
           c_Weight: "",
           d_Weight: "",
         };
+        toast.success("Entry added successfully!");
       })
       .addCase(addRiskBasedPricingEquationRule.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateRBPE.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateRBPE.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Entry updated successfully!");
       })
       .addCase(updateRBPE.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteRiskBasedPricingEquationRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteRiskBasedPricingEquationRule.fulfilled, (state) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteRiskBasedPricingEquationRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(addRiskBasedPricingRule.pending, (state) => {
         state.loading = true;
@@ -1000,29 +1033,35 @@ const rulePolicySlice = createSlice({
             },
           ],
         };
+        toast.success("Entry added successfully!");
       })
       .addCase(addRiskBasedPricingRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteRiskBasedPricingRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteRiskBasedPricingRule.fulfilled, (state) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteRiskBasedPricingRule.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateRiskBasedPricingRules.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateRiskBasedPricingRules.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Entry updated successfully!");
       })
       .addCase(updateRiskBasedPricingRules.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(addLengthOfServiceRule.pending, (state) => {
         state.loading = true;
@@ -1045,29 +1084,35 @@ const rulePolicySlice = createSlice({
             },
           ],
         };
+        toast.success("Entry added successfully!");
       })
       .addCase(addLengthOfServiceRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteLengthOfServiceRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteLengthOfServiceRule.fulfilled, (state) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteLengthOfServiceRule.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateLengthOfServiceRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateLengthOfServiceRule.fulfilled, (state, action) => {
         state.loading = false;
+        toast.success("Entry updated successfully!");
       })
       .addCase(updateLengthOfServiceRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(addCityTagRule.pending, (state) => {
         state.loading = true;
@@ -1075,19 +1120,24 @@ const rulePolicySlice = createSlice({
       .addCase(addCityTagRule.fulfilled, (state, action) => {
         state.loading = false;
         state.cityFormData = initialState.cityFormData;
+        toast.success("Entry added successfully!");
       })
       .addCase(addCityTagRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteCityTagRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteCityTagRule.fulfilled, (state) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteCityTagRule.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(addOccupationTagRule.pending, (state) => {
         state.loading = true;
@@ -1095,19 +1145,23 @@ const rulePolicySlice = createSlice({
       .addCase(addOccupationTagRule.fulfilled, (state, action) => {
         state.loading = false;
         state.occupationFormData = initialState.occupationFormData;
+        toast.success("Entry added successfully!");
       })
       .addCase(addOccupationTagRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteOccupationTagRule.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteOccupationTagRule.fulfilled, (state) => {
         state.loading = false;
+        toast("Entry deleted successfully!");
       })
       .addCase(deleteOccupationTagRule.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
@@ -1125,30 +1179,36 @@ const rulePolicySlice = createSlice({
       })
       .addCase(updateRulePolicyName.fulfilled, (state, action) => {
         state.itemName = action.payload;
+        toast.success("Name updated successfully!");
       })
       .addCase(updateRulePolicyName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(createClone.pending, (state) => {
         state.loading = true;
       })
       .addCase(createClone.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Clone created successfully!");
       })
       .addCase(createClone.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(deleteRulePolicy.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteRulePolicy.fulfilled, (state) => {
         state.loading = false;
+        toast("Rule Policy deleted successfully!");
       })
       .addCase(deleteRulePolicy.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });

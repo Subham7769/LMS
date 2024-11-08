@@ -3,6 +3,7 @@ import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSl
 import { HeaderList, CreditScoreETList } from "../../data/CreditScoreETData";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
+import { handleApiErrors } from "../../utils/handleApiErrors";
 
 // Thunks for fetching Credit Score ET Info
 export const fetchCreditScoreETInfo = createAsyncThunk(
@@ -109,8 +110,11 @@ export const saveCreditScoreET = createAsyncThunk(
         console.log(errorData);
         return rejectWithValue(errorData.message);
       }
+      // const data = await handleApiErrors(response);
+
       // Optionally, refetch the data to update the store
       dispatch(fetchCreditScoreETInfo(creditScoreETId));
+      // return data;
     } catch (error) {
       console.log("Failed to update data:", error);
       return rejectWithValue(error);
@@ -558,8 +562,8 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(saveCreditScoreET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
-        toast.error(`${action.payload}`);
+        state.error = action.payload.message;
+        toast.error(`${action.payload.message}`);
       })
       .addCase(AddNewRange.pending, (state) => {
         state.loading = true;
