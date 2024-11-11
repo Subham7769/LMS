@@ -107,8 +107,11 @@ const ProductGroup = () => {
       <DynamicHeader
         itemName={productGroupData?.configName}
         handleNameUpdate={handleUpdatePGName}
+<<<<<<< Updated upstream
         loading={loading}
         error={error}
+=======
+>>>>>>> Stashed changes
       />
       <ContainerTile
         loading={loading}

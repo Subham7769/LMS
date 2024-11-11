@@ -128,13 +128,17 @@ const TCLViewList = () => {
   const ActionList =
     roleName !== "ROLE_VIEWER"
       ? [
-        {
-          icon: TrashIcon,
-          circle: true,
-          action: handleDelete,
-        },
-      ]
+          {
+            icon: TrashIcon,
+            circle: true,
+            action: handleDelete,
+          },
+        ]
       : [];
+
+  if (loading) {
+    return <LoadingState />;
+  }
 
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);

@@ -13,7 +13,7 @@ import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { toast } from "react-toastify";
 
-const OccupationCard = ({ occupationData,loading, error  }) => {
+const OccupationCard = ({ occupationData, loading, error }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
@@ -36,9 +36,9 @@ const OccupationCard = ({ occupationData,loading, error  }) => {
   }, [occupationData, rulePolicyId]);
 
   useEffect(() => {
-    if (tags.length > 0) {
-      dispatch(setOccupationFormData({ name: "tags", value: tags }));
-    }
+    // if (tags.length > 0) {
+    dispatch(setOccupationFormData({ name: "tags", value: tags }));
+    // }
   }, [tags, dispatch]);
 
   const handleChange = (e) => {
@@ -119,11 +119,7 @@ const OccupationCard = ({ occupationData,loading, error  }) => {
   };
 
   return (
-    <ContainerTile 
-    className={"w-full"}
-    loading={loading}
-    error={error}
-    >
+    <ContainerTile className={"w-full"} loading={loading} error={error}>
       <div className="text-lg mb-3">Occupation</div>
       <TagInput
         formData={occupationFormData}

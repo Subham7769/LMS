@@ -14,7 +14,7 @@ import { validateForm } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import store from "../../redux/store";
 
-const CityCard = ({ cityData,loading, error }) => {
+const CityCard = ({ cityData, loading, error }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
@@ -22,6 +22,7 @@ const CityCard = ({ cityData,loading, error }) => {
 
   useEffect(() => {
     if (cityData) {
+      console.log("Entered here");
       setTags(
         cityData
           .filter((data) => data.rulePolicyTempId === rulePolicyId)
@@ -36,10 +37,13 @@ const CityCard = ({ cityData,loading, error }) => {
     }
   }, [cityData]);
 
+  console.log(cityData);
+  console.log(cityFormData);
+
   useEffect(() => {
-    if (tags.length > 0) {
-      dispatch(setCityFormData({ name: "tags", value: tags }));
-    }
+    // if (tags.length > 0) {
+    dispatch(setCityFormData({ name: "tags", value: tags }));
+    // }
   }, [tags, dispatch]);
 
   const handleChange = (e) => {
@@ -120,11 +124,7 @@ const CityCard = ({ cityData,loading, error }) => {
   };
 
   return (
-    <ContainerTile 
-    className={"w-full"}
-    loading={loading}
-    error={error}
-    >
+    <ContainerTile className={"w-full"} loading={loading} error={error}>
       <div className="flex items-center justify-between mb-3">
         <div className="text-lg">City</div>
       </div>

@@ -3,7 +3,6 @@ import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSl
 import { HeaderList, CreditScoreETList } from "../../data/CreditScoreETData";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
-import { handleApiErrors } from "../../utils/handleApiErrors";
 
 // Thunks for fetching Credit Score ET Info
 export const fetchCreditScoreETInfo = createAsyncThunk(
@@ -29,7 +28,8 @@ export const fetchCreditScoreETInfo = createAsyncThunk(
         return;
       }
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
       }
       return await response.json();
     } catch (error) {
@@ -62,7 +62,8 @@ export const fetchCreditScoreETName = createAsyncThunk(
         return;
       }
       if (!response.ok) {
-        throw new Error("Failed to fetch name");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
       }
       return await response.json();
     } catch (error) {
@@ -107,7 +108,6 @@ export const saveCreditScoreET = createAsyncThunk(
       );
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData);
         return rejectWithValue(errorData.message);
       }
       // const data = await handleApiErrors(response);
@@ -539,7 +539,8 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(fetchCreditScoreETInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(fetchCreditScoreETName.pending, (state) => {
         state.loading = true;
@@ -551,7 +552,8 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(fetchCreditScoreETName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(saveCreditScoreET.pending, (state) => {
         state.loading = true;
@@ -562,8 +564,8 @@ const creditScoreETSlice = createSlice({
       })
       .addCase(saveCreditScoreET.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
-        toast.error(`${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(AddNewRange.pending, (state) => {
         state.loading = true;

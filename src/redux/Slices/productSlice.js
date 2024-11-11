@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 // Define async thunks for fetching data and performing actions
 export const fetchData = createAsyncThunk(
-  "product/fetchName",
+  "product/fetchData",
   async (productType, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -23,6 +23,10 @@ export const fetchData = createAsyncThunk(
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         return rejectWithValue("Unauthorized");
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
       const data = await response.json();
       return data;
@@ -50,7 +54,8 @@ export const saveProductData = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to save");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -81,7 +86,8 @@ export const updateProductName = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update");
       }
 
       return newName; // Return the updated data
@@ -109,7 +115,8 @@ export const deleteLoanProduct = createAsyncThunk(
       );
 
       if (!deleteResponse.ok) {
-        throw new Error("Failed to delete the item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
       }
 
       return loanProId; // Return the deleted loanProId to handle it in the reducer
@@ -156,8 +163,10 @@ export const createProductData = createAsyncThunk(
       );
 
       if (!postResponse.ok) {
-        throw new Error(`HTTP error! Status: ${postResponse.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to create");
       }
+
       return filteredproductData;
       // Assuming the server responds with the newly created product data
     } catch (error) {
@@ -293,7 +302,8 @@ const productSlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(saveProductData.pending, (state) => {
         state.loading = true;
@@ -317,8 +327,8 @@ const productSlice = createSlice({
       })
       .addCase(updateProductName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(deleteLoanProduct.pending, (state) => {
         state.loading = true;
@@ -329,8 +339,8 @@ const productSlice = createSlice({
       })
       .addCase(deleteLoanProduct.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(createProductData.pending, (state) => {
         state.loading = true;
@@ -342,8 +352,8 @@ const productSlice = createSlice({
       })
       .addCase(createProductData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message; // Set the error message if the request fails
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       });
   },
 });

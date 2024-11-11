@@ -25,7 +25,8 @@ export const fetchRules = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to fetch data");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
 
       const debtBurdenConfig = await response.json();
@@ -57,7 +58,8 @@ export const fetchName = createAsyncThunk(
           localStorage.clear();
           return rejectWithValue("Unauthorized");
         }
-        throw new Error("Failed to fetch name");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
 
       const retrievedname = await response.json();
@@ -402,7 +404,8 @@ export const dbrSlice = createSlice({
       })
       .addCase(fetchRules.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
@@ -413,7 +416,8 @@ export const dbrSlice = createSlice({
       })
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
       .addCase(deleteRule.pending, (state) => {
         state.loading = true;

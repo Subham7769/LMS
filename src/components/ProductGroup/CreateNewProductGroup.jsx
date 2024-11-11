@@ -6,16 +6,17 @@ import TagInput from "../TagInput/TagInput";
 import useGroupFormState from "../../utils/useGroupFormState";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import useInList from "../../utils/useInList";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { fetchInList } from "../../redux/Slices/productGroupSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const CreateNewProductGroup = () => {
   const { configId, groupName } = useParams();
   const location = useLocation();
   const isNewGroup = groupName === "newGroup";
   const newGroupName = location.state?.Name || "New Group";
-  const options = useInList();
-  const [productTypeOptions, setProductTypeOptions] = useState([]);
+  const dispatch = useDispatch();
+  const { inListOption } = useSelector((state) => state.productGroup);
 
   const {
     formData,
@@ -33,14 +34,8 @@ const CreateNewProductGroup = () => {
   });
 
   useEffect(() => {
-    if (options) {
-      const formattedOptions = options.map((option) => ({
-        label: option,
-        value: option,
-      }));
-      setProductTypeOptions(formattedOptions);
-    }
-  }, [options]);
+    dispatch(fetchInList());
+  }, [dispatch]);
 
   const handleSave = useCallback(
     (newName) => {
@@ -79,7 +74,7 @@ const CreateNewProductGroup = () => {
             handleSelectChange={handleSelectChange}
             addTag={addTag}
             deleteTag={deleteTag}
-            productTypeOptions={productTypeOptions}
+            productTypeOptions={inListOption}
             inputNumberName={"limit"}
             inputNumberLabel={"Max Product Limit"}
           />

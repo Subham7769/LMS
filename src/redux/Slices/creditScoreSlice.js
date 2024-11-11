@@ -23,6 +23,11 @@ export const fetchCreditScore = createAsyncThunk(
         return rejectWithValue("Unauthorized");
       }
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
+      }
+
       const data = await response.json();
       return data;
     } catch (error) {
@@ -348,7 +353,8 @@ const creditScoreSlice = createSlice({
       })
       .addCase(fetchCreditScore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateCreditScore.pending, (state) => {
         state.loading = true;

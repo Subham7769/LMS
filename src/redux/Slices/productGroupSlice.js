@@ -62,6 +62,35 @@ export const fetchLoanProducts = createAsyncThunk(
   }
 );
 
+export const fetchInList = createAsyncThunk(
+  "productGroup/fetchInList",
+  async (_, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_PRODUCT_INLIST_READ}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        return rejectWithValue("Unauthorized");
+      }
+
+      const data = await response.json();
+      return data.inList;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const updateProductGroup = createAsyncThunk(
   "productGroup/updateProductGroup",
   async (productGroupData, { rejectWithValue, dispatch }) => {
@@ -137,6 +166,7 @@ const initialState = {
     tags: [],
   },
   productTypeOptions: [],
+  inListOption: [],
   loading: false,
   error: null,
   productGroupStatsData: {
@@ -282,6 +312,23 @@ const productGroupSlice = createSlice({
         state.productTypeOptions = formattedProductTypeOptions;
       })
       .addCase(fetchLoanProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchInList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchInList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.inListOption = action.payload;
+        const formattedProductTypeOptions = action.payload.map((item) => ({
+          value: item,
+          label: item,
+        }));
+        state.inListOption = formattedProductTypeOptions;
+      })
+      .addCase(fetchInList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

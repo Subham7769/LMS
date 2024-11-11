@@ -53,7 +53,8 @@ export const fetchBlockedEmployerData = createAsyncThunk(
       );
       const data = await response.json();
       if (!response.ok) {
-        return rejectWithValue(data);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
       return data;
     } catch (error) {
@@ -85,7 +86,8 @@ export const fetchBlockedEmployerName = createAsyncThunk(
       }
       const data = await response.json();
       if (!response.ok) {
-        return rejectWithValue(data);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
       return data.name;
     } catch (error) {
@@ -315,7 +317,8 @@ const beSlice = createSlice({
       })
       .addCase(fetchBlockedEmployerData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
 
       // Fetch Blocked Employer Name
@@ -329,7 +332,8 @@ const beSlice = createSlice({
       })
       .addCase(fetchBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`${action.payload}`);
       })
 
       // Update Blocked Employer Name

@@ -22,6 +22,10 @@ export const fetchName = createAsyncThunk(
         localStorage.clear();
         return rejectWithValue("Unauthorized");
       }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
+      }
       const data = await response.json();
       return data.tclName;
     } catch (error) {
@@ -48,6 +52,10 @@ export const fetchData = createAsyncThunk(
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         return rejectWithValue("Unauthorized");
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
       const data = await response.json();
       const formattedTCLInfoData = data.map(({ fileName, tclFileId }) => ({
@@ -302,7 +310,8 @@ const tclSlice = createSlice({
       })
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
@@ -313,7 +322,8 @@ const tclSlice = createSlice({
       })
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
@@ -353,7 +363,7 @@ const tclSlice = createSlice({
         toast.success("TCL deleted successfully!");
       })
       .addCase(deleteTCL.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.payload;
         toast.error(`Error : ${action.payload}`);
       })
       .addCase(deleteTCLFile.pending, (state) => {

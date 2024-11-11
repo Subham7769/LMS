@@ -18,6 +18,12 @@ export const fetchRulePolicyData = createAsyncThunk(
         },
       }
     );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message || "Failed to read");
+    }
+
     if (response.status === 200) {
       const data = await response.json();
       return data;
@@ -928,7 +934,8 @@ const rulePolicySlice = createSlice({
       })
       .addCase(fetchRulePolicyData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateFinanceAmountWithTenureRules.pending, (state) => {
         state.loading = true;
@@ -939,6 +946,7 @@ const rulePolicySlice = createSlice({
       })
       .addCase(updateFinanceAmountWithTenureRules.rejected, (state) => {
         state.loading = false;
+        state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
       })
       .addCase(createMaxFinAmtEntry.pending, (state) => {

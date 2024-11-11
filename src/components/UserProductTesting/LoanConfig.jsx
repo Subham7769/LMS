@@ -223,7 +223,6 @@ const LoanConfig = () => {
               inputValue={loanConfigFields.amount}
               onChange={handleChange}
               placeHolder={"5000"}
-              isValidation={true}
             />
           )}
           <div>

@@ -27,6 +27,10 @@ export const fetchData = createAsyncThunk(
         localStorage.clear();
         return rejectWithValue("Unauthorized");
       }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
+      }
       const data = await response.json();
       data.startDate = formattedDate(data.startDate);
       data.endDate = formattedDate(data.endDate);
@@ -235,8 +239,10 @@ export const createProject = createAsyncThunk(
       });
 
       if (!response.ok) {
-        const errorMessage = await response.text();
-        return rejectWithValue(errorMessage || "Failed to create project.");
+        const errorMessage = await response.json();
+        return rejectWithValue(
+          errorMessage.message || "Failed to create project."
+        );
       }
 
       const data = await response.json();
@@ -462,7 +468,8 @@ const projectSlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(updateProject.pending, (state) => {
         state.loading = true;
@@ -503,8 +510,8 @@ const projectSlice = createSlice({
       })
       .addCase(createProject.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`Error : ${action.payload}`);
       });
   },
 });

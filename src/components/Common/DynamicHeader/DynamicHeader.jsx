@@ -10,7 +10,7 @@ const DynamicHeader = ({
   handleClone,
   handleDelete,
   loading,
-  error
+  error,
 }) => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;

@@ -17,7 +17,7 @@ const NewRulePolicy = () => {
   const { rulePolicyId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { itemName } = useSelector((state) => state.rulePolicy);
+  const { itemName, loading, error } = useSelector((state) => state.rulePolicy);
 
   useEffect(() => {
     dispatch(fetchName(rulePolicyId));
@@ -73,6 +73,8 @@ const NewRulePolicy = () => {
         handleNameUpdate={handleUpdateRPName}
         handleClone={handleClone}
         handleDelete={() => handleDelete(rulePolicyId)}
+        loading={loading}
+        error={error}
       />
       <div className="flex flex-col gap-8 mt-4">
         <CloneModal

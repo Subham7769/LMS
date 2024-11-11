@@ -23,6 +23,10 @@ export const fetchName = createAsyncThunk(
         localStorage.clear();
         return rejectWithValue("Unauthorized");
       }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
+      }
       const data = await response.json();
       return data.name;
     } catch (error) {
@@ -49,6 +53,10 @@ export const fetchData = createAsyncThunk(
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
         return rejectWithValue("Unauthorized");
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
       }
       const data = await response.json();
       return data;
@@ -83,9 +91,11 @@ export const updateOrPostData = createAsyncThunk(
         return rejectWithValue("Unauthorized");
       }
 
-      if (response.ok) {
-        return await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update");
       }
+      return await response.json();
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -275,7 +285,8 @@ const recoverySlice = createSlice({
       })
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
@@ -298,7 +309,8 @@ const recoverySlice = createSlice({
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(updateOrPostData.pending, (state, action) => {
         state.loading = true;

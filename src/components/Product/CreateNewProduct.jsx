@@ -56,10 +56,6 @@ const CreateNewProduct = () => {
     }
   };
 
-  if (error) {
-    <p>Error: {error}</p>;
-  }
-
   console.log(productData);
 
   return (

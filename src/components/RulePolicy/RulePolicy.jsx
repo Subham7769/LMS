@@ -37,7 +37,11 @@ const CreditPolicy = () => {
       <LengthofService loading={loading} error={error} />
       <div className="grid grid-cols-2 gap-8">
         <CityCard cityData={cityData} loading={loading} error={error} />
-        <OccupationCard occupationData={occupationData} loading={loading} error={error} />
+        <OccupationCard
+          occupationData={occupationData}
+          loading={loading}
+          error={error}
+        />
       </div>
     </>
   );

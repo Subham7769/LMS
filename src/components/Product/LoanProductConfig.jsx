@@ -156,10 +156,6 @@ const LoanProductConfig = () => {
   };
 
 
-  if (error) {
-    <p>Error: {error}</p>;
-  }
-
   const getSortIcon = (column) => {
     if (sortConfig.key === column) {
       if (sortConfig.direction === "asc") {
