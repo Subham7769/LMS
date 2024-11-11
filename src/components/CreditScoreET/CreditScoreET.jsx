@@ -3,7 +3,6 @@ import { operatorOptions } from "../../data/OptionsData";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 import Button from "../Common/Button/Button";
@@ -176,9 +175,6 @@ const CreditScoreET = () => {
     dispatch(setNewRangeTenure({ name, value }));
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
 
   return (
     <>
@@ -187,6 +183,8 @@ const CreditScoreET = () => {
         handleNameUpdate={handleUpdateCSET}
         handleClone={handleClone}
         handleDelete={() => onDeleteCSET(creditScoreETId)}
+        loading={loading}
+        error={error}
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -197,7 +195,10 @@ const CreditScoreET = () => {
         initialName={creditScoreETName}
       />
       {roleName !== "ROLE_VIEWER" ? (
-        <ContainerTile>
+        <ContainerTile
+        loading={loading}
+        error={error}
+        >
           <div className="grid grid-cols-4 gap-2 mb-5 items-end">
             <InputSelect
               labelName={"Minimum Credit Score"}
@@ -258,7 +259,11 @@ const CreditScoreET = () => {
         <div className="flex flex-col gap-5 mt-5">
           {creditScoreET?.rules?.map((rule, index) => {
             return (
-              <ContainerTile key={index}>
+              <ContainerTile 
+              key={index}
+              loading={loading}
+              error={error}
+              >
                 <div className="grid grid-cols-4 gap-2 mb-5 items-end">
                   <InputSelect
                     labelName={"Minimum Credit Score"}

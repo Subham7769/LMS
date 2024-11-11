@@ -1,11 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
-  CheckCircleIcon,
-  TrashIcon,
-  XCircleIcon,
+  CheckCircleIcon
 } from "@heroicons/react/20/solid";
-import LoadingState from "../LoadingState/LoadingState";
 import {
   countryOptions,
   currencyOptions,
@@ -99,25 +96,21 @@ const Project = () => {
     toast.error("Cannot edit start date");
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    <p>Error: {error}</p>;
-  }
-
   return (
     <>
       <DynamicHeader
         itemName={projectData?.name}
         isEditable={false}
         handleNameUpdate={updateName}
-        isClonable={false}
         handleDelete={handleDelete}
+        loading={loading}
+        error={error}
       />
       <form className="flex flex-col gap-8">
-        <ContainerTile>
+        <ContainerTile
+          loading={loading}
+          error={error}
+        >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {/* Description */}
             <InputText
@@ -334,7 +327,10 @@ const Project = () => {
           </div>
         </ContainerTile>
 
-        <ContainerTile>
+        <ContainerTile
+          loading={loading}
+          error={error}
+        >
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-5 mb-[24px]">
             {/* Loan Amount */}
@@ -435,11 +431,10 @@ const Project = () => {
             <div style={divStyle}>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div
-                  className={`flex-1 w-full ${
-                    (projectData.loanType === "cash" ||
-                      projectData.loanType === "") &&
+                  className={`flex-1 w-full ${(projectData.loanType === "cash" ||
+                    projectData.loanType === "") &&
                     "hidden"
-                  }`}
+                    }`}
                 >
                   <InputCheckbox
                     labelName={"Down Payment"}
@@ -523,7 +518,10 @@ const Project = () => {
           </div>
         </ContainerTile>
 
-        <ContainerTile>
+        <ContainerTile
+          loading={loading}
+          error={error}
+        >
           <div className="gap-5">
             <div>
               <InputTextArea
@@ -570,12 +568,12 @@ const Project = () => {
         </ContainerTile>
         {roleName !== "ROLE_VIEWER" ? (
           <div className="flex items-center justify-end gap-4 mt-4">
-            <Button
+           {!loading && <Button
               buttonName={"Update"}
               buttonIcon={CheckCircleIcon}
               onClick={handleUpdate}
               rectangle={true}
-            />
+            />}
           </div>
         ) : (
           ""

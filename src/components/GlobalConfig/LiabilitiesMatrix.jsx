@@ -4,8 +4,6 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
-import _ from "lodash";
-import LoadingState from "../LoadingState/LoadingState";
 import {
   productOptions,
   issuerOptions,
@@ -35,7 +33,7 @@ import store from "../../redux/store";
 
 const LiabilitiesMatrix = () => {
   const dispatch = useDispatch();
-  const { allLiabilityData, newLiabilityForm, loading } = useSelector(
+  const { allLiabilityData, newLiabilityForm, loading, error } = useSelector(
     (state) => state.globalConfig
   );
   const { userData } = useSelector((state) => state.auth);
@@ -85,9 +83,6 @@ const LiabilitiesMatrix = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
 
   return (
     <>
@@ -101,7 +96,10 @@ const LiabilitiesMatrix = () => {
       </h2>
       <div className="flex flex-col gap-5 relative">
         {roleName !== "ROLE_VIEWER" ? (
-          <ContainerTile>
+          <ContainerTile
+            loading={loading}
+            error={error}
+          >
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] py-2 max-sm:grid-cols-1 gap-8 items-center">
               <InputSelect
                 labelName="Product"
@@ -202,7 +200,10 @@ const LiabilitiesMatrix = () => {
 
         {allLiabilityData.length > 0 ? (
           allLiabilityData?.map((item, index) => (
-            <ContainerTile>
+            <ContainerTile
+              loading={loading}
+              error={error}
+            >
               <div key={index} className="flex flex-col gap-y-6 ">
                 <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
                   <InputSelect

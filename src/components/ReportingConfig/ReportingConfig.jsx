@@ -3,14 +3,13 @@ import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
-import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import { PlusIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchReportingConfig, updateReportingConfig, deleteReportingConfig, updateReportingConfigField, updateNewConfigName, } from "../../redux/Slices/reportingConfigSlice";
 import { fetchReportingConfigData } from '../../redux/Slices/sidebarSlice';
-import DynamicName from "../Common/DynamicName/DynamicName";
+import DynamicHeader from '../Common/DynamicHeader/DynamicHeader';
 
 
 const CreateNewReportingConfig = () => {
@@ -81,27 +80,19 @@ const CreateNewReportingConfig = () => {
     dispatch(updateNewConfigName(newName))
   };
 
-
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <>
-      <div className="mb-4 flex items-center justify-between">
-        <DynamicName
-          initialName={reportingConfigData.name}
-          onSave={handleUpdateName}
-        />
-        <div className="flex gap-4">
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={() => onDeleteReportingConfig(RCName)}
-            circle={true}
-          />
-        </div>
-      </div>
-      <ContainerTile>
+      <DynamicHeader
+        itemName={reportingConfigData.name}
+        handleNameUpdate={handleUpdateName}
+        handleDelete={() => onDeleteReportingConfig(RCName)}
+        loading={loading}
+        error={error}
+      />
+      <ContainerTile
+              loading={loading}
+              error={error}
+      >
         <div className="grid grid-cols-4 gap-2 mb-5 items-end">
           <InputNumber
             labelName="Default Time Range Days"

@@ -18,7 +18,6 @@ import {
   uploadTCLFile,
 } from "../../redux/Slices/tclSlice";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
@@ -129,21 +128,13 @@ const TCLViewList = () => {
   const ActionList =
     roleName !== "ROLE_VIEWER"
       ? [
-          {
-            icon: TrashIcon,
-            circle: true,
-            action: handleDelete,
-          },
-        ]
+        {
+          icon: TrashIcon,
+          circle: true,
+          action: handleDelete,
+        },
+      ]
       : [];
-
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    <p>Error: {error}</p>;
-  }
 
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
@@ -159,10 +150,15 @@ const TCLViewList = () => {
       <DynamicHeader
         itemName={itemName}
         handleNameUpdate={handleUpdateTCL}
-        isClonable={false}
         handleDelete={() => handleDeleteTCL(tclId)}
+        loading={loading}
+        error={error}
       />
-      <ContainerTile className={"flex items-center justify-between"}>
+      <ContainerTile
+        className={"flex items-center justify-between"}
+        loading={loading}
+        error={error}
+      >
         <SelectAndAdd
           ListName={"Select TCL List"}
           SelectOptions={data}

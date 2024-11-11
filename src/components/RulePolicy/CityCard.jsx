@@ -14,7 +14,7 @@ import { validateForm } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import store from "../../redux/store";
 
-const CityCard = ({ cityData }) => {
+const CityCard = ({ cityData,loading, error }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
@@ -120,7 +120,11 @@ const CityCard = ({ cityData }) => {
   };
 
   return (
-    <ContainerTile className={"w-full"}>
+    <ContainerTile 
+    className={"w-full"}
+    loading={loading}
+    error={error}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="text-lg">City</div>
       </div>

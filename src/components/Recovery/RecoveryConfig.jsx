@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { PencilIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -7,7 +7,6 @@ import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputText from "../Common/InputText/InputText";
 import { useNavigate, useParams } from "react-router-dom";
 import { options } from "../../data/OptionsData";
-import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import {
@@ -125,14 +124,6 @@ const RecoveryConfig = () => {
     setIsEditingEquation(!isEditingEquation);
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    throw new Error(error);
-  }
-
   return (
     <>
       <DynamicHeader
@@ -140,6 +131,8 @@ const RecoveryConfig = () => {
         handleNameUpdate={handleNameUpdate}
         handleClone={handleClone}
         handleDelete={handleDelete}
+        loading={loading}
+        error={error}
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -147,7 +140,11 @@ const RecoveryConfig = () => {
         onCreateClone={createCloneRecovery}
         initialName={itemName}
       />
-      <ContainerTile className=" flex flex-col gap-4 ">
+      <ContainerTile
+        className=" flex flex-col gap-4 "
+        loading={loading}
+        error={error}
+      >
         <div className="flex gap-4 space-x-2 2xl:w-[50%] w-[75%]">
           <div className="flex-1">
             <InputNumber

@@ -4,7 +4,6 @@ import MaxFinAmtTen from "./MaxFinAmtTen";
 import LengthofService from "./LengthOfService";
 import CityCard from "./CityCard";
 import OccupationCard from "./OccupationCard";
-import LoadingState from "../LoadingState/LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchRulePolicyData,
@@ -30,21 +29,15 @@ const CreditPolicy = () => {
     };
   }, [dispatch, rulePolicyId]);
 
-  if (loading) {
-    return <LoadingState />;
-  }
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
   return (
     <>
-      <MaxFinAmtTen FAWTData={FAWTData} />
-      <RiskBasedPricingEquation />
-      <RiskBasedPricing />
-      <LengthofService />
-      <div className="flex gap-8 w-full">
-        <CityCard cityData={cityData} />
-        <OccupationCard occupationData={occupationData} />
+      <MaxFinAmtTen FAWTData={FAWTData} loading={loading} error={error} />
+      <RiskBasedPricingEquation loading={loading} error={error} />
+      <RiskBasedPricing loading={loading} error={error} />
+      <LengthofService loading={loading} error={error} />
+      <div className="grid grid-cols-2 gap-8">
+        <CityCard cityData={cityData} loading={loading} error={error} />
+        <OccupationCard occupationData={occupationData} loading={loading} error={error} />
       </div>
     </>
   );

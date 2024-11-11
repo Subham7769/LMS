@@ -26,7 +26,6 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
-import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import Table from "./Table";
 import { operatorOptions, empOptions } from "../../data/OptionsData";
@@ -50,7 +49,7 @@ const DebtBurdenConfig = () => {
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
 
   // Redux state selectors
-  const { name, loading, currentPage, isModalOpen, dbrData, allDBRData } =
+  const { name, loading, error, currentPage, isModalOpen, dbrData, allDBRData } =
     useSelector((state) => state.dbrConfig);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
@@ -239,10 +238,6 @@ const DebtBurdenConfig = () => {
   // Determine total number of pages
   const totalPages = Math.ceil(allDBRData?.dbrRules.length / itemsPerPage);
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <>
       <DynamicHeader
@@ -250,6 +245,8 @@ const DebtBurdenConfig = () => {
         handleNameUpdate={updateNameHandler}
         handleClone={handleClone}
         handleDelete={() => deleteCurrentDBC(dbcTempId)}
+        loading={loading}
+        error={error}
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -257,7 +254,10 @@ const DebtBurdenConfig = () => {
         onCreateClone={createClone}
         initialName={name}
       />
-      <ContainerTile>
+      <ContainerTile
+        loading={loading}
+        error={error}
+      >
         {roleName !== "ROLE_VIEWER" ? (
           <div className="grid grid-cols-10 gap-2 items-end mt-2 border-b pb-5 mb-2">
             <div className="relative">
@@ -383,11 +383,10 @@ const DebtBurdenConfig = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
+              className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-500"
+                }`}
             >
               <ChevronLeftIcon className="w-5 h-5" />
             </button>
@@ -397,11 +396,10 @@ const DebtBurdenConfig = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
+              className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-500"
+                }`}
             >
               <ChevronRightIcon className="w-5 h-5" />
             </button>

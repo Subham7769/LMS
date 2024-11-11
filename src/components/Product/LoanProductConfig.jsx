@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  PlusIcon,
   TrashIcon,
   CheckCircleIcon,
   PencilIcon,
@@ -8,7 +7,6 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
@@ -157,9 +155,6 @@ const LoanProductConfig = () => {
     toast(`You have switched to page: ${newPage}`);
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
 
   if (error) {
     <p>Error: {error}</p>;
@@ -222,10 +217,14 @@ const LoanProductConfig = () => {
       <DynamicHeader
         itemName={productData?.productType}
         handleNameUpdate={handleProductNameChange}
-        isClonable={false}
         handleDelete={() => handleDeleteLoanProduct(loanProId)}
+        loading={loading}
+        error={error}
       />
-      <ContainerTile>
+      <ContainerTile
+        loading={loading}
+        error={error}
+      >
         <ProductInputFields
           productData={productData}
           handleChange={handleChange}
@@ -370,15 +369,15 @@ const LoanProductConfig = () => {
                           placeHolder="3"
                           isValidation={true}
                           isIndex={item?.dataIndex}
-                          // showError={validationError.repaymentTenure}
-                          // onFocus={() =>
-                          //   dispatch(
-                          //     setValidationError({
-                          //       ...validationError,
-                          //       repaymentTenure: false,
-                          //     })
-                          //   )
-                          // }
+                        // showError={validationError.repaymentTenure}
+                        // onFocus={() =>
+                        //   dispatch(
+                        //     setValidationError({
+                        //       ...validationError,
+                        //       repaymentTenure: false,
+                        //     })
+                        //   )
+                        // }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -451,7 +450,7 @@ const LoanProductConfig = () => {
               buttonIcon={ChevronLeftIcon}
               onClick={
                 currentPage === 1
-                  ? () => {}
+                  ? () => { }
                   : () => handlePageChange(currentPage - 1)
               }
               rectangle={true}
@@ -469,16 +468,15 @@ const LoanProductConfig = () => {
               buttonIcon={ChevronRightIcon}
               onClick={
                 currentPage === totalPages || currentItems.length < 1
-                  ? () => {}
+                  ? () => { }
                   : () => handlePageChange(currentPage + 1)
               }
               rectangle={true}
               className={`
-          ${
-            currentPage === totalPages || currentItems.length < 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : ""
-          }
+          ${currentPage === totalPages || currentItems.length < 1
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : ""
+                }
         `}
               disabled={currentPage === totalPages || currentItems.length < 1}
             />

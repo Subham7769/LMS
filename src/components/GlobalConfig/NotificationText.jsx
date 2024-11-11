@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import { notiChannelOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
@@ -43,10 +42,6 @@ const NotificationText = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <div className="flex flex-col gap-5">
       <h2 className="mb-6">
@@ -58,7 +53,10 @@ const NotificationText = () => {
         </b>
       </h2>
       {notificationInputList?.map((notificationData, index) => (
-        <ContainerTile>
+        <ContainerTile
+        loading={loading}
+        error={error}
+        >
           <div key={notificationData.id} className="flex flex-col gap-y-6 ">
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputText

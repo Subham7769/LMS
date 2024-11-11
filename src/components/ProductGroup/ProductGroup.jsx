@@ -3,7 +3,6 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
-import LoadingState from "../Common/Loader/Loader";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { toast } from "react-toastify";
@@ -27,7 +26,7 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const ProductGroup = () => {
   const dispatch = useDispatch();
-  const { productGroupData, productTypeOptions, loading } = useSelector(
+  const { productGroupData, productTypeOptions, loading,error } = useSelector(
     (state) => state.productGroup
   );
   const { userData } = useSelector((state) => state.auth);
@@ -103,19 +102,18 @@ const ProductGroup = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <>
       <DynamicHeader
         itemName={productGroupData?.configName}
         handleNameUpdate={handleUpdatePGName}
-        isClonable={false}
-        isDeleteable={false}
+        loading={loading}
+        error={error}
       />
-      <ContainerTile>
+      <ContainerTile
+        loading={loading}
+        error={error}
+      >
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
             labelName="Percentage from Equated Installments"

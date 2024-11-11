@@ -15,7 +15,7 @@ import Button from "../Common/Button/Button";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 
-const RiskBasedPricingEquation = () => {
+const RiskBasedPricingEquation = ({ loading, error }) => {
   const dispatch = useDispatch();
   const { rulePolicyId } = useParams();
   const { riskBasedPricingEquation, rules } = useSelector(
@@ -90,7 +90,10 @@ const RiskBasedPricingEquation = () => {
 
   return (
     <>
-      <ContainerTile>
+      <ContainerTile
+              loading={loading}
+              error={error}
+      >
         <div className=" text-center my-4 text-lg">
           Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
           (*Length of Service*C%) + (*Cities*D%)]

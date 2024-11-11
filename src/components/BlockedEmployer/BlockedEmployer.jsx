@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBEData } from "../../redux/Slices/sidebarSlice";
@@ -106,9 +105,6 @@ const BlockedEmployer = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
   return (
     <>
       <DynamicHeader
@@ -116,6 +112,8 @@ const BlockedEmployer = () => {
         handleNameUpdate={handleUpdateName}
         handleClone={handleClone}
         handleDelete={handleDeleteBE}
+        loading={loading}
+        error={error}
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -123,7 +121,10 @@ const BlockedEmployer = () => {
         onCreateClone={createCloneBE}
         initialName={itemName}
       />
-      <ContainerTile>
+      <ContainerTile
+        loading={loading}
+        error={error}
+      >
         <TagInput
           formData={blockEmployer}
           handleChange={handleChange}

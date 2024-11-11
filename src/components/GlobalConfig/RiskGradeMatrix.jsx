@@ -4,7 +4,6 @@ import {
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import LoadingState from "../LoadingState/LoadingState";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
@@ -26,7 +25,7 @@ import store from "../../redux/store";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
-  const { allRiskGradeData, newRiskGradeForm, loading } = useSelector(
+  const { allRiskGradeData, newRiskGradeForm, loading, error } = useSelector(
     (state) => state.globalConfig
   );
   const { userData } = useSelector((state) => state.auth);
@@ -64,10 +63,6 @@ const RiskGradeMatrix = () => {
     dispatch(deleteRiskGrade(id))
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <>
       <h2 className="mb-6">
@@ -80,7 +75,10 @@ const RiskGradeMatrix = () => {
       </h2>
       <div className="flex flex-col gap-5">
         {roleName !== "ROLE_VIEWER" ? (
-          <ContainerTile>
+          <ContainerTile
+          loading={loading}
+          error={error}
+          >
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
               <InputNumber
                 labelName="From"
@@ -147,7 +145,10 @@ const RiskGradeMatrix = () => {
         )}
 
         {allRiskGradeData.map((riskGradingData, index) => (
-          <ContainerTile>
+          <ContainerTile
+          loading={loading}
+          error={error}
+          >
             <div
               key={riskGradingData.id}
               className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4"

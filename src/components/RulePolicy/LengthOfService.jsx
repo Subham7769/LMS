@@ -34,7 +34,7 @@ const operatorOptions = [
   { value: ">=", label: ">=" },
 ];
 
-const LengthofService = () => {
+const LengthofService = ({ loading, error }) => {
   const dispatch = useDispatch();
   const { rulePolicyId } = useParams();
   const [editingIndex, setEditingIndex] = useState(null);
@@ -171,7 +171,10 @@ const LengthofService = () => {
 
   return (
     <>
-      <ContainerTile>
+      <ContainerTile
+        loading={loading}
+        error={error}
+      >
         <div className="text-lg mb-4">Length of Service</div>
         {roleName !== "ROLE_VIEWER" ? (
           <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
@@ -397,11 +400,10 @@ const LengthofService = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`flex items-center px-4 py-2 rounded-md ${
-              currentPage === 1
+            className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1
                 ? "bg-gray-300 cursor-not-allowed"
                 : "bg-indigo-600 text-white hover:bg-indigo-500"
-            }`}
+              }`}
           >
             <ChevronLeftIcon className="w-5 h-5" />
           </button>
@@ -411,11 +413,10 @@ const LengthofService = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || currentItems.length < 1}
-            className={`flex items-center px-4 py-2 rounded-md ${
-              currentPage === totalPages
+            className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages
                 ? "bg-gray-300 cursor-not-allowed"
                 : "bg-indigo-600 text-white hover:bg-indigo-500"
-            }`}
+              }`}
           >
             <ChevronRightIcon className="w-5 h-5" />
           </button>

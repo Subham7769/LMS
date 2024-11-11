@@ -4,7 +4,6 @@ import {
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import { typeOptions, frequencyOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
@@ -86,10 +85,6 @@ const MinimumExpense = () => {
     dispatch(deleteExpenseField(id))
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <>
       <h2 className="mb-6">
@@ -102,7 +97,10 @@ const MinimumExpense = () => {
       </h2>
       <div className="flex flex-col gap-5">
         {roleName !== "ROLE_VIEWER" ? (
-          <ContainerTile>
+          <ContainerTile
+          loading={loading}
+          error={error}
+          >
             <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
               <InputText
                 labelName="Expenses"
@@ -148,7 +146,10 @@ const MinimumExpense = () => {
         )}
 
         {allExpenseData?.map((expenseData, index) => (
-          <ContainerTile>
+          <ContainerTile
+          loading={loading}
+          error={error}
+          >
             <div
               key={expenseData.id}
               className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end "

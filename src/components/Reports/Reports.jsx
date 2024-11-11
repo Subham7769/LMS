@@ -8,7 +8,6 @@ import {
   generateReport,
   handleChangeInReportsData,
 } from "../../redux/Slices/reportsSlice";
-import LoadingState from "../LoadingState/LoadingState";
 
 const Reports = () => {
   const dispatch = useDispatch();
@@ -30,16 +29,12 @@ const Reports = () => {
     dispatch(generateReport(formattedReportsData));
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    throw new Error(error);
-  }
   return (
     <>
-      <ContainerTile>
+      <ContainerTile
+        loading={loading}
+        error={error}
+      >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5 items-end">
           <InputSelect
             labelName={"Report Name"}
