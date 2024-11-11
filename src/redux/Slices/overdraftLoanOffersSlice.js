@@ -176,7 +176,7 @@ export const closeOverdraftLoanAccount = createAsyncThunk(
       const responseData = await response.json();
       return responseData; // Return the response data on success
     } catch (error) {
-      return rejectWithValue(error.message); // Handle network or other errors
+      return rejectWithValue(error); // Handle network or other errors
     }
   }
 );
@@ -205,7 +205,7 @@ export const getOverdraftLoanAccount = createAsyncThunk(
       const responseData = await response.json();
       return responseData; // Return the response data on success
     } catch (error) {
-      return rejectWithValue(error.message); // Handle network or other errors
+      return rejectWithValue(error); // Handle network or other errors
     }
   }
 );
@@ -234,7 +234,7 @@ export const getOverdraftLoanAccountOutstanding = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -263,7 +263,7 @@ export const getOverdraftLoanAccountPIF = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -316,7 +316,7 @@ export const debitOverdraftLoanAccount = createAsyncThunk(
       return responseData; // Return the response data from the server
     } catch (error) {
       // Return a rejected action if an error occurred
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -349,7 +349,7 @@ export const payOverdraftLoanAccount = createAsyncThunk(
       const responseData = await response.json();
       return responseData; // Return the response data on success
     } catch (error) {
-      return rejectWithValue(error.message); // Handle network or other errors
+      return rejectWithValue(error); // Handle network or other errors
     }
   }
 );
@@ -381,7 +381,7 @@ export const getAccountDetails = createAsyncThunk(
       const data = await response.json();
       return data; // Return the response data on success
     } catch (error) {
-      return rejectWithValue(error.message); // Handle network or other errors
+      return rejectWithValue(error); // Handle network or other errors
     }
   }
 );
@@ -586,7 +586,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getOverdraftLoanAccountOutstanding.pending, (state) => {
         state.loading = true;
@@ -596,14 +596,13 @@ const overdraftLoanOffersSlice = createSlice({
         getOverdraftLoanAccountOutstanding.fulfilled,
         (state, action) => {
           state.loading = false;
-          console.log(action.payload); // Useful for debugging
           state.accountOutstanding = action.payload;
         }
       )
       .addCase(getOverdraftLoanAccountOutstanding.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload || action.error.message;
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getOverdraftLoanAccountPIF.pending, (state) => {
         state.loading = true;
@@ -611,8 +610,7 @@ const overdraftLoanOffersSlice = createSlice({
       })
       .addCase(getOverdraftLoanAccountPIF.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload); // Useful for debugging
-        state.accountPIF = action.payload;
+        state.accountPIF = action.payload || action.error.message;
       })
       .addCase(getOverdraftLoanAccountPIF.rejected, (state, action) => {
         state.loading = false;
@@ -673,7 +671,7 @@ const overdraftLoanOffersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         console.log(action.payload);
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`Error : ${action.payload.message}`);
       })
       .addCase(getAccountDetails.pending, (state) => {
         state.loading = true;
@@ -686,7 +684,7 @@ const overdraftLoanOffersSlice = createSlice({
       .addCase(getAccountDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`Error : ${action.payload.message}`);
       });
   },
 });
