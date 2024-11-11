@@ -4,8 +4,6 @@ import {
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
@@ -47,16 +45,7 @@ const RiskGradeMatrix = () => {
     const isValid = state.validation.isValid;
     console.log(isValid);
     if (isValid) {
-      dispatch(addRiskGrade(newRiskGradeForm)).then(() =>
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"Item has been added successfully"}
-          />
-        ))
-      );
+      dispatch(addRiskGrade(newRiskGradeForm))
     }
   };
 
@@ -67,30 +56,12 @@ const RiskGradeMatrix = () => {
     console.log(isValid);
     if (isValid) {
       const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
-      dispatch(updateRiskGrade(itemToUpdate)).then(() =>
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated Successfully"}
-            message={"Data has been updated successfully"}
-          />
-        ))
-      );
+      dispatch(updateRiskGrade(itemToUpdate))
     }
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteRiskGrade(id)).then(() =>
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Deleted Successfully"}
-          message={"The item has been deleted successfully"}
-        />
-      ))
-    );
+    dispatch(deleteRiskGrade(id))
   };
 
   if (loading) {
@@ -99,7 +70,6 @@ const RiskGradeMatrix = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <h2 className="mb-6">
         <b
           title="Risk Grading Calculation"

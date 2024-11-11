@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { toast, Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import { notiChannelOptions } from "../../data/OptionsData";
@@ -41,27 +39,7 @@ const NotificationText = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      try {
-        await dispatch(saveNotificationData(id)).unwrap();
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated Successfully"}
-            message={"Data has been updated successfully"}
-          />
-        ));
-      } catch (error) {
-        // Handle the error here if needed
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Edit Failed"}
-            message={`${error.message}`}
-          />
-        ));
-      }
+      await dispatch(saveNotificationData(id))
     }
   };
 
@@ -69,13 +47,8 @@ const NotificationText = () => {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
   return (
     <div className="flex flex-col gap-5">
-      <Toaster position="top-center" reverseOrder={false} />
       <h2 className="mb-6">
         <b
           title="Notification Text"

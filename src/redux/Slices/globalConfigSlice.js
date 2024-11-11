@@ -411,7 +411,8 @@ export const saveNotificationData = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        return rejectWithValue(errorData)
       }
 
       // You can return this if you want to handle the result
@@ -553,7 +554,7 @@ export const globalConfigSlice = createSlice({
           activeRule: "",
           defaultConsideredInSIMAHscore: "",
         };
-        toast.success("Item added successfully!");
+        toast.success("Added Successfully");
       })
       .addCase(addNewLiabilityItem.rejected, (state, action) => {
         state.loading = false;
@@ -577,7 +578,7 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteLiabilityItem.fulfilled, (state) => {
         state.loading = false;
-        toast("Item deleted successfully!");
+        toast.success("Deleted Successfully");
       })
       .addCase(deleteLiabilityItem.rejected, (state, action) => {
         state.loading = false;
@@ -612,6 +613,7 @@ export const globalConfigSlice = createSlice({
           to: "",
           grade: "",
         };
+        toast.success("Added Successfully");
       })
       .addCase(addRiskGrade.rejected, (state, action) => {
         state.loading = false;
@@ -624,6 +626,7 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(updateRiskGrade.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Updated Successfully");
       })
       .addCase(updateRiskGrade.rejected, (state, action) => {
         state.loading = false;
@@ -636,6 +639,7 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteRiskGrade.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Deleted Successfully");
       })
       .addCase(deleteRiskGrade.rejected, (state, action) => {
         state.loading = false;
@@ -663,6 +667,7 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(addExpenseField.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Added Successfully");
       })
       .addCase(addExpenseField.rejected, (state, action) => {
         state.loading = false;
@@ -686,6 +691,7 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteExpenseField.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Deleted Successfully");
       })
       .addCase(deleteExpenseField.rejected, (state, action) => {
         state.loading = false;
@@ -713,6 +719,7 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(saveNotificationData.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Updated Successfully");
       })
       .addCase(saveNotificationData.rejected, (state, action) => {
         state.loading = false;

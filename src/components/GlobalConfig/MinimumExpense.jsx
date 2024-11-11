@@ -4,8 +4,6 @@ import {
   TrashIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
 import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import { typeOptions, frequencyOptions } from "../../data/OptionsData";
@@ -55,28 +53,8 @@ const MinimumExpense = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      try {
-        await dispatch(addExpenseField(expenseForm)).unwrap();
-        dispatch(resetExpenseFormData());
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Added Successfully"}
-            message={"Item has been added successfully"}
-          />
-        ));
-      } catch (error) {
-        // Handle the error here if needed
-        toast.custom((t) => (
-          <Failed
-            t={t}
-            toast={toast}
-            title={"Edit Failed"}
-            message={`${error.message}`}
-          />
-        ));
-      }
+      await dispatch(addExpenseField(expenseForm)).unwrap();
+      dispatch(resetExpenseFormData())
     }
   };
 
@@ -100,43 +78,20 @@ const MinimumExpense = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      // Find the item to be update
-      dispatch(saveExpenseField(id)).then(() =>
-        toast.custom((t) => (
-          <Passed
-            t={t}
-            toast={toast}
-            title={"Updated Successfully"}
-            message={"Data has been updated successfully"}
-          />
-        ))
-      );
+      dispatch(saveExpenseField(id))
     }
   };
 
   const handleDelete = async (id) => {
-    dispatch(deleteExpenseField(id)).then(() =>
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"Deleted Successfully"}
-          message={"The item has been deleted successfully"}
-        />
-      ))
-    );
+    dispatch(deleteExpenseField(id))
   };
 
   if (loading) {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <h2 className="mb-6">
         <b
           title="Bare Minimum Expenses"

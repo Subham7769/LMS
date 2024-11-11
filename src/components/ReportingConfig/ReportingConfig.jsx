@@ -8,7 +8,7 @@ import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector, useDispatch } from "react-redux";
-import {  fetchReportingConfig, updateReportingConfig, deleteReportingConfig, updateReportingConfigField, updateNewConfigName,} from "../../redux/Slices/reportingConfigSlice";
+import { fetchReportingConfig, updateReportingConfig, deleteReportingConfig, updateReportingConfigField, updateNewConfigName, } from "../../redux/Slices/reportingConfigSlice";
 import { fetchReportingConfigData } from '../../redux/Slices/sidebarSlice';
 import DynamicName from "../Common/DynamicName/DynamicName";
 
@@ -77,17 +77,13 @@ const CreateNewReportingConfig = () => {
     dispatch(updateReportingConfig({ RCName, reportingConfigData }))
   };
 
-  const handleUpdateName =  (newName) => {
-     dispatch(updateNewConfigName( newName ))
+  const handleUpdateName = (newName) => {
+    dispatch(updateNewConfigName(newName))
   };
 
 
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (error) {
-    throw new Error(error);
   }
 
   return (

@@ -19,7 +19,7 @@ export const fetchList = createAsyncThunk(
 export const deleteReportingConfig = createAsyncThunk(
   "reportingConfig/deleteReportingConfig",
   async (RCName, { rejectWithValue }) => {
-    const url = `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations/${RCName}`;
+    const url = `${import.meta.env.VITE_REPORTING_CONFIG_DELETE}${RCName}`;
     const token = localStorage.getItem("authToken");
 
     try {
@@ -29,7 +29,7 @@ export const deleteReportingConfig = createAsyncThunk(
         },
       });
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -41,7 +41,7 @@ export const createReportConfig = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken"); // Assuming you're using token-based auth
       const response = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configuration",
+        `${import.meta.env.VITE_REPORTING_CONFIG_CREATE}`,
         {
           method: "POST",
           headers: {
@@ -54,14 +54,12 @@ export const createReportConfig = createAsyncThunk(
 
       if (!response.ok) {
         throw new Error("Failed to create report configuration");
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message)
       }
 
       const data = await response.json(); // Assuming response contains some data
       return data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -74,7 +72,7 @@ export const fetchReportingConfig = createAsyncThunk(
 
     try {
       const response = await axios.get(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations/${RCName}`,
+        `${import.meta.env.VITE_REPORTING_CONFIG_READ}${RCName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
@@ -84,7 +82,7 @@ export const fetchReportingConfig = createAsyncThunk(
       return response.data; // Return the API response data
     } catch (error) {
       // Handle and return error response
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -98,7 +96,7 @@ export const updateReportingConfig = createAsyncThunk(
     try {
       // Make a PUT request to update the configuration
       const response = await axios.put(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/report/configurations/${RCName}`,
+        `${import.meta.env.VITE_REPORTING_CONFIG_UPDATE}${RCName}`,
         reportingConfigData, // Payload with the updated config data
         {
           headers: {
@@ -109,7 +107,7 @@ export const updateReportingConfig = createAsyncThunk(
 
       return response.data; // Return the updated data from the API
     } catch (error) {
-      return rejectWithValue(error.response?.data || error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -181,7 +179,7 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
+        state.error = action.error.message;
       })
       .addCase(deleteReportingConfig.pending, (state) => {
         state.loading = true;
@@ -192,8 +190,8 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(deleteReportingConfig.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-         toast.error(`Error : ${action.error.message}` )
+        state.error = action.error.message;
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(createReportConfig.pending, (state) => {
         state.loading = true;
@@ -207,7 +205,7 @@ const reportingConfigSlice = createSlice({
       .addCase(createReportConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-         toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}` )
       })
       .addCase(fetchReportingConfig.pending, (state) => {
         state.loading = true;
@@ -235,8 +233,7 @@ const reportingConfigSlice = createSlice({
       .addCase(updateReportingConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error occurred while updating";
-      })
-      
+      });
   },
 });
 
