@@ -5,10 +5,9 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useRacRules from "../../utils/useRACRules";
-import toast, { Toaster } from "react-hot-toast";
-import { RowChanged } from "../Toasts";
 import SelectInput from "../Common/DynamicSelect/DynamicSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import { toast } from "react-toastify";
 
 const options = [
   { value: "Indian", label: "Indian" },
@@ -619,7 +618,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -665,7 +664,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -711,7 +710,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -757,7 +756,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -802,7 +801,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -847,7 +846,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -892,7 +891,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -951,7 +950,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1013,7 +1012,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1075,7 +1074,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1134,7 +1133,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1193,7 +1192,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1244,7 +1243,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1303,7 +1302,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1362,7 +1361,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1411,7 +1410,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1460,7 +1459,7 @@ const RacMatrixConfig = () => {
       if (!postResponse.ok) {
         throw new Error(`HTTP error! Status: ${postResponse.status}`);
       } else if (postResponse.ok) {
-        toast.custom((t) => <RowChanged t={t} toast={toast} />);
+        toast.success("Row has been modified Successfully");
       }
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -1469,7 +1468,6 @@ const RacMatrixConfig = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="flex gap-5">
         <div className="flex flex-col max-w-[660px] flex-auto gap-y-5">
           <div className="shadow-md rounded-xl py-6 px-5 border border-red-600">

@@ -14,8 +14,7 @@ import {
   validateForm,
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed } from "../Toasts";
+import { toast } from "react-toastify";
 
 const Toolbox = () => {
   const { racId } = useParams();
@@ -132,14 +131,7 @@ const Toolbox = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (!isValid2) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Alert"}
-          message={"Add atleast 1 range"}
-        />
-      ));
+      toast.error("Add atleast 1 range");
     }
     if (isValid && isValid2) {
       dispatch(
@@ -161,7 +153,6 @@ const Toolbox = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="border-2 rounded-lg py-5 basis-1/5 flex-grow max-h-[550px] overflow-y-scroll">
         <div className="grid grid-cols-1 gap-3 flex-1">
           <div className={`grid gap-2 px-2 grid-cols-1`}>

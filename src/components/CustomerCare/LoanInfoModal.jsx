@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { Failed, Passed } from "../Toasts";
+import { useEffect, useState } from "react";;
 import { loanStatusOptions } from "../../data/OptionsData";
+import { toast } from "react-toastify";
 
 const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
   <div className="flex gap-5 text-left border-b border-gray-300 pb-5">
@@ -61,7 +60,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
 const TableHeader = () => (
   <thead className="bg-white sticky top-0">
     <tr className="divide-x divide-gray-200">
-      {["No.", "Date","Amount", "Status", "Interest Value", "Principal Value"].map(
+      {["No.", "Date", "Amount", "Status", "Interest Value", "Principal Value"].map(
         (item, index) => (
           <th key={index} className="py-3.5 px-2 text-center text-gray-900">
             {item}
@@ -110,23 +109,9 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(loanDetails.loanId);
-      toast.custom((t) => (
-        <Passed
-          t={t}
-          toast={toast}
-          title={"ID Copied!"}
-          message={"ID was copied successfully!"}
-        />
-      ));
+      toast.success("ID was copied successfully!");
     } catch (err) {
-      toast.custom((t) => (
-        <Failed
-          t={t}
-          toast={toast}
-          title={"Failed!"}
-          message={"The ID was not copied!"}
-        />
-      ));
+      toast.error("The ID was not copied!");
     }
   };
 
@@ -160,7 +145,6 @@ const LoanInfoModal = ({ visible, onClose, loanDetails }) => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div
         id="loanInfoContainer"
         onClick={handleOnClose}

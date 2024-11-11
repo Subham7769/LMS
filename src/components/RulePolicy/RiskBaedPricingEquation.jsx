@@ -10,8 +10,6 @@ import {
   setRiskBasedPricingEquation,
 } from "../../redux/Slices/rulePolicySlice";
 import { useNavigate, useParams } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import { TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import { validateForm } from "../../redux/Slices/validationSlice";
@@ -92,7 +90,6 @@ const RiskBasedPricingEquation = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
         <div className=" text-center my-4 text-lg">
           Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +

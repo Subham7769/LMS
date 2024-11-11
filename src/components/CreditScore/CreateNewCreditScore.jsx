@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import DynamicName from "../Common/DynamicName/DynamicName";
-import { TrashIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams } from "react-router-dom";
 import CreditScore from "./CreditScore";
-import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { useDispatch } from "react-redux";
 import { fetchCreditScoreEqData } from "../../redux/Slices/sidebarSlice";
@@ -12,8 +9,6 @@ import {
   deleteCreditScore,
   renameCreditScore,
 } from "../../redux/Slices/creditScoreSlice";
-import toast, { Toaster } from "react-hot-toast";
-import { Passed } from "../Toasts";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const NewCreatedCreditScore = () => {
@@ -100,7 +95,6 @@ const NewCreatedCreditScore = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="px-3 pt-3">
         <DynamicHeader
           itemName={creditScoreName}

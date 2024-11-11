@@ -200,7 +200,7 @@ const RecoveryConfig = () => {
                 )}
               </div>
               <div className="relative flex items-center justify-center gap-4 mt-4 group">
-                <FaInfoCircle className="text-yellow-500 mt-2" size={24} />
+                <FaInfoCircle className="text-indigo-400" size={20} />
                 <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 bottom-full mb-2 whitespace-nowrap">
                   The Recovery Equation uses:
                   <ul className="list-disc ml-4">

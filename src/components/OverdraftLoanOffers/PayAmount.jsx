@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
@@ -78,7 +77,6 @@ const PayAmount = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <ContainerTile>
         <div className="text-lg">Proceed for Pay Amount</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">

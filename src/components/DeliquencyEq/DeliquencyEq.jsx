@@ -6,10 +6,10 @@ import {
 } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import useRacRules from "../../utils/useRACRules";
-import toast from "react-hot-toast";
-import { RowChanged } from "../Toasts";
+import { toast } from "react-toastify";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
+
 
 const DeliquencyEq = () => {
   const { racID } = useParams();
@@ -53,7 +53,7 @@ const DeliquencyEq = () => {
       if (!response.ok)
         throw new Error(`HTTP error! Status: ${response.status}`);
 
-      toast.custom((t) => <RowChanged t={t} toast={toast} />);
+      toast.success("Row has been modified Successfully");
     } catch (error) {
       console.error("Failed to update data:", error);
     }
