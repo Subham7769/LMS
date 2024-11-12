@@ -26,7 +26,7 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const ProductGroup = () => {
   const dispatch = useDispatch();
-  const { productGroupData, productTypeOptions, loading,error } = useSelector(
+  const { productGroupData, productTypeOptions, loading, error } = useSelector(
     (state) => state.productGroup
   );
   const { userData } = useSelector((state) => state.auth);
@@ -107,16 +107,10 @@ const ProductGroup = () => {
       <DynamicHeader
         itemName={productGroupData?.configName}
         handleNameUpdate={handleUpdatePGName}
-<<<<<<< Updated upstream
         loading={loading}
         error={error}
-=======
->>>>>>> Stashed changes
       />
-      <ContainerTile
-        loading={loading}
-        error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
             labelName="Percentage from Equated Installments"

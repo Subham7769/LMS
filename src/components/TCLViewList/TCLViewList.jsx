@@ -136,10 +136,6 @@ const TCLViewList = () => {
         ]
       : [];
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
   // console.log(tableDataWithoutId);

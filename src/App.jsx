@@ -96,9 +96,7 @@ const CreateNewCreditScore = lazy(() =>
 
 // RulePolicy Imports
 const RulePolicyPage = lazy(() => import("./pages/RulePolicyPage"));
-const NewRulePolicy = lazy(() =>
-  import("./components/RulePolicy/NewRulePolicy")
-);
+const RulePolicy = lazy(() => import("./components/RulePolicy/RulePolicy"));
 
 // ProductGroup Imports
 const ProductGroupPage = lazy(() => import("./pages/ProductGroupPage"));
@@ -399,7 +397,7 @@ const routes = [
       },
       {
         path: "/rule-policy/:rulePolicyId",
-        element: <NewRulePolicy />,
+        element: <RulePolicy />,
         errorElement: <RouteErrorBoundary />,
       },
       {

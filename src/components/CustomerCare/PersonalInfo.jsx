@@ -48,9 +48,9 @@ const PersonalInfo = () => {
   );
 
   // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
+  // if (loading) {
+  //   return <LoadingState />;
+  // }
 
   const Content = () => (
     <>
@@ -122,12 +122,16 @@ const PersonalInfo = () => {
   return (
     <>
       <div>
-        <ContainerTile className="flex items-center gap-5 mb-5">
+        <ContainerTile
+          className="flex items-center gap-5 mb-5"
+          loading={loading}
+          error={error}
+        >
           <SectionErrorBoundary>
             <Content />
           </SectionErrorBoundary>
         </ContainerTile>
-        <ContainerTile>
+        <ContainerTile loading={loading} error={error}>
           <SectionErrorBoundary>
             <Content2 />
           </SectionErrorBoundary>
