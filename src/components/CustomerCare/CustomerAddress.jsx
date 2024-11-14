@@ -1,10 +1,8 @@
-import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
 import { useParams } from "react-router-dom";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const CustomerAddress = () => {
   const { subID } = useParams();  // Extracting subID from the URL
@@ -19,14 +17,6 @@ const CustomerAddress = () => {
   }, [dispatch, subID, url]);  // Add subID and url to the dependency array
   
   const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
-
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
 
   const address = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.addresses?.address || [];
 
@@ -53,6 +43,8 @@ const CustomerAddress = () => {
         cacad9: add.cacad9 || "N/A",
       }))}
       Divider={true}
+      loading={loading}
+      error={error}
     />
   );
 };

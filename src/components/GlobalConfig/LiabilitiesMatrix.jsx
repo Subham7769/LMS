@@ -203,6 +203,7 @@ const LiabilitiesMatrix = () => {
             <ContainerTile
               loading={loading}
               error={error}
+              key={"Liability"+index}
             >
               <div key={index} className="flex flex-col gap-y-6 ">
                 <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">

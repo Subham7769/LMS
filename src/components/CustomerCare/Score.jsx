@@ -1,5 +1,4 @@
 import React from "react";
-import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector } from "react-redux";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
@@ -9,16 +8,6 @@ const Score = () => {
     (state) => state.customerCare
   );
 
-  if (loading) {
-    return <LoadingState />;
-  }
-  if (
-    CreditBureauDetails.length === 0 ||
-    CreditBureauDetails.response.length === 0
-  ) {
-    return <LoadingState />;
-  }
-
   // Subcomponents for cleaner structure
   const InfoRow = ({ label, value }) => (
     <div className="py-2 grid grid-cols-3">
@@ -27,8 +16,7 @@ const Score = () => {
     </div>
   );
 
-  const { score } =
-    CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0];
+  const { score } = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0];
   const {
     scscore,
     scscorecard,
@@ -53,7 +41,11 @@ const Score = () => {
   );
 
   return (
-    <ContainerTile>
+    <ContainerTile
+      loading={loading || CreditBureauDetails.length === 0 ||
+        CreditBureauDetails.response.length === 0}
+      error={error}
+    >
       <div className="grid grid-cols-2 gap-4 text-[14px]">
         <SectionErrorBoundary>
           <Content />

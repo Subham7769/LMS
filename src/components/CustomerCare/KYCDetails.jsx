@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector } from "react-redux";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
@@ -43,10 +42,6 @@ const KYCDetails = () => {
     establishmentActivity,
   } = personalInfo?.recentGosiData?.employmentStatusInfo?.[0] || {};
   
-  // Conditional rendering starts after hooks have been defined
-  if (loading) {
-    return <LoadingState />;
-  }
 
   const Content = () => (
     <>
@@ -64,7 +59,10 @@ const KYCDetails = () => {
   );
 
   return (
-    <ContainerTile>
+    <ContainerTile
+    loading={loading}
+    error={error}
+    >
       <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
         <SectionErrorBoundary>
           <Content />

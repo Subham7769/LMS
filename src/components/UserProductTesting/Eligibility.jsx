@@ -50,7 +50,9 @@ const EligibilityResults = ({ eligibilityResults }) => {
         {projects?.map(
           (project, index) =>
             project?.projectName && (
-              <ContainerTile>
+              <ContainerTile
+                key={"Eligibility" + index}
+              >
                 <h2 className="text-[16px] text-center font-semibold">
                   {project?.projectName}
                 </h2>

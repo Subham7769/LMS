@@ -24,6 +24,7 @@ import {
   validateFormFieldsRule,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const options = [
   { value: "==", label: "==" },
@@ -37,7 +38,7 @@ const CreditScore = () => {
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { creditScoreData, loading } = useSelector(
+  const { creditScoreData, loading,error } = useSelector(
     (state) => state.creditScore
   );
   const { userData } = useSelector((state) => state.auth);
@@ -72,9 +73,6 @@ const CreditScore = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
 
   return (
     <>
@@ -96,6 +94,8 @@ const CreditScore = () => {
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
+          loading={loading}
+          error={error}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -112,6 +112,8 @@ const CreditScore = () => {
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
+          loading={loading}
+          error={error}
         />
         <ListTable
           ListName={"Residential Status Score"}
@@ -126,6 +128,8 @@ const CreditScore = () => {
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
+          loading={loading}
+          error={error}
         />
       </div>
       <div className="mb-6">
@@ -146,9 +150,14 @@ const CreditScore = () => {
           Editable={true}
           handleEditableFields={handleChange}
           Divider={true}
+          loading={loading}
+          error={error}
         />
       </div>
-      <div className="bg-gray-100 rounded-xl p-6">
+      <ContainerTile 
+                loading={loading}
+                error={error}
+      >
         <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">
           Dependents Rules
         </h2>
@@ -385,8 +394,8 @@ const CreditScore = () => {
             </div>
           </div>
         </div>
-      </div>
-      {roleName !== "ROLE_VIEWER" ? (
+      </ContainerTile>
+      {roleName !== "ROLE_VIEWER" && !loading ? (
         <div className="text-right mt-8">
           <Button
             buttonIcon={CheckCircleIcon}

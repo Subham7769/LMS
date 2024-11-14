@@ -1,4 +1,3 @@
-import LoadingState from "../LoadingState/LoadingState";
 import LoanInfoModal from "./LoanInfoModal";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
@@ -148,10 +147,6 @@ const LoanHistory = () => {
     ),
   }));
 
-  // Conditional rendering starts after hooks have been defined
-  if (loading) {
-    return <LoadingState />;
-  }
 
   return (
     <>
@@ -181,6 +176,8 @@ const LoanHistory = () => {
           ListItem={itemList}
           Divider={true}
           Searchable={true}
+          loading={loading}
+          error={error}
         />
       )}
     </>

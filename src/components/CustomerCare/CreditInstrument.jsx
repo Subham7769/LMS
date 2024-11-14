@@ -3,7 +3,6 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import LoadingState from "../LoadingState/LoadingState";
 import { useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
@@ -50,9 +49,6 @@ const CreditInstrument = () => {
     (state) => state.customerCare
   );
 
-  if (loading) {
-    return <LoadingState />;
-  }
 
   const settings = {
     dots: false,
@@ -90,7 +86,10 @@ const CreditInstrument = () => {
       ?.cidetails?.cidetail;
 
   return (
-    <ContainerTile>
+    <ContainerTile
+      loading={loading}
+      error={error}
+    >
       <div className="flex items-start shadow-md bg-gray-100 mt-4">
         <table className="divide-y divide-gray-300 border-r border-gray-200 w-full text-[14px]">
           <TableHeader />

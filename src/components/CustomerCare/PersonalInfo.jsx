@@ -47,11 +47,6 @@ const PersonalInfo = () => {
     </div>
   );
 
-  // Conditional rendering based on loading and error states
-  // if (loading) {
-  //   return <LoadingState />;
-  // }
-
   const Content = () => (
     <>
       <img
@@ -121,9 +116,9 @@ const PersonalInfo = () => {
 
   return (
     <>
-      <div>
+      <div className="flex flex-col gap-5">
         <ContainerTile
-          className="flex items-center gap-5 mb-5"
+          className="flex items-center gap-5"
           loading={loading}
           error={error}
         >

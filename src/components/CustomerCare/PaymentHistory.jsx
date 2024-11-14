@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
 import { useParams } from "react-router-dom";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 // Utility function for date formatting
 const formatDate = (dateString) => {
@@ -56,19 +54,13 @@ const PaymentHistory = () => {
     "Triggered By",
   ]
 
-  // Conditional rendering starts after hooks have been defined
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
   return (
     <ListTable
       ListHeader={listHeader}
       ListItem={listItems}
       Divider={true}
+      loading={loading}
+      error={error}
     />
   );
 };

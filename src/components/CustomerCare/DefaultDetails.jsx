@@ -1,13 +1,8 @@
-import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useSelector } from "react-redux";
 
 const DefaultDetails = () => {
   const { CreditBureauDetails, loading, error } = useSelector(state => state.customerCare);
-
-  if (loading) {
-    return <LoadingState />;
-  }
 
   const defaultDet = CreditBureauDetails?.response?.message?.item[0]?.rspreport?.consumer[0]?.defaults?.default;
 
@@ -38,6 +33,8 @@ const DefaultDetails = () => {
         dfsettlddate: add.dfsettlddate,
       }))}
       Divider={true}
+      loading={loading}
+      error={error}
     />
   );
 };

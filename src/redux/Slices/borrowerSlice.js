@@ -39,10 +39,6 @@ const initialState = {
   error: null,
   downloadLoading: false,
   downloadError: null,
-  loadingCreditProfile: false,
-  errorCreditProfile: null,
-  loadingLoanOffersCalculations: false,
-  errorLoanOffersCalculations: null,
 };
 
 export const fetchBorrowerData = createAsyncThunk(

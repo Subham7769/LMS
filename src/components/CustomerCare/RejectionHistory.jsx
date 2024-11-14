@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
@@ -37,10 +36,6 @@ const RejectionHistory = () => {
     }
   }, [rejectionHistory]);
 
-  // Conditional rendering starts after hooks have been defined
-  if (loading) {
-    return <LoadingState />;
-  }
 
   return (
     <ListTable
@@ -50,6 +45,8 @@ const RejectionHistory = () => {
         rejectionReason: reject.rejectionReason,
       }))}
       Divider={true}
+      loading={loading}
+      error={error}
     />
   );
 };

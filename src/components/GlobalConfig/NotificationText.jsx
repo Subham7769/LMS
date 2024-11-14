@@ -56,6 +56,7 @@ const NotificationText = () => {
         <ContainerTile
         loading={loading}
         error={error}
+        key={"notification"+index}
         >
           <div key={notificationData.id} className="flex flex-col gap-y-6 ">
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">

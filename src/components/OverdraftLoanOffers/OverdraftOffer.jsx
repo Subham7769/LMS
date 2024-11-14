@@ -9,7 +9,6 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingState from "../LoadingState/LoadingState";
 import { useNavigate } from "react-router-dom";
 import {
   updateOverdraftOfferField,
@@ -161,14 +160,6 @@ const OverdraftOffer = () => {
   const tableSliderStyle =
     "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500 flex justify-center items-center";
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  // if (error) {
-  //   return <ContainerTile>Error: {error}</ContainerTile>;
-  // }
 
   return (
     <div className="flex flex-col gap-5">

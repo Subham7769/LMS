@@ -145,7 +145,7 @@ const TCLViewList = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-5">
       {/* Select & Add to List */}
       <DynamicHeader
         itemName={itemName}
@@ -190,7 +190,7 @@ const TCLViewList = () => {
         )}
       </ContainerTile>
       {/* Message */}
-      {message && <div className="mb-4 text-red-500">{message}</div>}
+      {message && <div className="text-red-500">{message}</div>}
 
       {/* List */}
       <ListTable
@@ -198,8 +198,10 @@ const TCLViewList = () => {
         ListHeader={TclViewListHeaderList}
         ListItem={tableDataWithoutId}
         ListAction={ActionList}
+        loading={loading}
+        error={error}
       />
-    </>
+    </div>
   );
 };
 

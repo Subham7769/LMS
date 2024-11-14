@@ -2,7 +2,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
-import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useParams } from "react-router-dom";
@@ -15,11 +14,7 @@ const CreditProfile = () => {
 
   const {
     creditProfile,
-    loadingCreditProfile,
-    errorCreditProfile,
     loanOffersCalculations,
-    loadingLoanOffersCalculations,
-    errorLoanOffersCalculations,
     loading,
     error,
   } = useSelector((state) => state.customerCare);
@@ -67,11 +62,6 @@ const CreditProfile = () => {
       </div>
     );
   };
-
-  // Conditional rendering starts after hooks have been defined
-  if (loading) {
-    return <LoadingState />;
-  }
 
   const Content = () => (
     <>
@@ -121,32 +111,33 @@ const CreditProfile = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      {loadingCreditProfile || loadingLoanOffersCalculations ? (
-        <LoadingState />
-      ) : (
-        <>
-          <ListTable
-            ListName="Credit Profile Data"
-            ListHeader={["No.", "Product Name", "Total TCL", "Net TCL"]}
-            ListItem={creditProfile.map((cp, index) => ({
-              no: index + 1,
-              projectName: cp.loanProductName,
-              totalTCL: cp.totalTCL ? cp.totalTCL : "N/A",
-              netTCL: cp.netTCL,
-            }))}
-            Divider={true}
-          />
-          <ContainerTile className="grid grid-cols-2 gap-2">
-            <SectionErrorBoundary>
-              <Content />
-            </SectionErrorBoundary>
-            <div className="text-xs text-gray-400 mt-3 -mb-5 col-span-2">
-              *CB - Credit Bureau, *GDBR - Gross Debt Burden Ratio, *MTG -
-              Mortgage
-            </div>
-          </ContainerTile>
-        </>
-      )}
+      <ListTable
+        ListName="Credit Profile Data"
+        ListHeader={["No.", "Product Name", "Total TCL", "Net TCL"]}
+        ListItem={creditProfile.map((cp, index) => ({
+          no: index + 1,
+          projectName: cp.loanProductName,
+          totalTCL: cp.totalTCL ? cp.totalTCL : "N/A",
+          netTCL: cp.netTCL,
+        }))}
+        Divider={true}
+        loading={loading}
+        error={error}
+      />
+      <ContainerTile
+        className="grid grid-cols-2 gap-2"
+        loading={loading}
+        error={error}
+      >
+        <SectionErrorBoundary>
+          <Content />
+        </SectionErrorBoundary>
+        <div className="text-xs text-gray-400 mt-3 -mb-5 col-span-2">
+          *CB - Credit Bureau, *GDBR - Gross Debt Burden Ratio, *MTG -
+          Mortgage
+        </div>
+      </ContainerTile>
+
     </div>
   );
 };

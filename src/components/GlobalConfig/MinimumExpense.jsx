@@ -149,6 +149,7 @@ const MinimumExpense = () => {
           <ContainerTile
           loading={loading}
           error={error}
+          key={"Expense"+index}
           >
             <div
               key={expenseData.id}

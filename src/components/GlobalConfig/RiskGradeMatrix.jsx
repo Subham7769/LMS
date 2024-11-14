@@ -148,6 +148,7 @@ const RiskGradeMatrix = () => {
           <ContainerTile
           loading={loading}
           error={error}
+          key={"RiskGrade"+index}
           >
             <div
               key={riskGradingData.id}
