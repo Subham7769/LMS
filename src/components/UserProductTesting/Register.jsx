@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
@@ -43,7 +42,7 @@ const CommentsModal = ({ closeModal, message }) => {
   );
 };
 
-const EligibilityResults = ({ eligibilityResults }) => {
+const EligibilityResults = ({ eligibilityResults, loading, error }) => {
   const projects = eligibilityResults?.registrationResults?.projects;
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState([]);
@@ -57,7 +56,7 @@ const EligibilityResults = ({ eligibilityResults }) => {
     <>
       <div className="p-4 grid xl:grid-cols-2 grid-cols-1  gap-3">
         {projects?.map((project, index) => (
-          <ContainerTile>
+          <ContainerTile loading={loading} error={error}>
             <h2 className="text-[16px] text-center font-semibold mb-4">
               {project.projectName}
             </h2>
@@ -149,9 +148,7 @@ const Register = () => {
   console.log(register);
 
   // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  } else if (register.message === "Borrower already exists") {
+  if (register.message === "Borrower already exists") {
     return (
       <>
         <div className="min-h-[70vh] w-full flex flex-col items-center justify-center">
@@ -184,7 +181,11 @@ const Register = () => {
 
   return (
     <SectionErrorBoundary>
-      <EligibilityResults eligibilityResults={register} />
+      <EligibilityResults
+        eligibilityResults={register}
+        loading={loading}
+        error={error}
+      />
     </SectionErrorBoundary>
   );
 };

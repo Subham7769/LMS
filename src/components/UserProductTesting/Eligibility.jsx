@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
@@ -40,18 +39,20 @@ const CommentsModal = ({ closeModal, message }) => {
   );
 };
 
-const EligibilityResults = ({ eligibilityResults }) => {
+const EligibilityResults = ({ eligibilityResults, loading, error }) => {
   const projects = eligibilityResults?.eligibilityResults?.projects;
   const [isModalOpen, setModalOpen] = useState(false);
 
   return (
     <>
-      <div className="p-4 grid max-md:grid-cols-1 grid-cols-2 2xl:grid-cols-2 gap-3">
+      <div className="py-4 grid max-md:grid-cols-1 grid-cols-2 2xl:grid-cols-2 gap-3">
         {projects?.map(
           (project, index) =>
             project?.projectName && (
               <ContainerTile
                 key={"Eligibility" + index}
+                loading={loading}
+                error={error}
               >
                 <h2 className="text-[16px] text-center font-semibold">
                   {project?.projectName}
@@ -131,13 +132,14 @@ const UserInfo = () => {
   console.log(eligibility);
 
   // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
 
   return (
     <>
-      <div className="flex items-center gap-5 mb-5">
+      <ContainerTile
+        className="flex items-center gap-5 mb-5"
+        loading={loading}
+        error={error}
+      >
         <div>
           <img
             className="rounded-full w-12"
@@ -146,9 +148,13 @@ const UserInfo = () => {
           />
         </div>
         <div className="text-xl">User Id : {userID}</div>
-      </div>
+      </ContainerTile>
       <SectionErrorBoundary>
-        <EligibilityResults eligibilityResults={eligibility} />
+        <EligibilityResults
+          eligibilityResults={eligibility}
+          loading={loading}
+          error={error}
+        />
       </SectionErrorBoundary>
     </>
   );

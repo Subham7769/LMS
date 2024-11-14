@@ -9,7 +9,6 @@ import {
   getRepaymentInfo,
   submitRepayment,
 } from "../../redux/Slices/userProductTestingSlice";
-import LoadingState from "../LoadingState/LoadingState";
 import {
   clearValidationError,
   validateForm,
@@ -57,14 +56,9 @@ const BackendRepayment = () => {
     }
   };
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
   if (repaymentData.length === 0) {
     return (
-      <ContainerTile className="text-center">
+      <ContainerTile className="text-center" loading={loading} error={error}>
         No Open Loans to Pay
       </ContainerTile>
     );
@@ -72,8 +66,10 @@ const BackendRepayment = () => {
 
   return (
     <>
-      <ContainerTile>
-        <div className="text-lg">Proceed for Repayments</div>
+      <ContainerTile loading={loading} error={error}>
+        <h2 className="mb-5 py-2">
+          <b>Proceed for Repayments</b>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputSelect
             labelName={"Select Loan Id"}

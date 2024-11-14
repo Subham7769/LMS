@@ -17,7 +17,6 @@ import {
   updateLoanConfigFieldsField,
   handleProceed,
 } from "../../redux/Slices/userProductTestingSlice";
-import LoadingState from "../LoadingState/LoadingState";
 import { useNavigate } from "react-router-dom";
 import {
   clearValidationError,
@@ -197,14 +196,9 @@ const LoanConfig = () => {
   const tableSliderStyle =
     "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
 
-  // Conditional rendering based on loading
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <div className="flex flex-col gap-5">
-      <ContainerTile>
+      <ContainerTile loading={loading} error={error}>
         <div className="grid grid-cols-5 gap-4 items-end">
           <InputSelect
             labelName={"Loan Type"}
@@ -239,7 +233,7 @@ const LoanConfig = () => {
       {showModal && (
         <>
           <div className="grid grid-cols-2 gap-5">
-            <ContainerTile>
+            <ContainerTile loading={loading} error={error}>
               <div className="font-semibold text-center -mt-3 mb-3">
                 Profile :{" "}
               </div>
@@ -258,7 +252,7 @@ const LoanConfig = () => {
                 />
               </div>
             </ContainerTile>
-            <ContainerTile>
+            <ContainerTile loading={loading} error={error}>
               <div className="font-semibold text-center -mt-3 mb-3">
                 Cash Loan Stats :{" "}
               </div>
@@ -294,7 +288,11 @@ const LoanConfig = () => {
               </div>
             </ContainerTile>
           </div>
-          <ContainerTile className="flex items-start w-full">
+          <ContainerTile
+            className="flex items-start w-full"
+            loading={loading}
+            error={error}
+          >
             <div className="w-[330px]">
               <table className="divide-y divide-gray-300  w-full border-r border-gray-300">
                 <thead className="bg-gray-50">

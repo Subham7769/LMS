@@ -5,7 +5,6 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingState from "../LoadingState/LoadingState";
 import {
   getDisbursementInfo,
   updateDisbursementData,
@@ -42,17 +41,21 @@ const DisbursementStatus = () => {
     }
   };
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
   console.log(disbursementData);
 
+  if (disbursementData.status === 500) {
+    return (
+      <ContainerTile className="text-center" loading={loading} error={error}>
+        No Loan Available for Disbursement
+      </ContainerTile>
+    );
+  }
   return (
     <div className="flex flex-col gap-5">
-      <ContainerTile>
-        <div className="text-lg">Proceed for disbursement</div>
+      <ContainerTile loading={loading} error={error}>
+        <h2 className="mb-5 py-2">
+          <b>Proceed for disbursement</b>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputText
             labelName={"Loan Id"}
@@ -77,13 +80,6 @@ const DisbursementStatus = () => {
           onClick={() => handleSubmit({ userID, disbursementData, navigate })}
         />
       </ContainerTile>
-      {/* Render error message if `error` is present */}
-      {disbursementData.status === 500 && (
-        <ContainerTile className="text-center">
-          No Loan Available for Disbursement
-        </ContainerTile>
-      )}
-      {/* {error && <ContainerTile>Error: {error}</ContainerTile>} */}
     </div>
   );
 };

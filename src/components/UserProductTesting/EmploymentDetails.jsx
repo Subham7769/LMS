@@ -1,7 +1,6 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
@@ -48,17 +47,12 @@ function EmploymentDetails() {
     }
   };
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
   return (
     <>
-      <h2 className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md  cursor-pointer">
-        <b>Employment Details</b>
-      </h2>
-      <ContainerTile>
+      <ContainerTile loading={loading} error={error}>
+        <h2 className="mb-5 py-2">
+          <b>Employment Details</b>
+        </h2>
         <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {/* Full Name */}
           <InputText
