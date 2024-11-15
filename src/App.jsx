@@ -39,8 +39,11 @@ const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
 
 // *******************************************************************************************
 const TestComponent = lazy(() =>
-  import("./components/TestComponent/TestComponent")
+  import("./components/Common/Notification/Notification1")
 );
+// const TestComponent = lazy(() =>
+//   import("./components/TestComponent/TestComponent")
+// );
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
 // *******************************************************************************************
 
@@ -348,11 +351,11 @@ const routes = [
         element: <TestComponent />,
         errorElement: <RouteErrorBoundary />,
       },
-      {
-        path: "/notification",
-        element: <Notifications />,
-        errorElement: <RouteErrorBoundary />,
-      },
+      // {
+      //   path: "/notification",
+      //   element: <Notifications />,
+      //   errorElement: <RouteErrorBoundary />,
+      // },
 
       // Accessing All Child Components
       {

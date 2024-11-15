@@ -75,7 +75,7 @@ const NotificationWindow = () => {
       {showNotifications && (
         <div
           id="notification-panel"
-          className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right"
+          className="absolute -right-1000 mt-2 w-80 max-h-96 overflow-y-auto bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right"
           role="region"
           aria-label="Notifications panel"
         >

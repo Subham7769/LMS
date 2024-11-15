@@ -1,7 +1,8 @@
+import Notification from "../Common/Notification/Notification1"
 const Notifications = () => {
   return (
     <>
-      <p>Notifications component</p>
+      <Notification/>
     </>
   );
 };

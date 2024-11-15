@@ -522,9 +522,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchProjectData.fulfilled, (state, action) => {
         state.loading = false;
         const submenuItems = action.payload;
-        // console.log(submenuItems)
         const updatedMenus = state.menus.map((menu) => {
-          console.log(menu.title === "Project")
           if (menu.title === "Project") {
             return { ...menu, submenuItems };
           }

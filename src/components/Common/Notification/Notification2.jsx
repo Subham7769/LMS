@@ -61,7 +61,7 @@ const NotificationPanel = () => {
 
       {isHovered && (
         <div
-          className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 transform transition-all duration-300 ease-in-out z-50"
+          className="absolute -right-100 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 transform transition-all duration-300 ease-in-out z-50"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           role="region"
