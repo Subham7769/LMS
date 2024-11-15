@@ -262,7 +262,7 @@ export const cloneBlockedEmployer = createAsyncThunk(
   }
 );
 
-const beSlice = createSlice({
+const blockedEmployerSlice = createSlice({
   name: "blockedEmployer",
   initialState,
   reducers: {
@@ -415,6 +415,6 @@ const beSlice = createSlice({
   },
 });
 
-export const { setFormData, setBlockEmployersTempId } = beSlice.actions;
+export const { setFormData, setBlockEmployersTempId } = blockedEmployerSlice.actions;
 
-export default beSlice.reducer;
+export default blockedEmployerSlice.reducer;

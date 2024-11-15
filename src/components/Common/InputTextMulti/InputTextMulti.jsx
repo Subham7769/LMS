@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { removeTag } from "../../../redux/Slices/DynamicRacSlice";
+import { removeTag } from "../../../redux/Slices/dynamicRacSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addFields,

@@ -1,7 +1,7 @@
 // src/components/CreditProfile/CreditProfile.js
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
+import { fetchBorrowerData } from "../../redux/Slices/customerCareSlice";
 import ListTable from "../Common/ListTable/ListTable";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useParams } from "react-router-dom";

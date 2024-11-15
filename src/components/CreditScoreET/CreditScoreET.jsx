@@ -27,7 +27,7 @@ import {
   createCloneCSET,
   handleDeleteCSET,
   handleDeleteRange,
-} from "../../redux/Slices/creditScoreETSlice";
+} from "../../redux/Slices/eligiblityTenureSlice";
 import TagInput from "../TagInput/TagInput";
 import {
   clearValidationError,

@@ -292,7 +292,7 @@ export const fetchList = createAsyncThunk(
   }
 );
 
-export const dbrSlice = createSlice({
+export const dbrConfigSlice = createSlice({
   name: "dbrConfig",
   initialState: {
     debtBurdenStatsData: {
@@ -503,6 +503,6 @@ export const {
   updateOperator,
   updateDbrRules,
   resetdbrData,
-} = dbrSlice.actions;
+} = dbrConfigSlice.actions;
 
-export default dbrSlice.reducer;
+export default dbrConfigSlice.reducer;

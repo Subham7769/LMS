@@ -3,7 +3,7 @@ import ListTable from "../components/Common/ListTable/ListTable";
 import { RacStats, HeaderList, RACList } from "../data/RacData";
 import StatContainer from "../components/Common/StatContainer/StatContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchList } from "../redux/Slices/DynamicRacSlice";
+import { fetchList } from "../redux/Slices/dynamicRacSlice";
 
 const DynamicRacPage = () => {
   const { HeaderList, RACList } = useSelector(

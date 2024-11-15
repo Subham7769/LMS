@@ -13,7 +13,7 @@ import {
   deleteBlockedEmployer,
   addBlockedEmployerEntry,
   cloneBlockedEmployer,
-} from "../../redux/Slices/beSlice";
+} from "../../redux/Slices/blockedEmployerSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import TagInput from "../TagInput/TagInput";
 import {

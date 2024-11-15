@@ -7,7 +7,7 @@ import {
   fetchOptionList,
   updateRuleNumberCriteria,
   handleChangeStringRule,
-} from "../../redux/Slices/DynamicRacSlice";
+} from "../../redux/Slices/dynamicRacSlice";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";

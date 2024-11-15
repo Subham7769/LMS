@@ -3,7 +3,7 @@ import StatContainer from "../components/Common/StatContainer/StatContainer";
 import ListTable from "../components/Common/ListTable/ListTable";
 import { BlockedEmployerStats } from "../data/BlockEmployerData";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchList } from "../redux/Slices/beSlice";
+import { fetchList } from "../redux/Slices/blockedEmployerSlice";
 
 const BlockedEmployerPage = () => {
   const { HeaderList, BlockedEmployerList } = useSelector(

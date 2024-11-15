@@ -150,7 +150,7 @@ export const downloadFile = createAsyncThunk(
   }
 );
 
-const borrowerSlice = createSlice({
+const customerCareSlice = createSlice({
   name: "borrower",
   initialState,
   reducers: {},
@@ -221,4 +221,4 @@ const borrowerSlice = createSlice({
   },
 });
 
-export default borrowerSlice.reducer;
+export default customerCareSlice.reducer;

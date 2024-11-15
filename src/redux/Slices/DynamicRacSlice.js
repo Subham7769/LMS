@@ -277,7 +277,7 @@ const initialState = {
   error: null,
 };
 
-const DynamicRacSlice = createSlice({
+const dynamicRacSlice = createSlice({
   name: "DynamicRac",
   initialState,
   reducers: {
@@ -643,5 +643,5 @@ export const {
   handleChangeNumberRule,
   handleChangeStringRule,
   removeTag,
-} = DynamicRacSlice.actions;
-export default DynamicRacSlice.reducer;
+} = dynamicRacSlice.actions;
+export default dynamicRacSlice.reducer;

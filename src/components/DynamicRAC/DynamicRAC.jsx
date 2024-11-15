@@ -29,7 +29,7 @@ import {
   updateSection,
   removeSection,
   deleteSection,
-} from "../../redux/Slices/DynamicRacSlice";
+} from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
 import Toolbox from "./ToolBox";
 import RuleComponent from "./RuleComponent";

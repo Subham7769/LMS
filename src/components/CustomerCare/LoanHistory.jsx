@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBorrowerData,
   downloadClearanceLetter,
-} from "../../redux/Slices/borrowerSlice";
+} from "../../redux/Slices/customerCareSlice";
 
 const LoanHistory = () => {
   const { subID } = useParams();

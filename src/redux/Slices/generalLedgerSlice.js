@@ -29,7 +29,7 @@ const initialState= {
   error: null,
 }
 
-const ledgerSlice = createSlice({
+const generalLedgerSlice = createSlice({
   name: 'ledger',
   initialState,
   reducers: {},
@@ -51,4 +51,4 @@ const ledgerSlice = createSlice({
   },
 });
 
-export default ledgerSlice.reducer;
+export default generalLedgerSlice.reducer;

@@ -1,7 +1,7 @@
 import ListTable from "../Common/ListTable/ListTable";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
+import { fetchBorrowerData } from "../../redux/Slices/customerCareSlice";
 import { useParams } from "react-router-dom";
 
 const CustomerAddress = () => {

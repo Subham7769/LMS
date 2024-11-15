@@ -16,7 +16,7 @@ import {
   updateDbrRules,
   resetdbrData,
   updateRule,
-} from "../../redux/Slices/dbrSlice";
+} from "../../redux/Slices/dbrConfigSlice";
 import {
   PlusIcon,
   TrashIcon,

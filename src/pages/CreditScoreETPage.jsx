@@ -3,7 +3,7 @@ import ListTable from "../components/Common/ListTable/ListTable";
 import StatContainer from "../components/Common/StatContainer/StatContainer";
 import { CreditScoreETStats } from "../data/CreditScoreETData";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchList } from "../redux/Slices/creditScoreETSlice";
+import { fetchList } from "../redux/Slices/eligiblityTenureSlice";
 
 const CreditScoreETPage = () => {
   const { HeaderList, CreditScoreETList } = useSelector(

@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { addRule } from "../../redux/Slices/DynamicRacSlice";
+import { addRule } from "../../redux/Slices/dynamicRacSlice";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import InputSelect from "../Common/InputSelect/InputSelect";

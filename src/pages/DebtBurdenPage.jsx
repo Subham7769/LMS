@@ -3,7 +3,7 @@ import StatContainer from "../components/Common/StatContainer/StatContainer";
 import ListTable from "../components/Common/ListTable/ListTable";
 import { DebtBurdenStats } from "../data/DebtBurdenData";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchList } from "../redux/Slices/dbrSlice";
+import { fetchList } from "../redux/Slices/dbrConfigSlice";
 
 const DebtBurdenPage = () => {
   const { HeaderList, DebtBurdenList } = useSelector(

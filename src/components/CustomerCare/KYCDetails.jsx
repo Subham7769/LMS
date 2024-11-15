@@ -3,7 +3,7 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useSelector } from "react-redux";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 import { useParams } from "react-router-dom";
-import { fetchBorrowerData } from "../../redux/Slices/borrowerSlice";
+import { fetchBorrowerData } from "../../redux/Slices/customerCareSlice";
 import { useDispatch } from "react-redux";
 
 const InfoRow = ({ label, value }) => (

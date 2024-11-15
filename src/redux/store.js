@@ -5,19 +5,19 @@ import recoverySlice from "./Slices/recoverySlice";
 import tclSlice from "./Slices/tclSlice";
 import projectSlice from "./Slices/projectSlice";
 import productSlice from "./Slices/productSlice";
-import beSlice from "./Slices/beSlice";
-import dbrSlice from "./Slices/dbrSlice";
+import blockedEmployerSlice from "./Slices/blockedEmployerSlice";
+import dbrConfigSlice from "./Slices/dbrConfigSlice";
 import creditScoreSlice from "./Slices/creditScoreSlice";
-import borrowerSlice from "./Slices/borrowerSlice";
+import customerCareSlice from "./Slices/customerCareSlice";
 import productGroupSlice from "./Slices/productGroupSlice";
-import ledgerSlice from "./Slices/ledgerSlice";
+import generalLedgerSlice from "./Slices/generalLedgerSlice";
 import userManagementSlice from "./Slices/userManagementSlice";
-import creditScoreETSlice from "./Slices/creditScoreETSlice";
+import eligiblityTenureSlice from "./Slices/eligiblityTenureSlice";
 import userProductTestingSlice from "./Slices/userProductTestingSlice";
 import rulePolicySlice from "./Slices/rulePolicySlice";
 import overdraftLoanOffersSlice from "./Slices/overdraftLoanOffersSlice";
 import globalConfigSlice from "./Slices/globalConfigSlice";
-import DynamicRacSlice from "./Slices/DynamicRacSlice";
+import dynamicRacSlice from "./Slices/dynamicRacSlice";
 import validationSlice from "./Slices/validationSlice";
 import reportingConfigSlice from "./Slices/reportingConfigSlice";
 import reportsSlice from "./Slices/reportsSlice";
@@ -25,21 +25,21 @@ import authSlice from "./Slices/authSlice";
 
 const store = configureStore({
   reducer: {
-    dynamicRac: DynamicRacSlice,
+    dynamicRac: dynamicRacSlice,
     sidebar: sidebarReducer,
     recovery: recoverySlice,
     tcl: tclSlice,
     project: projectSlice,
     product: productSlice,
-    blockedEmployer: beSlice,
-    dbrConfig: dbrSlice,
+    blockedEmployer: blockedEmployerSlice,
+    dbrConfig: dbrConfigSlice,
     creditScore: creditScoreSlice,
-    customerCare: borrowerSlice,
+    customerCare: customerCareSlice,
     productGroup: productGroupSlice,
     userManagement: userManagementSlice,
-    creditScoreET: creditScoreETSlice,
+    creditScoreET: eligiblityTenureSlice,
     rulePolicy: rulePolicySlice,
-    ledger: ledgerSlice,
+    ledger: generalLedgerSlice,
     userProductTesting: userProductTestingSlice,
     globalConfig: globalConfigSlice,
     overdraftLoanOffers: overdraftLoanOffersSlice,

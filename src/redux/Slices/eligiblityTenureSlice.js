@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchCreditScoreEligibleTenureData } from "../../redux/Slices/sidebarSlice";
+import { fetchCreditScoreEligibleTenureData } from "./sidebarSlice";
 import { HeaderList, CreditScoreETList } from "../../data/CreditScoreETData";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
@@ -369,7 +369,7 @@ const creditScoreETInitialState = {
   },
 };
 
-const creditScoreETSlice = createSlice({
+const eligiblityTenureSlice = createSlice({
   name: "creditScoreET",
   initialState: creditScoreETInitialState,
   reducers: {
@@ -657,6 +657,6 @@ export const {
   setTenure,
   deleteTenure,
   deleteNewRangeTenure,
-} = creditScoreETSlice.actions;
+} = eligiblityTenureSlice.actions;
 
-export default creditScoreETSlice.reducer;
+export default eligiblityTenureSlice.reducer;

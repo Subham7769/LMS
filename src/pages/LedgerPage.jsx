@@ -2,7 +2,7 @@ import {  HeaderList } from "../data/LedgerData";
 import LedgerListTable from "../components/LedgerListTable/LedgerListTable";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLedgerData } from "../redux/Slices/ledgerSlice";
+import { fetchLedgerData } from "../redux/Slices/generalLedgerSlice";
 import LoadingState from "../components/LoadingState/LoadingState";
 
 const LedgerPage = () => {
