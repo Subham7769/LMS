@@ -6,6 +6,10 @@ import {
   setValidationError,
 } from "../../../redux/Slices/validationSlice";
 import { useSelector } from "react-redux";
+import {
+  addUpdateFields,
+  setUpdateMap,
+} from "../../../redux/Slices/notificationSlice";
 
 const InputText = ({
   labelName,
@@ -21,6 +25,7 @@ const InputText = ({
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
+  const { updateFields } = useSelector((state) => state.notification);
   if (inputValue == null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -50,6 +55,11 @@ const InputText = ({
       }
     }, [inputName, dispatch]);
   }
+  useEffect(() => {
+    if (!updateFields.includes(inputName)) {
+      dispatch(addUpdateFields({ inputName }));
+    }
+  }, [inputName, dispatch]);
 
   return (
     <div className="w-full">
@@ -68,7 +78,10 @@ const InputText = ({
         name={inputName}
         value={inputValue}
         onChange={onChange}
-        onFocus={() => dispatch(setValidationError(validationKey))}
+        onFocus={() => {
+          dispatch(setValidationError(validationKey));
+          dispatch(setUpdateMap(inputName));
+        }}
         placeholder={placeHolder}
         disabled={disabled}
         className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 

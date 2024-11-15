@@ -6,6 +6,10 @@ import {
   addFields,
   setValidationError,
 } from "../../../redux/Slices/validationSlice";
+import {
+  addUpdateFields,
+  setUpdateMap,
+} from "../../../redux/Slices/notificationSlice";
 
 const InputSelect = ({
   labelName,
@@ -28,6 +32,7 @@ const InputSelect = ({
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
+  const { updateFields } = useSelector((state) => state.notification);
 
   if (inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
@@ -90,6 +95,12 @@ const InputSelect = ({
     }, [inputName, dispatch]);
   }
 
+  useEffect(() => {
+    if (!updateFields.includes(inputName)) {
+      dispatch(addUpdateFields({ inputName }));
+    }
+  }, [inputName, dispatch]);
+
   return (
     <div className="flex flex-col">
       {labelName && (
@@ -109,14 +120,18 @@ const InputSelect = ({
         value={
           isMulti
             ? inputValue
-            : inputOptions?.find((option) => option.value === inputValue) || null
+            : inputOptions?.find((option) => option.value === inputValue) ||
+              null
         }
         inputId={inputId}
         onChange={handleChange}
         isClearable={isClearable}
         isSearchable={searchable}
         placeholder={placeHolder}
-        onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state
+        onFocus={() => {
+          dispatch(setValidationError(validationKey));
+          dispatch(setUpdateMap(inputName));
+        }} // Call onFocus to reset the error state
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}

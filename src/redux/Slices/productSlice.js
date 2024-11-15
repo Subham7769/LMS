@@ -38,20 +38,21 @@ export const fetchData = createAsyncThunk(
 
 export const saveProductData = createAsyncThunk(
   "product/saveData",
-  async ({ loanProId, productData }, { rejectWithValue }) => {
+  async ({ loanProId, productData, roleName }, { rejectWithValue }) => {
+    const url =
+      roleName !== "ROLE_MAKER_ADMIN"
+        ? import.meta.env.VITE_PRODUCT_UPDATE
+        : import.meta.env.VITE_PRODUCT_UPDATE_MAKER;
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_PRODUCT_UPDATE}${loanProId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(productData),
-        }
-      );
+      const response = await fetch(`${url}${loanProId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(productData),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -128,9 +129,12 @@ export const deleteLoanProduct = createAsyncThunk(
 
 export const createProductData = createAsyncThunk(
   "product/createProductData",
-  async (productData, { rejectWithValue }) => {
+  async ({ productData, roleName }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-
+    const url =
+      roleName !== "ROLE_MAKER_ADMIN"
+        ? import.meta.env.VITE_PRODUCT_CREATE
+        : import.meta.env.VITE_PRODUCT_CREATE_MAKER;
     try {
       // Filter out objects with empty fields
       const filteredInterestEligibleTenure =
@@ -150,17 +154,14 @@ export const createProductData = createAsyncThunk(
         interestEligibleTenure: filteredInterestEligibleTenure,
       };
 
-      const postResponse = await fetch(
-        `${import.meta.env.VITE_PRODUCT_CREATE}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(filteredproductData),
-        }
-      );
+      const postResponse = await fetch(`${url}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(filteredproductData),
+      });
 
       if (!postResponse.ok) {
         const errorData = await response.json();

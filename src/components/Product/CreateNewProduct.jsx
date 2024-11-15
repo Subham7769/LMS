@@ -20,6 +20,8 @@ const CreateNewProduct = () => {
   const { productName } = useParams();
   const dispatch = useDispatch();
   const { productData, error } = useSelector((state) => state.product);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -43,7 +45,13 @@ const CreateNewProduct = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       try {
-        await dispatch(createProductData(productData)).then((action) => {
+        const newProductData = {
+          ...productData,
+          routingLink: `/product/${productName}/loan-product-config/${productData.projectId}/`,
+        };
+        await dispatch(
+          createProductData({ productData: newProductData, roleName })
+        ).then((action) => {
           console.log(action.payload);
           // navigate(`/product/${action.payload.productType}/${action.payload.projectId}`);
           navigate(`/product/`);

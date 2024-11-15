@@ -19,7 +19,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
   // Sidebar Redux Data
   const RACDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "RAC")[0]?.submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "RAC")[0]
+        ?.submenuItems
   );
 
   const DBRConfigInfo = useSelector(
@@ -29,8 +30,9 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
   const BEDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "Blocked Employer")[0]
-        ?.submenuItems
+      state?.sidebar?.menus?.filter(
+        (item) => item.title === "Blocked Employer"
+      )[0]?.submenuItems
   );
   const RPDataInfo = useSelector(
     (state) =>
@@ -44,8 +46,9 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
   const CSETDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "Eligible Tenure")[0]
-        ?.submenuItems
+      state?.sidebar?.menus?.filter(
+        (item) => item.title === "Eligible Tenure"
+      )[0]?.submenuItems
   );
   const ProjectDataInfo = useSelector(
     (state) =>
@@ -54,7 +57,8 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
   const TCLDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "TCL")[0]?.submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "TCL")[0]
+        ?.submenuItems
   );
   const RecoveryDataInfo = useSelector(
     (state) =>
@@ -65,7 +69,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   const { userData } = useSelector((state) => state?.auth);
   const roleName = userData?.roles[0]?.name;
 
-console.log(ProjectDataInfo)
+  // console.log(ProjectDataInfo);
 
   // Entries State
   const [interestEligibleTenure, setInterestEligibleTenure] = useState({

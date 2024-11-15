@@ -331,7 +331,7 @@ const ROLE_MAKER_ADMIN = [
   "Business Rule",
   "Global Config",
   "Dynamic RAC",
-]
+];
 const ROLE_CHECKER_ADMIN = ["Dynamic RAC"];
 const ROLE_TECHNICAL = [
   "Customer Care",

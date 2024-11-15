@@ -5,6 +5,10 @@ import {
   addFields,
   setValidationError,
 } from "../../../redux/Slices/validationSlice";
+import {
+  addUpdateFields,
+  setUpdateMap,
+} from "../../../redux/Slices/notificationSlice";
 
 const InputNumber = ({
   labelName,
@@ -23,6 +27,7 @@ const InputNumber = ({
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
+  const { updateFields } = useSelector((state) => state.notification);
   if (inputValue === null || inputValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
   }
@@ -57,6 +62,11 @@ const InputNumber = ({
       }
     }, [inputName, dispatch]);
   }
+  useEffect(() => {
+    if (!updateFields.includes(inputName)) {
+      dispatch(addUpdateFields({ inputName }));
+    }
+  }, [inputName, dispatch]);
 
   const handleChange = (e) => {
     const { name, value, id } = e.target;
@@ -104,7 +114,10 @@ const InputNumber = ({
           name={inputName}
           value={inputValue}
           onChange={handleChange}
-          onFocus={() => dispatch(setValidationError(validationKey))}
+          onFocus={() => {
+            dispatch(setValidationError(validationKey));
+            dispatch(setUpdateMap(inputName));
+          }}
           placeholder={placeHolder}
           style={{
             appearance: "none", // General rule for most modern browsers

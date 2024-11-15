@@ -33,6 +33,10 @@ import {
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { toast } from "react-toastify";
+import {
+  clearUpdateMap,
+  setUpdateMap,
+} from "../../redux/Slices/notificationSlice";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -47,11 +51,13 @@ const LoanProductConfig = () => {
   const { productData, loading, error } = useSelector((state) => state.product);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+  const { updateMap } = useSelector((state) => state.notification);
 
   useEffect(() => {
     dispatch(fetchData(productType));
     return () => {
       dispatch(clearValidationError());
+      dispatch(clearUpdateMap());
     };
   }, [dispatch, productType]);
 
@@ -84,7 +90,7 @@ const LoanProductConfig = () => {
     if (editingIndex !== null) {
       const interestEligibleTenure =
         productData.interestEligibleTenure[absoluteIndex];
-      console.log(interestEligibleTenure);
+      // console.log(interestEligibleTenure);
       await dispatch(validateForm(interestEligibleTenure));
       const state = store.getState();
       const isValid = state.validation.isValid;
@@ -112,8 +118,27 @@ const LoanProductConfig = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       try {
+        if (roleName !== "ROLE_MAKER_ADMIN") {
+          dispatch(saveProductData({ loanProId, productData, roleName }));
+        } else {
+          const updatedProductData = {
+            ...productData,
+            routingLink: `/product/${productType}/loan-product-config/${projectId}/${loanProId}`,
+            updateMap: updateMap,
+          };
+          // console.log(updatedProductData);
+          dispatch(
+            saveProductData({
+              loanProId,
+              productData: updatedProductData,
+              roleName,
+            })
+          );
+        }
+
         // Dispatch the saveProductData thunk with necessary parameters
-        dispatch(saveProductData({ loanProId, productData }));
+
+        // dispatch(saveProductData({ loanProId, updatedProductData, roleName }));
       } catch (error) {
         console.error("Failed to update data:", error);
       }
@@ -154,7 +179,6 @@ const LoanProductConfig = () => {
     setCurrentPage(newPage);
     toast(`You have switched to page: ${newPage}`);
   };
-
 
   const getSortIcon = (column) => {
     if (sortConfig.key === column) {
@@ -208,6 +232,8 @@ const LoanProductConfig = () => {
     columns.push({ label: "Actions", key: "actions", sortable: false });
   }
 
+  console.log(updateMap);
+
   return (
     <>
       <DynamicHeader
@@ -217,10 +243,7 @@ const LoanProductConfig = () => {
         loading={loading}
         error={error}
       />
-      <ContainerTile
-        loading={loading}
-        error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <ProductInputFields
           productData={productData}
           handleChange={handleChange}
@@ -365,15 +388,15 @@ const LoanProductConfig = () => {
                           placeHolder="3"
                           isValidation={true}
                           isIndex={item?.dataIndex}
-                        // showError={validationError.repaymentTenure}
-                        // onFocus={() =>
-                        //   dispatch(
-                        //     setValidationError({
-                        //       ...validationError,
-                        //       repaymentTenure: false,
-                        //     })
-                        //   )
-                        // }
+                          // showError={validationError.repaymentTenure}
+                          // onFocus={() =>
+                          //   dispatch(
+                          //     setValidationError({
+                          //       ...validationError,
+                          //       repaymentTenure: false,
+                          //     })
+                          //   )
+                          // }
                         />
                       ) : (
                         <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
@@ -407,7 +430,13 @@ const LoanProductConfig = () => {
                     </td>
                     {roleName !== "ROLE_VIEWER" ? (
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                        <button onClick={() => toggleEdit(index)} type="button">
+                        <button
+                          onClick={() => {
+                            toggleEdit(index);
+                            dispatch(setUpdateMap("interestEligibleTenure"));
+                          }}
+                          type="button"
+                        >
                           {editingIndex === index ? (
                             <div
                               // onClick={informUser}
@@ -446,7 +475,7 @@ const LoanProductConfig = () => {
               buttonIcon={ChevronLeftIcon}
               onClick={
                 currentPage === 1
-                  ? () => { }
+                  ? () => {}
                   : () => handlePageChange(currentPage - 1)
               }
               rectangle={true}
@@ -464,15 +493,16 @@ const LoanProductConfig = () => {
               buttonIcon={ChevronRightIcon}
               onClick={
                 currentPage === totalPages || currentItems.length < 1
-                  ? () => { }
+                  ? () => {}
                   : () => handlePageChange(currentPage + 1)
               }
               rectangle={true}
               className={`
-          ${currentPage === totalPages || currentItems.length < 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : ""
-                }
+          ${
+            currentPage === totalPages || currentItems.length < 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : ""
+          }
         `}
               disabled={currentPage === totalPages || currentItems.length < 1}
             />
