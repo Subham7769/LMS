@@ -109,7 +109,7 @@ const InputSelect = ({
         value={
           isMulti
             ? inputValue
-            : inputOptions.find((option) => option.value === inputValue) || null
+            : inputOptions?.find((option) => option.value === inputValue) || null
         }
         inputId={inputId}
         onChange={handleChange}

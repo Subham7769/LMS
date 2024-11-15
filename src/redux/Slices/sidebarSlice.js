@@ -315,7 +315,23 @@ const ROLE_CREDITOR_ADMIN = [
 ];
 const ROLE_CUSTOMER_CARE_MANAGER = ["Customer Care"];
 const ROLE_CUSTOMER_CARE_USER = ["Customer Care"];
-const ROLE_MAKER_ADMIN = ["Dynamic RAC"];
+const ROLE_MAKER_ADMIN = [
+  "Home",
+  "RAC",
+  "Recovery",
+  "TCL",
+  "Project",
+  "Product",
+  "Eligible Tenure",
+  "DBR Config",
+  "Blocked Employer",
+  "Credit Score",
+  "Rule Policy",
+  "Product Group",
+  "Business Rule",
+  "Global Config",
+  "Dynamic RAC",
+]
 const ROLE_CHECKER_ADMIN = ["Dynamic RAC"];
 const ROLE_TECHNICAL = [
   "Customer Care",
@@ -506,7 +522,9 @@ const sidebarSlice = createSlice({
       .addCase(fetchProjectData.fulfilled, (state, action) => {
         state.loading = false;
         const submenuItems = action.payload;
+        // console.log(submenuItems)
         const updatedMenus = state.menus.map((menu) => {
+          console.log(menu.title === "Project")
           if (menu.title === "Project") {
             return { ...menu, submenuItems };
           }

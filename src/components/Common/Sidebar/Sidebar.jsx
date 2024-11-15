@@ -178,6 +178,16 @@ const SideBar = () => {
         break;
 
       case "ROLE_MAKER_ADMIN":
+        dispatch(fetchRACData());
+        dispatch(fetchDBRData());
+        dispatch(fetchBEData());
+        dispatch(fetchProjectData());
+        dispatch(fetchProductData());
+        dispatch(fetchCreditScoreEqData());
+        dispatch(fetchRulePolicyData());
+        dispatch(fetchTCLData());
+        dispatch(fetchRecoveryData());
+        dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         break;
 

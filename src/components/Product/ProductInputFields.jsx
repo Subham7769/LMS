@@ -19,50 +19,53 @@ const ProductInputFields = ({ productData, handleChange }) => {
   // Sidebar Redux Data
   const RACDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "RAC")[0].submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "RAC")[0]?.submenuItems
   );
+
   const DBRConfigInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "DBR Config")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "DBR Config")[0]
+        ?.submenuItems
   );
   const BEDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "Blocked Employer")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "Blocked Employer")[0]
+        ?.submenuItems
   );
   const RPDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "Rule Policy")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "Rule Policy")[0]
+        ?.submenuItems
   );
   const CSDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "Credit Score")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "Credit Score")[0]
+        ?.submenuItems
   );
   const CSETDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "Eligible Tenure")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "Eligible Tenure")[0]
+        ?.submenuItems
   );
   const ProjectDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "Project")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "Project")[0]
+        ?.submenuItems
   );
   const TCLDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "TCL")[0].submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "TCL")[0]?.submenuItems
   );
   const RecoveryDataInfo = useSelector(
     (state) =>
-      state.sidebar.menus.filter((item) => item.title === "Recovery")[0]
-        .submenuItems
+      state?.sidebar?.menus?.filter((item) => item.title === "Recovery")[0]
+        ?.submenuItems
   );
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.auth);
+  const { userData } = useSelector((state) => state?.auth);
   const roleName = userData?.roles[0]?.name;
+
+console.log(ProjectDataInfo)
 
   // Entries State
   const [interestEligibleTenure, setInterestEligibleTenure] = useState({
@@ -103,7 +106,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
 
   // Reusable function for formatting dropdown data
   function formateDataDropDown(replacerString, data) {
-    const formattedData = data.map(({ name, href }) => ({
+    const formattedData = data?.map(({ name, href }) => ({
       value: href.replace(replacerString, ""),
       label: name,
     }));
@@ -115,7 +118,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
       replacerString == "/blocked-employer/" ||
       replacerString == "/rule-policy/"
     )
-      formattedData.push({
+      formattedData?.push({
         value: null,
         label: "None",
       });
