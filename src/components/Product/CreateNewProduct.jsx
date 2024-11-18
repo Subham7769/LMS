@@ -64,7 +64,7 @@ const CreateNewProduct = () => {
     }
   };
 
-  console.log(productData);
+  // console.log(productData);
 
   return (
     <>

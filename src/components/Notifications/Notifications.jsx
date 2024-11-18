@@ -1,10 +1,9 @@
-import Notification from "../Common/Notification/Notification1"
+import React from 'react'
+
 const Notifications = () => {
   return (
-    <>
-      <Notification/>
-    </>
-  );
-};
+    <div>Notifications</div>
+  )
+}
 
-export default Notifications;
+export default Notifications
