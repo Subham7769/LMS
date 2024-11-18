@@ -44,7 +44,7 @@ const RegistrationPage = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5">
+        <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-5">
           {/* Input Fields */}
           {[
             { label: "Contact Person Name", name: "contactPersonName", type: "text" },
@@ -105,7 +105,7 @@ const RegistrationPage = () => {
           </div>
 
           {/* Save Button */}
-          <div className="flex justify-center col-span-2">
+          <div className="flex justify-center col-span-4">
             <button
               type="submit"
               className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none transition-all flex items-center"

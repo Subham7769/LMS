@@ -48,14 +48,14 @@ const ProfilePage = () => {
           <h1 className="text-3xl font-semibold text-gray-800">Profile Page</h1>
           <button
             onClick={handleEdit}
-            className="text-white bg-indigo-600 hover:bg-indigo-700 rounded-full px-4 py-2 flex items-center shadow-md transition-all"
+            className="text-white bg-indigo-600 hover:bg-indigo-700 rounded-full px-4 py-1 flex items-center shadow-md transition-all"
           >
             <FiEdit2 className="mr-2" /> Edit
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5">
+        <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-5">
           {/* Input Fields */}
           {[
             { label: "Contact Person Name", name: "contactPersonName", type: "text" },
@@ -116,7 +116,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Save Button */}
-          <div className="flex justify-center col-span-2">
+          <div className="flex justify-center col-span-4">
             <button
               type="submit"
               className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none transition-all flex items-center"

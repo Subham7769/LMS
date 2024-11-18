@@ -55,7 +55,9 @@ const CashReceivable = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-7xl">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+      <div className="mx-auto space-y-8">
+      <div className="bg-white rounded-xl shadow-lg p-6">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Cash Receivable Management</h1>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
@@ -173,6 +175,9 @@ const CashReceivable = () => {
           </tbody>
         </table>
       </div>
+      </div>
+      </div>
+
     </div>
   );
 };
