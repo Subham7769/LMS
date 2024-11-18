@@ -228,6 +228,16 @@ const CreateNewReportingConfig = lazy(() =>
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
 
+
+// Invoice Discounting Imports
+const Registration = lazy(() => import("./components/InvoiceDiscounting/Registration"));
+const ProfilePage = lazy(() => import("./components/InvoiceDiscounting/ProfilePage"));
+const CashPayable = lazy(() => import("./components/InvoiceDiscounting/CashPayable"));
+const CashReceivable = lazy(() => import("./components/InvoiceDiscounting/CashReceivable"));
+const WorkingCapital = lazy(() => import("./components/InvoiceDiscounting/WorkingCapital"));
+const ProjectFinance = lazy(() => import("./components/InvoiceDiscounting/ProjectFinance"));
+
+
 const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
@@ -453,8 +463,6 @@ const routes = [
         element: <ReportingConfig />,
         errorElement: <RouteErrorBoundary />,
       },
-
-      // Accessing All New Created Child Components
       {
         path: "/credit-score/:creditScoreId",
         element: <CreateNewCreditScore />,
@@ -480,7 +488,37 @@ const routes = [
         element: <CreateNewReportingConfig />,
         errorElement: <RouteErrorBoundary />,
       },
-
+      // Accessing All New Created Child Components
+      {
+        path: "/invoice-discounting",
+        element: <Registration />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/invoice-discounting/profile",
+        element: <ProfilePage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/invoice-discounting/cash-payable",
+        element: <CashPayable />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/invoice-discounting/cash-receivable",
+        element: <CashReceivable />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/invoice-discounting/working-capital",
+        element: <WorkingCapital />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/invoice-discounting/project-finance",
+        element: <ProjectFinance />,
+        errorElement: <RouteErrorBoundary />,
+      },
       // Accessing All Page Component with it's Child Components
       {
         path: "/customer-care/:subID",
@@ -594,7 +632,10 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
         ],
+
+
       },
+
     ],
   },
 

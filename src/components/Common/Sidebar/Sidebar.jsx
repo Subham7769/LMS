@@ -42,6 +42,8 @@ import {
   MinusCircleIcon,
   BeakerIcon,
   ChartBarIcon,
+  DocumentCurrencyRupeeIcon,
+  NewspaperIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -88,6 +90,8 @@ const SideBar = () => {
     MinusCircleIcon,
     BeakerIcon,
     ChartBarIcon,
+    DocumentCurrencyRupeeIcon,
+    NewspaperIcon,
   };
 
   const functionMapping = {
