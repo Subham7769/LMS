@@ -23,6 +23,7 @@ const NotificationWindow = () => {
   );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+  const dataInfo = useSelector((state) => state.sidebar.menus);
 
   const dispatch = useDispatch();
 
@@ -169,28 +170,21 @@ const NotificationWindow = () => {
 
   // console.log(notifications);
 
-  // const extractValue = (numericKey, numericValue) => {
-  //   const CSETDataInfo = useSelector(
-  //     (state) =>
-  //       state?.sidebar?.menus?.filter(
-  //         (item) => item.uniqueKey === numericKey
-  //       )[0]?.submenuItems
-  //   );
+  const extractValue = (numericKey, numericValue) => {
+    const dataInfo2 = dataInfo.filter(
+      (item) => item?.uniqueKey === numericKey
+    )[0]?.submenuItems;
 
-  //   if (!CSETDataInfo) {
-  //     return numericValue; // Return null if no submenuItems are found
-  //   }
+    if (!dataInfo2) {
+      return numericValue; // Return null if no submenuItems are found
+    }
 
-  //   const matchingItem = CSETDataInfo.find((item) =>
-  //     item.href.includes(numericValue)
-  //   );
+    const matchingItem = dataInfo2.find((item) =>
+      item.href.includes(numericValue)
+    );
 
-  //   return matchingItem ? matchingItem.name : null;
-  // };
-
-  // console.log(
-  //   extractValue("creditScoreEtTempId", "feea2ebc-701f-4b84-b372-3bd22dd50f6c")
-  // );
+    return matchingItem ? matchingItem.name : "None";
+  };
 
   return (
     <div className="relative" ref={notificationRef}>
@@ -351,13 +345,12 @@ const NotificationWindow = () => {
                               <p>
                                 <b>Old Value</b>
                                 <br />
-                                {/* {extractValue(item.fieldName, item.oldValue)} */}
-                                {item.oldValue}
+                                {extractValue(item.fieldName, item.oldValue)}
                               </p>
                               <p>
                                 <b>New Value</b>
                                 <br />
-                                {item.newValue}
+                                {extractValue(item.fieldName, item.newValue)}
                               </p>
                               {roleName !== "ROLE_MAKER_ADMIN" ? (
                                 <div className="flex justify-center align-middle gap-2">

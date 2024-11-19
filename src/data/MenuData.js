@@ -21,6 +21,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "racId",
   },
   {
     title: "Recovery",
@@ -37,6 +38,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "recoveryEquationTempId",
   },
   {
     title: "TCL",
@@ -53,6 +55,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "tclFileId",
   },
   {
     title: "Project",
@@ -69,6 +72,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "projectId",
   },
   {
     title: "Product",
@@ -101,7 +105,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
-    // uniqueKey: "creditScoreEtTempId",
+    uniqueKey: "creditScoreEtTempId",
   },
   {
     title: "DBR Config",
@@ -118,6 +122,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "dbcTempId",
   },
   {
     title: "Blocked Employer",
@@ -134,6 +139,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "blockEmployersTempId",
   },
   {
     title: "Credit Score",
@@ -150,6 +156,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "creditScoreEqTempId",
   },
   {
     title: "Rule Policy",
@@ -166,6 +173,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "rulePolicyTempId",
   },
   {
     title: "Product Group",

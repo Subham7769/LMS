@@ -123,7 +123,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
       replacerString == "/rule-policy/"
     )
       formattedData?.push({
-        value: null,
+        value: "null",
         label: "None",
       });
 
