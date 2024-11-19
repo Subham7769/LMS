@@ -101,6 +101,7 @@ export const MenusInitial = [
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    // uniqueKey: "creditScoreEtTempId",
   },
   {
     title: "DBR Config",

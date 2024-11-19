@@ -125,6 +125,7 @@ const LoanProductConfig = () => {
             ...productData,
             routingLink: `/product/${productType}/loan-product-config/${projectId}/${loanProId}`,
             updateMap: updateMap,
+            section: "Product",
           };
           // console.log(updatedProductData);
           dispatch(
@@ -232,7 +233,7 @@ const LoanProductConfig = () => {
     columns.push({ label: "Actions", key: "actions", sortable: false });
   }
 
-  console.log(updateMap);
+  // console.log(updateMap);
 
   return (
     <>
