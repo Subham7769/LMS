@@ -294,12 +294,7 @@ export const MenusInitial = [
     isOpen: false,
     current: false,
   },
-  {
-    title: "Test Component",
-    href: "/test",
-    icon: "BeakerIcon",
-    current: false,
-  },
+
   {
     title: "Reports",
     href: "/reports",
@@ -346,4 +341,10 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
+  // {
+  //   title: "Test Component",
+  //   href: "/test",
+  //   icon: "BeakerIcon",
+  //   current: false,
+  // },
 ];
