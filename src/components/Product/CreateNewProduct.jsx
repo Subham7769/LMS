@@ -48,6 +48,7 @@ const CreateNewProduct = () => {
         const newProductData = {
           ...productData,
           routingLink: `/product/${productName}/loan-product-config/${productData.projectId}/`,
+          section: "Product",
         };
         await dispatch(
           createProductData({ productData: newProductData, roleName })

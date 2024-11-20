@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, ProductList } from "../../data/ProductData";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
+import { fetchNotifications } from "./notificationSlice";
 
 // Define async thunks for fetching data and performing actions
 export const fetchData = createAsyncThunk(
@@ -37,8 +38,11 @@ export const fetchData = createAsyncThunk(
 );
 
 export const saveProductData = createAsyncThunk(
-  "product/saveData",
-  async ({ loanProId, productData, roleName }, { rejectWithValue }) => {
+  "product/saveProductData",
+  async (
+    { loanProId, productData, roleName },
+    { rejectWithValue, dispatch }
+  ) => {
     const url =
       roleName !== "ROLE_MAKER_ADMIN"
         ? import.meta.env.VITE_PRODUCT_UPDATE
@@ -57,6 +61,9 @@ export const saveProductData = createAsyncThunk(
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to save");
+      }
+      if (roleName === "ROLE_MAKER_ADMIN") {
+        dispatch(fetchNotifications());
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -129,7 +136,7 @@ export const deleteLoanProduct = createAsyncThunk(
 
 export const createProductData = createAsyncThunk(
   "product/createProductData",
-  async ({ productData, roleName }, { rejectWithValue }) => {
+  async ({ productData, roleName }, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("authToken");
     const url =
       roleName !== "ROLE_MAKER_ADMIN"
@@ -166,6 +173,9 @@ export const createProductData = createAsyncThunk(
       if (!postResponse.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to create");
+      }
+      if (roleName === "ROLE_MAKER_ADMIN") {
+        dispatch(fetchNotifications());
       }
 
       return filteredproductData;
