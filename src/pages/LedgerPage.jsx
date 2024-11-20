@@ -13,16 +13,13 @@ const LedgerPage = () => {
     dispatch(fetchLedgerData())
   },[dispatch])
 
-    // Conditional rendering based on loading and error states
-    if (loading) {
-      return <LoadingState />;
-    }
-
   return (
         <LedgerListTable
           ListName={"Ledger List"}
           ListHeader={HeaderList}
           ListItem={ledgerData}
+          loading={loading}
+          error={error}
         />
   );
 };

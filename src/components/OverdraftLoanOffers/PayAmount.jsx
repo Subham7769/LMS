@@ -6,7 +6,6 @@ import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { payOverdraftLoanAccount,getOverdraftAccountNumberList } from "../../redux/Slices/overdraftLoanOffersSlice";
-import LoadingState from "../LoadingState/LoadingState";
 import convertToReadableString from '../../utils/convertToReadableString'
 
 
@@ -62,22 +61,13 @@ const PayAmount = () => {
     </div>
   );
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  // if (error) {
-  //   return <ContainerTile>Error: {error}</ContainerTile>;
-  // }
-
   if (accountNumberList?.length < 1) {
-    return <ContainerTile className="text-center">No Pay Amount Account</ContainerTile>;
+    return <ContainerTile loading={loading} error={error} className="text-center">No Pay Amount Account</ContainerTile>;
   }
 
   return (
     <>
-      <ContainerTile>
+      <ContainerTile loading={loading} error={error}>
         <div className="text-lg">Proceed for Pay Amount</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputSelect

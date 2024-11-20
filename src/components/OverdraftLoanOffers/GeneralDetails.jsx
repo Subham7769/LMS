@@ -1,4 +1,3 @@
-import LoadingState from "../LoadingState/LoadingState";
 import ListTable from "../Common/ListTable/ListTable";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,9 +36,9 @@ const GeneralDetails = () => {
     "supplementaryAccountsList"
   ];
 
-  const renderListDetails = (key, data) => {
+  const renderListDetails = (key, data ,loading ,error) => {
     if (!data) {
-      return <ContainerTile><InfoRow label={`${convertToReadableString(key)}`} value={data} /></ContainerTile>
+      return <ContainerTile loading={loading} error={error}><InfoRow label={`${convertToReadableString(key)}`} value={data} /></ContainerTile>
     }
 
     return (
@@ -49,23 +48,16 @@ const GeneralDetails = () => {
           ListHeader={Object.keys(data[0]).map(item => convertToReadableString(item))}
           ListItem={Object.values(data).map(value => value)}
           Divider={true}
+          loading={loading} 
+          error={error}
         />
       </div>
     );
   };
 
-  // Conditional rendering starts after hooks have been defined
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    return <ContainerTile>Error: {error}</ContainerTile>;
-  }
-
   return (
     <>
-      <ContainerTile>
+      <ContainerTile loading={loading} error={error}>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
           {
             Object.entries(overdraftDetails).map(([key, value]) => {
@@ -102,7 +94,7 @@ const GeneralDetails = () => {
         {
           Object.entries(overdraftDetails).map(([key, value]) => {
             if (withModel.includes(key)) {
-              return renderListDetails(key, value);
+              return renderListDetails(key, value,loading ,error);
             }
 
             // Handle other fields here if needed

@@ -8,7 +8,7 @@ import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 
-const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
+const LedgerListTable = ({ ListName, ListHeader, ListItem,loading, error }) => {
   const tableRef = useRef(null);
   const paginationRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -145,7 +145,31 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
     </table>
   );
 
+  const ShimmerTable = () => {
+    return (
+      <div className="grid grid-cols-4 gap-4 animate-pulse">
+        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-gray-300 rounded"></div>
+      </div>
+    )
+  }
+
   return (
+    <>
+    {loading ? (
+      <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5">
+      <ShimmerTable />
+      <ShimmerTable />
+      <ShimmerTable />
+      </div>
+    ) : error ? (
+      <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
+        <p>Oops! Something went wrong. Please try again later.</p>
+      </div>
+    ) :
+      (
     <div className="bg-gray-100 py-10 rounded-xl flex flex-col items-center w-full">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
         {/* Search */}
@@ -245,7 +269,9 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
           </button>
         </div>
       ) : null}
-    </div>
+    </div>)
+    }
+    </>
   );
 };
 

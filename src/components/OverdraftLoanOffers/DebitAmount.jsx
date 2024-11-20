@@ -6,7 +6,6 @@ import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { getOverdraftAccountNumberList, debitOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
-import LoadingState from "../LoadingState/LoadingState";
 import convertToReadableString from '../../utils/convertToReadableString'
 
 
@@ -43,22 +42,13 @@ const DebitAmount = () => {
     </div>
   );
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  // if (error) {
-  //   return <ContainerTile>Error: {error}</ContainerTile>;
-  // }
-
   if (accountNumberList?.length < 1) {
-    return <ContainerTile className="text-center">No Debit Amount Account</ContainerTile>;
+    return <ContainerTile className="text-center" loading={loading} error={error}>No Debit Amount Account</ContainerTile>;
   }
 
   return (
     <>
-      <ContainerTile>
+      <ContainerTile loading={loading} error={error}>
         <div className="text-lg">Proceed for Debit Amount</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
           <InputSelect
@@ -82,7 +72,7 @@ const DebitAmount = () => {
           onClick={() => dispatch(debitOverdraftLoanAccount(formData))}
         />
       </ContainerTile>
-      {debitAmount?.accountStatus && <ContainerTile className={"mt-5"}>
+      {debitAmount?.accountStatus && <ContainerTile className={"mt-5"} loading={loading} error={error}>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
           {
             Object.entries(debitAmount?.accountStatus).map(([key, value]) => <InfoRow key={key} label={convertToReadableString(key)} value={value} />)

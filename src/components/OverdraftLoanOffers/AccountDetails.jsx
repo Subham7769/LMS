@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { activateOverdraftLoanAccount,getOverdraftAccountNumberList, cancelOverdraftLoanAccount, closeOverdraftLoanAccount, getAccountDetails,updateAccountNumber } from "../../redux/Slices/overdraftLoanOffersSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -88,14 +87,6 @@ function AccountDetails() {
   } = accountDetails;
 
 
-  // Conditional rendering based on loading and error states
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  // if (error) {
-  //   return <ContainerTile>Error: {error}</ContainerTile>;
-  // }
 
   return (
     <>
@@ -112,7 +103,7 @@ function AccountDetails() {
         </div>
 
       </div>
-      <ContainerTile>
+      <ContainerTile loading={loading} error={error}>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
           <InfoRow label="Account Number" value={accountNumber} />
           <InfoRow label="Account Type" value={accountType} />

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useDateExtract from "../../utils/useDateExtract";
-import LoadingState from "../LoadingState/LoadingState";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { fetchBorrowerData } from "../../redux/Slices/customerCareSlice";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";

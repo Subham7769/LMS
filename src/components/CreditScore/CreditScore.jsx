@@ -2,7 +2,6 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingState from "../LoadingState/LoadingState";
 import Button from "../Common/Button/Button";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
 import ListTable from "../Common/ListTable/ListTable";
