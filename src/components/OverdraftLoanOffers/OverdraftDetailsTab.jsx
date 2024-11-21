@@ -36,6 +36,16 @@ const Tab = ({ id, label, activeTab, setActiveTab }) => (
   </div>
 );
 
+const ShimmerTable = () => {
+  return (
+    <div className="grid grid-cols-4 gap-4 animate-pulse">
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+    </div>
+  )
+}
 
 const OverdraftDetailsTab = () => {
   const { userID } = useParams();

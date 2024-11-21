@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import LoadingState from "../LoadingState/LoadingState";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 
 function SampleNextArrow(props) {
@@ -60,13 +59,6 @@ const InstallmentSummery = ({ isOpen, onClose, installDataProp }) => {
     setinstallmentConfigData(installDataProp);
   }, []);
 
-  if (installmentConfigData.length === 0) {
-    return (
-      <>
-        <LoadingState />
-      </>
-    );
-  }
   const arrowVis = installmentConfigData.length;
   const settings = {
     dots: false,

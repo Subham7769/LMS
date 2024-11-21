@@ -504,9 +504,7 @@ const projectSlice = createSlice({
       })
       .addCase(createProject.fulfilled, (state, action) => {
         state.loading = false;
-        state.projectData = action.payload;
         toast.success("Project created");
-        // Update state with created project details if needed
       })
       .addCase(createProject.rejected, (state, action) => {
         state.loading = false;

@@ -34,13 +34,12 @@ import { useDispatch } from "react-redux";
 import Toolbox from "./ToolBox";
 import RuleComponent from "./RuleComponent";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingState from "../LoadingState/LoadingState";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
 import {
   clearValidationError,
   validateRAC,
 } from "../../redux/Slices/validationSlice";
-import {  toast } from "react-toastify"
+import { toast } from "react-toastify";
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -200,7 +199,9 @@ const DynamicRAC = () => {
 
     if (duplicateSectionName) {
       // Show an alert message if a duplicate section name exists
-      toast(`${duplicateSectionName} already exists. Please use unique section names.`)
+      toast(
+        `${duplicateSectionName} already exists. Please use unique section names.`
+      );
       return; // Exit early, preventing further execution
     }
 
@@ -263,210 +264,249 @@ const DynamicRAC = () => {
     toast("Section Added successfully");
   };
 
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
-    <p>Error: {error}</p>;
-  }
-
+  const ShimmerTable = () => {
+    return (
+      <div className="grid grid-cols-4 gap-4 animate-pulse">
+        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-gray-300 rounded"></div>
+      </div>
+    );
+  };
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center w-full">
-          <div className="flex-1 flex items-center justify-between mr-5">
-            <DynamicName
+      {loading ? (
+        <div className="flex gap-5 animate-pulse py-5">
+          {/* Column 1 (20% width) */}
+          <div className="w-1/5 flex flex-col gap-3 h-screen rounded-lg border-2 p-5">
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2 mb-20"></div>
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2 mb-20"></div>
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2 mb-20"></div>
+          </div>
+
+          {/* Column 2 (80% width) */}
+          <div className="w-4/5 flex flex-col gap-3 h-screen rounded-lg border-2 p-5">
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/3 mt-20"></div>
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/3 mt-20"></div>
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/3 mt-20"></div>
+          </div>
+        </div>
+      ) : error ? (
+        <div className="text-red-500 text-center py-4">
+          <p>Oops! Something went wrong. Please try again later.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex-1 flex items-center justify-between mr-5">
+              <DynamicName
+                initialName={name}
+                onSave={(newName) => handleUpdateName(racId, newName)}
+                editable={roleName !== "ROLE_VIEWER"}
+              />
+              {roleName !== "ROLE_VIEWER" ? (
+                <div className="flex gap-4">
+                  <Button
+                    buttonName={"Clone"}
+                    onClick={handleClone}
+                    rectangle={true}
+                  />
+                  <Button
+                    buttonIcon={TrashIcon}
+                    onClick={() => handleDelete(racId)}
+                    circle={true}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <CloneModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
               initialName={name}
-              onSave={(newName) => handleUpdateName(racId, newName)}
-              editable={roleName !== "ROLE_VIEWER"}
             />
-            {roleName !== "ROLE_VIEWER" ? (
-              <div className="flex gap-4">
-                <Button
-                  buttonName={"Clone"}
-                  onClick={handleClone}
-                  rectangle={true}
+
+            <div className="flex justify-center items-center">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isEditorMode}
+                  onChange={(e) => setIsEditorMode(e.target.checked)}
+                  className="hidden" // Hide the checkbox visually
                 />
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => handleDelete(racId)}
-                  circle={true}
-                />
+                <div className="flex justify-between items-center gap-1 hover:cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 rounded-lg border-2 px-2 py-1">
+                  {isEditorMode ? (
+                    <ViewfinderCircleIcon className="h-4 w-4" />
+                  ) : (
+                    <PencilSquareIcon className="h-4 w-4" />
+                  )}
+                  <span className="text-sm mt-1font-bold">
+                    {isEditorMode ? "View Mode" : "Editor Mode"}
+                  </span>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div className="flex justify-between items-center">
+            {isEditorMode && roleName !== "ROLE_VIEWER" && (
+              <div className="flex justify-between gap-5 w-full">
+                <div className="flex gap-2">
+                  <HoverButton
+                    icon={PlusIcon}
+                    text="Add Section"
+                    color="green" // Automatically sets hover and background colors
+                    onClick={() => handleAddSection()}
+                  />
+                </div>
+                <div className="flex gap-2 items-end">
+                  <HoverButton
+                    icon={ArrowDownOnSquareIcon}
+                    text="Download Config"
+                    color="yellow" // Automatically sets hover and background colors
+                    onClick={() => dispatch(downloadConfig())}
+                  />
+                  <HoverButton
+                    icon={ArrowUpOnSquareIcon}
+                    text="Upload Config"
+                    color="green" // Automatically sets hover and background colors
+                    onClick={() => fileInputRef.current.click()}
+                  />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    style={{ display: "none" }}
+                    onChange={handleUploadConfig}
+                  />
+                </div>
               </div>
-            ) : (
-              ""
             )}
           </div>
-          <CloneModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
-            initialName={name}
-          />
-
-          <div className="flex justify-center items-center">
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isEditorMode}
-                onChange={(e) => setIsEditorMode(e.target.checked)}
-                className="hidden" // Hide the checkbox visually
-              />
-              <div className="flex justify-between items-center gap-1 hover:cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 rounded-lg border-2 px-2 py-1">
-                {isEditorMode ? (
-                  <ViewfinderCircleIcon className="h-4 w-4" />
-                ) : (
-                  <PencilSquareIcon className="h-4 w-4" />
-                )}
-                <span className="text-sm mt-1font-bold">
-                  {isEditorMode ? "View Mode" : "Editor Mode"}
-                </span>
-              </div>
-            </label>
-          </div>
-        </div>
-        <div className="flex justify-between items-center">
-          {isEditorMode && roleName !== "ROLE_VIEWER" && (
-            <div className="flex justify-between gap-5 w-full">
-              <div className="flex gap-2">
-                <HoverButton
-                  icon={PlusIcon}
-                  text="Add Section"
-                  color="green" // Automatically sets hover and background colors
-                  onClick={() => handleAddSection()}
-                />
-              </div>
-              <div className="flex gap-2 items-end">
-                <HoverButton
-                  icon={ArrowDownOnSquareIcon}
-                  text="Download Config"
-                  color="yellow" // Automatically sets hover and background colors
-                  onClick={() => dispatch(downloadConfig())}
-                />
-                <HoverButton
-                  icon={ArrowUpOnSquareIcon}
-                  text="Upload Config"
-                  color="green" // Automatically sets hover and background colors
-                  onClick={() => fileInputRef.current.click()}
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json"
-                  style={{ display: "none" }}
-                  onChange={handleUploadConfig}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-        <div
-          className={`flex items-start ${
-            isEditorMode ? " max-h-[550px]" : "max-h-screen"
-          }`}
-        >
-          {isEditorMode && roleName !== "ROLE_VIEWER" && <Toolbox />}
           <div
-            className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${
+            className={`flex items-start ${
               isEditorMode ? " max-h-[550px]" : "max-h-screen"
-            } overflow-hidden pb-20`}
+            }`}
           >
-            <DragDropContext onDragEnd={onDragEnd}>
-              <div className="flex flex-col justify-center gap-5">
-                {sections?.map((section) => (
-                  <Droppable
-                    key={section.sectionId}
-                    droppableId={section.sectionId}
-                  >
-                    {(provided) => (
-                      <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className={`shadow-md border-gray-300 border rounded-xl p-5 ${
-                          section.size === "full"
-                            ? "col-span-3"
-                            : section.size === "half"
-                            ? "col-span-2"
-                            : "col-span-1"
-                        }`}
-                      >
-                        <div className="flex justify-between items-center mb-2">
-                          <DynamicName
-                            initialName={section.sectionName}
-                            editable={roleName !== "ROLE_VIEWER"}
-                            onSave={(name) =>
-                              dispatch(
-                                updateSection({
-                                  sectionId: section.sectionId,
-                                  name,
-                                })
-                              )
-                            }
-                          />
-                          {isEditorMode && roleName !== "ROLE_VIEWER" && (
-                            <div className="flex justify-between items-center gap-2">
-                              <TrashIcon
-                                onClick={() =>
-                                  handleDeleteSection({
-                                    racId,
+            {isEditorMode && roleName !== "ROLE_VIEWER" && <Toolbox />}
+            <div
+              className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${
+                isEditorMode ? " max-h-[550px]" : "max-h-screen"
+              } overflow-hidden pb-20`}
+            >
+              <DragDropContext onDragEnd={onDragEnd}>
+                <div className="flex flex-col justify-center gap-3">
+                  {sections?.map((section) => (
+                    <Droppable
+                      key={section.sectionId}
+                      droppableId={section.sectionId}
+                    >
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className={`shadow-md border-gray-300 border rounded-xl p-5 ${
+                            section.size === "full"
+                              ? "col-span-3"
+                              : section.size === "half"
+                              ? "col-span-2"
+                              : "col-span-1"
+                          }`}
+                        >
+                          <div className="flex justify-between items-center mb-2">
+                            <DynamicName
+                              initialName={section.sectionName}
+                              editable={roleName !== "ROLE_VIEWER"}
+                              onSave={(name) =>
+                                dispatch(
+                                  updateSection({
                                     sectionId: section.sectionId,
+                                    name,
                                   })
-                                }
-                                className="h-5 w-5 hover:text-red-500"
-                              />
-                            </div>
-                          )}
-                        </div>
-
-                        {section?.rules?.map((rule, index) => (
-                          <Draggable
-                            key={rule.dynamicRacRuleId}
-                            draggableId={rule.dynamicRacRuleId}
-                            index={index}
-                            isDragDisabled={!isEditorMode}
-                          >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className="mb-4"
-                              >
-                                <RuleComponent
-                                  rule={rule}
-                                  racId={racId}
-                                  dynamicRacRuleId={rule.dynamicRacRuleId}
-                                  isEditorMode={isEditorMode}
-                                  sectionId={section.sectionId}
+                                )
+                              }
+                            />
+                            {isEditorMode && roleName !== "ROLE_VIEWER" && (
+                              <div className="flex justify-between items-center gap-2">
+                                <TrashIcon
+                                  onClick={() =>
+                                    handleDeleteSection({
+                                      racId,
+                                      sectionId: section.sectionId,
+                                    })
+                                  }
+                                  className="h-5 w-5 hover:text-red-500"
                                 />
                               </div>
                             )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                ))}
-              </div>
-            </DragDropContext>
-            {sections.length > 0 && roleName !== "ROLE_VIEWER" ? (
-              <div className="flex justify-end items-center gap-5">
-                <Button
-                  className="mt-4"
-                  buttonIcon={CheckCircleIcon}
-                  buttonName="Save"
-                  onClick={handleSaveDynamicRAC}
-                  rectangle={true}
-                />
-              </div>
-            ) : (
-              ""
-            )}
+                          </div>
+
+                          {section?.rules?.map((rule, index) => (
+                            <Draggable
+                              key={rule.dynamicRacRuleId}
+                              draggableId={rule.dynamicRacRuleId}
+                              index={index}
+                              isDragDisabled={!isEditorMode}
+                            >
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className="mb-4"
+                                >
+                                  <RuleComponent
+                                    rule={rule}
+                                    racId={racId}
+                                    dynamicRacRuleId={rule.dynamicRacRuleId}
+                                    isEditorMode={isEditorMode}
+                                    sectionId={section.sectionId}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  ))}
+                </div>
+              </DragDropContext>
+              {sections.length > 0 && roleName !== "ROLE_VIEWER" ? (
+                <div className="flex justify-end items-center gap-5">
+                  <Button
+                    className="mt-4"
+                    buttonIcon={CheckCircleIcon}
+                    buttonName="Save"
+                    onClick={handleSaveDynamicRAC}
+                    rectangle={true}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

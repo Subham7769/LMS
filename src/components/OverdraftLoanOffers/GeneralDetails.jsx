@@ -3,12 +3,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import convertToReadableString from '../../utils/convertToReadableString'
+import convertToReadableString from "../../utils/convertToReadableString";
 
 const GeneralDetails = () => {
   const dispatch = useDispatch();
-  const { overdraftDetails,accountNumberList, accountNumber, loading, error } = useSelector(state => state.overdraftLoanOffers)
-  console.log(overdraftDetails)
+  const { overdraftDetails, accountNumberList, accountNumber, loading, error } =
+    useSelector((state) => state.overdraftLoanOffers);
+  console.log(overdraftDetails);
 
   useEffect(() => {
     if (accountNumberList.length > 0) {
@@ -33,22 +34,37 @@ const GeneralDetails = () => {
     "installmentDetailsList",
     "debitHistoryList",
     "paymentHistoryList",
-    "supplementaryAccountsList"
+    "supplementaryAccountsList",
   ];
 
-  const renderListDetails = (key, data ,loading ,error) => {
+  const renderListDetails = (key, data, loading, error) => {
     if (!data) {
-      return <ContainerTile loading={loading} error={error}><InfoRow label={`${convertToReadableString(key)}`} value={data} /></ContainerTile>
+      return (
+        <ContainerTile loading={loading} error={error}>
+          <InfoRow label={`${convertToReadableString(key)}`} value={data} />
+        </ContainerTile>
+      );
     }
 
     return (
-      <div className={key === "supplementaryAccountsList" || key === "installmentDetailsList" || key === "paymentHistoryList" || key === "debitHistoryList" ? "col-span-2" : ""}>
+      <div
+        className={
+          key === "supplementaryAccountsList" ||
+          key === "installmentDetailsList" ||
+          key === "paymentHistoryList" ||
+          key === "debitHistoryList"
+            ? "col-span-2"
+            : ""
+        }
+      >
         <ListTable
           ListName={`${convertToReadableString(key)}`}
-          ListHeader={Object.keys(data[0]).map(item => convertToReadableString(item))}
-          ListItem={Object.values(data).map(value => value)}
+          ListHeader={Object.keys(data[0]).map((item) =>
+            convertToReadableString(item)
+          )}
+          ListItem={Object.values(data).map((value) => value)}
           Divider={true}
-          loading={loading} 
+          loading={loading}
           error={error}
         />
       </div>
@@ -59,48 +75,70 @@ const GeneralDetails = () => {
     <>
       <ContainerTile loading={loading} error={error}>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
-          {
-            Object.entries(overdraftDetails).map(([key, value]) => {
-              if (withModel.includes(key)) {
-                // Skip rendering for fields in withModel
-                return null;
-              }
-
-              // Conditional rendering for specific keys
-              if (key === 'creationDate') {
-                return <InfoRow key={key} label="Creation Date" value={new Date(value).toLocaleDateString()} />;
-              }
-
-              if (key === 'activationDate') {
-                return <InfoRow key={key} label="Activation Date" value={new Date(value).toLocaleDateString()} />;
-              }
-
-              if (key === 'currency') {
-                return (
-                  <>
-                    <InfoRow key={`${key}_name`} label="Currency" value={value.name} />
-                    <InfoRow key={`${key}_correction`} label="Correction Factor" value={value.correctionFactor} />
-                  </>
-                );
-              }
-
-              // Default rendering for other fields
-              return <InfoRow key={key} label={convertToReadableString(key)} value={value} />;
-            })
-          }
-        </div>
-      </ContainerTile >
-      <div className="grid grid-cols-2 gap-4 text-[14px] pb-2 mt-5">
-        {
-          Object.entries(overdraftDetails).map(([key, value]) => {
+          {Object.entries(overdraftDetails).map(([key, value]) => {
             if (withModel.includes(key)) {
-              return renderListDetails(key, value,loading ,error);
+              // Skip rendering for fields in withModel
+              return null;
             }
 
-            // Handle other fields here if needed
-            return null;
-          })
-        }
+            // Conditional rendering for specific keys
+            if (key === "creationDate") {
+              return (
+                <InfoRow
+                  key={key}
+                  label="Creation Date"
+                  value={new Date(value).toLocaleDateString()}
+                />
+              );
+            }
+
+            if (key === "activationDate") {
+              return (
+                <InfoRow
+                  key={key}
+                  label="Activation Date"
+                  value={new Date(value).toLocaleDateString()}
+                />
+              );
+            }
+
+            if (key === "currency") {
+              return (
+                <>
+                  <InfoRow
+                    key={`${key}_name`}
+                    label="Currency"
+                    value={value.name}
+                  />
+                  <InfoRow
+                    key={`${key}_correction`}
+                    label="Correction Factor"
+                    value={value.correctionFactor}
+                  />
+                </>
+              );
+            }
+
+            // Default rendering for other fields
+            return (
+              <InfoRow
+                key={key}
+                label={convertToReadableString(key)}
+                value={value}
+              />
+            );
+          })}
+        </div>
+      </ContainerTile>
+      <div className="grid grid-cols-2 gap-4 text-[14px] pb-2 mt-5">
+        {Object.entries(overdraftDetails).map(([key, value]) => {
+          if (withModel.includes(key)) {
+            return renderListDetails(key, value, loading, error);
+          }
+
+          // Handle other fields here if needed
+          return null;
+        })}
       </div>
     </>
   );

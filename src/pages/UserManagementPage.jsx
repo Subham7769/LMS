@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import Loader from "../components/Common/Loader/Loader";
+import LoadingState from "../components/LoadingState/LoadingState";
 import UserManagement from "../components/UserManagement/UserManagement";
 
 const UserManagementPage = () => {
@@ -34,7 +34,7 @@ const UserManagementPage = () => {
     fetchRolesData();
   }, []);
 
-  return <>{rolesData ? <UserManagement role={rolesData} /> : <Loader />}</>;
+  return <>{rolesData ? <UserManagement role={rolesData} /> : <LoadingState />}</>;
 };
 
 export default UserManagementPage;
