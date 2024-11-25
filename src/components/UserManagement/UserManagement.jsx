@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchRoles,
   fetchUsers,
   setSelectedUserData,
   setIsModalOpen,
@@ -11,13 +12,14 @@ import AddUserModal from "./AddUserModal";
 import ActionOption from "./ActionOption";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
-const UserManagement = ({ role }) => {
+const UserManagement = () => {
   const dispatch = useDispatch();
-  const { allUsersInfo, loading, selectedUserData, isModalOpen, error } = useSelector(
+  const { roleData, allUsersInfo, loading, selectedUserData, isModalOpen, error } = useSelector(
     (state) => state.userManagement
   );
 
   useEffect(() => {
+    dispatch(fetchRoles()).unwrap
     dispatch(fetchUsers());
   }, [dispatch]);
 
@@ -90,7 +92,7 @@ const UserManagement = ({ role }) => {
                     <div onClick={() => handleUserAction(item)}>
                       <ActionOption
                         userDataProp={selectedUserData}
-                        role={role}
+                        roleData={roleData}
                       />
                     </div>
                   </td>
@@ -100,7 +102,7 @@ const UserManagement = ({ role }) => {
           </table>
         </div>
       </ContainerTile>
-      <AddUserModal isOpen={isModalOpen} onClose={closeModal} role={role} />
+      <AddUserModal isOpen={isModalOpen} onClose={closeModal} roleData={roleData} />
     </>
   );
 };

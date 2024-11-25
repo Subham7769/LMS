@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import {  toast } from "react-toastify"
 
 // Async thunk for fetching user data
@@ -21,6 +22,34 @@ export const fetchUsers = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Async thunk for fetching role data
+export const fetchRoles = createAsyncThunk(
+  "roles/fetchRoles",
+  async (_, { rejectWithValue,dispatch }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await axios.get(
+        `${import.meta.env.VITE_USER_ROLES_READ}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const formattedRoleData = response.data.map(({ id, name }) => ({
+        label: name,
+        value: id,
+      }));
+      dispatch(fetchUsers());
+      return formattedRoleData.filter((item) => item.label !== "ROLE_SUPERADMIN");
+    } catch (error) {
+      console.error(error);
       return rejectWithValue(error.message);
     }
   }
@@ -228,10 +257,10 @@ export const updateUser = createAsyncThunk(
 const userManagementSlice = createSlice({
   name: "userManagement",
   initialState: {
+    roleData:[],
     allUsersInfo: [],
     loading: false,
     error: null,
-    selectedUserData: null,
     isModalOpen: false,
     formData: {
       active: true,
@@ -246,9 +275,6 @@ const userManagementSlice = createSlice({
     userRole: [],
   },
   reducers: {
-    setSelectedUserData: (state, action) => {
-      state.selectedUserData = action.payload;
-    },
     setIsModalOpen: (state, action) => {
       state.isModalOpen = action.payload;
     },
@@ -277,6 +303,17 @@ const userManagementSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    .addCase(fetchRoles.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(fetchRoles.fulfilled, (state, action) => {
+      state.loading = false;
+      state.roleData = action.payload;
+    })
+    .addCase(fetchRoles.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -369,7 +406,6 @@ const userManagementSlice = createSlice({
 });
 
 export const {
-  setSelectedUserData,
   setIsModalOpen,
   setFormData,
   setConfirmPassword,

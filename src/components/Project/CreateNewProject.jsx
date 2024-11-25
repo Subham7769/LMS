@@ -23,7 +23,7 @@ const CreateNewProject = () => {
   const { projectName } = useParams();
   const [clientIdsString, setClientIdsString] = useState("lmsClient");
   const dispatch = useDispatch();
-  const { projectData, loading, error } = useSelector((state) => state.project);
+  const { projectData } = useSelector((state) => state.project);
 
 
   useEffect(() => {

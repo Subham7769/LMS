@@ -2,6 +2,47 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { fetchProductData } from "./sidebarSlice";
 
+// AsyncThunk to fetch notifications history
+export const fetchNotificationsHistory = createAsyncThunk(
+  'notifications/fetchNotificationsHistory',
+  async (_, { rejectWithValue }) => {
+    try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem('authToken');
+
+      if (!token) {
+        throw new Error('Authentication token is missing.');
+      }
+
+      // Make the API request
+      const response = await fetch(
+        `${import.meta.env.VITE_NOTIFICATION_NOTIFICATION_HISTORY_READ}`,
+        {
+          method: 'GET', // Use GET for fetching data
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Extract error message from response
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch notifications history');
+      }
+
+      // Parse and return response data
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      // Return error message for rejection
+      return rejectWithValue(error.message || 'Something went wrong');
+    }
+  }
+);
+
+
 // AsyncThunk to fetch notifications
 export const fetchNotifications = createAsyncThunk(
   "notifications/fetchNotifications",
@@ -92,6 +133,7 @@ export const updateNotificationRequest = createAsyncThunk(
 
 const notificationInitialState = {
   notifications: [],
+  notificationsHistory: [],
   loading: false,
   error: null,
   updateMap: {},
@@ -169,6 +211,22 @@ const notificationSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(fetchNotificationsHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchNotificationsHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        const filteredNotifications = action.payload.filter((item)=>{ 
+          if(item.status === "REJECTED" || item.status === "APPROVED"){
+          return item
+        }})
+        state.notificationsHistory = filteredNotifications;
+      })
+      .addCase(fetchNotificationsHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

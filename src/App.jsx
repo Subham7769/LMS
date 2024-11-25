@@ -361,11 +361,11 @@ const routes = [
         element: <TestComponent />,
         errorElement: <RouteErrorBoundary />,
       },
-      // {
-      //   path: "/notification",
-      //   element: <Notifications />,
-      //   errorElement: <RouteErrorBoundary />,
-      // },
+      {
+        path: "/notifications",
+        element: <Notifications />,
+        errorElement: <RouteErrorBoundary />,
+      },
 
       // Accessing All Child Components
       {

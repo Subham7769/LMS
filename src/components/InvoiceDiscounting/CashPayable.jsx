@@ -20,7 +20,6 @@ const CashPayable = () => {
     interestDue: "",
     file: null,
   });
-
   const [applications, setApplications] = useState([
     {
       applicationId: "INV001",
@@ -55,7 +54,6 @@ const CashPayable = () => {
       file: "invoice2.pdf",
     },
   ]);
-
   const [errors, setErrors] = useState({});
   const [selectedApplication, setSelectedApplication] = useState(null);
 
@@ -208,14 +206,14 @@ const CashPayable = () => {
             <table className="min-w-full table-auto" role="table">
 
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600"></th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Invoice Id</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Date</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Amount</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Invoice Discounting</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4"></th>
+                  <th className="px-6 py-4">Invoice Id</th>
+                  <th className="px-6 py-4">Date</th>
+                  <th className="px-6 py-4">Amount</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Invoice Discounting</th>
+                  <th className="px-6 py-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -288,7 +286,7 @@ const CashPayable = () => {
                       <tr className="bg-gray-50">
                         <td colSpan="7" className="px-6 py-4">
                           {/* <div className="grid grid-cols-3 md:grid-cols-[80%_20%] gap-4"> */}
-                          <div className="gap-4">
+
                             <div className="space-y-2 text-sm text-gray-600">
                               <h3 className="font-semibold text-gray-800">Invoice Details</h3>
                               <div className="grid grid-cols-2 gap-4">
@@ -327,7 +325,7 @@ const CashPayable = () => {
                               </div>
 
                             </div>
-                          </div>
+
                         </td>
                       </tr>
                     )}

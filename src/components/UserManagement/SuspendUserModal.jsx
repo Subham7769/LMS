@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import {
@@ -32,7 +32,7 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
     }
   };
 
-  console.log(validationError);
+  // console.log(validationError);
 
   if (!isOpen) return null;
 
@@ -72,4 +72,4 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
   );
 };
 
-export default SuspendUserModal;
+export default React.memo(SuspendUserModal);
