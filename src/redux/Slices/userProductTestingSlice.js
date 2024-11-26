@@ -110,7 +110,7 @@ export const getBorrowerInfo = createAsyncThunk(
         return rejectWithValue("User Not Found");
       } else if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue({ message: "Unauthorized" });
       }
 
       return response.data;
@@ -144,7 +144,7 @@ export const getUserLoanOptions = createAsyncThunk(
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue({ message: "Unauthorized" });
       }
 
       const json = await response.json();
@@ -519,6 +519,59 @@ export const updateEmploymentDetails = createAsyncThunk(
 
 const initialState = {
   eligibility: {},
+  registrationDetails: {
+    firstNameEn: "",
+    lastNameEn: "",
+    middleNameEn: "",
+    firstNameAr: "",
+    lastNameAr: "",
+    middleNameAr: "",
+    gender: "",
+    dateOfBirth: "",
+    idType: "",
+    idNumber: "",
+    idExpiryDate: "",
+    nationality: "",
+    nationalityId: "",
+    occupation: "",
+    residenceDetails: {
+      buildingNumber: "",
+      streetName: "",
+      city: "",
+      cityId: "",
+      neighborhood: "",
+      postOfficeBox: "",
+      additionalNumbers: "",
+      unitNumber: "",
+      rent: "",
+      homeOwnership: 0,
+      residentialType: "VILLA",
+    },
+    maritalDetails: {
+      maritalStatus: "",
+      noOfDomesticWorkers: "",
+      noOfChildren: "",
+      totalDependent: "",
+      breadWinner: "",
+      noOfDependentsInPrivateSchools: "",
+      noOfDependentsInPublicSchools: "",
+    },
+    totalMonthlyExpenses: 0.0,
+    monthlyExpenses: {
+      RE: 0.0,
+      FLE: 0.0,
+      TE: 0.0,
+      CE: 0.0,
+      UE: 0.0,
+      EE: 0.0,
+      HHE: 0.0,
+      HCE: 0.0,
+      IP: 0.0,
+      EDT: 0.0,
+      MR: 0.0,
+      OMR: 0.0,
+    },
+  },
   register: {},
   loanOptions: [],
   loanConfigFields: {
@@ -560,6 +613,21 @@ const userProductTestingSlice = createSlice({
   name: "userProductTesting",
   initialState,
   reducers: {
+    updateRegistrationDetailsField: (state, action) => {
+      const { name, value } = action.payload;
+
+      if (name.startsWith("residenceDetails.")) {
+        const nestedField = name.split(".")[1];
+        state.registrationDetails.residenceDetails[nestedField] = value;
+      } else if (name.startsWith("maritalDetails.")) {
+        const nestedField = name.split(".")[1];
+        state.registrationDetails.maritalDetails[nestedField] = value;
+      } else {
+        // Handle top-level fields
+        state.registrationDetails[name] = value;
+      }
+    },
+
     updateLoanConfigFieldsField: (state, action) => {
       const { name, value } = action.payload;
       state.loanConfigFields[name] = value; // Dynamically update the field in loanConfigFields
@@ -765,6 +833,7 @@ const userProductTestingSlice = createSlice({
 });
 
 export const {
+  updateRegistrationDetailsField,
   updateLoanConfigFieldsField,
   updateDisbursementData,
   updateFamilyDetailsField,

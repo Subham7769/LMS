@@ -228,15 +228,25 @@ const CreateNewReportingConfig = lazy(() =>
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
 
-
 // Invoice Discounting Imports
-const Registration = lazy(() => import("./components/InvoiceDiscounting/Registration"));
-const ProfilePage = lazy(() => import("./components/InvoiceDiscounting/ProfilePage"));
-const CashPayable = lazy(() => import("./components/InvoiceDiscounting/CashPayable"));
-const CashReceivable = lazy(() => import("./components/InvoiceDiscounting/CashReceivable"));
-const WorkingCapital = lazy(() => import("./components/InvoiceDiscounting/WorkingCapital"));
-const ProjectFinance = lazy(() => import("./components/InvoiceDiscounting/ProjectFinance"));
-
+const Registration = lazy(() =>
+  import("./components/InvoiceDiscounting/Registration")
+);
+const ProfilePage = lazy(() =>
+  import("./components/InvoiceDiscounting/ProfilePage")
+);
+const CashPayable = lazy(() =>
+  import("./components/InvoiceDiscounting/CashPayable")
+);
+const CashReceivable = lazy(() =>
+  import("./components/InvoiceDiscounting/CashReceivable")
+);
+const WorkingCapital = lazy(() =>
+  import("./components/InvoiceDiscounting/WorkingCapital")
+);
+const ProjectFinance = lazy(() =>
+  import("./components/InvoiceDiscounting/ProjectFinance")
+);
 
 const routes = [
   // Accessing All Main Components
@@ -490,7 +500,7 @@ const routes = [
       },
       // Accessing All New Created Child Components
       {
-        path: "/invoice-discounting",
+        path: "/invoice-discounting/registration",
         element: <Registration />,
         errorElement: <RouteErrorBoundary />,
       },
@@ -632,10 +642,7 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
         ],
-
-
       },
-
     ],
   },
 

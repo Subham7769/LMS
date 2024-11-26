@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { PencilIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -34,27 +34,33 @@ const RecoveryConfig = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditingEquation, setIsEditingEquation] = useState(false);
   const { itemName, data, loading, error } = useSelector(
     (state) => state.recovery
   );
-  const [isEditingEquation, setIsEditingEquation] = useState(false);
   const { userData } = useSelector((state) => state.auth);
-  const roleName = userData?.roles[0]?.name;
+  const roleName = useMemo(() => userData?.roles[0]?.name, [userData]);
 
-  const handleChangeWrapper = (e) => {
-    const { name, value } = e.target;
-    dispatch(handleChange({ name, value }));
-  };
+  const handleChangeWrapper = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      dispatch(handleChange({ name, value }));
+    },
+    [dispatch]
+  );
 
-  const handleNameUpdate = async (newName) => {
-    try {
-      await dispatch(updateRecoveryName({ recoveryEquationTempId, newName }));
-      dispatch(fetchName(recoveryEquationTempId));
-      dispatch(fetchRecoveryData());
-    } catch (error) {
-      console.error("Failed to update name:", error);
-    }
-  };
+  const handleNameUpdate = useCallback(
+    async (newName) => {
+      try {
+        await dispatch(updateRecoveryName({ recoveryEquationTempId, newName }));
+        dispatch(fetchName(recoveryEquationTempId));
+        dispatch(fetchRecoveryData());
+      } catch (error) {
+        console.error("Failed to update name:", error);
+      }
+    },
+    [dispatch, recoveryEquationTempId]
+  );
 
   useEffect(() => {
     dispatch(fetchName(recoveryEquationTempId));
@@ -256,4 +262,4 @@ const RecoveryConfig = () => {
   );
 };
 
-export default RecoveryConfig;
+export default React.memo(RecoveryConfig);

@@ -7,6 +7,7 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { getBorrowerInfo } from "../../redux/Slices/userProductTestingSlice";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
+import RegistrationForm from "./RegistrationForm";
 
 const CommentsModal = ({ closeModal, message }) => {
   console.log(message);
@@ -54,7 +55,7 @@ const EligibilityResults = ({ eligibilityResults, loading, error }) => {
 
   return (
     <>
-      <div className="p-4 grid xl:grid-cols-2 grid-cols-1  gap-3">
+      <div className="grid xl:grid-cols-2 grid-cols-1  gap-3">
         {projects?.map((project, index) => (
           <ContainerTile loading={loading} error={error}>
             <h2 className="text-[16px] text-center font-semibold mb-4">
@@ -145,7 +146,7 @@ const Register = () => {
   const { register, loading, error } = useSelector(
     (state) => state.userProductTesting
   );
-  console.log(register);
+  // console.log(register);
 
   // Conditional rendering based on loading and error states
   if (register.message === "Borrower already exists") {
@@ -181,6 +182,7 @@ const Register = () => {
 
   return (
     <SectionErrorBoundary>
+      <RegistrationForm />
       <EligibilityResults
         eligibilityResults={register}
         loading={loading}

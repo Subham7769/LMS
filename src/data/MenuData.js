@@ -312,14 +312,14 @@ export const MenusInitial = [
   },
   {
     title: "Invoice Discounting",
-    href: "/invoice-discounting",
+    href: "/invoice-discounting/registration",
     icon: "DocumentCurrencyRupeeIcon",
     current: false,
     submenu: true,
     submenuItems: [
       {
         name: "Home",
-        href: "/invoice-discounting",
+        href: "/invoice-discounting/registration",
         current: false,
       },
       {

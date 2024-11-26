@@ -23,10 +23,12 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
       isValid = false;
     }
     if (isValid) {
-      await dispatch(suspendUser({
-        userName: userDetails.username,
-        reason: suspensionReason,
-      })).unwrap();
+      await dispatch(
+        suspendUser({
+          userName: userDetails.username,
+          reason: suspensionReason,
+        })
+      ).unwrap();
       onClose();
       dispatch(clearFormData());
     }
@@ -72,4 +74,4 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
   );
 };
 
-export default React.memo(SuspendUserModal);
+export default SuspendUserModal;

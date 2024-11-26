@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {  toast } from "react-toastify"
+import { toast } from "react-toastify";
 
 // Async thunk for fetching user data
 export const fetchUsers = createAsyncThunk(
@@ -30,7 +30,7 @@ export const fetchUsers = createAsyncThunk(
 // Async thunk for fetching role data
 export const fetchRoles = createAsyncThunk(
   "roles/fetchRoles",
-  async (_, { rejectWithValue,dispatch }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await axios.get(
@@ -47,7 +47,9 @@ export const fetchRoles = createAsyncThunk(
         value: id,
       }));
       dispatch(fetchUsers());
-      return formattedRoleData.filter((item) => item.label !== "ROLE_SUPERADMIN");
+      return formattedRoleData.filter(
+        (item) => item.label !== "ROLE_SUPERADMIN"
+      );
     } catch (error) {
       console.error(error);
       return rejectWithValue(error.message);
@@ -257,10 +259,11 @@ export const updateUser = createAsyncThunk(
 const userManagementSlice = createSlice({
   name: "userManagement",
   initialState: {
-    roleData:[],
+    roleData: [],
     allUsersInfo: [],
     loading: false,
     error: null,
+    selectedUserData: null,
     isModalOpen: false,
     formData: {
       active: true,
@@ -275,6 +278,9 @@ const userManagementSlice = createSlice({
     userRole: [],
   },
   reducers: {
+    setSelectedUserData: (state, action) => {
+      state.selectedUserData = action.payload;
+    },
     setIsModalOpen: (state, action) => {
       state.isModalOpen = action.payload;
     },
@@ -303,17 +309,17 @@ const userManagementSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(fetchRoles.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(fetchRoles.fulfilled, (state, action) => {
-      state.loading = false;
-      state.roleData = action.payload;
-    })
-    .addCase(fetchRoles.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    })
+      .addCase(fetchRoles.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchRoles.fulfilled, (state, action) => {
+        state.loading = false;
+        state.roleData = action.payload;
+      })
+      .addCase(fetchRoles.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -325,7 +331,7 @@ const userManagementSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -337,7 +343,7 @@ const userManagementSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(suspendUser.pending, (state) => {
         state.loading = true;
@@ -349,7 +355,7 @@ const userManagementSlice = createSlice({
       .addCase(suspendUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
@@ -361,7 +367,7 @@ const userManagementSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(activateUser.pending, (state) => {
         state.loading = true;
@@ -374,7 +380,7 @@ const userManagementSlice = createSlice({
       .addCase(activateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(generatePassword.pending, (state) => {
         state.loading = true;
@@ -387,7 +393,7 @@ const userManagementSlice = createSlice({
       .addCase(generatePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       })
       .addCase(createUser.pending, (state) => {
         state.loading = true;
@@ -400,12 +406,13 @@ const userManagementSlice = createSlice({
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`Error : ${action.error.message}`);
       });
   },
 });
 
 export const {
+  setSelectedUserData,
   setIsModalOpen,
   setFormData,
   setConfirmPassword,
