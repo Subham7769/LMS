@@ -7,11 +7,14 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import AppErrorBoundary from "./components/ErrorBoundary/AppErrorBoundary"; // Import AppErrorBoundary
+import "@elastic/charts/dist/theme_light.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <AppErrorBoundary> {/* Wrap App in AppErrorBoundary */}
+    <AppErrorBoundary>
+      {" "}
+      {/* Wrap App in AppErrorBoundary */}
       <App />
     </AppErrorBoundary>
   </Provider>

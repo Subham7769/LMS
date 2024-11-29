@@ -23,6 +23,7 @@ const CreditScoreETPage = () => {
         ListHeader={HeaderList}
         ListItem={CreditScoreETList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

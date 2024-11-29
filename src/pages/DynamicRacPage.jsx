@@ -23,6 +23,7 @@ const DynamicRacPage = () => {
         ListHeader={HeaderList}
         ListItem={RACList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

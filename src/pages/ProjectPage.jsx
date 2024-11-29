@@ -24,6 +24,7 @@ const ProjectPage = () => {
         ListHeader={HeaderList}
         ListItem={ProjectList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

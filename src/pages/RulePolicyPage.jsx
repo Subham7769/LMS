@@ -23,6 +23,7 @@ const RulePolicyPage = () => {
         ListHeader={HeaderList}
         ListItem={RulePolicyList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

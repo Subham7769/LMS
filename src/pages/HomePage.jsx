@@ -23,6 +23,7 @@ const HomePage = () => {
         ListHeader={HeaderList}
         ListItem={ProductList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

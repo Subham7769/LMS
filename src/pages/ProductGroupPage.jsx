@@ -23,6 +23,7 @@ const ProductGroupPage = () => {
         ListHeader={HeaderList}
         ListItem={ProductGroupList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

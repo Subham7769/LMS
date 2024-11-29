@@ -23,6 +23,7 @@ const TclPage = () => {
         ListHeader={HeaderList}
         ListItem={TCLList}
         Searchable={true}
+        SearchBy={"name"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </>

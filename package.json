@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@bpmn-io/properties-panel": "^3.18.2",
+    "@elastic/charts": "^68.0.3",
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.1.5",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -45,7 +46,6 @@
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.6",
     "react-transition-group": "^4.4.5",
-    "recharts": "^2.12.7",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.5.2",
