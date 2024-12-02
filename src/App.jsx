@@ -46,9 +46,6 @@ const TestComponent = lazy(() =>
 // );
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
 const ReCharts = lazy(() => import("./components/TestComponent/ReCharts"));
-const ElasticCharts = lazy(() =>
-  import("./components/TestComponent/ElasticCharts")
-);
 // *******************************************************************************************
 
 // Recovery Imports
@@ -373,8 +370,8 @@ const routes = [
       {
         path: "/test",
         // element: <TestComponent />,
-        // element: <ReCharts />,
-        element: <ElasticCharts />,
+        element: <ReCharts />,
+        // element: <ElasticCharts />,
         errorElement: <RouteErrorBoundary />,
       },
       {
