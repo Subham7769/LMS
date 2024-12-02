@@ -70,7 +70,7 @@ const Project = () => {
     <>
       <DynamicHeader
         itemName={projectData?.name}
-        isEditable={false}
+        isEditable={true}
         handleNameUpdate={updateName}
         handleDelete={handleDelete}
         loading={loading}

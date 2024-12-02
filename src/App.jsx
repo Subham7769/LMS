@@ -236,6 +236,9 @@ const Registration = lazy(() =>
 const ProfilePage = lazy(() =>
   import("./components/InvoiceDiscounting/ProfilePage")
 );
+const ManagePartner = lazy(() =>
+  import("./components/InvoiceDiscounting/ManagePartner")
+);
 const CashPayable = lazy(() =>
   import("./components/InvoiceDiscounting/CashPayable")
 );
@@ -510,6 +513,11 @@ const routes = [
       {
         path: "/invoice-discounting/profile",
         element: <ProfilePage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/invoice-discounting/manage-partner",
+        element: <ManagePartner />,
         errorElement: <RouteErrorBoundary />,
       },
       {

@@ -328,6 +328,11 @@ export const MenusInitial = [
         current: false,
       },
       {
+        name: "Manage Partner",
+        href: "/invoice-discounting/manage-partner",
+        current: false,
+      },
+      {
         name: "Cash Payable",
         href: "/invoice-discounting/cash-payable",
         current: false,
