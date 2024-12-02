@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import transformData from '../../utils/GeneralLedgerDataTransformation';
 
 // Define async thunk to fetch ledger data
 export const fetchLedgerData = createAsyncThunk(
@@ -9,7 +10,7 @@ export const fetchLedgerData = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await axios.get(
-        `${import.meta.env.VITE_GENERAL_LEDGER_READ}`,
+        `${import.meta.env.VITE_GENERAL_LEDGER_READ_TEST}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -41,7 +42,7 @@ const generalLedgerSlice = createSlice({
       })
       .addCase(fetchLedgerData.fulfilled, (state, action) => {
         state.loading = false;
-        state.ledgerData = action.payload;
+        state.ledgerData = transformData(action.payload);
       })
       .addCase(fetchLedgerData.rejected, (state, action) => {
         state.loading = false;
