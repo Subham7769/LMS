@@ -14,7 +14,7 @@ const DownloadReports = () => {
   };
 
   return (
-    <div className="flex gap-10">
+    <div className="flex gap-10 mt-4">
       <Button
         buttonName="Export CSV File"
         onClick={() =>

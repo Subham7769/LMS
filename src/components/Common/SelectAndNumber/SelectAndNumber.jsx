@@ -130,7 +130,7 @@ const SelectAndNumber = ({
             validationError[validationKey2]
               ? "text-red-600"
               : "text-gray-700"
-          } px-1 text-[14px]`}
+          } px-1 text-sm font-semibold`}
           htmlFor={inputSelectName}
         >
           {validationError[validationKey] ||
@@ -145,7 +145,7 @@ const SelectAndNumber = ({
           name={inputSelectName}
           defaultValue={inputSelectValue}
           options={inputSelectOptions}
-          className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm "
+          className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm "
           value={
             inputSelectOptions.find(
               (option) => option.value === inputSelectValue
@@ -165,7 +165,7 @@ const SelectAndNumber = ({
           onChange={handleNumberChange}
           onFocus={() => dispatch(setValidationError(validationKey))}
           placeholder={placeHolderNumber}
-          className={`block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
+          className={`block h-10 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
           ${
             validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"
@@ -179,7 +179,7 @@ const SelectAndNumber = ({
               name={inputSelect2Name}
               defaultValue={inputSelect2Value}
               options={inputSelect2Options}
-              className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm "
+              className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
               value={
                 inputSelect2Options.find(
                   (option) => option.value === inputSelect2Value
@@ -197,7 +197,7 @@ const SelectAndNumber = ({
               onChange={handleNumber2Change}
               onFocus={() => dispatch(setValidationError(validationKey2))}
               placeholder={placeHolderNumber2}
-              className={`block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
+              className={`block h-9 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
           ${
             validationError[validationKey2]
               ? "ring-red-600 focus:ring-red-600"

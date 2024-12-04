@@ -252,6 +252,12 @@ const ProjectFinance = lazy(() =>
   import("./components/InvoiceDiscounting/ProjectFinance")
 );
 
+// LOS Imports
+const Los = lazy(() => import("./components/Los/Los"));
+const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers")); 
+const Loans = lazy(() => import("./components/Los/Loans/Loans")); 
+const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
+
 const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
@@ -322,7 +328,11 @@ const routes = [
         element: <CreditScorePage />,
         errorElement: <RouteErrorBoundary />,
       },
-      { path: "/rule-policy", element: <RulePolicyPage /> },
+      {
+        path: "/rule-policy",
+        element: <RulePolicyPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
       {
         path: "/product-group",
         element: <ProductGroupPage />,
@@ -538,6 +548,33 @@ const routes = [
       {
         path: "/invoice-discounting/project-finance",
         element: <ProjectFinance />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/loan-origination-system",
+        element: <Los />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/loan-origination-system/borrowers",
+        element: <Borrowers />,
+        children: [
+          {
+            path: "personal-info",
+            element: <PersonalInfo />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/loan-origination-system/loans",
+        element: <Loans />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/loan-origination-system/repayments",
+        element: <Repayments />,
         errorElement: <RouteErrorBoundary />,
       },
       // Accessing All Page Component with it's Child Components

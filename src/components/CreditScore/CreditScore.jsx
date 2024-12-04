@@ -75,7 +75,7 @@ const CreditScore = () => {
 
   return (
     <>
-      <div className="my-5">
+      <div className="mb-4">
         <ListTable
           ListName={creditScoreData?.equation}
           ListNameAlign={"center"}

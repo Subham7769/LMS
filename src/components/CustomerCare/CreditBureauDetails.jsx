@@ -5,12 +5,13 @@ const CreditInstrument = React.lazy(() => import("./CreditInstrument"));
 const DefaultDetails = React.lazy(() => import("./DefaultDetails"));
 const Score = React.lazy(() => import("./Score"));
 const DownloadReports = React.lazy(() => import("./DownloadReports"));
+import Tab from "../Common/Tab/Tab";
 
 const tabComponents = {
   "customer-address": CustomerAddress,
   "credit-instruments": CreditInstrument,
   "default-details": DefaultDetails,
-  "score": Score,
+  score: Score,
   "download-reports": DownloadReports,
 };
 
@@ -22,37 +23,25 @@ const tabs = [
   { id: "download-reports", label: "Download Reports" },
 ];
 
-const Tab = ({ id, label, activeTab, setActiveTab }) => (
-  <div className="px-2">
-    <div
-      className={`py-1 px-1.5 cursor-pointer rounded text-[16px] ${
-        activeTab === id
-          ? "text-white bg-indigo-500 "
-          : "text-indigo-500 hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
-      }`}
-      onClick={() => setActiveTab(id)}
-    >
-      {label}
-    </div>
-  </div>
-);
 
 const CreditBureauDetails = () => {
   const [activeTab, setActiveTab] = useState("customer-address");
   const ActiveComponent = tabComponents[activeTab];
 
   return (
-    <div className="mt-4">
-      <div className="flex mb-10">
-        {tabs.map((tab) => (
-          <Tab
-            key={tab.id}
-            id={tab.id}
-            label={tab.label}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-        ))}
+    <div>
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              label={tab.label}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          ))}
+        </ul>
       </div>
       <Suspense fallback={<LoadingState />}>
         <ActiveComponent />

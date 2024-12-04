@@ -24,7 +24,7 @@ const InputSelect = ({
   isMulti = false,
   searchable = false,
   isClearable = false,
-  dropdownTextSize = "medium", // New prop to control dropdown text size
+  dropdownTextSize = "small", // New prop to control dropdown text size
   isValidation = false,
   isIndex,
   isSectionId,
@@ -58,11 +58,13 @@ const InputSelect = ({
           : dropdownTextSize === "large"
           ? "16px"
           : "14px", // Change font size
-      padding: 10,
+      padding: 6,
     }),
     control: (provided) => ({
       ...provided,
       border: "1px solid #ccc",
+      height:"30px",
+      padding:0,
       boxShadow: "none",
       "&:hover": {
         border: "1px solid #aaa",
@@ -82,6 +84,8 @@ const InputSelect = ({
           : "14px", // Same font size as options
     }),
   };
+
+  
   let validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
 
   if (isSectionId && isRuleId) {
@@ -105,9 +109,9 @@ const InputSelect = ({
     <div className="flex flex-col">
       {labelName && (
         <label
-          className={`block ${
+          className={`block  text-sm font-semibold ${
             validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-[14px]`}
+          } px-1`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Field required" : labelName}

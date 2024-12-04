@@ -44,6 +44,7 @@ import {
   ChartBarIcon,
   DocumentCurrencyRupeeIcon,
   NewspaperIcon,
+  AtSymbolIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -92,6 +93,7 @@ const SideBar = () => {
     ChartBarIcon,
     DocumentCurrencyRupeeIcon,
     NewspaperIcon,
+    AtSymbolIcon,
   };
 
   const functionMapping = {

@@ -67,7 +67,7 @@ const InputText = ({
         <label
           className={`block ${
             validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-[14px]`}
+          } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Field required" : labelName}
@@ -84,7 +84,7 @@ const InputText = ({
         }}
         placeholder={placeHolder}
         disabled={disabled}
-        className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
+        className={`block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
           ${
             validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"

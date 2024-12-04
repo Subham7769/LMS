@@ -1,42 +1,38 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import LoanHistory from "./LoanHistory";
 import PaymentHistory from "./PaymentHistory";
-
-const Tab = ({ isActive, onClick, children }) => (
-  <div
-    className={`py-1 px-1.5 cursor-pointer rounded text-[16px] ${
-      isActive
-        ? "text-white bg-indigo-500 "
-        : "text-indigo-500 hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
-    }`}
-    onClick={onClick}
-  >
-    {children}
-  </div>
-);
+import Tab from "../Common/Tab/Tab";
 
 const LoanNPaymentHist = () => {
-  const [isLoanVisible, setIsLoanVisible] = useState(true);
+  const [activeTab, setActiveTab] = useState("loan-history");
+
+  const tabs = [
+    { id: "loan-history", label: "Loan History"},
+    { id: "payment-history", label: "Payment History" },
+  ];
 
   return (
-    <>
-      <div className="flex mb-7">
-        <div className=" px-2">
-          <Tab isActive={isLoanVisible} onClick={() => setIsLoanVisible(true)}>
-            Loan History
-          </Tab>
-        </div>
-        <div className="px-2">
-          <Tab
-            isActive={!isLoanVisible}
-            onClick={() => setIsLoanVisible(false)}
-          >
-            Payment History
-          </Tab>
-        </div>
+    <div>
+      {/* Tab Navigation */}
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              label={tab.label}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          ))}
+        </ul>
       </div>
-      {isLoanVisible ? <LoanHistory /> : <PaymentHistory />}
-    </>
+
+      {/* Content based on active tab */}
+      <div className="mt-4">
+        {activeTab === "loan-history" ? <LoanHistory /> : <PaymentHistory />}
+      </div>
+    </div>
   );
 };
 

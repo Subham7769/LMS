@@ -356,6 +356,51 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
+    title: "LOS",
+    href: "/loan-origination-system",
+    icon: "AtSymbolIcon",
+    current: false,
+    submenu: true,
+    submenuItems: [
+      {
+        name: "Borrowers",
+        href: "/loan-origination-system/borrowers",
+        current: false,
+      },
+      {
+        name: "Loans",
+        href: "/loan-origination-system/loans",
+        current: false,
+      },
+      {
+        name: "Repayments",
+        href: "/loan-origination-system/repayments",
+        current: false,
+      },
+      // {
+      //   name: "Cash Payable",
+      //   href: "/loan-origination-system/cash-payable",
+      //   current: false,
+      // },
+      // {
+      //   name: "Cash Receivable",
+      //   href: "/loan-origination-system/cash-receivable",
+      //   current: false,
+      // },
+      // {
+      //   name: "Working Capital",
+      //   href: "/loan-origination-system/working-capital",
+      //   current: false,
+      // },
+      // {
+      //   name: "Project Finance",
+      //   href: "/loan-origination-system/project-finance",
+      //   current: false,
+      // },
+    ],
+    isOpen: false,
+  },
+  {
     title: "Test Component",
     href: "/test",
     icon: "BeakerIcon",

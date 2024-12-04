@@ -344,7 +344,7 @@ const DebtBurdenConfig = () => {
             </div>
             <div className="relative">
               <InputText
-                labelName="GDBR (including MTG)"
+                labelName="GDBR (with MTG)"
                 inputName={`gdbrWithMTG`}
                 inputValue={dbrData?.gdbrWithMTG}
                 onChange={handleInputChange}

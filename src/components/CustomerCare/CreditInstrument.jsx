@@ -89,6 +89,7 @@ const CreditInstrument = () => {
     <ContainerTile
       loading={loading}
       error={error}
+      className={"mt-4"}
     >
       <div className="flex items-start shadow-md bg-gray-100 mt-4">
         <table className="divide-y divide-gray-300 border-r border-gray-200 w-full text-[14px]">

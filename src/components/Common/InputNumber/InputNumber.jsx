@@ -85,7 +85,7 @@ const InputNumber = ({
         <label
           className={`block ${
             validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-[14px]`}
+          } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Field required" : labelName}
@@ -122,7 +122,7 @@ const InputNumber = ({
           style={{
             appearance: "none", // General rule for most modern browsers
           }}
-          className={`flex-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
+          className={`flex-1 h-10 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
             ${
               validationError[validationKey]
                 ? "ring-red-600 focus:ring-red-600"

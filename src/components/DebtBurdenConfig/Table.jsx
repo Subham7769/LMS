@@ -31,7 +31,7 @@ export default function Table({
     { name: "Consumer DBR", sortKey: "consumerDBR" },
     { name: "GDBR (Without MTG)", sortKey: "gdbrWithoutMTG" },
     { name: "Employer Retired", sortKey: "employerRetired" },
-    { name: "GDBR (Including MTG)", sortKey: "gdbrWithMTG" },
+    { name: "GDBR (with MTG)", sortKey: "gdbrWithMTG" },
   ];
 
   if (roleName !== "ROLE_VIEWER") {

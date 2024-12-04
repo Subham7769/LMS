@@ -1,39 +1,41 @@
-import { useLocation, Link, useParams, Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { useParams, Outlet } from "react-router-dom";
+import Tab from "../Common/Tab/Tab";
 
 const UserProductTesting = () => {
   const { userID } = useParams();
-  const location = useLocation();
-  const currentPath = location.pathname;
+  const [activeTab, setActiveTab] = useState("eligibility");
 
   const tabs = [
-    { path: `/user-product-testing/${userID}/eligibilty`, label: "Eligibility" },
-    { path: `/user-product-testing/${userID}/register`, label: "Register" },
-    { path: `/user-product-testing/${userID}/loan-config`, label: "Loan Config" },
-    { path: `/user-product-testing/${userID}/disbursement-status`, label: "Disbursement Status" },
-    { path: `/user-product-testing/${userID}/backend-repayment`, label: "Backend Repayments" },
-    { path: `/user-product-testing/${userID}/family-details`, label: "Family Details" },
-    { path: `/user-product-testing/${userID}/employment-details`, label: "Employment Details" },
+    { id: "eligibility", label: "Eligibility", to: `/user-product-testing/${userID}/eligibilty` },
+    { id: "register", label: "Register", to: `/user-product-testing/${userID}/register` },
+    { id: "loan-config", label: "Loan Config", to: `/user-product-testing/${userID}/loan-config` },
+    { id: "disbursement-status", label: "Disbursement Status", to: `/user-product-testing/${userID}/disbursement-status` },
+    { id: "backend-repayment", label: "Backend Repayments", to: `/user-product-testing/${userID}/backend-repayment` },
+    { id: "family-details", label: "Family Details", to: `/user-product-testing/${userID}/family-details` },
+    { id: "employment-details", label: "Employment Details", to: `/user-product-testing/${userID}/employment-details` },
   ];
 
   return (
     <div className="mt-4">
-      <div className="flex mb-10">
-        {tabs.map((tab) => (
-          <div className="px-2" key={tab.path}>
-            <Link
-              to={tab.path}
-              className={`py-1 px-1.5 text-[16px] rounded ${
-                currentPath === tab.path
-                  ? "text-white bg-indigo-500 "
-                  : "text-indigo-500  hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
-              }`}
-            >
-              {tab.label}
-            </Link>
-          </div>
-        ))}
+      {/* Tab Navigation */}
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              label={tab.label}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              to={tab.to}
+            />
+          ))}
+        </ul>
       </div>
-      <div>
+
+      {/* Content Rendering */}
+      <div className="mt-4">
         <Outlet />
       </div>
     </div>

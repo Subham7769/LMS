@@ -179,7 +179,7 @@ const ListTable = ({
   return (
     <>
       {loading ? (
-        <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5">
+        <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5 mt-3">
           <ShimmerTable />
           <ShimmerTable />
           <ShimmerTable />
