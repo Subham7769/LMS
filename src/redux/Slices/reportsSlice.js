@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 export const fetchReportsConfigData = createAsyncThunk(
   "reports/fetchReportsConfigData",
@@ -24,7 +25,7 @@ export const fetchReportsConfigData = createAsyncThunk(
 
 export const generateReport = createAsyncThunk(
   "reports/generateReport",
-  async (reportsData, { rejectWithValue }) => {
+  async (reportGenerationData, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("authToken");
     const url = import.meta.env.VITE_GENERATE_REPORT_READ;
 
@@ -35,16 +36,20 @@ export const generateReport = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(reportsData),
+        body: JSON.stringify(reportGenerationData),
       });
 
       if (response.status === 401 || response.status === 403) {
         localStorage.clear();
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue({ message: "Unauthorized" });
       }
 
       if (response.ok) {
+        dispatch(fetchReportsConfigData());
         return await response.json();
+      } else {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to generate");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -54,12 +59,17 @@ export const generateReport = createAsyncThunk(
 
 // Initial state
 const initialState = {
-  reportsData: {
+  reportGenerationData: {
     reportName: "",
     startDate: "",
     endDate: "",
+    relativeTimeRange: {
+      time: 0,
+      unit: "",
+    },
   },
-  reportConfigData: [],
+  reportOptions: [],
+  configData: [],
   loading: false,
   error: null,
 };
@@ -74,10 +84,17 @@ const reportsSlice = createSlice({
     setError: (state, action) => {
       state.error = action.error.message;
     },
-    handleChangeInReportsData: (state, action) => {
+    handleChangeInreportGenerationData: (state, action) => {
       const { name, value } = action.payload;
-      state.reportsData = {
-        ...state.reportsData,
+      state.reportGenerationData = {
+        ...state.reportGenerationData,
+        [name]: value,
+      };
+    },
+    handleChangeCommonSelection: (state, action) => {
+      const { name, value } = action.payload;
+      state.reportGenerationData.relativeTimeRange = {
+        ...state.reportGenerationData.relativeTimeRange,
         [name]: value,
       };
     },
@@ -90,20 +107,37 @@ const reportsSlice = createSlice({
       })
       .addCase(fetchReportsConfigData.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
-        const updatedReportConfigData = action.payload.map((data) => ({
+        const updatedreportOptions = action.payload.map((data) => ({
           label: data.name,
           value: data.name,
         }));
-        state.reportConfigData = updatedReportConfigData;
+        state.reportOptions = updatedreportOptions;
+        state.configData = action.payload;
       })
       .addCase(fetchReportsConfigData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(generateReport.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(generateReport.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Report Generated");
+      })
+      .addCase(generateReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });
 
-export const { setLoading, setError, handleChangeInReportsData } =
-  reportsSlice.actions;
+export const {
+  setLoading,
+  setError,
+  handleChangeInreportGenerationData,
+  handleChangeCommonSelection,
+} = reportsSlice.actions;
 export default reportsSlice.reducer;

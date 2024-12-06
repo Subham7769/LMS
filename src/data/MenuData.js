@@ -288,6 +288,12 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "Server Config",
+    href: "/server-config",
+    icon: "WrenchScrewdriverIcon",
+    current: false,
+  },
+  {
     title: "Reporting Config",
     href: "/reporting-config",
     icon: "ChartBarIcon",
@@ -303,7 +309,6 @@ export const MenusInitial = [
     isOpen: false,
     current: false,
   },
-
   {
     title: "Reports",
     href: "/reports",

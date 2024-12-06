@@ -45,6 +45,7 @@ import {
   DocumentCurrencyRupeeIcon,
   NewspaperIcon,
   AtSymbolIcon,
+  WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -94,6 +95,7 @@ const SideBar = () => {
     DocumentCurrencyRupeeIcon,
     NewspaperIcon,
     AtSymbolIcon,
+    WrenchScrewdriverIcon,
   };
 
   const functionMapping = {
