@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import DatePicker from "./components/Reports/DatePicker";
 
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
@@ -36,7 +37,7 @@ const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 // *************************************TEST******************************************************
 
 const TestComponent = lazy(() => import("./components/TestComponent/TestComponent11") );
-const ReCharts = lazy(() => import("./components/TestComponent/ReCharts"));
+
 
 // *************************************TEST******************************************************
 
@@ -217,6 +218,11 @@ const BusinessRule3 = lazy(() =>
   import("./components/BusinessRule/BusinessRule3")
 );
 
+//Server Config imports
+const ServerConfig = lazy(() =>
+  import("./components/ServerConfig/ServerConfig")
+);
+
 // Reporting Config imports
 const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
 const ReportingConfig = lazy(() =>
@@ -228,6 +234,7 @@ const CreateNewReportingConfig = lazy(() =>
 
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
+const ReCharts = lazy(() => import("./components/Reports/ReCharts"));
 
 // Invoice Discounting Imports
 const Registration = lazy(() =>
@@ -365,6 +372,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "/server-config",
+        element: <ServerConfig />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "/reporting-config",
         element: <ReportingConfigPage />,
         errorElement: <RouteErrorBoundary />,
@@ -383,9 +395,7 @@ const routes = [
       },
       {
         path: "/test",
-        element: <TestComponent />,
-        // element: <ReCharts />,
-        // element: <ElasticCharts />,
+        element: <DatePicker />,
         errorElement: <RouteErrorBoundary />,
       },
       {
