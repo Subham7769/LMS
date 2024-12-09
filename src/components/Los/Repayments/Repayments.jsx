@@ -1,10 +1,11 @@
 import React, { useState, Suspense } from "react";
 import LoadingState from "../../LoadingState/LoadingState";
+import Tab from "../../Common/Tab/Tab";
 
 const RepaymentDetails = React.lazy(() => import("./RepaymentDetails"));
 const RepaymentHistory = React.lazy(() => import("./RepaymentHistory"));
 
-const repaymentTabs = [
+const tabs = [
   { id: "repayment-details", label: "Repayment Details" },
   { id: "repayment-history", label: "Repayment History" },
 ];
@@ -14,20 +15,6 @@ const repaymentComponents = {
   "repayment-history": RepaymentHistory,
 };
 
-const Tab = ({ id, label, activeTab, setActiveTab }) => (
-  <div className="px-2">
-    <div
-      className={`py-1 px-1.5 cursor-pointer rounded text-[16px] ${
-        activeTab === id
-          ? "text-white bg-indigo-500"
-          : "text-indigo-500 hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
-      }`}
-      onClick={() => setActiveTab(id)}
-    >
-      {label}
-    </div>
-  </div>
-);
 
 const Repayments = () => {
   const [activeTab, setActiveTab] = useState("repayment-details");
@@ -35,17 +22,22 @@ const Repayments = () => {
 
   return (
     <div className="mt-4">
-      <div className="flex mb-10">
-        {repaymentTabs.map((tab) => (
-          <Tab
-            key={tab.id}
-            id={tab.id}
-            label={tab.label}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-        ))}
+      {/* Tab Navigation */}
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              label={tab.label}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              to={tab.to}
+            />
+          ))}
+        </ul>
       </div>
+
       <Suspense fallback={<LoadingState />}>
         <ActiveComponent />
       </Suspense>

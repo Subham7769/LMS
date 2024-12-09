@@ -32,21 +32,21 @@ const Notifications = lazy(() =>
 );
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 
+
+// *************************************TEST******************************************************
+
+const TestComponent = lazy(() => import("./components/TestComponent/TestComponent11") );
+const ReCharts = lazy(() => import("./components/TestComponent/ReCharts"));
+
+// *************************************TEST******************************************************
+
+
 // RAC Imports
 const RacPage = lazy(() => import("./pages/RacPage"));
 const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
+const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
 
-// *******************************************************************************************
-const TestComponent = lazy(() =>
-  import("./components/Common/Notification/Notification1")
-);
-// const TestComponent = lazy(() =>
-//   import("./components/TestComponent/TestComponent")
-// );
-const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
-const ReCharts = lazy(() => import("./components/TestComponent/ReCharts"));
-// *******************************************************************************************
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -258,10 +258,11 @@ const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
 const Loans = lazy(() => import("./components/Los/Loans/Loans")); 
 const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
 
+
 const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
-
+  
   {
     path: "/",
     element: (
@@ -382,8 +383,8 @@ const routes = [
       },
       {
         path: "/test",
-        // element: <TestComponent />,
-        element: <ReCharts />,
+        element: <TestComponent />,
+        // element: <ReCharts />,
         // element: <ElasticCharts />,
         errorElement: <RouteErrorBoundary />,
       },

@@ -22,7 +22,7 @@ const borrowerComponents = {
 };
 
 const Borrowers = () => {
-  const [activeTab, setActiveTab] = useState("add-borrower-group");
+  const [activeTab, setActiveTab] = useState("add-borrower");
   const ActiveComponent = borrowerComponents[activeTab];
 
   return (
