@@ -1,23 +1,15 @@
-import React, { useState } from "react";
-import {
-  FiChevronDown,
-  FiChevronUp,
-  FiDownload,
-  FiCheckCircle,
-  FiXCircle,
-} from "react-icons/fi";
-import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
+import React from "react";
+import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
+import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 
-const CashPayable = () => {
-  const [invoices, setInvoices] = useState([
+const ApproveLoans = () => {
+  const applications = [
     {
-      applicationId: "APP001",
-      invoiceId: "INV001",
+      loanId: "INV001",
       applicationUploadDate: "2024-11-15",
       applicationDueDate: "2024-12-15",
-      applicationStatus: "rejected",
-      invoiceDiscountingStatus: "Yes",
-      invoiceAmount: "50000",
+      applicationStatus: "Pending",
+      loanAmount: "50000",
       companyName: "ABC Corp",
       companyId: "C001",
       daysLeftFromDueDate: "30",
@@ -29,50 +21,45 @@ const CashPayable = () => {
       file: "invoice1.pdf",
     },
     {
-      applicationId: "APP002",
-      invoiceId: "INV002",
+      loanId: "INV002",
       applicationUploadDate: "2024-11-10",
       applicationDueDate: "2024-12-10",
       applicationStatus: "Pending",
-      invoiceDiscountingStatus: "No",
-      invoiceAmount: "30000",
+      loanAmount: "30000",
       companyName: "XYZ Ltd",
       companyId: "C002",
       daysLeftFromDueDate: "25",
-      approvalStatus: "No",
+      approvalStatus: "Yes",
       paymentStatus: "Unpaid",
       financedAmount: "0",
       netOutstanding: "30000",
       interestDue: "0",
       file: "invoice2.pdf",
     },
-  ]);
-
-  const handleApprove = (id) => {
-    setInvoices(
-      invoices.map((invoice) =>
-        invoice.applicationId === id
-          ? { ...invoice, approvalStatus: "Yes" }
-          : invoice
-      )
-    );
-  };
-
-  const handleReject = (id) => {
-    setInvoices(
-      invoices.map((invoice) =>
-        invoice.applicationId === id
-          ? { ...invoice, approvalStatus: "No" }
-          : invoice
-      )
-    );
-  };
+    {
+      loanId: "INV003",
+      applicationUploadDate: "2024-11-19",
+      applicationDueDate: "2024-12-21",
+      applicationStatus: "Pending",
+      loanAmount: "38000",
+      companyName: "QWERTY Ltd",
+      companyId: "C056",
+      daysLeftFromDueDate: "53",
+      approvalStatus: "No",
+      paymentStatus: "Unpaid",
+      financedAmount: "0",
+      netOutstanding: "38000",
+      interestDue: "12",
+      file: "invoice3.pdf",
+    },
+  ];
 
   const columns = [
     { label: "Company Name", field: "companyName" },
-    { label: "Application ID", field: "applicationId" },
-    { label: "Upload Date", field: "applicationUploadDate" },
-    { label: "Amount", field: "invoiceAmount" },
+    { label: "Company Id", field: "companyId" },
+    { label: "Loan Id", field: "loanId" },
+    { label: "Date", field: "applicationUploadDate" },
+    { label: "Amount", field: "loanAmount" },
     { label: "Status", field: "applicationStatus" },
   ];
 
@@ -159,24 +146,12 @@ const CashPayable = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
-      <div className="mx-auto space-y-8">
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h1 className="text-3xl font-bold mb-6 text-gray-800">
-            Cash Payable Management
-          </h1>
-
-          <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
-            <ExpandableTable
-              columns={columns}
-              data={invoices}
-              renderExpandedRow={renderExpandedRow}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <ExpandableTable
+      columns={columns}
+      data={applications}
+      renderExpandedRow={renderExpandedRow}
+    />
   );
 };
 
-export default CashPayable;
+export default ApproveLoans;
