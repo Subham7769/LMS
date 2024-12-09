@@ -134,34 +134,34 @@ const CreditBureauDetails = lazy(() =>
   import("./components/CustomerCare/CreditBureauDetails")
 );
 
-// UserProductTesting Imports
-const UserProductTestingPage = lazy(() =>
-  import("./pages/UserProductTestingPage")
-);
-const UserProductTesting = lazy(() =>
-  import("./components/UserProductTesting/UserProductTesting")
+// ProductTesting Imports
+const TermLoanPage = lazy(() => import("./pages/TermLoanPage"));
+const TermLoan = lazy(() =>
+  import("./components/ProductTesting/TermLoan/TermLoan")
 );
 const Eligibility = lazy(() =>
-  import("./components/UserProductTesting/Eligibility")
+  import("./components/ProductTesting/TermLoan/Eligibility")
 );
 const DisbursementStatus = lazy(() =>
-  import("./components/UserProductTesting/DisbursementStatus")
+  import("./components/ProductTesting/TermLoan/DisbursementStatus")
 );
-const Register = lazy(() => import("./components/UserProductTesting/Register"));
+const Register = lazy(() =>
+  import("./components/ProductTesting/TermLoan/Register")
+);
 const InstallmentSummery = lazy(() =>
-  import("./components/UserProductTesting/InstallmentSummery")
+  import("./components/ProductTesting/TermLoan/InstallmentSummery")
 );
 const LoanConfig = lazy(() =>
-  import("./components/UserProductTesting/LoanConfig")
+  import("./components/ProductTesting/TermLoan/LoanConfig")
 );
 const BackendRepayment = lazy(() =>
-  import("./components/UserProductTesting/BackendRepayment")
+  import("./components/ProductTesting/TermLoan/BackendRepayment")
 );
 const FamilyDetails = lazy(() =>
-  import("./components/UserProductTesting/FamilyDetails")
+  import("./components/ProductTesting/TermLoan/FamilyDetails")
 );
 const EmploymentDetails = lazy(() =>
-  import("./components/UserProductTesting/EmploymentDetails")
+  import("./components/ProductTesting/TermLoan/EmploymentDetails")
 );
 
 // GlobalConfig Imports
@@ -184,27 +184,25 @@ const LedgerPage = lazy(() => import("./pages/LedgerPage"));
 // User Management Imports
 const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
 
-// OverdraftLoanOffers Imports
-const OverdraftLoanOffersPage = lazy(() =>
-  import("./pages/OverdraftLoanOffersPage")
-);
-const OverdraftLoanOffers = lazy(() =>
-  import("./components/OverdraftLoanOffers/OverdraftLoanOffers")
+// OverdraftLoan Imports
+const OverdraftLoanPage = lazy(() => import("./pages/OverdraftLoanPage"));
+const OverdraftLoan = lazy(() =>
+  import("./components/ProductTesting/OverdraftLoan/OverdraftLoan")
 );
 const OverdraftOffer = lazy(() =>
-  import("./components/OverdraftLoanOffers/OverdraftOffer")
+  import("./components/ProductTesting/OverdraftLoan/OverdraftOffer")
 );
 const AccountDetails = lazy(() =>
-  import("./components/OverdraftLoanOffers/AccountDetails")
+  import("./components/ProductTesting/OverdraftLoan/AccountDetails")
 );
 const DebitAmount = lazy(() =>
-  import("./components/OverdraftLoanOffers/DebitAmount")
+  import("./components/ProductTesting/OverdraftLoan/DebitAmount")
 );
 const PayAmount = lazy(() =>
-  import("./components/OverdraftLoanOffers/PayAmount")
+  import("./components/ProductTesting/OverdraftLoan/PayAmount")
 );
 const OverdraftDetailsTab = lazy(() =>
-  import("./components/OverdraftLoanOffers/OverdraftDetailsTab")
+  import("./components/ProductTesting/OverdraftLoan/OverdraftDetailsTab")
 );
 
 // BusinessRule Imports
@@ -261,8 +259,8 @@ const ProjectFinance = lazy(() =>
 
 // LOS Imports
 const Los = lazy(() => import("./components/Los/Los"));
-const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers")); 
-const Loans = lazy(() => import("./components/Los/Loans/Loans")); 
+const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
+const Loans = lazy(() => import("./components/Los/Loans/Loans"));
 const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
 
 
@@ -352,11 +350,6 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/user-product-testing",
-        element: <UserProductTestingPage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
         path: "/general-ledger",
         element: <LedgerPage />,
         errorElement: <RouteErrorBoundary />,
@@ -364,11 +357,6 @@ const routes = [
       {
         path: "/user-management",
         element: <UserManagementPage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "/overdraft-loan-offers",
-        element: <OverdraftLoanOffersPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -488,6 +476,16 @@ const routes = [
       {
         path: "/global-config/notification-text",
         element: <NotificationText />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/product-testing/term-loan",
+        element: <TermLoanPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "/product-testing/overdraft-loan",
+        element: <OverdraftLoanPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -626,8 +624,8 @@ const routes = [
         ],
       },
       {
-        path: "/user-product-testing/:userID",
-        element: <UserProductTesting />,
+        path: "/product-testing/term-loan/:userID",
+        element: <TermLoan />,
         children: [
           {
             path: "eligibilty",
@@ -672,8 +670,8 @@ const routes = [
         ],
       },
       {
-        path: "/overdraft-loan-offers/:userID",
-        element: <OverdraftLoanOffers />,
+        path: "/product-testing/overdraft-loan/:userID",
+        element: <OverdraftLoan />,
         children: [
           {
             path: "overdraft-offer",

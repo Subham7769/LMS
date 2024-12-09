@@ -2,10 +2,10 @@ import { useParams } from "react-router-dom";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserEligibility } from "../../redux/Slices/userProductTestingSlice";
-import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
+import { getUserEligibility } from "../../../redux/Slices/productTestingSlice";
+import SectionErrorBoundary from "../../ErrorBoundary/SectionErrorBoundary";
 
 const CommentsModal = ({ closeModal, message }) => {
   return (
@@ -127,7 +127,7 @@ const UserInfo = () => {
   }, [dispatch, userID]);
 
   const { eligibility, loading, error } = useSelector(
-    (state) => state.userProductTesting
+    (state) => state.productTesting
   );
   console.log(eligibility);
 

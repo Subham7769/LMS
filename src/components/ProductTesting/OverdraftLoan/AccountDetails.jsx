@@ -1,26 +1,34 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import { activateOverdraftLoanAccount,getOverdraftAccountNumberList, cancelOverdraftLoanAccount, closeOverdraftLoanAccount, getAccountDetails,updateAccountNumber } from "../../redux/Slices/overdraftLoanOffersSlice";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import {
+  activateOverdraftLoanAccount,
+  getOverdraftAccountNumberList,
+  cancelOverdraftLoanAccount,
+  closeOverdraftLoanAccount,
+  getAccountDetails,
+  updateAccountNumber,
+} from "../../../redux/Slices/overdraftLoanSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../Common/Button/Button";
-import ListTable from "../Common/ListTable/ListTable";
-import convertToReadableString from '../../utils/convertToReadableString'
-import InputSelect from "../Common/InputSelect/InputSelect";
+import Button from "../../Common/Button/Button";
+import ListTable from "../../Common/ListTable/ListTable";
+import convertToReadableString from "../../../utils/convertToReadableString";
+import InputSelect from "../../Common/InputSelect/InputSelect";
 
 function AccountDetails() {
-  const { accountDetails, accountNumberList,accountNumber, loading, error } = useSelector(state => state.overdraftLoanOffers)
+  const { accountDetails, accountNumberList, accountNumber, loading, error } =
+    useSelector((state) => state.overdraftLoan);
   const { userID } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // console.log(accountDetails)
 
   useEffect(() => {
-    if(!accountNumberList){
-      dispatch(getOverdraftAccountNumberList(userID))
+    if (!accountNumberList) {
+      dispatch(getOverdraftAccountNumberList(userID));
     }
-  }, [accountNumberList,userID, dispatch]);
+  }, [accountNumberList, userID, dispatch]);
 
   useEffect(() => {
     if (accountNumber) {
@@ -28,34 +36,48 @@ function AccountDetails() {
     }
   }, [accountNumber, dispatch]);
 
-
-  const handleActivateOverdraftLoanAccount = (accountNumber, supplementaryAccountsList) => {
-    dispatch(activateOverdraftLoanAccount({ accountNumber, supplementaryAccountsList }))
+  const handleActivateOverdraftLoanAccount = (
+    accountNumber,
+    supplementaryAccountsList
+  ) => {
+    dispatch(
+      activateOverdraftLoanAccount({ accountNumber, supplementaryAccountsList })
+    )
       .unwrap()
       .then(() => {
-        navigate(`/overdraft-loan-offers/${userID}/overdraft-details`);
+        navigate(`/overdraft-loan/${userID}/overdraft-details`);
       })
       .catch((error) => {
         console.error("Failed to create overdraft:", error);
       });
   };
 
-  const handleCancelOverdraftLoanAccount = (accountNumber, supplementaryAccountsList) => {
-    dispatch(cancelOverdraftLoanAccount({ accountNumber, supplementaryAccountsList }))
+  const handleCancelOverdraftLoanAccount = (
+    accountNumber,
+    supplementaryAccountsList
+  ) => {
+    dispatch(
+      cancelOverdraftLoanAccount({ accountNumber, supplementaryAccountsList })
+    )
       .unwrap()
       .then(() => {
-        navigate(`/overdraft-loan-offers/${userID}/overdraft-details`);
+        navigate(`/overdraft-loan/${userID}/overdraft-details`);
       })
       .catch((error) => {
         console.error("Failed to create overdraft:", error);
       });
   };
 
-  const handleCloseOverdraftLoanAccount = (accountNumber, supplementaryAccountsList) => {
-    dispatch(closeOverdraftLoanAccount({ accountNumber, supplementaryAccountsList }))
+  const handleCloseOverdraftLoanAccount = (
+    accountNumber,
+    supplementaryAccountsList
+  ) => {
+    dispatch(
+      closeOverdraftLoanAccount({ accountNumber, supplementaryAccountsList })
+    )
       .unwrap()
       .then(() => {
-        navigate(`/overdraft-loan-offers/${userID}/overdraft-details`);
+        navigate(`/overdraft-loan/${userID}/overdraft-details`);
       })
       .catch((error) => {
         console.error("Failed to create overdraft:", error);
@@ -71,10 +93,9 @@ function AccountDetails() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(updateAccountNumber(value))
-    dispatch(getAccountDetails(value))
+    dispatch(updateAccountNumber(value));
+    dispatch(getAccountDetails(value));
   };
-
 
   const {
     accountType,
@@ -85,8 +106,6 @@ function AccountDetails() {
     supplementaryAccountsList,
     userId,
   } = accountDetails;
-
-
 
   return (
     <>
@@ -101,7 +120,6 @@ function AccountDetails() {
             onChange={handleChange}
           />
         </div>
-
       </div>
       <ContainerTile loading={loading} error={error}>
         <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
@@ -109,43 +127,67 @@ function AccountDetails() {
           <InfoRow label="Account Type" value={accountType} />
           <InfoRow label="Balance Amount" value={balanceAmount} />
           <InfoRow label="Currency" value={currency?.name} />
-          <InfoRow label="Correction Factor" value={currency?.correctionFactor} />
+          <InfoRow
+            label="Correction Factor"
+            value={currency?.correctionFactor}
+          />
           <InfoRow label="Maximum Limit" value={maximumLimit} />
           <InfoRow label="Status" value={status} />
           <InfoRow label="User ID" value={userId} />
           <div className={supplementaryAccountsList ? "col-span-2" : ""}>
-            {supplementaryAccountsList ?
-              (<ListTable
+            {supplementaryAccountsList ? (
+              <ListTable
                 ListName={"Supplementary Accounts List"}
-                ListHeader={Object.keys(supplementaryAccountsList[0]).map(item => convertToReadableString(item))}
-                ListItem={Object.values(supplementaryAccountsList).map(value => value)}
+                ListHeader={Object.keys(supplementaryAccountsList[0]).map(
+                  (item) => convertToReadableString(item)
+                )}
+                ListItem={Object.values(supplementaryAccountsList).map(
+                  (value) => value
+                )}
                 Divider={true}
-              />) :
-              <InfoRow label="Supplementary Accounts List" value={supplementaryAccountsList} />}
+              />
+            ) : (
+              <InfoRow
+                label="Supplementary Accounts List"
+                value={supplementaryAccountsList}
+              />
+            )}
           </div>
         </div>
         <div className="mt-5 flex justify-evenly align-middle">
           <Button
             buttonName={"Activate"}
-            onClick={() => handleActivateOverdraftLoanAccount(accountNumber, supplementaryAccountsList)}
+            onClick={() =>
+              handleActivateOverdraftLoanAccount(
+                accountNumber,
+                supplementaryAccountsList
+              )
+            }
             rectangle={true}
             className={"bg-green-600 hover:bg-green-500"}
           />
           <Button
             buttonName={"Cancel"}
-            onClick={() => handleCancelOverdraftLoanAccount(accountNumber, supplementaryAccountsList)}
+            onClick={() =>
+              handleCancelOverdraftLoanAccount(
+                accountNumber,
+                supplementaryAccountsList
+              )
+            }
             rectangle={true}
             className={"bg-red-500"}
           />
           <Button
             buttonName={"Close"}
-            onClick={() => handleCloseOverdraftLoanAccount(
-              accountNumber, supplementaryAccountsList)
+            onClick={() =>
+              handleCloseOverdraftLoanAccount(
+                accountNumber,
+                supplementaryAccountsList
+              )
             }
             rectangle={true}
             className={"bg-yellow-500 hover:bg-yellow-400"}
           />
-
         </div>
       </ContainerTile>
     </>

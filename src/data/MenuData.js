@@ -248,16 +248,24 @@ export const MenusInitial = [
     current: false,
   },
   {
-    title: "User Product Testing",
-    href: "/user-product-testing",
+    title: "Product Testing",
+    href: "/product-testing/term-loan",
     icon: "HandRaisedIcon",
     current: false,
-  },
-  {
-    title: "Overdraft Loan Offers",
-    href: "/overdraft-loan-offers",
-    icon: "MinusCircleIcon",
-    current: false,
+    submenu: true,
+    submenuItems: [
+      {
+        name: "Term Loan",
+        href: "/product-testing/term-loan",
+        current: false,
+      },
+      {
+        name: "Overdraft Loan",
+        href: "/product-testing/overdraft-loan",
+        current: false,
+      },
+    ],
+    isOpen: false,
   },
   {
     title: "General Ledger",

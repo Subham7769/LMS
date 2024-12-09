@@ -1,19 +1,19 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import Button from "../../Common/Button/Button";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getRepaymentInfo,
   submitRepayment,
-} from "../../redux/Slices/userProductTestingSlice";
+} from "../../../redux/Slices/productTestingSlice";
 import {
   clearValidationError,
   validateForm,
-} from "../../redux/Slices/validationSlice";
-import store from "../../redux/store";
+} from "../../../redux/Slices/validationSlice";
+import store from "../../../redux/store";
 
 const BackendRepayment = () => {
   const { userID } = useParams();
@@ -22,7 +22,7 @@ const BackendRepayment = () => {
   const [amount, setamount] = useState("");
   const [userloanID, setuserloanID] = useState("");
   const { loanIdOptions, repaymentData, loading, error } = useSelector(
-    (state) => state.userProductTesting
+    (state) => state.productTesting
   );
 
   useEffect(() => {

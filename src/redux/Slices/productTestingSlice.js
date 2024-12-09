@@ -59,7 +59,7 @@ const postData = {
 
 // Async thunk to fetch user product testing data
 export const getUserEligibility = createAsyncThunk(
-  "userProductTesting/getUserEligibility",
+  "productTesting/getUserEligibility",
   async ({ userID, url }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -609,8 +609,8 @@ const initialState = {
   error: null,
 };
 
-const userProductTestingSlice = createSlice({
-  name: "userProductTesting",
+const productTestingSlice = createSlice({
+  name: "productTesting",
   initialState,
   reducers: {
     updateRegistrationDetailsField: (state, action) => {
@@ -838,5 +838,5 @@ export const {
   updateDisbursementData,
   updateFamilyDetailsField,
   updateEmploymentDetailsField,
-} = userProductTestingSlice.actions;
-export default userProductTestingSlice.reducer;
+} = productTestingSlice.actions;
+export default productTestingSlice.reducer;

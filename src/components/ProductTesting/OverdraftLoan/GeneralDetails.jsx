@@ -1,14 +1,14 @@
-import ListTable from "../Common/ListTable/ListTable";
+import ListTable from "../../Common/ListTable/ListTable";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import convertToReadableString from "../../utils/convertToReadableString";
+import { getOverdraftLoanAccount } from "../../../redux/Slices/overdraftLoanSlice";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import convertToReadableString from "../../../utils/convertToReadableString";
 
 const GeneralDetails = () => {
   const dispatch = useDispatch();
   const { overdraftDetails, accountNumberList, accountNumber, loading, error } =
-    useSelector((state) => state.overdraftLoanOffers);
+    useSelector((state) => state.overdraftLoan);
   console.log(overdraftDetails);
 
   useEffect(() => {

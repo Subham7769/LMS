@@ -18,7 +18,7 @@ import ListTable from "../Common/ListTable/ListTable";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 
-const MaxFinAmtTen = ({ FAWTData,loading, error }) => {
+const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
   const { rulePolicyId } = useParams();
   const dispatch = useDispatch();
   const inputList = useSelector((state) => state.rulePolicy.inputList);
@@ -94,17 +94,17 @@ const MaxFinAmtTen = ({ FAWTData,loading, error }) => {
   const ActionList =
     roleName !== "ROLE_VIEWER"
       ? [
-        {
-          icon: PencilIcon,
-          circle: true,
-          action: handleUpdate,
-        },
-        {
-          icon: TrashIcon,
-          circle: true,
-          action: handleDelete,
-        },
-      ]
+          {
+            icon: PencilIcon,
+            circle: true,
+            action: handleUpdate,
+          },
+          {
+            icon: TrashIcon,
+            circle: true,
+            action: handleDelete,
+          },
+        ]
       : [];
 
   const tableDataWithoutId = inputList.map(
@@ -118,10 +118,7 @@ const MaxFinAmtTen = ({ FAWTData,loading, error }) => {
 
   return (
     <>
-      <ContainerTile
-        loading={loading}
-        error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <div className="text-lg mb-5">Max Finance Amount With Tenure</div>
         {roleName !== "ROLE_VIEWER" ? (
           <div className="grid grid-cols-3 gap-5 items-end">
@@ -135,7 +132,7 @@ const MaxFinAmtTen = ({ FAWTData,loading, error }) => {
               isIndex={maxFinAmtRules.dataIndex}
             />
             <InputNumber
-              labelName={"Tenure"}
+              labelName={"Tenure as per Product"}
               inputName={"tenure"}
               inputValue={maxFinAmtRules.tenure}
               onChange={handleRuleChange}

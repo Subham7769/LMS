@@ -1,22 +1,20 @@
 import React from "react";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import InputText from "../Common/InputText/InputText";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputDate from "../Common/InputDate/InputDate";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import InputText from "../../Common/InputText/InputText";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputDate from "../../Common/InputDate/InputDate";
 import { useDispatch, useSelector } from "react-redux";
-import { updateRegistrationDetailsField } from "../../redux/Slices/userProductTestingSlice";
+import { updateRegistrationDetailsField } from "../../../redux/Slices/productTestingSlice";
 import {
   booleanOptions,
   genderOptions,
   maritalOptions,
-} from "../../data/OptionsData";
+} from "../../../data/OptionsData";
 
 const RegistrationForm = () => {
   const dispatch = useDispatch();
-  const { registrationDetails } = useSelector(
-    (state) => state.userProductTesting
-  );
+  const { registrationDetails } = useSelector((state) => state.productTesting);
   const handleChange = (e) => {
     const { name, value } = e.target;
 

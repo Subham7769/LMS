@@ -13,9 +13,9 @@ import productGroupSlice from "./Slices/productGroupSlice";
 import generalLedgerSlice from "./Slices/generalLedgerSlice";
 import userManagementSlice from "./Slices/userManagementSlice";
 import eligiblityTenureSlice from "./Slices/eligiblityTenureSlice";
-import userProductTestingSlice from "./Slices/userProductTestingSlice";
+import productTestingSlice from "./Slices/productTestingSlice";
 import rulePolicySlice from "./Slices/rulePolicySlice";
-import overdraftLoanOffersSlice from "./Slices/overdraftLoanOffersSlice";
+import overdraftLoanSlice from "./Slices/overdraftLoanSlice";
 import globalConfigSlice from "./Slices/globalConfigSlice";
 import dynamicRacSlice from "./Slices/dynamicRacSlice";
 import validationSlice from "./Slices/validationSlice";
@@ -42,9 +42,9 @@ const store = configureStore({
     creditScoreET: eligiblityTenureSlice,
     rulePolicy: rulePolicySlice,
     ledger: generalLedgerSlice,
-    userProductTesting: userProductTestingSlice,
+    productTesting: productTestingSlice,
     globalConfig: globalConfigSlice,
-    overdraftLoanOffers: overdraftLoanOffersSlice,
+    overdraftLoan: overdraftLoanSlice,
     validation: validationSlice,
     reportingConfig: reportingConfigSlice,
     reports: reportsSlice,

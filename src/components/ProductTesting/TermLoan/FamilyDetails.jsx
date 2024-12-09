@@ -1,26 +1,26 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import { maritalOptions, booleanOptions } from "../../data/OptionsData";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import { maritalOptions, booleanOptions } from "../../../data/OptionsData";
+import Button from "../../Common/Button/Button";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import {
   updateFamilyDetailsField,
   getBorrowerDetails,
   updateFamilyDetails,
-} from "../../redux/Slices/userProductTestingSlice";
+} from "../../../redux/Slices/productTestingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearValidationError,
   validateForm,
-} from "../../redux/Slices/validationSlice";
-import store from "../../redux/store";
+} from "../../../redux/Slices/validationSlice";
+import store from "../../../redux/store";
 
 function FamilyDetails() {
   const { familyDetails, loading, error } = useSelector(
-    (state) => state.userProductTesting
+    (state) => state.productTesting
   );
   const { userID } = useParams();
   const dispatch = useDispatch();

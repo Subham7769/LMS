@@ -56,7 +56,7 @@ const SearchBox = () => {
     }
   }
 
-  async function checkBorrowerInfoUserProductTesting(borrowerID) {
+  async function checkBorrowerInfoProductTesting(borrowerID) {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
@@ -74,7 +74,7 @@ const SearchBox = () => {
       if (data.status === 404) {
         console.log("User Not Found"); // Clear the token
         setBorrowerNotFound(true);
-        navigate("/user-product-testing"); // Redirect to login page
+        navigate("/product-testing/term-loan"); // Redirect to login page
         return; // Stop further execution
       }
       // Check for token expiration or invalid token
@@ -83,7 +83,7 @@ const SearchBox = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      navigate("/user-product-testing/" + borrowerID + "/eligibilty");
+      navigate("/product-testing/term-loan/" + borrowerID + "/eligibilty");
       setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);
@@ -91,7 +91,7 @@ const SearchBox = () => {
   }
 
   function checkBorrowerInfoOverdraftLoanOffer(borrowerID) {
-    navigate(`/overdraft-loan-offers/${borrowerID}/overdraft-offer`);
+    navigate(`/product-testing/overdraft-loan/${borrowerID}/overdraft-offer`);
   }
 
   const handleClick = async () => {
@@ -101,8 +101,8 @@ const SearchBox = () => {
     if (isValid) {
       if (location.pathname === "/customer-care") {
         checkBorrowerInfoCustomerCare(borrowerID);
-      } else if (location.pathname === "/user-product-testing") {
-        checkBorrowerInfoUserProductTesting(borrowerID);
+      } else if (location.pathname === "/product-testing/term-loan") {
+        checkBorrowerInfoProductTesting(borrowerID);
       } else {
         checkBorrowerInfoOverdraftLoanOffer(borrowerID);
       }

@@ -7,7 +7,7 @@ export const submitOverdraftOffer = createAsyncThunk(
   "loanConfig/submitOverdraftOffer",
   async (userID, { getState, rejectWithValue }) => {
     // Access overdraftOffer from the current state
-    const { overdraftOffer } = getState().overdraftLoanOffers;
+    const { overdraftOffer } = getState().overdraftLoan;
 
     // Ensure refinanceLoan is updated properly with uid
     const postData = {
@@ -211,7 +211,7 @@ export const getOverdraftLoanAccount = createAsyncThunk(
 );
 
 export const getOverdraftLoanAccountOutstanding = createAsyncThunk(
-  "overdraftLoanOffers/getOverdraftLoanAccountOutstanding",
+  "overdraftLoan/getOverdraftLoanAccountOutstanding",
   async (accountNumber, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -240,7 +240,7 @@ export const getOverdraftLoanAccountOutstanding = createAsyncThunk(
 );
 
 export const getOverdraftLoanAccountPIF = createAsyncThunk(
-  "overdraftLoanOffers/getOverdraftLoanAccountPIF",
+  "overdraftLoan/getOverdraftLoanAccountPIF",
   async (accountNumber, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -432,8 +432,8 @@ const initialState = {
   error: null,
 };
 
-const overdraftLoanOffersSlice = createSlice({
-  name: "overdraftLoanOffers",
+const overdraftLoanSlice = createSlice({
+  name: "overdraftLoan",
   initialState,
   reducers: {
     updateAccountNumber(state, action) {
@@ -690,5 +690,5 @@ const overdraftLoanOffersSlice = createSlice({
 });
 
 export const { updateAccountNumber, updateOverdraftOfferField } =
-  overdraftLoanOffersSlice.actions;
-export default overdraftLoanOffersSlice.reducer;
+  overdraftLoanSlice.actions;
+export default overdraftLoanSlice.reducer;

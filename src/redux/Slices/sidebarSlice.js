@@ -349,11 +349,7 @@ const ROLE_CHECKER_ADMIN = [
   "Global Config",
   "Dynamic RAC",
 ];
-const ROLE_TECHNICAL = [
-  "Customer Care",
-  "User Product Testing",
-  "General Ledger",
-];
+const ROLE_TECHNICAL = ["Customer Care", "Product Testing", "General Ledger"];
 const ROLE_VIEWER = [
   "Home",
   "RAC",

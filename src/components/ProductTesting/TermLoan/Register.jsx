@@ -2,11 +2,11 @@ import { useParams } from "react-router-dom";
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import Sorry from "../../assets/image/sorry.png";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import Sorry from "../../../assets/image/sorry.png";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getBorrowerInfo } from "../../redux/Slices/userProductTestingSlice";
-import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
+import { getBorrowerInfo } from "../../../redux/Slices/productTestingSlice";
+import SectionErrorBoundary from "../../ErrorBoundary/SectionErrorBoundary";
 import RegistrationForm from "./RegistrationForm";
 
 const CommentsModal = ({ closeModal, message }) => {
@@ -144,7 +144,7 @@ const Register = () => {
   }, [dispatch, userID]);
 
   const { register, loading, error } = useSelector(
-    (state) => state.userProductTesting
+    (state) => state.productTesting
   );
   // console.log(register);
 

@@ -6,23 +6,23 @@ import InstallmentSummery from "./InstallmentSummery";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import Button from "../../Common/Button/Button";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserLoanOptions,
   submitLoanConfiguration,
   updateLoanConfigFieldsField,
   handleProceed,
-} from "../../redux/Slices/userProductTestingSlice";
+} from "../../../redux/Slices/productTestingSlice";
 import { useNavigate } from "react-router-dom";
 import {
   clearValidationError,
   validateForm,
-} from "../../redux/Slices/validationSlice";
-import store from "../../redux/store";
+} from "../../../redux/Slices/validationSlice";
+import store from "../../../redux/store";
 
 const LoanConfig = () => {
   const [settings, setSettings] = useState({});
@@ -36,7 +36,7 @@ const LoanConfig = () => {
     showModal,
     loading,
     error,
-  } = useSelector((state) => state.userProductTesting);
+  } = useSelector((state) => state.productTesting);
   const { validationError } = useSelector((state) => state.validation);
   const { userID } = useParams();
   const dispatch = useDispatch();

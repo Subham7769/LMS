@@ -5,18 +5,18 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import Button from "../../Common/Button/Button";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   updateOverdraftOfferField,
   submitOverdraftOffer,
   createOverdraft,
-} from "../../redux/Slices/overdraftLoanOffersSlice";
+} from "../../../redux/Slices/overdraftLoanSlice";
 import React from "react";
-import convertToReadableString from "../../utils/convertToReadableString";
+import convertToReadableString from "../../../utils/convertToReadableString";
 
 const OverdraftOffer = () => {
   const [settings, setSettings] = useState({});
@@ -28,7 +28,7 @@ const OverdraftOffer = () => {
     showModal,
     loading,
     error,
-  } = useSelector((state) => state.overdraftLoanOffers);
+  } = useSelector((state) => state.overdraftLoan);
   const { userID } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
@@ -119,7 +119,7 @@ const OverdraftOffer = () => {
     dispatch(createOverdraft({ transactionId, userID }))
       .unwrap()
       .then(() => {
-        navigate(`/overdraft-loan-offers/${userID}/account-details`);
+        navigate(`/overdraft-loan/${userID}/account-details`);
       })
       .catch((error) => {
         console.error("Failed to create overdraft:", error);
@@ -159,7 +159,6 @@ const OverdraftOffer = () => {
     "divide-x divide-gray-200 text-center w-full h-[58px]";
   const tableSliderStyle =
     "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500 flex justify-center items-center";
-
 
   return (
     <div className="flex flex-col gap-5">

@@ -1,19 +1,23 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import Button from "../../Common/Button/Button";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
-import { getOverdraftAccountNumberList, debitOverdraftLoanAccount } from "../../redux/Slices/overdraftLoanOffersSlice";
-import convertToReadableString from '../../utils/convertToReadableString'
-
+import {
+  getOverdraftAccountNumberList,
+  debitOverdraftLoanAccount,
+} from "../../../redux/Slices/overdraftLoanSlice";
+import convertToReadableString from "../../../utils/convertToReadableString";
 
 const DebitAmount = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userID } = useParams();
-  const { debitAmount, accountNumberList, loading, error } = useSelector(state => state.overdraftLoanOffers)
+  const { debitAmount, accountNumberList, loading, error } = useSelector(
+    (state) => state.overdraftLoan
+  );
 
   const [formData, setFormData] = useState({
     accountNumber: "",
@@ -23,7 +27,7 @@ const DebitAmount = () => {
 
   useEffect(() => {
     if (!accountNumberList) {
-      dispatch(getOverdraftAccountNumberList(userID))
+      dispatch(getOverdraftAccountNumberList(userID));
     }
   }, [dispatch, userID, accountNumberList]);
 
@@ -43,7 +47,11 @@ const DebitAmount = () => {
   );
 
   if (accountNumberList?.length < 1) {
-    return <ContainerTile className="text-center" loading={loading} error={error}>No Debit Amount Account</ContainerTile>;
+    return (
+      <ContainerTile className="text-center" loading={loading} error={error}>
+        No Debit Amount Account
+      </ContainerTile>
+    );
   }
 
   return (
@@ -72,13 +80,19 @@ const DebitAmount = () => {
           onClick={() => dispatch(debitOverdraftLoanAccount(formData))}
         />
       </ContainerTile>
-      {debitAmount?.accountStatus && <ContainerTile className={"mt-5"} loading={loading} error={error}>
-        <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
-          {
-            Object.entries(debitAmount?.accountStatus).map(([key, value]) => <InfoRow key={key} label={convertToReadableString(key)} value={value} />)
-          }
-        </div>
-      </ContainerTile >}
+      {debitAmount?.accountStatus && (
+        <ContainerTile className={"mt-5"} loading={loading} error={error}>
+          <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
+            {Object.entries(debitAmount?.accountStatus).map(([key, value]) => (
+              <InfoRow
+                key={key}
+                label={convertToReadableString(key)}
+                value={value}
+              />
+            ))}
+          </div>
+        </ContainerTile>
+      )}
     </>
   );
 };

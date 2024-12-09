@@ -1,27 +1,27 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import InputNumber from "../Common/InputNumber/InputNumber";
-import InputText from "../Common/InputText/InputText";
-import Button from "../Common/Button/Button";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputText from "../../Common/InputText/InputText";
+import Button from "../../Common/Button/Button";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBorrowerDetails,
   updateEmploymentDetailsField,
   updateEmploymentDetails,
-} from "../../redux/Slices/userProductTestingSlice";
+} from "../../../redux/Slices/productTestingSlice";
 import {
   clearValidationError,
   validateForm,
-} from "../../redux/Slices/validationSlice";
-import store from "../../redux/store";
+} from "../../../redux/Slices/validationSlice";
+import store from "../../../redux/store";
 
 function EmploymentDetails() {
   const { userID } = useParams();
   const dispatch = useDispatch();
   const { EmploymentDetails, loading, error } = useSelector(
-    (state) => state.userProductTesting
+    (state) => state.productTesting
   );
 
   useEffect(() => {
