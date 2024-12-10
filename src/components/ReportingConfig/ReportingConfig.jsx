@@ -15,6 +15,7 @@ import {
 } from "../../redux/Slices/reportingConfigSlice";
 import { fetchReportingConfigData } from "../../redux/Slices/sidebarSlice";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import store from "../../redux/store";
 
 const CreateNewReportingConfig = () => {
   const { RCName } = useParams();
@@ -48,17 +49,21 @@ const CreateNewReportingConfig = () => {
     }
   };
 
-  const handleUpdateReportingConfig = () => {
-    dispatch(
+  const handleUpdateReportingConfig = async () => {
+    await dispatch(
       updateReportingConfig({
-        RCName,
         reportingConfigData,
       })
-    );
+    ).unwrap();
   };
 
-  const handleUpdateName = (newName) => {
+  const handleUpdateName = async (newName) => {
     dispatch(updateNewConfigName(newName));
+    const state = store.getState();
+    const reportingConfigData = state.reportingConfig.reportingConfigData;
+    dispatch(updateReportingConfig({ reportingConfigData }));
+    await dispatch(fetchReportingConfigData()).unwrap();
+    navigate("/reporting-config/" + reportingConfigData.name);
   };
 
   return (

@@ -88,15 +88,18 @@ export const fetchReportingConfig = createAsyncThunk(
 );
 
 // Define the asyncThunk for updating reporting configuration
+
 export const updateReportingConfig = createAsyncThunk(
-  "reportingConfig/update",
-  async ({ RCName, reportingConfigData }, { rejectWithValue }) => {
+  "reportingConfig/updateReportingConfig",
+  async ({ reportingConfigData }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken"); // Retrieve token from localStorage
 
     try {
       // Make a PUT request to update the configuration
       const response = await axios.put(
-        `${import.meta.env.VITE_REPORTING_CONFIG_UPDATE}${RCName}`,
+        `${import.meta.env.VITE_REPORTING_CONFIG_UPDATE}${
+          reportingConfigData.id
+        }`,
         reportingConfigData, // Payload with the updated config data
         {
           headers: {
@@ -209,7 +212,7 @@ const reportingConfigSlice = createSlice({
       })
       .addCase(fetchReportingConfig.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+        // console.log(action.payload);
         state.reportingConfigData = action.payload;
       })
       .addCase(fetchReportingConfig.rejected, (state, action) => {

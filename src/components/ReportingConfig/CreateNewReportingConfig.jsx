@@ -48,18 +48,8 @@ const CreateNewReportingConfig = () => {
   };
 
   const handleCreateReportingConfig = () => {
-    const transformedConfigData = {
-      ...newReportingConfigData,
-      transformationCode: newReportingConfigData.transformationCode
-        ? newReportingConfigData.transformationCode
-            .replace(/\s+/g, "") // Remove whitespace
-            .replace(/"/g, '\\"') // Escape double quotes
-        : "",
-    };
-
-    dispatch(
-      createReportConfig({ newReportingConfigData: transformedConfigData })
-    ).then((action) => {
+    console.log(newReportingConfigData);
+    dispatch(createReportConfig({ newReportingConfigData })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         // Extract the 'name' from the action.payload
         const configName = action.payload?.name;

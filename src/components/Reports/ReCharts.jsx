@@ -17,6 +17,13 @@ import {
 import InputSelect from "../Common/InputSelect/InputSelect";
 import { useSelector } from "react-redux";
 import { flatten } from "flat";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import Button from "../Common/Button/Button";
+import { TrashIcon } from "@heroicons/react/20/solid";
+import { deleteReportingConfig } from "../../redux/Slices/reportingConfigSlice";
+import { fetchReportsConfigData } from "../../redux/Slices/reportsSlice";
+import { useDispatch } from "react-redux";
+import { fetchReportingConfigData } from "../../redux/Slices/sidebarSlice";
 
 const chartOptions = [
   {
@@ -42,6 +49,8 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 const ReCharts = ({ response, index }) => {
   const [chartType, setChartType] = useState("Bar");
   const { configData } = useSelector((state) => state.reports);
+  const { loading } = useSelector((state) => state.reportingConfig);
+  const dispatch = useDispatch();
 
   const transformationCode = new Function(
     "response",
@@ -78,7 +87,18 @@ const ReCharts = ({ response, index }) => {
   }
   const transformedPieChartData = transformDataForPieChart(data);
 
-  console.log(data);
+  const onDeleteReportingConfig = async (RCName) => {
+    try {
+      // Step 1: Delete the Reporting Config by its name
+      await dispatch(deleteReportingConfig(RCName)).unwrap();
+      await dispatch(fetchReportsConfigData());
+      await dispatch(fetchReportingConfigData());
+    } catch (error) {
+      console.error("Error while deleting Reporting Config: ", error);
+    }
+  };
+
+  // console.log(data);
 
   const renderChart = () => {
     switch (chartType) {
@@ -163,21 +183,32 @@ const ReCharts = ({ response, index }) => {
   }
   return (
     <>
-      <div className="flex justify-between items-center my-3">
-        <div>Report: {configData[index].name}</div>
-        <div className="w-1/6">
-          <InputSelect
-            labelName="Chart Type"
-            inputOptions={chartOptions}
-            inputName="chartType"
-            inputValue={chartType}
-            onChange={(e) => setChartType(e.target.value)}
-          />
+      <ContainerTile className={"my-5"} loading={loading}>
+        <div className="grid grid-cols-4 items-center">
+          <div className="col-span-3">Report: {configData[index].name}</div>
+          <div className="grid grid-cols-4 items-end">
+            <div className="col-span-3">
+              <InputSelect
+                labelName="Chart Type"
+                inputOptions={chartOptions}
+                inputName="chartType"
+                inputValue={chartType}
+                onChange={(e) => setChartType(e.target.value)}
+              />
+            </div>
+            <div className="text-right">
+              <Button
+                buttonIcon={TrashIcon}
+                onClick={() => onDeleteReportingConfig(configData[index].name)}
+                circle={true}
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <ResponsiveContainer width="100%" height={400}>
-        {renderChart()}
-      </ResponsiveContainer>
+        <ResponsiveContainer width="100%" height={400}>
+          {renderChart()}
+        </ResponsiveContainer>
+      </ContainerTile>
     </>
   );
 };
