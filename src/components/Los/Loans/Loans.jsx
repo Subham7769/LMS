@@ -23,13 +23,13 @@ const loanComponents = {
 
 
 const Loans = () => {
-  const [activeTab, setActiveTab] = useState("approve-loans");
+  const [activeTab, setActiveTab] = useState("add-loan");
   const ActiveComponent = loanComponents[activeTab];
 
   return (
     <div className="mt-4">
       {/* Tab Navigation */}
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-5">
         <ul className="flex flex-wrap -mb-px">
           {tabs.map((tab) => (
             <Tab

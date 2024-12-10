@@ -36,7 +36,7 @@ const ViewBorrowers = () => {
   };
 
   return (
-    <div className={`flex flex-col gap-5`}>
+    <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`grid grid-cols-[42%_42%_16%] gap-5`}>
         <InputText
           labelName="Borrower Name"
@@ -55,7 +55,7 @@ const ViewBorrowers = () => {
           onChange={handleChange}
           isValidation={true}
         />
-        <div className="flex  gap-5">
+        <div className="flex gap-5">
           <Button
             buttonName={"Search"}
             onClick={() => {}}
@@ -77,7 +77,7 @@ const ViewBorrowers = () => {
         ListItem={BorrowersList}
         ListAction={ActionList}
         Searchable={true}
-        SearchBy={"borrowerName"}
+        SearchBy={"fullName"}
         Sortable={true} // New prop to enable/disable sorting
       />
     </div>

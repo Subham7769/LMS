@@ -283,9 +283,7 @@ const LiabilitiesMatrix = () => {
               </div>
             </ContainerTile>
           ))
-        ) : (
-          <p className="text-center">No data available</p>
-        )}
+        ) : ""}
         <div className="absolute bottom-1 left-2 text-xs  text-gray-500">
           *CB - Credit Bureau
         </div>

@@ -122,12 +122,12 @@ export const cloneDynamicRac = createAsyncThunk(
 // Define the asyncThunk for fetching option list
 export const fetchOptionList = createAsyncThunk(
   "rac/fetchOptionList",
-  async (_, { rejectWithValue }) => {
+  async (racId, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
 
     try {
       const response = await axios.get(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/3669df8e-db60-4a93-beb4-88daede5b34f/available-names",
+        `${import.meta.env.VITE_DYNAMIC_RAC_ALL_NAME_READ}${racId}/available-names`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Correct placement of headers

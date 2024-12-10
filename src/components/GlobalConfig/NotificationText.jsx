@@ -44,7 +44,7 @@ const NotificationText = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="mb-6">
+      <h2>
         <b
           title="Notification Text"
           className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"

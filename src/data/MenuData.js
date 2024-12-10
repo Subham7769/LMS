@@ -6,22 +6,38 @@ export const MenusInitial = [
     count: "5",
     current: true,
   },
+  // {
+  //   title: "RAC",
+  //   href: "/rac",
+  //   icon: "ClipboardDocumentCheckIcon",
+  //   current: false,
+  //   submenu: true,
+  //   createButton: true, //if create RAC from Side bar Using input box
+  //   editable: true, //if Button takes input string
+  //   createFunction: "createNewRac",
+  //   buttonName: "Create RAC", //Create button text
+  //   placeholder: "Enter Name", //required placeholder for input box
+  //   navigateSuccess: "/rac/", // navigation
+  //   navigateFail: "/login", // navigation
+  //   submenuItems: [],
+  //   isOpen: false,
+  //   uniqueKey: "racId",
+  // },
   {
-    title: "RAC",
-    href: "/rac",
+    title: "Dynamic RAC",
+    href: "/dynamic-rac",
     icon: "ClipboardDocumentCheckIcon",
-    current: false,
     submenu: true,
-    createButton: true, //if create RAC from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewRac",
-    buttonName: "Create RAC", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/rac/", // navigation
-    navigateFail: "/login", // navigation
+    createButton: true,
+    editable: true,
+    createFunction: "createNewDynamicRac",
+    buttonName: "Create RAC",
+    placeholder: "Enter Name",
+    navigateSuccess: "/dynamic-rac/",
+    navigateFail: "/login",
     submenuItems: [],
     isOpen: false,
-    uniqueKey: "racId",
+    current: false,
   },
   {
     title: "Recovery",
@@ -279,22 +295,7 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
-  {
-    title: "Dynamic RAC",
-    href: "/dynamic-rac",
-    icon: "ClipboardDocumentCheckIcon",
-    submenu: true,
-    createButton: true,
-    editable: true,
-    createFunction: "createNewDynamicRac",
-    buttonName: "Create RAC",
-    placeholder: "Enter Name",
-    navigateSuccess: "/dynamic-rac/",
-    navigateFail: "/login",
-    submenuItems: [],
-    isOpen: false,
-    current: false,
-  },
+  
   {
     title: "Server Config",
     href: "/server-config",

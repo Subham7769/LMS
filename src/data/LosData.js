@@ -42,7 +42,7 @@ export const BorrowerHeaderList = [
   "Open Loans",
   "Status",
   "Actions",
-]
+];
 
 export const BorrowerGroupHeaderList = [
   "Group Name",
@@ -50,6 +50,27 @@ export const BorrowerGroupHeaderList = [
   "Group Leader",
   "Collector",
   "Meeting",
+  "Actions",
+];
+
+export const CollateralRegisterHeaderList = [
+  "Borrower",
+  "Name",
+  "Model",
+  "Serial Number",
+  "Status",
+  "Condition",
+];
+
+export const AddBulkRepaymentHeaderList = [
+  "Row",
+  "Loan",
+  "Amount",
+  "Method",
+  "Collection Date",
+  "Collection By",
+  "Description",
+  "Accounting",
   "Actions",
 ];
 
@@ -89,7 +110,6 @@ export const BorrowersList = [
   },
 ];
 
-
 export const BorrowersGroupList = [
   {
     groupName: "Cash Loan Group",
@@ -106,7 +126,6 @@ export const BorrowersGroupList = [
     collector: "B",
     Meeting: "3",
     href: "/product/cash-loan/loan-product-config",
-
   },
   {
     groupName: "Overdraft Group",
@@ -115,6 +134,49 @@ export const BorrowersGroupList = [
     collector: "C",
     Meeting: "4",
     href: "/product/cash-loan/loan-product-config",
+  },
+];
 
+export const CollateralRegisterList = [
+  {
+    borrower: "John Doe",
+    name: "Equipment A",
+    model: "X123",
+    serialNumber: "SN001",
+    status: "Active",
+    condition: "Good",
+  },
+  {
+    borrower: "Jane Smith",
+    name: "Equipment B",
+    model: "Y456",
+    serialNumber: "SN002",
+    status: "Inactive",
+    condition: "Fair",
+  },
+];
+
+export const AddBulkRepaymentList = [
+  {
+    row: 1,
+    loan: "Home Loan",
+    amount: 50000,
+    method: "Online Transfer",
+    collectionDate: "2024-12-10",
+    collectionBy: "John Doe",
+    addEdit: "Edit",
+    description: "EMI for December",
+    accounting: "Cash",
+  },
+  {
+    row: 2,
+    loan: "Car Loan",
+    amount: 20000,
+    method: "Cheque",
+    collectionDate: "2024-12-11",
+    collectionBy: "Jane Smith",
+    addEdit: "Add",
+    description: "Partial payment",
+    accounting: "Bank",
   },
 ];
