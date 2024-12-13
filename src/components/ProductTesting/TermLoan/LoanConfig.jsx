@@ -137,7 +137,7 @@ const LoanConfig = () => {
       .unwrap() // Unwrap the result for error handling
       .then((loanId) => {
         console.log("Loan ID:", loanId);
-        navigate("/customer-care/" + userID + "/loan-payment-history");
+        navigate("/loan/customer-care/" + userID + "/loan-payment-history");
       })
       .catch((error) => {
         console.error("Error:", error);

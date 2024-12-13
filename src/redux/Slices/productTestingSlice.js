@@ -304,7 +304,7 @@ export const submitDisbursement = createAsyncThunk(
 
       if (response.status === 202) {
         setTimeout(() => {
-          navigate("/customer-care/" + userID + "/loan-payment-history");
+          navigate("/loan/customer-care/" + userID + "/loan-payment-history");
         }, 1000);
         return "Disbursement done Successfully !!";
       }
@@ -401,7 +401,7 @@ export const submitRepayment = createAsyncThunk(
 
       if (response.status === 202) {
         setTimeout(() => {
-          navigate("/customer-care/" + userID + "/loan-payment-history");
+          navigate("/loan/customer-care/" + userID + "/loan-payment-history");
         }, 1000);
         return "Repayment done Successfully !!";
       }
