@@ -138,7 +138,7 @@ const RecoveryConfig = () => {
         handleClone={handleClone}
         handleDelete={handleDelete}
         loading={loading}
-        error={error}
+
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -149,7 +149,7 @@ const RecoveryConfig = () => {
       <ContainerTile
         className=" flex flex-col gap-4 "
         loading={loading}
-        error={error}
+
       >
         <div className="flex gap-4 space-x-2 2xl:w-[50%] w-[75%]">
           <div className="flex-1">

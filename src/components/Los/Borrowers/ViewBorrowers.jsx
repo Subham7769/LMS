@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ListTable from "../../Common/ListTable/ListTable";
-import { BorrowerHeaderList, BorrowersList } from "../../../data/LosData";
+import { BorrowerHeaderList, BorrowersList,loanOfficer } from "../../../data/LosData";
 import { PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
@@ -8,7 +8,7 @@ import Button from "../../Common/Button/Button";
 import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
 
 const ViewBorrowers = () => {
-  const loanOfficer = ["A", "B", "C", "D", "E"];
+
   const [formData, setFormData] = useState({
     borrowerName: "",
     allLoanOfficer: [],

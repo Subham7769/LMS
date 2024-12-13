@@ -180,3 +180,23 @@ export const AddBulkRepaymentList = [
     accounting: "Bank",
   },
 ];
+
+
+export const loanOfficer = [
+  { label: "John Doe", value: "John Doe" },
+  { label: "Jane Smith", value: "Jane Smith" },
+  { label: "Michael Johnson", value: "Michael Johnson" },
+  { label: "Emily Davis", value: "Emily Davis" },
+  { label: "Chris Brown", value: "Chris Brown" },
+];
+
+export const ApproveRepaymentColumns = [
+  { label: "Amount", field: "amount" },
+  { label: "Collection Date", field: "collectionDate" },
+  { label: "Name", field: "name" },
+  { label: "Loan Id", field: "loanId" },
+  { label: "Collected By", field: "collectedBy" },
+  { label: "Method", field: "method" },
+  { label: "Staff", field: "staff" },
+  { label: "Edit Date", field: "editDate" },
+];

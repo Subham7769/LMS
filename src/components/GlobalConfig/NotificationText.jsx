@@ -88,6 +88,7 @@ const NotificationText = () => {
                       name: e.target.name,
                       value: e.target.value,
                     })
+                    
                   )
                 }
               />

@@ -22,6 +22,11 @@ const ProductInputFields = ({ productData, handleChange }) => {
       state?.sidebar?.menus?.filter((item) => item.title === "RAC")[0]
         ?.submenuItems
   );
+  const DynamicRACDataInfo = useSelector(
+    (state) =>
+      state?.sidebar?.menus?.filter((item) => item.title === "Dynamic RAC")[0]
+        ?.submenuItems
+  );
 
   const DBRConfigInfo = useSelector(
     (state) =>
@@ -155,7 +160,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="RAC"
-            inputOptions={formateDataDropDown("/rac/", RACDataInfo)}
+            inputOptions={formateDataDropDown("/rac/", RACDataInfo? RACDataInfo:DynamicRACDataInfo)}
             inputName="racId"
             inputValue={productData?.racId}
             onChange={handleChange}
