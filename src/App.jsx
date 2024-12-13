@@ -271,6 +271,8 @@ const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
 
+  { path: "/", element: <Login />, errorElement: <RouteErrorBoundary /> },
+
   {
     path: "/loan",
     element: (
