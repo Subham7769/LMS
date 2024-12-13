@@ -24,6 +24,8 @@ import reportsSlice from "./Slices/reportsSlice";
 import authSlice from "./Slices/authSlice";
 import notificationSlice from "./Slices/notificationSlice";
 import serverConfigSlice from "./Slices/serverConfigSlice";
+import depositSidebarSlice from "./Slices/depositSidebarSlice";
+import accountsSlice from "./Slices/accountsSlice";
 
 const store = configureStore({
   reducer: {
@@ -51,6 +53,8 @@ const store = configureStore({
     auth: authSlice,
     notification: notificationSlice,
     serverConfig: serverConfigSlice,
+    depositSidebar: depositSidebarSlice,
+    accounts: accountsSlice,
   },
 });
 

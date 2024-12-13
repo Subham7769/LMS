@@ -20,10 +20,8 @@ import { flatten } from "flat";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Button from "../Common/Button/Button";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { deleteReportingConfig } from "../../redux/Slices/reportingConfigSlice";
-import { fetchReportsConfigData } from "../../redux/Slices/reportsSlice";
+import { deleteReportResult } from "../../redux/Slices/reportsSlice";
 import { useDispatch } from "react-redux";
-import { fetchReportingConfigData } from "../../redux/Slices/sidebarSlice";
 
 const chartOptions = [
   {
@@ -48,8 +46,7 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const ReCharts = ({ response, index }) => {
   const [chartType, setChartType] = useState("Bar");
-  const { configData } = useSelector((state) => state.reports);
-  const { loading } = useSelector((state) => state.reportingConfig);
+  const { configData, loading } = useSelector((state) => state.reports);
   const dispatch = useDispatch();
 
   const transformationCode = new Function(
@@ -90,9 +87,7 @@ const ReCharts = ({ response, index }) => {
   const onDeleteReportingConfig = async (RCName) => {
     try {
       // Step 1: Delete the Reporting Config by its name
-      await dispatch(deleteReportingConfig(RCName)).unwrap();
-      await dispatch(fetchReportsConfigData());
-      await dispatch(fetchReportingConfigData());
+      await dispatch(deleteReportResult(RCName)).unwrap();
     } catch (error) {
       console.error("Error while deleting Reporting Config: ", error);
     }

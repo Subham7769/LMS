@@ -57,6 +57,38 @@ export const generateReport = createAsyncThunk(
   }
 );
 
+export const deleteReportResult = createAsyncThunk(
+  "reports/deleteReportResult",
+  async (name, { rejectWithValue, dispatch }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_REPORT_RESULT_DELETE}${name}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.clear();
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+
+      if (response.ok) {
+        dispatch(fetchReportsConfigData());
+      } else {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to generate");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Initial state
 const initialState = {
   reportGenerationData: {
@@ -127,6 +159,19 @@ const reportsSlice = createSlice({
         toast.success("Report Generated");
       })
       .addCase(generateReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(deleteReportResult.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteReportResult.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Report removed");
+      })
+      .addCase(deleteReportResult.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);

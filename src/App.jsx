@@ -3,6 +3,13 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "./components/Reports/DatePicker";
+import DepositAppLayout from "./components/Deposit/DepositAppLayout/DepositAppLayout";
+import Deposit from "./components/Deposit/Deposit";
+import CreateAccount from "./components/Deposit/Accounts/CreateAccount";
+import Summary from "./components/Deposit/Accounts/Summary";
+import AccountsPage from "./pages/AccountsPage";
+import Accounts from "./components/Deposit/Accounts/Accounts";
+import UpdateProfile from "./components/Deposit/Accounts/UpdateProfile";
 
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
@@ -33,21 +40,19 @@ const Notifications = lazy(() =>
 );
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 
-
 // *************************************TEST******************************************************
 
-const TestComponent = lazy(() => import("./components/TestComponent/TestComponent11") );
-
+const TestComponent = lazy(() =>
+  import("./components/TestComponent/TestComponent11")
+);
 
 // *************************************TEST******************************************************
-
 
 // RAC Imports
 const RacPage = lazy(() => import("./pages/RacPage"));
 const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
 const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
-
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -232,7 +237,6 @@ const CreateNewReportingConfig = lazy(() =>
 
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
-const ReCharts = lazy(() => import("./components/Reports/ReCharts"));
 
 // Invoice Discounting Imports
 const Registration = lazy(() =>
@@ -263,11 +267,10 @@ const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
 const Loans = lazy(() => import("./components/Los/Loans/Loans"));
 const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
 
-
 const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
-  
+
   {
     path: "/",
     element: (
@@ -696,6 +699,51 @@ const routes = [
           {
             path: "overdraft-details",
             element: <OverdraftDetailsTab />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    path: "/deposit",
+    element: (
+      <PageErrorBoundary>
+        <ProtectedRoute>
+          <DepositAppLayout />
+        </ProtectedRoute>
+      </PageErrorBoundary>
+    ),
+    children: [
+      {
+        path: "",
+        element: <HomePage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "save/create-account",
+        element: <CreateAccount />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "save/accounts",
+        element: <AccountsPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "save/accounts/:userID",
+        element: <Accounts />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "summary",
+            element: <Summary />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-profile",
+            element: <UpdateProfile />,
             errorElement: <RouteErrorBoundary />,
           },
         ],

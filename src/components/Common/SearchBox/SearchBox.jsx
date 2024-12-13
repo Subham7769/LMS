@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../Button/Button";
 import InputText from "../InputText/InputText";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
@@ -10,6 +9,7 @@ import {
 } from "../../../redux/Slices/validationSlice";
 import { useDispatch } from "react-redux";
 import store from "../../../redux/store";
+import { fetchAccountDetailsById } from "../../../redux/Slices/accountsSlice";
 
 const SearchBox = () => {
   const location = useLocation();
@@ -94,6 +94,17 @@ const SearchBox = () => {
     navigate(`/product-testing/overdraft-loan/${borrowerID}/overdraft-offer`);
   }
 
+  async function checkBorrowerInfoAccountDetails(borrowerID) {
+    await dispatch(fetchAccountDetailsById(borrowerID)).unwrap();
+    const state = store.getState();
+    const accountDetails = state.accounts.accountDetails;
+    if (accountDetails.length == 0) {
+      setBorrowerNotFound(true);
+    } else {
+      navigate(`/deposit/save/accounts/${borrowerID}/summary`);
+    }
+  }
+
   const handleClick = async () => {
     await dispatch(validateForm({ borrowerID }));
     const state = store.getState();
@@ -103,6 +114,8 @@ const SearchBox = () => {
         checkBorrowerInfoCustomerCare(borrowerID);
       } else if (location.pathname === "/product-testing/term-loan") {
         checkBorrowerInfoProductTesting(borrowerID);
+      } else if (location.pathname === "/deposit/save/accounts") {
+        checkBorrowerInfoAccountDetails(borrowerID);
       } else {
         checkBorrowerInfoOverdraftLoanOffer(borrowerID);
       }
@@ -117,6 +130,8 @@ const SearchBox = () => {
         <div>
           {location.pathname === "/customer-care"
             ? "Customer ID"
+            : location.pathname === "/deposit/save/accounts"
+            ? "Account No."
             : "Borrower ID"}
         </div>
         <div>
@@ -140,7 +155,7 @@ const SearchBox = () => {
       </div>
       {borrowerNotFound && (
         <div className="text-red-600 mt-4 text-center p-5 bg-red-300 ">
-          Borrower Not Found or Invalid ID
+          User Not Found or Invalid ID
         </div>
       )}
     </>

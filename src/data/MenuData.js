@@ -91,7 +91,7 @@ export const MenusInitial = [
     uniqueKey: "projectId",
   },
   {
-    title: "Product",
+    title: "Loan Product",
     href: "/product",
     icon: "CubeIcon",
     current: false,
@@ -295,7 +295,7 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
-  
+
   {
     title: "Server Config",
     href: "/server-config",

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BoltIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import useOnline from "../../../utils/useOnline";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import NotificationWindow from "../../Notifications/NotificationWindow";
+import Tab from "../Tab/Tab";
 
 const UserMenu = ({ userNavigation, isOnline }) => (
   <Menu as="div" className="relative">
@@ -66,6 +67,30 @@ const Header = () => {
     ],
     []
   );
+  const [activeTab, setActiveTab] = useState("loans");
+
+  console.log(activeTab);
+
+  const tabs = [
+    {
+      id: "loans",
+      path: `/`,
+      label: "Loans",
+    },
+    {
+      id: "deposits",
+      path: `/deposit`,
+      label: "Deposits",
+    },
+  ];
+
+  // Update activeTab based on the current route
+  // useEffect(() => {
+  //   const active = tabs.find((tab) => location.pathname.startsWith(tab.path));
+  //   if (active) {
+  //     setActiveTab(active.id);
+  //   }
+  // }, [location, tabs]);
 
   return (
     <header
@@ -87,12 +112,12 @@ const Header = () => {
         />
       </div>
       <div className="flex justify-center w-1/3">
-        <div>
+        {/* <div>
           <label htmlFor="search" className="sr-only">
             Search
           </label>
-          {/* Uncomment and customize the search input if needed */}
-          {/* <div className="relative">
+          Uncomment and customize the search input if needed
+          <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
@@ -103,8 +128,19 @@ const Header = () => {
               placeholder="Search"
               type="search"
             />
-          </div> */}
-        </div>
+          </div>
+        </div> */}
+        <ul className="flex flex-wrap">
+          {tabs.map((tab) => (
+            <Tab
+              id={tab.id}
+              label={tab.label}
+              to={tab.path}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          ))}
+        </ul>
       </div>
       <div className="px-8 py-3 relative flex justify-end items-center gap-5 w-1/3">
         <ElementErrorBoundary>
