@@ -1,5 +1,9 @@
 import React, { Suspense, lazy } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "./components/Reports/DatePicker";
@@ -271,7 +275,11 @@ const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
 
-  { path: "/", element: <Login />, errorElement: <RouteErrorBoundary /> },
+  {
+    path: "/",
+    element: <Navigate to="/login" replace />,
+    errorElement: <RouteErrorBoundary />,
+  },
 
   {
     path: "/loan",
