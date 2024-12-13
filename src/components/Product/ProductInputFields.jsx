@@ -161,7 +161,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           <InputSelect
             labelName="RAC"
             inputOptions={formateDataDropDown(
-              "/loan/rac/",
+              "/loan/dynamic-rac/",
               RACDataInfo ? RACDataInfo : DynamicRACDataInfo
             )}
             inputName="racId"
