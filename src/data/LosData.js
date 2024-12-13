@@ -200,3 +200,8 @@ export const ApproveRepaymentColumns = [
   { label: "Staff", field: "staff" },
   { label: "Edit Date", field: "editDate" },
 ];
+
+export const yesNoOptions = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "no" }
+];

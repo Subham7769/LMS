@@ -182,7 +182,7 @@ const Register = () => {
 
   return (
     <SectionErrorBoundary>
-      <RegistrationForm />
+      {/* <RegistrationForm /> */}
       <EligibilityResults
         eligibilityResults={register}
         loading={loading}
