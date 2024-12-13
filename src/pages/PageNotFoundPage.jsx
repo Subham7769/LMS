@@ -1,16 +1,15 @@
-import React from 'react';
+import React from "react";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import Button from '../components/Common/Button/Button';
-import { useNavigate } from 'react-router-dom';
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import Button from "../components/Common/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 const PageNotFoundPage = () => {
-
   const navigate = useNavigate();
 
   // Function to navigate back to the previous page
   const goBack = () => {
-    navigate(-1); // This will navigate back to the last visited page
+    navigate("/loan/home"); // This will navigate back to the last visited page
   };
 
   return (
@@ -27,7 +26,8 @@ const PageNotFoundPage = () => {
 
         {/* Description */}
         <p className="mt-4 text-gray-500">
-          The page you're looking for doesn't exist. Perhaps you'd like to go back to the homepage?
+          The page you're looking for doesn't exist. Perhaps you'd like to go
+          back to the homepage?
         </p>
 
         {/* Button to Navigate Back */}
@@ -36,7 +36,7 @@ const PageNotFoundPage = () => {
           buttonName={"Go Back"}
           onClick={goBack}
           rectangle={true}
-        className={"mt-5"}
+          className={"mt-5"}
         />
       </div>
     </div>
