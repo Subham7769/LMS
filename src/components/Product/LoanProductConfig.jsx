@@ -123,7 +123,7 @@ const LoanProductConfig = () => {
         } else {
           const updatedProductData = {
             ...productData,
-            routingLink: `/product/${productType}/loan-product-config/${projectId}/${loanProId}`,
+            routingLink: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProId}`,
             updateMap: updateMap,
             section: "Product",
           };
@@ -155,7 +155,7 @@ const LoanProductConfig = () => {
         })
       );
       navigate(
-        `/product/${newName}/loan-product-config/${projectId}/${loanProId}`
+        `/loan/loan-product/${newName}/loan-product-config/${projectId}/${loanProId}`
       );
       dispatch(fetchData(newName));
       dispatch(fetchProductData());
@@ -168,7 +168,7 @@ const LoanProductConfig = () => {
     try {
       await dispatch(deleteLoanProduct(loanProId)).unwrap();
       await dispatch(fetchProductData());
-      navigate("/product");
+      navigate("/loan/loan-product");
     } catch (error) {
       console.error("Failed to delete loan product:", error);
       // Optionally handle the error in the UI

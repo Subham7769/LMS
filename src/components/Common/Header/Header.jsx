@@ -59,38 +59,33 @@ const UserMenu = ({ userNavigation, isOnline }) => (
 
 const Header = () => {
   const isOnline = useOnline();
-  const userNavigation = useMemo(
-    () => [
-      // { name: "Your Profile", href: "#" },
-      // { name: "Settings", href: "#" },
-      { name: "Sign out", href: "/login", action: () => localStorage.clear() },
-    ],
-    []
-  );
-  const [activeTab, setActiveTab] = useState("loans");
+  const userNavigation = [
+    { name: "Sign out", href: "/login", action: () => localStorage.clear() },
+  ];
+  const [activeTab, setActiveTab] = useState("loan");
 
   console.log(activeTab);
 
   const tabs = [
     {
-      id: "loans",
-      path: `/`,
-      label: "Loans",
+      id: "loan",
+      path: `/loan/home`,
+      label: "Loan",
     },
     {
-      id: "deposits",
-      path: `/deposit`,
-      label: "Deposits",
+      id: "deposit",
+      path: `/deposit/home`,
+      label: "Deposit",
     },
   ];
 
   // Update activeTab based on the current route
-  // useEffect(() => {
-  //   const active = tabs.find((tab) => location.pathname.startsWith(tab.path));
-  //   if (active) {
-  //     setActiveTab(active.id);
-  //   }
-  // }, [location, tabs]);
+  useEffect(() => {
+    const active = tabs.find((tab) => location.pathname.startsWith(tab.path));
+    if (active) {
+      setActiveTab(active.id);
+    }
+  }, [location, tabs]);
 
   return (
     <header

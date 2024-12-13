@@ -1,7 +1,7 @@
 export const MenusInitial = [
   {
     title: "Home",
-    href: "/",
+    href: "/loan/home",
     icon: "HomeIcon",
     count: "5",
     current: true,
@@ -25,7 +25,7 @@ export const MenusInitial = [
   // },
   {
     title: "Dynamic RAC",
-    href: "/dynamic-rac",
+    href: "/loan/dynamic-rac",
     icon: "ClipboardDocumentCheckIcon",
     submenu: true,
     createButton: true,
@@ -33,7 +33,7 @@ export const MenusInitial = [
     createFunction: "createNewDynamicRac",
     buttonName: "Create RAC",
     placeholder: "Enter Name",
-    navigateSuccess: "/dynamic-rac/",
+    navigateSuccess: "/loan/dynamic-rac/",
     navigateFail: "/login",
     submenuItems: [],
     isOpen: false,
@@ -41,7 +41,7 @@ export const MenusInitial = [
   },
   {
     title: "Recovery",
-    href: "/recovery",
+    href: "/loan/recovery",
     icon: "ArrowPathRoundedSquareIcon",
     current: false,
     submenu: true,
@@ -50,7 +50,7 @@ export const MenusInitial = [
     createFunction: "createNewRecovery",
     buttonName: "Create Recovery", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/recovery/", // navigation
+    navigateSuccess: "/loan/recovery/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -58,7 +58,7 @@ export const MenusInitial = [
   },
   {
     title: "TCL",
-    href: "/tcl",
+    href: "/loan/tcl",
     icon: "CurrencyRupeeIcon",
     current: false,
     submenu: true,
@@ -67,7 +67,7 @@ export const MenusInitial = [
     createFunction: "createNewTCL",
     buttonName: "Create TCL", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/tcl/", // navigation
+    navigateSuccess: "/loan/tcl/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -75,7 +75,7 @@ export const MenusInitial = [
   },
   {
     title: "Project",
-    href: "/project", //previous -> "/project/loan-form"
+    href: "/loan/project", //previous -> "/project/loan-form"
     icon: "ChartPieIcon",
     current: false,
     submenu: true,
@@ -84,7 +84,7 @@ export const MenusInitial = [
     createFunction: "createNewProject",
     buttonName: "Create Project", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/project/newProject/", // navigation
+    navigateSuccess: "/loan/project/newProject/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -92,7 +92,7 @@ export const MenusInitial = [
   },
   {
     title: "Loan Product",
-    href: "/product",
+    href: "/loan/loan-product",
     icon: "CubeIcon",
     current: false,
     submenu: true,
@@ -101,14 +101,14 @@ export const MenusInitial = [
     createFunction: "createNewProduct",
     buttonName: "Create Product", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "product/newProduct/", // navigation
+    navigateSuccess: "/loan/loan-product/newProduct/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
   },
   {
     title: "Eligible Tenure",
-    href: "/credit-score-eligible-tenure",
+    href: "/loan/credit-score-eligible-tenure",
     icon: "CalculatorIcon",
     current: false,
     submenu: true,
@@ -117,7 +117,7 @@ export const MenusInitial = [
     createFunction: "createNewCreditScoreET", //Create function
     buttonName: "Create New Tenure", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/credit-score-eligible-tenure/", // navigation
+    navigateSuccess: "/loan/credit-score-eligible-tenure/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -125,7 +125,7 @@ export const MenusInitial = [
   },
   {
     title: "DBR Config",
-    href: "/dbr-config",
+    href: "/loan/dbr-config",
     icon: "CreditCardIcon",
     current: false,
     submenu: true,
@@ -134,7 +134,7 @@ export const MenusInitial = [
     createFunction: "createNewDBC",
     buttonName: "Create DBR", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/dbr-config/", // navigation
+    navigateSuccess: "/loan/dbr-config/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -142,7 +142,7 @@ export const MenusInitial = [
   },
   {
     title: "Blocked Employer",
-    href: "/blocked-employer",
+    href: "/loan/blocked-employer",
     icon: "NoSymbolIcon",
     current: false,
     submenu: true,
@@ -151,7 +151,7 @@ export const MenusInitial = [
     createFunction: "createNewBE",
     buttonName: "Create BE", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/blocked-employer/", // navigation
+    navigateSuccess: "/loan/blocked-employer/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -159,7 +159,7 @@ export const MenusInitial = [
   },
   {
     title: "Credit Score",
-    href: "/credit-score",
+    href: "/loan/credit-score",
     icon: "CalculatorIcon",
     current: false,
     submenu: true,
@@ -168,7 +168,7 @@ export const MenusInitial = [
     createFunction: "createNewCreditScoreEq",
     buttonName: "Create Credit Score", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/credit-score/", // navigation
+    navigateSuccess: "/loan/credit-score/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -176,7 +176,7 @@ export const MenusInitial = [
   },
   {
     title: "Rule Policy",
-    href: "/rule-policy",
+    href: "/loan/rule-policy",
     icon: "ClipboardDocumentListIcon",
     current: false,
     submenu: true,
@@ -185,7 +185,7 @@ export const MenusInitial = [
     createFunction: "createNewRulePolicy",
     buttonName: "Create Rule Policy", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/rule-policy/", // navigation
+    navigateSuccess: "/loan/rule-policy/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -193,7 +193,7 @@ export const MenusInitial = [
   },
   {
     title: "Product Group",
-    href: "/product-group",
+    href: "/loan/product-group",
     icon: "RectangleGroupIcon",
     current: false,
     submenu: true,
@@ -202,14 +202,14 @@ export const MenusInitial = [
     createFunction: "createNewProductGroup",
     buttonName: "Create Group", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/product-group/newProductGroup/", // navigation
+    navigateSuccess: "/loan/product-group/newProductGroup/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
   },
   {
     title: "Business Rule",
-    href: "/business-rule/1",
+    href: "/loan/business-rule/1",
     icon: "AdjustmentsHorizontalIcon",
     current: false,
     submenu: true,
@@ -223,35 +223,35 @@ export const MenusInitial = [
     submenuItems: [
       { name: "Business Rule 1", href: "/business-rule/1" },
       { name: "Business Rule 2", href: "/business-rule/2" },
-      { name: "Business Rule 3", href: "/business-rule/3" },
+      { name: "Business Rule 3", href: "/loan/business-rule/3" },
     ],
     isOpen: false,
   },
   {
     title: "Global Config",
-    href: "/global-config/liabilities-matrix",
+    href: "/loan/global-config/liabilities-matrix",
     icon: "Cog6ToothIcon",
     current: false,
     submenu: true,
     submenuItems: [
       {
         name: "Liabilities Matrix",
-        href: "/global-config/liabilities-matrix",
+        href: "/loan/global-config/liabilities-matrix",
         current: false,
       },
       {
         name: "Risk Grading Matrix",
-        href: "/global-config/risk-grading-matrix",
+        href: "/loan/global-config/risk-grading-matrix",
         current: false,
       },
       {
         name: "Minimum Expense",
-        href: "/global-config/min-expense",
+        href: "/loan/global-config/min-expense",
         current: false,
       },
       {
         name: "Notification Text",
-        href: "/global-config/notification-text",
+        href: "/loan/global-config/notification-text",
         current: false,
       },
     ],
@@ -259,25 +259,25 @@ export const MenusInitial = [
   },
   {
     title: "Customer Care",
-    href: "/customer-care",
+    href: "/loan/customer-care",
     icon: "HeartIcon",
     current: false,
   },
   {
     title: "Product Testing",
-    href: "/product-testing/term-loan",
+    href: "/loan/product-testing/term-loan",
     icon: "HandRaisedIcon",
     current: false,
     submenu: true,
     submenuItems: [
       {
         name: "Term Loan",
-        href: "/product-testing/term-loan",
+        href: "/loan/product-testing/term-loan",
         current: false,
       },
       {
         name: "Overdraft Loan",
-        href: "/product-testing/overdraft-loan",
+        href: "/loan/product-testing/overdraft-loan",
         current: false,
       },
     ],
@@ -285,26 +285,26 @@ export const MenusInitial = [
   },
   {
     title: "General Ledger",
-    href: "/general-ledger",
+    href: "/loan/general-ledger",
     icon: "BookOpenIcon",
     current: false,
   },
   {
     title: "User Management",
-    href: "/user-management",
+    href: "/loan/user-management",
     icon: "UserGroupIcon",
     current: false,
   },
 
   {
     title: "Server Config",
-    href: "/server-config",
+    href: "/loan/server-config",
     icon: "WrenchScrewdriverIcon",
     current: false,
   },
   {
     title: "Reporting Config",
-    href: "/reporting-config",
+    href: "/loan/reporting-config",
     icon: "ChartBarIcon",
     submenu: true,
     createButton: true,
@@ -312,7 +312,7 @@ export const MenusInitial = [
     createFunction: "createNewReportingConfig",
     buttonName: "Create Report",
     placeholder: "Enter Name",
-    navigateSuccess: "/reporting-config/newConfig/",
+    navigateSuccess: "/loan/reporting-config/newConfig/",
     navigateFail: "/login",
     submenuItems: [],
     isOpen: false,
@@ -320,50 +320,50 @@ export const MenusInitial = [
   },
   {
     title: "Reports",
-    href: "/reports",
+    href: "/loan/reports",
     icon: "NewspaperIcon",
     current: false,
   },
   {
     title: "Invoice Discounting",
-    href: "/invoice-discounting/registration",
+    href: "/loan/invoice-discounting/registration",
     icon: "DocumentCurrencyRupeeIcon",
     current: false,
     submenu: true,
     submenuItems: [
       {
         name: "Home",
-        href: "/invoice-discounting/registration",
+        href: "/loan/invoice-discounting/registration",
         current: false,
       },
       {
         name: "Profile",
-        href: "/invoice-discounting/profile",
+        href: "/loan/invoice-discounting/profile",
         current: false,
       },
       {
         name: "Manage Partner",
-        href: "/invoice-discounting/manage-partner",
+        href: "/loan/invoice-discounting/manage-partner",
         current: false,
       },
       {
         name: "Cash Payable",
-        href: "/invoice-discounting/cash-payable",
+        href: "/loan/invoice-discounting/cash-payable",
         current: false,
       },
       {
         name: "Cash Receivable",
-        href: "/invoice-discounting/cash-receivable",
+        href: "/loan/invoice-discounting/cash-receivable",
         current: false,
       },
       {
         name: "Working Capital",
-        href: "/invoice-discounting/working-capital",
+        href: "/loan/invoice-discounting/working-capital",
         current: false,
       },
       {
         name: "Project Finance",
-        href: "/invoice-discounting/project-finance",
+        href: "/loan/invoice-discounting/project-finance",
         current: false,
       },
     ],
@@ -371,44 +371,44 @@ export const MenusInitial = [
   },
   {
     title: "LOS",
-    href: "/loan-origination-system",
+    href: "/loan/loan-origination-system",
     icon: "AtSymbolIcon",
     current: false,
     submenu: true,
     submenuItems: [
       {
         name: "Borrowers",
-        href: "/loan-origination-system/borrowers",
+        href: "/loan/loan-origination-system/borrowers",
         current: false,
       },
       {
         name: "Loans",
-        href: "/loan-origination-system/loans",
+        href: "/loan/loan-origination-system/loans",
         current: false,
       },
       {
         name: "Repayments",
-        href: "/loan-origination-system/repayments",
+        href: "/loan/loan-origination-system/repayments",
         current: false,
       },
       // {
       //   name: "Cash Payable",
-      //   href: "/loan-origination-system/cash-payable",
+      //   href: "/loan/loan-origination-system/cash-payable",
       //   current: false,
       // },
       // {
       //   name: "Cash Receivable",
-      //   href: "/loan-origination-system/cash-receivable",
+      //   href: "/loan/loan-origination-system/cash-receivable",
       //   current: false,
       // },
       // {
       //   name: "Working Capital",
-      //   href: "/loan-origination-system/working-capital",
+      //   href: "/loan/loan-origination-system/working-capital",
       //   current: false,
       // },
       // {
       //   name: "Project Finance",
-      //   href: "/loan-origination-system/project-finance",
+      //   href: "/loan/loan-origination-system/project-finance",
       //   current: false,
       // },
     ],
@@ -416,7 +416,7 @@ export const MenusInitial = [
   },
   {
     title: "Test Component",
-    href: "/test",
+    href: "/loan/test",
     icon: "BeakerIcon",
     current: false,
   },

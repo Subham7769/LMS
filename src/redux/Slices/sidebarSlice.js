@@ -53,7 +53,7 @@ export const fetchRACData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, racId }) => ({
         name,
-        href: "/rac/" + racId,
+        href: "/loan/rac/" + racId,
       }));
     };
     try {
@@ -71,7 +71,7 @@ export const fetchRecoveryData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, recoveryEquationTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/recovery/" + recoveryEquationTempId,
+        href: "/loan/recovery/" + recoveryEquationTempId,
       }));
     };
     try {
@@ -89,7 +89,7 @@ export const fetchTCLData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ tclId, tclName }) => ({
         name: tclName.replace(/_/g, " "),
-        href: "/tcl/" + tclId,
+        href: "/loan/tcl/" + tclId,
       }));
     };
     try {
@@ -108,7 +108,7 @@ export const fetchProjectData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, projectId }) => ({
         name,
-        href: "/project/" + projectId,
+        href: "/loan/project/" + projectId,
       }));
     };
     try {
@@ -126,7 +126,7 @@ export const fetchProductData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ productType, projectId, loanProductId }) => ({
         name: productType.replace(/_/g, " "),
-        href: `/product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
+        href: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
       }));
     };
     try {
@@ -146,7 +146,7 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, creditScoreEtTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/credit-score-eligible-tenure/" + creditScoreEtTempId,
+        href: "/loan/credit-score-eligible-tenure/" + creditScoreEtTempId,
       }));
     };
     try {
@@ -164,7 +164,7 @@ export const fetchDBRData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, dbcTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/dbr-config/" + dbcTempId,
+        href: "/loan/dbr-config/" + dbcTempId,
       }));
     };
     try {
@@ -182,7 +182,7 @@ export const fetchBEData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, blockEmployerTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/blocked-employer/" + blockEmployerTempId,
+        href: "/loan/blocked-employer/" + blockEmployerTempId,
       }));
     };
     try {
@@ -200,7 +200,7 @@ export const fetchCreditScoreEqData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ creditScoreEqTempId, name }) => ({
         name: name.replace(/-/g, " "),
-        href: "/credit-score/" + creditScoreEqTempId,
+        href: "/loan/credit-score/" + creditScoreEqTempId,
       }));
     };
     try {
@@ -218,7 +218,7 @@ export const fetchRulePolicyData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ rulePolicyTempId, name }) => ({
         name: name.replace(/-/g, " "),
-        href: "/rule-policy/" + rulePolicyTempId,
+        href: "/loan/rule-policy/" + rulePolicyTempId,
       }));
     };
     try {
@@ -237,7 +237,7 @@ export const fetchProdGroupData = createAsyncThunk(
       const ProdDetailsArray = Array.isArray(data) ? data : [data];
       return ProdDetailsArray.map(({ configName, configId }) => ({
         name: configName.replace(/-/g, " "),
-        href: "/product-group/" + configId,
+        href: "/loan/product-group/" + configId,
       }));
     };
     try {
@@ -258,7 +258,7 @@ export const fetchDynamicRacData = createAsyncThunk(
       return data.map((item) => {
         const transformedItem = {
           name: item.racDetails.name.replace(/-/g, " "), // Transform the name if needed
-          href: "/dynamic-rac/" + item.racDetails.racId, // Construct href for navigation
+          href: "/loan/dynamic-rac/" + item.racDetails.racId, // Construct href for navigation
         };
         return transformedItem;
       });
@@ -282,7 +282,7 @@ export const fetchReportingConfigData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name }) => ({
         name: name.replace(/-/g, " "),
-        href: "/reporting-config/" + name,
+        href: "/loan/reporting-config/" + name,
       }));
     };
 
@@ -302,7 +302,7 @@ const ROLE_CREDITOR_ADMIN = [
   "Recovery",
   "TCL",
   "Project",
-  "Product",
+  "Loan Product",
   "Eligible Tenure",
   "DBR Config",
   "Blocked Employer",
@@ -321,7 +321,7 @@ const ROLE_MAKER_ADMIN = [
   "Recovery",
   "TCL",
   "Project",
-  "Product",
+  "Loan Product",
   "Eligible Tenure",
   "DBR Config",
   "Blocked Employer",
@@ -338,7 +338,7 @@ const ROLE_CHECKER_ADMIN = [
   "Recovery",
   "TCL",
   "Project",
-  "Product",
+  "Loan Product",
   "Eligible Tenure",
   "DBR Config",
   "Blocked Employer",
@@ -356,7 +356,7 @@ const ROLE_VIEWER = [
   "Recovery",
   "TCL",
   "Project",
-  "Product",
+  "Loan Product",
   "Eligible Tenure",
   "DBR Config",
   "Blocked Employer",
@@ -555,7 +555,7 @@ const sidebarSlice = createSlice({
         state.loading = false;
         const submenuItems = action.payload;
         const updatedMenus = state.menus.map((menu) => {
-          if (menu.title === "Product") {
+          if (menu.title === "Loan Product") {
             return { ...menu, submenuItems };
           }
           return menu;

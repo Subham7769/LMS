@@ -94,7 +94,7 @@ const RecoveryConfig = () => {
     try {
       await dispatch(deleteRecovery(recoveryEquationTempId)).unwrap();
       await dispatch(fetchRecoveryData());
-      navigate("/recovery");
+      navigate("/loan/recovery");
     } catch (err) {
       if (err === "Unauthorized") {
         navigate("/login");
@@ -110,7 +110,7 @@ const RecoveryConfig = () => {
         createClone({ recoveryEquationTempId, cloneName })
       ).unwrap();
       dispatch(fetchRecoveryData());
-      navigate("/recovery/" + Details.recoveryEquationTempId);
+      navigate("/loan/recovery/" + Details.recoveryEquationTempId);
     } catch (err) {
       if (err === "Unauthorized") {
         navigate("/login");
@@ -138,7 +138,6 @@ const RecoveryConfig = () => {
         handleClone={handleClone}
         handleDelete={handleDelete}
         loading={loading}
-
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -146,11 +145,7 @@ const RecoveryConfig = () => {
         onCreateClone={createCloneRecovery}
         initialName={itemName}
       />
-      <ContainerTile
-        className=" flex flex-col gap-4 "
-        loading={loading}
-
-      >
+      <ContainerTile className=" flex flex-col gap-4 " loading={loading}>
         <div className="flex gap-4 space-x-2 2xl:w-[50%] w-[75%]">
           <div className="flex-1">
             <InputNumber

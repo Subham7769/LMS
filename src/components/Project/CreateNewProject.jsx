@@ -25,7 +25,6 @@ const CreateNewProject = () => {
   const dispatch = useDispatch();
   const { projectData } = useSelector((state) => state.project);
 
-
   useEffect(() => {
     if (projectName) {
       dispatch(resetProjectData());
@@ -54,7 +53,7 @@ const CreateNewProject = () => {
           createProject({ projectData, clientIdsString })
         ).unwrap();
         dispatch(fetchProjectData());
-        navigate("/project/" + Details.projectId);
+        navigate("/loan/project/" + Details.projectId);
       } catch (err) {
         if (err === "Unauthorized") {
           navigate("/login");
@@ -70,7 +69,7 @@ const CreateNewProject = () => {
   return (
     <>
       <form className="flex flex-col gap-8">
-      <ProjectInputFields
+        <ProjectInputFields
           projectData={projectData}
           handleChange={handleChange}
           addNoEditToast={addNoEditToast}

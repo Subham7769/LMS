@@ -40,7 +40,7 @@ const SearchBox = () => {
       if (data.status === 404) {
         console.log("Borrower Not Found"); // Clear the token
         setBorrowerNotFound(true);
-        navigate("/customer-care"); // Redirect to customer-care page
+        navigate("/loan/customer-care"); // Redirect to customer-care page
         return; // Stop further execution
       }
       // Check for token expiration or invalid token
@@ -49,7 +49,7 @@ const SearchBox = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      navigate("/customer-care/" + borrowerID + "/personal-info");
+      navigate("/loan/customer-care/" + borrowerID + "/personal-info");
       setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);
@@ -74,7 +74,7 @@ const SearchBox = () => {
       if (data.status === 404) {
         console.log("User Not Found"); // Clear the token
         setBorrowerNotFound(true);
-        navigate("/product-testing/term-loan"); // Redirect to login page
+        navigate("/loan/product-testing/term-loan"); // Redirect to login page
         return; // Stop further execution
       }
       // Check for token expiration or invalid token
@@ -83,7 +83,7 @@ const SearchBox = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      navigate("/product-testing/term-loan/" + borrowerID + "/eligibilty");
+      navigate("/loan/product-testing/term-loan/" + borrowerID + "/eligibilty");
       setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);
@@ -91,7 +91,9 @@ const SearchBox = () => {
   }
 
   function checkBorrowerInfoOverdraftLoanOffer(borrowerID) {
-    navigate(`/product-testing/overdraft-loan/${borrowerID}/overdraft-offer`);
+    navigate(
+      `/loan/product-testing/overdraft-loan/${borrowerID}/overdraft-offer`
+    );
   }
 
   async function checkBorrowerInfoAccountDetails(borrowerID) {
@@ -110,9 +112,9 @@ const SearchBox = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      if (location.pathname === "/customer-care") {
+      if (location.pathname === "/loan/customer-care") {
         checkBorrowerInfoCustomerCare(borrowerID);
-      } else if (location.pathname === "/product-testing/term-loan") {
+      } else if (location.pathname === "/loan/product-testing/term-loan") {
         checkBorrowerInfoProductTesting(borrowerID);
       } else if (location.pathname === "/deposit/save/accounts") {
         checkBorrowerInfoAccountDetails(borrowerID);
@@ -128,11 +130,13 @@ const SearchBox = () => {
     <>
       <div className="flex items-center gap-5 justify-center mt-10">
         <div>
-          {location.pathname === "/customer-care"
+          {location.pathname === "/loan/customer-care"
             ? "Customer ID"
             : location.pathname === "/deposit/save/accounts"
-            ? "Account No."
-            : "Borrower ID"}
+            ? "User ID."
+            : location.pathname === "/loan/product-testing/term-loan"
+            ? "Term Loan Borrower ID"
+            : "Overdraft Loan Borrower ID"}
         </div>
         <div>
           <InputText

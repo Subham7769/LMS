@@ -272,7 +272,7 @@ const routes = [
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
 
   {
-    path: "/",
+    path: "/loan",
     element: (
       <PageErrorBoundary>
         <ProtectedRoute>
@@ -283,292 +283,292 @@ const routes = [
     children: [
       // Accessing All Page Components
       {
-        path: "/",
+        path: "home",
         element: <HomePage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/rac",
+        path: "rac",
         element: <RacPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/dynamic-rac",
+        path: "dynamic-rac",
         element: <DynamicRacPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/recovery",
+        path: "recovery",
         element: <RecoveryPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/tcl",
+        path: "tcl",
         element: <TclPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/project",
+        path: "project",
         element: <ProjectPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product",
+        path: "loan-product",
         element: <ProductPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/credit-score-eligible-tenure",
+        path: "credit-score-eligible-tenure",
         element: <CreditScoreETPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/dbr-config",
+        path: "dbr-config",
         element: <DebtBurdenPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/blocked-employer",
+        path: "blocked-employer",
         element: <BlockedEmployerPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/credit-score",
+        path: "credit-score",
         element: <CreditScorePage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/rule-policy",
+        path: "rule-policy",
         element: <RulePolicyPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product-group",
+        path: "product-group",
         element: <ProductGroupPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/customer-care",
+        path: "customer-care",
         element: <CustomerCarePage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/general-ledger",
+        path: "general-ledger",
         element: <LedgerPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/user-management",
+        path: "user-management",
         element: <UserManagementPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/server-config",
+        path: "server-config",
         element: <ServerConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/reporting-config",
+        path: "reporting-config",
         element: <ReportingConfigPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/reports",
+        path: "reports",
         element: <ReportsPage />,
         errorElement: <RouteErrorBoundary />,
       },
 
       // Accessing All Misc. Page Components
       {
-        path: "/settings",
+        path: "settings",
         element: <UploadLogo />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/test",
+        path: "test",
         element: <DatePicker />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/notifications",
+        path: "notifications",
         element: <Notifications />,
         errorElement: <RouteErrorBoundary />,
       },
 
       // Accessing All Child Components
       {
-        path: "/rac/:racID",
+        path: "rac/:racID",
         element: <NewCreatedRAC />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/recovery/:recoveryEquationTempId",
+        path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/tcl/:tclId",
+        path: "tcl/:tclId",
         element: <TCLViewList />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/project/:projectId",
+        path: "project/:projectId",
         element: <Project />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product/:productType/loan-product-config/:projectId/:loanProId",
+        path: "loan-product/:productType/loan-product-config/:projectId/:loanProId",
         element: <LoanProductConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/credit-score-eligible-tenure/:creditScoreETId",
+        path: "credit-score-eligible-tenure/:creditScoreETId",
         element: <CreditScoreET />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/dbr-config/:dbcTempId",
+        path: "dbr-config/:dbcTempId",
         element: <DebtBurdenConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/blocked-employer/:blockEmployersTempId",
+        path: "blocked-employer/:blockEmployersTempId",
         element: <BlockedEmployer />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/rule-policy/:rulePolicyId",
+        path: "rule-policy/:rulePolicyId",
         element: <RulePolicy />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product-group/:configId",
+        path: "product-group/:configId",
         element: <ProductGroup />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/business-rule/1",
+        path: "business-rule/1",
         element: <BusinessRule1 />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/business-rule/2",
+        path: "business-rule/2",
         element: <BusinessRule2 />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/business-rule/3",
+        path: "business-rule/3",
         element: <BusinessRule3 />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/global-config/liabilities-matrix",
+        path: "global-config/liabilities-matrix",
         element: <LiabilitiesMatrix />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/global-config/risk-grading-matrix",
+        path: "global-config/risk-grading-matrix",
         element: <RiskGradeMatrix />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/global-config/min-expense",
+        path: "global-config/min-expense",
         element: <MinimumExpense />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/global-config/notification-text",
+        path: "global-config/notification-text",
         element: <NotificationText />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product-testing/term-loan",
+        path: "product-testing/term-loan",
         element: <TermLoanPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product-testing/overdraft-loan",
+        path: "product-testing/overdraft-loan",
         element: <OverdraftLoanPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/dynamic-rac/:racId",
+        path: "dynamic-rac/:racId",
         element: <DynamicRAC />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/reporting-config/:RCName",
+        path: "reporting-config/:RCName",
         element: <ReportingConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/credit-score/:creditScoreId",
+        path: "credit-score/:creditScoreId",
         element: <CreateNewCreditScore />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product-group/newProductGroup/:configId",
+        path: "product-group/newProductGroup/:configId",
         element: <CreateNewProductGroup />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/project/newProject/:projectName",
+        path: "project/newProject/:projectName",
         element: <CreateNewProject />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/product/newProduct/:productName",
+        path: "loan-product/newProduct/:productName",
         element: <CreateNewProduct />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/reporting-config/newConfig/:RCName",
+        path: "reporting-config/newConfig/:RCName",
         element: <CreateNewReportingConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       // Accessing All New Created Child Components
       {
-        path: "/invoice-discounting/registration",
+        path: "invoice-discounting/registration",
         element: <Registration />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/invoice-discounting/profile",
+        path: "invoice-discounting/profile",
         element: <ProfilePage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/invoice-discounting/manage-partner",
+        path: "invoice-discounting/manage-partner",
         element: <ManagePartner />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/invoice-discounting/cash-payable",
+        path: "invoice-discounting/cash-payable",
         element: <CashPayable />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/invoice-discounting/cash-receivable",
+        path: "invoice-discounting/cash-receivable",
         element: <CashReceivable />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/invoice-discounting/working-capital",
+        path: "invoice-discounting/working-capital",
         element: <WorkingCapital />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/invoice-discounting/project-finance",
+        path: "invoice-discounting/project-finance",
         element: <ProjectFinance />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/loan-origination-system",
+        path: "loan-origination-system",
         element: <Los />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/loan-origination-system/borrowers",
+        path: "loan-origination-system/borrowers",
         element: <Borrowers />,
         children: [
           {
@@ -580,18 +580,18 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/loan-origination-system/loans",
+        path: "loan-origination-system/loans",
         element: <Loans />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "/loan-origination-system/repayments",
+        path: "loan-origination-system/repayments",
         element: <Repayments />,
         errorElement: <RouteErrorBoundary />,
       },
       // Accessing All Page Component with it's Child Components
       {
-        path: "/customer-care/:subID",
+        path: "customer-care/:subID",
         element: <CustomerCare />,
         children: [
           {
@@ -627,7 +627,7 @@ const routes = [
         ],
       },
       {
-        path: "/product-testing/term-loan/:userID",
+        path: "product-testing/term-loan/:userID",
         element: <TermLoan />,
         children: [
           {
@@ -673,7 +673,7 @@ const routes = [
         ],
       },
       {
-        path: "/product-testing/overdraft-loan/:userID",
+        path: "product-testing/overdraft-loan/:userID",
         element: <OverdraftLoan />,
         children: [
           {
@@ -717,7 +717,7 @@ const routes = [
     ),
     children: [
       {
-        path: "",
+        path: "home",
         element: <HomePage />,
         errorElement: <RouteErrorBoundary />,
       },

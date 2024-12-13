@@ -190,7 +190,9 @@ export const fetchList = createAsyncThunk(
   "product/fetchList",
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
-    const Menu = sideBarState?.menus.find((menu) => menu.title === "Product");
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "Loan Product"
+    );
     const submenuItems = Menu ? Menu.submenuItems : [];
     return submenuItems;
   }

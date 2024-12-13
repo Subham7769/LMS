@@ -12,37 +12,37 @@ const CustomerCare = () => {
   const tabs = [
     {
       id: "personal-info",
-      path: `/customer-care/${subID}/personal-info`,
+      path: `/loan/customer-care/${subID}/personal-info`,
       label: "Personal Info",
     },
     {
       id: "credit-profile",
-      path: `/customer-care/${subID}/credit-profile`,
+      path: `/loan/customer-care/${subID}/credit-profile`,
       label: "Credit Profile",
     },
     {
       id: "kyc-details",
-      path: `/customer-care/${subID}/kyc-details`,
+      path: `/loan/customer-care/${subID}/kyc-details`,
       label: "KYC Details",
     },
     {
       id: "loan-payment-history",
-      path: `/customer-care/${subID}/loan-payment-history`,
+      path: `/loan/customer-care/${subID}/loan-payment-history`,
       label: "Loan & Payment History",
     },
     {
       id: "rejection-history",
-      path: `/customer-care/${subID}/rejection-history`,
+      path: `/loan/customer-care/${subID}/rejection-history`,
       label: "Rejection History",
     },
     {
       id: "credit-bureau-details",
-      path: `/customer-care/${subID}/credit-bureau-details`,
+      path: `/loan/customer-care/${subID}/credit-bureau-details`,
       label: "Credit Bureau Details",
     },
     {
       id: "back-to-user-page",
-      path: `/product-testing/${subID}/eligibilty`,
+      path: `/loan/product-testing/term-loan/${subID}/eligibilty`,
       label: "Back to User Page",
     },
   ];

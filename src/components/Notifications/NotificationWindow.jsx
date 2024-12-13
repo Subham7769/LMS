@@ -196,10 +196,11 @@ const NotificationWindow = () => {
         aria-expanded={isOpen}
       >
         <BsBell size={24} className="text-gray-600" />
-        { notifications.length >= 1 &&
+        {notifications.length >= 1 && (
           <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-          {notifications.length}
-        </span>}
+            {notifications.length}
+          </span>
+        )}
       </button>
 
       {isOpen && (
@@ -246,7 +247,6 @@ const NotificationWindow = () => {
                     <div className="flex-shrink-0 mt-1">
                       {notification.type === "UPDATE" ? (
                         <AiOutlineSetting
-                        
                           className="text-orange-500"
                           size={24}
                         />
@@ -413,10 +413,10 @@ const NotificationWindow = () => {
           </div>
 
           <div className="p-3 border-t border-gray-200">
-            <Link to='/notifications'>
-            <button className="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 transition-colors duration-200">
-              Notifications History
-            </button>
+            <Link to="/loan/notifications">
+              <button className="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 transition-colors duration-200">
+                Notifications History
+              </button>
             </Link>
           </div>
         </div>
@@ -428,40 +428,42 @@ const NotificationWindow = () => {
 export default NotificationWindow;
 [
   {
-    "id": "67404eaa4a05290001164309",
-    "notificationId": "d2b3e449-e578-4241-b2f5-5889af33018e",
-    "notificationType": "LOAN_PRODUCT",
-    "productId": "a68cad1b-0512-4b95-9601-162a8f4b55b4",
-    "sectionName": "Product",
-    "subSectionName": "jhjhjhj",
-    "type": "NEW",
-    "status": "CREATED",
-    "routingLink": "/product/jhjhjhj/loan-product-config/95a12803-4612-4b12-ad9f-8849c5eba060/a68cad1b-0512-4b95-9601-162a8f4b55b4",
-    "creationTime": "2024-11-22T12:28:10.118Z",
-    "requestedBy": "role_maker_admin",
-    "requestedAt": "2024-11-22T12:28:10.118Z",
-    "notificationStatus": "read"
+    id: "67404eaa4a05290001164309",
+    notificationId: "d2b3e449-e578-4241-b2f5-5889af33018e",
+    notificationType: "LOAN_PRODUCT",
+    productId: "a68cad1b-0512-4b95-9601-162a8f4b55b4",
+    sectionName: "Product",
+    subSectionName: "jhjhjhj",
+    type: "NEW",
+    status: "CREATED",
+    routingLink:
+      "/product/jhjhjhj/loan-product-config/95a12803-4612-4b12-ad9f-8849c5eba060/a68cad1b-0512-4b95-9601-162a8f4b55b4",
+    creationTime: "2024-11-22T12:28:10.118Z",
+    requestedBy: "role_maker_admin",
+    requestedAt: "2024-11-22T12:28:10.118Z",
+    notificationStatus: "read",
   },
   {
-    "id": "6740351f4a05290001164306",
-    "notificationId": "1f678b79-3bd7-4cd3-8d47-bc01e7fd2fc1",
-    "notificationType": "LOAN_PRODUCT",
-    "productId": "4fddde1f-28ee-4637-8530-f70f636b8000",
-    "sectionName": "Product",
-    "subSectionName": "mnb",
-    "type": "UPDATE",
-    "status": "APPROVED",
-    "routingLink": "/product/mnb/loan-product-config/95a12803-4612-4b12-ad9f-8849c5eba060/4fddde1f-28ee-4637-8530-f70f636b8000",
-    "requestId": "137ecab5-d73e-41f8-8a83-4814b3381727",
-    "fieldName": "numberOfEmisForEarlySettlement",
-    "oldValue": 1,
-    "newValue": 16,
-    "creationTime": "2024-11-22T10:39:11.264Z",
-    "requestedBy": "role_maker_admin",
-    "requestedAt": "2024-11-22T10:39:11.264Z",
-    "approvedBy": "role_checker_admin",
-    "approvedAt": "2024-11-22T11:59:51.699Z",
-    "rejectedNote": null,
-    "notificationStatus": "read"
+    id: "6740351f4a05290001164306",
+    notificationId: "1f678b79-3bd7-4cd3-8d47-bc01e7fd2fc1",
+    notificationType: "LOAN_PRODUCT",
+    productId: "4fddde1f-28ee-4637-8530-f70f636b8000",
+    sectionName: "Product",
+    subSectionName: "mnb",
+    type: "UPDATE",
+    status: "APPROVED",
+    routingLink:
+      "/product/mnb/loan-product-config/95a12803-4612-4b12-ad9f-8849c5eba060/4fddde1f-28ee-4637-8530-f70f636b8000",
+    requestId: "137ecab5-d73e-41f8-8a83-4814b3381727",
+    fieldName: "numberOfEmisForEarlySettlement",
+    oldValue: 1,
+    newValue: 16,
+    creationTime: "2024-11-22T10:39:11.264Z",
+    requestedBy: "role_maker_admin",
+    requestedAt: "2024-11-22T10:39:11.264Z",
+    approvedBy: "role_checker_admin",
+    approvedAt: "2024-11-22T11:59:51.699Z",
+    rejectedNote: null,
+    notificationStatus: "read",
   },
-]
+];

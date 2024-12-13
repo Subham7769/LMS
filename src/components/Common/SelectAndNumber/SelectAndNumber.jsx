@@ -188,6 +188,7 @@ const SelectAndNumber = ({
               onChange={handleSelect2Change}
               isDisabled={disabledSelect2}
               isHidden={hiddenSelect2}
+              isSearchable={false}
             />
             <input
               type="number"

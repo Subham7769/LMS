@@ -64,7 +64,7 @@ const NewCreatedCreditScore = () => {
       dispatch(fetchCreditScoreEqData());
 
       if (response?.creditScoreEqTempId) {
-        navigate(`/credit-score/${response.creditScoreEqTempId}`);
+        navigate(`/loan/credit-score/${response.creditScoreEqTempId}`);
       }
     } catch (error) {
       console.error(error);
@@ -86,7 +86,7 @@ const NewCreatedCreditScore = () => {
   const handleDelete = async () => {
     try {
       await dispatch(deleteCreditScore(creditScoreId)).unwrap();
-      navigate("/credit-score");
+      navigate("/loan/credit-score");
       dispatch(fetchCreditScoreEqData());
     } catch (error) {
       console.error(error);

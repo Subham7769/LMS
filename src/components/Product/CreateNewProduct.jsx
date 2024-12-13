@@ -47,7 +47,7 @@ const CreateNewProduct = () => {
       try {
         const newProductData = {
           ...productData,
-          routingLink: `/product/${productName}/loan-product-config/${productData.projectId}/`,
+          routingLink: `/loan/loan-product/${productName}/loan-product-config/${productData.projectId}/`,
           section: "Product",
         };
         await dispatch(
@@ -55,7 +55,7 @@ const CreateNewProduct = () => {
         ).then((action) => {
           console.log(action.payload);
           // navigate(`/product/${action.payload.productType}/${action.payload.projectId}`);
-          navigate(`/product/`);
+          navigate(`/loan/loan-product/`);
         });
         dispatch(fetchProductData());
       } catch (error) {

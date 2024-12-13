@@ -71,7 +71,7 @@ const BlockedEmployer = () => {
     dispatch(deleteBlockedEmployer(blockEmployersTempId)).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchBEData());
-        navigate("/blocked-employer");
+        navigate("/loan/blocked-employer");
       }
     });
   };
@@ -95,7 +95,7 @@ const BlockedEmployer = () => {
       cloneBlockedEmployer({ blockEmployersTempId, cloneBEName })
     ).unwrap();
     dispatch(fetchBEData());
-    navigate(`/blocked-employer/${beDetails.blockEmployerTempId}`);
+    navigate(`/loan/blocked-employer/${beDetails.blockEmployerTempId}`);
   };
 
   const handleClone = () => {
@@ -121,10 +121,7 @@ const BlockedEmployer = () => {
         onCreateClone={createCloneBE}
         initialName={itemName}
       />
-      <ContainerTile
-        loading={loading}
-        error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <TagInput
           formData={blockEmployer}
           handleChange={handleChange}

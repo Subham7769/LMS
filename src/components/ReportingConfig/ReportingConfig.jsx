@@ -43,7 +43,7 @@ const CreateNewReportingConfig = () => {
       await dispatch(fetchReportingConfigData()).unwrap();
 
       // Step 3: Navigate to the /reporting-config page
-      navigate("/reporting-config");
+      navigate("/loan/reporting-config");
     } catch (error) {
       console.error("Error while deleting Reporting Config: ", error);
     }
@@ -61,9 +61,9 @@ const CreateNewReportingConfig = () => {
     dispatch(updateNewConfigName(newName));
     const state = store.getState();
     const reportingConfigData = state.reportingConfig.reportingConfigData;
-    dispatch(updateReportingConfig({ reportingConfigData }));
+    await dispatch(updateReportingConfig({ reportingConfigData })).unwrap();
     await dispatch(fetchReportingConfigData()).unwrap();
-    navigate("/reporting-config/" + reportingConfigData.name);
+    navigate("/loan/reporting-config/" + reportingConfigData.name);
   };
 
   return (

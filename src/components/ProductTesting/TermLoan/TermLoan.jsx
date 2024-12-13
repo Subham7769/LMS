@@ -10,37 +10,37 @@ const TermLoan = () => {
     {
       id: "eligibility",
       label: "Eligibility",
-      to: `/product-testing/term-loan/${userID}/eligibilty`,
+      to: `/loan/product-testing/term-loan/${userID}/eligibilty`,
     },
     {
       id: "register",
       label: "Register",
-      to: `/product-testing/term-loan/${userID}/register`,
+      to: `/loan/product-testing/term-loan/${userID}/register`,
     },
     {
       id: "loan-config",
       label: "Loan Config",
-      to: `/product-testing/term-loan/${userID}/loan-config`,
+      to: `/loan/product-testing/term-loan/${userID}/loan-config`,
     },
     {
       id: "disbursement-status",
       label: "Disbursement Status",
-      to: `/product-testing/term-loan/${userID}/disbursement-status`,
+      to: `/loan/product-testing/term-loan/${userID}/disbursement-status`,
     },
     {
       id: "backend-repayment",
       label: "Backend Repayments",
-      to: `/product-testing/term-loan/${userID}/backend-repayment`,
+      to: `/loan/product-testing/term-loan/${userID}/backend-repayment`,
     },
     {
       id: "family-details",
       label: "Family Details",
-      to: `/product-testing/term-loan/${userID}/family-details`,
+      to: `/loan/product-testing/term-loan/${userID}/family-details`,
     },
     {
       id: "employment-details",
       label: "Employment Details",
-      to: `/product-testing/term-loan/${userID}/employment-details`,
+      to: `/loan/product-testing/term-loan/${userID}/employment-details`,
     },
   ];
 

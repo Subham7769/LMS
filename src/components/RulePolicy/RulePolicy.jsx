@@ -52,7 +52,7 @@ const RulePolicy = () => {
         createClone({ rulePolicyId, cloneRPName })
       ).unwrap();
       dispatch(fetchRulePolicyData());
-      navigate("/rule-policy/" + Details.rulePolicyTempId);
+      navigate("/loan/rule-policy/" + Details.rulePolicyTempId);
       // window.location.reload();
     } catch (error) {
       console.error(error);
@@ -75,7 +75,7 @@ const RulePolicy = () => {
     try {
       await dispatch(deleteRulePolicy(rulePolicyId)).unwrap();
       dispatch(fetchRulePolicyData());
-      navigate("/rule-policy");
+      navigate("/loan/rule-policy");
     } catch (error) {
       console.error(error);
     }

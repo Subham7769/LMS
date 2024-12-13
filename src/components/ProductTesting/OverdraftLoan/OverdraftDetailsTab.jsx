@@ -8,6 +8,7 @@ import {
   getOverdraftAccountNumberList,
 } from "../../../redux/Slices/overdraftLoanSlice";
 import { useParams } from "react-router-dom";
+import Tab from "../../Common/Tab/Tab";
 
 const GeneralDetails = React.lazy(() => import("./GeneralDetails"));
 const OutstandingDetails = React.lazy(() => import("./OutstandingDetails"));
@@ -25,37 +26,11 @@ const tabs = [
   { id: "pif-details", label: "PIF Details" },
 ];
 
-const Tab = ({ id, label, activeTab, setActiveTab }) => (
-  <div className="px-2">
-    <div
-      className={`py-1 px-1.5 cursor-pointer rounded text-[16px] ${
-        activeTab === id
-          ? "text-white bg-indigo-500 "
-          : "text-indigo-500 hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
-      }`}
-      onClick={() => setActiveTab(id)}
-    >
-      {label}
-    </div>
-  </div>
-);
-
-const ShimmerTable = () => {
-  return (
-    <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-    </div>
-  );
-};
-
 const OverdraftDetailsTab = () => {
   const { userID } = useParams();
   const dispatch = useDispatch();
   const { accountNumberList, accountNumber } = useSelector(
-    (state) => state.overdraftLoan
+    (state) => state.overdraftLoanOffers
   );
   const [activeTab, setActiveTab] = useState("general-details");
   const ActiveComponent = tabComponents[activeTab];
@@ -80,8 +55,9 @@ const OverdraftDetailsTab = () => {
 
   return (
     <div className="mt-4">
-      <div className="flex w-full justify-between items-center mb-10">
-        <div className="flex w-3/4 justify-start items-center">
+      {/* Tab Navigation */}
+      <div className="flex justify-between align-middle text-sm font-medium  text-gray-500 border-b border-gray-200">
+        <ul className="flex flex-wrap -mb-px">
           {tabs.map((tab) => (
             <Tab
               key={tab.id}
@@ -91,9 +67,8 @@ const OverdraftDetailsTab = () => {
               setActiveTab={setActiveTab}
             />
           ))}
-        </div>
-
-        <div className="w-1/4">
+        </ul>
+        <div className="w-1/4 -mt-2">
           <InputSelect
             labelName="Account Number List"
             inputOptions={accountNumberList}
@@ -103,6 +78,7 @@ const OverdraftDetailsTab = () => {
           />
         </div>
       </div>
+
       <Suspense fallback={<LoadingState />}>
         <ActiveComponent />
       </Suspense>

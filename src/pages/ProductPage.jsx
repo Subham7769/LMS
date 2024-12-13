@@ -21,7 +21,7 @@ const ProductPage = () => {
       <StatContainer stats={ProductStats} />{" "}
       {/* Assuming there's a similar stats component for recovery */}
       <ListTable
-        ListName="Product List"
+        ListName="Loan Product List"
         ListHeader={HeaderList}
         ListItem={ProductList}
         Searchable={true}

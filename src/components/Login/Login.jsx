@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
-import {  toast } from "react-toastify"
-
+import { toast } from "react-toastify";
 
 import BG from "../../assets/image/1.webp";
 import BG1 from "../../assets/image/2.webp";
@@ -45,7 +44,7 @@ const Login = () => {
         if (!response.ok) {
           return response.json().then((errorData) => {
             setButtonText(errorData.message || "Try Again!");
-            toast("Failed to login")
+            toast("Failed to login");
             throw new Error(errorData.message || "Failed to login");
           });
         }
@@ -69,51 +68,51 @@ const Login = () => {
         setTimeout(() => {
           switch (data?.roles[0]?.name) {
             case "ROLE_SUPERADMIN":
-              navigate("/");
+              navigate("/loan/home");
               break;
 
             case "ROLE_VIEWER":
-              navigate("/");
+              navigate("/loan/home");
               break;
 
             case "ROLE_ADMIN":
-              navigate("/");
+              navigate("/loan/home");
               break;
 
             case "ROLE_CUSTOMER_CARE_USER":
-              navigate("/customer-care");
+              navigate("/loan/customer-care");
               break;
 
             case "ROLE_CREDITOR_ADMIN":
-              navigate("/");
+              navigate("/loan/home");
               break;
 
             case "ROLE_CUSTOMER_CARE_MANAGER":
-              navigate("/customer-care");
+              navigate("/loan/customer-care");
               break;
 
             case "ROLE_TICKETING_USER":
-              navigate("/");
+              navigate("/loan/home");
               break;
 
             case "ROLE_TICKETING_SUPERVISOR":
-              navigate("/");
+              navigate("/loan/home");
               break;
 
             case "ROLE_TECHNICAL":
-              navigate("/customer-care");
+              navigate("/loan/customer-care");
               break;
 
             case "ROLE_MAKER_ADMIN":
-              navigate("/dynamic-rac");
+              navigate("/loan/dynamic-rac");
               break;
 
             case "ROLE_CHECKER_ADMIN":
-              navigate("/dynamic-rac");
+              navigate("/loan/dynamic-rac");
               break;
 
             default:
-              navigate("/");
+              navigate("/loan/home");
               break;
           }
         }, 0);

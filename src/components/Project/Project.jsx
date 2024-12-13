@@ -59,7 +59,7 @@ const Project = () => {
     const token = localStorage.getItem("projectToken");
     await dispatch(deleteProject({ projectId, token })).unwrap();
     dispatch(fetchProjectData());
-    navigate("/project");
+    navigate("/loan/project");
   };
 
   const addNoEditToast = () => {

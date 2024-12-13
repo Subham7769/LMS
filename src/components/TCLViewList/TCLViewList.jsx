@@ -69,7 +69,7 @@ const TCLViewList = () => {
     dispatch(updateTCL({ tclId, updateTCLName }))
       .unwrap()
       .then(() => {
-        navigate(`/tcl/${tclId}`);
+        navigate(`/loan/tcl/${tclId}`);
         window.location.reload();
       })
       .catch((err) => console.error(err));
@@ -119,7 +119,7 @@ const TCLViewList = () => {
     dispatch(deleteTCL(tclId))
       .unwrap()
       .then(() => {
-        navigate("/tcl");
+        navigate("/loan/tcl");
       })
       .catch((err) => console.error(err));
   };

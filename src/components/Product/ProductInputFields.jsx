@@ -122,10 +122,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
 
     // Append the "None" option to the formatted data
     if (
-      replacerString == "/tcl/" ||
-      replacerString == "/recovery/" ||
-      replacerString == "/blocked-employer/" ||
-      replacerString == "/rule-policy/"
+      replacerString == "/loan/tcl/" ||
+      replacerString == "/loan/recovery/" ||
+      replacerString == "/loan/blocked-employer/" ||
+      replacerString == "/loan/rule-policy/"
     )
       formattedData?.push({
         value: "null",
@@ -160,7 +160,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="RAC"
-            inputOptions={formateDataDropDown("/rac/", RACDataInfo? RACDataInfo:DynamicRACDataInfo)}
+            inputOptions={formateDataDropDown(
+              "/loan/rac/",
+              RACDataInfo ? RACDataInfo : DynamicRACDataInfo
+            )}
             inputName="racId"
             inputValue={productData?.racId}
             onChange={handleChange}
@@ -168,7 +171,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="Project"
-            inputOptions={formateDataDropDown("/project/", ProjectDataInfo)}
+            inputOptions={formateDataDropDown(
+              "/loan/project/",
+              ProjectDataInfo
+            )}
             inputName="projectId"
             inputValue={productData?.projectId}
             onChange={handleChange}
@@ -176,7 +182,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="TCL"
-            inputOptions={formateDataDropDown("/tcl/", TCLDataInfo)}
+            inputOptions={formateDataDropDown("/loan/tcl/", TCLDataInfo)}
             inputName="tclFileId"
             inputValue={productData?.tclFileId}
             onChange={handleChange}
@@ -184,7 +190,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
             // isClearable={true}
           />
           <InputSelect
-            inputOptions={formateDataDropDown("/recovery/", RecoveryDataInfo)}
+            inputOptions={formateDataDropDown(
+              "/loan/recovery/",
+              RecoveryDataInfo
+            )}
             labelName="Recovery Type"
             inputName="recoveryEquationTempId"
             inputValue={productData?.recoveryEquationTempId}
@@ -196,7 +205,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
         <div className="grid grid-cols-5 gap-5 items-end mb-4">
           <InputSelect
             labelName="DBR Config"
-            inputOptions={formateDataDropDown("/dbr-config/", DBRConfigInfo)}
+            inputOptions={formateDataDropDown(
+              "/loan/dbr-config/",
+              DBRConfigInfo
+            )}
             inputName="dbcTempId"
             inputValue={productData?.dbcTempId}
             onChange={handleChange}
@@ -204,7 +216,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="Blocked Employer"
-            inputOptions={formateDataDropDown("/blocked-employer/", BEDataInfo)}
+            inputOptions={formateDataDropDown(
+              "/loan/blocked-employer/",
+              BEDataInfo
+            )}
             inputName="blockEmployersTempId"
             inputValue={productData?.blockEmployersTempId}
             onChange={handleChange}
@@ -213,7 +228,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="Rule Policy"
-            inputOptions={formateDataDropDown("/rule-policy/", RPDataInfo)}
+            inputOptions={formateDataDropDown("/loan/rule-policy/", RPDataInfo)}
             inputName="rulePolicyTempId"
             inputValue={productData?.rulePolicyTempId}
             onChange={handleChange}
@@ -222,7 +237,10 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="Credit Score"
-            inputOptions={formateDataDropDown("/credit-score/", CSDataInfo)}
+            inputOptions={formateDataDropDown(
+              "/loan/credit-score/",
+              CSDataInfo
+            )}
             inputName="creditScoreEqTempId"
             inputValue={productData?.creditScoreEqTempId}
             onChange={handleChange}
@@ -231,7 +249,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           <InputSelect
             labelName="Eligible Tenure"
             inputOptions={formateDataDropDown(
-              "/credit-score-eligible-tenure/",
+              "/loan/credit-score-eligible-tenure/",
               CSETDataInfo
             )}
             inputName="creditScoreEtTempId"

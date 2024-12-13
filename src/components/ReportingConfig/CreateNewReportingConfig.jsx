@@ -32,21 +32,6 @@ const CreateNewReportingConfig = () => {
     dispatch(updateNewReportingConfigField({ name, value }));
   };
 
-  const onDeleteReportingConfig = async (RCName) => {
-    try {
-      // Step 1: Delete the Reporting Config by its name
-      await dispatch(deleteReportingConfig(RCName)).unwrap();
-
-      // Step 2: Fetch the updated Reporting Config data after deletion
-      await dispatch(fetchReportingConfigData()).unwrap();
-
-      // Step 3: Navigate to the /reporting-config page
-      navigate("/reporting-config");
-    } catch (error) {
-      console.error("Error while deleting Reporting Config: ", error);
-    }
-  };
-
   const handleCreateReportingConfig = () => {
     console.log(newReportingConfigData);
     dispatch(createReportConfig({ newReportingConfigData })).then((action) => {
@@ -56,7 +41,7 @@ const CreateNewReportingConfig = () => {
         dispatch(fetchReportingConfigData());
         // Navigate to /reporting-config/{name} if 'name' exists
         if (configName) {
-          navigate(`/reporting-config/${configName}`);
+          navigate(`/loan/reporting-config/${configName}`);
         }
       }
     });
@@ -73,13 +58,6 @@ const CreateNewReportingConfig = () => {
           initialName={newReportingConfigData.name}
           onSave={handleUpdateName}
         />
-        <div className="flex gap-4">
-          <Button
-            buttonIcon={TrashIcon}
-            onClick={() => onDeleteReportingConfig(RCName)}
-            circle={true}
-          />
-        </div>
       </div>
       <ContainerTile>
         <div className="grid grid-cols-3 gap-2 mb-5 items-end">

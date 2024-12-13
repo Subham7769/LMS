@@ -1,7 +1,7 @@
 export const MenusInitial = [
   {
     title: "Home",
-    href: "/deposit",
+    href: "/deposit/home",
     icon: "HomeIcon",
     count: "5",
     current: true,
