@@ -197,7 +197,7 @@ const LoanConfig = () => {
     "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
 
   return (
-    <div className="flex flex-col gap-5 -mt-4">
+    <div className="flex flex-col gap-5 mt-4">
       <ContainerTile loading={loading} error={error}>
         <div className="grid grid-cols-5 gap-4 items-end">
           <InputSelect

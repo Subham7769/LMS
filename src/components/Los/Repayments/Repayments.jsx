@@ -20,7 +20,7 @@ const repaymentComponents = {
 
 
 const Repayments = () => {
-  const [activeTab, setActiveTab] = useState("upload-repayment");
+  const [activeTab, setActiveTab] = useState("add-bulk-repayment");
   const ActiveComponent = repaymentComponents[activeTab];
 
   return (
