@@ -44,7 +44,6 @@ const Login = () => {
         if (!response.ok) {
           return response.json().then((errorData) => {
             setButtonText(errorData.message || "Try Again!");
-            toast("Failed to login");
             throw new Error(errorData.message || "Failed to login");
           });
         }

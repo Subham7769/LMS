@@ -14,6 +14,7 @@ import Summary from "./components/Deposit/Accounts/Summary";
 import AccountsPage from "./pages/AccountsPage";
 import Accounts from "./components/Deposit/Accounts/Accounts";
 import UpdateProfile from "./components/Deposit/Accounts/UpdateProfile";
+import { ToastContainer } from "react-toastify";
 
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
@@ -286,6 +287,7 @@ const routes = [
     element: (
       <PageErrorBoundary>
         <ProtectedRoute>
+          <ToastContainer />
           <AppLayout />
         </ProtectedRoute>
       </PageErrorBoundary>
