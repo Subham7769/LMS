@@ -103,7 +103,7 @@ const SearchBox = () => {
     if (accountDetails.length == 0) {
       setBorrowerNotFound(true);
     } else {
-      navigate(`/deposit/save/accounts/${borrowerID}/summary`);
+      navigate(`/deposit/savings/accounts/${borrowerID}/summary`);
     }
   }
 
@@ -116,7 +116,7 @@ const SearchBox = () => {
         checkBorrowerInfoCustomerCare(borrowerID);
       } else if (location.pathname === "/loan/product-testing/term-loan") {
         checkBorrowerInfoProductTesting(borrowerID);
-      } else if (location.pathname === "/deposit/save/accounts") {
+      } else if (location.pathname === "/deposit/savings/accounts") {
         checkBorrowerInfoAccountDetails(borrowerID);
       } else {
         checkBorrowerInfoOverdraftLoanOffer(borrowerID);
@@ -132,7 +132,7 @@ const SearchBox = () => {
         <div>
           {location.pathname === "/loan/customer-care"
             ? "Customer ID"
-            : location.pathname === "/deposit/save/accounts"
+            : location.pathname === "/deposit/savings/accounts"
             ? "User ID."
             : location.pathname === "/loan/product-testing/term-loan"
             ? "Term Loan Borrower ID"

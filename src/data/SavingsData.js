@@ -4,7 +4,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 
-export const AccountsStats = [
+export const SavingsStats = [
   {
     id: 1,
     name: "Total Borrowers",

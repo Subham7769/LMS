@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import Button from "../../Common/Button/Button";
+import { TrashIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { convertDate } from "../../../utils/convertDate";
+import { deleteAccount, fetchAccountDetailsById } from "../../../redux/Slices/accountsSlice";
 
 const Summary = () => {
   const { userID } = useParams();
+  const dispatch = useDispatch();
   const { accountDetails, loading, error } = useSelector(
     (state) => state.accounts
   );
+
+  useEffect(() => {
+    if (accountDetails.length == 0) {
+      dispatch(fetchAccountDetailsById(userID));
+    }
+  }, [accountDetails, userID, dispatch]);
+
+
+  const onDeleteAccount = async (accountNumber) => {
+      await dispatch(deleteAccount(accountNumber)).unwrap();
+      await dispatch(fetchAccountDetailsById(userID)).unwrap();
+  };
 
   const InfoRow = ({ label, value }) => (
     <div className="py-2 grid grid-cols-3">
@@ -29,8 +45,22 @@ const Summary = () => {
         </div>
       </ContainerTile>
       {accountDetails.map((acDetail) => (
-        <ContainerTile className={"mt-5"} loading={loading}>
-          <div className="text-sm mb-2 font-semibold">Account Summary</div>
+        <ContainerTile
+          key={acDetail?.accountNumber}
+          className={"mt-5"}
+          loading={loading}
+        >
+          <div className="flex justify-between">
+            <div className="text-sm mb-2 font-semibold">Account Summary</div>
+            <div>
+              <Button
+                buttonIcon={TrashIcon}
+                onClick={() => onDeleteAccount(acDetail?.accountNumber)}
+                circle={true}
+              />
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
             <InfoRow
               label="Account Holder Name"

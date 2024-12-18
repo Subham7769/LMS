@@ -60,18 +60,16 @@ const Header = () => {
   const userNavigation = [
     { name: "Sign out", href: "/login", action: () => localStorage.clear() },
   ];
-  const [activeTab, setActiveTab] = useState("loan");
-
-  // console.log(activeTab);
+  const [activeTab, setActiveTab] = useState("");
 
   const tabs = [
     {
-      id: "loan",
+      id: "/loan",
       path: `/loan/home`,
       label: "Loan",
     },
     {
-      id: "deposit",
+      id: "/deposit",
       path: `/deposit/home`,
       label: "Deposit",
     },
@@ -79,7 +77,7 @@ const Header = () => {
 
   // Update activeTab based on the current route
   useEffect(() => {
-    const active = tabs.find((tab) => location.pathname.startsWith(tab.path));
+    const active = tabs.find((tab) => location.pathname.startsWith(tab.id));
     if (active) {
       setActiveTab(active.id);
     }
@@ -125,6 +123,7 @@ const Header = () => {
         <ul className="flex flex-wrap">
           {tabs.map((tab) => (
             <Tab
+              key={tab.id}
               id={tab.id}
               label={tab.label}
               to={tab.path}

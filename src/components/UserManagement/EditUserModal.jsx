@@ -10,6 +10,7 @@ import {
 } from "../../redux/Slices/userManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearValidationError,
   validateForm,
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
@@ -26,6 +27,9 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
       value: id,
     }));
     dispatch(setUserRole(formattedRoleData));
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [userDetails, dispatch]);
 
   const handleChange = (e) => {
@@ -40,9 +44,12 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
   const updateData = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(formData));
+    console.log(formData);
     const state = store.getState();
     const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(userRole, dispatch);
+    console.log(state.validation.fields);
+    console.log(isValid + " ------ " + isValid2);
     if (isValid && isValid2) {
       await dispatch(updateUser({ userDetails, formData, userRole })).unwrap();
       onClose();

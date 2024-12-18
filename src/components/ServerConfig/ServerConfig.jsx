@@ -15,7 +15,7 @@ import {
   deleteServerConfig,
 } from "../../redux/Slices/serverConfigSlice";
 import store from "../../redux/store";
-import { validateForm } from "../../redux/Slices/validationSlice";
+import { clearValidationError, validateForm } from "../../redux/Slices/validationSlice";
 
 const ServerConfig = () => {
   const [bindingData, setBindingData] = useState({});
@@ -28,7 +28,10 @@ const ServerConfig = () => {
 
   useEffect(() => {
     dispatch(fetchData());
-  }, []);
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
 
   // Function to handle changes to the binding inputs
   const handleBindingChange = (index, key, value) => {

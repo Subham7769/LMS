@@ -93,7 +93,6 @@ export const maritalOptions = [
   { value: "DIVORCED", label: "DIVORCED" },
 ];
 
-
 export const booleanOptions = [
   { value: true, label: "true" },
   { value: false, label: "false" },
@@ -215,4 +214,19 @@ export const NumberArray = [
   { label: "simahScore", value: "simahScore" },
   { label: "writeOff", value: "writeOff" },
   { label: "activeRule", value: "activeRule" },
+];
+
+export const statusOption = [
+  { label: "ACTIVE", value: "ACTIVE" },
+  { label: "FROZEN", value: "FROZEN" },
+  { label: "CLOSED", value: "CLOSED" },
+  { label: "PENDING", value: "PENDING" },
+  { label: "EXPIRED", value: "EXPIRED" },
+  { label: "REACTIVATED", value: "REACTIVATED" },
+];
+
+export const transactionTypeOption = [
+  { label: "ALL", value: "ALL" },
+  { label: "DEPOSIT", value: "DEPOSIT" },
+  { label: "WITHDRAW", value: "WITHDRAW" },
 ];

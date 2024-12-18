@@ -25,7 +25,7 @@ const CreateAccount = () => {
 
   const handleCreateAccount = async () => {
     await dispatch(createAccount(newAccountData)).unwrap();
-    navigate(`/deposit/save/accounts/${newAccountData.uid}/summary`);
+    navigate(`/deposit/savings/accounts/${newAccountData.uid}/summary`);
   };
   return (
     <ContainerTile loading={loading}>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsers,
@@ -10,6 +10,7 @@ import Button from "../Common/Button/Button";
 import AddUserModal from "./AddUserModal";
 import ActionOption from "./ActionOption";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { clearValidationError } from "../../redux/Slices/validationSlice";
 
 const UserManagement = ({ role }) => {
   const dispatch = useDispatch();
@@ -18,6 +19,9 @@ const UserManagement = ({ role }) => {
 
   useEffect(() => {
     dispatch(fetchUsers());
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch]);
 
   const handleAddUser = () => {

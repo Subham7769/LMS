@@ -6,15 +6,6 @@ import {
 } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-import DatePicker from "./components/Reports/DatePicker";
-import DepositAppLayout from "./components/Deposit/DepositAppLayout/DepositAppLayout";
-import Deposit from "./components/Deposit/Deposit";
-import CreateAccount from "./components/Deposit/Accounts/CreateAccount";
-import Summary from "./components/Deposit/Accounts/Summary";
-import AccountsPage from "./pages/AccountsPage";
-import Accounts from "./components/Deposit/Accounts/Accounts";
-import UpdateProfile from "./components/Deposit/Accounts/UpdateProfile";
 import { ToastContainer } from "react-toastify";
 
 // Error Handlers Imports
@@ -243,6 +234,7 @@ const CreateNewReportingConfig = lazy(() =>
 
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
+const DatePicker = lazy(() => import("./components/Reports/DatePicker"));
 
 // Invoice Discounting Imports
 const Registration = lazy(() =>
@@ -272,6 +264,42 @@ const Los = lazy(() => import("./components/Los/Los"));
 const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
 const Loans = lazy(() => import("./components/Los/Loans/Loans"));
 const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
+
+
+// ------------------------ Deposit Section Imports -----------------------------------
+
+const DepositAppLayout = React.lazy(() =>
+  import("./components/Deposit/DepositAppLayout/DepositAppLayout")
+);
+const CreateAccount = React.lazy(() =>
+  import("./components/Deposit/Savings/CreateAccount")
+);
+const Summary = React.lazy(() =>
+  import("./components/Deposit/Savings/Summary")
+);
+const SavingsPage = React.lazy(() => import("./pages/SavingsPage"));
+const Accounts = React.lazy(() =>
+  import("./components/Deposit/Savings/Accounts")
+);
+const UpdateProfile = React.lazy(() =>
+  import("./components/Deposit/Savings/UpdateProfile")
+);
+const DepositAmount = React.lazy(() =>
+  import("./components/Deposit/Savings/DepositAmount")
+);
+const WithdrawAmount = React.lazy(() =>
+  import("./components/Deposit/Savings/WithdrawAmount")
+);
+const Transaction = React.lazy(() =>
+  import("./components/Deposit/Savings/Transaction")
+);
+const Transfer = React.lazy(() =>
+  import("./components/Deposit/Savings/Transfer")
+);
+const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
+const Internal = React.lazy(() =>
+  import("./components/Deposit/Savings/Internal")
+);
 
 const routes = [
   // Accessing All Main Components
@@ -734,17 +762,17 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "save/create-account",
+        path: "savings/create-account",
         element: <CreateAccount />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "save/accounts",
-        element: <AccountsPage />,
+        path: "savings/accounts",
+        element: <SavingsPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "save/accounts/:userID",
+        path: "savings/accounts/:userID",
         element: <Accounts />,
         errorElement: <RouteErrorBoundary />,
         children: [
@@ -757,6 +785,38 @@ const routes = [
             path: "update-profile",
             element: <UpdateProfile />,
             errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "deposit-amount",
+            element: <DepositAmount />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "withdraw-amount",
+            element: <WithdrawAmount />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "transaction",
+            element: <Transaction />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "transfer",
+            element: <Transfer />,
+            errorElement: <RouteErrorBoundary />,
+            children: [
+              {
+                path: "self",
+                element: <Self />,
+                errorElement: <RouteErrorBoundary />,
+              },
+              {
+                path: "internal",
+                element: <Internal />,
+                errorElement: <RouteErrorBoundary />,
+              },
+            ],
           },
         ],
       },

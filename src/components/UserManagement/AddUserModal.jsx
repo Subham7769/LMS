@@ -60,7 +60,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
     }
   };
 
-  console.log(userRole);
+  // console.log(userRole);
 
   if (!isOpen) return null;
 

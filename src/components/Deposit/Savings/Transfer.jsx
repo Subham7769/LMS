@@ -2,20 +2,20 @@ import React, { useState } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import Tab from "../../Common/Tab/Tab";
 
-const Accounts = () => {
+const Transfer = () => {
   const { userID } = useParams();
-  const [activeTab, setActiveTab] = useState("summary");
+  const [activeTab, setActiveTab] = useState("self");
 
   const tabs = [
     {
-      id: "summary",
-      path: `/deposit/save/accounts/${userID}/summary`,
-      label: "Summary",
+      id: "self",
+      path: `/deposit/savings/accounts/${userID}/transfer/self`,
+      label: "Self",
     },
     {
-      id: "update-profile",
-      path: `/deposit/save/accounts/${userID}/update-profile`,
-      label: "Update Profile",
+      id: "internal",
+      path: `/deposit/savings/accounts/${userID}/transfer/internal`,
+      label: "Internal",
     },
   ];
   return (
@@ -24,6 +24,7 @@ const Accounts = () => {
         <ul className="flex flex-wrap">
           {tabs.map((tab) => (
             <Tab
+              key={tab.id}
               id={tab.id}
               label={tab.label}
               to={tab.path}
@@ -40,4 +41,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default Transfer;

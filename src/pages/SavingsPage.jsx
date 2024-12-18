@@ -1,15 +1,15 @@
 import React from "react";
-import { AccountsStats } from "../data/AccountsData";
+import { SavingsStats } from "../data/SavingsData";
 import StatContainer from "../components/Common/StatContainer/StatContainer";
 import SearchBox from "../components/Common/SearchBox/SearchBox";
 
-const AccountsPage = () => {
+const SavingsPage = () => {
   return (
     <>
-      <StatContainer stats={AccountsStats} />
+      <StatContainer stats={SavingsStats} />
       <SearchBox />
     </>
   );
 };
 
-export default AccountsPage;
+export default SavingsPage;
