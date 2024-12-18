@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
-import { toast } from "react-toastify";
+import { setMenus } from "../../redux/Slices/sidebarSlice";
+import { useDispatch,useSelector } from "react-redux";
 
 import BG from "../../assets/image/1.webp";
 import BG1 from "../../assets/image/2.webp";
@@ -10,123 +11,80 @@ import BG3 from "../../assets/image/4.webp";
 import BG4 from "../../assets/image/5.webp";
 import BG5 from "../../assets/image/6.jpg";
 
-import { setMenus } from "../../redux/Slices/sidebarSlice";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../../redux/Slices/authSlice";
+import {
+  setIsSignup,
+  updateDataField,
+  login,
+  setButtonText,
+  setError,
+  resetError,
+} from "../../redux/Slices/authSlice";
+
 
 const Login = () => {
-  const [isSignup, setIsSignup] = useState("Login");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [buttonText, setButtonText] = useState("Login");
   const images = [BG, BG1, BG2, BG3, BG4, BG5];
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {
+    isSignup,
+    username,
+    password,
+    email,
+    newPassword,
+    confirmPassword,
+    buttonText,
+    error,
+  } = useSelector((state) => state.auth);
 
-  useEffect(() => {}, []);
-  // Function to handle login
-  const login = (username, password) => {
-    setButtonText("Validating User");
-    setErrorMsg("");
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    };
+  const handleLogin = (username, password) => {
+    dispatch(setButtonText("Validating User"));
 
-    fetch(`${import.meta.env.VITE_LOGIN}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((errorData) => {
-            setButtonText(errorData.message || "Try Again!");
-            throw new Error(errorData.message || "Failed to login");
-          });
+    // Dispatch the login action
+    dispatch(login({ username, password }))
+      .unwrap()
+      .then(({ token, data }) => {
+        // Successful login logic
+        if (data?.roles && data?.roles.length > 0) {
+          const role = data?.roles[0]?.name;
+
+          // Dispatch menus
+          dispatch(setMenus({ roleName: role }));
+
+          // Set the button text to "Validated!"
+          dispatch(setButtonText("Validated!"));
+
+          // Role-based navigation mapping
+          const roleBasedNavigation = {
+            ROLE_SUPERADMIN: "/loan/home",
+            ROLE_VIEWER: "/loan/home",
+            ROLE_ADMIN: "/loan/home",
+            ROLE_CUSTOMER_CARE_USER: "/loan/customer-care",
+            ROLE_CREDITOR_ADMIN: "/loan/home",
+            ROLE_CUSTOMER_CARE_MANAGER: "/loan/customer-care",
+            ROLE_TICKETING_USER: "/loan/home",
+            ROLE_TICKETING_SUPERVISOR: "/loan/home",
+            ROLE_TECHNICAL: "/loan/customer-care",
+            ROLE_MAKER_ADMIN: "/loan/dynamic-rac",
+            ROLE_CHECKER_ADMIN: "/loan/dynamic-rac",
+          };
+
+          // Navigate based on the user role
+          navigate(roleBasedNavigation[role] || "/loan/home");
+        } else {
+          // Handle case where no roles are found in the response
+          dispatch(setButtonText("Try Again!"));
+          // toast("User roles not found.");
         }
-        const authToken = response.headers.get("Authorization");
-        const token = authToken ? authToken.replace("Bearer ", "") : null;
-        if (token) {
-          localStorage.setItem("authToken", token);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data?.roles[0]?.name);
-        dispatch(setUserData(data));
-        dispatch(setMenus({ roleName: data?.roles[0]?.name }));
-        setButtonText("Validated!");
-        console.log("Login Successful:", data);
-        localStorage.setItem("roleName", data?.roles[0]?.name);
-        localStorage.setItem("username", username);
-        toast(`Welcome ${username}`);
-
-        setTimeout(() => {
-          switch (data?.roles[0]?.name) {
-            case "ROLE_SUPERADMIN":
-              navigate("/loan/home");
-              break;
-
-            case "ROLE_VIEWER":
-              navigate("/loan/home");
-              break;
-
-            case "ROLE_ADMIN":
-              navigate("/loan/home");
-              break;
-
-            case "ROLE_CUSTOMER_CARE_USER":
-              navigate("/loan/customer-care");
-              break;
-
-            case "ROLE_CREDITOR_ADMIN":
-              navigate("/loan/home");
-              break;
-
-            case "ROLE_CUSTOMER_CARE_MANAGER":
-              navigate("/loan/customer-care");
-              break;
-
-            case "ROLE_TICKETING_USER":
-              navigate("/loan/home");
-              break;
-
-            case "ROLE_TICKETING_SUPERVISOR":
-              navigate("/loan/home");
-              break;
-
-            case "ROLE_TECHNICAL":
-              navigate("/loan/customer-care");
-              break;
-
-            case "ROLE_MAKER_ADMIN":
-              navigate("/loan/dynamic-rac");
-              break;
-
-            case "ROLE_CHECKER_ADMIN":
-              navigate("/loan/dynamic-rac");
-              break;
-
-            default:
-              navigate("/loan/home");
-              break;
-          }
-        }, 0);
       })
       .catch((error) => {
-        setButtonText("Try Again!");
-        toast("Failed to login:", error.message);
-        console.error("Failed to login:", error.message);
-        setErrorMsg(error.message);
+        // Failure handling logic
+        dispatch(setButtonText("Try Again!"));
       });
   };
 
   const signup = (username, password, fullName) => {
-    setButtonText("Creating User");
-    setErrorMsg("");
+    dispatch(setButtonText("Creating User"));
     // const requestOptions = {
     //   method: "POST",
     //   headers: { "Content-Type": "application/json" },
@@ -137,31 +95,30 @@ const Login = () => {
     //   .then((response) => {
     //     if (!response.ok) {
     //       return response.json().then((errorData) => {
-    //         setButtonText(errorData.message || "Try Again!");
+    //         dispatch(setButtonText(errorData.message || "Try Again!"));
     //         throw new Error(errorData.message || "Failed to signup");
     //       });
     //     }
     //     return response.json();
     //   })
     //   .then((data) => {
-    //     setButtonText("Account Created!");
+    //     dispatch(setButtonText("Account Created!"));
     //     console.log("Signup Successful:", data);
-    //     setIsSignup("Login");
+    //     dispatch(setIsSignup("Login"));
     //   })
     //   .catch((error) => {
-    //     setButtonText("Try Again!");
+    //     dispatch(setButtonText("Try Again!"));
     //     console.error("Failed to signup:", error.message);
-    //     setErrorMsg(error.message);
     //   });
   };
 
   const resetPassword = (email, newPassword, confirmPassword) => {
     if (newPassword !== confirmPassword) {
-      setErrorMsg("Passwords do not match");
+      dispatch(setError("Passwords do not match"));
       return;
     }
-    setButtonText("Setting up Password");
-    setErrorMsg("");
+    dispatch(setButtonText("Setting up Password"));
+
     // const requestOptions = {
     //   method: "POST",
     //   headers: { "Content-Type": "application/json" },
@@ -172,21 +129,20 @@ const Login = () => {
     //   .then((response) => {
     //     if (!response.ok) {
     //       return response.json().then((errorData) => {
-    //         setButtonText(errorData.message || "Try Again!");
+    //         dispatch(setButtonText(errorData.message || "Try Again!"));
     //         throw new Error(errorData.message || "Failed to reset password");
     //       });
     //     }
     //     return response.json();
     //   })
     //   .then((data) => {
-    //     setButtonText("Password Reset Successful!");
+    //     dispatch(setButtonText("Password Reset Successful!"));
     //     console.log("Password reset successful:", data);
-    //     setIsSignup("Login");
+    //     dispatch(setIsSignup("Login"));
     //   })
     //   .catch((error) => {
-    //     setButtonText("Try Again!");
+    //     dispatch(setButtonText("Try Again!"));
     //     console.error("Failed to reset password:", error.message);
-    //     setErrorMsg(error.message);
     //   });
   };
 
@@ -200,6 +156,11 @@ const Login = () => {
     autoplaySpeed: 5000,
     pauseOnHover: false,
     beforeChange: (current, next) => setImageIndex(next),
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(updateDataField({ name, value }));
   };
   const InputStyle =
     "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
@@ -263,7 +224,7 @@ const Login = () => {
                   name="username"
                   id="username"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => handleChange(e)}
                   className={InputStyle}
                   placeholder="Your username"
                 />
@@ -280,7 +241,7 @@ const Login = () => {
                   name="password"
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => handleChange(e)}
                   className={InputStyle}
                   placeholder="Your password"
                 />
@@ -301,7 +262,7 @@ const Login = () => {
                   name="email"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => handleChange(e)}
                   className={InputStyle}
                   placeholder="Your email"
                 />
@@ -318,7 +279,7 @@ const Login = () => {
                   name="newPassword"
                   id="newPassword"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={(e) => handleChange(e)}
                   className={InputStyle}
                   placeholder="New password"
                 />
@@ -335,21 +296,19 @@ const Login = () => {
                   name="confirmPassword"
                   id="confirmPassword"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => handleChange(e)}
                   className={InputStyle}
                   placeholder="Confirm password"
                 />
               </div>
             </>
           )}
-          {errorMsg && (
-            <div className="mb-4 text-red-500 text-sm">{errorMsg}</div>
-          )}
+          {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
           <button
             type="button"
             onClick={() => {
               if (isSignup === "Login") {
-                login(username, password);
+                handleLogin(username, password);
               } else if (isSignup === "Signup") {
                 const fullName = document.getElementById("fullName").value;
                 signup(username, password, fullName);
@@ -394,9 +353,9 @@ const Login = () => {
               Don't have an account?{" "}
               <button
                 onClick={() => {
-                  setIsSignup("Signup");
-                  setErrorMsg("");
-                  setButtonText("Create an Account");
+                  dispatch(setIsSignup("Signup"));
+                  dispatch(resetError());
+                  dispatch(setButtonText("Create an Account"));
                 }}
                 className="text-indigo-600 hover:text-indigo-500 font-semibold"
               >
@@ -409,9 +368,9 @@ const Login = () => {
               Already have an account?{" "}
               <button
                 onClick={() => {
-                  setIsSignup("Login");
-                  setErrorMsg("");
-                  setButtonText("Login");
+                  dispatch(setIsSignup("Login"));
+                  dispatch(resetError());
+                  dispatch(setButtonText("Login"));
                 }}
                 className="text-indigo-600 hover:text-indigo-500 font-semibold"
               >
@@ -423,9 +382,9 @@ const Login = () => {
             <p>
               <button
                 onClick={() => {
-                  setIsSignup("Forget Password");
-                  setErrorMsg("");
-                  setButtonText("Set New Password");
+                  dispatch(setIsSignup("Forget Password"));
+                  dispatch(resetError());
+                  dispatch(setButtonText("Set New Password"));
                 }}
                 className="text-indigo-600 hover:text-indigo-500 font-semibold"
               >
@@ -437,9 +396,9 @@ const Login = () => {
             <p>
               <button
                 onClick={() => {
-                  setIsSignup("Login");
-                  setErrorMsg("");
-                  setButtonText("Login");
+                  dispatch(setIsSignup("Login"));
+                  dispatch(resetError());
+                  dispatch(setButtonText("Login"));
                 }}
                 className="text-indigo-600 hover:text-indigo-500 font-semibold"
               >

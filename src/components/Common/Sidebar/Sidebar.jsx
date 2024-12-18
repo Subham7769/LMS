@@ -120,7 +120,7 @@ const SideBar = () => {
 
   useEffect(() => {
     const roleName = localStorage.getItem("roleName");
-    console.log(roleName);
+    // console.log(roleName);
     switch (roleName) {
       case "ROLE_SUPERADMIN":
         dispatch(fetchRACData());

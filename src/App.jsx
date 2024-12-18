@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
 import DatePicker from "./components/Reports/DatePicker";
 import DepositAppLayout from "./components/Deposit/DepositAppLayout/DepositAppLayout";
 import Deposit from "./components/Deposit/Deposit";
@@ -287,7 +288,6 @@ const routes = [
     element: (
       <PageErrorBoundary>
         <ProtectedRoute>
-          <ToastContainer />
           <AppLayout />
         </ProtectedRoute>
       </PageErrorBoundary>
@@ -786,6 +786,7 @@ const appRouter = createBrowserRouter(routes);
 function App() {
   return (
     <Suspense fallback={<LoadingState />}>
+      <ToastContainer />
       <RouterProvider router={appRouter} />
     </Suspense>
   );

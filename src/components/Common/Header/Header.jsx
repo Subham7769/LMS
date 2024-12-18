@@ -1,8 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { BoltIcon } from "@heroicons/react/24/outline";
+import { BoltIcon,UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import UserImg from "../../../assets/image/user.png";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import useOnline from "../../../utils/useOnline";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,13 +11,13 @@ import Tab from "../Tab/Tab";
 const UserMenu = ({ userNavigation, isOnline }) => (
   <Menu as="div" className="relative">
     <div className="flex items-center gap-2">
-      <Menu.Button className="relative flex rounded-full p-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+      <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-gray-100 transition-colors duration-200 ">
         <span className="absolute -inset-1.5" />
         <span className="sr-only">Open user menu</span>
-        <img className="h-6 w-6 rounded-full" src={UserImg} alt="User" />
+        <UserCircleIcon className="h-8 w-8 text-gray-500" />
         <span
           title={isOnline ? "Internet Access" : "No Internet Access"}
-          className={`absolute bottom-0 right-0 h-3 w-3 ${
+          className={`absolute bottom-1 right-1 h-3 w-3 ${
             isOnline ? "bg-green-500" : "bg-red-500"
           }  rounded-full text-xs text-white flex items-center justify-center`}
         ></span>
@@ -63,7 +62,7 @@ const Header = () => {
   ];
   const [activeTab, setActiveTab] = useState("loan");
 
-  console.log(activeTab);
+  // console.log(activeTab);
 
   const tabs = [
     {
