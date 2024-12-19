@@ -405,7 +405,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(fetchRules.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
@@ -417,7 +417,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteRule.pending, (state) => {
         state.loading = true;
@@ -429,7 +429,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(deleteRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateName.pending, (state) => {
         state.loading = true;
@@ -441,7 +441,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(updateName.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createCloneDBC.pending, (state) => {
         state.loading = true;
@@ -454,7 +454,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(createCloneDBC.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addRule.pending, (state) => {
         state.loading = true;
@@ -466,7 +466,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(addRule.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteDBC.pending, (state) => {
         state.loading = true;
@@ -478,7 +478,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(deleteDBC.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateRule.pending, (state) => {
         state.loading = true;
@@ -490,7 +490,7 @@ export const dbrConfigSlice = createSlice({
       .addCase(updateRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

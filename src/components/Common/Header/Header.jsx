@@ -1,12 +1,15 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { BoltIcon,UserCircleIcon } from "@heroicons/react/24/outline";
+import { BoltIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import useOnline from "../../../utils/useOnline";
 import "react-toastify/dist/ReactToastify.css";
 import NotificationWindow from "../../Notifications/NotificationWindow";
 import Tab from "../Tab/Tab";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/Slices/authSlice";
 
 const UserMenu = ({ userNavigation, isOnline }) => (
   <Menu as="div" className="relative">
@@ -56,11 +59,17 @@ const UserMenu = ({ userNavigation, isOnline }) => (
 );
 
 const Header = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isOnline = useOnline();
+
   const userNavigation = [
-    { name: "Sign out", href: "/login", action: () => localStorage.clear() },
+    { name: "Sign out", href: "/login", action: () => dispatch(logout()) },
   ];
-  const [activeTab, setActiveTab] = useState("");
+
+  const [activeTab, setActiveTab] = useState("loan");
+
+  // console.log(activeTab);
 
   const tabs = [
     {
@@ -90,11 +99,6 @@ const Header = () => {
     >
       {/* logo */}
       <div className="w-1/3 flex shrink-0 items-center">
-        {/* <img
-          className={`h-8 ${open ? "w-auto" : "w-10 h-auto"} ml-5`}
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        /> */}
         <BoltIcon
           className={`h-8 ${
             open ? "w-auto" : "w-10 h-auto"

@@ -161,7 +161,7 @@ const reportsSlice = createSlice({
       .addCase(generateReport.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteReportResult.pending, (state) => {
         state.loading = true;
@@ -174,7 +174,7 @@ const reportsSlice = createSlice({
       .addCase(deleteReportResult.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

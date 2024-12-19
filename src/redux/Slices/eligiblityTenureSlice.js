@@ -540,7 +540,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(fetchCreditScoreETInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchCreditScoreETName.pending, (state) => {
         state.loading = true;
@@ -553,7 +553,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(fetchCreditScoreETName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(saveCreditScoreET.pending, (state) => {
         state.loading = true;
@@ -565,7 +565,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(saveCreditScoreET.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(AddNewRange.pending, (state) => {
         state.loading = true;
@@ -592,7 +592,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(AddNewRange.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateCreditScoreETName.pending, (state) => {
         state.loading = true;
@@ -604,7 +604,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(updateCreditScoreETName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createCloneCSET.pending, (state) => {
         state.loading = true;
@@ -616,7 +616,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(createCloneCSET.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(handleDeleteCSET.pending, (state) => {
         state.loading = true;
@@ -628,7 +628,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(handleDeleteCSET.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(handleDeleteRange.pending, (state) => {
         state.loading = true;
@@ -640,7 +640,7 @@ const eligiblityTenureSlice = createSlice({
       .addCase(handleDeleteRange.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

@@ -162,7 +162,7 @@ const serverConfigSlice = createSlice({
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateServerConfig.pending, (state) => {
         state.loading = true;
@@ -174,7 +174,7 @@ const serverConfigSlice = createSlice({
       .addCase(updateServerConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createServerConfig.pending, (state) => {
         state.loading = true;
@@ -186,7 +186,7 @@ const serverConfigSlice = createSlice({
       .addCase(createServerConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteServerConfig.pending, (state) => {
         state.loading = true;
@@ -198,7 +198,7 @@ const serverConfigSlice = createSlice({
       .addCase(deleteServerConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

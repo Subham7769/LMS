@@ -47,7 +47,7 @@ const generalLedgerSlice = createSlice({
       .addCase(fetchLedgerData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       });
   },
 });

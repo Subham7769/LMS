@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MenusInitial } from "../../data/MenuData";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const useFetchData = async (url, transformData, options = {}) => {
   const {
@@ -41,7 +42,7 @@ const useFetchData = async (url, transformData, options = {}) => {
     return transformedData;
   } catch (error) {
     console.error("Error fetching data:", error);
-    return Promise.reject(error.message || "Data fetch failed");
+    return Promise.reject(error || "Data fetch failed");
   }
 };
 
@@ -59,7 +60,7 @@ export const fetchRACData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -77,7 +78,7 @@ export const fetchRecoveryData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -95,7 +96,7 @@ export const fetchTCLData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -152,7 +153,7 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -170,7 +171,7 @@ export const fetchDBRData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -188,7 +189,7 @@ export const fetchBEData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -206,7 +207,7 @@ export const fetchCreditScoreEqData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -224,7 +225,7 @@ export const fetchRulePolicyData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -243,7 +244,7 @@ export const fetchProdGroupData = createAsyncThunk(
     try {
       return await useFetchData(url, transformData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -269,7 +270,7 @@ export const fetchDynamicRacData = createAsyncThunk(
       const data = await useFetchData(url, transformData);
       return data; // Transform the fetched data
     } catch (error) {
-      return rejectWithValue(error.message); // Handle errors
+      return rejectWithValue(error); // Handle errors
     }
   }
 );
@@ -291,7 +292,7 @@ export const fetchReportingConfigData = createAsyncThunk(
       return await useFetchData(url, transformData);
     } catch (error) {
       // Handle errors and reject with value
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -485,6 +486,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchRACData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchDBRData.pending, (state) => {
@@ -505,6 +507,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchDBRData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchBEData.pending, (state) => {
@@ -525,6 +528,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchBEData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchProjectData.pending, (state) => {
@@ -545,6 +549,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchProjectData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchProductData.pending, (state) => {
@@ -565,6 +570,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchProductData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchCreditScoreEqData.pending, (state) => {
@@ -585,6 +591,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchCreditScoreEqData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchRulePolicyData.pending, (state) => {
@@ -605,6 +612,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchRulePolicyData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchTCLData.pending, (state) => {
@@ -625,6 +633,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchTCLData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchProdGroupData.pending, (state) => {
@@ -645,6 +654,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchProdGroupData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchRecoveryData.pending, (state) => {
@@ -665,6 +675,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchRecoveryData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
 
       .addCase(fetchCreditScoreEligibleTenureData.pending, (state) => {
@@ -688,6 +699,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchCreditScoreEligibleTenureData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(fetchDynamicRacData.pending, (state) => {
         state.loading = true;
@@ -707,6 +719,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchDynamicRacData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(fetchReportingConfigData.pending, (state) => {
         state.loading = true;
@@ -726,6 +739,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchReportingConfigData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.error.message}`);
       });
   },
 });

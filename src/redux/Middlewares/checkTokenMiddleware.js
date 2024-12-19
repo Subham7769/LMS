@@ -1,42 +1,45 @@
 import { toast } from "react-toastify";
-// import { logout } from "../Slices/authSlice"; // Import your logout action
+import { logout } from "../Slices/authSlice"; // Import your logout action
 
 // Middleware to check token expiration
-const tokenMiddleware = (navigate) => (storeAPI) => (next) => (action) => {
+const tokenMiddleware = (storeAPI) => (next) => (action) => {
   const token = localStorage.getItem("authToken");
+  const decodedToken = parseJwt(token);
+  const currentTime = Date.now() / 1000;
 
   if (token) {
-    const decodedToken = parseJwt(token);
-    const currentTime = Date.now() / 1000;
+    // console.log(decodedToken?.exp);
+    // console.log(currentTime);
 
     if (decodedToken?.exp < currentTime) {
-      // Tost Token has expired
-      toast("Token expired. Logging out...");
+      // Toast Token has expired
+      alert("Token expired. Logging out...");
 
       // Clear the token
-      localStorage.removeItem("authToken"); 
+      localStorage.removeItem("authToken");
 
       // Dispatch logout action
-      storeAPI.dispatch(logout()); 
+      storeAPI.dispatch(logout());
 
       // Redirect to login page
-      navigate("/login"); 
+      window.location.pathname = "/login";
 
       // Stop further execution
-      return; 
+      return;
     }
   }
 
   // Pass the action to the next middleware
-  return next(action); 
+  return next(action); // Ensure `next(action)` is called correctly
 };
-
 // Utility function to decode JWT
 const parseJwt = (token) => {
   try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(base64));
+    if(token){
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(atob(base64));
+    }
   } catch (e) {
     console.error("Error decoding token:", e);
     return null;

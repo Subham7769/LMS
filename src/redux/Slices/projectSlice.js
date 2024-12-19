@@ -469,7 +469,7 @@ const projectSlice = createSlice({
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateProject.pending, (state) => {
         state.loading = true;
@@ -482,7 +482,7 @@ const projectSlice = createSlice({
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteProject.pending, (state) => {
         state.loading = true;
@@ -496,7 +496,7 @@ const projectSlice = createSlice({
       .addCase(deleteProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(createProject.pending, (state) => {
         state.loading = true;
@@ -509,7 +509,7 @@ const projectSlice = createSlice({
       .addCase(createProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

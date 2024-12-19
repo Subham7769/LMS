@@ -658,7 +658,7 @@ const productTestingSlice = createSlice({
       .addCase(getUserEligibility.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getBorrowerInfo.pending, (state) => {
         state.loading = true;
@@ -671,7 +671,7 @@ const productTestingSlice = createSlice({
       .addCase(getBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
@@ -691,7 +691,7 @@ const productTestingSlice = createSlice({
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;
@@ -705,7 +705,7 @@ const productTestingSlice = createSlice({
       .addCase(submitLoanConfiguration.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(handleProceed.pending, (state) => {
         state.loading = true;
@@ -718,7 +718,7 @@ const productTestingSlice = createSlice({
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getDisbursementInfo.pending, (state) => {
         state.loading = true;
@@ -733,7 +733,7 @@ const productTestingSlice = createSlice({
       .addCase(getDisbursementInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(submitDisbursement.pending, (state) => {
         state.loading = true;
@@ -746,7 +746,7 @@ const productTestingSlice = createSlice({
       .addCase(submitDisbursement.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getRepaymentInfo.pending, (state) => {
         state.loading = true;
@@ -763,7 +763,7 @@ const productTestingSlice = createSlice({
       .addCase(getRepaymentInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(submitRepayment.pending, (state) => {
         state.loading = true;
@@ -777,7 +777,7 @@ const productTestingSlice = createSlice({
       .addCase(submitRepayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getBorrowerDetails.pending, (state) => {
         state.loading = true;
@@ -799,7 +799,7 @@ const productTestingSlice = createSlice({
       .addCase(getBorrowerDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(updateFamilyDetails.pending, (state) => {
         state.loading = true;
@@ -813,7 +813,7 @@ const productTestingSlice = createSlice({
       .addCase(updateFamilyDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(updateEmploymentDetails.pending, (state) => {
         state.loading = true;
@@ -827,7 +827,7 @@ const productTestingSlice = createSlice({
       .addCase(updateEmploymentDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       });
   },
 });

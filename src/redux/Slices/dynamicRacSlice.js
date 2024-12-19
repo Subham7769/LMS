@@ -512,7 +512,7 @@ const dynamicRacSlice = createSlice({
       .addCase(deleteDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`API Error : ${action.error.message}` )
       })
       .addCase(cloneDynamicRac.pending, (state) => {
         state.loading = true;
@@ -526,7 +526,7 @@ const dynamicRacSlice = createSlice({
       .addCase(cloneDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`API Error : ${action.error.message}` )
       })
       .addCase(fetchDynamicRacDetails.pending, (state) => {
         state.loading = true;
@@ -544,6 +544,7 @@ const dynamicRacSlice = createSlice({
       .addCase(fetchDynamicRacDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.error.message}` )
       })
       .addCase(saveDynamicRac.pending, (state) => {
         state.loading = true;
@@ -557,7 +558,7 @@ const dynamicRacSlice = createSlice({
       .addCase(saveDynamicRac.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`API Error : ${action.error.message}` )
       })
       .addCase(fetchOptionList.pending, (state) => {
         state.loading = true;
@@ -595,7 +596,7 @@ const dynamicRacSlice = createSlice({
       .addCase(updateStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`API Error : ${action.error.message}` )
       })
       .addCase(updateRacName.pending, (state) => {
         state.loading = true;
@@ -612,7 +613,7 @@ const dynamicRacSlice = createSlice({
       .addCase(updateRacName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`API Error : ${action.error.message}` )
       })
       .addCase(deleteSection.pending, (state) => {
         state.loading = true;
@@ -624,7 +625,7 @@ const dynamicRacSlice = createSlice({
       .addCase(deleteSection.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.error.message}` )
+        toast.error(`API Error : ${action.error.message}` )
       });
   },
 });

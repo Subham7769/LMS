@@ -316,7 +316,7 @@ const productSlice = createSlice({
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(saveProductData.pending, (state) => {
         state.loading = true;
@@ -328,7 +328,7 @@ const productSlice = createSlice({
       .addCase(saveProductData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(updateProductName.pending, (state) => {
         state.loading = true;
@@ -341,7 +341,7 @@ const productSlice = createSlice({
       .addCase(updateProductName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error :  ${action.payload}`);
       })
       .addCase(deleteLoanProduct.pending, (state) => {
         state.loading = true;
@@ -353,7 +353,7 @@ const productSlice = createSlice({
       .addCase(deleteLoanProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createProductData.pending, (state) => {
         state.loading = true;
@@ -366,7 +366,7 @@ const productSlice = createSlice({
       .addCase(createProductData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

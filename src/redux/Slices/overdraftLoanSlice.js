@@ -458,7 +458,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(submitOverdraftOffer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(createOverdraft.pending, (state) => {
         state.loading = true;
@@ -484,7 +484,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(createOverdraft.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(activateOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -502,7 +502,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(activateOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(cancelOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -520,7 +520,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(cancelOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(closeOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -538,7 +538,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(closeOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -586,7 +586,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(getOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getOverdraftLoanAccountOutstanding.pending, (state) => {
         state.loading = true;
@@ -602,7 +602,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(getOverdraftLoanAccountOutstanding.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getOverdraftLoanAccountPIF.pending, (state) => {
         state.loading = true;
@@ -615,7 +615,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(getOverdraftLoanAccountPIF.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(getOverdraftAccountNumberList.pending, (state) => {
         state.loading = true;
@@ -636,7 +636,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(getOverdraftAccountNumberList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch account details";
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(debitOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -653,7 +653,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(debitOverdraftLoanAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(payOverdraftLoanAccount.pending, (state) => {
         state.loading = true;
@@ -671,7 +671,7 @@ const overdraftLoanSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         console.log(action.payload);
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(getAccountDetails.pending, (state) => {
         state.loading = true;
@@ -684,7 +684,7 @@ const overdraftLoanSlice = createSlice({
       .addCase(getAccountDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       });
   },
 });

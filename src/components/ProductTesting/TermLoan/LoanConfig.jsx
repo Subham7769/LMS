@@ -198,7 +198,7 @@ const LoanConfig = () => {
 
   return (
     <div className="flex flex-col gap-5 mt-4">
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile>
         <div className="grid grid-cols-5 gap-4 items-end">
           <InputSelect
             labelName={"Loan Type"}

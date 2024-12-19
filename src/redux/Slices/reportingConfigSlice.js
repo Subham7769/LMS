@@ -190,7 +190,7 @@ const reportingConfigSlice = createSlice({
       .addCase(deleteReportingConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(createReportConfig.pending, (state) => {
         state.loading = true;
@@ -204,7 +204,7 @@ const reportingConfigSlice = createSlice({
       .addCase(createReportConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchReportingConfig.pending, (state) => {
         state.loading = true;
@@ -232,6 +232,8 @@ const reportingConfigSlice = createSlice({
       .addCase(updateReportingConfig.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error occurred while updating";
+        toast.error(`API Error : Error occurred while updating`);
+
       });
   },
 });

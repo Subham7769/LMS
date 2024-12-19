@@ -79,6 +79,8 @@ const authSlice = createSlice({
       // Clear localStorage
       localStorage.removeItem("userData");
       localStorage.removeItem("authToken");
+      localStorage.removeItem("roleName");
+      localStorage.removeItem("username");
     },
   },
   extraReducers: (builder) => {
@@ -98,7 +100,6 @@ const authSlice = createSlice({
         localStorage.setItem("authToken", action.payload.token);
         localStorage.setItem("roleName", action.payload.data?.roles[0]?.name);
         localStorage.setItem("username", action.payload?.data?.username);
-        localStorage.setItem("roleName", action.payload?.data?.roles[0]?.name);
 
         // Welcome Toast
         toast(`Welcome ${action.payload?.data?.username}`);

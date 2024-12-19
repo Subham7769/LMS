@@ -538,7 +538,7 @@ export const globalConfigSlice = createSlice({
       .addCase(fetchLiabilityData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(addNewLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -559,7 +559,7 @@ export const globalConfigSlice = createSlice({
       .addCase(addNewLiabilityItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -571,7 +571,7 @@ export const globalConfigSlice = createSlice({
       .addCase(updateLiabilityItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -583,7 +583,7 @@ export const globalConfigSlice = createSlice({
       .addCase(deleteLiabilityItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchRiskGrades.pending, (state) => {
         state.loading = true;
@@ -600,7 +600,7 @@ export const globalConfigSlice = createSlice({
       .addCase(fetchRiskGrades.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(addRiskGrade.pending, (state) => {
         state.loading = true;
@@ -618,7 +618,7 @@ export const globalConfigSlice = createSlice({
       .addCase(addRiskGrade.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       // Update Item Reducers
       .addCase(updateRiskGrade.pending, (state) => {
@@ -631,7 +631,7 @@ export const globalConfigSlice = createSlice({
       .addCase(updateRiskGrade.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       // Delete Item Reducers
       .addCase(deleteRiskGrade.pending, (state) => {
@@ -644,7 +644,7 @@ export const globalConfigSlice = createSlice({
       .addCase(deleteRiskGrade.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(fetchExpenseData.pending, (state) => {
         state.loading = true;
@@ -660,7 +660,7 @@ export const globalConfigSlice = createSlice({
       .addCase(fetchExpenseData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(addExpenseField.pending, (state) => {
         state.loading = true;
@@ -672,7 +672,7 @@ export const globalConfigSlice = createSlice({
       .addCase(addExpenseField.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(saveExpenseField.pending, (state) => {
         state.loading = true;
@@ -684,7 +684,7 @@ export const globalConfigSlice = createSlice({
       .addCase(saveExpenseField.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(deleteExpenseField.pending, (state) => {
         state.loading = true;
@@ -696,7 +696,7 @@ export const globalConfigSlice = createSlice({
       .addCase(deleteExpenseField.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(fetchNotificationData.pending, (state) => {
         state.loading = true;
@@ -712,7 +712,7 @@ export const globalConfigSlice = createSlice({
       .addCase(fetchNotificationData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(saveNotificationData.pending, (state) => {
         state.loading = true;
@@ -724,7 +724,7 @@ export const globalConfigSlice = createSlice({
       .addCase(saveNotificationData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       });
   },
 });

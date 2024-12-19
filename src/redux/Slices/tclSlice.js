@@ -311,7 +311,6 @@ const tclSlice = createSlice({
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
@@ -323,7 +322,7 @@ const tclSlice = createSlice({
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
@@ -353,7 +352,8 @@ const tclSlice = createSlice({
         state.error = null;
       })
       .addCase(updateTCL.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteTCL.pending, (state) => {
         state.loading = true;
@@ -364,7 +364,7 @@ const tclSlice = createSlice({
       })
       .addCase(deleteTCL.rejected, (state, action) => {
         state.error = action.payload;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteTCLFile.pending, (state) => {
         state.loading = true;
@@ -378,7 +378,7 @@ const tclSlice = createSlice({
       })
       .addCase(deleteTCLFile.rejected, (state, action) => {
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadTCLFile.pending, (state) => {
         state.loading = true;
@@ -391,7 +391,7 @@ const tclSlice = createSlice({
       .addCase(uploadTCLFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload}`); // Notify the user of the error
+        toast.error(`API Error : ${action.payload}`); // Notify the user of the error
       });
   },
 });

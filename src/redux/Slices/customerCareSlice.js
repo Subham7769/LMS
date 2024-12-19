@@ -167,6 +167,7 @@ const customerCareSlice = createSlice({
           state.loanOffersCalculations = action.payload;
         } else if (url.includes("/loans")) {
           state.loanHistory = action.payload;
+          console.log(action.payload)
         } else if (url.includes("/repayments")) {
           state.paymentHistory = action.payload;
         } else if (url.includes("/rejection-history")) {
@@ -181,9 +182,8 @@ const customerCareSlice = createSlice({
       })
       .addCase(fetchBorrowerData.rejected, (state, action) => {
         state.loading = false;
-        console.error("fetchBorrowerData failed:", action.payload);
-        state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        state.error = action.payload.message;
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;
@@ -204,7 +204,7 @@ const customerCareSlice = createSlice({
         state.downloadLoading = false;
         state.downloadError = action.error.message;
         console.error("Download failed:", action.payload);
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       })
       .addCase(downloadFile.pending, (state) => {
         state.loading = true;
@@ -216,7 +216,7 @@ const customerCareSlice = createSlice({
       .addCase(downloadFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload.message}`);
       });
   },
 });

@@ -318,7 +318,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(fetchBlockedEmployerData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
 
       // Fetch Blocked Employer Name
@@ -333,7 +333,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(fetchBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
 
       // Update Blocked Employer Name
@@ -349,7 +349,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(updateBlockedEmployerName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
 
       // Delete Blocked Employer Entry
@@ -364,7 +364,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(deleteBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
 
       // Delete Blocked Employer
@@ -379,7 +379,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(deleteBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
 
       // Add Blocked Employer Entry
@@ -395,7 +395,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(addBlockedEmployerEntry.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
 
       // Clone Blocked Employer
@@ -410,7 +410,7 @@ const blockedEmployerSlice = createSlice({
       .addCase(cloneBlockedEmployer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

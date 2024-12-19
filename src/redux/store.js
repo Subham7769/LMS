@@ -26,6 +26,7 @@ import notificationSlice from "./Slices/notificationSlice";
 import serverConfigSlice from "./Slices/serverConfigSlice";
 import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
+import checkTokenMiddleware from './Middlewares/checkTokenMiddleware.js'
 
 const store = configureStore({
   reducer: {
@@ -56,7 +57,8 @@ const store = configureStore({
     depositSidebar: depositSidebarSlice,
     accounts: accountsSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(checkTokenMiddleware),
 });
-
 
 export default store;

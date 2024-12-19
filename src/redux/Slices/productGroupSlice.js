@@ -298,6 +298,7 @@ const productGroupSlice = createSlice({
       .addCase(fetchPGroups.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchLoanProducts.pending, (state) => {
         state.loading = true;
@@ -314,6 +315,7 @@ const productGroupSlice = createSlice({
       .addCase(fetchLoanProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchInList.pending, (state) => {
         state.loading = true;
@@ -331,6 +333,7 @@ const productGroupSlice = createSlice({
       .addCase(fetchInList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateProductGroup.pending, (state) => {
         state.loading = true;
@@ -343,7 +346,7 @@ const productGroupSlice = createSlice({
       .addCase(updateProductGroup.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

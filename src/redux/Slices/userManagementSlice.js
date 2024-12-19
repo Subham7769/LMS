@@ -319,6 +319,7 @@ const userManagementSlice = createSlice({
       .addCase(fetchRoles.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
@@ -330,8 +331,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -342,8 +343,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(suspendUser.pending, (state) => {
         state.loading = true;
@@ -354,8 +355,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(suspendUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
@@ -366,8 +367,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(activateUser.pending, (state) => {
         state.loading = true;
@@ -379,8 +380,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(activateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(generatePassword.pending, (state) => {
         state.loading = true;
@@ -393,7 +394,7 @@ const userManagementSlice = createSlice({
       .addCase(generatePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       })
       .addCase(createUser.pending, (state) => {
         state.loading = true;
@@ -406,7 +407,7 @@ const userManagementSlice = createSlice({
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        toast.error(`Error : ${action.error.message}`);
+        toast.error(`API Error : ${action.error.message}`);
       });
   },
 });

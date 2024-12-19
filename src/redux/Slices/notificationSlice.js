@@ -175,7 +175,7 @@ const notificationSlice = createSlice({
       .addCase(fetchNotifications.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateNotificationStatus.pending, (state) => {
         // state.loading = true;
@@ -193,7 +193,7 @@ const notificationSlice = createSlice({
       .addCase(updateNotificationStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateNotificationRequest.pending, (state) => {
         // state.loading = true;
@@ -210,7 +210,7 @@ const notificationSlice = createSlice({
       .addCase(updateNotificationRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchNotificationsHistory.pending, (state) => {
         state.loading = true;
@@ -227,6 +227,7 @@ const notificationSlice = createSlice({
       .addCase(fetchNotificationsHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`)
       });
   },
 });

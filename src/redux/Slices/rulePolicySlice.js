@@ -935,7 +935,7 @@ const rulePolicySlice = createSlice({
       .addCase(fetchRulePolicyData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateFinanceAmountWithTenureRules.pending, (state) => {
         state.loading = true;
@@ -947,7 +947,7 @@ const rulePolicySlice = createSlice({
       .addCase(updateFinanceAmountWithTenureRules.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createMaxFinAmtEntry.pending, (state) => {
         state.loading = true;
@@ -960,7 +960,7 @@ const rulePolicySlice = createSlice({
       .addCase(createMaxFinAmtEntry.rejected, (state) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteMaxFinAmtEntry.pending, (state) => {
         state.loading = true;
@@ -972,7 +972,7 @@ const rulePolicySlice = createSlice({
       .addCase(deleteMaxFinAmtEntry.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addRiskBasedPricingEquationRule.pending, (state) => {
         state.loading = true;
@@ -993,7 +993,7 @@ const rulePolicySlice = createSlice({
       .addCase(addRiskBasedPricingEquationRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateRBPE.pending, (state) => {
         state.loading = true;
@@ -1005,7 +1005,7 @@ const rulePolicySlice = createSlice({
       .addCase(updateRBPE.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteRiskBasedPricingEquationRule.pending, (state) => {
         state.loading = true;
@@ -1017,7 +1017,7 @@ const rulePolicySlice = createSlice({
       .addCase(deleteRiskBasedPricingEquationRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addRiskBasedPricingRule.pending, (state) => {
         state.loading = true;
@@ -1046,7 +1046,7 @@ const rulePolicySlice = createSlice({
       .addCase(addRiskBasedPricingRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteRiskBasedPricingRule.pending, (state) => {
         state.loading = true;
@@ -1057,7 +1057,7 @@ const rulePolicySlice = createSlice({
       })
       .addCase(deleteRiskBasedPricingRule.rejected, (state, action) => {
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateRiskBasedPricingRules.pending, (state) => {
         state.loading = true;
@@ -1069,7 +1069,7 @@ const rulePolicySlice = createSlice({
       .addCase(updateRiskBasedPricingRules.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addLengthOfServiceRule.pending, (state) => {
         state.loading = true;
@@ -1097,7 +1097,7 @@ const rulePolicySlice = createSlice({
       .addCase(addLengthOfServiceRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteLengthOfServiceRule.pending, (state) => {
         state.loading = true;
@@ -1108,7 +1108,7 @@ const rulePolicySlice = createSlice({
       })
       .addCase(deleteLengthOfServiceRule.rejected, (state, action) => {
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateLengthOfServiceRule.pending, (state) => {
         state.loading = true;
@@ -1120,7 +1120,7 @@ const rulePolicySlice = createSlice({
       .addCase(updateLengthOfServiceRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addCityTagRule.pending, (state) => {
         state.loading = true;
@@ -1133,7 +1133,7 @@ const rulePolicySlice = createSlice({
       .addCase(addCityTagRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteCityTagRule.pending, (state) => {
         state.loading = true;
@@ -1145,7 +1145,7 @@ const rulePolicySlice = createSlice({
       .addCase(deleteCityTagRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addOccupationTagRule.pending, (state) => {
         state.loading = true;
@@ -1158,7 +1158,7 @@ const rulePolicySlice = createSlice({
       .addCase(addOccupationTagRule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteOccupationTagRule.pending, (state) => {
         state.loading = true;
@@ -1169,7 +1169,7 @@ const rulePolicySlice = createSlice({
       })
       .addCase(deleteOccupationTagRule.rejected, (state, action) => {
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchName.pending, (state) => {
         state.loading = true;
@@ -1192,7 +1192,7 @@ const rulePolicySlice = createSlice({
       .addCase(updateRulePolicyName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createClone.pending, (state) => {
         state.loading = true;
@@ -1204,7 +1204,7 @@ const rulePolicySlice = createSlice({
       .addCase(createClone.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteRulePolicy.pending, (state) => {
         state.loading = true;
@@ -1216,7 +1216,7 @@ const rulePolicySlice = createSlice({
       .addCase(deleteRulePolicy.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

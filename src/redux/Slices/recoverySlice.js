@@ -286,7 +286,7 @@ const recoverySlice = createSlice({
       .addCase(fetchName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
@@ -310,7 +310,7 @@ const recoverySlice = createSlice({
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateOrPostData.pending, (state, action) => {
         state.loading = true;
@@ -322,8 +322,8 @@ const recoverySlice = createSlice({
       })
       .addCase(updateOrPostData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`Error : ${action.payload}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteRecovery.pending, (state) => {
         state.loading = true;
@@ -334,11 +334,7 @@ const recoverySlice = createSlice({
       })
       .addCase(deleteRecovery.rejected, (state, action) => {
         state.error = action.error.message;
-        if (action.payload === "Unauthorized") {
-          toast.error("Session expired. Please log in again.");
-        } else {
-          toast.error("Failed to delete recovery configuration.");
-        }
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createClone.pending, (state) => {
         state.loading = true;
@@ -348,25 +344,16 @@ const recoverySlice = createSlice({
         toast.success("Clone created successfully!");
       })
       .addCase(createClone.rejected, (state, action) => {
-        if (action.payload === "Unauthorized") {
-          toast.error("Session expired. Please log in again.");
-        } else {
-          toast.error("Failed to create clone.");
-          state.error = action.error.message;
-        }
         state.error = action.error.message;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateRecoveryName.fulfilled, (state, action) => {
         state.itemName = action.payload;
         toast.success("Name updated successfully!");
       })
       .addCase(updateRecoveryName.rejected, (state, action) => {
-        if (action.payload === "Unauthorized") {
-          toast.error("Session expired. Please log in again.");
-        } else {
-          toast.error("Failed to update name.");
-        }
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });
