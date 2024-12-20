@@ -28,6 +28,7 @@ import {
   deleteDynamicRac,
   updateSection,
   removeSection,
+  setSectionSettings,
   deleteSection,
 } from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
@@ -47,6 +48,8 @@ const DynamicRAC = () => {
   const fileInputRef = useRef(null);
   const [isEditorMode, setIsEditorMode] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
+  const [newSize, setNewSize] = useState("");
   const { racConfig, loading, error } = useSelector(
     (state) => state.dynamicRac
   );
@@ -237,6 +240,12 @@ const DynamicRAC = () => {
     setIsModalOpen(true);
   };
 
+  const handleSectionSettings = ({sectionId}) => {
+    setIsOpenSectionSettings(!isOpenSectionSettings)
+    dispatch(setSectionSettings({sectionId,newSize}));
+    setNewSize("")
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -264,18 +273,8 @@ const DynamicRAC = () => {
     toast("Section Added successfully");
   };
 
-  const ShimmerTable = () => {
-    return (
-      <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-      </div>
-    );
-  };
   return (
-    <>
+    <div className="relative">
       {loading ? (
         <div className="flex gap-5 animate-pulse py-5">
           {/* Column 1 (20% width) */}
@@ -445,6 +444,10 @@ const DynamicRAC = () => {
                             />
                             {isEditorMode && roleName !== "ROLE_VIEWER" && (
                               <div className="flex justify-between items-center gap-2">
+                                {/* <Cog6ToothIcon
+                                  onClick={() =>handleSectionSettings({sectionId: section.sectionId})}
+                                  className="h-5 w-5 hover:text-indigo-500"
+                                /> */}
                                 <TrashIcon
                                   onClick={() =>
                                     handleDeleteSection({
@@ -507,7 +510,7 @@ const DynamicRAC = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

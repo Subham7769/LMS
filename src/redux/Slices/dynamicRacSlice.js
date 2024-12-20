@@ -31,6 +31,7 @@ export const fetchDynamicRacDetails = createAsyncThunk(
       );
       return response.data; // Assuming the API returns data in the desired format
     } catch (error) {
+      console.log(error)
       return rejectWithValue(error.response.data); // Return the error response if the request fails
     }
   }
@@ -130,13 +131,17 @@ export const fetchOptionList = createAsyncThunk(
         `${import.meta.env.VITE_DYNAMIC_RAC_ALL_NAME_READ}${racId}/available-names`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Correct placement of headers
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
       return response.data; // Return the data from the API response
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message); // Handle errors
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -344,6 +349,18 @@ const dynamicRacSlice = createSlice({
       state.racConfig.sections = state.racConfig.sections.filter(
         (section) => section.sectionId !== sectionId
       );
+    },
+    setSectionSettings(state, action) {
+      const { sectionId,newSize } = action.payload;
+      state.racConfig.sections = state.racConfig.sections.map((section) => {
+        if (section.sectionId === sectionId) {
+          return {
+            ...section,
+            size: newSize,
+          };
+        }
+        return section;
+      });
     },
     addRule(state, action) {
       const { sectionId, ruleConfig } = action.payload;
@@ -583,6 +600,7 @@ const dynamicRacSlice = createSlice({
       .addCase(fetchOptionList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.payload}` )
       })
       .addCase(updateStatus.pending, (state) => {
         state.loading = true;
@@ -637,6 +655,7 @@ export const {
   setSection,
   addSection,
   removeSection,
+  setSectionSettings,
   updateSection,
   addRule,
   removeRule,

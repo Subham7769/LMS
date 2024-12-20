@@ -205,3 +205,21 @@ export const yesNoOptions = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" }
 ];
+
+
+export const repaymentOptions = [
+  { label: "Ignore", value: "ignore" },
+  { label: "Amount", value: "amount" },
+  { label: "Collection Method", value: "collectionMethod" },
+  { label: "Loan Unique Number", value: "loanUniqueNumber" },
+  { label: "Collected By", value: "collectedBy" },
+  { label: "Description", value: "description" },
+  { label: "Recalculate remaining schedule with balance principal amount", value: "recalculateSchedule" },
+  { label: "Adjust interest on a pro-rata basis until the Collection Date selected above", value: "adjustInterestProrata" },
+  { label: "Allocate repayment amount manually based on the below value", value: "allocateRepayment" },
+  { label: "Principal Amount", value: "principalAmount" },
+  { label: "Interest Amount", value: "interestAmount" },
+  { label: "Fees Amount", value: "feesAmount" },
+  { label: "Penalty Amount", value: "penaltyAmount" },
+  { label: "Destination of Funds for Repayment Amount", value: "destinationFundsRepayment" }
+];
