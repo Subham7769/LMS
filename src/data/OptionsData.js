@@ -54,10 +54,10 @@ export const tenureOptions = [
 ];
 
 export const tenureTypeOptions = [
-  { value: "DAILY", label: "DAY" },
-  { value: "WEEKLY", label: "WEEK" },
-  { value: "MONTHLY", label: "MONTH" },
-  { value: "YEARLY", label: "YEAR" },
+  { value: "DAY", label: "DAY" },
+  { value: "WEEK", label: "WEEK" },
+  { value: "MONTH", label: "MONTH" },
+  { value: "YEAR", label: "YEAR" },
 ];
 
 export const options = [

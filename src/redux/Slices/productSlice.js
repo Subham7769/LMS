@@ -327,8 +327,8 @@ const productSlice = createSlice({
       })
       .addCase(saveProductData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateProductName.pending, (state) => {
         state.loading = true;

@@ -363,7 +363,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           />
           <InputSelect
             labelName="Per"
-            inputOptions={options}
+            inputOptions={tenureTypeOptions}
             inputName="interestPeriodType"
             inputValue={interestEligibleTenure?.interestPeriodType}
             onChange={handleChangeInterestEligibleTenure}

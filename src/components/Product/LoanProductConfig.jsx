@@ -308,7 +308,7 @@ const LoanProductConfig = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingIndex === index ? (
                         <InputSelect
-                          inputOptions={options}
+                          inputOptions={tenureTypeOptions}
                           inputName={"interestPeriodType"}
                           inputValue={item?.interestPeriodType}
                           onChange={(selectedOption) =>
