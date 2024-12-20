@@ -6,7 +6,7 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputText from "../Common/InputText/InputText";
 import { useNavigate, useParams } from "react-router-dom";
-import { options } from "../../data/OptionsData";
+import { tenureDurationOptions } from "../../data/OptionsData";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import {
@@ -162,7 +162,7 @@ const RecoveryConfig = () => {
               labelName="Tenure Type"
               inputName="tenureType"
               inputValue={data?.tenureType}
-              inputOptions={options}
+              inputOptions={tenureDurationOptions}
               onChange={handleChangeWrapper}
               placeHolder="Select Tenure Type"
               isValidation={true}
