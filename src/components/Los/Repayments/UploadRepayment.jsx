@@ -18,7 +18,7 @@ const UploadRepayment = () => {
   const [showStep2, setShowStep2] = useState(false);
   const [columnArray, setColumnArray] = useState([]);
   const [repaymentHeaderData, setRepaymentHeaderData] = useState([]);
-  const [repaymentData, setRepaymentData] = useState();
+  const [repaymentData, setRepaymentData] = useState(null);
 
   console.log(repaymentHeaderData);
   console.log(repaymentData);
@@ -409,7 +409,8 @@ const UploadRepayment = () => {
             setShowStep2(!showStep2);
           }}
           rectangle={true}
-          className={`mt-4 h-fit self-center`}
+          className={`mt-4 h-fit self-center disabled:bg-gray-500`}
+          disabled={!repaymentData}
         />
       </div>
 

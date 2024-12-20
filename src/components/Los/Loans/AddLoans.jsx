@@ -16,7 +16,6 @@ const AddLoans = () => {
     principalAmount: "",
     loanReleaseDate: "",
     interestMethod: "",
-    interestType: "",
     loanInterest: "",
     interestPer: "",
     loanDuration: "",
