@@ -135,10 +135,6 @@ export const fetchOptionList = createAsyncThunk(
           },
         }
       );
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message);
-      }
       return response.data; // Return the data from the API response
     } catch (error) {
       return rejectWithValue(error.message);
