@@ -101,8 +101,8 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem,loading, error }) => {
       </thead>
       <tbody className="divide-y divide-gray-200 bg-white">
         {currentData.length !== 0 ? (
-          currentData.map((item) => (
-            <React.Fragment key={item.id}>
+          currentData.map((item, index) => (
+            <React.Fragment key={index}>
               {item.accounts.map((accountItem, idx) => (
                 <tr key={`${item.id}-${idx}`}>
                   <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">

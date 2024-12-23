@@ -119,13 +119,13 @@ const PersonalInfo = () => {
         <ContainerTile
           className="flex items-center gap-5"
           loading={loading}
-          error={error}
+          // error={error}
         >
-          <SectionErrorBoundary>
-            <Content />
-          </SectionErrorBoundary>
+        <SectionErrorBoundary>
+          <Content />
+        </SectionErrorBoundary>
         </ContainerTile>
-        <ContainerTile loading={loading} error={error}>
+        <ContainerTile loading={loading}>
           <SectionErrorBoundary>
             <Content2 />
           </SectionErrorBoundary>

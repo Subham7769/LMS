@@ -122,12 +122,10 @@ const CreditProfile = () => {
         }))}
         Divider={true}
         loading={loading}
-        error={error}
       />
       <ContainerTile
         className="grid grid-cols-2 gap-2"
         loading={loading}
-        error={error}
       >
         <SectionErrorBoundary>
           <Content />

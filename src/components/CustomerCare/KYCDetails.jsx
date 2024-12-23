@@ -61,7 +61,6 @@ const KYCDetails = () => {
   return (
     <ContainerTile
     loading={loading}
-    error={error}
     >
       <div className="grid grid-cols-2 gap-4 text-[14px] pb-2">
         <SectionErrorBoundary>

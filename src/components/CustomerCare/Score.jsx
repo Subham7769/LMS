@@ -44,7 +44,6 @@ const Score = () => {
     <ContainerTile
       loading={loading || CreditBureauDetails.length === 0 ||
         CreditBureauDetails.response.length === 0}
-      error={error}
       className={"mt-4"}
     >
       <div className="grid grid-cols-2 gap-4 text-[14px]">

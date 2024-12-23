@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 const postData = {
@@ -63,26 +62,20 @@ export const getUserEligibility = createAsyncThunk(
   async ({ userID, url }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios({
+      const response = await fetch(`${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}${url}`, {
         method: "POST",
-        url: `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}${url}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (response.status === 404) {
-        return rejectWithValue("User not found");
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        return rejectWithValue("Unauthorized access");
-      } else if (response.status === 500) {
+      if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData.message || "Failed to get details");
       }
-
-      return response.data;
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -95,25 +88,24 @@ export const getBorrowerInfo = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
 
-      const response = await axios({
-        method: "PUT",
-        url: `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        data: { ...postData, idNumber: userID },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ ...postData, idNumber: userID }),
+        }
+      );
 
-      // Handle specific status codes
-      if (response.status === 404) {
-        return rejectWithValue("User Not Found");
-      } else if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        return rejectWithValue({ message: "Unauthorized" });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get details");
       }
-
-      return response.data;
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -138,17 +130,12 @@ export const getUserLoanOptions = createAsyncThunk(
         }
       );
 
-      if (response.status === 404) {
-        return rejectWithValue("User Not Found");
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get details");
       }
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        return rejectWithValue({ message: "Unauthorized" });
-      }
-
-      const json = await response.json();
-      return json;
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -180,13 +167,12 @@ export const submitLoanConfiguration = createAsyncThunk(
         }
       );
 
-      if (response.status === 400) {
+      if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData.message || "Failed to get details");
       }
-
-      const json = await response.json();
-      return json;
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -216,9 +202,9 @@ export const handleProceed = createAsyncThunk(
         }
       );
 
-      if (response.status === 400) {
+      if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData); // Handle error with a reject
+        return rejectWithValue(errorData.message || "Failed to get details");
       }
 
       const loanData = await response.json();
@@ -250,14 +236,12 @@ export const getDisbursementInfo = createAsyncThunk(
       );
 
       // Check for token expiration or invalid token
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        navigate("/login");
-        return rejectWithValue("Unauthorized or Forbidden access.");
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get details");
       }
-
-      const json = await response.json();
-      return json; // Return disbursement data
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -297,16 +281,13 @@ export const submitDisbursement = createAsyncThunk(
       );
 
       // Handle error response
-      if (response.status === 400) {
+      if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
-      }
-
-      if (response.status === 202) {
-        setTimeout(() => {
-          navigate("/loan/customer-care/" + userID + "/loan-payment-history");
-        }, 1000);
-        return "Disbursement done Successfully !!";
+        return rejectWithValue(errorData.message || "Failed to get details");
+      } else {
+          setTimeout(() => {
+            navigate("/loan/customer-care/" + userID + "/loan-payment-history");
+          }, 1000);
       }
     } catch (error) {
       return rejectWithValue(error);
@@ -334,20 +315,15 @@ export const getRepaymentInfo = createAsyncThunk(
         }
       );
 
-      // Check for token expiration or invalid token
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return rejectWithValue("Unauthorized access. Redirecting to login.");
-      }
-
-      if (response.status === 404) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData);
-      }
-
-      if (response.status === 500) {
-        return rejectWithValue("No data found for this User Id");
+      if (!response.ok) {
+        if (response.status === 500) {
+          return rejectWithValue("No data found for this User Id");
+        }else {
+            const errorData = await response.json();
+            return rejectWithValue(
+              errorData.message || "Failed to get details"
+            );
+        }
       }
 
       const data = await response.json();
@@ -394,17 +370,15 @@ export const submitRepayment = createAsyncThunk(
         }
       );
 
-      if (response.status === 400 || response.status === 404) {
+      if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
-      }
-
-      if (response.status === 202) {
+        return rejectWithValue(errorData.message || "Failed to get details");
+      } else {
         setTimeout(() => {
           navigate("/loan/customer-care/" + userID + "/loan-payment-history");
         }, 1000);
-        return "Repayment done Successfully !!";
       }
+
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -429,7 +403,7 @@ export const getBorrowerDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData || "Failed to get details");
       }
 
       const data = await response.json();
@@ -470,7 +444,7 @@ export const updateFamilyDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData || "Failed to get details");
       }
 
       // Dispatch to fetch updated family details after successful update
@@ -506,7 +480,7 @@ export const updateEmploymentDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData || "Failed to get details");
       }
 
       // Dispatch to fetch updated family details after successful update
@@ -657,8 +631,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(getUserEligibility.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getBorrowerInfo.pending, (state) => {
         state.loading = true;
@@ -670,8 +644,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(getBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
@@ -690,8 +664,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;
@@ -705,7 +679,7 @@ const productTestingSlice = createSlice({
       .addCase(submitLoanConfiguration.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`API Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(handleProceed.pending, (state) => {
         state.loading = true;
@@ -718,7 +692,7 @@ const productTestingSlice = createSlice({
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`API Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getDisbursementInfo.pending, (state) => {
         state.loading = true;
@@ -732,8 +706,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(getDisbursementInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(submitDisbursement.pending, (state) => {
         state.loading = true;
@@ -745,8 +719,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(submitDisbursement.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getRepaymentInfo.pending, (state) => {
         state.loading = true;
@@ -762,8 +736,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(getRepaymentInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(submitRepayment.pending, (state) => {
         state.loading = true;
@@ -776,8 +750,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(submitRepayment.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getBorrowerDetails.pending, (state) => {
         state.loading = true;
@@ -798,8 +772,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(getBorrowerDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateFamilyDetails.pending, (state) => {
         state.loading = true;
@@ -812,8 +786,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(updateFamilyDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(updateEmploymentDetails.pending, (state) => {
         state.loading = true;
@@ -826,8 +800,8 @@ const productTestingSlice = createSlice({
       })
       .addCase(updateEmploymentDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

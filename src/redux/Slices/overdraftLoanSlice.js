@@ -273,15 +273,26 @@ export const getOverdraftAccountNumberList = createAsyncThunk(
   "overdraft/getOverdraftAccountNumberList",
   async (userID, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_LIST}${userID}`
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_OVERDRAFT_ACCOUNT_LIST}${userID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      return response.data; // Return the account details on success
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get details");
+      }
+      const data = await response.json(); // Return the account details on success
+      return data;
     } catch (error) {
-      // Handle errors and return a rejected value
-      return rejectWithValue(
-        error.response?.data || "Error fetching account number"
-      );
+      return rejectWithValue(error);
     }
   }
 );

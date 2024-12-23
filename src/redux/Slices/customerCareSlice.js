@@ -57,11 +57,16 @@ export const fetchBorrowerData = createAsyncThunk(
         }
       );
       if (response.status === 404) {
-        return rejectWithValue("Borrower Not Found");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Borrower Not Found");
       }
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
         return rejectWithValue({message:"Unauthorized"});
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
       }
       const data = await response.json();
       return data;
@@ -88,12 +93,15 @@ export const downloadClearanceLetter = createAsyncThunk(
         },
       });
 
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        // You can redirect using another approach, but we can't call navigate directly here
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.removeItem("authToken"); // Clear the token
-          // You can redirect using another approach, but we can't call navigate directly here
-          return rejectWithValue({message:"Unauthorized"});
-        }
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
       }
 
       const blob = await response.blob();
@@ -124,13 +132,15 @@ export const downloadFile = createAsyncThunk(
         },
       });
 
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        // Optionally navigate to login
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.removeItem("authToken");
-          // Optionally navigate to login
-          return rejectWithValue({message:"Unauthorized"});
-        }
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
       }
 
       const blob = await response.blob();
@@ -182,8 +192,8 @@ const customerCareSlice = createSlice({
       })
       .addCase(fetchBorrowerData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;
@@ -202,9 +212,9 @@ const customerCareSlice = createSlice({
       })
       .addCase(downloadClearanceLetter.rejected, (state, action) => {
         state.downloadLoading = false;
-        state.downloadError = action.error.message;
+        state.downloadError = action.payload;
         console.error("Download failed:", action.payload);
-        toast.error(`API Error : ${action.payload.message}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(downloadFile.pending, (state) => {
         state.loading = true;
@@ -215,8 +225,8 @@ const customerCareSlice = createSlice({
       })
       .addCase(downloadFile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

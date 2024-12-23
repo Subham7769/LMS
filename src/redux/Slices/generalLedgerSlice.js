@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import transformData from '../../utils/GeneralLedgerDataTransformation';
 
@@ -9,17 +8,23 @@ export const fetchLedgerData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.get(
+      const response = await fetch(
         `${import.meta.env.VITE_GENERAL_LEDGER_READ_TEST}`,
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      return response.data;
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get item");
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error);
     }
   }
 );
@@ -46,8 +51,8 @@ const generalLedgerSlice = createSlice({
       })
       .addCase(fetchLedgerData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

@@ -20,12 +20,14 @@ const PaymentHistory = () => {
   const url = "/repayments";
   const dispatch = useDispatch();
   const { subID } = useParams();
-  const { paymentHistory, loading, error } = useSelector((state) => state.customerCare);
+  const { paymentHistory, loading, error } = useSelector(
+    (state) => state.customerCare
+  );
   const [repaymentsArr, setRepaymentsArr] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchBorrowerData({ subID, url }))
-  }, [dispatch])
+    dispatch(fetchBorrowerData({ subID, url }));
+  }, [dispatch]);
 
   useEffect(() => {
     if (paymentHistory.length > 0) {
@@ -44,7 +46,7 @@ const PaymentHistory = () => {
     loanId: repayment.loanId,
     repaymentStatus: repayment.repaymentStatus,
     repaymentOriginator: repayment.repaymentOriginator,
-  }))
+  }));
 
   const listHeader = [
     "Payment Date",
@@ -52,17 +54,23 @@ const PaymentHistory = () => {
     "Loan Id",
     "Payment Status",
     "Triggered By",
-  ]
+  ];
 
   return (
-    <ListTable
-      ListHeader={listHeader}
-      ListItem={listItems}
-      Divider={true}
-      loading={loading}
-      error={error}
-    />
+    <>
+      {repaymentsArr.length === 0 ? (
+        <div className="text-center shadow-md bg-gray-100 border-gray-300 border py-5 rounded-xl mt-4 px-5">
+          No Loan Data
+        </div>
+      ) : (
+        <ListTable
+          ListHeader={listHeader}
+          ListItem={listItems}
+          Divider={true}
+          loading={loading}
+        />
+      )}
+    </>
   );
 };
-
 export default PaymentHistory;

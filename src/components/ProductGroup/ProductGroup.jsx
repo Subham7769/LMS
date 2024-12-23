@@ -45,8 +45,12 @@ const ProductGroup = () => {
     dispatch(handleChangeDispatch({ name, value }));
   };
 
-  const handleUpdatePGName = (updatePGName) => {
+  const handleUpdatePGName = async(updatePGName) => {
     dispatch(setFormData({ name: "configName", value: updatePGName }));
+    const state = store.getState();
+    const productGroupData = state.productGroup.productGroupData;
+    await dispatch(updateProductGroup(productGroupData)).unwrap();
+    await dispatch(fetchProdGroupData()).unwrap();
   };
 
   const handleTagInputChange = (e) => {

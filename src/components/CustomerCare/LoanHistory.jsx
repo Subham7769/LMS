@@ -177,7 +177,6 @@ const LoanHistory = () => {
           Divider={true}
           Searchable={true}
           loading={loading}
-          error={error}
         />
       )}
     </>

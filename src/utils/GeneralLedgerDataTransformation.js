@@ -1,7 +1,6 @@
 export default function transformData(data) {
   // Group transactions by userId and loanId
   const transformed = [];
-  console.log(data);
 
   data.forEach((item) => {
     const { userId, loanId, account } = item;
@@ -25,6 +24,5 @@ export default function transformData(data) {
     existingEntry.accounts.push({ ...account });
   });
 
-  console.log(transformed)
   return transformed;
 }

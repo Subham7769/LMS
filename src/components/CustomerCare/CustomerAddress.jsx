@@ -50,7 +50,6 @@ const CustomerAddress = () => {
         }))}
         Divider={true}
         loading={loading}
-        error={error}
       />
     </div>
   );

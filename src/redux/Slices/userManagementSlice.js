@@ -17,7 +17,7 @@ export const fetchUsers = createAsyncThunk(
       });
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData.message || "Failed to get users");
       }
       const data = await response.json();
       return data;
@@ -33,16 +33,21 @@ export const fetchRoles = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.get(
+      const response = await fetch(
         `${import.meta.env.VITE_USER_ROLES_READ}`,
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      const formattedRoleData = response.data.map(({ id, name }) => ({
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get roles");
+      }
+      const data = await response.json();
+      const formattedRoleData = data.map(({ id, name }) => ({
         label: name,
         value: id,
       }));
@@ -74,7 +79,7 @@ export const activateUser = createAsyncThunk(
       );
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData.message || "Failed to activate user");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -101,7 +106,7 @@ export const generatePassword = createAsyncThunk(
       );
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData);
+        return rejectWithValue(errorData.message || "Failed to generate password");
       }
     } catch (error) {
       return rejectWithValue(error);
@@ -125,13 +130,8 @@ export const deleteUser = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          window.location.href = "/login"; // Redirect to login page
-          return;
-        }
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData.message || "Failed to delete user");
       }
       dispatch(fetchUsers()); // Fetch the updated user list after deletion
     } catch (error) {
@@ -158,7 +158,7 @@ export const suspendUser = createAsyncThunk(
       );
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData.message || "Failed to suspend user");
       }
       dispatch(fetchUsers()); // Refresh the user list after suspension
     } catch (error) {
@@ -199,7 +199,7 @@ export const createUser = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData.message || "Failed to create user");
       }
 
       dispatch(fetchUsers()); // Refresh user list after creation
@@ -247,7 +247,7 @@ export const updateUser = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message);
+        return rejectWithValue(errorData.message || "Failed to update user");
       }
       dispatch(fetchUsers());
     } catch (error) {
@@ -393,8 +393,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(generatePassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(createUser.pending, (state) => {
         state.loading = true;
@@ -406,8 +406,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
-        toast.error(`API Error : ${action.error.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

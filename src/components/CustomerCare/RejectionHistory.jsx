@@ -46,7 +46,6 @@ const RejectionHistory = () => {
       }))}
       Divider={true}
       loading={loading}
-      error={error}
     />
   );
 };

@@ -15,10 +15,9 @@ export const fetchLiabilityData = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        window.location.href = "/login";
-        return;
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
       }
       const data = await response.json();
       return data;
@@ -153,11 +152,11 @@ export const fetchRiskGrades = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        window.location.href = "/login";
-        return rejectWithValue("Unauthorized");
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get item");
       }
+      
       const data = await response.json();
       const sorteddata = [...data].sort((a, b) => a.from - b.from);
       return sorteddata;
@@ -182,7 +181,8 @@ export const addRiskGrade = createAsyncThunk(
         body: JSON.stringify(newRiskGradeForm),
       });
       if (!response.ok) {
-        throw new Error("Failed to add item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add item");
       }
       dispatch(fetchRiskGrades());
     } catch (error) {
@@ -207,7 +207,8 @@ export const updateRiskGrade = createAsyncThunk(
         body: JSON.stringify(itemToUpdate),
       });
       if (!response.ok) {
-        throw new Error("Failed to update item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to update item");
       }
       dispatch(fetchRiskGrades());
     } catch (error) {
@@ -230,7 +231,8 @@ export const deleteRiskGrade = createAsyncThunk(
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to delete item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete item");
       }
       dispatch(fetchRiskGrades());
     } catch (error) {
@@ -253,7 +255,8 @@ export const fetchExpenseData = createAsyncThunk(
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get item");
       }
       const data = await response.json();
       return data.expenses;
@@ -279,7 +282,8 @@ export const addExpenseField = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add item");
       }
 
       // Fetch the updated data after successful addition
@@ -313,7 +317,8 @@ export const saveExpenseField = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to save item");
       }
 
       dispatch(fetchExpenseData());
@@ -342,7 +347,8 @@ export const deleteExpenseField = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete the item");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete item");
       }
 
       // Fetch the updated data after deletion
@@ -370,7 +376,8 @@ export const fetchNotificationData = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get item");
       }
       const data = await response.json();
       return data;
@@ -412,7 +419,7 @@ export const saveNotificationData = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData)
+        return rejectWithValue(errorData.message || "Failed to save item");
       }
 
       // You can return this if you want to handle the result
@@ -537,8 +544,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchLiabilityData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addNewLiabilityItem.pending, (state) => {
         state.loading = true;
@@ -599,8 +606,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchRiskGrades.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addRiskGrade.pending, (state) => {
         state.loading = true;
@@ -617,8 +624,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(addRiskGrade.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       // Update Item Reducers
       .addCase(updateRiskGrade.pending, (state) => {
@@ -630,8 +637,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(updateRiskGrade.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       // Delete Item Reducers
       .addCase(deleteRiskGrade.pending, (state) => {
@@ -643,8 +650,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteRiskGrade.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchExpenseData.pending, (state) => {
         state.loading = true;
@@ -659,8 +666,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchExpenseData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(addExpenseField.pending, (state) => {
         state.loading = true;
@@ -671,8 +678,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(addExpenseField.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(saveExpenseField.pending, (state) => {
         state.loading = true;
@@ -683,8 +690,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(saveExpenseField.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteExpenseField.pending, (state) => {
         state.loading = true;
@@ -695,8 +702,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(deleteExpenseField.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchNotificationData.pending, (state) => {
         state.loading = true;
@@ -711,8 +718,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(fetchNotificationData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(saveNotificationData.pending, (state) => {
         state.loading = true;
@@ -723,8 +730,8 @@ export const globalConfigSlice = createSlice({
       })
       .addCase(saveNotificationData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        toast.error(`API Error : ${action.payload.message}`);
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

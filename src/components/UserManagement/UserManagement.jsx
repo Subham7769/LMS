@@ -42,7 +42,7 @@ const UserManagement = ({ role }) => {
   const options = { day: "2-digit", month: "short", year: "numeric" };
   return (
     <>
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading}>
         <div className="flex justify-between mb-5 items-end">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
             Users List
