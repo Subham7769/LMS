@@ -10,6 +10,9 @@ import { countryOptions } from "../../../data/CountryData";
 import InputFile from "../../Common/InputFile/InputFile";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import Button from "../../Common/Button/Button";
+import Accordion from "../../Common/Accordion/Accordion";
+import { maritalStatus } from "../../../data/LosData";
+
 import {
   updateBorrowerField,
   resetBorrowerData,
@@ -19,30 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 const AddBorrowers = () => {
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({
-    country: "",
-    gender: "",
-    title: "",
-    workingStatus: "",
-    firstName: "",
-    lastName: "",
-    uniqueNumber: "",
-    businessName: "",
-    mobile: "",
-    email: "",
-    dateOfBirth: "",
-    address: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    landlinePhone: "",
-    creditScore: "",
-    loanOfficerAccess: false,
-    description: "",
-    borrowerPhoto: null,
-    borrowerFiles: null,
-  });
-
   const { addBorrowerData } = useSelector((state) => state.borrowers);
 
   console.log(addBorrowerData);
@@ -50,69 +29,126 @@ const AddBorrowers = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     dispatch(updateBorrowerField({ name, value, type, checked }));
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    
   };
 
   const handleFileUpload = (e) => {
     const { name, value, type, checked } = e.target;
     console.log(files[0].name);
-    dispatch(updateBorrowerField({ name, value:files[0].name, type, checked }));
-    setFormData({ ...formData, [name]: files[0] });
+    dispatch(
+      updateBorrowerField({ name, value: files[0].name, type, checked })
+    );
+    s
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     alert("Registration successful!");
   };
 
+  const personalDetails = (addBorrowerData) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Title Dropdown */}
+      <InputSelect
+        labelName="Title"
+        inputName="title"
+        inputOptions={[
+          { value: "Mr.", label: "Mr." },
+          { value: "Ms.", label: "Ms." },
+          { value: "Mrs.", label: "Mrs." },
+          { value: "Dr.", label: "Dr." },
+          { value: "Prof.", label: "Prof." },
+        ]}
+        inputValue={addBorrowerData.title}
+        onChange={handleInputChange}
+        isValidation={true}
+      />
+
+      {/* First Name Input Fields */}
+      <InputText
+        labelName="First Name"
+        inputName="firstName"
+        inputValue={addBorrowerData.firstName}
+        onChange={handleInputChange}
+        placeHolder="Enter First Name"
+        isValidation={true}
+      />
+
+      {/*Last Name Input Fields  */}
+      <InputText
+        labelName="Last Name"
+        inputName="lastName"
+        inputValue={addBorrowerData.lastName}
+        onChange={handleInputChange}
+        placeHolder="Enter Last Name"
+        isValidation={true}
+      />
+
+      {/* Gender Dropdown */}
+      <InputSelect
+        labelName="Gender"
+        inputName="gender"
+        inputOptions={[
+          { value: "Male", label: "Male" },
+          { value: "Female", label: "Female" },
+          { value: "Other", label: "Other" },
+        ]}
+        inputValue={addBorrowerData.gender}
+        onChange={handleInputChange}
+        isValidation={true}
+      />
+
+      {/* Marital Status Dropdown */}
+      <InputSelect
+        labelName="Marital Status"
+        inputName="maritalStatus"
+        inputOptions={maritalStatus}
+        inputValue={addBorrowerData.gender}
+        onChange={handleInputChange}
+        isValidation={true}
+      />
+
+      {/* Country Dropdown */}
+      <InputSelect
+        labelName="Nationality"
+        inputName="nationality"
+        inputOptions={countryOptions}
+        inputValue={addBorrowerData.nationality}
+        onChange={handleInputChange}
+        isValidation={true}
+      />
+
+      {/* DOB */}
+      <div className="col-span-1">
+        <InputDate
+          labelName="Date of Birth"
+          inputName="dateOfBirth"
+          inputValue={addBorrowerData.dateOfBirth}
+          onChange={handleInputChange}
+          isValidation={true}
+        />
+      </div>
+
+      {/*Place of Birth Input Fields  */}
+      <InputText
+        labelName="Place of Birth"
+        inputName="placeOfBirth"
+        inputValue={addBorrowerData.placeOfBirth}
+        onChange={handleInputChange}
+        placeHolder="Enter Name"
+        isValidation={true}
+      />
+    </div>
+  );
+
   return (
-    <ContainerTile>
-      <form
-        className="grid grid-cols-1 md:grid-cols-4 gap-5"
-      >
-        {/* Country Dropdown */}
-        <InputSelect
-          labelName="Country"
-          inputName="country"
-          inputOptions={countryOptions}
-          inputValue={addBorrowerData.country}
-          onChange={handleInputChange}
-          isValidation={true}
-        />
-
-        {/* Gender Dropdown */}
-        <InputSelect
-          labelName="Gender"
-          inputName="gender"
-          inputOptions={[
-            { value: "Male", label: "Male" },
-            { value: "Female", label: "Female" },
-            { value: "Other", label: "Other" },
-          ]}
-          inputValue={addBorrowerData.gender}
-          onChange={handleInputChange}
-          isValidation={true}
-        />
-
-        {/* Title Dropdown */}
-        <InputSelect
-          labelName="Title"
-          inputName="title"
-          inputOptions={[
-            { value: "Mr.", label: "Mr." },
-            { value: "Ms.", label: "Ms." },
-            { value: "Mrs.", label: "Mrs." },
-            { value: "Dr.", label: "Dr." },
-            { value: "Prof.", label: "Prof." },
-          ]}
-          inputValue={addBorrowerData.title}
-          onChange={handleInputChange}
-          isValidation={true}
-        />
+    <>
+      <Accordion
+        heading={"Personal Details"}
+        renderExpandedContent={() => personalDetails(addBorrowerData)}
+      />
+      <ContainerTile className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        {/* {personalDetails(addBorrowerData)} */}
 
         {/* Working Status Dropdown */}
         <InputSelect
@@ -127,25 +163,6 @@ const AddBorrowers = () => {
           ]}
           inputValue={addBorrowerData.workingStatus}
           onChange={handleInputChange}
-          isValidation={true}
-        />
-
-        {/* Input Fields */}
-        <InputText
-          labelName="First Name"
-          inputName="firstName"
-          inputValue={addBorrowerData.firstName}
-          onChange={handleInputChange}
-          placeHolder="Enter First Name"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="Last Name"
-          inputName="lastName"
-          inputValue={addBorrowerData.lastName}
-          onChange={handleInputChange}
-          placeHolder="Enter Last Name"
           isValidation={true}
         />
 
@@ -183,16 +200,6 @@ const AddBorrowers = () => {
           placeHolder="Enter Email"
           isValidation={true}
         />
-
-        <div className="col-span-1">
-          <InputDate
-            labelName="Date of Birth"
-            inputName="dateOfBirth"
-            inputValue={addBorrowerData.dateOfBirth}
-            onChange={handleInputChange}
-            isValidation={true}
-          />
-        </div>
 
         <InputText
           labelName="Address"
@@ -284,15 +291,19 @@ const AddBorrowers = () => {
 
         {/* Save Button */}
         <div className="flex justify-between col-span-4 mx-10">
-          <Button buttonName="Reset" onClick={() => dispatch(resetBorrowerData())} rectangle={true} />
+          <Button
+            buttonName="Reset"
+            onClick={() => dispatch(resetBorrowerData())}
+            rectangle={true}
+          />
           <Button
             buttonName="Add Borrower"
             onClick={() => {}}
             rectangle={true}
           />
         </div>
-      </form>
-    </ContainerTile>
+      </ContainerTile>
+    </>
   );
 };
 

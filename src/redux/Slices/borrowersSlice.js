@@ -3,17 +3,21 @@ import { toast } from "react-toastify";
 
 const initialState = {
   addBorrowerData: {
-    country: "",
-    gender: "",
     title: "",
-    workingStatus: "",
     firstName: "",
     lastName: "",
+    uniqueNumberType: "",
     uniqueNumber: "",
+    gender: "",
+    maritalStatus:"",
+    nationality: "",
+    dateOfBirth: "",
+    placeOfBirth: "",
+    workingStatus: "",
+
     businessName: "",
     mobile: "",
     email: "",
-    dateOfBirth: "",
     address: "",
     city: "",
     state: "",
