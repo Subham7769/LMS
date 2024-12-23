@@ -10,8 +10,8 @@ const ViewBorrowersGroup = React.lazy(() => import("./ViewBorrowersGroup"));
 const tabs = [
   { id: "add-borrower", label: "Add Borrower" },
   { id: "view-borrower", label: "View Borrower" },
-  { id: "add-borrower-group", label: "Add Borrower Group" },
-  { id: "view-borrower-group", label: "View Borrower Group" },
+  // { id: "add-borrower-group", label: "Add Borrower Group" },
+  // { id: "view-borrower-group", label: "View Borrower Group" },
 ];
 
 const borrowerComponents = {
