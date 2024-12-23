@@ -3,30 +3,79 @@ import { toast } from "react-toastify";
 
 const initialState = {
   addBorrowerData: {
-    title: "",
-    firstName: "",
-    lastName: "",
-    uniqueNumberType: "",
-    uniqueNumber: "",
-    gender: "",
-    maritalStatus:"",
-    nationality: "",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    workingStatus: "",
-
-    businessName: "",
-    mobile: "",
-    email: "",
-    address: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    landlinePhone: "",
-    creditScore: 0,
-    description: "",
-    borrowerPhotoId: "",
-    groupId: "",
+    personalDetails: {
+      title: "",
+      surname: "",
+      otherName: "",
+      uniqueIDType: "",
+      uniqueID: "",
+      gender: "",
+      maritalStatus: "",
+      nationality: "",
+      dateOfBirth: "",
+      placeOfBirth: "",
+      loanOfficer: localStorage.getItem("username"),
+    },
+    contactDetails: {
+      mobile1: "",
+      mobile2: "",
+      landlinePhone: "",
+      houseNumber: "",
+      street: "",
+      residentialArea: "",
+      country: "",
+      province: "",
+      district: "",
+      email: "",
+      postBox: "",
+    },
+    employmentDetails: {
+      employer: "",
+      occupation: "",
+      district: "",
+      location: "",
+      workStartDate: "",
+      workPhoneNumber: "",
+      workPhysicalAddress: "",
+      employeeNo: "",
+      workType: "",
+    },
+    bankDetails: {
+      bankName: "",
+      accountName: "",
+      accountType: "",
+      branch: "",
+      branchCode: "",
+      sortCode: "",
+      accountNo: "",
+    },
+    nextOfKinDetails: {
+      title: "",
+      surname: "",
+      otherName: "",
+      nrcNo: "",
+      gender: "",
+      mobile1: "",
+      mobile2: "",
+      email: "",
+      houseNo: "",
+      street: "",
+      residentialArea: "",
+      district: "",
+      province: "",
+      country: "",
+      employer: "",
+      occupation: "",
+      location: "",
+      workPhoneNumber: "",
+    },
+    otherDetails: {
+      reasonForBorrowing: "",
+      sourceOfRepayment: "",
+      groupId: "",
+      creditScore: 0,
+      freeCashInHand:0,
+    },
   },
   error: null,
   loading: false,
@@ -37,8 +86,15 @@ const borrowersSlice = createSlice({
   initialState,
   reducers: {
     updateBorrowerField: (state, action) => {
-      const { name, value, type, checked } = action.payload;
-      state.addBorrowerData[name] = type === "checkbox" ? checked : value;
+      const { section, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.addBorrowerData[section]) {
+        state.addBorrowerData[section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in addBorrowerData
+        state.addBorrowerData[field] = type === "checkbox" ? checked : value;
+      }
     },
     resetBorrowerData: (state) => {
       state.addBorrowerData = initialState.addBorrowerData;
@@ -49,6 +105,7 @@ const borrowersSlice = createSlice({
   },
 });
 
-export const {updateBorrowerField,resetBorrowerData} = borrowersSlice.actions;
+export const { updateBorrowerField, resetBorrowerData } =
+  borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

@@ -2,20 +2,27 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 
-const Accordion = ({ heading, renderExpandedContent }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const Accordion = ({ heading, renderExpandedContent, error = false, isOpen= false  }) => {
+  const [isExpanded, setIsExpanded] = useState(isOpen);
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
-  return (
-    <div className="border rounded-lg shadow-sm bg-white mb-4">
+  return ( 
+    <div className={`border rounded-lg shadow-sm bg-gray-50 mb-3 hover:bg-indigo-50 ${isExpanded?'bg-indigo-50':""}`}>
       <div
-        className="flex justify-between items-center px-4 py-4 cursor-pointer"
+        className={`flex justify-between items-center px-4 py-4 cursor-pointer ${
+          error ? `border-l-4 border-l-red-500 rounded-lg` : ""
+        }`}
         onClick={toggleExpand}
       >
-        <span className="font-medium text-gray-800">{heading}</span>
+        <div className="flex gap-2 justify-start items-center ">
+          <span className="font-medium text-gray-800">{heading}</span>
+          {error && (
+            <span className="text-xs text-red-500 px-2 py-1 bg-red-50 rounded-lg">Contains Error</span>
+          )}
+        </div>
         <button
           className="text-gray-600 hover:text-gray-800"
           aria-label={isExpanded ? "Collapse section" : "Expand section"}
@@ -24,7 +31,7 @@ const Accordion = ({ heading, renderExpandedContent }) => {
         </button>
       </div>
       {isExpanded && (
-        <div className="px-4 py-4 bg-gray-100">{renderExpandedContent()}</div>
+        <div className="px-4 py-4 bg-gray-50">{renderExpandedContent()}</div>
       )}
     </div>
   );

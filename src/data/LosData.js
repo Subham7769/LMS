@@ -231,3 +231,37 @@ export const maritalStatus = [
   { value: "Divorced", label: "Divorced" },
   { value: "Widowed", label: "Widowed" },
 ];
+
+export const workType = [
+  { value: "Full-time", label: "Full-time" },
+  { value: "Part-time", label: "Part-time" },
+  { value: "Contract", label: "Contract" },
+  { value: "Temporary", label: "Temporary" },
+  { value: "Freelance", label: "Freelance" },
+]
+
+export const title = [
+  { value: "Mr.", label: "Mr." },
+  { value: "Ms.", label: "Ms." },
+  { value: "Mrs.", label: "Mrs." },
+  { value: "Dr.", label: "Dr." },
+  { value: "Prof.", label: "Prof." },
+]
+export const gender = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
+]
+export const accountType = [
+  { value: "Savings", label: "Savings" },
+  { value: "Current", label: "Current" },
+  { value: "Corporate", label: "Corporate" },
+]
+export const uniqueIDType = [
+  { value: "Passport", label: "Passport" },
+  { value: "NRC No.", label: "NRC No." },
+  { value: "Driver's License", label: "Driver's License" },
+  { value: "National ID", label: "National ID" },
+  { value: "Voter ID", label: "Voter ID" },
+  { value: "Social Security Number", label: "Social Security Number" },
+]

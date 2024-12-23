@@ -1,17 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiUpload, FiPlus, FiRotateCcw } from "react-icons/fi";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputEmail from "../../Common/InputEmail/InputEmail";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputTextArea from "../../Common/InputTextArea/InputTextArea";
 import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import { countryOptions } from "../../../data/CountryData";
+import { countryOptions, locationOptions } from "../../../data/CountryData";
 import InputFile from "../../Common/InputFile/InputFile";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import Button from "../../Common/Button/Button";
 import Accordion from "../../Common/Accordion/Accordion";
-import { maritalStatus } from "../../../data/LosData";
+import {
+  maritalStatus,
+  workType,
+  title,
+  gender,
+  accountType,
+  uniqueIDType,
+} from "../../../data/LosData";
 
 import {
   updateBorrowerField,
@@ -21,15 +29,30 @@ import { useDispatch, useSelector } from "react-redux";
 
 const AddBorrowers = () => {
   const dispatch = useDispatch();
-
+  const [filteredLocations1, setFilteredLocations1] = useState([]);
+  const [filteredLocations2, setFilteredLocations2] = useState([]);
   const { addBorrowerData } = useSelector((state) => state.borrowers);
 
-  console.log(addBorrowerData);
+  useEffect(() => {
+    setFilteredLocations1(
+      locationOptions[addBorrowerData.contactDetails.country] || []
+    );
+    setFilteredLocations2(
+      locationOptions[addBorrowerData.nextOfKinDetails.country] || []
+    );
+  }, [
+    addBorrowerData.contactDetails.country,
+    addBorrowerData.nextOfKinDetails.country,
+  ]);
 
-  const handleInputChange = (e) => {
+  console.log(addBorrowerData.nextOfKinDetails);
+
+  const handleInputChange = (e, section) => {
     const { name, value, type, checked } = e.target;
-    dispatch(updateBorrowerField({ name, value, type, checked }));
-    
+    // Use section to update the correct part of the state
+    dispatch(
+      updateBorrowerField({ section, field: name, value, type, checked })
+    );
   };
 
   const handleFileUpload = (e) => {
@@ -38,7 +61,7 @@ const AddBorrowers = () => {
     dispatch(
       updateBorrowerField({ name, value: files[0].name, type, checked })
     );
-    s
+    s;
   };
 
   const handleSubmit = (e) => {
@@ -46,41 +69,55 @@ const AddBorrowers = () => {
     alert("Registration successful!");
   };
 
-  const personalDetails = (addBorrowerData) => (
+  const personalDetails = (personalDetails) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {/* Title Dropdown */}
       <InputSelect
         labelName="Title"
         inputName="title"
-        inputOptions={[
-          { value: "Mr.", label: "Mr." },
-          { value: "Ms.", label: "Ms." },
-          { value: "Mrs.", label: "Mrs." },
-          { value: "Dr.", label: "Dr." },
-          { value: "Prof.", label: "Prof." },
-        ]}
-        inputValue={addBorrowerData.title}
-        onChange={handleInputChange}
+        inputOptions={title}
+        inputValue={personalDetails.title}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
         isValidation={true}
       />
 
-      {/* First Name Input Fields */}
+      {/* Surname Input Fields */}
       <InputText
-        labelName="First Name"
-        inputName="firstName"
-        inputValue={addBorrowerData.firstName}
-        onChange={handleInputChange}
-        placeHolder="Enter First Name"
+        labelName="Surname"
+        inputName="surname"
+        inputValue={personalDetails.surname}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
+        placeHolder="Enter Surname"
         isValidation={true}
       />
 
-      {/*Last Name Input Fields  */}
+      {/*Other Name Input Fields  */}
       <InputText
-        labelName="Last Name"
-        inputName="lastName"
-        inputValue={addBorrowerData.lastName}
-        onChange={handleInputChange}
-        placeHolder="Enter Last Name"
+        labelName="Other Name"
+        inputName="otherName"
+        inputValue={personalDetails.otherName}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
+        placeHolder="Enter Other Name"
+        isValidation={true}
+      />
+
+      {/* "Unique ID Type Dropdown */}
+      <InputSelect
+        labelName="Unique ID Type"
+        inputName="uniqueIDType"
+        inputOptions={uniqueIDType}
+        inputValue={personalDetails.uniqueIDType}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
+        isValidation={true}
+      />
+
+      {/* "Unique ID */}
+      <InputText
+        labelName="Unique ID"
+        inputName="uniqueID"
+        inputValue={personalDetails.uniqueID}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
+        placeHolder="Enter Unique ID"
         isValidation={true}
       />
 
@@ -88,13 +125,9 @@ const AddBorrowers = () => {
       <InputSelect
         labelName="Gender"
         inputName="gender"
-        inputOptions={[
-          { value: "Male", label: "Male" },
-          { value: "Female", label: "Female" },
-          { value: "Other", label: "Other" },
-        ]}
-        inputValue={addBorrowerData.gender}
-        onChange={handleInputChange}
+        inputOptions={gender}
+        inputValue={personalDetails.gender}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
         isValidation={true}
       />
 
@@ -103,18 +136,18 @@ const AddBorrowers = () => {
         labelName="Marital Status"
         inputName="maritalStatus"
         inputOptions={maritalStatus}
-        inputValue={addBorrowerData.gender}
-        onChange={handleInputChange}
+        inputValue={personalDetails.gender}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
         isValidation={true}
       />
 
-      {/* Country Dropdown */}
+      {/* Nationality Dropdown */}
       <InputSelect
         labelName="Nationality"
         inputName="nationality"
         inputOptions={countryOptions}
-        inputValue={addBorrowerData.nationality}
-        onChange={handleInputChange}
+        inputValue={personalDetails.nationality}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
         isValidation={true}
       />
 
@@ -123,8 +156,8 @@ const AddBorrowers = () => {
         <InputDate
           labelName="Date of Birth"
           inputName="dateOfBirth"
-          inputValue={addBorrowerData.dateOfBirth}
-          onChange={handleInputChange}
+          inputValue={personalDetails.dateOfBirth}
+          onChange={(e) => handleInputChange(e, "personalDetails")}
           isValidation={true}
         />
       </div>
@@ -133,11 +166,514 @@ const AddBorrowers = () => {
       <InputText
         labelName="Place of Birth"
         inputName="placeOfBirth"
-        inputValue={addBorrowerData.placeOfBirth}
-        onChange={handleInputChange}
-        placeHolder="Enter Name"
+        inputValue={personalDetails.placeOfBirth}
+        onChange={(e) => handleInputChange(e, "personalDetails")}
+        placeHolder="Enter Place of Birth"
         isValidation={true}
       />
+    </div>
+  );
+
+  const contactDetails = (contactDetails) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Mobile1 */}
+      <InputNumber
+        labelName="Mobile 1"
+        inputName="mobile1"
+        inputValue={contactDetails.mobile1}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Mobile Number"
+        isValidation={true}
+      />
+      {/* Mobile */}
+      <InputNumber
+        labelName="Mobile 2"
+        inputName="mobile2"
+        inputValue={contactDetails.mobile2}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Mobile Number"
+        isValidation={true}
+      />
+
+      {/* Landline */}
+      <InputText
+        labelName="Landline Phone"
+        inputName="landlinePhone"
+        inputValue={contactDetails.landlinePhone}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Landline Number"
+      />
+
+      {/* House Number */}
+      <InputText
+        labelName="House Number"
+        inputName="houseNumber"
+        inputValue={contactDetails.houseNumber}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter House Number"
+      />
+
+      {/* Street */}
+      <InputText
+        labelName="Street"
+        inputName="street"
+        inputValue={contactDetails.street}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Street"
+      />
+
+      {/* Residential Area */}
+      <InputText
+        labelName="Residential Area"
+        inputName="residentialArea"
+        inputValue={contactDetails.residentialArea}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Residential Area"
+      />
+
+      {/* Country Dropdown */}
+      <InputSelect
+        labelName="Country"
+        inputName="country"
+        inputOptions={countryOptions}
+        inputValue={contactDetails.country}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        isValidation={true}
+      />
+
+      {/* Province/State Dropdown */}
+      <InputSelect
+        labelName="Province / State"
+        inputName="province"
+        inputOptions={filteredLocations1}
+        inputValue={contactDetails.province}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        isValidation={true}
+      />
+
+      {/* District */}
+      <InputText
+        labelName="District"
+        inputName="district"
+        inputValue={contactDetails.district}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter District"
+      />
+
+      {/* Email */}
+      <InputEmail
+        labelName="Email"
+        inputName="email"
+        inputValue={contactDetails.email}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Email"
+        isValidation={true}
+      />
+
+      {/* Post Box */}
+      <InputText
+        labelName="Post Box"
+        inputName="postBox"
+        inputValue={contactDetails.postBox}
+        onChange={(e) => handleInputChange(e, "contactDetails")}
+        placeHolder="Enter Post Box"
+      />
+    </div>
+  );
+
+  const employmentDetails = (employmentDetails) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Employer */}
+      <InputText
+        labelName="Employer"
+        inputName="employer"
+        inputValue={employmentDetails.employer}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter Employer Name"
+        isValidation={true}
+      />
+
+      {/* Occupation */}
+      <InputText
+        labelName="Occupation"
+        inputName="occupation"
+        inputValue={employmentDetails.occupation}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter Occupation"
+        isValidation={true}
+      />
+
+      {/* District */}
+      <InputText
+        labelName="District"
+        inputName="district"
+        inputValue={employmentDetails.district}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter District"
+        isValidation={true}
+      />
+
+      {/* Location */}
+      <InputText
+        labelName="Location"
+        inputName="location"
+        inputValue={employmentDetails.location}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter Location"
+        isValidation={true}
+      />
+
+      {/* Work Start Date */}
+      <div className="col-span-1">
+        <InputDate
+          labelName="Work Start Date"
+          inputName="workStartDate"
+          inputValue={employmentDetails.workStartDate}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
+          isValidation={true}
+        />
+      </div>
+
+      {/* Work Phone Number */}
+      <InputText
+        labelName="Work Phone Number"
+        inputName="workPhoneNumber"
+        inputValue={employmentDetails.workPhoneNumber}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter Work Phone Number"
+        isValidation={true}
+      />
+
+      {/* Work Physical Address */}
+      <InputText
+        labelName="Work Physical Address"
+        inputName="workPhysicalAddress"
+        inputValue={employmentDetails.workPhysicalAddress}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter Work Physical Address"
+        isValidation={true}
+      />
+
+      {/* Employee No. */}
+      <InputText
+        labelName="Employee No."
+        inputName="employeeNo"
+        inputValue={employmentDetails.employeeNo}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        placeHolder="Enter Employee Number"
+        isValidation={true}
+      />
+
+      {/* Work Type */}
+      <InputSelect
+        labelName="Work Type"
+        inputName="workType"
+        inputOptions={workType}
+        inputValue={employmentDetails.workType}
+        onChange={(e) => handleInputChange(e, "employmentDetails")}
+        isValidation={true}
+      />
+    </div>
+  );
+
+  const bankDetails = (bankDetails) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Name of Bank */}
+      <InputText
+        labelName="Name of Bank"
+        inputName="bankName"
+        inputValue={bankDetails.bankName}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        placeHolder="Enter Name of Bank"
+        isValidation={true}
+      />
+
+      {/* Account Name */}
+      <InputText
+        labelName="Account Name"
+        inputName="accountName"
+        inputValue={bankDetails.accountName}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        placeHolder="Enter Account Name"
+        isValidation={true}
+      />
+
+      {/* Type of Account */}
+      <InputSelect
+        labelName="Type of Account"
+        inputName="accountType"
+        inputOptions={accountType}
+        inputValue={bankDetails.accountType}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        isValidation={true}
+      />
+
+      {/* Branch */}
+      <InputText
+        labelName="Branch"
+        inputName="branch"
+        inputValue={bankDetails.branch}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        placeHolder="Enter Branch"
+        isValidation={true}
+      />
+
+      {/* Branch Code */}
+      <InputText
+        labelName="Branch Code"
+        inputName="branchCode"
+        inputValue={bankDetails.branchCode}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        placeHolder="Enter Branch Code"
+        isValidation={true}
+      />
+
+      {/* Sort Code */}
+      <InputText
+        labelName="Sort Code"
+        inputName="sortCode"
+        inputValue={bankDetails.sortCode}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        placeHolder="Enter Sort Code"
+        isValidation={true}
+      />
+
+      {/* Account No. */}
+      <InputNumber
+        labelName="Account No."
+        inputName="accountNo"
+        inputValue={bankDetails.accountNo}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
+        placeHolder="Enter Account Number"
+        isValidation={true}
+      />
+    </div>
+  );
+
+  const nextOfKinDetails = (nextOfKinData) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Title */}
+      <InputSelect
+        labelName="Title"
+        inputName="title"
+        inputOptions={title}
+        inputValue={nextOfKinData.title}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        isValidation={true}
+      />
+
+      {/* Surname */}
+      <InputText
+        labelName="Surname"
+        inputName="surname"
+        inputValue={nextOfKinData.surname}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Surname"
+        isValidation={true}
+      />
+
+      {/* Other Name */}
+      <InputText
+        labelName="Other Name"
+        inputName="otherName"
+        inputValue={nextOfKinData.otherName}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Other Name"
+        isValidation={true}
+      />
+
+      {/* NRC No. */}
+      <InputText
+        labelName="NRC No."
+        inputName="nrcNo"
+        inputValue={nextOfKinData.nrcNo}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter NRC Number"
+        isValidation={true}
+      />
+
+      {/* Gender */}
+      <InputSelect
+        labelName="Gender"
+        inputName="gender"
+        inputOptions={gender}
+        inputValue={nextOfKinData.gender}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        isValidation={true}
+      />
+
+      {/* Mobile Phone Number 1 */}
+      <InputNumber
+        labelName="Mobile 1"
+        inputName="mobile1"
+        inputValue={nextOfKinData.mobile1}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Mobile Number 1"
+        isValidation={true}
+      />
+
+      {/* Mobile Phone Number 2 */}
+      <InputNumber
+        labelName="Mobile 2"
+        inputName="mobile2"
+        inputValue={nextOfKinData.mobile2}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Mobile Number 2"
+      />
+
+      {/* Email Address */}
+      <InputEmail
+        labelName="Email"
+        inputName="email"
+        inputValue={nextOfKinData.email}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter E-mail Address"
+        isValidation={true}
+      />
+
+      {/* House No. */}
+      <InputText
+        labelName="House No."
+        inputName="houseNo"
+        inputValue={nextOfKinData.houseNo}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter House No."
+      />
+
+      {/* Street */}
+      <InputText
+        labelName="Street"
+        inputName="street"
+        inputValue={nextOfKinData.street}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Street"
+      />
+
+      {/* Residential Area */}
+      <InputText
+        labelName="Residential Area"
+        inputName="residentialArea"
+        inputValue={nextOfKinData.residentialArea}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Residential Area"
+      />
+
+      {/* District */}
+      <InputText
+        labelName="District"
+        inputName="district"
+        inputValue={nextOfKinData.district}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter District"
+      />
+
+      {/* Country */}
+      <InputSelect
+        labelName="Country"
+        inputName="country"
+        inputOptions={countryOptions}
+        inputValue={nextOfKinData.country}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        isValidation={true}
+      />
+
+      {/* Province/State Dropdown */}
+      <InputSelect
+        labelName="Province / State"
+        inputName="province"
+        inputOptions={filteredLocations2}
+        inputValue={nextOfKinData.province}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        isValidation={true}
+      />
+
+      {/* Employer */}
+      <InputText
+        labelName="Employer"
+        inputName="employer"
+        inputValue={nextOfKinData.employer}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Employer Name"
+      />
+
+      {/* Occupation */}
+      <InputText
+        labelName="Occupation"
+        inputName="occupation"
+        inputValue={nextOfKinData.occupation}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Occupation"
+      />
+
+      {/* Location */}
+      <InputText
+        labelName="Location"
+        inputName="location"
+        inputValue={nextOfKinData.location}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Location"
+      />
+
+      {/* Work Phone Number */}
+      <InputText
+        labelName="Work Phone Number"
+        inputName="workPhoneNumber"
+        inputValue={nextOfKinData.workPhoneNumber}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+        placeHolder="Enter Work Phone Number"
+      />
+    </div>
+  );
+
+  const otherDetails = (otherDetails) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Reason for Borrowing */}
+      <InputText
+        labelName="Reason for Borrowing"
+        inputName="reasonForBorrowing"
+        inputValue={otherDetails.reasonForBorrowing}
+        onChange={(e) => handleInputChange(e, "otherDetails")}
+        placeHolder="Enter Reason for Borrowing"
+        isValidation={true}
+      />
+
+      {/* Source of Repayment */}
+      <InputText
+        labelName="Source of Repayment"
+        inputName="sourceOfRepayment"
+        inputValue={otherDetails.sourceOfRepayment}
+        onChange={(e) => handleInputChange(e, "otherDetails")}
+        placeHolder="Enter Source of Repayment"
+        isValidation={true}
+      />
+
+       {/* Free Cash In Hand */}
+       <InputNumber
+        labelName="Free Cash In Hand"
+        inputName="freeCashInHand"
+        inputValue={otherDetails.freeCashInHand}
+        onChange={(e) => handleInputChange(e, "otherDetails")}
+        placeHolder="Enter Amount"
+      />
+
+       {/* Credit Score */}
+       <InputNumber
+        labelName="Credit Score"
+        inputName="creditScore"
+        inputValue={otherDetails.creditScore}
+        onChange={(e) => handleInputChange(e, "otherDetails")}
+        placeHolder="Enter Score"
+      />
+
+      {/* Customer Photo */}
+      {/* <InputFile
+        labelName="Customer Photo"
+        inputName="customerPhoto"
+        inputValue={otherDetails.customerPhoto}
+        onChange={(e) => handleFileChange(e, "otherDetails")}
+        accept="image/*"
+        isValidation={true}
+      /> */}
     </div>
   );
 
@@ -145,164 +681,47 @@ const AddBorrowers = () => {
     <>
       <Accordion
         heading={"Personal Details"}
-        renderExpandedContent={() => personalDetails(addBorrowerData)}
+        renderExpandedContent={() =>
+          personalDetails(addBorrowerData.personalDetails)
+        }
       />
-      <ContainerTile className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        {/* {personalDetails(addBorrowerData)} */}
+      <Accordion
+        heading={"Contact Details"}
+        renderExpandedContent={() =>
+          contactDetails(addBorrowerData.contactDetails)
+        }
+      />
+      <Accordion
+        heading={"Employment Details"}
+        renderExpandedContent={() =>
+          employmentDetails(addBorrowerData.employmentDetails)
+        }
+      />
+      <Accordion
+        heading={"Bank Details"}
+        renderExpandedContent={() => bankDetails(addBorrowerData.bankDetails)}
+      />
+      <Accordion
+        heading={"Next of Kin Details"}
+        renderExpandedContent={() =>
+          nextOfKinDetails(addBorrowerData.nextOfKinDetails)
+        }
+      />
+      <Accordion
+        heading={"Other Details"}
+        renderExpandedContent={() =>
+          otherDetails(addBorrowerData.otherDetails)
+        }
+      />
 
-        {/* Working Status Dropdown */}
-        <InputSelect
-          labelName="Working Status"
-          inputName="workingStatus"
-          inputOptions={[
-            { value: "Employed", label: "Employed" },
-            { value: "Self-Employed", label: "Self-Employed" },
-            { value: "Unemployed", label: "Unemployed" },
-            { value: "Student", label: "Student" },
-            { value: "Retired", label: "Retired" },
-          ]}
-          inputValue={addBorrowerData.workingStatus}
-          onChange={handleInputChange}
-          isValidation={true}
+      <div className="flex justify-between col-span-4 mx-10">
+        <Button
+          buttonName="Reset"
+          onClick={() => dispatch(resetBorrowerData())}
+          rectangle={true}
         />
-
-        <InputText
-          labelName="Unique Number"
-          inputName="uniqueNumber"
-          inputValue={addBorrowerData.uniqueNumber}
-          onChange={handleInputChange}
-          placeHolder="Enter Unique Number"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="Business Name"
-          inputName="businessName"
-          inputValue={addBorrowerData.businessName}
-          onChange={handleInputChange}
-          placeHolder="Enter Business Name"
-        />
-
-        <InputText
-          labelName="Mobile"
-          inputName="mobile"
-          inputValue={addBorrowerData.mobile}
-          onChange={handleInputChange}
-          placeHolder="Enter Mobile Number"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="Email"
-          inputName="email"
-          inputValue={addBorrowerData.email}
-          onChange={handleInputChange}
-          placeHolder="Enter Email"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="Address"
-          inputName="address"
-          inputValue={addBorrowerData.address}
-          onChange={handleInputChange}
-          placeHolder="Enter Address"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="City"
-          inputName="city"
-          inputValue={addBorrowerData.city}
-          onChange={handleInputChange}
-          placeHolder="Enter City"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="State"
-          inputName="state"
-          inputValue={addBorrowerData.state}
-          onChange={handleInputChange}
-          placeHolder="Enter State"
-          isValidation={true}
-        />
-
-        <InputNumber
-          labelName="Zipcode"
-          inputName="zipcode"
-          inputValue={addBorrowerData.zipcode}
-          onChange={handleInputChange}
-          placeHolder="Enter Zipcode"
-          isValidation={true}
-        />
-
-        <InputText
-          labelName="Landline Phone"
-          inputName="landlinePhone"
-          inputValue={addBorrowerData.landlinePhone}
-          onChange={handleInputChange}
-          placeHolder="Enter Landline Number"
-        />
-
-        <InputNumber
-          labelName="Credit Score"
-          inputName="creditScore"
-          inputValue={addBorrowerData.creditScore}
-          onChange={handleInputChange}
-          placeHolder="Enter Credit Score"
-          isValidation={true}
-        />
-
-        {/* Loan Officer Access Checkbox */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700">
-            Loan Officer Access
-          </label>
-          <div className="flex items-center align-middle  bg-gray-200 rounded-lg py-1 px-3">
-            <input
-              type="checkbox"
-              name="loanOfficerAccess"
-              checked={addBorrowerData.loanOfficerAccess}
-              onChange={handleInputChange}
-              className="w-7 h-7 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all"
-            />
-            <label className="text-sm font-semibold text-gray-700 text-center py-2 w-full">
-              Tahseen Jamal
-            </label>
-          </div>
-        </div>
-
-        <InputTextArea
-          labelName="Description"
-          inputName="description"
-          inputValue={addBorrowerData.description}
-          onChange={handleInputChange}
-          rowCount={3}
-        />
-
-        <InputFile
-          labelName="Borrower Photo"
-          inputName="borrowerPhotoId"
-          onChange={handleFileUpload}
-          accept=".jpg,.png"
-          placeholder="Click or drag to upload"
-        />
-
-        {/* Save Button */}
-        <div className="flex justify-between col-span-4 mx-10">
-          <Button
-            buttonName="Reset"
-            onClick={() => dispatch(resetBorrowerData())}
-            rectangle={true}
-          />
-          <Button
-            buttonName="Add Borrower"
-            onClick={() => {}}
-            rectangle={true}
-          />
-        </div>
-      </ContainerTile>
+        <Button buttonName="Add Borrower" onClick={() => {}} rectangle={true} />
+      </div>
     </>
   );
 };
