@@ -56,8 +56,10 @@ const ViewBorrowers = () => {
   ];
 
   const renderExpandedRow = (rowData) => {
-    const handleEdit = () => {};
-    const handleSuspend = () => {};
+    const handleEdit = (uniqueID) => {
+      
+    };
+    const handleInactive = () => {};
     return (
       <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
         <div className="grid grid-cols-[80%_20%] gap-4">
@@ -204,8 +206,8 @@ const ViewBorrowers = () => {
               rectangle={true}
             />
             <Button
-              buttonName={"Suspend Borrower"}
-              onClick={() => handleSuspend(rowData.uniqueID)}
+              buttonName={"Inactive Borrower"}
+              onClick={() => handleInactive(rowData.uniqueID)}
               className={"bg-red-500 hover:bg-red-600"}
               rectangle={true}
             />

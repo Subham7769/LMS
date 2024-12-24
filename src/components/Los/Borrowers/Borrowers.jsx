@@ -25,7 +25,7 @@ const borrowerComponents = {
 };
 
 const Borrowers = () => {
-  const [activeTab, setActiveTab] = useState("view-borrower");
+  const [activeTab, setActiveTab] = useState("add-borrower");
   const ActiveComponent = borrowerComponents[activeTab];
 
   return (

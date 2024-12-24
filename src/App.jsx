@@ -603,12 +603,12 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "loan-origination-system",
+        path: "loan-origination-system/personal",
         element: <Los />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "loan-origination-system/borrowers",
+        path: "loan-origination-system/personal/borrowers",
         element: <Borrowers />,
         children: [
           {
@@ -620,12 +620,12 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "loan-origination-system/loans",
+        path: "loan-origination-system/personal/loans",
         element: <Loans />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "loan-origination-system/repayments",
+        path: "loan-origination-system/personal/repayments",
         element: <Repayments />,
         errorElement: <RouteErrorBoundary />,
       },
