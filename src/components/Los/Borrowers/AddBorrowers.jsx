@@ -38,11 +38,11 @@ const AddBorrowers = () => {
       locationOptions[addBorrowerData.contactDetails.country] || []
     );
     setFilteredLocations2(
-      locationOptions[addBorrowerData.nextOfKinDetails.country] || []
+      locationOptions[addBorrowerData.nextOfKinDetails.kinCountry] || []
     );
   }, [
     addBorrowerData.contactDetails.country,
-    addBorrowerData.nextOfKinDetails.country,
+    addBorrowerData.nextOfKinDetails.kinCountry,
   ]);
 
   console.log(addBorrowerData.nextOfKinDetails);
@@ -306,8 +306,8 @@ const AddBorrowers = () => {
       {/* District */}
       <InputText
         labelName="District"
-        inputName="district"
-        inputValue={employmentDetails.district}
+        inputName="employmentDistrict"
+        inputValue={employmentDetails.employmentDistrict}
         onChange={(e) => handleInputChange(e, "employmentDetails")}
         placeHolder="Enter District"
         isValidation={true}
@@ -316,8 +316,8 @@ const AddBorrowers = () => {
       {/* Location */}
       <InputText
         labelName="Location"
-        inputName="location"
-        inputValue={employmentDetails.location}
+        inputName="employmentLocation"
+        inputValue={employmentDetails.employmentLocation}
         onChange={(e) => handleInputChange(e, "employmentDetails")}
         placeHolder="Enter Location"
         isValidation={true}
@@ -455,9 +455,9 @@ const AddBorrowers = () => {
       {/* Title */}
       <InputSelect
         labelName="Title"
-        inputName="title"
+        inputName="kinTitle"
         inputOptions={title}
-        inputValue={nextOfKinData.title}
+        inputValue={nextOfKinData.kinTitle}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         isValidation={true}
       />
@@ -465,8 +465,8 @@ const AddBorrowers = () => {
       {/* Surname */}
       <InputText
         labelName="Surname"
-        inputName="surname"
-        inputValue={nextOfKinData.surname}
+        inputName="kinSurname"
+        inputValue={nextOfKinData.kinSurname}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Surname"
         isValidation={true}
@@ -475,8 +475,8 @@ const AddBorrowers = () => {
       {/* Other Name */}
       <InputText
         labelName="Other Name"
-        inputName="otherName"
-        inputValue={nextOfKinData.otherName}
+        inputName="kinOtherName"
+        inputValue={nextOfKinData.kinOtherName}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Other Name"
         isValidation={true}
@@ -485,8 +485,8 @@ const AddBorrowers = () => {
       {/* NRC No. */}
       <InputText
         labelName="NRC No."
-        inputName="nrcNo"
-        inputValue={nextOfKinData.nrcNo}
+        inputName="kinNrcNo"
+        inputValue={nextOfKinData.kinNrcNo}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter NRC Number"
         isValidation={true}
@@ -495,9 +495,9 @@ const AddBorrowers = () => {
       {/* Gender */}
       <InputSelect
         labelName="Gender"
-        inputName="gender"
+        inputName="kinGender"
         inputOptions={gender}
-        inputValue={nextOfKinData.gender}
+        inputValue={nextOfKinData.kinGender}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         isValidation={true}
       />
@@ -505,8 +505,8 @@ const AddBorrowers = () => {
       {/* Mobile Phone Number 1 */}
       <InputNumber
         labelName="Mobile 1"
-        inputName="mobile1"
-        inputValue={nextOfKinData.mobile1}
+        inputName="kinMobile1"
+        inputValue={nextOfKinData.kinMobile1}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Mobile Number 1"
         isValidation={true}
@@ -515,8 +515,8 @@ const AddBorrowers = () => {
       {/* Mobile Phone Number 2 */}
       <InputNumber
         labelName="Mobile 2"
-        inputName="mobile2"
-        inputValue={nextOfKinData.mobile2}
+        inputName="kinMobile2"
+        inputValue={nextOfKinData.kinMobile2}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Mobile Number 2"
       />
@@ -524,8 +524,8 @@ const AddBorrowers = () => {
       {/* Email Address */}
       <InputEmail
         labelName="Email"
-        inputName="email"
-        inputValue={nextOfKinData.email}
+        inputName="kinEmail"
+        inputValue={nextOfKinData.kinEmail}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter E-mail Address"
         isValidation={true}
@@ -534,8 +534,8 @@ const AddBorrowers = () => {
       {/* House No. */}
       <InputText
         labelName="House No."
-        inputName="houseNo"
-        inputValue={nextOfKinData.houseNo}
+        inputName="kinHouseNo"
+        inputValue={nextOfKinData.kinHouseNo}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter House No."
       />
@@ -543,8 +543,8 @@ const AddBorrowers = () => {
       {/* Street */}
       <InputText
         labelName="Street"
-        inputName="street"
-        inputValue={nextOfKinData.street}
+        inputName="kinStreet"
+        inputValue={nextOfKinData.kinStreet}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Street"
       />
@@ -552,8 +552,8 @@ const AddBorrowers = () => {
       {/* Residential Area */}
       <InputText
         labelName="Residential Area"
-        inputName="residentialArea"
-        inputValue={nextOfKinData.residentialArea}
+        inputName="kinResidentialArea"
+        inputValue={nextOfKinData.kinResidentialArea}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Residential Area"
       />
@@ -561,8 +561,8 @@ const AddBorrowers = () => {
       {/* District */}
       <InputText
         labelName="District"
-        inputName="district"
-        inputValue={nextOfKinData.district}
+        inputName="kinDistrict"
+        inputValue={nextOfKinData.kinDistrict}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter District"
       />
@@ -570,9 +570,9 @@ const AddBorrowers = () => {
       {/* Country */}
       <InputSelect
         labelName="Country"
-        inputName="country"
+        inputName="kinCountry"
         inputOptions={countryOptions}
-        inputValue={nextOfKinData.country}
+        inputValue={nextOfKinData.kinCountry}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         isValidation={true}
       />
@@ -580,9 +580,9 @@ const AddBorrowers = () => {
       {/* Province/State Dropdown */}
       <InputSelect
         labelName="Province / State"
-        inputName="province"
+        inputName="kinProvince"
         inputOptions={filteredLocations2}
-        inputValue={nextOfKinData.province}
+        inputValue={nextOfKinData.kinProvince}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         isValidation={true}
       />
@@ -590,8 +590,8 @@ const AddBorrowers = () => {
       {/* Employer */}
       <InputText
         labelName="Employer"
-        inputName="employer"
-        inputValue={nextOfKinData.employer}
+        inputName="kinEmployer"
+        inputValue={nextOfKinData.kinEmployer}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Employer Name"
       />
@@ -599,8 +599,8 @@ const AddBorrowers = () => {
       {/* Occupation */}
       <InputText
         labelName="Occupation"
-        inputName="occupation"
-        inputValue={nextOfKinData.occupation}
+        inputName="kinOccupation"
+        inputValue={nextOfKinData.kinOccupation}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Occupation"
       />
@@ -608,8 +608,8 @@ const AddBorrowers = () => {
       {/* Location */}
       <InputText
         labelName="Location"
-        inputName="location"
-        inputValue={nextOfKinData.location}
+        inputName="kinLocation"
+        inputValue={nextOfKinData.kinLocation}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Location"
       />
@@ -617,8 +617,8 @@ const AddBorrowers = () => {
       {/* Work Phone Number */}
       <InputText
         labelName="Work Phone Number"
-        inputName="workPhoneNumber"
-        inputValue={nextOfKinData.workPhoneNumber}
+        inputName="kinWorkPhoneNumber"
+        inputValue={nextOfKinData.kinWorkPhoneNumber}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
         placeHolder="Enter Work Phone Number"
       />
@@ -663,6 +663,15 @@ const AddBorrowers = () => {
         inputValue={otherDetails.creditScore}
         onChange={(e) => handleInputChange(e, "otherDetails")}
         placeHolder="Enter Score"
+      />
+
+       {/* Gross Salary */}
+       <InputNumber
+        labelName="Gross Salary"
+        inputName="grossSalary"
+        inputValue={otherDetails.grossSalary}
+        onChange={(e) => handleInputChange(e, "otherDetails")}
+        placeHolder="Enter Gross Salary"
       />
 
       {/* Customer Photo */}
