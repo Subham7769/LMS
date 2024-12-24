@@ -6,10 +6,12 @@ const ViewBorrowers = React.lazy(() => import("./ViewBorrowers"));
 const AddBorrowers = React.lazy(() => import("./AddBorrowers"));
 const AddBorrowersGroup = React.lazy(() => import("./AddBorrowersGroup"));
 const ViewBorrowersGroup = React.lazy(() => import("./ViewBorrowersGroup"));
+const UpdateBorrowers = React.lazy(() => import("./UpdateBorrowers"));
 
 const tabs = [
   { id: "add-borrower", label: "Add Borrower" },
   { id: "view-borrower", label: "View Borrower" },
+  // { id: "update-borrower", label: "Update Borrower" },
   // { id: "add-borrower-group", label: "Add Borrower Group" },
   // { id: "view-borrower-group", label: "View Borrower Group" },
 ];
@@ -17,12 +19,13 @@ const tabs = [
 const borrowerComponents = {
   "view-borrower": ViewBorrowers,
   "add-borrower": AddBorrowers,
+  "update-borrower": UpdateBorrowers,
   "view-borrower-group": ViewBorrowersGroup,
   "add-borrower-group": AddBorrowersGroup,
 };
 
 const Borrowers = () => {
-  const [activeTab, setActiveTab] = useState("add-borrower");
+  const [activeTab, setActiveTab] = useState("view-borrower");
   const ActiveComponent = borrowerComponents[activeTab];
 
   return (

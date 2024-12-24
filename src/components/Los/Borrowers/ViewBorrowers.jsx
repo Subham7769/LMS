@@ -11,197 +11,226 @@ import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
 import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
-import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const ViewBorrowers = () => {
-  const [formData, setFormData] = useState({
-    borrowerName: "",
+  const [searchData, setSearchData] = useState({
+    searchTerm: "",
     allLoanOfficer: [],
   });
-
-  const handleDelete = () => {};
-  const handleUpdate = () => {};
-
-  const ActionList = [
-    {
-      icon: PencilIcon,
-      circle: true,
-      action: handleUpdate,
-    },
-    {
-      icon: TrashIcon,
-      circle: true,
-      action: handleDelete,
-    },
-  ];
+  const { borrowers, error, loading } = useSelector((state) => state.borrowers);
+  const [filteredBorrowers, setFilteredBorrowers] = useState(borrowers)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ [name]: value });
+    setSearchData({ [name]: value });
   };
 
-  const applications = [
-    {
-      loanId: "INV001",
-      applicationUploadDate: "2024-11-15",
-      applicationDueDate: "2024-12-15",
-      applicationStatus: "Pending",
-      loanAmount: "50000",
-      companyName: "ABC Corp",
-      companyId: "C001",
-      daysLeftFromDueDate: "30",
-      approvalStatus: "No",
-      paymentStatus: "Unpaid",
-      financedAmount: "0",
-      netOutstanding: "50000",
-      interestDue: "0",
-      file: "invoice1.pdf",
-    },
-    {
-      loanId: "INV002",
-      applicationUploadDate: "2024-11-10",
-      applicationDueDate: "2024-12-10",
-      applicationStatus: "Pending",
-      loanAmount: "30000",
-      companyName: "XYZ Ltd",
-      companyId: "C002",
-      daysLeftFromDueDate: "25",
-      approvalStatus: "Yes",
-      paymentStatus: "Unpaid",
-      financedAmount: "0",
-      netOutstanding: "30000",
-      interestDue: "0",
-      file: "invoice2.pdf",
-    },
-    {
-      loanId: "INV003",
-      applicationUploadDate: "2024-11-19",
-      applicationDueDate: "2024-12-21",
-      applicationStatus: "Pending",
-      loanAmount: "38000",
-      companyName: "QWERTY Ltd",
-      companyId: "C056",
-      daysLeftFromDueDate: "53",
-      approvalStatus: "No",
-      paymentStatus: "Unpaid",
-      financedAmount: "0",
-      netOutstanding: "38000",
-      interestDue: "12",
-      file: "invoice3.pdf",
-    },
-  ];
+  function flattenToSimpleObjectArray(borrowers) {
+    return borrowers.map((borrower) => {
+      const result = {};
 
-  const columns = [
-    { label: "Full Name", field: "fullName" },
-    { label: "Business", field: "business" },
-    { label: "Unique#", field: "uniqueNumber" },
-    { label: "Mobile", field: "mobile" },
+      function recurse(current) {
+        for (const key in current) {
+          if (typeof current[key] === "object" && current[key] !== null) {
+            recurse(current[key]);
+          } else {
+            result[key] = current[key];
+          }
+        }
+      }
+
+      recurse(borrower);
+      return result;
+    });
+  }
+
+  const personalDetailsColumns = [
+    { label: "Title", field: "title" },
+    { label: "Surname", field: "surname" },
+    { label: "Other Name", field: "otherName" },
+    { label: "Unique ID", field: "uniqueID" },
     { label: "Email", field: "email" },
-    { label: "Total Paid", field: "totalPaid" },
-    { label: "Open Loans", field: "openLoans" },
-    { label: "Status", field: "status" },
-    { label: "Actions", field: "actions" },
+    { label: "Mobile", field: "mobile1" },
+    { label: "Loan Officer", field: "loanOfficer" },
   ];
 
-  const renderExpandedRow = (rowData) => (
-    <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
-      <div className="grid grid-cols-3 md:grid-cols-[80%_20%] gap-4">
-        <div className="space-y-2">
-          <div className="grid grid-cols-2 gap-4 py-5">
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Company ID:</p>
-              <p className="text-sm text-gray-600">{rowData.companyId}</p>
+  const renderExpandedRow = (rowData) => {
+    const handleEdit = () => {};
+    const handleSuspend = () => {};
+    return (
+      <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
+        <div className="grid grid-cols-[80%_20%] gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+            {/* Personal Details */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg text-gray-800">
+                Personal Details
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+
+                <p>
+                  <strong>Name:</strong> {rowData.title} {rowData.surname} {rowData.otherName}
+                </p>
+                <p>
+                  <strong>Unique ID Type:</strong> {rowData.uniqueIDType}
+                </p>
+                <p>
+                  <strong>Unique ID:</strong> {rowData.uniqueID}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {rowData.gender}
+                </p>
+                <p>
+                  <strong>Marital Status:</strong> {rowData.maritalStatus}
+                </p>
+                <p>
+                  <strong>Nationality:</strong> {rowData.nationality}
+                </p>
+                <p>
+                  <strong>Age:</strong> {rowData.age}
+                </p>
+                <p>
+                  <strong>Date of Birth:</strong> {rowData.dateOfBirth}
+                </p>
+                <p>
+                  <strong>Place of Birth:</strong> {rowData.placeOfBirth}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Due Date:</p>
-              <p className="text-sm text-gray-600">
-                {rowData.applicationDueDate}
-              </p>
+
+            {/* Contact Details */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg text-gray-800">
+                Contact Details
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <p>
+                  <strong>Mobile 1:</strong> {rowData.mobile1}
+                </p>
+                <p>
+                  <strong>Mobile 2:</strong> {rowData.mobile2}
+                </p>
+                <p>
+                  <strong>Landline:</strong> {rowData.landlinePhone}
+                </p>
+                <p>
+                  <strong>Email:</strong> {rowData.email}
+                </p>
+                <p>
+                  <strong>House No:</strong> {rowData.houseNumber}
+                </p>
+                <p>
+                  <strong>Street:</strong> {rowData.street}
+                </p>
+                <p>
+                  <strong>Residential Area:</strong> {rowData.residentialArea}
+                </p>
+                <p>
+                  <strong>Country:</strong> {rowData.country}
+                </p>
+                <p>
+                  <strong>Province:</strong> {rowData.province}
+                </p>
+                <p>
+                  <strong>District:</strong> {rowData.district}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Days Left:</p>
-              <p className="text-sm text-gray-600">
-                {rowData.daysLeftFromDueDate}
-              </p>
+
+            {/* Employment Details */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg text-gray-800">
+                Employment Details
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <p>
+                  <strong>Employer:</strong> {rowData.employer}
+                </p>
+                <p>
+                  <strong>Occupation:</strong> {rowData.occupation}
+                </p>
+                <p>
+                  <strong>Work Start Date:</strong> {rowData.workStartDate}
+                </p>
+                <p>
+                  <strong>Work Phone:</strong> {rowData.workPhoneNumber}
+                </p>
+                <p>
+                  <strong>Work Address:</strong> {rowData.workPhysicalAddress}
+                </p>
+                <p>
+                  <strong>Employment Type:</strong> {rowData.workType}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Approval Status:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.approvalStatus}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Payment Status:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.paymentStatus}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Financed Amount:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.financedAmount}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Net Outstanding:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.netOutstanding}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Interest Due:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.interestDue}</p>
+
+            {/* Banking Details */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg text-gray-800">
+                Banking Details
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <p>
+                  <strong>Bank Name:</strong> {rowData.bankName}
+                </p>
+                <p>
+                  <strong>Account Name:</strong> {rowData.accountName}
+                </p>
+                <p>
+                  <strong>Account Type:</strong> {rowData.accountType}
+                </p>
+                <p>
+                  <strong>Account No:</strong> {rowData.accountNo}
+                </p>
+                <p>
+                  <strong>Branch:</strong> {rowData.branch}
+                </p>
+                <p>
+                  <strong>Branch Code:</strong> {rowData.branchCode}
+                </p>
+                <p>
+                  <strong>Sort Code:</strong> {rowData.sortCode}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full flex justify-end  flex-col gap-4 p-5">
-          <button
-            onClick={() => handleApprove(rowData.applicationId)}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-            disabled={rowData.approvalStatus === "Yes"}
-          >
-            <FiCheckCircle className="mr-2" />
-            Approve
-          </button>
-          <button
-            onClick={() => handleReject(rowData.applicationId)}
-            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-            disabled={rowData.approvalStatus === "No"}
-          >
-            <FiXCircle className="mr-2" />
-            Reject
-          </button>
-          <button
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            onClick={() => window.alert("PDF viewer would open here")}
-          >
-            <FiDownload className="mr-2" />
-            View PDF
-          </button>
+          {/* Actions */}
+          <div className="flex justify-start gap-5 flex-col mt-4">
+            <Button
+              buttonName={"Edit"}
+              onClick={() => handleEdit(rowData.uniqueID)}
+              className={"text-center"}
+              rectangle={true}
+            />
+            <Button
+              buttonName={"Suspend Borrower"}
+              onClick={() => handleSuspend(rowData.uniqueID)}
+              className={"bg-red-500 hover:bg-red-600"}
+              rectangle={true}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`grid grid-cols-[42%_42%_16%] gap-5`}>
         <InputText
           labelName="Borrower Name"
-          inputName="borrowerName"
-          inputValue={formData?.borrowerName}
+          inputName="searchTerm"
+          inputValue={searchData?.searchTerm}
           onChange={handleChange}
           required
-          isValidation={true}
         />
         <SelectInput
           labelName="All Loan Officers"
           inputName="allLoanOfficer"
           inputOptions={loanOfficer}
           isMulti={true}
-          inputValue={formData?.allLoanOfficer}
+          inputValue={searchData?.allLoanOfficer}
           onChange={handleChange}
           isValidation={true}
         />
@@ -222,19 +251,9 @@ const ViewBorrowers = () => {
       </ContainerTile>
 
       <ExpandableTable
-        columns={columns}
-        data={applications}
+        columns={personalDetailsColumns}
+        data={flattenToSimpleObjectArray(filteredBorrowers)}
         renderExpandedRow={renderExpandedRow}
-      />
-
-      <ListTable
-        ListName={"Borrowers List"}
-        ListHeader={BorrowerHeaderList}
-        ListItem={BorrowersList}
-        ListAction={ActionList}
-        Searchable={true}
-        SearchBy={"fullName"}
-        Sortable={true} // New prop to enable/disable sorting
       />
     </div>
   );
