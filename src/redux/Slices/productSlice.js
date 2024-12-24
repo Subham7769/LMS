@@ -228,6 +228,7 @@ const productInitialState = {
     overDraftPaymentPrinciplePercentage: "",
     maxOverdraftPrincipalLimit: "",
     minOverdraftPrincipalLimit: "",
+    interestMethod: "",
   },
   loading: false,
   error: null,

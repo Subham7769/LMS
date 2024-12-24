@@ -6,6 +6,7 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 
 import {
+  interestMethodOptions,
   options,
   tenureOptions,
   tenureTypeOptions,
@@ -282,6 +283,14 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.numberOfEmisForEarlySettlement}
             onChange={handleChange}
             placeHolder="3"
+            isValidation={true}
+          />
+          <InputSelect
+            labelName="Interest Method"
+            inputOptions={interestMethodOptions}
+            inputName="interestMethod"
+            inputValue={productData?.interestMethod}
+            onChange={handleChange}
             isValidation={true}
           />
 

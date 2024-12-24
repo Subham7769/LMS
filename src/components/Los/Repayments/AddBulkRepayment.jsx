@@ -5,21 +5,16 @@ import InputText from "../../Common/InputText/InputText";
 import InputDate from "../../Common/InputDate/InputDate";
 import { AddBulkRepaymentHeaderList } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-
+import {
+  updateBulkRepaymentData,
+  addBulkRepaymentRow,
+  removeBulkRepaymentRow,
+} from "../../../redux/Slices/repaymentsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddBulkRepayment = () => {
-  const initialData = [
-    {
-      row: "",
-      loan: "",
-      amount: "",
-      method: "",
-      collectionDate: "",
-      collectionBy: "",
-      description: "",
-      accounting: "",
-    },
-  ];
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.repayments.addNewBulkRepaymentData);
 
   const methodOptions = [
     { label: "Cash", value: "cash" },
@@ -41,21 +36,16 @@ const AddBulkRepayment = () => {
     { label: "Loan 2", value: "loan_2" },
   ];
 
-  const [data, setData] = useState(initialData);
-
   const handleChange = (value, rowIndex, fieldName) => {
-    const updatedData = [...data];
-    updatedData[rowIndex][fieldName] = value;
-    setData(updatedData);
+    dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
   };
 
   const addRow = () => {
-    setData([...data, { ...initialData[0] }]);
+    dispatch(addBulkRepaymentRow());
   };
 
   const removeRow = (index) => {
-    const updatedData = data.filter((_, i) => i !== index);
-    setData(updatedData);
+    dispatch(removeBulkRepaymentRow(index));
   };
 
   return (

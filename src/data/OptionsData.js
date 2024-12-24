@@ -230,3 +230,8 @@ export const transactionTypeOption = [
   { label: "DEPOSIT", value: "DEPOSIT" },
   { label: "WITHDRAW", value: "WITHDRAW" },
 ];
+
+export const interestMethodOptions = [
+  { label: "FLAT", value: "FLAT" },
+  { label: "REDUCING", value: "REDUCING" },
+];

@@ -1,85 +1,89 @@
 import React from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
+import { useSelector } from "react-redux";
+
+function transformData(inputArray) {
+  return inputArray.map((item) => ({
+    loanProduct: item.generalDetails.loanProduct,
+    borrower: item.generalDetails.borrower,
+    disbursedBy: item.generalDetails.disbursedBy,
+    principalAmount: item.generalDetails.principalAmount,
+    loanReleaseDate: item.generalDetails.loanReleaseDate,
+    interestMethod: item.generalDetails.interestMethod,
+    generalDetailsInterestType: item.generalDetails.generalDetailsInterestType,
+    loanInterest: item.generalDetails.loanInterest,
+    interestPer: item.generalDetails.interestPer,
+    loanDuration: item.generalDetails.loanDuration,
+    durationPer: item.generalDetails.durationPer,
+    repaymentCycle: item.generalDetails.repaymentCycle,
+    numberOfRepayments: item.generalDetails.numberOfRepayments,
+    loanFiles: item.loanFiles,
+    applicationStatus: item.applicationStatus,
+  }));
+}
 
 const LoanHistory = () => {
-  const applications = [
-    {
-      loanId: "INV001",
-      applicationUploadDate: "2024-11-15",
-      applicationDueDate: "2024-12-15",
-      applicationStatus: "rejected",
-      loanAmount: "50000",
-      companyName: "ABC Corp",
-      companyId: "C001",
-      daysLeftFromDueDate: "30",
-      approvalStatus: "No",
-      paymentStatus: "Unpaid",
-      financedAmount: "0",
-      netOutstanding: "50000",
-      interestDue: "0",
-      file: "invoice1.pdf",
-    },
-    {
-      loanId: "INV002",
-      applicationUploadDate: "2024-11-10",
-      applicationDueDate: "2024-12-10",
-      applicationStatus: "Approved",
-      loanAmount: "30000",
-      companyName: "XYZ Ltd",
-      companyId: "C002",
-      daysLeftFromDueDate: "25",
-      approvalStatus: "No",
-      paymentStatus: "Unpaid",
-      financedAmount: "0",
-      netOutstanding: "30000",
-      interestDue: "0",
-      file: "invoice2.pdf",
-    },
-    {
-      loanId: "INV003",
-      applicationUploadDate: "2024-11-19",
-      applicationDueDate: "2024-12-21",
-      applicationStatus: "Approved",
-      loanAmount: "38000",
-      companyName: "QWERTY Ltd",
-      companyId: "C056",
-      daysLeftFromDueDate: "53",
-      approvalStatus: "No",
-      paymentStatus: "Unpaid",
-      financedAmount: "0",
-      netOutstanding: "38000",
-      interestDue: "12",
-      file: "invoice3.pdf",
-    },
-  ];
+  const { loanHistory } = useSelector((state) => state.loans);
+
+  const loanHistoryData = transformData(loanHistory);
 
   const columns = [
-    { label: "Company Name", field: "companyName" },
-    { label: "Company Id", field: "companyId" },
-    { label: "Loan Id", field: "loanId" },
-    { label: "Date", field: "applicationUploadDate" },
-    { label: "Amount", field: "loanAmount" },
-    { label: "Status", field: "applicationStatus"},
+    { label: "Loan Product", field: "loanProduct" },
+    { label: "Borrower", field: "borrower" },
+    { label: "Disbursed By", field: "disbursedBy" },
+    { label: "Loan Release Date", field: "loanReleaseDate" },
+    { label: "Principal Amount", field: "principalAmount" },
+    { label: "Status", field: "applicationStatus" },
   ];
 
   const renderExpandedRow = (rowData) => (
     <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
       <div className="grid grid-cols-2 gap-4">
         <div className="flex justify-between">
-          <p className="font-semibold">Financed Amount:</p>
-          <p>{rowData.financedAmount}</p>
+          <p className="text-sm font-semibold text-gray-600">
+            Interest Method:
+          </p>
+          <p className="text-sm text-gray-600">{rowData.interestMethod}</p>
         </div>
         <div className="flex justify-between">
-          <p className="font-semibold">Due Date:</p>
-          <p>{rowData.applicationDueDate}</p>
+          <p className="text-sm font-semibold text-gray-600">Interest Type:</p>
+          <p className="text-sm text-gray-600">
+            {rowData.generalDetailsInterestType}
+          </p>
         </div>
         <div className="flex justify-between">
-          <p className="font-semibold">Days Left:</p>
-          <p>{rowData.daysLeftFromDueDate}</p>
+          <p className="text-sm font-semibold text-gray-600">
+            Repayment Cycle:
+          </p>
+          <p className="text-sm text-gray-600">{rowData.repaymentCycle}</p>
         </div>
         <div className="flex justify-between">
-          <p className="font-semibold">Approval Status:</p>
-          <p>{rowData.applicationStatus}</p>
+          <p className="text-sm font-semibold text-gray-600">
+            Number of Repayments:
+          </p>
+          <p className="text-sm text-gray-600">{rowData.numberOfRepayments}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="text-sm font-semibold text-gray-600">
+            Loan Interest %:
+          </p>
+          <p className="text-sm text-gray-600">{rowData.loanInterest}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="text-sm font-semibold text-gray-600">
+            Per (Loan Interest):
+          </p>
+          <p className="text-sm text-gray-600">{rowData.interestPer}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="text-sm font-semibold text-gray-600">Loan Duration:</p>
+          <p className="text-sm text-gray-600">{rowData.loanDuration}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="text-sm font-semibold text-gray-600">
+            Per (Loan Duration):
+          </p>
+          <p className="text-sm text-gray-600">{rowData.durationPer}</p>
         </div>
       </div>
     </div>
@@ -88,7 +92,7 @@ const LoanHistory = () => {
   return (
     <ExpandableTable
       columns={columns}
-      data={applications}
+      data={loanHistoryData}
       renderExpandedRow={renderExpandedRow}
     />
   );

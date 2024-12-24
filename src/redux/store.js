@@ -28,6 +28,7 @@ import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
 import borrowersSlice from "./Slices/borrowersSlice";
 import loansSlice from "./Slices/loansSlice";
+import repaymentsSlice from "./Slices/repaymentsSlice";
 
 import checkTokenMiddleware from './Middlewares/checkTokenMiddleware.js'
 
@@ -60,7 +61,8 @@ const store = configureStore({
     depositSidebar: depositSidebarSlice,
     accounts: accountsSlice,
     borrowers: borrowersSlice,
-    loans: loansSlice
+    loans: loansSlice,
+    repayments: repaymentsSlice
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(checkTokenMiddleware),
