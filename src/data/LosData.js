@@ -226,10 +226,10 @@ export const repaymentOptions = [
 
 
 export const maritalStatus = [
-  { value: "Single", label: "Single" },
-  { value: "Married", label: "Married" },
-  { value: "Divorced", label: "Divorced" },
-  { value: "Widowed", label: "Widowed" },
+  { value: "SINGLE", label: "SINGLE" },
+  { value: "MARRIED", label: "MARRIED" },
+  { value: "DIVORCED", label: "DIVORCED" },
+  { value: "WIDOWED", label: "WIDOWED" },
 ];
 
 export const workType = [
@@ -248,20 +248,20 @@ export const title = [
   { value: "Prof.", label: "Prof." },
 ]
 export const gender = [
-  { value: "Male", label: "Male" },
-  { value: "Female", label: "Female" },
-  { value: "Other", label: "Other" },
-]
+  { value: "MALE", label: "MALE" },
+  { value: "FEMALE", label: "FEMALE" },
+  { value: "OTHER", label: "OTHER" },
+];
 export const accountType = [
   { value: "Savings", label: "Savings" },
   { value: "Current", label: "Current" },
   { value: "Corporate", label: "Corporate" },
 ]
 export const uniqueIDType = [
-  { value: "Passport", label: "Passport" },
-  { value: "NRC No.", label: "NRC No." },
-  { value: "Driver's License", label: "Driver's License" },
-  { value: "National ID", label: "National ID" },
-  { value: "Voter ID", label: "Voter ID" },
-  { value: "Social Security Number", label: "Social Security Number" },
-]
+  { value: "PASSPORT", label: "PASSPORT" },
+  { value: "NRC NO.", label: "NRC NO." },
+  { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
+  { value: "NATIONAL ID", label: "NATIONAL ID" },
+  { value: "VOTER ID", label: "VOTER ID" },
+  { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
+];

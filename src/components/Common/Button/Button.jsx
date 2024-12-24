@@ -20,7 +20,7 @@ const Button = ({ buttonIcon: ButtonIcon, buttonName, onClick, rectangle = false
       disabled={disabled}
     >
       {ButtonIcon && <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
-      {buttonName}
+      {ButtonIcon ? <span>{buttonName}</span>:<span className='text-center w-full'>{buttonName}</span>}
     </button>
   );
 }

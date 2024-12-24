@@ -6,6 +6,7 @@ import SideBar from "../Common/Sidebar/Sidebar";
 import Body from "../Common/Body/Body";
 import LoadingState from '../LoadingState/LoadingState';
 
+
 const AppLayout = () => {
   return (
     <div className="flex flex-col max-h-screen">

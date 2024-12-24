@@ -36,7 +36,7 @@ const ExpandableTable = ({
                 className="hover:bg-gray-50 cursor-pointer text-xs font-medium"
                 onClick={() => handleExpand(index)}
               >
-                <td className=" flex justify-center items-center  py-6">
+                <td className=" flex justify-center items-center py-6">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -57,7 +57,7 @@ const ExpandableTable = ({
                 {columns.map((col, index) => (
                   <td
                     key={index}
-                    className="px-4 py-6 text-sm text-center text-gray-800"
+                    className="max-w-28 break-words px- py-6 text-sm text-center text-gray-800"
                   >
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
