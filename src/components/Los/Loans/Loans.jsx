@@ -11,14 +11,14 @@ const tabs = [
   { id: "add-loan", label: "Add Loan" },
   { id: "approve-loans", label: "Approve Loans" },
   { id: "loan-history", label: "Loan History" },
-  { id: "collateral-register", label: "Collateral Register" },
+  // { id: "collateral-register", label: "Collateral Register" },
 ];
 
 const loanComponents = {
   "add-loan": AddLoans,
   "loan-history": LoanHistory,
   "approve-loans": ApproveLoans,
-  "collateral-register": CollateralRegister,
+  // "collateral-register": CollateralRegister,
 };
 
 
