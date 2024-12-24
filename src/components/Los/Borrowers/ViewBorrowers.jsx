@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListTable from "../../Common/ListTable/ListTable";
 import {
   BorrowerHeaderList,
@@ -12,22 +12,38 @@ import Button from "../../Common/Button/Button";
 import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { fetchAllBorrowers } from "../../../redux/Slices/borrowersSlice";
 
 const ViewBorrowers = () => {
   const [searchData, setSearchData] = useState({
     searchTerm: "",
     allLoanOfficer: [],
   });
-  const { borrowers, error, loading } = useSelector((state) => state.borrowers);
-  const [filteredBorrowers, setFilteredBorrowers] = useState(borrowers)
+  const { allBorrowersData, borrowers, error, loading } = useSelector((state) => state.borrowers);
+  const [filteredBorrowers, setFilteredBorrowers] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setFilteredBorrowers(allBorrowersData.map(
+      (item) => item.borrowerProfile
+    ))
+  }, [allBorrowersData])
+  
+
+  console.log(allBorrowersData)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSearchData({ [name]: value });
   };
 
-  function flattenToSimpleObjectArray(borrowers) {
-    return borrowers.map((borrower) => {
+  useEffect(() => {
+    dispatch(fetchAllBorrowers({ page : 0, size : 20 }));
+  }, [dispatch]);
+
+  function flattenToSimpleObjectArray(filteredBorrowers) {
+    return filteredBorrowers.map((borrower) => {
       const result = {};
 
       function recurse(current) {
@@ -56,9 +72,7 @@ const ViewBorrowers = () => {
   ];
 
   const renderExpandedRow = (rowData) => {
-    const handleEdit = (uniqueID) => {
-      
-    };
+    const handleEdit = (uniqueID) => {};
     const handleInactive = () => {};
     return (
       <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
@@ -70,9 +84,9 @@ const ViewBorrowers = () => {
                 Personal Details
               </h3>
               <div className="grid grid-cols-2 gap-4">
-
                 <p>
-                  <strong>Name:</strong> {rowData.title} {rowData.surname} {rowData.otherName}
+                  <strong>Name:</strong> {rowData.title} {rowData.surname}{" "}
+                  {rowData.otherName}
                 </p>
                 <p>
                   <strong>Unique ID Type:</strong> {rowData.uniqueIDType}

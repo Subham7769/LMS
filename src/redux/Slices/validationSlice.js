@@ -1,80 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const validationInitialState = {
-  validationError: {},
-  fields: [],
-  isValid: true,
-};
-
-const validationSlice = createSlice({
-  name: "validation",
-  initialState: validationInitialState,
-  reducers: {
-    addFields: (state, action) => {
-      const { inputName } = action.payload;
-      state.fields.push(inputName);
-      state.validationError[inputName] = false; // Set all fields to false initially
-    },
-    setValidationError: (state, action) => {
-      const inputName = action.payload;
-      state.validationError = {
-        ...state.validationError,
-        [inputName]: false,
-      };
-    },
-    updateValidationError: (state, action) => {
-      const newErrors = action.payload;
-      state.validationError = {
-        ...state.validationError,
-        ...newErrors,
-      };
-    },
-    clearValidationError: (state, action) => {
-      state.validationError = {};
-      state.fields = [];
-    },
-    validateForm: (state, action) => {
-      const errors = {};
-      const formData = action.payload;
-      state.isValid = true;
-
-      if (formData.dataIndex) {
-        state.fields.forEach((field) => {
-          if (formData[field] === "") {
-            errors[`${field}_${formData.dataIndex}`] = true;
-            state.isValid = false;
-          } else {
-            errors[`${field}_${formData.dataIndex}`] = false;
-          }
-        });
-      } else {
-        state.fields.forEach((field) => {
-          if (formData[field] === "") {
-            errors[field] = true;
-            state.isValid = false;
-          } else {
-            errors[field] = false;
-          }
-        });
-      }
-
-      state.validationError = {
-        ...state.validationError,
-        ...errors,
-      };
-    },
-  },
-});
-
-export const {
-  addFields,
-  setValidationError,
-  updateValidationError,
-  clearValidationError,
-  validateForm,
-} = validationSlice.actions;
-export default validationSlice.reducer;
-
 export const validateUserRole = (userRole, dispatch) => {
   let isValid = true;
   const errors = {};
@@ -208,3 +133,82 @@ export const validateRAC = (sections, dispatch) => {
 
   return isValid;
 };
+
+const validationInitialState = {
+  validationError: {},
+  fields: [],
+  isValid: true,
+};
+
+const validationSlice = createSlice({
+  name: "validation",
+  initialState: validationInitialState,
+  reducers: {
+    setFields: (state, action) => {
+      state.fields = action.payload;
+    },
+    addFields: (state, action) => {
+      const { inputName } = action.payload;
+      state.fields.push(inputName);
+      state.validationError[inputName] = false; // Set all fields to false initially
+    },
+    setValidationError: (state, action) => {
+      const inputName = action.payload;
+      state.validationError = {
+        ...state.validationError,
+        [inputName]: false,
+      };
+    },
+    updateValidationError: (state, action) => {
+      const newErrors = action.payload;
+      state.validationError = {
+        ...state.validationError,
+        ...newErrors,
+      };
+    },
+    clearValidationError: (state, action) => {
+      state.validationError = {};
+      state.fields = [];
+    },
+    validateForm: (state, action) => {
+      const errors = {};
+      const formData = action.payload;
+      state.isValid = true;
+
+      if (formData.dataIndex) {
+        state.fields.forEach((field) => {
+          if (formData[field] === "") {
+            errors[`${field}_${formData.dataIndex}`] = true;
+            state.isValid = false;
+          } else {
+            errors[`${field}_${formData.dataIndex}`] = false;
+          }
+        });
+      } else {
+        state.fields.forEach((field) => {
+          if (formData[field] === "") {
+            errors[field] = true;
+            state.isValid = false;
+          } else {
+            errors[field] = false;
+          }
+        });
+      }
+
+      state.validationError = {
+        ...state.validationError,
+        ...errors,
+      };
+    },
+  },
+});
+
+export const {
+  setFields,
+  addFields,
+  setValidationError,
+  updateValidationError,
+  clearValidationError,
+  validateForm,
+} = validationSlice.actions;
+export default validationSlice.reducer;
