@@ -3,7 +3,7 @@ export async function createNewRac(Name, navigate, navigateSuccess, navigateFail
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac",
+      `${import.meta.env.VITE_DYNAMIC_RAC_CREATE_NEWRAC}`,
       {
         method: "POST",
         headers: {

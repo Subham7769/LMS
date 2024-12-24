@@ -100,9 +100,9 @@ const initialState = {
       reasonForBorrowing: "",//optional
       sourceOfRepayment: "",//optional
       groupId: "",
-      creditScore: 0,
-      freeCashInHand: 0,
-      grossSalary: 0,
+      creditScore: "",
+      freeCashInHand: "",
+      grossSalary: "",
     },
   },
   borrowers: [

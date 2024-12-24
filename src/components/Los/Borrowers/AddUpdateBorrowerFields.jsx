@@ -4,9 +4,14 @@ import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputEmail from "../../Common/InputEmail/InputEmail";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import { countryOptions, locationOptions } from "../../../data/CountryData";
-import Button from "../../Common/Button/Button";
 import Accordion from "../../Common/Accordion/Accordion";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateBorrowerField,
+  resetBorrowerData,
+  registerBorrower,
+} from "../../../redux/Slices/borrowersSlice";
+import { countryOptions, locationOptions } from "../../../data/CountryData";
 import {
   maritalStatus,
   workType,
@@ -16,45 +21,23 @@ import {
   uniqueIDType,
 } from "../../../data/LosData";
 
-import {
-  updateBorrowerField,
-  resetBorrowerData,
-  registerBorrower,
-} from "../../../redux/Slices/borrowersSlice";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearValidationError,
-  validateForm,
-} from "../../../redux/Slices/validationSlice";
-import store from "../../../redux/store";
-
-const AddBorrowers = () => {
+const AddUpdateBorrowerFields = ({ BorrowerData }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
-  const { addBorrowerData, error, loading } = useSelector(
-    (state) => state.borrowers
-  );
 
-  useEffect(() => {
-    setFilteredLocations1(
-      locationOptions[addBorrowerData.contactDetails.country] || []
-    );
-    setFilteredLocations2(
-      locationOptions[addBorrowerData.nextOfKinDetails.kinCountry] || []
-    );
-  }, [
-    addBorrowerData.contactDetails.country,
-    addBorrowerData.nextOfKinDetails.kinCountry,
-  ]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearValidationError());
-    };
-  }, [dispatch]);
-
-  console.log(addBorrowerData);
+  
+    useEffect(() => {
+      setFilteredLocations1(
+        locationOptions[BorrowerData.contactDetails.country] || []
+      );
+      setFilteredLocations2(
+        locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
+      );
+    }, [
+      BorrowerData.contactDetails.country,
+      BorrowerData.nextOfKinDetails.kinCountry,
+    ]);
 
   const handleInputChange = (e, section) => {
     const { name, value, type, checked } = e.target;
@@ -63,43 +46,6 @@ const AddBorrowers = () => {
       updateBorrowerField({ section, field: name, value, type, checked })
     );
   };
-
-  const handleFileUpload = (e) => {
-    const { name, value, type, checked } = e.target;
-    console.log(files[0].name);
-    dispatch(
-      updateBorrowerField({ name, value: files[0].name, type, checked })
-    );
-    s;
-  };
-
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-  
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-  
-    recurse(nestedObject);
-    return result;
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)));
-    const state = store.getState();
-    const isValid = state.validation.isValid;
-    if (isValid) {
-      dispatch(registerBorrower(addBorrowerData));
-    }
-  };
-
 
   // Dedicated UI Components
   const personalDetails = (personalDetails) => (
@@ -723,48 +669,38 @@ const AddBorrowers = () => {
       <Accordion
         heading={"Personal Details"}
         renderExpandedContent={() =>
-          personalDetails(addBorrowerData.personalDetails)
+          personalDetails(BorrowerData.personalDetails)
         }
         isOpen={true}
       />
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
-          contactDetails(addBorrowerData.contactDetails)
+          contactDetails(BorrowerData.contactDetails)
         }
       />
       <Accordion
         heading={"Employment Details"}
         renderExpandedContent={() =>
-          employmentDetails(addBorrowerData.employmentDetails)
+          employmentDetails(BorrowerData.employmentDetails)
         }
       />
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() => bankDetails(addBorrowerData.bankDetails)}
+        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
       />
       <Accordion
         heading={"Next of Kin Details"}
         renderExpandedContent={() =>
-          nextOfKinDetails(addBorrowerData.nextOfKinDetails)
+          nextOfKinDetails(BorrowerData.nextOfKinDetails)
         }
       />
       <Accordion
         heading={"Other Details"}
-        renderExpandedContent={() => otherDetails(addBorrowerData.otherDetails)}
+        renderExpandedContent={() => otherDetails(BorrowerData.otherDetails)}
       />
-
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
-        <Button
-          buttonName="Reset"
-          onClick={() => dispatch(resetBorrowerData())}
-          rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
-        />
-        <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
-      </div>
     </>
   );
 };
 
-export default AddBorrowers;
+export default AddUpdateBorrowerFields;
