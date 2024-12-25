@@ -3,10 +3,10 @@ import Button from "../../Common/Button/Button";
 import {
   resetBorrowerData,
   registerBorrower,
+  updateAddBorrowerField
 } from "../../../redux/Slices/borrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import store from "../../../redux/store";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
 
 const AddBorrowers = () => {
@@ -34,7 +34,7 @@ const AddBorrowers = () => {
     return result;
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)));
     if (isValid) {
@@ -42,9 +42,10 @@ const AddBorrowers = () => {
     }
   };
 
+
   return (
     <>
-      <AddUpdateBorrowerFields BorrowerData={addBorrowerData} />
+      <AddUpdateBorrowerFields BorrowerData={addBorrowerData}  handleChangeReducer={updateAddBorrowerField} />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
           buttonName="Reset"

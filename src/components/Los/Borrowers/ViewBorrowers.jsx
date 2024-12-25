@@ -1,46 +1,104 @@
 import React, { useEffect, useState } from "react";
-import ListTable from "../../Common/ListTable/ListTable";
-import {
-  BorrowerHeaderList,
-  BorrowersList,
-  loanOfficer,
-} from "../../../data/LosData";
-import { PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { loanOfficer, accountStatusOptions } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
-import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
+import InputSelect from "../../Common/InputSelect/InputSelect";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { fetchAllBorrowers } from "../../../redux/Slices/borrowersSlice";
+import {
+  fetchAllBorrowers,
+  changeBorrowerStatus,
+  setUpdateBorrower,
+} from "../../../redux/Slices/borrowersSlice";
+import { useNavigate } from "react-router-dom";
+import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Select
 
 const ViewBorrowers = () => {
-  const [searchData, setSearchData] = useState({
-    searchTerm: "",
-    allLoanOfficer: [],
-  });
-  const { allBorrowersData, borrowers, error, loading } = useSelector((state) => state.borrowers);
-  const [filteredBorrowers, setFilteredBorrowers] = useState([]);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { allBorrowersData, error, loading } = useSelector( (state) => state.borrowers );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [allLoanOfficer, setAllLoanOfficer] = useState([]);
+  const [filteredBorrowers, setFilteredBorrowers] = useState([]);
+  const [borrowerStatuses, setBorrowerStatuses] = useState({});
 
-  useEffect(() => {
-    setFilteredBorrowers(allBorrowersData.map(
-      (item) => item.borrowerProfile
-    ))
-  }, [allBorrowersData])
+  // Track changes in both search term and loan officer selection
+useEffect(() => {
+  applyFilters(); // Apply filters whenever either searchTerm or allLoanOfficer changes
+}, [searchTerm, allLoanOfficer]);
+
+useEffect(() => {
+  console.log()
+  if(allBorrowersData.length<=0){
+    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+  }
+}, [dispatch]);
+
+useEffect(() => {
+  const transformedData = allBorrowersData.map((item) => ({
+    ...item.borrowerProfile,
+    uid: item.uid,
+    lmsUserStatus: item.lmsUserStatus,
+  }));
+  setFilteredBorrowers(transformedData);
+}, [allBorrowersData]);
+
+  const applyFilters = () => {
+    const selectedLoanOfficers = allLoanOfficer.map((officer) =>
+      officer.value.toLowerCase()
+    );
   
-
-  console.log(allBorrowersData)
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSearchData({ [name]: value });
+    const filtered = allBorrowersData.filter((borrower) => {
+      const personalDetails = borrower.borrowerProfile?.personalDetails || {};
+      const contactDetails = borrower.borrowerProfile?.contactDetails || {};
+  
+      const matchesLoanOfficer = selectedLoanOfficers.length
+        ? selectedLoanOfficers.includes(
+            personalDetails.loanOfficer?.toLowerCase()
+          )
+        : true;
+  
+      const matchesSearchTerm = searchTerm
+        ? [
+            personalDetails.surname,
+            personalDetails.otherName,
+            personalDetails.uniqueID,
+            contactDetails.email,
+            contactDetails.mobile1,
+          ]
+            .some((field) =>
+              field?.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        : true;
+  
+      return matchesLoanOfficer && matchesSearchTerm;
+    });
+  
+    setFilteredBorrowers(filtered);
   };
-
-  useEffect(() => {
-    dispatch(fetchAllBorrowers({ page : 0, size : 20 }));
-  }, [dispatch]);
+  
+  const handleLoanOfficerFilter = (selectedOfficers) => {
+    setAllLoanOfficer(selectedOfficers); // Update loan officer filter
+    applyFilters(); // Apply filters
+  };
+  
+  const handleSearchFilter = (term) => {
+    setSearchTerm(term); // Update search term
+    applyFilters(); // Apply filters
+  };
+  
+  const handleChangeSearch = (e) => {
+    const term = e.target.value;
+    handleSearchFilter(term);
+  };
+  
+  const handleReset = () => {
+    setSearchTerm("");
+    setAllLoanOfficer([]);
+    setFilteredBorrowers(allBorrowersData); // Reset to original data
+  };
 
   function flattenToSimpleObjectArray(filteredBorrowers) {
     return filteredBorrowers.map((borrower) => {
@@ -69,11 +127,37 @@ const ViewBorrowers = () => {
     { label: "Email", field: "email" },
     { label: "Mobile", field: "mobile1" },
     { label: "Loan Officer", field: "loanOfficer" },
+    { label: "Status", field: "lmsUserStatus" },
   ];
 
   const renderExpandedRow = (rowData) => {
-    const handleEdit = (uniqueID) => {};
-    const handleInactive = () => {};
+    const currentStatus =
+      borrowerStatuses[rowData.uid] || rowData.lmsUserStatus; // Get the current status for this borrower
+    const setCurrentStatus = (newStatus) => {
+      setBorrowerStatuses((prevStatuses) => ({
+        ...prevStatuses,
+        [rowData.uid]: newStatus, // Update the status for this borrower
+      }));
+    };
+    const handleEdit = (uid) => {
+      dispatch(setUpdateBorrower({ uid }));
+      navigate(
+        `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
+      );
+      console.log(uid);
+    };
+
+    const handleChangeStatus = (uid, newStatus) => {
+      console.log(uid);
+      setCurrentStatus(newStatus);
+      dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap()
+      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      navigate(
+        `/loan/loan-origination-system/personal/borrowers/view-borrower`
+      );
+
+    };
+
     return (
       <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
         <div className="grid grid-cols-[80%_20%] gap-4">
@@ -215,13 +299,20 @@ const ViewBorrowers = () => {
           <div className="flex justify-start gap-5 flex-col mt-4">
             <Button
               buttonName={"Edit"}
-              onClick={() => handleEdit(rowData.uniqueID)}
+              onClick={() => handleEdit(rowData.uid)}
               className={"text-center"}
               rectangle={true}
             />
+            <InputSelect
+              labelName={"Account Status"}
+              inputName={"accountStatus"}
+              inputOptions={accountStatusOptions}
+              inputValue={currentStatus}
+              onChange={(e) => setCurrentStatus(e.target.value)}
+            />
             <Button
-              buttonName={"Inactive Borrower"}
-              onClick={() => handleInactive(rowData.uniqueID)}
+              buttonName={"Change Status"}
+              onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
               className={"bg-red-500 hover:bg-red-600"}
               rectangle={true}
             />
@@ -230,36 +321,37 @@ const ViewBorrowers = () => {
       </div>
     );
   };
-
+  
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`grid grid-cols-[42%_42%_16%] gap-5`}>
+      <ContainerTile className={`grid grid-cols-[45%_45%_10%] gap-5`}>
         <InputText
-          labelName="Borrower Name"
+          labelName="Search Borrower"
           inputName="searchTerm"
-          inputValue={searchData?.searchTerm}
-          onChange={handleChange}
+          inputValue={searchTerm}
+          onChange={handleChangeSearch}
           required
         />
         <SelectInput
           labelName="All Loan Officers"
           inputName="allLoanOfficer"
           inputOptions={loanOfficer}
-          isMulti={true}
-          inputValue={searchData?.allLoanOfficer}
-          onChange={handleChange}
+          inputValue={allLoanOfficer}
           isValidation={true}
+          onChange={handleLoanOfficerFilter}
+          className="w-full"
+          isMulti={true}
         />
-        <div className="flex gap-5">
-          <Button
+        <div className="flex align-middle gap-5">
+          {/* <Button
             buttonName={"Search"}
-            onClick={() => {}}
+            onClick={handleSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
-          />
+          /> */}
           <Button
             buttonName={"Reset"}
-            onClick={() => {}}
+            onClick={handleReset}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
           />
@@ -270,6 +362,8 @@ const ViewBorrowers = () => {
         columns={personalDetailsColumns}
         data={flattenToSimpleObjectArray(filteredBorrowers)}
         renderExpandedRow={renderExpandedRow}
+        loading={loading}
+        error={error}
       />
     </div>
   );

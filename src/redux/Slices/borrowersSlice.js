@@ -36,7 +36,7 @@ export const fetchAllBorrowers = createAsyncThunk(
     try {
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `https://api-dev.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/all?page=${page}&size=${size}`,
+        `${import.meta.env.VITE_BORROWERS_READ_ALL_PERSONAL_BORROWER}?page=${page}&size=${size}`,
         {
           method: "GET",
           headers: {
@@ -53,6 +53,68 @@ export const fetchAllBorrowers = createAsyncThunk(
 
       const data = await response.json();
       return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Change Borrower Status
+export const changeBorrowerStatus = createAsyncThunk(
+  "borrowers/changeStatus", // Action type
+  async ({ uid, newStatus }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_CHANGE_STATUS
+        }/${uid}/status/${newStatus}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to change borrower status"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Update Borrower Information
+export const updateBorrowerInfo = createAsyncThunk(
+  "borrowers/updateInfo", // Action type
+  async ({ borrowerData, uid }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_UPDATE_ENDPOINT}${uid}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify(borrowerData), // Send updated borrower data
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower information"
+        );
+      }
+
     } catch (error) {
       return rejectWithValue(error.message); // Return the error message
     }
@@ -137,7 +199,7 @@ const initialState = {
     },
   },
   allBorrowersData: [],
-  borrowers: [],
+  updateBorrowerData: {},
   error: null,
   loading: false,
 };
@@ -146,7 +208,7 @@ const borrowersSlice = createSlice({
   name: "borrowers",
   initialState,
   reducers: {
-    updateBorrowerField: (state, action) => {
+    updateAddBorrowerField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
       if (section && state.addBorrowerData[section]) {
@@ -157,8 +219,31 @@ const borrowersSlice = createSlice({
         state.addBorrowerData[field] = type === "checkbox" ? checked : value;
       }
     },
-    resetBorrowerData: (state) => {
+    resetBorrowerData: (state, action) => {
       state.addBorrowerData = initialState.addBorrowerData;
+    },
+    updateBorrowerUpdateField: (state, action) => {
+      const { section, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.updateBorrowerData[section]) {
+        state.updateBorrowerData[section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in updateBorrowerData
+        state.updateBorrowerData[field] = type === "checkbox" ? checked : value;
+      }
+    },
+    setUpdateBorrower: (state, action) => {
+      const { uid } = action.payload;
+      const borrower = state.allBorrowersData.find((item) => item.uid === uid);
+      if (borrower) {
+        state.updateBorrowerData = borrower.borrowerProfile;
+      } else {
+        state.updateBorrowerData = null; // Reset if no match found
+      }
+    },
+    resetUpdateBorrowerData: (state, action) => {
+      state.updateBorrowerData = initialState.updateBorrowerData;
     },
   },
   extraReducers: (builder) => {
@@ -182,12 +267,6 @@ const borrowersSlice = createSlice({
       })
       .addCase(fetchAllBorrowers.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
-        // Extract all borrowerProfiles from the content array
-        const borrowers = action.payload.content.map(
-          (item) => item.borrowerProfile
-        );
-
         // Update state with the borrowers array
         state.allBorrowersData = action.payload.content;
         state.error = null;
@@ -196,11 +275,42 @@ const borrowersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(changeBorrowerStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changeBorrowerStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Borrower Status Changed Successfully");
+      })
+      .addCase(changeBorrowerStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateBorrowerInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBorrowerInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Borrower Information Updated Successfully");
+      })
+      .addCase(updateBorrowerInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });
 
-export const { updateBorrowerField, resetBorrowerData } =
-  borrowersSlice.actions;
+export const {
+  updateAddBorrowerField,
+  resetBorrowerData,
+  updateBorrowerUpdateField,
+  setUpdateBorrower,
+  resetUpdateBorrowerData,
+} = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

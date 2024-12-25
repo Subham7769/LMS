@@ -183,11 +183,8 @@ export const AddBulkRepaymentList = [
 
 
 export const loanOfficer = [
-  { label: "John Doe", value: "John Doe" },
-  { label: "Jane Smith", value: "Jane Smith" },
-  { label: "Michael Johnson", value: "Michael Johnson" },
-  { label: "Emily Davis", value: "Emily Davis" },
-  { label: "Chris Brown", value: "Chris Brown" },
+  { label: "Super Admin", value: "superadmin" },
+  { label: "Test", value: "test" },
 ];
 
 export const ApproveRepaymentColumns = [
@@ -264,4 +261,8 @@ export const uniqueIDType = [
   { value: "NATIONAL ID", label: "NATIONAL ID" },
   { value: "VOTER ID", label: "VOTER ID" },
   { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
+];
+export const accountStatusOptions = [
+  { value: "DEACTIVATED", label: "DEACTIVATED" },
+  { value: "DEFAULTER", label: "DEFAULTER" },
 ];

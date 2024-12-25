@@ -6,9 +6,6 @@ import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateBorrowerField,
-} from "../../../redux/Slices/borrowersSlice";
 import { countryOptions, locationOptions } from "../../../data/CountryData";
 import {
   maritalStatus,
@@ -21,10 +18,9 @@ import {
 import {
   setFields,
   clearValidationError,
-  validateForm,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateBorrowerFields = ({ BorrowerData }) => {
+const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -95,22 +91,19 @@ const AddUpdateBorrowerFields = ({ BorrowerData }) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
     dispatch(
-      updateBorrowerField({ section, field: name, value, type, checked })
+      handleChangeReducer({ section, field: name, value, type, checked })
     );
-    
   };
 
   const handleFileUpload = (e) => {
     const { name, value, type, checked } = e.target;
     console.log(files[0].name);
     dispatch(
-      updateBorrowerField({ name, value: files[0].name, type, checked })
+      handleChangeReducer({ name, value: files[0].name, type, checked })
     );
-    s;
   };
 
-
-//   All Fields Configuration
+  //   All Fields Configuration
   const personalDetailsConfig = [
     {
       labelName: "Title",
@@ -464,10 +457,6 @@ const AddUpdateBorrowerFields = ({ BorrowerData }) => {
     // Uncomment this if you decide to include the file input field
     // { labelName: "Customer Photo", inputName: "customerPhoto", type: "file", validation: true, accept: "image/*" },
   ];
-  
-  const validationError = useSelector(
-    (state) => state.validation.validationError
-  );
 
   const personalDetailsInputNames = personalDetailsConfig.map(
     (field) => field.inputName
@@ -577,7 +566,11 @@ const AddUpdateBorrowerFields = ({ BorrowerData }) => {
     renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
 
   const employmentDetails = (employmentDetails) =>
-    renderDetails(employmentDetails, employmentDetailsConfig, "employmentDetails");
+    renderDetails(
+      employmentDetails,
+      employmentDetailsConfig,
+      "employmentDetails"
+    );
 
   const bankDetails = (bankDetails) =>
     renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
@@ -588,10 +581,15 @@ const AddUpdateBorrowerFields = ({ BorrowerData }) => {
   const otherDetails = (otherDetails) =>
     renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
 
-//   Validation Checks
-  const isValidationFailed = (errors, fields) => {
+//   Validation Error Object from Validation slice to check Error state
+  const validationError = useSelector(
+    (state) => state.validation.validationError
+  );
+
+  //   Validation Checks
+  const isValidationFailed = (validationError, sectionInputFields) => {
     // Iterate over fields and check if any corresponding error is true
-    return fields.some((field) => errors[field] === true);
+    return sectionInputFields.some((field) => validationError[field] === true);
   };
 
   return (

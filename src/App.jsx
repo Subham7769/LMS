@@ -262,6 +262,12 @@ const ProjectFinance = lazy(() =>
 // LOS Imports
 const Los = lazy(() => import("./components/Los/Los"));
 const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
+const AddBorrowers = lazy(() => import("./components/Los/Borrowers/AddBorrowers"));
+const ViewBorrowers = lazy(() => import("./components/Los/Borrowers/ViewBorrowers"));
+const UpdateBorrower = lazy(() => import("./components/Los/Borrowers/UpdateBorrower"));
+const AddBorrowersGroup = lazy(() => import("./components/Los/Borrowers/AddBorrowersGroup"));
+const ViewBorrowersGroup = lazy(() => import("./components/Los/Borrowers/ViewBorrowersGroup"));
+
 const Loans = lazy(() => import("./components/Los/Loans/Loans"));
 const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
 
@@ -610,14 +616,34 @@ const routes = [
       {
         path: "loan-origination-system/personal/borrowers",
         element: <Borrowers />,
+        errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: "personal-info",
-            element: <PersonalInfo />,
+            path: "add-borrower",
+            element: <AddBorrowers />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "view-borrower",
+            element: <ViewBorrowers />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-borrower/:uid",
+            element: <UpdateBorrower />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-borrower-group",
+            element: <AddBorrowersGroup />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "view-borrower-group",
+            element: <ViewBorrowersGroup />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
-        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "loan-origination-system/personal/loans",
