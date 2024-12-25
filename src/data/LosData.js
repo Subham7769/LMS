@@ -208,6 +208,7 @@ export const repaymentOptions = [
   { label: "Ignore", value: "ignore" },
   { label: "Amount", value: "amount" },
   { label: "Collection Method", value: "collectionMethod" },
+  { label: "Collection Date", value: "collectionDate" },
   { label: "Loan Unique Number", value: "loanUniqueNumber" },
   { label: "Collected By", value: "collectedBy" },
   { label: "Description", value: "description" },

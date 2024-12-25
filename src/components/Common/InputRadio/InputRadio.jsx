@@ -6,8 +6,8 @@ import { addFields, setValidationError } from "../../../redux/Slices/validationS
 const InputRadio = ({
   labelName,
   inputName,
+  selectedValue, // Renamed for clarity
   options,
-  selectedValue,
   onChange,
   isValidation = false,
 }) => {
@@ -51,14 +51,9 @@ const InputRadio = ({
             <input
               type="radio"
               name={inputName}
-              value={option.value}
-              checked={selectedValue === option.value}
-              onChange={(e) => {
-                onChange(e);
-                if (isValidation) {
-                  dispatch(setValidationError(validationKey));
-                }
-              }}
+              value={option.value} // Set each option's value
+              checked={selectedValue === option.value} // Ensure the correct radio is selected
+              onChange={onChange}
               className={`form-radio ${
                 validationError[validationKey]
                   ? "text-red-600 focus:ring-red-600"

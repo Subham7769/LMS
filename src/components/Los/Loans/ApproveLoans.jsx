@@ -11,13 +11,12 @@ function transformData(inputArray) {
     principalAmount: item.generalDetails.principalAmount,
     loanReleaseDate: item.generalDetails.loanReleaseDate,
     interestMethod: item.generalDetails.interestMethod,
-    generalDetailsInterestType: item.generalDetails.generalDetailsInterestType,
     loanInterest: item.generalDetails.loanInterest,
     interestPer: item.generalDetails.interestPer,
     loanDuration: item.generalDetails.loanDuration,
     durationPer: item.generalDetails.durationPer,
     repaymentCycle: item.generalDetails.repaymentCycle,
-    numberOfRepayments: item.generalDetails.numberOfRepayments,
+    numberOfTenure: item.generalDetails.numberOfTenure,
     loanFiles: item.loanFiles,
   }));
 }
@@ -48,24 +47,16 @@ const ApproveLoans = () => {
             </div>
             <div className="flex justify-between">
               <p className="text-sm font-semibold text-gray-600">
-                Interest Type:
-              </p>
-              <p className="text-sm text-gray-600">
-                {rowData.generalDetailsInterestType}
-              </p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
                 Repayment Cycle:
               </p>
               <p className="text-sm text-gray-600">{rowData.repaymentCycle}</p>
             </div>
             <div className="flex justify-between">
               <p className="text-sm font-semibold text-gray-600">
-                Number of Repayments:
+                Number of Tenure:
               </p>
               <p className="text-sm text-gray-600">
-                {rowData.numberOfRepayments}
+                {rowData.numberOfTenure}
               </p>
             </div>
             <div className="flex justify-between">

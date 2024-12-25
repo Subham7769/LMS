@@ -44,11 +44,6 @@ export const createAccount = createAsyncThunk(
         body: JSON.stringify(newAccountData),
       });
 
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
-
       if (response.ok) {
         dispatch(fetchAccountDetailsById(newAccountData.uid));
       } else {
@@ -79,11 +74,6 @@ export const updateAccount = createAsyncThunk(
         body: JSON.stringify(filteredAccountDetails),
       });
 
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
-
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to update");
@@ -109,11 +99,6 @@ export const updateDepositAmount = createAsyncThunk(
         },
         body: JSON.stringify(depostAmountData),
       });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -141,11 +126,6 @@ export const updateWithdrawAmount = createAsyncThunk(
         body: JSON.stringify(withdrawAmountData),
       });
 
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
-
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to update");
@@ -171,11 +151,6 @@ export const transferFunds = createAsyncThunk(
         },
         body: JSON.stringify(transferDetails),
       });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
 
       if (!response.ok) {
         const errorData = await response.json();
