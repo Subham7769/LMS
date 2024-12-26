@@ -1,6 +1,32 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
+export const fetchLoanProductData = createAsyncThunk(
+  "loans/fetchLoanProductData",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_PRODUCT_READ_ALL_PRODUCT}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   addLoanData: {
     generalDetails: {
@@ -10,13 +36,12 @@ const initialState = {
       principalAmount: "",
       loanReleaseDate: "",
       interestMethod: "",
-      generalDetailsInterestType: "",
       loanInterest: "",
       interestPer: "",
       loanDuration: "",
       durationPer: "",
       repaymentCycle: "",
-      numberOfRepayments: "",
+      numberOfTenure: "",
     },
     advanceSettings: {
       decimalPlaces: "",
@@ -63,13 +88,12 @@ const initialState = {
         principalAmount: "5000",
         loanReleaseDate: "2024-01-15",
         interestMethod: "Flat",
-        generalDetailsInterestType: "Fixed",
         loanInterest: "5",
         interestPer: "Yearly",
         loanDuration: "12",
         durationPer: "Months",
         repaymentCycle: "Monthly",
-        numberOfRepayments: "12",
+        numberOfTenure: "12",
       },
       advanceSettings: {
         decimalPlaces: "2",
@@ -115,13 +139,12 @@ const initialState = {
         principalAmount: "15000",
         loanReleaseDate: "2024-03-10",
         interestMethod: "Reducing Balance",
-        generalDetailsInterestType: "Variable",
         loanInterest: "7",
         interestPer: "Yearly",
         loanDuration: "24",
         durationPer: "Months",
         repaymentCycle: "Quarterly",
-        numberOfRepayments: "8",
+        numberOfTenure: "8",
       },
       advanceSettings: {
         decimalPlaces: "2",
@@ -167,13 +190,12 @@ const initialState = {
         principalAmount: "20000",
         loanReleaseDate: "2024-06-01",
         interestMethod: "Flat",
-        generalDetailsInterestType: "Fixed",
         loanInterest: "4",
         interestPer: "Monthly",
         loanDuration: "36",
         durationPer: "Months",
         repaymentCycle: "Monthly",
-        numberOfRepayments: "36",
+        numberOfTenure: "36",
       },
       advanceSettings: {
         decimalPlaces: "2",
@@ -221,13 +243,12 @@ const initialState = {
         principalAmount: "5000",
         loanReleaseDate: "2024-01-15",
         interestMethod: "Flat",
-        generalDetailsInterestType: "Fixed",
         loanInterest: "5",
         interestPer: "Yearly",
         loanDuration: "12",
         durationPer: "Months",
         repaymentCycle: "Monthly",
-        numberOfRepayments: "12",
+        numberOfTenure: "12",
       },
       advanceSettings: {
         decimalPlaces: "2",
@@ -274,13 +295,12 @@ const initialState = {
         principalAmount: "15000",
         loanReleaseDate: "2024-03-10",
         interestMethod: "Reducing Balance",
-        generalDetailsInterestType: "Variable",
         loanInterest: "7",
         interestPer: "Yearly",
         loanDuration: "24",
         durationPer: "Months",
         repaymentCycle: "Quarterly",
-        numberOfRepayments: "8",
+        numberOfTenure: "8",
       },
       advanceSettings: {
         decimalPlaces: "2",
@@ -327,13 +347,12 @@ const initialState = {
         principalAmount: "20000",
         loanReleaseDate: "2024-06-01",
         interestMethod: "Flat",
-        generalDetailsInterestType: "Fixed",
         loanInterest: "4",
         interestPer: "Monthly",
         loanDuration: "36",
         durationPer: "Months",
         repaymentCycle: "Monthly",
-        numberOfRepayments: "36",
+        numberOfTenure: "36",
       },
       advanceSettings: {
         decimalPlaces: "2",
@@ -373,6 +392,7 @@ const initialState = {
       applicationStatus: "Approved",
     },
   ],
+  loanProductOptions: [],
   error: null,
   loading: false,
 };
@@ -396,7 +416,27 @@ const loansSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder;
+    builder
+      .addCase(fetchLoanProductData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchLoanProductData.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedLoanProductOptions = action.payload
+          .filter((item) => item.eligibleCustomerType === "CONSUMER")
+          .map((item) => ({
+            label: item.productType.replace(/_/g, " "),
+            value: item.loanProductId,
+          }));
+        state.loanProductOptions = updatedLoanProductOptions;
+        console.log(state.loanProductOptions);
+      })
+      .addCase(fetchLoanProductData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      });
   },
 });
 

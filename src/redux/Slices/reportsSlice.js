@@ -15,6 +15,10 @@ export const fetchReportsConfigData = createAsyncThunk(
           },
         }
       );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
       const responseData = await response.json();
       return responseData;
     } catch (error) {
@@ -38,11 +42,6 @@ export const generateReport = createAsyncThunk(
         },
         body: JSON.stringify(reportGenerationData),
       });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
 
       if (response.ok) {
         dispatch(fetchReportsConfigData());
@@ -71,11 +70,6 @@ export const deleteReportResult = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue({ message: "Unauthorized" });
-      }
 
       if (response.ok) {
         dispatch(fetchReportsConfigData());
@@ -148,7 +142,8 @@ const reportsSlice = createSlice({
       })
       .addCase(fetchReportsConfigData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(generateReport.pending, (state) => {
         state.loading = true;

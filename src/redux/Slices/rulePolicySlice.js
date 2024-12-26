@@ -524,10 +524,6 @@ export const fetchName = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       const data = await response.json();
       return data.name;
     } catch (error) {
@@ -553,10 +549,7 @@ export const updateRulePolicyName = createAsyncThunk(
         },
       });
 
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      } else if (response.ok) {
+      if (response.ok) {
         return updateRPName;
       } else {
         const errorData = await response.json();
@@ -585,11 +578,6 @@ export const createClone = createAsyncThunk(
       }
     );
 
-    if (response.status === 401 || response.status === 403) {
-      localStorage.clear();
-      return rejectWithValue("Unauthorized");
-    }
-
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message || "Failed to create clone");
@@ -614,11 +602,6 @@ export const deleteRulePolicy = createAsyncThunk(
         },
       }
     );
-
-    if (response.status === 401 || response.status === 403) {
-      localStorage.clear();
-      return rejectWithValue("Unauthorized");
-    }
 
     if (!response.ok) {
       const errorData = await response.json();

@@ -19,6 +19,14 @@ const UploadRepayment = () => {
   const [columnArray, setColumnArray] = useState([]);
   const [repaymentHeaderData, setRepaymentHeaderData] = useState([]);
   const [repaymentData, setRepaymentData] = useState(null);
+  const [saveHeadersOption, setSaveHeadersOption] = useState("");
+
+  useEffect(() => {
+    const savedHeaderData = localStorage.getItem("repaymentHeaderData");
+    if (savedHeaderData) {
+      setRepaymentHeaderData(JSON.parse(savedHeaderData));
+    }
+  }, []);
 
   console.log(repaymentHeaderData);
   console.log(repaymentData);
@@ -59,6 +67,21 @@ const UploadRepayment = () => {
         setRepaymentData(results.data);
       },
     });
+  };
+
+  const handleSubmit = () => {
+    console.log(saveHeadersOption);
+    if (saveHeadersOption === "yes") {
+      localStorage.setItem(
+        "repaymentHeaderData",
+        JSON.stringify(repaymentHeaderData)
+      );
+      console.log("Data saved");
+    } else {
+      localStorage.removeItem("repaymentHeaderData"); // Remove data if the option is not "yes"
+    }
+    
+    console.log(localStorage.getItem("repaymentHeaderData"));
   };
 
   return (
@@ -436,9 +459,12 @@ const UploadRepayment = () => {
                 </div>
                 <div className="flex justify-center">
                   <InputRadio
-                    inputName={"Save options on this page"}
+                    inputName={"saveHeadersOption"}
+                    selectedValue={saveHeadersOption} // Updated prop name
                     options={yesNoOptions}
-                    onChange={() => {}}
+                    onChange={(e) => {
+                      setSaveHeadersOption(e.target.value);
+                    }}
                   />
                 </div>
               </div>
@@ -456,9 +482,7 @@ const UploadRepayment = () => {
                   <thead className="bg-gray-50 sticky top-0 z-10">
                     <tr className="divide-x divide-gray-200">
                       {
-                        <th
-                          className={`max-w-24 text-center py-3 px-2`}
-                        >
+                        <th className={`max-w-24 text-center py-3 px-2`}>
                           {"No."}
                         </th>
                       }
@@ -515,7 +539,7 @@ const UploadRepayment = () => {
           <div className="flex justify-center align-middle">
             <Button
               buttonName={"Submit"}
-              onClick={() => {}}
+              onClick={handleSubmit}
               rectangle={true}
               className={`mt-4 h-fit self-center`}
             />

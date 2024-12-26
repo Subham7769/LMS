@@ -80,10 +80,6 @@ export const fetchBlockedEmployerName = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       const data = await response.json();
       if (!response.ok) {
         const errorData = await response.json();
@@ -113,10 +109,6 @@ export const updateBlockedEmployerName = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       if (!response.ok) {
         const data = await response.json();
         return rejectWithValue(data.message || "Failed to update name");
