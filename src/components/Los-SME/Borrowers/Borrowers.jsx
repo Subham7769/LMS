@@ -1,0 +1,63 @@
+import React, { Suspense, useEffect, useState } from "react";
+import { Outlet, Link, useLocation, useParams } from "react-router-dom";
+import LoadingState from "../../LoadingState/LoadingState";
+import Tab from "../../Common/Tab/Tab";
+
+const Borrowers = () => {
+  const [activeTab, setActiveTab] = useState("add-borrower");
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const tabs = [
+    {
+      id: "add-borrower",
+      path: "/loan/loan-origination-system/personal/borrowers/add-borrower",
+      label: "Add Borrower",
+    },
+    {
+      id: "view-borrower",
+      path: "/loan/loan-origination-system/personal/borrowers/view-borrower",
+      label: "View Borrower",
+    },
+    // { id: "update-borrower", path: "/loan/loan-origination-system/personal/borrowers/update-borrower/:uid", label: "Update Borrower" },
+    // { id: "add-borrower-group", path: "/borrowers/add-borrower-group", label: "Add Borrower Group" },
+    // { id: "view-borrower-group", path: "/borrowers/view-borrower-group", label: "View Borrower Group" },
+  ];
+
+  // Update activeTab based on the current route
+  useEffect(() => {
+    const active = tabs.find((tab) => currentPath.includes(tab.id)); // Check if path contains tab.id
+    if (active) {
+      setActiveTab(active.id);
+    }
+  }, [location, tabs]);
+
+  return (
+    <div className="mt-4">
+      {/* Tab Navigation */}
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-4">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              label={tab.label}
+              to={tab.path}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          ))}
+        </ul>
+      </div>
+
+      {/* Content Rendering */}
+      <div className="mt-4">
+        <Suspense fallback={<LoadingState />}>
+          <Outlet />
+        </Suspense>
+      </div>
+    </div>
+  );
+};
+
+export default Borrowers;

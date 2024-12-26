@@ -11,7 +11,7 @@ import {
   fetchAllBorrowers,
   changeBorrowerStatus,
   setUpdateBorrower,
-} from "../../../redux/Slices/borrowersSlice";
+} from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
 import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Select
 
@@ -19,7 +19,7 @@ const ViewBorrowers = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { allBorrowersData, error, loading } = useSelector(
-    (state) => state.borrowers
+    (state) => state.personalBorrowers
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [allLoanOfficer, setAllLoanOfficer] = useState([]);

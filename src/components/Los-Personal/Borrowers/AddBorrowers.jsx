@@ -4,7 +4,7 @@ import {
   resetBorrowerData,
   registerBorrower,
   updateAddBorrowerField
-} from "../../../redux/Slices/borrowersSlice";
+} from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
@@ -13,7 +13,7 @@ const AddBorrowers = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
   const { addBorrowerData, error, loading } = useSelector(
-    (state) => state.borrowers
+    (state) => state.personalBorrowers
   );
 
   function flattenToSimpleObject(nestedObject) {
@@ -33,6 +33,8 @@ const AddBorrowers = () => {
     console.log(result);
     return result;
   }
+  
+console.log(isValid)
 
   const handleSubmit = async(e) => {
     e.preventDefault();

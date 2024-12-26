@@ -40,6 +40,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   useEffect(() => {
     const keysArray = [
       "title",
+      "firstName",
       "surname",
       "uniqueIDType",
       "uniqueID",
@@ -113,6 +114,12 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: true,
     },
     {
+      labelName: "First Name",
+      inputName: "firstName",
+      type: "text",
+      validation: true,
+    },
+    {
       labelName: "Surname",
       inputName: "surname",
       type: "text",
@@ -132,6 +139,13 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: true,
     },
     {
+      labelName: "Marital Status",
+      inputName: "maritalStatus",
+      type: "select",
+      options: maritalStatus,
+      validation: true,
+    },
+    {
       labelName: "Unique ID Type",
       inputName: "uniqueIDType",
       type: "select",
@@ -142,13 +156,6 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       labelName: "Unique ID",
       inputName: "uniqueID",
       type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Marital Status",
-      inputName: "maritalStatus",
-      type: "select",
-      options: maritalStatus,
       validation: true,
     },
     {

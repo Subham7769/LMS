@@ -267,3 +267,8 @@ export const accountStatusOptions = [
   { value: "DEACTIVATED", label: "DEACTIVATE" },
   { value: "DEFAULTER", label: "DEFAULTER" },
 ];
+
+export const natureOfCompanyOptions = [
+  { value: "LIMITED", label: "Limited" },
+  { value: "BUSINESS_NAME", label: "Business Name" },
+];

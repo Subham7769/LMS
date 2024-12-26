@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import StatContainer from "../Common/StatContainer/StatContainer";
 import { HomeStats } from "../../data/HomeData";
 
-const DebtBurdenPage = () => {
+const LosSME = () => {
 
   return (
     <>
@@ -11,4 +11,4 @@ const DebtBurdenPage = () => {
   );
 };
 
-export default DebtBurdenPage;
+export default LosSME;

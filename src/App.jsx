@@ -238,39 +238,46 @@ const DatePicker = lazy(() => import("./components/Reports/DatePicker"));
 
 // Invoice Discounting Imports
 const Registration = lazy(() =>
-  import("./components/InvoiceDiscounting/Registration")
+  import("./components/Los-SME/Registration")
 );
 const ProfilePage = lazy(() =>
-  import("./components/InvoiceDiscounting/ProfilePage")
+  import("./components/Los-SME/ProfilePage")
 );
 const ManagePartner = lazy(() =>
-  import("./components/InvoiceDiscounting/ManagePartner")
+  import("./components/Los-SME/ManagePartner")
 );
 const CashPayable = lazy(() =>
-  import("./components/InvoiceDiscounting/CashPayable")
+  import("./components/Los-SME/CashPayable")
 );
 const CashReceivable = lazy(() =>
-  import("./components/InvoiceDiscounting/CashReceivable")
+  import("./components/Los-SME/CashReceivable")
 );
 const WorkingCapital = lazy(() =>
-  import("./components/InvoiceDiscounting/WorkingCapital")
+  import("./components/Los-SME/WorkingCapital")
 );
 const ProjectFinance = lazy(() =>
-  import("./components/InvoiceDiscounting/ProjectFinance")
+  import("./components/Los-SME/ProjectFinance")
 );
 
-// LOS Imports
-const Los = lazy(() => import("./components/Los/Los"));
-const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
-const AddBorrowers = lazy(() => import("./components/Los/Borrowers/AddBorrowers"));
-const ViewBorrowers = lazy(() => import("./components/Los/Borrowers/ViewBorrowers"));
-const UpdateBorrower = lazy(() => import("./components/Los/Borrowers/UpdateBorrower"));
-const AddBorrowersGroup = lazy(() => import("./components/Los/Borrowers/AddBorrowersGroup"));
-const ViewBorrowersGroup = lazy(() => import("./components/Los/Borrowers/ViewBorrowersGroup"));
+// LOS-Personal Imports
+const Los = lazy(() => import("./components/Los-Personal/Los"));
+const Borrowers = lazy(() => import("./components/Los-Personal/Borrowers/Borrowers"));
+const AddBorrowers = lazy(() => import("./components/Los-Personal/Borrowers/AddBorrowers"));
+const ViewBorrowers = lazy(() => import("./components/Los-Personal/Borrowers/ViewBorrowers"));
+const UpdateBorrower = lazy(() => import("./components/Los-Personal/Borrowers/UpdateBorrower"));
+const AddBorrowersGroup = lazy(() => import("./components/Los-Personal/Borrowers/AddBorrowersGroup"));
+const ViewBorrowersGroup = lazy(() => import("./components/Los-Personal/Borrowers/ViewBorrowersGroup"));
 
-const Loans = lazy(() => import("./components/Los/Loans/Loans"));
-const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
+const Loans = lazy(() => import("./components/Los-Personal/Loans/Loans"));
+const Repayments = lazy(() => import("./components/Los-Personal/Repayments/Repayments"));
 
+
+// LOS-SME Imports
+const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
+const BorrowersSME = lazy(() => import("./components/Los-SME/Borrowers/Borrowers"));
+const AddBorrowersSME = lazy(() => import("./components/Los-SME/Borrowers/AddBorrowers"));
+const ViewBorrowersSME = lazy(() => import("./components/Los-SME/Borrowers/ViewBorrowers"));
+const UpdateBorrowerSME = lazy(() => import("./components/Los-SME/Borrowers/UpdateBorrower"));
 
 // ------------------------ Deposit Section Imports -----------------------------------
 
@@ -574,37 +581,64 @@ const routes = [
       },
       // Accessing All New Created Child Components
       {
-        path: "invoice-discounting/registration",
+        path: "loan-origination-system/sme",
+        element: <LosSME />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-origination-system/sme/borrowers",
+        element: <BorrowersSME />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "add-borrower",
+            element: <AddBorrowersSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "view-borrower",
+            element: <ViewBorrowersSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-borrower/:uid",
+            element: <UpdateBorrowerSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "loan-origination-system/sme/borrowers",
         element: <Registration />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/profile",
+        path: "loan-origination-system/sme/profile",
         element: <ProfilePage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/manage-partner",
+        path: "loan-origination-system/sme/manage-partner",
         element: <ManagePartner />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/cash-payable",
+        path: "loan-origination-system/sme/cash-payable",
         element: <CashPayable />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/cash-receivable",
+        path: "loan-origination-system/sme/cash-receivable",
         element: <CashReceivable />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/working-capital",
+        path: "loan-origination-system/sme/working-capital",
         element: <WorkingCapital />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/project-finance",
+        path: "loan-origination-system/sme/project-finance",
         element: <ProjectFinance />,
         errorElement: <RouteErrorBoundary />,
       },

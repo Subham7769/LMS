@@ -26,9 +26,10 @@ import notificationSlice from "./Slices/notificationSlice";
 import serverConfigSlice from "./Slices/serverConfigSlice";
 import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
-import borrowersSlice from "./Slices/borrowersSlice";
+import personalBorrowersSlice from "./Slices/personalBorrowersSlice";
 import loansSlice from "./Slices/loansSlice";
 import repaymentsSlice from "./Slices/repaymentsSlice";
+import smeBorrowersSlice from "./Slices/smeBorrowersSlice";
 
 import checkTokenMiddleware from './Middlewares/checkTokenMiddleware.js'
 
@@ -60,9 +61,10 @@ const store = configureStore({
     serverConfig: serverConfigSlice,
     depositSidebar: depositSidebarSlice,
     accounts: accountsSlice,
-    borrowers: borrowersSlice,
+    personalBorrowers: personalBorrowersSlice,
     loans: loansSlice,
-    repayments: repaymentsSlice
+    repayments: repaymentsSlice,
+    smeBorrowers:smeBorrowersSlice,
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(checkTokenMiddleware),

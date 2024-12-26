@@ -11,7 +11,7 @@ import {
   updateLoanField,
 } from "../../../redux/Slices/loansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllBorrowers } from "../../../redux/Slices/borrowersSlice";
+import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
 import {
   clearValidationError,
   setFields,
@@ -20,7 +20,7 @@ import {
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { allBorrowersData } = useSelector(
-    (state) => state.borrowers
+    (state) => state.personalBorrowers
   );
   const { loanProductOptions } = useSelector(
     (state) => state.loans

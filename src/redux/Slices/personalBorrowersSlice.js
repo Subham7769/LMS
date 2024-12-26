@@ -125,6 +125,7 @@ const initialState = {
   addBorrowerData: {
     personalDetails: {
       title: "",
+      firstName:"",
       surname: "",
       otherName: "", //optional
       uniqueIDType: "",
@@ -205,7 +206,7 @@ const initialState = {
 };
 
 const borrowersSlice = createSlice({
-  name: "borrowers",
+  name: "personalBorrowers",
   initialState,
   reducers: {
     updateAddBorrowerField: (state, action) => {

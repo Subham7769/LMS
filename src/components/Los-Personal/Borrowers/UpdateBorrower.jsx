@@ -5,7 +5,7 @@ import {
   resetUpdateBorrowerData,
   updateBorrowerInfo,
   fetchAllBorrowers,
-} from "../../../redux/Slices/borrowersSlice";
+} from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const UpdateBorrower = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const { updateBorrowerData, error, loading } = useSelector(
-    (state) => state.borrowers
+    (state) => state.personalBorrowers
   );
   const dispatch = useDispatch();
   const { uid } = useParams();
