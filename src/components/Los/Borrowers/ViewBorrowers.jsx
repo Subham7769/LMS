@@ -18,48 +18,50 @@ import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Se
 const ViewBorrowers = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { allBorrowersData, error, loading } = useSelector( (state) => state.borrowers );
+  const { allBorrowersData, error, loading } = useSelector(
+    (state) => state.borrowers
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [allLoanOfficer, setAllLoanOfficer] = useState([]);
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
 
   // Track changes in both search term and loan officer selection
-useEffect(() => {
-  applyFilters(); // Apply filters whenever either searchTerm or allLoanOfficer changes
-}, [searchTerm, allLoanOfficer]);
+  useEffect(() => {
+    applyFilters(); // Apply filters whenever either searchTerm or allLoanOfficer changes
+  }, [searchTerm, allLoanOfficer]);
 
-useEffect(() => {
-  console.log()
-  if(allBorrowersData.length<=0){
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }
-}, [dispatch]);
+  useEffect(() => {
+    console.log();
+    if (allBorrowersData.length <= 0) {
+      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+    }
+  }, [dispatch]);
 
-useEffect(() => {
-  const transformedData = allBorrowersData.map((item) => ({
-    ...item.borrowerProfile,
-    uid: item.uid,
-    lmsUserStatus: item.lmsUserStatus,
-  }));
-  setFilteredBorrowers(transformedData);
-}, [allBorrowersData]);
+  useEffect(() => {
+    const transformedData = allBorrowersData.map((item) => ({
+      ...item.borrowerProfile,
+      uid: item.uid,
+      lmsUserStatus: item.lmsUserStatus,
+    }));
+    setFilteredBorrowers(transformedData);
+  }, [allBorrowersData]);
 
   const applyFilters = () => {
     const selectedLoanOfficers = allLoanOfficer.map((officer) =>
       officer.value.toLowerCase()
     );
-  
+
     const filtered = allBorrowersData.filter((borrower) => {
       const personalDetails = borrower.borrowerProfile?.personalDetails || {};
       const contactDetails = borrower.borrowerProfile?.contactDetails || {};
-  
+
       const matchesLoanOfficer = selectedLoanOfficers.length
         ? selectedLoanOfficers.includes(
             personalDetails.loanOfficer?.toLowerCase()
           )
         : true;
-  
+
       const matchesSearchTerm = searchTerm
         ? [
             personalDetails.surname,
@@ -67,33 +69,32 @@ useEffect(() => {
             personalDetails.uniqueID,
             contactDetails.email,
             contactDetails.mobile1,
-          ]
-            .some((field) =>
-              field?.toLowerCase().includes(searchTerm.toLowerCase())
-            )
+          ].some((field) =>
+            field?.toLowerCase().includes(searchTerm.toLowerCase())
+          )
         : true;
-  
+
       return matchesLoanOfficer && matchesSearchTerm;
     });
-  
+
     setFilteredBorrowers(filtered);
   };
-  
+
   const handleLoanOfficerFilter = (selectedOfficers) => {
     setAllLoanOfficer(selectedOfficers); // Update loan officer filter
     applyFilters(); // Apply filters
   };
-  
+
   const handleSearchFilter = (term) => {
     setSearchTerm(term); // Update search term
     applyFilters(); // Apply filters
   };
-  
+
   const handleChangeSearch = (e) => {
     const term = e.target.value;
     handleSearchFilter(term);
   };
-  
+
   const handleReset = () => {
     setSearchTerm("");
     setAllLoanOfficer([]);
@@ -150,12 +151,11 @@ useEffect(() => {
     const handleChangeStatus = (uid, newStatus) => {
       console.log(uid);
       setCurrentStatus(newStatus);
-      dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap()
+      dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
       dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
       );
-
     };
 
     return (
@@ -218,22 +218,12 @@ useEffect(() => {
                   <strong>Email:</strong> {rowData.email}
                 </p>
                 <p>
-                  <strong>House No:</strong> {rowData.houseNumber}
+                  <strong>Address:</strong> {[ rowData.houseNumber,
+                  rowData.street, rowData.residentialArea, rowData.province,
+                  rowData.district, rowData.country, ].filter(Boolean).join(", ")}
                 </p>
                 <p>
-                  <strong>Street:</strong> {rowData.street}
-                </p>
-                <p>
-                  <strong>Residential Area:</strong> {rowData.residentialArea}
-                </p>
-                <p>
-                  <strong>Country:</strong> {rowData.country}
-                </p>
-                <p>
-                  <strong>Province:</strong> {rowData.province}
-                </p>
-                <p>
-                  <strong>District:</strong> {rowData.district}
+                  <strong>Post Box:</strong> {rowData.postBox}
                 </p>
               </div>
             </div>
@@ -321,7 +311,7 @@ useEffect(() => {
       </div>
     );
   };
-  
+
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`grid grid-cols-[45%_45%_10%] gap-5`}>

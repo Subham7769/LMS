@@ -4,6 +4,7 @@ import {
   updateBorrowerUpdateField,
   resetUpdateBorrowerData,
   updateBorrowerInfo,
+  fetchAllBorrowers,
 } from "../../../redux/Slices/borrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -43,7 +44,8 @@ const UpdateBorrower = () => {
     if (isValid) {
       dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
-      );
+      ).unwrap();
+            dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
     }
     navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   };

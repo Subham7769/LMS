@@ -1,9 +1,7 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Outlet, Link, useLocation, useParams } from "react-router-dom";
 import LoadingState from "../../LoadingState/LoadingState";
 import Tab from "../../Common/Tab/Tab";
-
-
 
 const Borrowers = () => {
   const [activeTab, setActiveTab] = useState("add-borrower");
@@ -25,6 +23,14 @@ const Borrowers = () => {
     // { id: "add-borrower-group", path: "/borrowers/add-borrower-group", label: "Add Borrower Group" },
     // { id: "view-borrower-group", path: "/borrowers/view-borrower-group", label: "View Borrower Group" },
   ];
+
+  // Update activeTab based on the current route
+  useEffect(() => {
+    const active = tabs.find((tab) => currentPath.includes(tab.id)); // Check if path contains tab.id
+    if (active) {
+      setActiveTab(active.id);
+    }
+  }, [location, tabs]);
 
   return (
     <div className="mt-4">

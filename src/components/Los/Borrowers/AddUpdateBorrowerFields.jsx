@@ -125,6 +125,13 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: false,
     },
     {
+      labelName: "Gender",
+      inputName: "gender",
+      type: "select",
+      options: gender,
+      validation: true,
+    },
+    {
       labelName: "Unique ID Type",
       inputName: "uniqueIDType",
       type: "select",
@@ -135,13 +142,6 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       labelName: "Unique ID",
       inputName: "uniqueID",
       type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Gender",
-      inputName: "gender",
-      type: "select",
-      options: gender,
       validation: true,
     },
     {
@@ -238,6 +238,13 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   ];
   const employmentDetailsConfig = [
     {
+      labelName: "Work Type",
+      inputName: "workType",
+      type: "select",
+      options: workType,
+      validation: true,
+    },
+    {
       labelName: "Employer",
       inputName: "employer",
       type: "text",
@@ -250,14 +257,8 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: true,
     },
     {
-      labelName: "District",
-      inputName: "employmentDistrict",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Location",
-      inputName: "employmentLocation",
+      labelName: "Employee No.",
+      inputName: "employeeNo",
       type: "text",
       validation: true,
     },
@@ -280,17 +281,16 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: false,
     },
     {
-      labelName: "Employee No.",
-      inputName: "employeeNo",
+      labelName: "Location",
+      inputName: "employmentLocation",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Work Type",
-      inputName: "workType",
-      type: "select",
-      options: workType,
-      validation: true,
+      labelName: "District",
+      inputName: "employmentDistrict",
+      type: "text",
+      validation: false,
     },
   ];
   const bankDetailsConfig = [
@@ -304,6 +304,12 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       labelName: "Account Name",
       inputName: "accountName",
       type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Account No.",
+      inputName: "accountNo",
+      type: "number",
       validation: true,
     },
     {
@@ -329,12 +335,6 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       labelName: "Sort Code",
       inputName: "sortCode",
       type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Account No.",
-      inputName: "accountNo",
-      type: "number",
       validation: true,
     },
   ];
@@ -427,18 +427,14 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   ];
   const otherDetailsConfig = [
     {
-      labelName: "Reason for Borrowing",
-      inputName: "reasonForBorrowing",
-      type: "text",
-    },
-    {
-      labelName: "Source of Repayment",
-      inputName: "sourceOfRepayment",
-      type: "text",
-    },
-    {
       labelName: "Free Cash In Hand",
       inputName: "freeCashInHand",
+      type: "number",
+      validation: true,
+    },
+    {
+      labelName: "Gross Salary",
+      inputName: "grossSalary",
       type: "number",
       validation: true,
     },
@@ -449,15 +445,20 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: true,
     },
     {
-      labelName: "Gross Salary",
-      inputName: "grossSalary",
-      type: "number",
-      validation: true,
+      labelName: "Reason for Borrowing",
+      inputName: "reasonForBorrowing",
+      type: "text",
+    },
+    {
+      labelName: "Source of Repayment",
+      inputName: "sourceOfRepayment",
+      type: "text",
     },
     // Uncomment this if you decide to include the file input field
     // { labelName: "Customer Photo", inputName: "customerPhoto", type: "file", validation: true, accept: "image/*" },
   ];
 
+// Generate the Form Field
   const personalDetailsInputNames = personalDetailsConfig.map(
     (field) => field.inputName
   );
@@ -475,6 +476,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     (field) => field.inputName
   );
 
+// Rendering Input Fields
   const renderDetails = (details, config, sectionName) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {config.map((field, index) => {
@@ -558,7 +560,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     </div>
   );
 
-  // Dedicated UI Components
+  // Dedicated UI Components Creation
   const personalDetails = (personalDetails) =>
     renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
 
