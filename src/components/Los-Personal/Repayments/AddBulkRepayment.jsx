@@ -3,7 +3,7 @@ import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import InputDate from "../../Common/InputDate/InputDate";
-import { AddBulkRepaymentHeaderList } from "../../../data/LosData";
+import { AddBulkRepaymentHeaderList,methodOptions,collectionByOptions,accountingOptions,loanOptions } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import {
   updateBulkRepaymentData,
@@ -14,30 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
-  const data = useSelector(
-    (state) => state.personalRepayments.addNewBulkRepaymentData
-  );
-
-  const methodOptions = [
-    { label: "Cash", value: "cash" },
-    { label: "Bank Transfer", value: "bank_transfer" },
-  ];
-
-  const collectionByOptions = [
-    { label: "Agent 1", value: "agent_1" },
-    { label: "Agent 2", value: "agent_2" },
-  ];
-
-  const accountingOptions = [
-    { label: "Cash", value: "cash" },
-    { label: "Bank", value: "bank" },
-  ];
-
-  const loanOptions = [
-    { label: "Loan 1", value: "loan_1" },
-    { label: "Loan 2", value: "loan_2" },
-  ];
-
+  const {addNewBulkRepaymentData} = useSelector( (state) => state.personalRepayments );
+console.log(addNewBulkRepaymentData)
   const handleChange = (value, rowIndex, fieldName) => {
     dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
   };
@@ -66,7 +44,7 @@ const AddBulkRepayment = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((item, rowIndex) => (
+          {addNewBulkRepaymentData.map((item, rowIndex) => (
             <tr key={rowIndex}>
               <td className="py-3 text-center">{rowIndex + 1}</td>
               <td className="py-3 text-center">
@@ -148,12 +126,18 @@ const AddBulkRepayment = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-center mt-5">
+      <div className="flex justify-end mt-5 gap-5">
         <button
           onClick={addRow}
           className="bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-700"
         >
           Add Row
+        </button>
+        <button
+          onClick={addRow}
+          className="bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-700"
+        >
+          Upload Repayments
         </button>
       </div>
     </ContainerTile>

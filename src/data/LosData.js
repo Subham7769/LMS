@@ -277,3 +277,22 @@ export const companyRegistrationOptions = [
   { value: "987654321", label: "XYZ Business Name" },
   { value: "456789123", label: "PQR Limited" },
 ];
+export const methodOptions = [
+  { label: "Cash", value: "cash" },
+  { label: "Bank Transfer", value: "bank_transfer" },
+];
+
+export const collectionByOptions = [
+  { label: "Agent 1", value: "agent_1" },
+  { label: "Agent 2", value: "agent_2" },
+];
+
+export const accountingOptions = [
+  { label: "Cash", value: "cash" },
+  { label: "Bank", value: "bank" },
+];
+
+export const loanOptions = [
+  { label: "Loan 1", value: "loan_1" },
+  { label: "Loan 2", value: "loan_2" },
+];

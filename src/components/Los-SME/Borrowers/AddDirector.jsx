@@ -81,7 +81,7 @@ const AddBorrowers = () => {
       </div>
       <div className=" flex flex-col">
         {addCompanyData.directorsKycDetails.map((Data, index) => (
-          <div className="relative">
+          <div className="relative" key={`Director${index}`}>
             <Accordion
               heading={`Director ${index + 1} Details`}
               renderExpandedContent={() => (
