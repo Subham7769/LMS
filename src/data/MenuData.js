@@ -338,12 +338,12 @@ export const MenusInitial = [
       },
       {
         name: "Loans",
-        href: "/loan/loan-origination-system/sme/loans",
+        href: "/loan/loan-origination-system/sme/loans/add-loan",
         current: false,
       },
       {
         name: "Repayments",
-        href: "/loan/loan-origination-system/sme/repayments",
+        href: "/loan/loan-origination-system/sme/repayments/add-bulk-repayment",
         current: false,
       },
       {
@@ -393,12 +393,12 @@ export const MenusInitial = [
       },
       {
         name: "Loans",
-        href: "/loan/loan-origination-system/personal/loans",
+        href: "/loan/loan-origination-system/personal/loans/add-loan",
         current: false,
       },
       {
         name: "Repayments",
-        href: "/loan/loan-origination-system/personal/repayments",
+        href: "/loan/loan-origination-system/personal/repayments/add-bulk-repayment",
         current: false,
       },
     ],

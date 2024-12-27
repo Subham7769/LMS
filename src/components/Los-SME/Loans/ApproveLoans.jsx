@@ -23,7 +23,7 @@ function transformData(inputArray) {
 
 
 const ApproveLoans = () => {
-  const { approveLoans } = useSelector((state) => state.loans);
+  const { approveLoans } = useSelector((state) => state.smeLoans);
 
   const approveLoansData = transformData(approveLoans);
 

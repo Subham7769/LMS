@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 export const fetchLoanProductData = createAsyncThunk(
-  "loans/fetchLoanProductData",
+  "personalLoans/fetchLoanProductData",
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -397,8 +397,8 @@ const initialState = {
   loading: false,
 };
 
-const loansSlice = createSlice({
-  name: "loans",
+const personalLoansSlice = createSlice({
+  name: "personalLoans",
   initialState,
   reducers: {
     updateLoanField: (state, action) => {
@@ -440,6 +440,6 @@ const loansSlice = createSlice({
   },
 });
 
-export const { updateLoanField } = loansSlice.actions;
+export const { updateLoanField } = personalLoansSlice.actions;
 
-export default loansSlice.reducer;
+export default personalLoansSlice.reducer;

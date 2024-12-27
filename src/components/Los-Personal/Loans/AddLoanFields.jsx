@@ -9,7 +9,7 @@ import Accordion from "../../Common/Accordion/Accordion";
 import {
   fetchLoanProductData,
   updateLoanField,
-} from "../../../redux/Slices/loansSlice";
+} from "../../../redux/Slices/personalLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
 import {
@@ -19,12 +19,8 @@ import {
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
-  const { allBorrowersData } = useSelector(
-    (state) => state.personalBorrowers
-  );
-  const { loanProductOptions } = useSelector(
-    (state) => state.loans
-  );
+  const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
+  const { loanProductOptions } = useSelector((state) => state.personalLoans);
   const [borrowerOptions, setBorrowerOptions] = useState([]);
 
   useEffect(() => {

@@ -22,7 +22,7 @@ function transformData(inputArray) {
 }
 
 const LoanHistory = () => {
-  const { loanHistory } = useSelector((state) => state.loans);
+  const { loanHistory } = useSelector((state) => state.smeLoans);
 
   const loanHistoryData = transformData(loanHistory);
 
@@ -37,42 +37,42 @@ const LoanHistory = () => {
 
   const renderExpandedRow = (rowData) => (
     <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex justify-between">
+      <div className="grid grid-cols-4">
+        <div className="flex justify-between py-2 px-4 border-r-2 border-gray-300">
           <p className="text-sm font-semibold text-gray-600">
             Interest Method:
           </p>
           <p className="text-sm text-gray-600">{rowData.interestMethod}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between py-2 px-4 border-r-2 border-gray-300">
           <p className="text-sm font-semibold text-gray-600">
             Repayment Cycle:
           </p>
           <p className="text-sm text-gray-600">{rowData.repaymentCycle}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between py-2 px-4 border-r-2 border-gray-300">
           <p className="text-sm font-semibold text-gray-600">
             Number of Tenure:
           </p>
           <p className="text-sm text-gray-600">{rowData.numberOfTenure}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">
             Loan Interest %:
           </p>
           <p className="text-sm text-gray-600">{rowData.loanInterest}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between py-2 px-4 border-r-2 border-gray-300">
           <p className="text-sm font-semibold text-gray-600">
             Per (Loan Interest):
           </p>
           <p className="text-sm text-gray-600">{rowData.interestPer}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between py-2 px-4 border-r-2 border-gray-300">
           <p className="text-sm font-semibold text-gray-600">Loan Duration:</p>
           <p className="text-sm text-gray-600">{rowData.loanDuration}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between py-2 px-4 border-r-2 border-gray-300">
           <p className="text-sm font-semibold text-gray-600">
             Per (Loan Duration):
           </p>

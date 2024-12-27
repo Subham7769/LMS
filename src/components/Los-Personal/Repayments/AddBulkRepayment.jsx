@@ -9,12 +9,14 @@ import {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
   removeBulkRepaymentRow,
-} from "../../../redux/Slices/repaymentsSlice";
+} from "../../../redux/Slices/personalRepaymentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.repayments.addNewBulkRepaymentData);
+  const data = useSelector(
+    (state) => state.personalRepayments.addNewBulkRepaymentData
+  );
 
   const methodOptions = [
     { label: "Cash", value: "cash" },

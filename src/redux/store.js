@@ -27,11 +27,13 @@ import serverConfigSlice from "./Slices/serverConfigSlice";
 import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
 import personalBorrowersSlice from "./Slices/personalBorrowersSlice";
-import loansSlice from "./Slices/loansSlice";
-import repaymentsSlice from "./Slices/repaymentsSlice";
+import personalLoansSlice from "./Slices/personalLoansSlice";
+import personalRepaymentsSlice from "./Slices/personalRepaymentsSlice";
 import smeBorrowersSlice from "./Slices/smeBorrowersSlice";
+import smeLoansSlice from "./Slices/smeLoansSlice";
+import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";
 
-import checkTokenMiddleware from './Middlewares/checkTokenMiddleware.js'
+import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
 
 const store = configureStore({
   reducer: {
@@ -62,12 +64,14 @@ const store = configureStore({
     depositSidebar: depositSidebarSlice,
     accounts: accountsSlice,
     personalBorrowers: personalBorrowersSlice,
-    loans: loansSlice,
-    repayments: repaymentsSlice,
-    smeBorrowers:smeBorrowersSlice,
+    personalLoans: personalLoansSlice,
+    personalRepayments: personalRepaymentsSlice,
+    smeBorrowers: smeBorrowersSlice,
+    smeLoans: smeLoansSlice,
+    smeRepayments: smeRepaymentsSlice,
   },
   middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(checkTokenMiddleware),
+    getDefaultMiddleware().concat(checkTokenMiddleware),
 });
 
 export default store;

@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 const initialState = {
   addNewBulkRepaymentData: [
     {
-      row: "",
       loan: "",
       amount: "",
       method: "",
@@ -18,8 +17,8 @@ const initialState = {
   loading: false,
 };
 
-const repaymentsSlice = createSlice({
-  name: "repayments",
+const smeRepaymentsSlice = createSlice({
+  name: "smeRepayments",
   initialState,
   reducers: {
     updateBulkRepaymentData: (state, action) => {
@@ -28,7 +27,6 @@ const repaymentsSlice = createSlice({
     },
     addBulkRepaymentRow: (state) => {
       const newRow = {
-        row: "",
         loan: "",
         amount: "",
         method: "",
@@ -53,6 +51,6 @@ export const {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
   removeBulkRepaymentRow,
-} = repaymentsSlice.actions;
+} = smeRepaymentsSlice.actions;
 
-export default repaymentsSlice.reducer;
+export default smeRepaymentsSlice.reducer;

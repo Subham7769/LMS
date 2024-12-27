@@ -11,12 +11,12 @@ const Borrowers = () => {
   const tabs = [
     {
       id: "add-borrower",
-      path: "/loan/loan-origination-system/personal/borrowers/add-borrower",
+      path: "/loan/loan-origination-system/sme/borrowers/add-borrower",
       label: "Add Borrower",
     },
     {
       id: "view-borrower",
-      path: "/loan/loan-origination-system/personal/borrowers/view-borrower",
+      path: "/loan/loan-origination-system/sme/borrowers/view-borrower",
       label: "View Borrower",
     },
     // { id: "update-borrower", path: "/loan/loan-origination-system/personal/borrowers/update-borrower/:uid", label: "Update Borrower" },

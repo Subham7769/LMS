@@ -1,27 +1,37 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import LoadingState from "../../LoadingState/LoadingState";
 import Tab from "../../Common/Tab/Tab";
-
-const AddBulkRepayment = React.lazy(() => import("./AddBulkRepayment"));
-const UploadRepayment = React.lazy(() => import("./UploadRepayment"));
-const ApproveRepayment = React.lazy(() => import("./ApproveRepayment"));
-
-const tabs = [
-  { id: "add-bulk-repayment", label: "Add Bulk Repayment" },
-  { id: "upload-repayment", label: "Upload Repayment" },
-  { id: "approve-repayment", label: "Approve Repayment" },
-];
-
-const repaymentComponents = {
-  "add-bulk-repayment": AddBulkRepayment,
-  "upload-repayment": UploadRepayment,
-  "approve-repayment": ApproveRepayment,
-};
-
+import { Outlet, useLocation } from "react-router-dom";
 
 const Repayments = () => {
   const [activeTab, setActiveTab] = useState("add-bulk-repayment");
-  const ActiveComponent = repaymentComponents[activeTab];
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const tabs = [
+    {
+      id: "add-bulk-repayment",
+      path: "/loan/loan-origination-system/personal/repayments/add-bulk-repayment",
+      label: "Add Bulk Repayment",
+    },
+    {
+      id: "upload-repayment",
+      path: "/loan/loan-origination-system/personal/repayments/upload-repayment",
+      label: "Upload Repayment",
+    },
+    {
+      id: "approve-repayment",
+      path: "/loan/loan-origination-system/personal/repayments/approve-repayment",
+      label: "Approve Repayment",
+    },
+  ];
+
+  useEffect(() => {
+    const active = tabs.find((tab) => currentPath.includes(tab.id)); // Check if path contains tab.id
+    if (active) {
+      setActiveTab(active.id);
+    }
+  }, [location, tabs]);
 
   return (
     <div className="mt-4">
@@ -33,17 +43,19 @@ const Repayments = () => {
               key={tab.id}
               id={tab.id}
               label={tab.label}
+              to={tab.path}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              to={tab.to}
             />
           ))}
         </ul>
       </div>
 
-      <Suspense fallback={<LoadingState />}>
-        <ActiveComponent />
-      </Suspense>
+      <div className="mt-4">
+        <Suspense fallback={<LoadingState />}>
+          <Outlet />
+        </Suspense>
+      </div>
     </div>
   );
 };

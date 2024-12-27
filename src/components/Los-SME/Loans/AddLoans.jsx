@@ -6,7 +6,7 @@ import { validateForm } from "../../../redux/Slices/validationSlice";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
-  const { addLoanData } = useSelector((state) => state.loans);
+  const { addLoanData } = useSelector((state) => state.smeLoans);
   const isValid = useSelector((state) => state.validation.isValid);
 
   function flattenToSimpleObject(nestedObject) {

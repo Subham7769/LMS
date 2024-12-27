@@ -8,7 +8,7 @@ import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
 import { loanOfficer,ApproveRepaymentColumns } from "../../../data/LosData";
 
 
-const ApproveRepayments = () => {
+const ApproveRepayment = () => {
   const repaymentData = [
     {
       amount: "50000",
@@ -146,4 +146,4 @@ const ApproveRepayments = () => {
   );
 };
 
-export default ApproveRepayments;
+export default ApproveRepayment;

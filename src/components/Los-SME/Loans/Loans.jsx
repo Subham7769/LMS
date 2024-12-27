@@ -1,30 +1,47 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import LoadingState from "../../LoadingState/LoadingState";
 import Tab from "../../Common/Tab/Tab";
-
-const AddLoans = React.lazy(() => import("./AddLoans"));
-const LoanHistory = React.lazy(() => import("./LoanHistory"));
-const ApproveLoans = React.lazy(() => import("./ApproveLoans"));
-const CollateralRegister = React.lazy(() => import("./CollateralRegister"));
-
-const tabs = [
-  { id: "add-loan", label: "Add Loan" },
-  { id: "approve-loans", label: "Approve Loans" },
-  { id: "loan-history", label: "Loan History" },
-  // { id: "collateral-register", label: "Collateral Register" },
-];
-
-const loanComponents = {
-  "add-loan": AddLoans,
-  "loan-history": LoanHistory,
-  "approve-loans": ApproveLoans,
-  // "collateral-register": CollateralRegister,
-};
-
+import { Outlet, useLocation } from "react-router-dom";
 
 const Loans = () => {
   const [activeTab, setActiveTab] = useState("add-loan");
-  const ActiveComponent = loanComponents[activeTab];
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const tabs = [
+    {
+      id: "add-loan",
+      path: "/loan/loan-origination-system/sme/loans/add-loan",
+      label: "Add Loan",
+    },
+    {
+      id: "loan-offers",
+      path: "/loan/loan-origination-system/sme/loans/loan-offers",
+      label: "Loan Offers",
+    },
+    {
+      id: "approve-loans",
+      path: "/loan/loan-origination-system/sme/loans/approve-loans",
+      label: "Approve Loans",
+    },
+    {
+      id: "loan-history",
+      path: "/loan/loan-origination-system/sme/loans/loan-history",
+      label: "Loan History",
+    },
+    // {
+    //   id: "collateral-register",
+    //   path: "/loan/loan-origination-system/personal/loans/collateral-register",
+    //   label: "Collateral Register",
+    // },
+  ];
+
+  useEffect(() => {
+    const active = tabs.find((tab) => currentPath.includes(tab.id)); // Check if path contains tab.id
+    if (active) {
+      setActiveTab(active.id);
+    }
+  }, [location, tabs]);
 
   return (
     <div className="mt-4">
@@ -36,17 +53,19 @@ const Loans = () => {
               key={tab.id}
               id={tab.id}
               label={tab.label}
+              to={tab.path}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              to={tab.to}
             />
           ))}
         </ul>
       </div>
 
-      <Suspense fallback={<LoadingState />}>
-        <ActiveComponent />
-      </Suspense>
+      <div className="mt-4">
+        <Suspense fallback={<LoadingState />}>
+          <Outlet />
+        </Suspense>
+      </div>
     </div>
   );
 };

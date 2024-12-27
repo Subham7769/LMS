@@ -22,7 +22,7 @@ function transformData(inputArray) {
 }
 
 const LoanHistory = () => {
-  const { loanHistory } = useSelector((state) => state.loans);
+  const { loanHistory } = useSelector((state) => state.personalLoans);
 
   const loanHistoryData = transformData(loanHistory);
 
