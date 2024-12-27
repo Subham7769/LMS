@@ -309,14 +309,17 @@ const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
 const BorrowersSME = lazy(() =>
   import("./components/Los-SME/Borrowers/Borrowers")
 );
-const AddBorrowersSME = lazy(() =>
-  import("./components/Los-SME/Borrowers/AddBorrowers")
+const AddCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddCompany")
 );
-const ViewBorrowersSME = lazy(() =>
-  import("./components/Los-SME/Borrowers/ViewBorrowers")
+const AddDirector = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddDirector")
 );
-const UpdateBorrowerSME = lazy(() =>
-  import("./components/Los-SME/Borrowers/UpdateBorrower")
+const ViewCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/ViewCompany")
+);
+const UpdateCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateCompany")
 );
 
 //------------Loans-----------------
@@ -662,18 +665,23 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: "add-borrower",
-            element: <AddBorrowersSME />,
+            path: "add-company",
+            element: <AddCompany />,
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "view-borrower",
-            element: <ViewBorrowersSME />,
+            path: "add-director",
+            element: <AddDirector />,
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "update-borrower/:uid",
-            element: <UpdateBorrowerSME />,
+            path: "view-company",
+            element: <ViewCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-company/:uid",
+            element: <UpdateCompany />,
             errorElement: <RouteErrorBoundary />,
           },
         ],

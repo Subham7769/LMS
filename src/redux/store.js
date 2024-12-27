@@ -28,7 +28,7 @@ import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
 import personalBorrowersSlice from "./Slices/personalBorrowersSlice";
 import personalLoansSlice from "./Slices/personalLoansSlice";
-import personalRepaymentsSlice from "./Slices/personalRepaymentsSlice";
+import personalRepaymentsSlice from "./Slices/personalRepaymentsSlice.jsx";
 import smeBorrowersSlice from "./Slices/smeBorrowersSlice";
 import smeLoansSlice from "./Slices/smeLoansSlice";
 import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";

@@ -8,9 +8,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
-
+import store from "../../../redux/store";
 const AddBorrowers = () => {
-  const isValid = useSelector((state) => state.validation.isValid);
+  // const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
   const { addBorrowerData, error, loading } = useSelector(
     (state) => state.personalBorrowers
@@ -34,16 +34,21 @@ const AddBorrowers = () => {
     return result;
   }
   
-console.log(isValid)
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)));
-    if (isValid) {
-      dispatch(registerBorrower(addBorrowerData));
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  // Dispatch the validation action
+  await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)));
+
+  // Access the updated state directly using getState
+  const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+  const isValid = state.validation.isValid; // Adjust based on your state structure
+
+  if (isValid) {
+    dispatch(registerBorrower(addBorrowerData));
+  }
+};
 
   return (
     <>

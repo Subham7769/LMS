@@ -122,6 +122,7 @@ const ViewBorrowers = () => {
 
   const personalDetailsColumns = [
     { label: "Title", field: "title" },
+    { label: "First Name", field: "firstName" },
     { label: "Surname", field: "surname" },
     { label: "Other Name", field: "otherName" },
     { label: "Unique ID", field: "uniqueID" },
@@ -169,8 +170,10 @@ const ViewBorrowers = () => {
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <p>
-                  <strong>Name:</strong> {rowData.title} {rowData.surname}{" "}
-                  {rowData.otherName}
+                  <strong>Name:</strong>{" "}
+                  {[rowData.firstName, rowData.surname, rowData.otherName]
+                    .filter(Boolean)
+                    .join(" ")}
                 </p>
                 <p>
                   <strong>Unique ID Type:</strong> {rowData.uniqueIDType}
@@ -218,9 +221,17 @@ const ViewBorrowers = () => {
                   <strong>Email:</strong> {rowData.email}
                 </p>
                 <p>
-                  <strong>Address:</strong> {[ rowData.houseNumber,
-                  rowData.street, rowData.residentialArea, rowData.province,
-                  rowData.district, rowData.country, ].filter(Boolean).join(", ")}
+                  <strong>Address:</strong>{" "}
+                  {[
+                    rowData.houseNumber,
+                    rowData.street,
+                    rowData.residentialArea,
+                    rowData.province,
+                    rowData.district,
+                    rowData.country,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")}
                 </p>
                 <p>
                   <strong>Post Box:</strong> {rowData.postBox}

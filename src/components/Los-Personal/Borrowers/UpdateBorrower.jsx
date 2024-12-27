@@ -10,8 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
+import store from "../../../redux/store";
+
 const UpdateBorrower = () => {
-  const isValid = useSelector((state) => state.validation.isValid);
   const { updateBorrowerData, error, loading } = useSelector(
     (state) => state.personalBorrowers
   );
@@ -41,11 +42,14 @@ const UpdateBorrower = () => {
 
     await dispatch(validateForm(flattenToSimpleObject(restUpdateBorrowerData)));
 
+    // Access the updated state directly using getState
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+    const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
       dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
       ).unwrap();
-            dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
     }
     navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   };

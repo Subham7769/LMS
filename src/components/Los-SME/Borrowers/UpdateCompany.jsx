@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
-  updateBorrowerUpdateField,
-  resetUpdateBorrowerData,
+  updateCompanyUpdateField,
+  resetUpdateCompanyData,
   updateBorrowerInfo,
   fetchAllBorrowers,
-} from "../../../redux/Slices/personalBorrowersSlice";
+} from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
-const UpdateBorrower = () => {
+const UpdateCompany = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const { updateBorrowerData, error, loading } = useSelector(
-    (state) => state.personalBorrowers
+    (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
   const { uid } = useParams();
@@ -51,7 +51,7 @@ const UpdateBorrower = () => {
   };
 
   const handleCancel = () => {
-    dispatch(resetUpdateBorrowerData());
+    dispatch(resetUpdateCompanyData());
     navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   };
 
@@ -59,7 +59,7 @@ const UpdateBorrower = () => {
     <>
       <AddUpdateBorrowerFields
         BorrowerData={updateBorrowerData}
-        handleChangeReducer={updateBorrowerUpdateField}
+        handleChangeReducer={updateCompanyUpdateField}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
@@ -78,4 +78,4 @@ const UpdateBorrower = () => {
   );
 };
 
-export default UpdateBorrower;
+export default UpdateCompany;

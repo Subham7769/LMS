@@ -10,14 +10,20 @@ const Borrowers = () => {
 
   const tabs = [
     {
-      id: "add-borrower",
-      path: "/loan/loan-origination-system/sme/borrowers/add-borrower",
-      label: "Add Borrower",
+      id: "add-company",
+      path: "/loan/loan-origination-system/sme/borrowers/add-company",
+      label: "Add Company",
     },
     {
-      id: "view-borrower",
-      path: "/loan/loan-origination-system/sme/borrowers/view-borrower",
-      label: "View Borrower",
+      id: "add-director",
+      path: "/loan/loan-origination-system/sme/borrowers/add-director",
+      label: "Add Director",
+    },
+
+    {
+      id: "view-company",
+      path: "/loan/loan-origination-system/sme/borrowers/view-company",
+      label: "View Company",
     },
     // { id: "update-borrower", path: "/loan/loan-origination-system/personal/borrowers/update-borrower/:uid", label: "Update Borrower" },
     // { id: "add-borrower-group", path: "/borrowers/add-borrower-group", label: "Add Borrower Group" },

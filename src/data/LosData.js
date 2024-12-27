@@ -272,3 +272,8 @@ export const natureOfCompanyOptions = [
   { value: "LIMITED", label: "Limited" },
   { value: "BUSINESS_NAME", label: "Business Name" },
 ];
+export const companyRegistrationOptions = [
+  { value: "123456789", label: "ABC Limited" },
+  { value: "987654321", label: "XYZ Business Name" },
+  { value: "456789123", label: "PQR Limited" },
+];

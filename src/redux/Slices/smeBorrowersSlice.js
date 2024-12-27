@@ -4,16 +4,16 @@ import { toast } from "react-toastify";
 // Register a Borrower
 export const registerBorrower = createAsyncThunk(
   "borrowers/register", // action type
-  async (addBorrowerData, { rejectWithValue }) => {
+  async (addCompanyData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
-      const response = await fetch(`${import.meta.env.VITE_BORROWERS_CREATE}`, {
+      const response = await fetch(`${import.meta.env.VITE_BORROWERS_CREATE_COMPANY_BORROWER}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${auth}`,
         },
-        body: JSON.stringify(addBorrowerData),
+        body: JSON.stringify(addCompanyData),
       });
 
       if (!response.ok) {
@@ -30,13 +30,15 @@ export const registerBorrower = createAsyncThunk(
 );
 
 // Fetch All Borrowers
-export const fetchAllBorrowers = createAsyncThunk(
+export const fetchAllCompanyBorrowers = createAsyncThunk(
   "borrowers/fetchAll", // action type
   async ({ page = 0, size = 12 }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_READ_ALL_PERSONAL_BORROWER}?page=${page}&size=${size}`,
+        `${
+          import.meta.env.VITE_BORROWERS_READ_ALL_COMPANY_BORROWER
+        }?page=${page}&size=${size}`,
         {
           method: "GET",
           headers: {
@@ -67,7 +69,7 @@ export const changeBorrowerStatus = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_BORROWERS_CHANGE_STATUS
+          import.meta.env.VITE_BORROWERS_CHANGE_STATUS_COMPANY_BORROWER
         }/${uid}/status/${newStatus}`,
         {
           method: "PUT",
@@ -97,7 +99,7 @@ export const updateBorrowerInfo = createAsyncThunk(
     try {
       const auth = localStorage.getItem("authToken"); // Retrieve the auth token
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_UPDATE_ENDPOINT}${uid}`,
+        `${import.meta.env.VITE_BORROWERS_UPDATE_COMPANY_BORROWER}${uid}`,
         {
           method: "PUT",
           headers: {
@@ -114,7 +116,6 @@ export const updateBorrowerInfo = createAsyncThunk(
           errorData.message || "Failed to update borrower information"
         );
       }
-
     } catch (error) {
       return rejectWithValue(error.message); // Return the error message
     }
@@ -122,22 +123,21 @@ export const updateBorrowerInfo = createAsyncThunk(
 );
 
 const initialState = {
-  addBorrowerData: {
-    personalDetails: {
-      title: "",
-      firstName:"",
-      surname: "",
-      otherName: "", //optional
-      uniqueIDType: "",
-      uniqueID: "",
-      gender: "",
-      maritalStatus: "",
-      nationality: "Zambia",
-      dateOfBirth: "",
-      placeOfBirth: "",
-      loanOfficer: localStorage.getItem("username"),
+  addCompanyData: {
+    companyDetails: {
+      companyName: "",
+      companyShortName: "",
+      natureOfCompany: "", 
+      companyRegistrationNo: "",
+      countryOfRegistration: "Zambia",
+      dateOfIncorporation: "",
+      province: "",
+      locationOfHQ: "",
+      industry: "",
+      natureOfBusiness: "",
+      numberOfPermanentEmployees: "", 
     },
-    contactDetails: {
+    companyContactDetails: {
       mobile1: "",
       mobile2: "", //optional
       landlinePhone: "", //optional
@@ -150,17 +150,6 @@ const initialState = {
       email: "",
       postBox: "", //optional
     },
-    employmentDetails: {
-      employer: "",
-      occupation: "",
-      employmentDistrict: "", //optional
-      employmentLocation: "",
-      workStartDate: "",
-      workPhoneNumber: "", //optional
-      workPhysicalAddress: "", //optional
-      employeeNo: "",
-      workType: "",
-    },
     bankDetails: {
       bankName: "",
       accountName: "",
@@ -170,33 +159,173 @@ const initialState = {
       sortCode: "",
       accountNo: "",
     },
-    nextOfKinDetails: {
-      kinTitle: "",
-      kinSurname: "",
-      kinOtherName: "", //optional
-      kinNrcNo: "",
-      kinGender: "",
-      kinMobile1: "",
-      kinMobile2: "", //optional
-      kinEmail: "",
-      kinHouseNo: "", //optional
-      kinStreet: "",
-      kinResidentialArea: "",
-      kinDistrict: "", //optional
-      kinCountry: "",
-      kinProvince: "", //optional
-      kinEmployer: "",
-      kinOccupation: "",
-      kinLocation: "", //optional
-      kinWorkPhoneNumber: "", //optional
-    },
-    otherDetails: {
-      reasonForBorrowing: "", //optional
-      sourceOfRepayment: "", //optional
-      groupId: "",
+    companyOtherDetails: {
       creditScore: "",
+      customerPhotoId: "",//optional
       freeCashInHand: "",
       grossSalary: "",
+      groupId: "",
+      reasonForBorrowing: "",
+      shareholdersCountryOfResidence: [],
+      shareholdersNames: [],
+      shareholdingStructure: "",
+      sourceOfRepayment: "",
+      tradeUnion: "",//optional
+    },
+    directorsKycDetails: [
+      {
+        bankDetails: {
+          accountName: "",
+          accountNo: "",
+          accountType: "",
+          bankName: "",
+          branch: "",
+          branchCode: "",
+          sortCode: "",
+        },
+        contactDetails: {
+          country: "",
+          district: "",
+          email: "",
+          houseNumber: "",
+          landlinePhone: "",
+          mobile1: "",
+          mobile2: "",
+          postBox: "",
+          province: "",
+          residentialArea: "",
+          street: "",
+        },
+        employmentDetails: {
+          employeeNo: "",
+          employer: "",
+          employmentDistrict: "",
+          employmentLocation: "",
+          occupation: "",
+          workPhoneNumber: "",
+          workPhysicalAddress: "",
+          workStartDate: "",
+          workType: "",
+        },
+        nextOfKinDetails: {
+          kinCountry: "",
+          kinDistrict: "",
+          kinEmail: "",
+          kinEmployer: "",
+          kinGender: "",
+          kinHouseNo: "",
+          kinLocation: "",
+          kinMobile1: "",
+          kinMobile2: "",
+          kinNrcNo: "",
+          kinOccupation: "",
+          kinOtherName: "",
+          kinProvince: "",
+          kinResidentialArea: "",
+          kinStreet: "",
+          kinSurname: "",
+          kinTitle: "",
+          kinWorkPhoneNumber: "",
+        },
+        otherDetails: {
+          customerPhotoId: "",
+          shareholdersCountryOfResidence: [],
+          shareholdersNames: [],
+          shareholdingStructure: "",
+        },
+        personalDetails: {
+          age: 0,
+          dateOfBirth: "",
+          firstName: "",
+          gender: "",
+          loanOfficer: "",
+          maritalStatus: "",
+          nationality: "",
+          otherName: "",
+          placeOfBirth: "",
+          surname: "",
+          title: "",
+          uniqueID: "",
+          uniqueIDType: "",
+        },
+      },
+      
+    ],
+  },
+  newDirector:{
+    bankDetails: {
+      accountName: "",
+      accountNo: "",
+      accountType: "",
+      bankName: "",
+      branch: "",
+      branchCode: "",
+      sortCode: "",
+    },
+    contactDetails: {
+      country: "",
+      district: "",
+      email: "",
+      houseNumber: "",
+      landlinePhone: "",
+      mobile1: "",
+      mobile2: "",
+      postBox: "",
+      province: "",
+      residentialArea: "",
+      street: "",
+    },
+    employmentDetails: {
+      employeeNo: "",
+      employer: "",
+      employmentDistrict: "",
+      employmentLocation: "",
+      occupation: "",
+      workPhoneNumber: "",
+      workPhysicalAddress: "",
+      workStartDate: "",
+      workType: "",
+    },
+    nextOfKinDetails: {
+      kinCountry: "",
+      kinDistrict: "",
+      kinEmail: "",
+      kinEmployer: "",
+      kinGender: "",
+      kinHouseNo: "",
+      kinLocation: "",
+      kinMobile1: "",
+      kinMobile2: "",
+      kinNrcNo: "",
+      kinOccupation: "",
+      kinOtherName: "",
+      kinProvince: "",
+      kinResidentialArea: "",
+      kinStreet: "",
+      kinSurname: "",
+      kinTitle: "",
+      kinWorkPhoneNumber: "",
+    },
+    otherDetails: {
+      customerPhotoId: "",
+      shareholdersCountryOfResidence: [],
+      shareholdersNames: [],
+      shareholdingStructure: "",
+    },
+    personalDetails: {
+      age: 0,
+      dateOfBirth: "",
+      firstName: "",
+      gender: "",
+      loanOfficer: "",
+      maritalStatus: "",
+      nationality: "",
+      otherName: "",
+      placeOfBirth: "",
+      surname: "",
+      title: "",
+      uniqueID: "",
+      uniqueIDType: "",
     },
   },
   allBorrowersData: [],
@@ -209,21 +338,21 @@ const borrowersSlice = createSlice({
   name: "smeBorrowers",
   initialState,
   reducers: {
-    updateAddBorrowerField: (state, action) => {
+    updateAddCompanyField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.addBorrowerData[section]) {
-        state.addBorrowerData[section][field] =
+      if (section && state.addCompanyData[section]) {
+        state.addCompanyData[section][field] =
           type === "checkbox" ? checked : value;
       } else {
-        // If no section, update directly in addBorrowerData
-        state.addBorrowerData[field] = type === "checkbox" ? checked : value;
+        // If no section, update directly in addCompanyData
+        state.addCompanyData[field] = type === "checkbox" ? checked : value;
       }
     },
-    resetBorrowerData: (state, action) => {
-      state.addBorrowerData = initialState.addBorrowerData;
+    resetCompanyData: (state, action) => {
+      state.addCompanyData = initialState.addCompanyData;
     },
-    updateBorrowerUpdateField: (state, action) => {
+    updateCompanyUpdateField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
       if (section && state.updateBorrowerData[section]) {
@@ -234,7 +363,7 @@ const borrowersSlice = createSlice({
         state.updateBorrowerData[field] = type === "checkbox" ? checked : value;
       }
     },
-    setUpdateBorrower: (state, action) => {
+    setUpdateCompany: (state, action) => {
       const { uid } = action.payload;
       const borrower = state.allBorrowersData.find((item) => item.uid === uid);
       if (borrower) {
@@ -243,8 +372,17 @@ const borrowersSlice = createSlice({
         state.updateBorrowerData = null; // Reset if no match found
       }
     },
-    resetUpdateBorrowerData: (state, action) => {
+    resetUpdateCompanyData: (state, action) => {
       state.updateBorrowerData = initialState.updateBorrowerData;
+    },
+    addDirector:(state,action)=>{
+      state.addCompanyData.directorsKycDetails.push(state.newDirector);
+      toast.success("Director Added Successfully");
+    },
+    removeDirector:(state,action)=>{
+      const {index} = action.payload;
+        state.addCompanyData.directorsKycDetails.splice(index, 1);
+        toast.error("Director Removed Successfully");
     },
   },
   extraReducers: (builder) => {
@@ -263,16 +401,16 @@ const borrowersSlice = createSlice({
         state.error = action.payload; // Store the error message
         toast.error(`API Error : ${action.payload}`); // Notify the user of the error
       })
-      .addCase(fetchAllBorrowers.pending, (state) => {
+      .addCase(fetchAllCompanyBorrowers.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchAllBorrowers.fulfilled, (state, action) => {
+      .addCase(fetchAllCompanyBorrowers.fulfilled, (state, action) => {
         state.loading = false;
         // Update state with the borrowers array
         state.allBorrowersData = action.payload.content;
         state.error = null;
       })
-      .addCase(fetchAllBorrowers.rejected, (state, action) => {
+      .addCase(fetchAllCompanyBorrowers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -307,11 +445,13 @@ const borrowersSlice = createSlice({
 });
 
 export const {
-  updateAddBorrowerField,
-  resetBorrowerData,
-  updateBorrowerUpdateField,
-  setUpdateBorrower,
-  resetUpdateBorrowerData,
+  updateAddCompanyField,
+  resetCompanyData,
+  updateCompanyUpdateField,
+  setUpdateCompany,
+  resetUpdateCompanyData,
+  addDirector,
+  removeDirector,
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

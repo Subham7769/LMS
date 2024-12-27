@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
-  resetBorrowerData,
+  resetCompanyData,
   registerBorrower,
-  updateAddBorrowerField
-} from "../../../redux/Slices/personalBorrowersSlice";
+  updateAddCompanyField
+} from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
+import store from "../../../redux/store";
 
-const AddBorrowers = () => {
-  const isValid = useSelector((state) => state.validation.isValid);
+const AddCompany = () => {
   const dispatch = useDispatch();
-  const { addBorrowerData, error, loading } = useSelector(
-    (state) => state.personalBorrowers
+  const { addCompanyData, error, loading } = useSelector(
+    (state) => state.smeBorrowers
   );
+  console.log(addCompanyData.companyDetails)
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -30,26 +31,32 @@ const AddBorrowers = () => {
     }
 
     recurse(nestedObject);
-    console.log(result);
     return result;
   }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)));
+
+    // Dispatch the validation action
+    await dispatch(validateForm(flattenToSimpleObject(addCompanyData)));
+  
+    // Access the updated state directly using getState
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+    const isValid = state.validation.isValid; // Adjust based on your state structure
+  
     if (isValid) {
-      dispatch(registerBorrower(addBorrowerData));
+      dispatch(registerBorrower(addCompanyData));
     }
   };
 
 
   return (
     <>
-      <AddUpdateBorrowerFields BorrowerData={addBorrowerData}  handleChangeReducer={updateAddBorrowerField} />
+      <AddUpdateBorrowerFields BorrowerData={addCompanyData}  handleChangeReducer={updateAddCompanyField} />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
           buttonName="Reset"
-          onClick={() => dispatch(resetBorrowerData())}
+          onClick={() => dispatch(resetCompanyData())}
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
         />
@@ -59,4 +66,4 @@ const AddBorrowers = () => {
   );
 };
 
-export default AddBorrowers;
+export default AddCompany;

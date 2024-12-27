@@ -8,14 +8,14 @@ import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  fetchAllBorrowers,
+  fetchAllCompanyBorrowers,
   changeBorrowerStatus,
-  setUpdateBorrower,
+  setUpdateCompany,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
 import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Select
 
-const ViewBorrowers = () => {
+const ViewCompany = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { allBorrowersData, error, loading } = useSelector(
@@ -34,7 +34,7 @@ const ViewBorrowers = () => {
   useEffect(() => {
     console.log();
     if (allBorrowersData.length <= 0) {
-      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20 }));
     }
   }, [dispatch]);
 
@@ -141,7 +141,7 @@ const ViewBorrowers = () => {
       }));
     };
     const handleEdit = (uid) => {
-      dispatch(setUpdateBorrower({ uid }));
+      dispatch(setUpdateCompany({ uid }));
       navigate(
         `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
       );
@@ -152,7 +152,7 @@ const ViewBorrowers = () => {
       console.log(uid);
       setCurrentStatus(newStatus);
       dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
-      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20 }));
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
       );
@@ -359,4 +359,4 @@ const ViewBorrowers = () => {
   );
 };
 
-export default ViewBorrowers;
+export default ViewCompany;

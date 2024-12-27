@@ -333,7 +333,7 @@ export const MenusInitial = [
     submenuItems: [
       {
         name: "Borrowers",
-        href: "/loan/loan-origination-system/sme/borrowers/add-borrower",
+        href: "/loan/loan-origination-system/sme/borrowers/add-company",
         current: false,
       },
       {

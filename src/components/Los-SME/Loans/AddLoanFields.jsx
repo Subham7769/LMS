@@ -11,7 +11,7 @@ import {
   updateLoanField,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllBorrowers } from "../../../redux/Slices/smeBorrowersSlice";
+import { fetchAllCompanyBorrowers } from "../../../redux/Slices/smeBorrowersSlice";
 import {
   clearValidationError,
   setFields,
@@ -29,7 +29,7 @@ const AddLoanFields = ({ addLoanData }) => {
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+    dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20 }));
     const keysArray = [
       "loanProduct",
       "borrower",

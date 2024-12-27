@@ -7,7 +7,7 @@ export const registerBorrower = createAsyncThunk(
   async (addBorrowerData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
-      const response = await fetch(`${import.meta.env.VITE_BORROWERS_CREATE}`, {
+      const response = await fetch(`${import.meta.env.VITE_BORROWERS_CREATE_PERSONAL_BORROWER}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export const changeBorrowerStatus = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_BORROWERS_CHANGE_STATUS
+          import.meta.env.VITE_BORROWERS_CHANGE_STATUS_PERSONAL_BORROWER
         }/${uid}/status/${newStatus}`,
         {
           method: "PUT",
@@ -97,7 +97,7 @@ export const updateBorrowerInfo = createAsyncThunk(
     try {
       const auth = localStorage.getItem("authToken"); // Retrieve the auth token
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_UPDATE_ENDPOINT}${uid}`,
+        `${import.meta.env.VITE_BORROWERS_UPDATE_PERSONAL_BORROWER}${uid}`,
         {
           method: "PUT",
           headers: {
