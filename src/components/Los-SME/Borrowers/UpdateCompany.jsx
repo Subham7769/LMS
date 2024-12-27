@@ -4,7 +4,7 @@ import {
   updateCompanyUpdateField,
   resetUpdateCompanyData,
   updateBorrowerInfo,
-  fetchAllBorrowers,
+  fetchAllCompanyBorrowers,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -45,7 +45,7 @@ const UpdateCompany = () => {
       dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
       ).unwrap();
-            dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+            dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20 }));
     }
     navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   };
