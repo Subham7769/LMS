@@ -3,7 +3,13 @@ import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import InputDate from "../../Common/InputDate/InputDate";
-import { AddBulkRepaymentHeaderList,methodOptions,collectionByOptions,accountingOptions,loanOptions } from "../../../data/LosData";
+import {
+  AddBulkRepaymentHeaderList,
+  methodOptions,
+  collectionByOptions,
+  accountingOptions,
+  loanOptions,
+} from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import {
   updateBulkRepaymentData,
@@ -11,11 +17,13 @@ import {
   removeBulkRepaymentRow,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Button from "../../Common/Button/Button";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
-  const {addNewBulkRepaymentData} = useSelector( (state) => state.personalRepayments );
-console.log(addNewBulkRepaymentData)
+  const { addNewBulkRepaymentData } = useSelector(
+    (state) => state.personalRepayments
+  );
   const handleChange = (value, rowIndex, fieldName) => {
     dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
   };
@@ -127,18 +135,12 @@ console.log(addNewBulkRepaymentData)
         </tbody>
       </table>
       <div className="flex justify-end mt-5 gap-5">
-        <button
+        <Button buttonName={"Add Row"} onClick={addRow} rectangle={true} />
+        <Button
+          buttonName={"Upload Repayments"}
           onClick={addRow}
-          className="bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-700"
-        >
-          Add Row
-        </button>
-        <button
-          onClick={addRow}
-          className="bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-700"
-        >
-          Upload Repayments
-        </button>
+          rectangle={true}
+        />
       </div>
     </ContainerTile>
   );

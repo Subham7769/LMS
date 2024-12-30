@@ -16,6 +16,7 @@ import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
+import { tenureTypeOptions } from "../../../data/OptionsData";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
@@ -27,18 +28,18 @@ const AddLoanFields = ({ addLoanData }) => {
     dispatch(fetchLoanProductData());
     dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
     const keysArray = [
-      "loanProduct",
-      "borrower",
+      "borrowerId",
       "disbursedBy",
-      "principalAmount",
-      "loanReleaseDate",
       "interestMethod",
-      "repaymentCycle",
-      "loanInterest",
-      "interestPer",
       "loanDuration",
-      "durationPer",
+      "loanInterest",
+      "loanProductId",
+      "loanReleaseDate",
       "numberOfTenure",
+      "perLoanDuration",
+      "perLoanInterest",
+      "principalAmount",
+      "repaymentCycle",
     ];
     dispatch(setFields(keysArray));
     return () => {
@@ -49,7 +50,7 @@ const AddLoanFields = ({ addLoanData }) => {
   useEffect(() => {
     const options = allBorrowersData.map((item) => ({
       label: `${item.borrowerProfile?.personalDetails?.title} ${item.borrowerProfile?.personalDetails?.surname} ${item.borrowerProfile?.personalDetails?.otherName}`,
-      value: item.id,
+      value: item.uid,
     }));
 
     setBorrowerOptions(options);
@@ -70,14 +71,14 @@ const AddLoanFields = ({ addLoanData }) => {
   const generalDetailsConfig = [
     {
       labelName: "Loan Product",
-      inputName: "loanProduct",
+      inputName: "loanProductId",
       type: "select",
       options: loanProductOptions, // Dynamically populated
       validation: true,
     },
     {
       labelName: "Borrower",
-      inputName: "borrower",
+      inputName: "borrowerId",
       type: "select",
       options: borrowerOptions, // Dynamically populated
       validation: true,
@@ -106,8 +107,8 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "interestMethod",
       type: "select",
       options: [
-        { value: "Flat", label: "Flat" },
-        { value: "Reducing", label: "Reducing" },
+        { value: "FLAT", label: "FLAT" },
+        { value: "REDUCING", label: "REDUCING" },
       ],
       validation: true,
     },
@@ -129,12 +130,9 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Per (Loan Interest)",
-      inputName: "interestPer",
+      inputName: "perLoanInterest",
       type: "select",
-      options: [
-        { value: "Year", label: "Year" },
-        { value: "Month", label: "Month" },
-      ],
+      options: tenureTypeOptions,
       validation: true,
     },
     {
@@ -145,12 +143,9 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Per (Loan Duration)",
-      inputName: "durationPer",
+      inputName: "perLoanDuration",
       type: "select",
-      options: [
-        { value: "Year", label: "Year" },
-        { value: "Month", label: "Month" },
-      ],
+      options: tenureTypeOptions,
       validation: true,
     },
     {
@@ -545,7 +540,7 @@ const AddLoanFields = ({ addLoanData }) => {
         isOpen={true}
         error={isValidationFailed(validationError, generalDetailsInputNames)}
       />
-      <Accordion
+      {/* <Accordion
         heading={"Advance Settings (optional)"}
         renderExpandedContent={() =>
           advanceSettings(addLoanData.advanceSettings)
@@ -563,7 +558,7 @@ const AddLoanFields = ({ addLoanData }) => {
         heading={"Extend Loan After Maturity Until Fully Paid (optional)"}
         renderExpandedContent={() => extendLoan(addLoanData.extendLoan)}
         error={isValidationFailed(validationError, extendLoanInputNames)}
-      />
+      /> */}
     </>
   );
 };

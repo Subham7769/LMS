@@ -11,27 +11,27 @@ const Loans = () => {
   const tabs = [
     {
       id: "add-loan",
-      path: "/loan/loan-origination-system/sme/loans/add-loan",
+      path: "/loan/loan-origination-system/personal/loans/add-loan",
       label: "Add Loan",
     },
     {
       id: "loan-offers",
-      path: "/loan/loan-origination-system/sme/loans/loan-offers",
+      path: "/loan/loan-origination-system/personal/loans/loan-offers",
       label: "Loan Offers",
     },
     {
       id: "approve-loans",
-      path: "/loan/loan-origination-system/sme/loans/approve-loans",
+      path: "/loan/loan-origination-system/personal/loans/approve-loans",
       label: "Approve Loans",
     },
     {
       id: "loan-history",
-      path: "/loan/loan-origination-system/sme/loans/loan-history",
+      path: "/loan/loan-origination-system/personal/loans/loan-history",
       label: "Loan History",
     },
     // {
     //   id: "collateral-register",
-    //   path: "/loan/loan-origination-system/sme/loans/collateral-register",
+    //   path: "/loan/loan-origination-system/personal/loans/collateral-register",
     //   label: "Collateral Register",
     // },
   ];

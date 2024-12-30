@@ -9,27 +9,32 @@ import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
 import { yesNoOptions, repaymentOptions } from "../../../data/LosData";
 import Papa from "papaparse";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setRepaymentData,
+  updateRepaymentData,
+  setRepaymentHeaderData,
+  updateRepaymentHeaderData,
+} from "../../../redux/Slices/personalRepaymentsSlice";
 
 const UploadRepayment = () => {
   const [formData, setFormData] = useState({
     loanProduct: "",
   });
-
+  const dispatch = useDispatch();
+  const { repaymentData, repaymentHeaderData } = useSelector(
+    (state) => state.personalRepayments
+  );
   const [showStep2, setShowStep2] = useState(false);
   const [columnArray, setColumnArray] = useState([]);
-  const [repaymentHeaderData, setRepaymentHeaderData] = useState([]);
-  const [repaymentData, setRepaymentData] = useState(null);
   const [saveHeadersOption, setSaveHeadersOption] = useState("");
 
   useEffect(() => {
     const savedHeaderData = localStorage.getItem("repaymentHeaderData");
     if (savedHeaderData) {
-      setRepaymentHeaderData(JSON.parse(savedHeaderData));
+      dispatch(setRepaymentHeaderData(JSON.parse(savedHeaderData)));
     }
-  }, []);
-
-  console.log(repaymentHeaderData);
-  console.log(repaymentData);
+  }, [dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,19 +43,12 @@ const UploadRepayment = () => {
 
   const handleChangeRepaymentData = (e, rowIndex) => {
     const { name, value } = e.target;
-    setRepaymentData((prevRepaymentData) => {
-      const updatedRepaymentData = [...prevRepaymentData]; // Create a copy of the array
-      updatedRepaymentData[rowIndex] = {
-        ...updatedRepaymentData[rowIndex], // Copy the current object at the given rowIndex
-        [name]: value, // Update the field with the new value
-      };
-      return updatedRepaymentData; // Correctly return the updated data
-    });
+    dispatch(updateRepaymentData({ rowIndex, fieldName: name, value }));
   };
 
   const handleChangeRepaymentHeaderData = (e, index) => {
     const { name, value } = e.target;
-    setRepaymentHeaderData({ ...repaymentHeaderData, [name]: value });
+    dispatch(updateRepaymentHeaderData({ fieldName: name, value }));
   };
 
   const handleFileUpload = (e) => {
@@ -64,7 +62,7 @@ const UploadRepayment = () => {
           columnArray.push(Object.keys(row));
         });
         setColumnArray(columnArray[0]);
-        setRepaymentData(results.data);
+        dispatch(setRepaymentData(results.data));
       },
     });
   };

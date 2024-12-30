@@ -3,9 +3,12 @@ import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
+import { submitLoan } from "../../../redux/Slices/personalLoansSlice";
+import { useNavigate } from "react-router-dom";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { addLoanData } = useSelector((state) => state.personalLoans);
   const isValid = useSelector((state) => state.validation.isValid);
 
@@ -31,8 +34,8 @@ const AddLoans = () => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     if (isValid) {
-      // dispatch(registerBorrower(addLoanData));
-      console.log("API call made");
+      await dispatch(submitLoan(addLoanData.generalDetails)).unwrap();
+      navigate('/loan/loan-origination-system/personal/loans/loan-offers');
     }
   };
 
@@ -40,7 +43,7 @@ const AddLoans = () => {
     <>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Save Button */}
-      <div className="flex justify-center col-span-4">
+      <div className="text-right mt-5">
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>
