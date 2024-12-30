@@ -325,7 +325,9 @@ const ViewBorrowers = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`grid grid-cols-[45%_45%_10%] gap-5`}>
+      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
+        <div className="w-[45%]">
+
         <InputText
           labelName="Search Borrower"
           inputName="searchTerm"
@@ -333,6 +335,9 @@ const ViewBorrowers = () => {
           onChange={handleChangeSearch}
           required
         />
+        </div>
+        <div className="w-[45%]">
+
         <SelectInput
           labelName="All Loan Officers"
           inputName="allLoanOfficer"
@@ -340,9 +345,10 @@ const ViewBorrowers = () => {
           inputValue={allLoanOfficer}
           isValidation={true}
           onChange={handleLoanOfficerFilter}
-          className="w-full"
+          // className="w-full"
           isMulti={true}
         />
+        </div>
         <div className="flex align-middle gap-5">
           {/* <Button
             buttonName={"Search"}

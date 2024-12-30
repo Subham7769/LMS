@@ -64,7 +64,7 @@ export const CollateralRegisterHeaderList = [
 
 export const AddBulkRepaymentHeaderList = [
   "Row",
-  "Loan",
+  "Loan Id",
   "Amount",
   "Method",
   "Collection Date",
@@ -190,12 +190,11 @@ export const loanOfficer = [
 export const ApproveRepaymentColumns = [
   { label: "Amount", field: "amount" },
   { label: "Collection Date", field: "collectionDate" },
-  { label: "Name", field: "name" },
-  { label: "Loan Id", field: "loanId" },
-  { label: "Collected By", field: "collectedBy" },
+  { label: "User Id", field: "userId" },
+  { label: "Loan Id", field: "loan" },
+  { label: "Collected By", field: "collectionBy" },
   { label: "Method", field: "method" },
-  { label: "Staff", field: "staff" },
-  { label: "Edit Date", field: "editDate" },
+  { label: "Accounting", field: "accounting" },
 ];
 
 export const yesNoOptions = [
@@ -278,8 +277,8 @@ export const companyRegistrationOptions = [
   { value: "456789123", label: "PQR Limited" },
 ];
 export const methodOptions = [
-  { label: "Cash", value: "cash" },
-  { label: "Bank Transfer", value: "bank_transfer" },
+  { label: "User Payment", value: "USER_PAYMENT" },
+  { label: "Auto Payment", value: "AUTO_PAYMENT" },
 ];
 
 export const collectionByOptions = [

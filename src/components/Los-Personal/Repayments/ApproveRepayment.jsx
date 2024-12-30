@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -6,12 +6,32 @@ import Button from "../../Common/Button/Button";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { loanOfficer, ApproveRepaymentColumns } from "../../../data/LosData";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  getRepayments,
+  approveRepayment,
+  rejectRepayment,
+} from "../../../redux/Slices/personalRepaymentsSlice";
 
 const ApproveRepayment = () => {
   const dispatch = useDispatch();
-  const { approveRepaymentData } = useSelector(
+  const { approveRepaymentData,loading, error } = useSelector(
     (state) => state.personalRepayments
   );
+
+useEffect(()=>{
+  if (approveRepaymentData.length < 1) {
+    dispatch(getRepayments({ pageSize : 10, pageNumber : 0}));
+  }
+},[dispatch])
+
+  const handleApprove = (transactionId) => {
+    dispatch(approveRepayment({ transactionId })).unwrap()
+    dispatch(getRepayments({ pageSize : 10, pageNumber : 0}))
+  };
+  const handleReject = (transactionId) => {
+    dispatch(rejectRepayment({ transactionId })).unwrap()
+    dispatch(getRepayments({ pageSize : 10, pageNumber : 0}))
+  };
   const [allStaff, setAllStaff] = useState("");
 
   const renderExpandedRow = (rowData) => (
@@ -22,39 +42,42 @@ const ApproveRepayment = () => {
             {/* Additional Information */}
             <div className="flex justify-between">
               <p className="text-sm font-semibold text-gray-600">
-                Payment Reference:
+                Installment Id:
               </p>
-              <p className="text-sm text-gray-600">
-                {rowData.paymentReference}
-              </p>
+              <p className="text-sm text-gray-600">{rowData.installmentId}</p>
             </div>
             <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Remarks:</p>
-              <p className="text-sm text-gray-600">{rowData.remarks}</p>
+              <p className="text-sm font-semibold text-gray-600">Request Id:</p>
+              <p className="text-sm text-gray-600">{rowData.requestId}</p>
             </div>
             <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Contact:</p>
-              <p className="text-sm text-gray-600">{rowData.contact}</p>
+              <p className="text-sm font-semibold text-gray-600">
+                Transaction Id:
+              </p>
+              <p className="text-sm text-gray-600">{rowData.transactionId}</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="text-sm font-semibold text-gray-600">
+                Description:
+              </p>
+              <p className="text-sm text-gray-600">{rowData.description}</p>
             </div>
           </div>
         </div>
         <div className="w-full flex justify-end flex-col gap-4 p-5">
-          <button
-            onClick={() => handleApprove(rowData.applicationId)}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-            disabled={rowData.approvalStatus === "Yes"}
-          >
-            <FiCheckCircle className="mr-2" />
-            Approve
-          </button>
-          <button
-            onClick={() => handleReject(rowData.applicationId)}
-            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+          <Button
+            buttonName={"Approve"}
+            onClick={() => handleApprove(rowData.transactionId)}
+            rectangle={true}
+            className={`bg-green-700`}
+          />
+          <Button
+            buttonName={"Reject"}
+            onClick={() => handleReject(rowData.transactionId)}
+            rectangle={true}
+            className={`bg-red-600 text-white rounded-md hover:bg-red-700 `}
             disabled={rowData.approvalStatus === "No"}
-          >
-            <FiXCircle className="mr-2" />
-            Delete
-          </button>
+          />
         </div>
       </div>
     </div>
@@ -62,7 +85,8 @@ const ApproveRepayment = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`grid grid-cols-[85%_15%] gap-5`}>
+      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
+        <div className="w-[80%]">
         <InputSelect
           labelName="All Staff"
           inputName="allStaff"
@@ -70,7 +94,9 @@ const ApproveRepayment = () => {
           inputValue={allStaff}
           onChange={(e) => setAllStaff(e.target.value)}
         />
-        <div className="flex gap-5">
+
+        </div>
+        <div className="flex gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={() => {}}
@@ -90,6 +116,8 @@ const ApproveRepayment = () => {
         columns={ApproveRepaymentColumns}
         data={approveRepaymentData}
         renderExpandedRow={renderExpandedRow}
+        loading={loading}
+        error={error}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -15,18 +15,25 @@ import {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
   removeBulkRepaymentRow,
+  submitRepayment,
+  getOpenLoans,
+  fetchClosingBalance,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
-  const { addNewBulkRepaymentData } = useSelector(
+  const { draftRepaymentDTOList, openLoans,loading } = useSelector(
     (state) => state.personalRepayments
   );
-  const handleChange = (value, rowIndex, fieldName) => {
-    dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
-  };
+  console.log(draftRepaymentDTOList);
+
+  useEffect(() => {
+    if (openLoans.length < 1) {
+      dispatch(getOpenLoans());
+    }
+  }, [dispatch]);
 
   const addRow = () => {
     dispatch(addBulkRepaymentRow());
@@ -34,6 +41,23 @@ const AddBulkRepayment = () => {
 
   const removeRow = (index) => {
     dispatch(removeBulkRepaymentRow(index));
+  };
+
+  const handleSelectChange = (value, rowIndex, fieldName) => {
+    const [loanId, userId] = value.split("@");
+    console.log(loanId, userId);
+
+    if (userId && loanId) {
+      dispatch(fetchClosingBalance({ userId, loanId }));
+    }
+    dispatch(
+      updateBulkRepaymentData({ rowIndex, fieldName: "userId", value: userId })
+    );
+    dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value: value }));
+  };
+
+  const handleChange = (value, rowIndex, fieldName) => {
+    dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
   };
 
   return (
@@ -52,26 +76,27 @@ const AddBulkRepayment = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {addNewBulkRepaymentData.map((item, rowIndex) => (
+          {draftRepaymentDTOList.map((item, rowIndex) => (
             <tr key={rowIndex}>
               <td className="py-3 text-center">{rowIndex + 1}</td>
-              <td className="py-3 text-center">
+              <td className="py-3 text-center w-1/4">
                 <InputSelect
                   inputName="loan"
-                  inputOptions={loanOptions}
+                  inputOptions={openLoans}
                   inputValue={item.loan}
                   onChange={(e) =>
-                    handleChange(e.target.value, rowIndex, "loan")
+                    handleSelectChange(e.target.value, rowIndex, "loan")
                   }
                 />
               </td>
-              <td className="py-3 text-center">
+              <td className="py-3 text-center w-1/12">
                 <InputNumber
                   inputName="amount"
                   inputValue={item.amount}
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "amount")
                   }
+                  loading={loading}
                 />
               </td>
               <td className="py-3 text-center">
@@ -93,17 +118,28 @@ const AddBulkRepayment = () => {
                   }
                 />
               </td>
-              <td className="py-3 text-center w-1/6">
-                <InputSelect
+              <td className="py-3 text-center ">
+                {
+                  // Agent Api Required
+                  /* <InputSelect
                   inputName="collectionBy"
                   inputOptions={collectionByOptions}
                   inputValue={item.collectionBy}
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "collectionBy")
                   }
+                /> */
+                }
+
+                <InputText
+                  inputName="collectionBy"
+                  inputValue={item.collectionBy}
+                  onChange={(e) =>
+                    handleChange(e.target.value, rowIndex, "collectionBy")
+                  }
                 />
               </td>
-              <td className="py-3 text-center w-1/12">
+              <td className="py-3 text-center">
                 <InputText
                   inputName="description"
                   inputValue={item.description}
@@ -112,7 +148,7 @@ const AddBulkRepayment = () => {
                   }
                 />
               </td>
-              <td className="py-3 text-center">
+              <td className="py-3 text-center w-1/12">
                 <InputSelect
                   inputName="accounting"
                   inputOptions={accountingOptions}
@@ -135,10 +171,19 @@ const AddBulkRepayment = () => {
         </tbody>
       </table>
       <div className="flex justify-end mt-5 gap-5">
-        <Button buttonName={"Add Row"} onClick={addRow} rectangle={true} />
+        <Button
+          buttonName={"Add Row"}
+          onClick={addRow}
+          rectangle={true}
+          className={"disabled:bg-gray-600"}
+          disabled={openLoans.length <= draftRepaymentDTOList.length}
+        />
+
         <Button
           buttonName={"Upload Repayments"}
-          onClick={addRow}
+          onClick={() => {
+            dispatch(submitRepayment({ draftRepaymentDTOList }));
+          }}
           rectangle={true}
         />
       </div>

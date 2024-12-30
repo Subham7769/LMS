@@ -15,6 +15,7 @@ import {
   updateRepaymentData,
   setRepaymentHeaderData,
   updateRepaymentHeaderData,
+  uploadFile,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 
 const UploadRepayment = () => {
@@ -28,6 +29,7 @@ const UploadRepayment = () => {
   const [showStep2, setShowStep2] = useState(false);
   const [columnArray, setColumnArray] = useState([]);
   const [saveHeadersOption, setSaveHeadersOption] = useState("");
+  const [file, setFile] = useState(null)
 
   useEffect(() => {
     const savedHeaderData = localStorage.getItem("repaymentHeaderData");
@@ -65,6 +67,7 @@ const UploadRepayment = () => {
         dispatch(setRepaymentData(results.data));
       },
     });
+    setFile(files[0])
   };
 
   const handleSubmit = () => {
@@ -364,7 +367,7 @@ const UploadRepayment = () => {
         </div>
       </ContainerTile>
 
-      <ContainerTile className={`flex flex-col gap-2`}>
+      {/* <ContainerTile className={`flex flex-col gap-2`}>
         <h2 className="font-bold text-lg mb-2">Save options</h2>
         <div className="grid grid-cols-2 gap-5 text-sm">
           <div className="flex flex-col gap-3 rounded-lg border-gray-50 shadow-md bg-white p-5">
@@ -386,12 +389,12 @@ const UploadRepayment = () => {
             </p>
           </div>
         </div>
-      </ContainerTile>
+      </ContainerTile> */}
 
       <ContainerTile className={`flex flex-col gap-2`}>
         <h2 className="font-bold text-lg mb-2">Upload your file</h2>
-        <div className="grid grid-cols-2 gap-5 ">
-          <div className="flex flex-col gap-3 rounded-lg border-gray-50 shadow-md bg-white p-5">
+        <div className="grid grid-cols-1 gap-5 ">
+          {/* <div className="flex flex-col gap-3 rounded-lg border-gray-50 shadow-md bg-white p-5">
             <div className="text-center">Columns Separated By (optional)</div>
             <div className="grid grid-cols-1">
               <InputSelect
@@ -404,7 +407,7 @@ const UploadRepayment = () => {
                 onChange={handleInputChange}
               />
             </div>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-3 rounded-lg border-gray-50 shadow-md bg-white p-5">
             <InputFile
               labelName="Loan Files (.csv)"
@@ -424,7 +427,7 @@ const UploadRepayment = () => {
           rectangle={true}
           className={`mt-4 h-fit self-center`}
         />
-        <Button
+        {/* <Button
           buttonName={"Proceed"}
           onClick={() => {
             setShowStep2(!showStep2);
@@ -432,10 +435,17 @@ const UploadRepayment = () => {
           rectangle={true}
           className={`mt-4 h-fit self-center disabled:bg-gray-500`}
           disabled={!repaymentData}
+        /> */}
+        <Button
+          buttonName={"Submit"}
+          onClick={() => dispatch(uploadFile({fileData:file}))}
+          rectangle={true}
+          className={`mt-4 h-fit self-center disabled:bg-gray-500`}
+          disabled={!repaymentData.length > 0 }
         />
       </div>
 
-      {showStep2 && (
+      {false && (
         <>
           <div className="border-b-2 border-gray-400 my-5"></div>
           <ContainerTile>
