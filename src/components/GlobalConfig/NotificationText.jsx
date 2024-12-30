@@ -55,7 +55,7 @@ const NotificationText = () => {
       {notificationInputList?.map((notificationData, index) => (
         <ContainerTile
         loading={loading}
-        error={error}
+        // error={error}
         key={"notification"+index}
         >
           <div key={notificationData.id} className="flex flex-col gap-y-6 ">

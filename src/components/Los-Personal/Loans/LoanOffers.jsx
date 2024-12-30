@@ -81,6 +81,13 @@ const LoanOffers = () => {
     </div>
   );
 
+  // const InfoRow2 = ({ label, value }) => (
+  //   <div className="py-2">
+  //     <div className="text-gray-500">{label}:</div>
+  //     <div className="font-semibold text-lg">{value}</div>
+  //   </div>
+  // );
+
   return (
     <>
       <ContainerTile className={"mb-5"} loading={loading}>
@@ -116,7 +123,7 @@ const LoanOffers = () => {
         <div className="flex flex-col gap-5 mt-4">
           <div className="grid grid-cols-2 gap-5">
             <ContainerTile loading={loading}>
-              <div className="font-semibold text-center -mt-3 mb-3">
+              <div className="font-semibold -mt-3 mb-3">
                 Profile :{" "}
               </div>
               <div className="grid grid-cols-2 gap-5 text-[14px]">

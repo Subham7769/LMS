@@ -86,8 +86,15 @@ const ApproveLoans = () => {
     await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
   };
 
-  const handleReject = (loanId) => {
-    dispatch(rejectLoan(loanId));
+  const handleReject = async (rowData) => {
+    const rejectLoanPayload = {
+      amount: rowData.principalAmount,
+      applicationStatus: "REJECTED",
+      loanId: rowData.loanId,
+      uid: rowData.uid,
+    };
+    await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
+    await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
   };
 
   const columns = [
@@ -156,7 +163,7 @@ const ApproveLoans = () => {
             Approve
           </button>
           <button
-            onClick={() => handleReject(rowData.loanId)}
+            onClick={() => handleReject(rowData)}
             className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
             disabled={rowData.approvalStatus === "No"}
           >
@@ -174,6 +181,8 @@ const ApproveLoans = () => {
       </div>
     </div>
   );
+
+  console.log("approveLoansData", !approveLoansData[0]?.loanId);
 
   return (
     <div className={`flex flex-col gap-3`}>
@@ -200,12 +209,18 @@ const ApproveLoans = () => {
           />
         </div>
       </ContainerTile>
-      <ExpandableTable
-        columns={columns}
-        data={approveLoansData}
-        renderExpandedRow={renderExpandedRow}
-        loading={loading}
-      />
+      {approveLoansData.length > 0 ? (
+        <ExpandableTable
+          columns={columns}
+          data={approveLoansData}
+          renderExpandedRow={renderExpandedRow}
+          loading={loading}
+        />
+      ) : (
+        <ContainerTile className={`text-center`} loading={loading}>
+          No loans to approve
+        </ContainerTile>
+      )}
     </div>
   );
 };

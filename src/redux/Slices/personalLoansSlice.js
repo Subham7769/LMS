@@ -62,7 +62,7 @@ export const getLoanOffers = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_PRODUCT_READ_LOAN_OFFERS}/${
+        `${import.meta.env.VITE_PRODUCT_READ_LOAN_OFFERS}${
           loanOfferFields.loanProductId
         }/caching/${loanOfferFields.uid}`,
         {
@@ -196,26 +196,24 @@ export const approveLoan = createAsyncThunk(
 
 export const rejectLoan = createAsyncThunk(
   "personalLoans/rejectLoan",
-  async (loanId, { rejectWithValue }) => {
+  async (rejectLoanPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_REJECT}/${loanId}/REJECT`;
+    const url = `${import.meta.env.VITE_LOAN_REJECT}`;
 
     try {
       const response = await fetch(url, {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(proceedPayload),
+        body: JSON.stringify(rejectLoanPayload),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to transfer");
       }
-      const responseData = await response.json();
-      return responseData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -258,7 +256,7 @@ export const getLoanHistoryByUid = createAsyncThunk(
       const response = await fetch(
         `${
           import.meta.env.VITE_PRODUCT_READ_LOAN_HISTORY_BY_UID
-        }/${uid}/pending-loans`,
+        }${uid}/all-loans`,
         {
           method: "GET",
           headers: {
@@ -552,7 +550,7 @@ const personalLoansSlice = createSlice({
         state.loanOfferFields.loanProductId =
           state.addLoanData.generalDetails.loanProductId;
         state.loanOfferFields.uid = state.addLoanData.generalDetails.borrowerId;
-        toast.success("Details submittted successfully");
+        toast.success("Offer generated successfully");
       })
       .addCase(submitLoan.rejected, (state, action) => {
         state.loading = false;
@@ -604,9 +602,16 @@ const personalLoansSlice = createSlice({
       })
       .addCase(getLoansByUid.fulfilled, (state, action) => {
         state.loading = false;
-        state.approveLoans = Array.isArray(action.payload)
+
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
           ? action.payload
           : [action.payload];
+
+        // Check if loanId is null in each object and filter accordingly
+        state.approveLoans = payload.some((item) => item.loanId === null)
+          ? [] // Set to an empty array if any loanId is null
+          : payload;
       })
       .addCase(getLoansByUid.rejected, (state, action) => {
         state.loading = false;
@@ -658,7 +663,15 @@ const personalLoansSlice = createSlice({
       })
       .addCase(getLoanHistoryByUid.fulfilled, (state, action) => {
         state.loading = false;
-        state.loanHistory = action.payload;
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+
+        // Check if loanId is null in each object and filter accordingly
+        state.loanHistory = payload.some((item) => item.loanId === null)
+          ? [] // Set to an empty array if any loanId is null
+          : payload;
       })
       .addCase(getLoanHistoryByUid.rejected, (state, action) => {
         state.loading = false;
