@@ -274,7 +274,6 @@ const personalRepaymentsSlice = createSlice({
       .addCase(submitRepayment.fulfilled, (state, action) => {
         state.loading = false;
         toast.success("Repayment Submitted Successfully!");
-
       })
       .addCase(submitRepayment.rejected, (state, action) => {
         state.loading = false;

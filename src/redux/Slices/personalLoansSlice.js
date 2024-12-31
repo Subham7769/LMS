@@ -32,7 +32,7 @@ export const submitLoan = createAsyncThunk(
   "personalLoans/submitLoan",
   async (generalDetails, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_SUBMIT_CREATE}`;
+    const url = `${import.meta.env.VITE_LOAN_SUBMIT_CREATE_PERSONAL}`;
 
     try {
       const response = await fetch(url, {
@@ -62,7 +62,7 @@ export const getLoanOffers = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_PRODUCT_READ_LOAN_OFFERS}${
+        `${import.meta.env.VITE_LOAN_READ_LOAN_OFFERS_PERSONAL}${
           loanOfferFields.loanProductId
         }/caching/${loanOfferFields.uid}`,
         {
@@ -88,7 +88,9 @@ export const handleProceed = createAsyncThunk(
   "personalLoans/handleProceed",
   async ({ proceedPayload, uid }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_SUBMIT_PUT}${uid}/submit-loan`;
+    const url = `${
+      import.meta.env.VITE_LOAN_SUBMIT_PUT_PERSONAL
+    }${uid}/submit-loan`;
 
     try {
       const response = await fetch(url, {
@@ -119,7 +121,7 @@ export const getPendingLoans = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_PRODUCT_READ_LOAN_PENDING
+          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_PERSONAL
         }?page=${page}&size=${size}`,
         {
           method: "GET",
@@ -147,7 +149,7 @@ export const getLoansByUid = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_PRODUCT_READ_LOAN_PENDING_BY_UID
+          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_BY_UID_PERSONAL
         }/${uid}/pending-loans`,
         {
           method: "GET",
@@ -172,7 +174,7 @@ export const approveLoan = createAsyncThunk(
   "personalLoans/approveLoan",
   async (approveLoanPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_APPROVE}`;
+    const url = `${import.meta.env.VITE_LOAN_APPROVE_PERSONAL}`;
 
     try {
       const response = await fetch(url, {
@@ -198,7 +200,7 @@ export const rejectLoan = createAsyncThunk(
   "personalLoans/rejectLoan",
   async (rejectLoanPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_REJECT}`;
+    const url = `${import.meta.env.VITE_LOAN_REJECT_PERSONAL}`;
 
     try {
       const response = await fetch(url, {
@@ -227,7 +229,7 @@ export const getLoanHistory = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_PRODUCT_READ_LOAN_HISTORY
+          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_PERSONAL
         }?page=${page}&size=${size}`,
         {
           method: "GET",
@@ -255,7 +257,7 @@ export const getLoanHistoryByUid = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_PRODUCT_READ_LOAN_HISTORY_BY_UID
+          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_BY_UID_PERSONAL
         }${uid}/all-loans`,
         {
           method: "GET",
@@ -329,164 +331,7 @@ const initialState = {
     loanFiles: [],
   },
   approveLoans: [],
-  loanHistory: [
-    {
-      generalDetails: {
-        loanProduct: "Personal Loan",
-        borrower: "John Doe",
-        disbursedBy: "Bank XYZ",
-        principalAmount: "5000",
-        loanReleaseDate: "2024-01-15",
-        interestMethod: "Flat",
-        loanInterest: "5",
-        interestPer: "Yearly",
-        loanDuration: "12",
-        durationPer: "Months",
-        repaymentCycle: "Monthly",
-        numberOfTenure: "12",
-      },
-      advanceSettings: {
-        decimalPlaces: "2",
-        interestStartDate: "2024-01-20",
-        firstRepaymentDate: "2024-02-01",
-        firstRepaymentAmount: "500",
-        lastRepaymentAmount: "500",
-        overrideMaturityDate: "2025-01-15",
-        overrideRepaymentAmount: "",
-        proRataBasis: "Yes",
-        interestChargeSchedule: "Monthly",
-        principalChargeSchedule: "Monthly",
-        balloonRepaymentAmount: "",
-        moveFirstRepaymentDays: "10",
-      },
-      automatedPayments: {
-        automaticPayments: "Yes",
-        timeToPostBetween: "09:00 - 17:00",
-        cashOrBank: "Bank",
-      },
-      extendLoan: {
-        extendLoanAfterMaturity: "No",
-        extendLoanInterestType: "",
-        calculateInterestOn: "",
-        loanInterestRateAfterMaturity: "",
-        recurringPeriodAfterMaturity: "",
-        per: "",
-        includeFeesAfterMaturity: "No",
-        loanStatusPastMaturity: "Active",
-        applyToDate: "",
-        loanStatus: "Ongoing",
-        selectGuarantors: "Guarantor A",
-        loanTitle: "John's Personal Loan",
-        description: "Loan for personal expenses",
-      },
-      loanFiles: ["file1.pdf", "file2.pdf"],
-      applicationStatus: "Rejected",
-    },
-    {
-      generalDetails: {
-        loanProduct: "Business Loan",
-        borrower: "Jane Smith",
-        disbursedBy: "Bank ABC",
-        principalAmount: "15000",
-        loanReleaseDate: "2024-03-10",
-        interestMethod: "Reducing Balance",
-        loanInterest: "7",
-        interestPer: "Yearly",
-        loanDuration: "24",
-        durationPer: "Months",
-        repaymentCycle: "Quarterly",
-        numberOfTenure: "8",
-      },
-      advanceSettings: {
-        decimalPlaces: "2",
-        interestStartDate: "2024-03-15",
-        firstRepaymentDate: "2024-06-15",
-        firstRepaymentAmount: "2000",
-        lastRepaymentAmount: "2000",
-        overrideMaturityDate: "",
-        overrideRepaymentAmount: "",
-        proRataBasis: "No",
-        interestChargeSchedule: "Quarterly",
-        principalChargeSchedule: "Quarterly",
-        balloonRepaymentAmount: "",
-        moveFirstRepaymentDays: "15",
-      },
-      automatedPayments: {
-        automaticPayments: "No",
-        timeToPostBetween: "",
-        cashOrBank: "Cash",
-      },
-      extendLoan: {
-        extendLoanAfterMaturity: "Yes",
-        extendLoanInterestType: "Fixed",
-        calculateInterestOn: "Principal",
-        loanInterestRateAfterMaturity: "10",
-        recurringPeriodAfterMaturity: "3",
-        per: "Months",
-        includeFeesAfterMaturity: "Yes",
-        loanStatusPastMaturity: "Overdue",
-        applyToDate: "2024-12-31",
-        loanStatus: "Pending",
-        selectGuarantors: "Guarantor B",
-        loanTitle: "Jane's Business Loan",
-        description: "Loan for business expansion",
-      },
-      loanFiles: ["document1.docx", "document2.xlsx"],
-      applicationStatus: "Approved",
-    },
-    {
-      generalDetails: {
-        loanProduct: "Education Loan",
-        borrower: "Alex Johnson",
-        disbursedBy: "Bank PQR",
-        principalAmount: "20000",
-        loanReleaseDate: "2024-06-01",
-        interestMethod: "Flat",
-        loanInterest: "4",
-        interestPer: "Monthly",
-        loanDuration: "36",
-        durationPer: "Months",
-        repaymentCycle: "Monthly",
-        numberOfTenure: "36",
-      },
-      advanceSettings: {
-        decimalPlaces: "2",
-        interestStartDate: "2024-06-10",
-        firstRepaymentDate: "2024-07-10",
-        firstRepaymentAmount: "600",
-        lastRepaymentAmount: "600",
-        overrideMaturityDate: "2027-06-01",
-        overrideRepaymentAmount: "",
-        proRataBasis: "Yes",
-        interestChargeSchedule: "Monthly",
-        principalChargeSchedule: "Monthly",
-        balloonRepaymentAmount: "",
-        moveFirstRepaymentDays: "10",
-      },
-      automatedPayments: {
-        automaticPayments: "Yes",
-        timeToPostBetween: "08:00 - 20:00",
-        cashOrBank: "Bank",
-      },
-      extendLoan: {
-        extendLoanAfterMaturity: "No",
-        extendLoanInterestType: "",
-        calculateInterestOn: "",
-        loanInterestRateAfterMaturity: "",
-        recurringPeriodAfterMaturity: "",
-        per: "",
-        includeFeesAfterMaturity: "No",
-        loanStatusPastMaturity: "Closed",
-        applyToDate: "",
-        loanStatus: "Completed",
-        selectGuarantors: "",
-        loanTitle: "Alex's Education Loan",
-        description: "Loan for higher studies",
-      },
-      loanFiles: ["certificate1.jpg", "certificate2.png"],
-      applicationStatus: "Approved",
-    },
-  ],
+  loanHistory: [],
   loanConfigData: {},
   loanProductOptions: [],
   loanOfferFields: {

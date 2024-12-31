@@ -237,10 +237,10 @@ const recoverySlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           caseId: newListItem.name,
           href: newListItem.href,
-          openedOn: RecoveryList[index]?.openedOn || "14/09/2022",
-          recoveredAmount: RecoveryList[index]?.recoveredAmount || "$50M",
-          outstandingAmount: RecoveryList[index]?.outstandingAmount || "$20M",
-          status: RecoveryList[index]?.status || "Active",
+          // openedOn: RecoveryList[index]?.openedOn || "14/09/2022",
+          // recoveredAmount: RecoveryList[index]?.recoveredAmount || "$50M",
+          // outstandingAmount: RecoveryList[index]?.outstandingAmount || "$20M",
+          // status: RecoveryList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to RecoveryList

@@ -85,7 +85,7 @@ const ExpandableTable = ({
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${
                           col.field.toLowerCase().includes("status") &&
-                          (rowData[col.field] === "Rejected" ||
+                          (rowData[col.field] === "REJECTED" ||
                           rowData[col.field] === "DEFAULTER"
                             ? "bg-red-100 text-red-800"
                             : rowData[col.field] === "Pending" ||

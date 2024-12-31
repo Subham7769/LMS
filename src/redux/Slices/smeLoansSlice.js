@@ -42,25 +42,32 @@ const initialState = {
       durationPer: "",
       repaymentCycle: "",
       numberOfTenure: "",
+      reasonForBorrowing: "",
     },
-    advanceSettings: {
-      decimalPlaces: "",
-      interestStartDate: "",
-      firstRepaymentDate: "",
-      firstRepaymentAmount: "",
-      lastRepaymentAmount: "",
-      overrideMaturityDate: "",
-      overrideRepaymentAmount: "",
-      proRataBasis: "",
-      interestChargeSchedule: "",
-      principalChargeSchedule: "",
-      balloonRepaymentAmount: "",
-      moveFirstRepaymentDays: "",
+    profomaDetails: {
+      orderNo: "",
+      orderDate: "",
+      amountOfOrder: "",
+      orderExpiryDate: "",
+      proformaInvoiceNo: "",
+      proformaInvoiceDate: "",
+      amountofProforma: "",
+      proformaExpectedDateOfPayment: "",
+      invoiceNo: "",
+      invoiceDate: "",
+      amountOfInvoice: "",
+      invoiceExpectedDateOfPayment: "",
     },
-    automatedPayments: {
-      automaticPayments: "",
-      timeToPostBetween: "",
-      cashOrBank: "",
+    supplierDetails: {
+      nameOfCompany: "",
+      industry: "",
+      natureOfBusiness: "",
+      location: "",
+      province: "",
+      country: "",
+      contactperson: "",
+      position: "",
+      cellPhoneNumber: "",
     },
     extendLoan: {
       extendLoanAfterMaturity: "",
@@ -95,7 +102,7 @@ const initialState = {
         repaymentCycle: "Monthly",
         numberOfTenure: "12",
       },
-      advanceSettings: {
+      profomaDetails: {
         decimalPlaces: "2",
         interestStartDate: "2024-01-20",
         firstRepaymentDate: "2024-02-01",
@@ -109,7 +116,7 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      automatedPayments: {
+      supplierDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "09:00 - 17:00",
         cashOrBank: "Bank",
@@ -146,7 +153,7 @@ const initialState = {
         repaymentCycle: "Quarterly",
         numberOfTenure: "8",
       },
-      advanceSettings: {
+      profomaDetails: {
         decimalPlaces: "2",
         interestStartDate: "2024-03-15",
         firstRepaymentDate: "2024-06-15",
@@ -160,7 +167,7 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "15",
       },
-      automatedPayments: {
+      supplierDetails: {
         automaticPayments: "No",
         timeToPostBetween: "",
         cashOrBank: "Cash",
@@ -197,7 +204,7 @@ const initialState = {
         repaymentCycle: "Monthly",
         numberOfTenure: "36",
       },
-      advanceSettings: {
+      profomaDetails: {
         decimalPlaces: "2",
         interestStartDate: "2024-06-10",
         firstRepaymentDate: "2024-07-10",
@@ -211,7 +218,7 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      automatedPayments: {
+      supplierDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "08:00 - 20:00",
         cashOrBank: "Bank",
@@ -250,7 +257,7 @@ const initialState = {
         repaymentCycle: "Monthly",
         numberOfTenure: "12",
       },
-      advanceSettings: {
+      profomaDetails: {
         decimalPlaces: "2",
         interestStartDate: "2024-01-20",
         firstRepaymentDate: "2024-02-01",
@@ -264,7 +271,7 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      automatedPayments: {
+      supplierDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "09:00 - 17:00",
         cashOrBank: "Bank",
@@ -302,7 +309,7 @@ const initialState = {
         repaymentCycle: "Quarterly",
         numberOfTenure: "8",
       },
-      advanceSettings: {
+      profomaDetails: {
         decimalPlaces: "2",
         interestStartDate: "2024-03-15",
         firstRepaymentDate: "2024-06-15",
@@ -316,7 +323,7 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "15",
       },
-      automatedPayments: {
+      supplierDetails: {
         automaticPayments: "No",
         timeToPostBetween: "",
         cashOrBank: "Cash",
@@ -354,7 +361,7 @@ const initialState = {
         repaymentCycle: "Monthly",
         numberOfTenure: "36",
       },
-      advanceSettings: {
+      profomaDetails: {
         decimalPlaces: "2",
         interestStartDate: "2024-06-10",
         firstRepaymentDate: "2024-07-10",
@@ -368,7 +375,7 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      automatedPayments: {
+      supplierDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "08:00 - 20:00",
         cashOrBank: "Bank",
@@ -424,7 +431,7 @@ const smeLoansSlice = createSlice({
       .addCase(fetchLoanProductData.fulfilled, (state, action) => {
         state.loading = false;
         const updatedLoanProductOptions = action.payload
-          .filter((item) => item.eligibleCustomerType === "CONSUMER")
+          .filter((item) => item.eligibleCustomerType === "CORPORATE")
           .map((item) => ({
             label: item.productType.replace(/_/g, " "),
             value: item.loanProductId,

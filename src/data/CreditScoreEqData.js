@@ -33,10 +33,10 @@ export const CreditScoreEqStats = [
 
 export const HeaderList = [
   "Name",
-  "Created On",
-  "Open Loans",
-  "Total Disbursed Principal",
-  "Status",
+  // "Created On",
+  // "Open Loans",
+  // "Total Disbursed Principal",
+  // "Status",
 ];
 
 export const CreditScoreEqList = [

@@ -30,10 +30,10 @@ export const DebtBurdenStats = [
 
 export const HeaderList = [
   "Case ID",
-  "Opened On",
-  "Debt Amount",
-  "Outstanding Amount",
-  "Status",
+  // "Opened On",
+  // "Debt Amount",
+  // "Outstanding Amount",
+  // "Status",
 ];
 
 export const DebtBurdenList = [

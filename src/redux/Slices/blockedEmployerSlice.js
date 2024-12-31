@@ -277,13 +277,13 @@ const blockedEmployerSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           employerId: newListItem.name,
           href: newListItem.href,
-          blockedOn: BlockedEmployerList[index]?.blockedOn || "14/09/2022",
-          reasonForBlocking:
-            BlockedEmployerList[index]?.reasonForBlocking ||
-            "Fraudulent Activities",
-          totalBlockedDuration:
-            BlockedEmployerList[index]?.totalBlockedDuration || "8 months",
-          status: BlockedEmployerList[index]?.status || "Inactive",
+          // blockedOn: BlockedEmployerList[index]?.blockedOn || "14/09/2022",
+          // reasonForBlocking:
+          //   BlockedEmployerList[index]?.reasonForBlocking ||
+          //   "Fraudulent Activities",
+          // totalBlockedDuration:
+          //   BlockedEmployerList[index]?.totalBlockedDuration || "8 months",
+          // status: BlockedEmployerList[index]?.status || "Inactive",
         }));
 
         // Assign the updatedList to BlockedEmployerList

@@ -291,11 +291,11 @@ const tclSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: TCLList[index]?.createdOn || "14/09/2022",
-          openLoans: TCLList[index]?.openLoans || "1490",
-          totalDisbursedPrincipal:
-            TCLList[index]?.totalDisbursedPrincipal || "$750M",
-          status: TCLList[index]?.status || "Active",
+          // createdOn: TCLList[index]?.createdOn || "14/09/2022",
+          // openLoans: TCLList[index]?.openLoans || "1490",
+          // totalDisbursedPrincipal:
+          //   TCLList[index]?.totalDisbursedPrincipal || "$750M",
+          // status: TCLList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to TCLList

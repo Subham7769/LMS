@@ -227,36 +227,36 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
-  // {
-  //   title: "Global Config",
-  //   href: "/loan/global-config/liabilities-matrix",
-  //   icon: "Cog6ToothIcon",
-  //   current: false,
-  //   submenu: true,
-  //   submenuItems: [
-  //     {
-  //       name: "Liabilities Matrix",
-  //       href: "/loan/global-config/liabilities-matrix",
-  //       current: false,
-  //     },
-  //     {
-  //       name: "Risk Grading Matrix",
-  //       href: "/loan/global-config/risk-grading-matrix",
-  //       current: false,
-  //     },
-  //     {
-  //       name: "Minimum Expense",
-  //       href: "/loan/global-config/min-expense",
-  //       current: false,
-  //     },
-  //     {
-  //       name: "Notification Text",
-  //       href: "/loan/global-config/notification-text",
-  //       current: false,
-  //     },
-  //   ],
-  //   isOpen: false,
-  // },
+  {
+    title: "Global Config",
+    href: "/loan/global-config/risk-grading-matrix",
+    icon: "Cog6ToothIcon",
+    current: false,
+    submenu: true,
+    submenuItems: [
+      // {
+      //   name: "Liabilities Matrix",
+      //   href: "/loan/global-config/liabilities-matrix",
+      //   current: false,
+      // },
+      {
+        name: "Risk Grading Matrix",
+        href: "/loan/global-config/risk-grading-matrix",
+        current: false,
+      },
+      {
+        name: "Minimum Expense",
+        href: "/loan/global-config/min-expense",
+        current: false,
+      },
+      {
+        name: "Notification Text",
+        href: "/loan/global-config/notification-text",
+        current: false,
+      },
+    ],
+    isOpen: false,
+  },
   {
     title: "Customer Care",
     href: "/loan/customer-care",

@@ -17,14 +17,14 @@ const DynamicRacPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={RacStats} />
+      {/* <StatContainer stats={RacStats} /> */}
       <ListTable
         ListName="Dynamic RAC List"
         ListHeader={HeaderList}
         ListItem={RACList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

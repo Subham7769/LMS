@@ -27,6 +27,19 @@ const ApproveLoans = () => {
 
   const approveLoansData = transformData(approveLoans);
 
+  const handleReject = async (rowData) => {
+      
+      const rejectLoanPayload = {
+        amount: rowData.principalAmount,
+        applicationStatus: "REJECTED",
+        loanId: rowData.loanId,
+        uid: rowData.uid,
+      };
+      // await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
+      // await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+      // navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    };
+
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrower" },

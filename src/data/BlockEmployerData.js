@@ -30,10 +30,10 @@ export const BlockedEmployerStats = [
 
 export const HeaderList = [
   "Employer ID",
-  "Blocked On",
-  "Reason for Blocking",
-  "Total Blocked Duration",
-  "Status",
+  // "Blocked On",
+  // "Reason for Blocking",
+  // "Total Blocked Duration",
+  // "Status",
 ];
 
 export const BlockedEmployerList = [

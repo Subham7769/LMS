@@ -24,8 +24,9 @@ function transformData(inputArray) {
     durationPer: item?.durationPer,
     repaymentCycle: item?.repaymentCycle,
     numberOfTenure: item?.numberOfTenure,
-    loanFiles: item.loanFiles,
-    applicationStatus: item.applicationStatus,
+    loanFiles: item?.loanFiles,
+    applicationStatus: item?.applicationStatus,
+    rejectionReason: item?.rejectionReason,
   }));
 }
 
@@ -115,6 +116,12 @@ const LoanHistory = () => {
           </p>
           <p className="text-sm text-gray-600">{rowData.durationPer}</p>
         </div>
+        <div className="flex justify-between border-r border-gray-300 py-2 px-4">
+          <p className="text-sm font-semibold text-gray-600">
+            {rowData.applicationStatus === "REJECTED" ? "Rejection Reason" : ""}
+          </p>
+          <p className="text-sm text-gray-600">{rowData?.rejectionReason}</p>
+        </div>
       </div>
     </div>
   );
@@ -144,12 +151,18 @@ const LoanHistory = () => {
           />
         </div>
       </ContainerTile>
-      <ExpandableTable
-        columns={columns}
-        data={loanHistoryData}
-        renderExpandedRow={renderExpandedRow}
-        loading={loading}
-      />
+      {loanHistoryData.length > 0 ? (
+        <ExpandableTable
+          columns={columns}
+          data={loanHistoryData}
+          renderExpandedRow={renderExpandedRow}
+          loading={loading}
+        />
+      ) : (
+        <ContainerTile className={`text-center`} loading={loading}>
+          No loans history found
+        </ContainerTile>
+      )}
     </div>
   );
 };

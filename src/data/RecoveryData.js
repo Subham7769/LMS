@@ -30,10 +30,10 @@ export const RecoveryStats = [
 
 export const RecoveryHeaderList = [
   "Case ID",
-  "Opened On",
-  "Recovered Amount",
-  "Outstanding Amount",
-  "Status",
+  // "Opened On",
+  // "Recovered Amount",
+  // "Outstanding Amount",
+  // "Status",
 ];
 
 export const RecoveryList = [

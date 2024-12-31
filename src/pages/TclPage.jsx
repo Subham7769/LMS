@@ -17,14 +17,14 @@ const TclPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={TclStats} />
+      {/* <StatContainer stats={TclStats} /> */}
       <ListTable
         ListName={"TCL List"}
         ListHeader={HeaderList}
         ListItem={TCLList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

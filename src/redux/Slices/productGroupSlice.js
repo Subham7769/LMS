@@ -260,11 +260,11 @@ const productGroupSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: ProductGroupList[index]?.createdOn || "14/09/2022",
-          openLoans: ProductGroupList[index]?.openLoans || "2367",
-          totalDisbursedPrincipal:
-            ProductGroupList[index]?.totalDisbursedPrincipal || "$234M",
-          status: ProductGroupList[index]?.status || "Inactive",
+          // createdOn: ProductGroupList[index]?.createdOn || "14/09/2022",
+          // openLoans: ProductGroupList[index]?.openLoans || "2367",
+          // totalDisbursedPrincipal:
+          //   ProductGroupList[index]?.totalDisbursedPrincipal || "$234M",
+          // status: ProductGroupList[index]?.status || "Inactive",
         }));
 
         // Assign the updatedList to ProductGroupList
