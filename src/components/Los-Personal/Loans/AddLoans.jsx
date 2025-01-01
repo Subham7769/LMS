@@ -3,12 +3,12 @@ import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import { submitLoan } from "../../../redux/Slices/personalLoansSlice";
+import { resetAddLoanData, submitLoan } from "../../../redux/Slices/personalLoansSlice";
 import { useNavigate } from "react-router-dom";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { addLoanData } = useSelector((state) => state.personalLoans);
   const isValid = useSelector((state) => state.validation.isValid);
 
@@ -35,7 +35,7 @@ const AddLoans = () => {
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     if (isValid) {
       await dispatch(submitLoan(addLoanData.generalDetails)).unwrap();
-      navigate('/loan/loan-origination-system/personal/loans/loan-offers');
+      navigate("/loan/loan-origination-system/personal/loans/loan-offers");
     }
   };
 
@@ -43,7 +43,13 @@ const AddLoans = () => {
     <>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Save Button */}
-      <div className="text-right mt-5">
+      <div className="flex justify-end mt-5 gap-x-5">
+        <Button
+          buttonName="Reset"
+          onClick={() => dispatch(resetAddLoanData())}
+          rectangle={true}
+          className={"bg-red-600 hover:bg-red-500"}
+        />
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>

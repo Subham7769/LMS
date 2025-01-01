@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  getFullLoanDetails,
   getLoanHistory,
   getLoanHistoryByUid,
 } from "../../../redux/Slices/personalLoansSlice";
@@ -10,6 +11,8 @@ import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import Pagination from "../../Common/Pagination/Pagination";
+import FullLoanDetailModal from "./FullLoanDetailModal";
+import { convertDate } from "../../../utils/convertDate";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -17,7 +20,7 @@ function transformData(inputArray) {
     borrower: item?.borrowerName,
     disbursedBy: item?.disbursedBy,
     principalAmount: item?.principalAmount,
-    loanReleaseDate: item?.loanReleaseDate,
+    loanReleaseDate: convertDate(item?.loanReleaseDate),
     interestMethod: item?.interestMethod,
     loanInterest: item?.loanInterest,
     interestPer: item?.interestPer,
@@ -28,17 +31,19 @@ function transformData(inputArray) {
     loanFiles: item?.loanFiles,
     applicationStatus: item?.applicationStatus,
     rejectionReason: item?.rejectionReason,
+    loanId: item?.loanId,
+    uid: item?.uid,
   }));
 }
 
 const LoanHistory = () => {
   const dispatch = useDispatch();
-  const { loanHistory, loading, loanHistoryTotalElements } = useSelector(
-    (state) => state.personalLoans
-  );
+  const { loanHistory, loading, loanHistoryTotalElements, fullLoanDetails } =
+    useSelector((state) => state.personalLoans);
   const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
   const [uid, setUid] = useState("");
   const [borrowerOptions, setBorrowerOptions] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
@@ -83,6 +88,17 @@ const LoanHistory = () => {
     }
   };
 
+  const handleFullLoanDetails = async (loanId, uid) => {
+    await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
+    if (!loading) {
+      setShowModal(true);
+    }
+  };
+
+  const closeFullLoanDetailModal = () => {
+    setShowModal(false);
+  };
+
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrower" },
@@ -113,7 +129,7 @@ const LoanHistory = () => {
           </p>
           <p className="text-sm text-gray-600">{rowData.interestPer}</p>
         </div>
-        <div className="flex justify-between  py-2 px-4">
+        <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">
             Repayment Cycle:
           </p>
@@ -141,6 +157,13 @@ const LoanHistory = () => {
           </p>
           <p className="text-sm text-gray-600">{rowData?.rejectionReason}</p>
         </div>
+      </div>
+      <div className="text-right">
+        <Button
+          buttonName={"More Details"}
+          onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+          rectangle={true}
+        />
       </div>
     </div>
   );
@@ -189,6 +212,11 @@ const LoanHistory = () => {
           No loans history found
         </ContainerTile>
       )}
+      <FullLoanDetailModal
+        isOpen={showModal}
+        onClose={closeFullLoanDetailModal}
+        loanDetails={fullLoanDetails}
+      />
     </div>
   );
 };

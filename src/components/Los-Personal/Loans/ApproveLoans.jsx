@@ -14,6 +14,7 @@ import Button from "../../Common/Button/Button";
 import { useNavigate } from "react-router-dom";
 import LoanRejectModal from "./LoanRejectModal";
 import Pagination from "../../Common/Pagination/Pagination";
+import { convertDate } from "../../../utils/convertDate";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -21,7 +22,7 @@ function transformData(inputArray) {
     borrower: item?.borrowerName,
     disbursedBy: item?.disbursedBy,
     principalAmount: item?.principalAmount,
-    loanReleaseDate: item?.loanReleaseDate,
+    loanReleaseDate: convertDate(item?.loanReleaseDate),
     interestMethod: item?.interestMethod,
     loanInterest: item?.loanInterest,
     interestPer: item?.perLoanInterest,

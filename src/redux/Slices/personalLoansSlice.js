@@ -278,6 +278,34 @@ export const getLoanHistoryByUid = createAsyncThunk(
   }
 );
 
+export const getFullLoanDetails = createAsyncThunk(
+  "personalLoans/getFullLoanDetails",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_FULL_LOAN_DETAILS_BY_ID_PERSONAL
+        }${uid}/loan-details/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   addLoanData: {
     generalDetails: {
@@ -340,6 +368,7 @@ const initialState = {
     loanProductId: "",
     uid: "",
   },
+  fullLoanDetails: {},
   error: null,
   loading: false,
 };
@@ -364,6 +393,9 @@ const personalLoansSlice = createSlice({
     updateLoanOfferFields: (state, action) => {
       const { name, value } = action.payload;
       state.loanOfferFields[name] = value; // Dynamically update the field in loanConfigFields
+    },
+    resetAddLoanData: (state, action) => {
+      state.addLoanData = initialState.addLoanData;
     },
   },
   extraReducers: (builder) => {
@@ -397,6 +429,7 @@ const personalLoansSlice = createSlice({
         state.loanOfferFields.loanProductId =
           state.addLoanData.generalDetails.loanProductId;
         state.loanOfferFields.uid = state.addLoanData.generalDetails.borrowerId;
+        state.addLoanData = initialState.addLoanData;
         toast.success("Offer generated successfully");
       })
       .addCase(submitLoan.rejected, (state, action) => {
@@ -526,11 +559,24 @@ const personalLoansSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getFullLoanDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getFullLoanDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.fullLoanDetails = action.payload;        
+      })
+      .addCase(getFullLoanDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });
 
-export const { updateLoanField, updateLoanOfferFields } =
+export const { updateLoanField, updateLoanOfferFields, resetAddLoanData } =
   personalLoansSlice.actions;
 
 export default personalLoansSlice.reducer;
