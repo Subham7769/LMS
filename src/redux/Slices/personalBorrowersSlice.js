@@ -31,12 +31,13 @@ export const registerBorrower = createAsyncThunk(
 
 // Fetch All Borrowers
 export const fetchAllBorrowers = createAsyncThunk(
-  "borrowers/fetchAll", // action type
+  "borrowers/fetchAllBorrowers", // action type
   async ({ page = 0, size = 12 }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
+      const username = localStorage.getItem("username");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_READ_ALL_PERSONAL_BORROWER}?page=${page}&size=${size}`,
+        `${import.meta.env.VITE_BORROWERS_READ_ALL_BY_LOAN_OFFICER_PERSONAL_BORROWER}${username}?page=${page}&size=${size}`,
         {
           method: "GET",
           headers: {
@@ -49,6 +50,37 @@ export const fetchAllBorrowers = createAsyncThunk(
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to fetch borrowers");
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Fetch Borrower By Field
+export const fetchBorrowerByField = createAsyncThunk(
+  "borrowers/fetchBorrowerByField", // action type
+  async ({ field, value,}, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const username = localStorage.getItem("username");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_SEARCH_BY_FIELD}${username}?${field}=${value}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch borrower by field");
       }
 
       const data = await response.json();
@@ -255,7 +287,6 @@ const borrowersSlice = createSlice({
       })
       .addCase(registerBorrower.fulfilled, (state, action) => {
         state.loading = false;
-        // state.borrower = action.payload; // Store the borrower data
         toast.success("Borrower Registered Successfully");
       })
       .addCase(registerBorrower.rejected, (state, action) => {
@@ -275,6 +306,19 @@ const borrowersSlice = createSlice({
       .addCase(fetchAllBorrowers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchBorrowerByField.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(fetchBorrowerByField.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.allBorrowersData = action.payload.content;
+      })
+      .addCase(fetchBorrowerByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(changeBorrowerStatus.pending, (state) => {
