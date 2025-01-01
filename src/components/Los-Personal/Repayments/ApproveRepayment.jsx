@@ -4,6 +4,7 @@ import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import Button from "../../Common/Button/Button";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputText from "../../Common/InputText/InputText";
 import { loanOfficer, ApproveRepaymentColumns } from "../../../data/LosData";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,25 +15,42 @@ import {
 
 const ApproveRepayment = () => {
   const dispatch = useDispatch();
-  const { approveRepaymentData,loading, error } = useSelector(
+  const { approveRepaymentData, loading, error } = useSelector(
     (state) => state.personalRepayments
   );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredRepayments, setFilteredRepayments] =
+    useState(approveRepaymentData);
+    
+    useEffect(() => {
+      const updatedRepayments = approveRepaymentData.filter((item) =>
+        [
+          item.amount,
+          item.userId,
+          item.method,
+          item.collectionBy,
+          item.accounting,
+        ].some((field) =>
+          field && field.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+      setFilteredRepayments(updatedRepayments);
+    }, [searchTerm, approveRepaymentData]);
+    
 
-useEffect(()=>{
-  if (approveRepaymentData.length < 1) {
-    dispatch(getRepayments({ pageSize : 10, pageNumber : 0}));
-  }
-},[dispatch])
+  useEffect(() => {
+    dispatch(getRepayments({ pageSize: 10, pageNumber: 0 }));
+  }, [dispatch]);
 
   const handleApprove = (transactionId) => {
-    dispatch(approveRepayment({ transactionId })).unwrap()
-    dispatch(getRepayments({ pageSize : 10, pageNumber : 0}))
+    dispatch(approveRepayment({ transactionId })).unwrap();
+    dispatch(getRepayments({ pageSize: 10, pageNumber: 0 }));
   };
+
   const handleReject = (transactionId) => {
-    dispatch(rejectRepayment({ transactionId })).unwrap()
-    dispatch(getRepayments({ pageSize : 10, pageNumber : 0}))
+    dispatch(rejectRepayment({ transactionId })).unwrap();
+    dispatch(getRepayments({ pageSize: 10, pageNumber: 0 }));
   };
-  const [allStaff, setAllStaff] = useState("");
 
   const renderExpandedRow = (rowData) => (
     <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
@@ -86,26 +104,32 @@ useEffect(()=>{
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[80%]">
-        <InputSelect
-          labelName="All Staff"
-          inputName="allStaff"
-          inputOptions={loanOfficer}
-          inputValue={allStaff}
-          onChange={(e) => setAllStaff(e.target.value)}
-        />
-
+        <div className="w-[95%]">
+          {/* <InputSelect
+            labelName="All Staff"
+            inputName="allStaff"
+            inputOptions={loanOfficer}
+            inputValue={allStaff}
+            onChange={(e) => setAllStaff(e.target.value)}
+          /> */}
+          <InputText
+            labelName={"Search"}
+            inputName={"searchTerm"}
+            inputValue={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeHolder={`Enter Collected By, Method, Accounting,User Id,Amount`}
+          />
         </div>
         <div className="flex gap-5 justify-end">
-          <Button
+          {/* <Button
             buttonName={"Search"}
             onClick={() => {}}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
-          />
+          /> */}
           <Button
             buttonName={"Reset"}
-            onClick={() => {}}
+            onClick={() => setSearchTerm("")}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
           />
@@ -114,7 +138,7 @@ useEffect(()=>{
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}
-        data={approveRepaymentData}
+        data={filteredRepayments}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
         error={error}

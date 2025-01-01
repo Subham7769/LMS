@@ -15,7 +15,7 @@ import {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
   removeBulkRepaymentRow,
-  submitRepayment,
+  uploadRepayment,
   getOpenLoans,
   fetchClosingBalance,
 } from "../../../redux/Slices/personalRepaymentsSlice";
@@ -87,6 +87,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleSelectChange(e.target.value, rowIndex, "loan")
                   }
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center w-1/12">
@@ -97,6 +98,7 @@ const AddBulkRepayment = () => {
                     handleChange(e.target.value, rowIndex, "amount")
                   }
                   loading={loading}
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center">
@@ -107,6 +109,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "method")
                   }
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center w-1/12">
@@ -116,6 +119,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "collectionDate")
                   }
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center ">
@@ -128,6 +132,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "collectionBy")
                   }
+                  isValidation={true}
                 /> */
                 }
 
@@ -137,6 +142,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "collectionBy")
                   }
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center">
@@ -146,6 +152,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "description")
                   }
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center w-1/12">
@@ -156,6 +163,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "accounting")
                   }
+                  isValidation={true}
                 />
               </td>
               <td className="py-3 text-center">
@@ -182,7 +190,7 @@ const AddBulkRepayment = () => {
         <Button
           buttonName={"Upload Repayments"}
           onClick={() => {
-            dispatch(submitRepayment({ draftRepaymentDTOList }));
+            dispatch(uploadRepayment({ draftRepaymentDTOList }));
           }}
           rectangle={true}
         />

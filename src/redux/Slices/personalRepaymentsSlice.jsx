@@ -58,8 +58,8 @@ export const fetchClosingBalance = createAsyncThunk(
   }
 );
 // Submit Repayment
-export const submitRepayment = createAsyncThunk(
-  "repayment/submitRepayment",
+export const uploadRepayment = createAsyncThunk(
+  "repayment/uploadRepayment",
   async ({ draftRepaymentDTOList }, { rejectWithValue }) => {
     try {
       const updatedDraftRepaymentDTOList = draftRepaymentDTOList.map(
@@ -69,7 +69,6 @@ export const submitRepayment = createAsyncThunk(
           collectionDate: entry.collectionDate + " 00:00:00",
         })
       );
-      console.log(updatedDraftRepaymentDTOList);
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${import.meta.env.VITE_REPAYMENT_SUBMIT_PERSONAL_BORROWER}`,
@@ -84,6 +83,12 @@ export const submitRepayment = createAsyncThunk(
           }),
         }
       );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(
+          errorData.message || "Failed to fetch open loans."
+        );
+      }
     } catch (error) {
       return rejectWithValue(error.message || "An error occurred");
     }
@@ -97,7 +102,9 @@ export const getRepayments = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_REPAYMENT_GET_ALL_REPAYMENT_PERSONAL_BORROWER}?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+        `${
+          import.meta.env.VITE_REPAYMENT_GET_ALL_CREATED_REPAYMENT_PERSONAL_BORROWER
+        }?pageSize=${pageSize}&pageNumber=${pageNumber}`,
         {
           method: "GET",
           headers: {
@@ -137,10 +144,9 @@ export const approveRepayment = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify([transactionId=transactionId]),
+          body: JSON.stringify([(transactionId = transactionId)]),
         }
       );
-
     } catch (error) {
       return rejectWithValue(error.message || "An error occurred");
     }
@@ -161,16 +167,15 @@ export const rejectRepayment = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify([transactionId=transactionId]),
+          body: JSON.stringify([(transactionId = transactionId)]),
         }
       );
       if (!response.ok) {
         // Check for specific status codes like 500
         if (response.status === 500) {
-          throw new Error('500 Internal Server Error'); 
+          throw new Error("500 Internal Server Error");
         }
       }
-    
     } catch (error) {
       return rejectWithValue(error.message || "An error occurred");
     }
@@ -179,19 +184,19 @@ export const rejectRepayment = createAsyncThunk(
 
 // AsyncThunk for uploading a file
 export const uploadFile = createAsyncThunk(
-  'repayment/uploadFile',
-  async ({fileData}, { rejectWithValue }) => {
+  "repayment/uploadFile",
+  async ({ fileData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-
+      console.log(fileData);
       // Create a FormData object to append the file
       const formData = new FormData();
-      formData.append('file', fileData.file); // Assuming fileData contains a `file` field
+      formData.append("file", fileData); 
 
       const response = await fetch(
         `${import.meta.env.VITE_REPAYMENT_FILE_UPLOAD_PERSONAL_BORROWER}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -199,8 +204,16 @@ export const uploadFile = createAsyncThunk(
         }
       );
 
+      if (!response.ok) {
+        if (response.status === 500) {
+          return rejectWithValue("500 Internal Server Error");
+        }
+        return rejectWithValue("Failed to fetch open loans.");
+      }
     } catch (error) {
-      return rejectWithValue(error.message || 'An error occurred during file upload');
+      return rejectWithValue(
+        error.message || "An error occurred during file upload"
+      );
     }
   }
 );
@@ -267,16 +280,15 @@ const personalRepaymentsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(submitRepayment.pending, (state) => {
+      .addCase(uploadRepayment.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(submitRepayment.fulfilled, (state, action) => {
+      .addCase(uploadRepayment.fulfilled, (state, action) => {
         state.loading = false;
         toast.success("Repayment Submitted Successfully!");
-
       })
-      .addCase(submitRepayment.rejected, (state, action) => {
+      .addCase(uploadRepayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -316,15 +328,14 @@ const personalRepaymentsSlice = createSlice({
       })
       .addCase(getRepayments.fulfilled, (state, action) => {
         state.loading = false;
-        state.approveRepaymentData = action.payload.draftRepaymentDTOList.filter(
-          (item) => item.draftStatus === 'CREATED'
-        );
+        state.approveRepaymentData = action.payload.draftRepaymentDTOList
       })
       .addCase(getRepayments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      // get OpenLoans
       .addCase(getOpenLoans.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -342,6 +353,7 @@ const personalRepaymentsSlice = createSlice({
         state.error = action.payload || "Failed to fetch open loans.";
         toast.error(`API Error : ${action.payload}`);
       })
+      // fetch closing Balance
       .addCase(fetchClosingBalance.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -359,9 +371,10 @@ const personalRepaymentsSlice = createSlice({
       })
       .addCase(fetchClosingBalance.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; 
+        state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      // upload File
       .addCase(uploadFile.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -372,9 +385,8 @@ const personalRepaymentsSlice = createSlice({
       })
       .addCase(uploadFile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'File upload failed';
+        state.error = action.payload || "File upload failed";
         toast.error(`API Error : ${action.payload}`);
-
       });
   },
 });
