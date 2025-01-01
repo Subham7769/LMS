@@ -270,11 +270,11 @@ const creditScoreSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: CreditScoreEqList[index]?.createdOn || "14/09/2022",
-          openLoans: CreditScoreEqList[index]?.openLoans || "2367",
-          totalDisbursedPrincipal:
-            CreditScoreEqList[index]?.totalDisbursedPrincipal || "$234M",
-          status: CreditScoreEqList[index]?.status || "Inactive",
+          // createdOn: CreditScoreEqList[index]?.createdOn || "14/09/2022",
+          // openLoans: CreditScoreEqList[index]?.openLoans || "2367",
+          // totalDisbursedPrincipal:
+          //   CreditScoreEqList[index]?.totalDisbursedPrincipal || "$234M",
+          // status: CreditScoreEqList[index]?.status || "Inactive",
         }));
 
         // Assign the updatedList to CreditScoreEqList

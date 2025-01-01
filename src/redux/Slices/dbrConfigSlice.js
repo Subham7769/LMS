@@ -340,10 +340,10 @@ export const dbrConfigSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           caseId: newListItem.name,
           href: newListItem.href,
-          openedOn: DebtBurdenList[index]?.openedOn || "14/09/2022",
-          debtAmount: DebtBurdenList[index]?.debtAmount || "$100M",
-          outstandingAmount: DebtBurdenList[index]?.outstandingAmount || "$50M",
-          status: DebtBurdenList[index]?.status || "Active",
+          // openedOn: DebtBurdenList[index]?.openedOn || "14/09/2022",
+          // debtAmount: DebtBurdenList[index]?.debtAmount || "$100M",
+          // outstandingAmount: DebtBurdenList[index]?.outstandingAmount || "$50M",
+          // status: DebtBurdenList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to DebtBurdenList

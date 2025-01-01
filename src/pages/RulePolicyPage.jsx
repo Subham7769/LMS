@@ -17,14 +17,14 @@ const RulePolicyPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={RulePolicyStats} />
+      {/* <StatContainer stats={RulePolicyStats} /> */}
       <ListTable
         ListName={"Rule Policy List"}
         ListHeader={HeaderList}
         ListItem={RulePolicyList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

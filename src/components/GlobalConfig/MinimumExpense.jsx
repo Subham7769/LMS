@@ -5,7 +5,7 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
-import { typeOptions, frequencyOptions } from "../../data/OptionsData";
+import { typeOptions, options } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelectNew from "../Common/DynamicSelect/InputSelect";
@@ -120,7 +120,7 @@ const MinimumExpense = () => {
               />
               <InputSelect
                 labelName="Expenses Frequency"
-                inputOptions={frequencyOptions}
+                inputOptions={options}
                 inputName="expensesFrequency"
                 inputValue={expenseForm?.expensesFrequency}
                 onChange={handleInputChange}
@@ -182,7 +182,7 @@ const MinimumExpense = () => {
               />
               <InputSelectNew
                 labelName="Expenses Frequency"
-                inputOptions={frequencyOptions}
+                inputOptions={options}
                 id={`frequency_${expenseData?.id}`}
                 inputName="expensesFrequency"
                 inputValue={expenseData?.expensesFrequency}

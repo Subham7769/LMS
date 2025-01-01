@@ -6,12 +6,13 @@ import {
   approveLoan,
   getLoansByUid,
   getPendingLoans,
-  rejectLoan,
 } from "../../../redux/Slices/personalLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
 import Button from "../../Common/Button/Button";
+import { useNavigate } from "react-router-dom";
+import LoanRejectModal from "./LoanRejectModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -40,6 +41,9 @@ const ApproveLoans = () => {
   const [uid, setUid] = useState("");
   const [borrowerOptions, setBorrowerOptions] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [currentRowData, setCurrentRowData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getPendingLoans({ page: 0, size: 20 }));
@@ -84,17 +88,16 @@ const ApproveLoans = () => {
     };
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
     await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
 
   const handleReject = async (rowData) => {
-    const rejectLoanPayload = {
-      amount: rowData.principalAmount,
-      applicationStatus: "REJECTED",
-      loanId: rowData.loanId,
-      uid: rowData.uid,
-    };
-    await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
-    await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+    setCurrentRowData(rowData);
+    setShowModal(true); // Show modal
+  };
+
+  const closeRejectModal = () => {
+    setShowModal(false);
   };
 
   const columns = [
@@ -182,8 +185,6 @@ const ApproveLoans = () => {
     </div>
   );
 
-  console.log("approveLoansData", !approveLoansData[0]?.loanId);
-
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`grid grid-cols-[85%_15%] gap-5`}>
@@ -221,6 +222,11 @@ const ApproveLoans = () => {
           No loans to approve
         </ContainerTile>
       )}
+      <LoanRejectModal
+        isOpen={showModal}
+        onClose={closeRejectModal}
+        userDetails={currentRowData}
+      />
     </div>
   );
 };

@@ -17,14 +17,14 @@ const CreditScoreETPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={CreditScoreETStats} />
+      {/* <StatContainer stats={CreditScoreETStats} /> */}
       <ListTable
         ListName={"Eligible Tenure List"}
         ListHeader={HeaderList}
         ListItem={CreditScoreETList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

@@ -17,14 +17,14 @@ const BlockedEmployerPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={BlockedEmployerStats} />
+      {/* <StatContainer stats={BlockedEmployerStats} /> */}
       <ListTable
         ListName={"Blocked Employer List"}
         ListHeader={HeaderList}
         ListItem={BlockedEmployerList}
         Searchable={true}
         SearchBy={"employerId"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

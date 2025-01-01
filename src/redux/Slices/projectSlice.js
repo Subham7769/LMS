@@ -405,11 +405,11 @@ const projectSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: ProjectList[index]?.createdOn || "14/09/2022",
-          openLoans: ProjectList[index]?.openLoans || "1490",
-          totalDisbursedPrincipal:
-            ProjectList[index]?.totalDisbursedPrincipal || "$750M",
-          status: ProjectList[index]?.status || "Active",
+          // createdOn: ProjectList[index]?.createdOn || "14/09/2022",
+          // openLoans: ProjectList[index]?.openLoans || "1490",
+          // totalDisbursedPrincipal:
+          //   ProjectList[index]?.totalDisbursedPrincipal || "$750M",
+          // status: ProjectList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to ProjectList

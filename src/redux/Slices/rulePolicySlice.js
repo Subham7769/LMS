@@ -854,11 +854,11 @@ const rulePolicySlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: RulePolicyList[index]?.createdOn || "14/09/2022",
-          openLoans: RulePolicyList[index]?.openLoans || "2367",
-          totalDisbursedPrincipal:
-            RulePolicyList[index]?.totalDisbursedPrincipal || "$234M",
-          status: RulePolicyList[index]?.status || "Inactive",
+          // createdOn: RulePolicyList[index]?.createdOn || "14/09/2022",
+          // openLoans: RulePolicyList[index]?.openLoans || "2367",
+          // totalDisbursedPrincipal:
+          //   RulePolicyList[index]?.totalDisbursedPrincipal || "$234M",
+          // status: RulePolicyList[index]?.status || "Inactive",
         }));
 
         // Assign the updatedList to RulePolicyList

@@ -19,12 +19,8 @@ import {
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
-  const { allBorrowersData } = useSelector(
-    (state) => state.smeBorrowers
-  );
-  const { loanProductOptions } = useSelector(
-    (state) => state.smeLoans
-  );
+  const { allBorrowersData } = useSelector((state) => state.smeBorrowers);
+  const { loanProductOptions } = useSelector((state) => state.smeLoans);
   const [borrowerOptions, setBorrowerOptions] = useState([]);
 
   useEffect(() => {
@@ -163,128 +159,142 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "number",
       validation: true,
     },
+    {
+      labelName: "Reason for Borrowing",
+      inputName: "reasonForBorrowing",
+      type: "text",
+      validation: true,
+    },
   ];
 
-  const advanceSettingsConfig = [
+  const profomaDetailsConfig = [
     {
-      labelName: "Decimal Places",
-      inputName: "decimalPlaces",
-      type: "select",
-      options: [
-        { value: "2", label: "2" },
-        { value: "3", label: "3" },
-      ],
+      labelName: "Order No. ",
+      inputName: "orderNo",
+      type: "number",
       validation: false,
     },
     {
-      labelName: "Interest Start Date",
-      inputName: "interestStartDate",
+      labelName: "Order Date",
+      inputName: "orderDate",
       type: "date",
       validation: false,
     },
     {
-      labelName: "First Repayment Date",
-      inputName: "firstRepaymentDate",
+      labelName: "Amount of Order",
+      inputName: "amountOfOrder",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Order Expiry Date",
+      inputName: "orderExpiryDate",
       type: "date",
       validation: false,
     },
     {
-      labelName: "First Repayment Amount",
-      inputName: "firstRepaymentAmount",
+      labelName: "Proforma Invoice No.",
+      inputName: "proformaInvoiceNo",
       type: "number",
       validation: false,
     },
     {
-      labelName: "Last Repayment Amount",
-      inputName: "lastRepaymentAmount",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Override Maturity Date",
-      inputName: "overrideMaturityDate",
+      labelName: "Proforma Invoice Date",
+      inputName: "proformaInvoiceDate",
       type: "date",
       validation: false,
     },
     {
-      labelName: "Override Each Repayment Amount to",
-      inputName: "overrideRepaymentAmount",
+      labelName: "Amount of Proforma",
+      inputName: "amountofProforma",
       type: "number",
       validation: false,
     },
     {
-      labelName: "Calculate Interest on Pro-Rata Basis",
-      inputName: "proRataBasis",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
+      labelName: "Proforma Expected date of payment",
+      inputName: "proformaExpectedDateOfPayment",
+      type: "date",
       validation: false,
     },
     {
-      labelName: "Interest charge Schedule",
-      inputName: "interestChargeSchedule",
-      type: "select",
-      options: [
-        { value: "Flat", label: "Flat" },
-        { value: "Reducing", label: "Reducing" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Principal charge Schedule",
-      inputName: "principalChargeSchedule",
-      type: "select",
-      options: [
-        { value: "Equal", label: "Equal" },
-        { value: "Balloon", label: "Balloon" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Balloon Repayment Amount",
-      inputName: "balloonRepaymentAmount",
+      labelName: "Invoice No",
+      inputName: "invoiceNo",
       type: "number",
       validation: false,
     },
     {
-      labelName: "Move First Repayment Days",
-      inputName: "moveFirstRepaymentDays",
+      labelName: "Invoice Date ",
+      inputName: "invoiceDate",
+      type: "date",
+      validation: false,
+    },
+    {
+      labelName: "Amount of Invoice",
+      inputName: "amountOfInvoice",
       type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Invoice Expected date of payment ",
+      inputName: "invoiceExpectedDateOfPayment",
+      type: "date",
       validation: false,
     },
   ];
 
-  const automatedPaymentsConfig = [
+  const supplierConfig = [
     {
-      labelName: "Add Automatic Payments?",
-      inputName: "automaticPayments",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
+      labelName: "Name of Company",
+      inputName: "nameOfCompany",
+      type: "text",
       validation: false,
     },
     {
-      labelName: "Post Automatic Payments Between",
-      inputName: "timeToPostBetween",
-      type: "select",
-      options: [
-        { value: "Morning", label: "Morning (6AM-12PM)" },
-        { value: "Afternoon", label: "Afternoon (12PM-6PM)" },
-      ],
+      labelName: "Industry",
+      inputName: "industry",
+      type: "text",
       validation: false,
     },
     {
-      labelName: "Cash or Bank?",
-      inputName: "cashOrBank",
-      type: "select",
-      options: [
-        { value: "Cash", label: "Cash" },
-        { value: "Bank", label: "Bank" },
-      ],
+      labelName: "Nature of Business",
+      inputName: "natureOfBusiness",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Location (Town/City)",
+      inputName: "location",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Province",
+      inputName: "province",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Country",
+      inputName: "country",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Contact Person (full name)",
+      inputName: "contactperson",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Position",
+      inputName: "position",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Cell phone number",
+      inputName: "cellPhoneNumber",
+      type: "number",
       validation: false,
     },
   ];
@@ -415,10 +425,10 @@ const AddLoanFields = ({ addLoanData }) => {
   const generalDetailsInputNames = generalDetailsConfig.map(
     (field) => field.inputName
   );
-  const advanceSettingsInputNames = advanceSettingsConfig.map(
+  const profomaDetailsInputNames = profomaDetailsConfig.map(
     (field) => field.inputName
   );
-  const automatedPaymentsInputNames = automatedPaymentsConfig.map(
+  const supplierInputNames = supplierConfig.map(
     (field) => field.inputName
   );
   const extendLoanInputNames = extendLoanConfig.map((field) => field.inputName);
@@ -522,14 +532,14 @@ const AddLoanFields = ({ addLoanData }) => {
   const generalDetails = (generalDetails) =>
     renderDetails(generalDetails, generalDetailsConfig, "generalDetails");
 
-  const advanceSettings = (advanceSettings) =>
-    renderDetails(advanceSettings, advanceSettingsConfig, "advanceSettings");
+  const profomaDetails = (profomaDetails) =>
+    renderDetails(profomaDetails, profomaDetailsConfig, "profomaDetails");
 
-  const automatedPayments = (automatedPayments) =>
+  const supplierDetails = (supplierDetails) =>
     renderDetails(
-      automatedPayments,
-      automatedPaymentsConfig,
-      "automatedPayments"
+      supplierDetails,
+      supplierConfig,
+      "supplierDetails"
     );
 
   const extendLoan = (extendLoan) =>
@@ -550,18 +560,16 @@ const AddLoanFields = ({ addLoanData }) => {
         error={isValidationFailed(validationError, generalDetailsInputNames)}
       />
       <Accordion
-        heading={"Advance Settings (optional)"}
-        renderExpandedContent={() =>
-          advanceSettings(addLoanData.advanceSettings)
-        }
-        error={isValidationFailed(validationError, advanceSettingsInputNames)}
+        heading={"Profoma Details"}
+        renderExpandedContent={() => profomaDetails(addLoanData.profomaDetails)}
+        error={isValidationFailed(validationError, profomaDetailsInputNames)}
       />
       <Accordion
-        heading={"Automated Payments (optional)"}
+        heading={"Supplier Details"}
         renderExpandedContent={() =>
-          automatedPayments(addLoanData.automatedPayments)
+          supplierDetails(addLoanData.supplierDetails)
         }
-        error={isValidationFailed(validationError, automatedPaymentsInputNames)}
+        error={isValidationFailed(validationError, supplierInputNames)}
       />
       <Accordion
         heading={"Extend Loan After Maturity Until Fully Paid (optional)"}

@@ -124,7 +124,7 @@ const Header = () => {
             />
           </div>
         </div> */}
-        <ul className="flex flex-wrap">
+        {/* <ul className="flex flex-wrap">
           {tabs.map((tab) => (
             <Tab
               key={tab.id}
@@ -135,7 +135,7 @@ const Header = () => {
               setActiveTab={setActiveTab}
             />
           ))}
-        </ul>
+        </ul> */}
       </div>
       <div className="px-8 py-3 relative flex justify-end items-center gap-5 w-1/3">
         <ElementErrorBoundary>

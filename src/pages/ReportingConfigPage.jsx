@@ -18,13 +18,13 @@ const ReportingConfigPage = () => {
 
   return (
     <>
-      <StatContainer stats={HomeStats} />
+      {/* <StatContainer stats={HomeStats} /> */}
       <ListTable
         ListName={"Reporting Config List"}
         ListHeader={HeaderList}
         ListItem={ProductList}
         Searchable={true}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   )

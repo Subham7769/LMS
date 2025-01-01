@@ -5,7 +5,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { tenureDurationOptions } from "../../data/OptionsData";
+import { tenureTypeOptions } from "../../data/OptionsData";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeCommonSelection,
@@ -63,7 +63,7 @@ const DatePicker = () => {
                 />
                 <InputSelect
                   inputName={"unit"}
-                  inputOptions={tenureDurationOptions}
+                  inputOptions={tenureTypeOptions}
                   inputValue={reportGenerationData.relativeTimeRange.unit}
                   onChange={handleChange}
                 />

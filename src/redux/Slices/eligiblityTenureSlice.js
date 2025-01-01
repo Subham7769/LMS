@@ -499,11 +499,11 @@ const eligiblityTenureSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: CreditScoreETList[index]?.createdOn || "14/09/2022",
-          openLoans: CreditScoreETList[index]?.openLoans || "1490",
-          totalDisbursedPrincipal:
-            CreditScoreETList[index]?.totalDisbursedPrincipal || "$750M",
-          status: CreditScoreETList[index]?.status || "Active",
+          // createdOn: CreditScoreETList[index]?.createdOn || "14/09/2022",
+          // openLoans: CreditScoreETList[index]?.openLoans || "1490",
+          // totalDisbursedPrincipal:
+          //   CreditScoreETList[index]?.totalDisbursedPrincipal || "$750M",
+          // status: CreditScoreETList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to CreditScoreETList

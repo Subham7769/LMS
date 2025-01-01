@@ -17,14 +17,14 @@ const HomePage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={HomeStats} />
+      {/* <StatContainer stats={HomeStats} /> */}
       <ListTable
         ListName={"Product List"}
         ListHeader={HeaderList}
         ListItem={ProductList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

@@ -18,14 +18,14 @@ const ProjectPage = () => {
 
   return (
     <>
-      <StatContainer stats={ProjectStats} />
+      {/* <StatContainer stats={ProjectStats} /> */}
       <ListTable
         ListName={"Project List"}
         ListHeader={HeaderList}
         ListItem={ProjectList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );
