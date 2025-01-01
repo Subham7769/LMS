@@ -235,6 +235,7 @@ const initialState = {
   repaymentData: [],
   repaymentHeaderData: {},
   approveRepaymentData: [],
+  approveRepaymentTotalElements:[],
   error: null,
   loading: false,
 };
@@ -329,6 +330,7 @@ const personalRepaymentsSlice = createSlice({
       .addCase(getRepayments.fulfilled, (state, action) => {
         state.loading = false;
         state.approveRepaymentData = action.payload.draftRepaymentDTOList
+        state.approveRepaymentTotalElements = action.payload.count
       })
       .addCase(getRepayments.rejected, (state, action) => {
         state.loading = false;

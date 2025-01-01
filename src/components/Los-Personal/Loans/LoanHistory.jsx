@@ -9,6 +9,7 @@ import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice"
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import Pagination from "../../Common/Pagination/Pagination";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -32,15 +33,22 @@ function transformData(inputArray) {
 
 const LoanHistory = () => {
   const dispatch = useDispatch();
-  const { loanHistory, loading } = useSelector((state) => state.personalLoans);
+  const { loanHistory, loading, loanHistoryTotalElements } = useSelector(
+    (state) => state.personalLoans
+  );
   const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
   const [uid, setUid] = useState("");
   const [borrowerOptions, setBorrowerOptions] = useState([]);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
-    dispatch(getLoanHistory({ page: 0, size: 20 }));
+    dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
     dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }, [dispatch]);
+  }, [dispatch, currentPage, pageSize]);
 
   useEffect(() => {
     const options = allBorrowersData.map((item) => ({
@@ -51,7 +59,11 @@ const LoanHistory = () => {
     setBorrowerOptions(options);
   }, [allBorrowersData]);
 
-  console.log(loanHistory);
+  useEffect(() => {
+    if (loanHistoryTotalElements) {
+      setTotalPages(Math.ceil(loanHistoryTotalElements / pageSize));
+    }
+  }, [loanHistoryTotalElements, pageSize]);
 
   const loanHistoryData = transformData(loanHistory);
 
@@ -61,7 +73,14 @@ const LoanHistory = () => {
 
   const handleReset = () => {
     setUid(""); // Reset selected UID
-    dispatch(getLoanHistory({ page: 0, size: 20 }));
+    setCurrentPage(0); // Reset to the first page
+    dispatch(getLoanHistory({ page: 0, size: pageSize }));
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   const columns = [
@@ -152,12 +171,19 @@ const LoanHistory = () => {
         </div>
       </ContainerTile>
       {loanHistoryData.length > 0 ? (
-        <ExpandableTable
-          columns={columns}
-          data={loanHistoryData}
-          renderExpandedRow={renderExpandedRow}
-          loading={loading}
-        />
+        <>
+          <ExpandableTable
+            columns={columns}
+            data={loanHistoryData}
+            renderExpandedRow={renderExpandedRow}
+            loading={loading}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       ) : (
         <ContainerTile className={`text-center`} loading={loading}>
           No loans history found

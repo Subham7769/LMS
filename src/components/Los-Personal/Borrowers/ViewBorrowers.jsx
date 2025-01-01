@@ -3,6 +3,7 @@ import { loanOfficer, accountStatusOptions } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
+import Pagination from "../../Common/Pagination/Pagination";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
@@ -19,7 +20,7 @@ import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Se
 const ViewBorrowers = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { allBorrowersData, error, loading } = useSelector(
+  const { allBorrowersData,allBorrowersTotalElements, error, loading } = useSelector(
     (state) => state.personalBorrowers
   );
   const [searchValue, setSearchValue] = useState("");
@@ -27,12 +28,26 @@ const ViewBorrowers = () => {
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
 
-  // console.log(allBorrowersData);
-  // console.log(allLoanOfficerOptions);
+  // Pagination state & Functionality
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }, [dispatch]);
+    dispatch(fetchAllBorrowers({ page: currentPage, size: pageSize }));
+  }, [dispatch, currentPage, pageSize]);
+
+    useEffect(() => {
+        if (allBorrowersTotalElements) {
+          setTotalPages(Math.ceil(allBorrowersTotalElements / pageSize));
+        }
+      }, [allBorrowersTotalElements, pageSize]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   useEffect(() => {
     const transformedData = allBorrowersData.map((item) => ({
@@ -87,11 +102,11 @@ const ViewBorrowers = () => {
   };
 
   const handleResetSearchBy = () => {
-    if(searchBy||searchValue){
+    if (searchBy || searchValue) {
       setSearchBy("");
       setSearchValue("");
       setFilteredBorrowers(allBorrowersData); // Reset to original data
-    }else{
+    } else {
       dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
     }
   };
@@ -332,11 +347,11 @@ const ViewBorrowers = () => {
     );
   };
 
-const SearchBorrowerByFieldSearch=()=>{
-  dispatch(fetchBorrowerByField({ field: searchBy, value: searchValue }))
-  setSearchBy("");
-  setSearchValue("");
-}
+  const SearchBorrowerByFieldSearch = () => {
+    dispatch(fetchBorrowerByField({ field: searchBy, value: searchValue }));
+    setSearchBy("");
+    setSearchValue("");
+  };
 
   return (
     <div className={`flex flex-col gap-3`}>
@@ -415,6 +430,11 @@ const SearchBorrowerByFieldSearch=()=>{
         renderExpandedRow={renderExpandedRow}
         loading={loading}
         error={error}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );

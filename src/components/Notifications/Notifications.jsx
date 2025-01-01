@@ -1,5 +1,7 @@
 import React, { useState, Suspense } from "react";
 import LoadingState from "../LoadingState/LoadingState";
+import Tab from "../Common/Tab/Tab";
+
 
 const ProductNotifications = React.lazy(() => import("./ProductNotifications"));
 const ProjectNotifications = React.lazy(() => import("./ProjectNotifications"));
@@ -17,20 +19,6 @@ const tabs = [
   { id: "RecoveryNotifications", label: "Recovery" },
 ];
 
-const Tab = ({ id, label, activeTab, setActiveTab }) => (
-  <div className="px-2">
-    <div
-      className={`py-1 px-2 cursor-pointer rounded text-[16px] whitespace-nowrap ${
-        activeTab === id
-          ? "text-white bg-indigo-500"
-          : "text-indigo-500 hover:bg-gray-200 hover:text-indigo-900 hover:font-medium"
-      }`}
-      onClick={() => setActiveTab(id)}
-    >
-      {label}
-    </div>
-  </div>
-);
 
 const Notifications = () => {
   const [activeTab, setActiveTab] = useState("ProductNotifications");

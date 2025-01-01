@@ -48,7 +48,8 @@ const handleSubmit = async (e) => {
   const isValid = state.validation.isValid; // Adjust based on your state structure
 
   if (isValid) {
-    dispatch(registerBorrower(addBorrowerData));
+    dispatch(registerBorrower(addBorrowerData)).unwrap()
+    navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   }
 };
 

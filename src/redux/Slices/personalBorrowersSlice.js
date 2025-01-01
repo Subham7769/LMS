@@ -68,7 +68,7 @@ export const fetchBorrowerByField = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const username = localStorage.getItem("username");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_SEARCH_BY_FIELD}${username}?${field}=${value}`,
+        `${import.meta.env.VITE_BORROWERS_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER}?fieldName=${field}&value=${value}`,
         {
           method: "GET",
           headers: {
@@ -84,6 +84,10 @@ export const fetchBorrowerByField = createAsyncThunk(
       }
 
       const data = await response.json();
+      const length = data.length;
+      if(length<1){
+        throw new Error("User not Found");
+      }
       return data; // This will be the action payload
     } catch (error) {
       return rejectWithValue(error.message); // Return the error message
@@ -232,6 +236,7 @@ const initialState = {
     },
   },
   allBorrowersData: [],
+  allBorrowersTotalElements:0,
   updateBorrowerData: {},
   error: null,
   loading: false,
@@ -301,6 +306,7 @@ const borrowersSlice = createSlice({
         state.loading = false;
         // Update state with the borrowers array
         state.allBorrowersData = action.payload.content;
+        state.allBorrowersTotalElements = action.payload.totalElements;
         state.error = null;
       })
       .addCase(fetchAllBorrowers.rejected, (state, action) => {
@@ -314,7 +320,7 @@ const borrowersSlice = createSlice({
       })
       .addCase(fetchBorrowerByField.fulfilled, (state, action) => {
         state.loading = false;
-        // state.allBorrowersData = action.payload.content;
+        state.allBorrowersData = action.payload;
       })
       .addCase(fetchBorrowerByField.rejected, (state, action) => {
         state.loading = false;

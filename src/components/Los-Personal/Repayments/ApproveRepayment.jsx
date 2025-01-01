@@ -12,35 +12,54 @@ import {
   approveRepayment,
   rejectRepayment,
 } from "../../../redux/Slices/personalRepaymentsSlice";
+import Pagination from "../../Common/Pagination/Pagination";
+
 
 const ApproveRepayment = () => {
   const dispatch = useDispatch();
-  const { approveRepaymentData, loading, error } = useSelector(
+  const { approveRepaymentData,approveRepaymentTotalElements, loading, error } = useSelector(
     (state) => state.personalRepayments
   );
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRepayments, setFilteredRepayments] =
-    useState(approveRepaymentData);
-    
-    useEffect(() => {
-      const updatedRepayments = approveRepaymentData.filter((item) =>
-        [
-          item.amount,
-          item.userId,
-          item.method,
-          item.collectionBy,
-          item.accounting,
-        ].some((field) =>
-          field && field.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-      setFilteredRepayments(updatedRepayments);
-    }, [searchTerm, approveRepaymentData]);
-    
+  const [filteredRepayments, setFilteredRepayments] =useState(approveRepaymentData);
+
+  // Pagination state & Functionality
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    dispatch(getRepayments({ pageSize: 10, pageNumber: 0 }));
-  }, [dispatch]);
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
+  }, [dispatch, currentPage, pageSize]);
+
+    useEffect(() => {
+        if (approveRepaymentTotalElements) {
+          setTotalPages(Math.ceil(approveRepaymentTotalElements / pageSize));
+        }
+      }, [approveRepaymentTotalElements, pageSize]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  useEffect(() => {
+    const updatedRepayments = approveRepaymentData.filter((item) =>
+      [
+        item.amount,
+        item.userId,
+        item.method,
+        item.collectionBy,
+        item.accounting,
+      ].some(
+        (field) =>
+          field &&
+          field.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredRepayments(updatedRepayments);
+  }, [searchTerm, approveRepaymentData]);
 
   const handleApprove = (transactionId) => {
     dispatch(approveRepayment({ transactionId })).unwrap();
@@ -142,6 +161,11 @@ const ApproveRepayment = () => {
         renderExpandedRow={renderExpandedRow}
         loading={loading}
         error={error}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );
