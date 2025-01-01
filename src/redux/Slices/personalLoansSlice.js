@@ -331,7 +331,9 @@ const initialState = {
     loanFiles: [],
   },
   approveLoans: [],
+  approveLoansTotalElements: 0,
   loanHistory: [],
+  loanHistoryTotalElements: 0,
   loanConfigData: {},
   loanProductOptions: [],
   loanOfferFields: {
@@ -435,6 +437,7 @@ const personalLoansSlice = createSlice({
       .addCase(getPendingLoans.fulfilled, (state, action) => {
         state.loading = false;
         state.approveLoans = action.payload.content;
+        state.approveLoansTotalElements = action.payload.totalElements;
       })
       .addCase(getPendingLoans.rejected, (state, action) => {
         state.loading = false;
@@ -496,6 +499,7 @@ const personalLoansSlice = createSlice({
       .addCase(getLoanHistory.fulfilled, (state, action) => {
         state.loading = false;
         state.loanHistory = action.payload.content;
+        state.loanHistoryTotalElements = action.payload.totalElements;
       })
       .addCase(getLoanHistory.rejected, (state, action) => {
         state.loading = false;

@@ -13,6 +13,7 @@ import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice"
 import Button from "../../Common/Button/Button";
 import { useNavigate } from "react-router-dom";
 import LoanRejectModal from "./LoanRejectModal";
+import Pagination from "../../Common/Pagination/Pagination";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -36,7 +37,9 @@ function transformData(inputArray) {
 
 const ApproveLoans = () => {
   const dispatch = useDispatch();
-  const { approveLoans, loading } = useSelector((state) => state.personalLoans);
+  const { approveLoans, loading, approveLoansTotalElements } = useSelector(
+    (state) => state.personalLoans
+  );
   const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
   const [uid, setUid] = useState("");
   const [borrowerOptions, setBorrowerOptions] = useState([]);
@@ -45,10 +48,15 @@ const ApproveLoans = () => {
   const [currentRowData, setCurrentRowData] = useState(null);
   const navigate = useNavigate();
 
+  // Pagination state
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
-    dispatch(getPendingLoans({ page: 0, size: 20 }));
+    dispatch(getPendingLoans({ page: currentPage, size: pageSize }));
     dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }, [dispatch]);
+  }, [dispatch, currentPage, pageSize]);
 
   // if(approveLoans.length > 0 && filteredData.length === 0) {
   //   setFilteredData(transformData(approveLoans)); // Initialize with all loans
@@ -62,6 +70,12 @@ const ApproveLoans = () => {
 
     setBorrowerOptions(options);
   }, [allBorrowersData]);
+
+  useEffect(() => {
+      if (approveLoansTotalElements) {
+        setTotalPages(Math.ceil(approveLoansTotalElements / pageSize));
+      }
+    }, [approveLoansTotalElements, pageSize]);
 
   const approveLoansData = transformData(approveLoans);
 
@@ -98,6 +112,12 @@ const ApproveLoans = () => {
 
   const closeRejectModal = () => {
     setShowModal(false);
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   const columns = [
@@ -211,12 +231,19 @@ const ApproveLoans = () => {
         </div>
       </ContainerTile>
       {approveLoansData.length > 0 ? (
-        <ExpandableTable
-          columns={columns}
-          data={approveLoansData}
-          renderExpandedRow={renderExpandedRow}
-          loading={loading}
-        />
+        <>
+          <ExpandableTable
+            columns={columns}
+            data={approveLoansData}
+            renderExpandedRow={renderExpandedRow}
+            loading={loading}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       ) : (
         <ContainerTile className={`text-center`} loading={loading}>
           No loans to approve
