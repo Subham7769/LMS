@@ -24,9 +24,8 @@ import Button from "../../Common/Button/Button";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
-  const { draftRepaymentDTOList, openLoans,loading } = useSelector(
-    (state) => state.personalRepayments
-  );
+  const { draftRepaymentDTOList, closingBalance, openLoans, loading } =
+    useSelector((state) => state.personalRepayments);
   console.log(draftRepaymentDTOList);
 
   useEffect(() => {
@@ -60,6 +59,25 @@ const AddBulkRepayment = () => {
     dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
   };
 
+  const InfoIcon = ({ data }) => {
+    return (
+      <div className="relative inline-block group z-50">
+        <div className="flex items-center justify-center w-4 h-4 bg-indigo-500 text-white text-xs font-bold rounded-full cursor-pointer">
+          i
+        </div>
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden w-64 bg-gray-700 text-white text-xs rounded-md shadow-lg p-3 group-hover:block">
+          <ul>
+            {Object.entries(data).map(([key, value]) => (
+              <li key={key} className="mb-1 last:mb-0">
+                <strong>{key}:</strong> {value}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <ContainerTile>
       <table className="min-w-full divide-y divide-gray-300">
@@ -91,15 +109,22 @@ const AddBulkRepayment = () => {
                 />
               </td>
               <td className="py-3 text-center w-1/12">
-                <InputNumber
-                  inputName="amount"
-                  inputValue={item.amount}
-                  onChange={(e) =>
-                    handleChange(e.target.value, rowIndex, "amount")
-                  }
-                  loading={loading}
-                  isValidation={true}
-                />
+                <div className="flex justify-between items-center">
+                  <div className="flex-1">
+                    <InputNumber
+                      inputName="amount"
+                      inputValue={item.amount}
+                      onChange={(e) =>
+                        handleChange(e.target.value, rowIndex, "amount")
+                      }
+                      loading={loading}
+                      isValidation={true}
+                    />
+                  </div>
+                  {item.closingBalance && (
+                    <InfoIcon data={item.closingBalance} />
+                  )}
+                </div>
               </td>
               <td className="py-3 text-center">
                 <InputSelect

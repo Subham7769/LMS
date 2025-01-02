@@ -347,7 +347,7 @@ const UploadRepayment = () => {
                   <li>
                     <a
                       href={
-                        "https://github.com/photonmatters/carbon-ui-react/blob/development/public/sample_file_bulk_repayments.csv"
+                        "/src/assets/files/sample_file_bulk_repayments.csv"
                       }
                       className="text-blue-600 underline"
                     >
