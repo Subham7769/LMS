@@ -1,6 +1,5 @@
 import InstallmentSummery from "./InstallmentSummery";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,12 +12,12 @@ import {
 } from "../../../redux/Slices/personalLoansSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
+import { UserIcon, CogIcon } from "@heroicons/react/24/outline";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
   const [borrowerOptions, setBorrowerOptions] = useState([]);
-  const { userID } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
 
@@ -75,18 +74,18 @@ const LoanOffers = () => {
   };
 
   const InfoRow = ({ label, value }) => (
-    <div className="grid grid-cols-2 py-2">
-      <div>{label}:</div>
-      <div>{value}</div>
+    <div className="flex gap-x-2 mb-1.5">
+      <div className="text-gray-600">{label}:</div>
+      <div className="">{value}</div>
     </div>
   );
 
-  // const InfoRow2 = ({ label, value }) => (
-  //   <div className="py-2">
-  //     <div className="text-gray-500">{label}:</div>
-  //     <div className="font-semibold text-lg">{value}</div>
-  //   </div>
-  // );
+  const InfoRow2 = ({ label, value }) => (
+    <div className="mb-2">
+      <div className="text-gray-500">{label}:</div>
+      <div className="font-semibold text-lg">{value} %</div>
+    </div>
+  );
 
   return (
     <>
@@ -122,68 +121,93 @@ const LoanOffers = () => {
       ) : Object.keys(loanConfigData || {}).length > 0 ? (
         <div className="flex flex-col gap-5 mt-4">
           <div className="grid grid-cols-2 gap-5">
-            <ContainerTile loading={loading}>
-              <div className="font-semibold -mt-3 mb-3">
-                Profile :{" "}
+            <ContainerTile loading={loading} className={"bg-white"}>
+              <div className="font-semibold -mt-3 mb-4 text-lg flex gap-x-2 items-center text-blue-600">
+                <UserIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" /> Meet
+                Our Borrower
               </div>
-              <div className="grid grid-cols-2 gap-5 text-[14px]">
+              <div className="font-semibold text-[15px] mb-2">
+                {
+                  borrowerOptions.find(
+                    (item) => item.value == loanOfferFields.uid
+                  )?.label
+                }
+              </div>
+              <div className="text-[14px]">
                 <InfoRow
-                  label="Cash Credit Score"
+                  label="Credit Score"
                   value={loanConfigData?.profile?.cashCreditScore}
                 />
                 <InfoRow
-                  label="Cash TCL"
+                  label="Total Credit Limit (TCL)"
                   value={loanConfigData?.profile?.cashTCL}
                 />
                 <InfoRow
-                  label="Net Cash TCL"
+                  label="Net Total Credit Limit"
                   value={loanConfigData?.profile?.netCashTCL}
                 />
               </div>
             </ContainerTile>
-            <ContainerTile loading={loading}>
-              <div className="font-semibold text-center -mt-3 mb-3">
-                Cash Loan Stats :{" "}
+            <ContainerTile loading={loading} className={"bg-white"}>
+              <div className="font-semibold -mt-3 mb-4 text-lg flex gap-x-2 items-center text-green-600">
+                <CogIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />{" "}
+                Avialable Loan Range
               </div>
-              <div className="grid grid-cols-2 gap-5 text-[14px]">
-                <InfoRow
-                  label="Max Loan Amount"
-                  value={loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(
-                    2
-                  )}
-                />
-                <InfoRow
-                  label="Min Loan Amount"
-                  value={loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(
-                    2
-                  )}
-                />
-                <InfoRow
-                  label="Max Loan Duration Days"
-                  value={loanConfigData?.cashLoanStats?.maxLoanDuration}
-                />
-                <InfoRow
-                  label="Min Loan Duration Days"
-                  value={loanConfigData?.cashLoanStats?.minLoanDuration}
-                />
-                <InfoRow
-                  label="Max Tenure Months"
-                  value={loanConfigData?.cashLoanStats?.maxTenure}
-                />
-                <InfoRow
-                  label="Min Tenure Months"
-                  value={loanConfigData?.cashLoanStats?.minTenure}
-                />
+              <div className="text-[14px]">
+                <div className="text-gray-500">Loan Range:</div>
+                <div className="font-semibold text-lg mb-2">
+                  {loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)} -{" "}
+                  {loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)}
+                </div>
+                <div className="text-gray-500">Duration Range:</div>
+                <div className="font-semibold text-lg">
+                  {loanConfigData?.cashLoanStats?.minLoanDuration} -{" "}
+                  {loanConfigData?.cashLoanStats?.maxLoanDuration} days
+                </div>
+                <div className="text-gray-500">
+                  ({loanConfigData?.cashLoanStats?.minLoanDurationMonths} -{" "}
+                  {loanConfigData?.cashLoanStats?.maxLoanDurationMonths} months)
+                </div>
+                <div className="text-gray-500">Average Installments: </div>
               </div>
             </ContainerTile>
           </div>
           <ContainerTile loading={loading}>
-            <div className="font-semibold text-center -mt-3 mb-3">
-              Dynamic Cash Loan Offers Stats
-            </div>
             <div className="grid grid-cols-2 gap-5 text-[14px]">
               {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => (
                 <React.Fragment key={index}>
+                  <div className="grid grid-cols-2 gap-5">
+                    <ContainerTile loading={loading} className={"bg-white"}>
+                      <div className="font-semibold -mt-3 mb-4 text-lg flex gap-x-2 items-center text-violet-600">
+                        <UserIcon
+                          className="-ml-0.5 h-5 w-5"
+                          aria-hidden="true"
+                        />{" "}
+                        Interest Rates
+                      </div>
+                      <div className="text-[14px]">
+                        <InfoRow2
+                          label="Annual Rate (APR)"
+                          value={ci?.annualInterestRatePercentWithoutFee}
+                        />
+                        <InfoRow2
+                          label="Monthly Rate"
+                          value={ci?.aprPerMonthPercent}
+                        />
+                        <InfoRow2
+                          label="Daily Rate"
+                          value={ci?.dailyInterestRatePercentWithoutFee}
+                        />
+                        <div className="mb-2">
+                          <div className="text-gray-500">Monthly Flat Rate</div>
+                          <div className="font-semibold text-lg">
+                            {ci?.monthlyFlatRatePercent} %
+                          </div>
+                        </div>
+                      </div>
+                    </ContainerTile>
+                  </div>
+
                   <InfoRow label="Transaction Id" value={ci?.transactionId} />
                   <InfoRow
                     label="Annual Flat Rate Percent"

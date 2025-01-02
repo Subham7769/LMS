@@ -46,14 +46,15 @@ const LoanHistory = () => {
   const [showModal, setShowModal] = useState(false);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(0);
+
+  const dispatcherFunction = (currentPage, pageSize) => {
+    dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
+  };
 
   useEffect(() => {
-    dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
     dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }, [dispatch, currentPage, pageSize]);
+  }, [dispatch]);
 
   useEffect(() => {
     const options = allBorrowersData.map((item) => ({
@@ -63,12 +64,6 @@ const LoanHistory = () => {
 
     setBorrowerOptions(options);
   }, [allBorrowersData]);
-
-  useEffect(() => {
-    if (loanHistoryTotalElements) {
-      setTotalPages(Math.ceil(loanHistoryTotalElements / pageSize));
-    }
-  }, [loanHistoryTotalElements, pageSize]);
 
   const loanHistoryData = transformData(loanHistory);
 
@@ -80,12 +75,6 @@ const LoanHistory = () => {
     setUid(""); // Reset selected UID
     setCurrentPage(0); // Reset to the first page
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
-  };
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
-    }
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
@@ -170,14 +159,17 @@ const LoanHistory = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`grid grid-cols-[85%_15%] gap-5`}>
-        <InputSelect
-          labelName="Borrower"
-          inputName="uid"
-          inputOptions={borrowerOptions}
-          inputValue={uid}
-          onChange={(e) => setUid(e.target.value)}
-        />
+      <ContainerTile className={`flex justify-between gap-5`}>
+        <div className="w-full">
+          <InputSelect
+            labelName="Borrower"
+            inputName="uid"
+            inputOptions={borrowerOptions}
+            inputValue={uid}
+            onChange={(e) => setUid(e.target.value)}
+          />
+        </div>
+
         <div className="flex gap-5">
           <Button
             buttonName={"Search"}
@@ -193,25 +185,17 @@ const LoanHistory = () => {
           />
         </div>
       </ContainerTile>
-      {loanHistoryData.length > 0 ? (
-        <>
-          <ExpandableTable
-            columns={columns}
-            data={loanHistoryData}
-            renderExpandedRow={renderExpandedRow}
-            loading={loading}
-          />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </>
-      ) : (
-        <ContainerTile className={`text-center`} loading={loading}>
-          No loans history found
-        </ContainerTile>
-      )}
+      <ExpandableTable
+        columns={columns}
+        data={loanHistoryData}
+        renderExpandedRow={renderExpandedRow}
+        loading={loading}
+      />
+      <Pagination
+        totalElements={loanHistoryTotalElements}
+        dispatcherFunction={dispatcherFunction}
+        pageSize={pageSize}
+      />
       <FullLoanDetailModal
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}

@@ -14,34 +14,23 @@ import {
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import Pagination from "../../Common/Pagination/Pagination";
 
-
 const ApproveRepayment = () => {
   const dispatch = useDispatch();
-  const { approveRepaymentData,approveRepaymentTotalElements, loading, error } = useSelector(
-    (state) => state.personalRepayments
-  );
+  const {
+    approveRepaymentData,
+    approveRepaymentTotalElements,
+    loading,
+    error,
+  } = useSelector((state) => state.personalRepayments);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRepayments, setFilteredRepayments] =useState(approveRepaymentData);
+  const [filteredRepayments, setFilteredRepayments] =
+    useState(approveRepaymentData);
 
   // Pagination state & Functionality
-  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
-  }, [dispatch, currentPage, pageSize]);
-
-    useEffect(() => {
-        if (approveRepaymentTotalElements) {
-          setTotalPages(Math.ceil(approveRepaymentTotalElements / pageSize));
-        }
-      }, [approveRepaymentTotalElements, pageSize]);
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
-    }
+  const dispatcherFunction = (currentPage, pageSize) => {
+    dispatch(getRepayments({ page: currentPage, size: pageSize }));
   };
 
   useEffect(() => {
@@ -163,9 +152,9 @@ const ApproveRepayment = () => {
         error={error}
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalElements={approveRepaymentTotalElements}
+        dispatcherFunction={dispatcherFunction}
+        pageSize={pageSize}
       />
     </div>
   );

@@ -159,6 +159,13 @@ const validationSlice = createSlice({
         [inputName]: false,
       };
     },
+    setValidationErrorTrue: (state, action) => {
+      const inputName = action.payload;
+      state.validationError = {
+        ...state.validationError,
+        [inputName]: true,
+      };
+    },
     updateValidationError: (state, action) => {
       const newErrors = action.payload;
       state.validationError = {
@@ -207,6 +214,7 @@ export const {
   setFields,
   addFields,
   setValidationError,
+  setValidationErrorTrue,
   updateValidationError,
   clearValidationError,
   validateForm,

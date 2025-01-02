@@ -384,7 +384,8 @@ const UploadRepayment = () => {
                     <div className="text-center">Loan Id</div>
                     <div className="flex justify-center">
                       <InputRadio
-                        inputName={"Loan Id"}
+                        inputName={"loanId"}
+                        selectedValue={selectedColumns.loanId}
                         options={yesNoOptions}
                         onChange={handleChange}
                       />
@@ -394,7 +395,8 @@ const UploadRepayment = () => {
                     <div className="text-center">Collection Method</div>
                     <div className="flex justify-center">
                       <InputRadio
-                        inputName={"Loan Id"}
+                        inputName={"collectionMethod"}
+                        selectedValue={selectedColumns.collectionMethod}
                         options={yesNoOptions}
                         onChange={handleChange}
                       />
@@ -404,7 +406,8 @@ const UploadRepayment = () => {
                     <div className="text-center">Collection By</div>
                     <div className="flex justify-center">
                       <InputRadio
-                        inputName={"Loan Id"}
+                        inputName={"collectionBy"}
+                        selectedValue={selectedColumns.collectionBy}
                         options={yesNoOptions}
                         onChange={handleChange}
                       />

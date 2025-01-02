@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addFields,
   setValidationError,
+  setValidationErrorTrue,
 } from "../../../redux/Slices/validationSlice";
 
 const InputEmail = ({
@@ -29,6 +30,17 @@ const InputEmail = ({
     }, [inputName, dispatch]);
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const handleBlur = () => {
+    // Check if the input value matches the email pattern
+    if (!emailRegex.test(inputValue)) {
+      dispatch(setValidationErrorTrue(validationKey));
+    } else {
+      dispatch(setValidationError(validationKey));
+    }
+  };
+
   return (
     <div className="w-full">
       {labelName && (
@@ -38,7 +50,7 @@ const InputEmail = ({
           } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
-          {validationError[validationKey] ? "Field required" : labelName}
+          {validationError[validationKey] ? "Invalid email format" : labelName}
         </label>
       )}
       <input
@@ -46,6 +58,7 @@ const InputEmail = ({
         name={inputName}
         value={inputValue}
         onChange={onChange}
+        onBlur={handleBlur}
         onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state
         placeholder={placeHolder}
         disabled={disabled}

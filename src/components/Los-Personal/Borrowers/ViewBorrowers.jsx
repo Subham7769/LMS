@@ -20,33 +20,18 @@ import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Se
 const ViewBorrowers = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { allBorrowersData,allBorrowersTotalElements, error, loading } = useSelector(
-    (state) => state.personalBorrowers
-  );
+  const { allBorrowersData, allBorrowersTotalElements, error, loading } =
+    useSelector((state) => state.personalBorrowers);
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
 
   // Pagination state & Functionality
-  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
+  const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(fetchAllBorrowers({ page: currentPage, size: pageSize }));
-  }, [dispatch, currentPage, pageSize]);
-
-    useEffect(() => {
-        if (allBorrowersTotalElements) {
-          setTotalPages(Math.ceil(allBorrowersTotalElements / pageSize));
-        }
-      }, [allBorrowersTotalElements, pageSize]);
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
-    }
   };
 
   useEffect(() => {
@@ -432,9 +417,9 @@ const ViewBorrowers = () => {
         error={error}
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalElements={allBorrowersTotalElements}
+        dispatcherFunction={dispatcherFunction}
+        pageSize={pageSize}
       />
     </div>
   );

@@ -52,7 +52,7 @@ const ExpandableTable = ({
                 </div>
               </td>
             </tr>
-          ) : (
+          ) : data.length > 0 ? (
             data.map((rowData, index) => (
               <React.Fragment key={index}>
                 <tr
@@ -123,6 +123,14 @@ const ExpandableTable = ({
                 )}
               </React.Fragment>
             ))
+          ) : (
+            <>
+              <tr>
+                <td colSpan={columns.length + (ListAction ? 2 : 1)}>
+                  <div className="text-center my-2">No Data found</div>
+                </td>
+              </tr>
+            </>
           )}
         </tbody>
       </table>
