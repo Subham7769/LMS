@@ -52,12 +52,12 @@ const ApproveRepayment = () => {
 
   const handleApprove = (transactionId) => {
     dispatch(approveRepayment({ transactionId })).unwrap();
-    dispatch(getRepayments({ pageSize: 10, pageNumber: 0 }));
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
   };
 
   const handleReject = (transactionId) => {
     dispatch(rejectRepayment({ transactionId })).unwrap();
-    dispatch(getRepayments({ pageSize: 10, pageNumber: 0 }));
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
   };
 
   const renderExpandedRow = (rowData) => (

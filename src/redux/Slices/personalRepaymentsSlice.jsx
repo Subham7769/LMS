@@ -43,7 +43,7 @@ export const fetchClosingBalance = createAsyncThunk(
         `${
           import.meta.env
             .VITE_REPAYMENT_GET_ALL_CLOSING_AMOUNT_PERSONAL_BORROWER
-        }${userId}/loan/${loanId}/closing-amount`
+        }${userId}/loan/${loanId}/loan-amounts`
       );
 
       if (!response.ok) {
@@ -60,13 +60,14 @@ export const fetchClosingBalance = createAsyncThunk(
 // Submit Repayment
 export const uploadRepayment = createAsyncThunk(
   "repayment/uploadRepayment",
-  async ({ draftRepaymentDTOList }, { rejectWithValue }) => {
+  async ({ draftRepaymentDTOList}, { rejectWithValue }) => {
     try {
       const updatedDraftRepaymentDTOList = draftRepaymentDTOList.map(
-        (entry) => ({
+        ({closingBalance, ...entry}) => ({
           ...entry,
           loan: entry.loan.split("@")[0],
           collectionDate: entry.collectionDate + " 00:00:00",
+          payAll:entry.amount >= closingBalance.xcClosingAmount
         })
       );
       const token = localStorage.getItem("authToken");
@@ -98,7 +99,7 @@ export const uploadRepayment = createAsyncThunk(
 // Get Repayments
 export const getRepayments = createAsyncThunk(
   "repayment/getRepayments",
-  async ({ pageSize = 10, pageNumber = 0 }, { rejectWithValue }) => {
+  async ({ pageSize, pageNumber }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -109,8 +110,6 @@ export const getRepayments = createAsyncThunk(
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
-            // pageSize: pageSize,
-            // pageNumber: pageNumber,
           },
         }
       );
@@ -229,6 +228,8 @@ const initialState = {
       description: "",
       accounting: "",
       userId: "",
+      payAll: false,
+
     },
   ],
   openLoans: [],
@@ -366,10 +367,10 @@ const personalRepaymentsSlice = createSlice({
         // Update the amount in the draftRepaymentDTOList
         state.draftRepaymentDTOList = state.draftRepaymentDTOList.map((entry) =>
           entry.userId === userId
-            ? { ...entry, amount: totalOutstanding }
+            ? { ...entry, amount: totalOutstanding, closingBalance:action.payload }
             : entry
         );
-        state.loading = false;
+        state.loading = false;        
       })
       .addCase(fetchClosingBalance.rejected, (state, action) => {
         state.loading = false;
