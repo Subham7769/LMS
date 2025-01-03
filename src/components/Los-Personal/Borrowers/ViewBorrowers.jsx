@@ -376,39 +376,6 @@ const ViewBorrowers = () => {
         </div>
       </ContainerTile>
 
-      {/* <div className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
-          <InputText
-            labelName="Search Borrower"
-            inputName="searchTerm"
-            inputValue={searchTerm}
-            onChange={(e)=>handleSearchFilter(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="w-[45%]">
-          <SelectInput
-            labelName="All Loan Officers"
-            inputName="allLoanOfficer"
-            inputOptions={allLoanOfficerOptions}
-            inputValue={allLoanOfficer}
-            isValidation={true}
-            onChange={handleLoanOfficerFilter}
-            // className="w-full"
-            isMulti={true}
-          />
-        </div>
-        <div className="flex align-middle gap-5">
-          <Button
-            buttonName={"Reset"}
-            onClick={handleReset}
-            rectangle={true}
-            className={`mt-4 h-fit self-center`}
-          />
-        </div>
-      </div> */}
-
       <ExpandableTable
         columns={personalDetailsColumns}
         data={flattenToSimpleObjectArray(filteredBorrowers)}

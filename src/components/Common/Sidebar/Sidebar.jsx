@@ -263,14 +263,16 @@ const SideBar = () => {
         } overflow-y-auto scrollbar-none border-gray-200`}
       >
         {allSectionName.map((sectionName, sectionIndex) => (
-          <div key={sectionName} className={`${!open && "mb-2"} `}>
-            <h2
-              className={`text-gray-500 text-sm font-semibold mb-1 ${
-                !open && "hidden"
-              } ${sectionIndex !== 0 ? "mt-4" : ""}`}
-            >
-              {sectionName}
-            </h2>
+          <div key={sectionName} className={`${!open && "mb-2 "} `}>
+            {menus.some((menu) => menu.sectionName === sectionName) && (
+              <h2
+                className={`text-gray-500 text-xs font-semibold ml-4 ${
+                  !open && "hidden"
+                } ${sectionIndex !== 0 ? "mt-7" : ""}`}
+              >
+                {sectionName}
+              </h2>
+            )}
             {menus.map((menu, index) => {
               const IconComponent = iconMapping[menu.icon];
               const createFunction = functionMapping[menu.createFunction];
@@ -285,12 +287,10 @@ const SideBar = () => {
                     <NavLink to={menu.href} className="text-gray-500">
                       <li
                         onClick={() => handleToggleSubmenu(index)}
-                        className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-1 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
+                        className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
                       >
                         <span
-                          className={`text-2xl block float-left group-hover:bg-indigo-100 ${
-                            !open && "bg-gray-200 mb-2 p-1 rounded-md"
-                          }`}
+                          className={`text-2xl block float-left group-hover:bg-indigo-100 `}
                           title={menu.title}
                         >
                           <IconComponent className="h-5 w-5 shrink-0" />

@@ -30,7 +30,7 @@ const ApproveRepayment = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    dispatch(getRepayments({ page: currentPage, size: pageSize }));
+    dispatch(getRepayments({ pageNumber: currentPage, pageSize: pageSize }));
   };
 
   useEffect(() => {
@@ -143,6 +143,7 @@ const ApproveRepayment = () => {
           />
         </div>
       </ContainerTile>
+      
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}
