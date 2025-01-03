@@ -350,36 +350,36 @@ export const MenusInitial = [
         href: "/loan/loan-origination-system/sme/repayments/add-bulk-repayment",
         current: false,
       },
-      {
-        name: "Profile",
-        href: "/loan/loan-origination-system/sme/profile",
-        current: false,
-      },
-      {
-        name: "Manage Partner",
-        href: "/loan/loan-origination-system/sme/manage-partner",
-        current: false,
-      },
-      {
-        name: "Cash Payable",
-        href: "/loan/loan-origination-system/sme/cash-payable",
-        current: false,
-      },
-      {
-        name: "Cash Receivable",
-        href: "/loan/loan-origination-system/sme/cash-receivable",
-        current: false,
-      },
-      {
-        name: "Working Capital",
-        href: "/loan/loan-origination-system/sme/working-capital",
-        current: false,
-      },
-      {
-        name: "Project Finance",
-        href: "/loan/loan-origination-system/sme/project-finance",
-        current: false,
-      },
+      // {
+      //   name: "Profile",
+      //   href: "/loan/loan-origination-system/sme/profile",
+      //   current: false,
+      // },
+      // {
+      //   name: "Manage Partner",
+      //   href: "/loan/loan-origination-system/sme/manage-partner",
+      //   current: false,
+      // },
+      // {
+      //   name: "Cash Payable",
+      //   href: "/loan/loan-origination-system/sme/cash-payable",
+      //   current: false,
+      // },
+      // {
+      //   name: "Cash Receivable",
+      //   href: "/loan/loan-origination-system/sme/cash-receivable",
+      //   current: false,
+      // },
+      // {
+      //   name: "Working Capital",
+      //   href: "/loan/loan-origination-system/sme/working-capital",
+      //   current: false,
+      // },
+      // {
+      //   name: "Project Finance",
+      //   href: "/loan/loan-origination-system/sme/project-finance",
+      //   current: false,
+      // },
     ],
     isOpen: false,
   },
