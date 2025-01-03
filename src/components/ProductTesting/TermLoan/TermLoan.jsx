@@ -22,16 +22,16 @@ const TermLoan = () => {
       label: "Loan Config",
       to: `/loan/product-testing/term-loan/${userID}/loan-config`,
     },
-    {
-      id: "disbursement-status",
-      label: "Disbursement Status",
-      to: `/loan/product-testing/term-loan/${userID}/disbursement-status`,
-    },
-    {
-      id: "backend-repayment",
-      label: "Backend Repayments",
-      to: `/loan/product-testing/term-loan/${userID}/backend-repayment`,
-    },
+    // {
+    //   id: "disbursement-status",
+    //   label: "Disbursement Status",
+    //   to: `/loan/product-testing/term-loan/${userID}/disbursement-status`,
+    // },
+    // {
+    //   id: "backend-repayment",
+    //   label: "Backend Repayments",
+    //   to: `/loan/product-testing/term-loan/${userID}/backend-repayment`,
+    // },
     // {
     //   id: "family-details",
     //   label: "Family Details",

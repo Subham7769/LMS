@@ -196,7 +196,7 @@ export const handleProceed = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS}${userID}/loans`,
+        `${import.meta.env.VITE_LOAN_SUBMIT_PUT_PERSONAL}${userID}/submit-loan`,
         {
           method: "PUT",
           headers: {
