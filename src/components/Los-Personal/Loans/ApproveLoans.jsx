@@ -4,12 +4,12 @@ import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import {
   approveLoan,
-  getLoansByUid,
+  getLoansByField,
   getPendingLoans,
 } from "../../../redux/Slices/personalLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
+import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
 import { useNavigate } from "react-router-dom";
 import LoanRejectModal from "./LoanRejectModal";
@@ -41,12 +41,10 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements } = useSelector(
     (state) => state.personalLoans
   );
-  const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
-  const [uid, setUid] = useState("");
-  const [borrowerOptions, setBorrowerOptions] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchBy, setSearchBy] = useState("");
   const navigate = useNavigate();
 
   // Pagination state
@@ -57,36 +55,17 @@ const ApproveLoans = () => {
     dispatch(getPendingLoans({ page: currentPage, size: pageSize }));
   };
 
-  useEffect(() => {
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }, [dispatch]);
-
-  // if(approveLoans.length > 0 && filteredData.length === 0) {
-  //   setFilteredData(transformData(approveLoans)); // Initialize with all loans
-  // }
-
-  useEffect(() => {
-    const options = allBorrowersData.map((item) => ({
-      label: `${item.borrowerProfile?.personalDetails?.title} ${item.borrowerProfile?.personalDetails?.surname} ${item.borrowerProfile?.personalDetails?.otherName}`,
-      value: item.uid,
-    }));
-
-    setBorrowerOptions(options);
-  }, [allBorrowersData]);
-
   const approveLoansData = transformData(approveLoans);
 
   const handleSearch = () => {
-    // if (uid) {
-    //   const filtered = approveLoans.filter((loan) => loan.uid === uid);
-    //   setFilteredData(transformData(filtered));
-    // }
-    dispatch(getLoansByUid(uid));
+    dispatch(getLoansByField({ field: searchBy, value: searchValue }));
+    setSearchBy("");
+    setSearchValue("");
   };
 
   const handleReset = () => {
-    // setFilteredData(transformData(approveLoans)); // Reset to all loans
-    setUid(""); // Reset selected UID
+    setSearchBy("");
+    setSearchValue("");
     dispatch(getPendingLoans({ page: 0, size: 20 }));
   };
 
@@ -110,6 +89,11 @@ const ApproveLoans = () => {
   const closeRejectModal = () => {
     setShowModal(false);
   };
+
+  const searchOptions = [
+    { label: "Borrower Name", value: "borrowerName" },
+    { label: "Unique ID", value: "uid" },
+  ];
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
@@ -198,17 +182,27 @@ const ApproveLoans = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5`}>
-        <div className="w-full">
+      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
+        <div className="w-[45%]">
           <InputSelect
-            labelName="Borrower"
-            inputName="uid"
-            inputOptions={borrowerOptions}
-            inputValue={uid}
-            onChange={(e) => setUid(e.target.value)}
+            labelName="Search By"
+            inputName="searchBy"
+            inputOptions={searchOptions}
+            inputValue={searchBy}
+            onChange={(e) => setSearchBy(e.target.value)}
           />
         </div>
-        <div className="flex gap-5">
+        <div className="w-[45%]">
+          <InputText
+            labelName="Enter Value"
+            inputName="searchValue"
+            inputValue={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="flex align-middle gap-5">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { loanStatusOptions } from "../../../data/OptionsData";
 import { toast } from "react-toastify";
 import { convertDate } from "../../../utils/convertDate";
@@ -115,7 +114,6 @@ const InstallmentScheduleTable = ({ loansarrModal }) => (
 );
 
 const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
-  const [loansarrModal, setLoansarrModal] = useState([]);
 
   const copyToClipboard = async () => {
     try {
@@ -137,7 +135,7 @@ const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
       <div
         id="loanInfoContainer"
         onClick={handleOnClose}
-        className="fixed inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center"
+        className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center"
       >
         <div className="bg-white border border-red-600 p-8 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
           <div className="font-semibold text-center text-xl text-gray-700 mb-5">

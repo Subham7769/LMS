@@ -4,19 +4,19 @@ import Tab from "../../Common/Tab/Tab";
 
 const TermLoan = () => {
   const { userID } = useParams();
-  const [activeTab, setActiveTab] = useState("eligibility");
+  const [activeTab, setActiveTab] = useState("loan-config");
 
   const tabs = [
-    {
-      id: "eligibility",
-      label: "Eligibility",
-      to: `/loan/product-testing/term-loan/${userID}/eligibilty`,
-    },
-    {
-      id: "register",
-      label: "Register",
-      to: `/loan/product-testing/term-loan/${userID}/register`,
-    },
+    // {
+    //   id: "eligibility",
+    //   label: "Eligibility",
+    //   to: `/loan/product-testing/term-loan/${userID}/eligibilty`,
+    // },
+    // {
+    //   id: "register",
+    //   label: "Register",
+    //   to: `/loan/product-testing/term-loan/${userID}/register`,
+    // },
     {
       id: "loan-config",
       label: "Loan Config",
@@ -32,16 +32,16 @@ const TermLoan = () => {
       label: "Backend Repayments",
       to: `/loan/product-testing/term-loan/${userID}/backend-repayment`,
     },
-    {
-      id: "family-details",
-      label: "Family Details",
-      to: `/loan/product-testing/term-loan/${userID}/family-details`,
-    },
-    {
-      id: "employment-details",
-      label: "Employment Details",
-      to: `/loan/product-testing/term-loan/${userID}/employment-details`,
-    },
+    // {
+    //   id: "family-details",
+    //   label: "Family Details",
+    //   to: `/loan/product-testing/term-loan/${userID}/family-details`,
+    // },
+    // {
+    //   id: "employment-details",
+    //   label: "Employment Details",
+    //   to: `/loan/product-testing/term-loan/${userID}/employment-details`,
+    // },
   ];
 
   return (

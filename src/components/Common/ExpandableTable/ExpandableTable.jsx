@@ -28,9 +28,9 @@ const ExpandableTable = ({
   };
 
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+    <div className="overflow-x-auto min-h-[5rem] max-h-full bg-white rounded-lg shadow-lg">
       <table className="min-w-full table-auto" role="table">
-        <thead>
+        <thead className={"sticky top-0 z-10"}>
           <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
             <th className="px-4 py-6"></th>
             {columns.map((col, index) => (

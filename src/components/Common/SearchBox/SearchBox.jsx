@@ -13,7 +13,7 @@ import { fetchAccountDetailsById } from "../../../redux/Slices/accountsSlice";
 
 const SearchBox = () => {
   const location = useLocation();
-  const [borrowerID, setBorrowerID] = useState("3333333361");
+  const [borrowerID, setBorrowerID] = useState("7777777");
   const [borrowerNotFound, setBorrowerNotFound] = useState(false);
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const dispatch = useDispatch();
@@ -61,10 +61,10 @@ const SearchBox = () => {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
         `${
-          import.meta.env.VITE_USER_PRODUCT_TESTING
-        }${borrowerID}/check-availability/14-11-1981`,
+          import.meta.env.VITE_USER_PRODUCT_TESTING_REGISTRATION_RESULT_GET
+        }${borrowerID}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -83,7 +83,9 @@ const SearchBox = () => {
         navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
-      navigate("/loan/product-testing/term-loan/" + borrowerID + "/eligibilty");
+      navigate(
+        "/loan/product-testing/term-loan/" + borrowerID + "/loan-config"
+      );
       setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);

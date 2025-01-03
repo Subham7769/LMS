@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { loanOfferSampleData } from "../../data/loanOfferSampleData";
+
+import convertToTitleCase from "../../utils/convertToTitleCase";
 
 export const fetchLoanProductData = createAsyncThunk(
   "personalLoans/fetchLoanProductData",
@@ -142,15 +143,15 @@ export const getPendingLoans = createAsyncThunk(
   }
 );
 
-export const getLoansByUid = createAsyncThunk(
-  "personalLoans/getLoansByUid",
-  async (uid, { rejectWithValue }) => {
+export const getLoansByField = createAsyncThunk(
+  "personalLoans/getLoansByField",
+  async ({ field, value }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_BY_UID_PERSONAL
-        }/${uid}/pending-loans`,
+          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_BY_FIELD_PERSONAL
+        }${field}&value=${value}`,
         {
           method: "GET",
           headers: {
@@ -250,15 +251,15 @@ export const getLoanHistory = createAsyncThunk(
   }
 );
 
-export const getLoanHistoryByUid = createAsyncThunk(
-  "personalLoans/getLoanHistoryByUid",
-  async (uid, { rejectWithValue }) => {
+export const getLoanHistoryByField = createAsyncThunk(
+  "personalLoans/getLoanHistoryByField",
+  async ({ field, value }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_BY_UID_PERSONAL
-        }${uid}/all-loans`,
+          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_BY_FIELD_PERSONAL
+        }${field}&value=${value}`,
         {
           method: "GET",
           headers: {
@@ -409,7 +410,7 @@ const personalLoansSlice = createSlice({
         const updatedLoanProductOptions = action.payload
           .filter((item) => item.eligibleCustomerType === "CONSUMER")
           .map((item) => ({
-            label: item.productType.replace(/_/g, " "),
+            label: convertToTitleCase(item.productType),
             value: item.loanProductId,
           }));
         state.loanProductOptions = updatedLoanProductOptions;
@@ -477,11 +478,11 @@ const personalLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
       })
-      .addCase(getLoansByUid.pending, (state) => {
+      .addCase(getLoansByField.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getLoansByUid.fulfilled, (state, action) => {
+      .addCase(getLoansByField.fulfilled, (state, action) => {
         state.loading = false;
 
         // Check if payload is an array or a single object
@@ -494,7 +495,7 @@ const personalLoansSlice = createSlice({
           ? [] // Set to an empty array if any loanId is null
           : payload;
       })
-      .addCase(getLoansByUid.rejected, (state, action) => {
+      .addCase(getLoansByField.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
@@ -539,11 +540,11 @@ const personalLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
       })
-      .addCase(getLoanHistoryByUid.pending, (state) => {
+      .addCase(getLoanHistoryByField.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getLoanHistoryByUid.fulfilled, (state, action) => {
+      .addCase(getLoanHistoryByField.fulfilled, (state, action) => {
         state.loading = false;
         // Check if payload is an array or a single object
         const payload = Array.isArray(action.payload)
@@ -555,7 +556,7 @@ const personalLoansSlice = createSlice({
           ? [] // Set to an empty array if any loanId is null
           : payload;
       })
-      .addCase(getLoanHistoryByUid.rejected, (state, action) => {
+      .addCase(getLoanHistoryByField.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
@@ -566,7 +567,7 @@ const personalLoansSlice = createSlice({
       })
       .addCase(getFullLoanDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.fullLoanDetails = action.payload;        
+        state.fullLoanDetails = action.payload;
       })
       .addCase(getFullLoanDetails.rejected, (state, action) => {
         state.loading = false;

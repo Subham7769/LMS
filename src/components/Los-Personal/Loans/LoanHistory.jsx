@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getFullLoanDetails,
   getLoanHistory,
-  getLoanHistoryByUid,
+  getLoanHistoryByField,
 } from "../../../redux/Slices/personalLoansSlice";
-import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputText from "../../Common/InputText/InputText";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
@@ -40,10 +40,9 @@ const LoanHistory = () => {
   const dispatch = useDispatch();
   const { loanHistory, loading, loanHistoryTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
-  const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
-  const [uid, setUid] = useState("");
-  const [borrowerOptions, setBorrowerOptions] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchBy, setSearchBy] = useState("");
 
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
@@ -52,28 +51,17 @@ const LoanHistory = () => {
     dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
   };
 
-  useEffect(() => {
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-  }, [dispatch]);
-
-  useEffect(() => {
-    const options = allBorrowersData.map((item) => ({
-      label: `${item.borrowerProfile?.personalDetails?.title} ${item.borrowerProfile?.personalDetails?.surname} ${item.borrowerProfile?.personalDetails?.otherName}`,
-      value: item.uid,
-    }));
-
-    setBorrowerOptions(options);
-  }, [allBorrowersData]);
-
   const loanHistoryData = transformData(loanHistory);
 
   const handleSearch = () => {
-    dispatch(getLoanHistoryByUid(uid));
+    dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
+    setSearchBy("");
+    setSearchValue("");
   };
 
   const handleReset = () => {
-    setUid(""); // Reset selected UID
-    setCurrentPage(0); // Reset to the first page
+    setSearchBy("");
+    setSearchValue("");
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
   };
 
@@ -87,6 +75,11 @@ const LoanHistory = () => {
   const closeFullLoanDetailModal = () => {
     setShowModal(false);
   };
+
+  const searchOptions = [
+    { label: "Borrower Name", value: "borrowerName" },
+    { label: "Unique ID", value: "uid" },
+  ];
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
@@ -159,18 +152,27 @@ const LoanHistory = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5`}>
-        <div className="w-full">
+      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
+        <div className="w-[45%]">
           <InputSelect
-            labelName="Borrower"
-            inputName="uid"
-            inputOptions={borrowerOptions}
-            inputValue={uid}
-            onChange={(e) => setUid(e.target.value)}
+            labelName="Search By"
+            inputName="searchBy"
+            inputOptions={searchOptions}
+            inputValue={searchBy}
+            onChange={(e) => setSearchBy(e.target.value)}
+          />
+        </div>
+        <div className="w-[45%]">
+          <InputText
+            labelName="Enter Value"
+            inputName="searchValue"
+            inputValue={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            required
           />
         </div>
 
-        <div className="flex gap-5">
+        <div className="flex align-middle gap-5">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
