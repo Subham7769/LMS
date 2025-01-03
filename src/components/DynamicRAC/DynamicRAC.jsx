@@ -231,7 +231,7 @@ const DynamicRAC = () => {
     dispatch(deleteDynamicRac(racId)).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacData());
-        navigate("/dynamic-rac");
+        navigate("/loan/dynamic-rac");
       }
     });
   };

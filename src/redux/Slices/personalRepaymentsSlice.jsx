@@ -60,14 +60,14 @@ export const fetchClosingBalance = createAsyncThunk(
 // Submit Repayment
 export const uploadRepayment = createAsyncThunk(
   "repayment/uploadRepayment",
-  async ({ draftRepaymentDTOList}, { rejectWithValue }) => {
+  async ({ draftRepaymentDTOList }, { rejectWithValue }) => {
     try {
       const updatedDraftRepaymentDTOList = draftRepaymentDTOList.map(
-        ({closingBalance, ...entry}) => ({
+        ({ closingBalance, ...entry }) => ({
           ...entry,
           loan: entry.loan.split("@")[0],
           collectionDate: entry.collectionDate + " 00:00:00",
-          payAll:entry.amount >= closingBalance.xcClosingAmount
+          payAll: entry.amount >= closingBalance.xcClosingAmount,
         })
       );
       const token = localStorage.getItem("authToken");
@@ -104,7 +104,8 @@ export const getRepayments = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_REPAYMENT_GET_ALL_CREATED_REPAYMENT_PERSONAL_BORROWER
+          import.meta.env
+            .VITE_REPAYMENT_GET_ALL_CREATED_REPAYMENT_PERSONAL_BORROWER
         }?pageSize=${pageSize}&pageNumber=${pageNumber}`,
         {
           method: "GET",
@@ -190,7 +191,7 @@ export const uploadFile = createAsyncThunk(
       console.log(fileData);
       // Create a FormData object to append the file
       const formData = new FormData();
-      formData.append("file", fileData); 
+      formData.append("file", fileData);
 
       const response = await fetch(
         `${import.meta.env.VITE_REPAYMENT_FILE_UPLOAD_PERSONAL_BORROWER}`,
@@ -217,6 +218,79 @@ export const uploadFile = createAsyncThunk(
   }
 );
 
+// Fetch Borrower By Field
+export const fetchRepaymentByField = createAsyncThunk(
+  "borrowers/fetchRepaymentByField", // action type
+  async ({ field, value }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const username = localStorage.getItem("username");
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER
+        }?fieldName=${field}&value=${value}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to fetch borrower by field"
+        );
+      }
+
+      const data = await response.json();
+      const length = data.length;
+      if (length < 1) {
+        throw new Error("User not Found");
+      }
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Fetch Repayment Files
+export const fetchRepaymentFileHistory = createAsyncThunk(
+  "repayments/fetchRepaymentFileHistory", 
+  async (_, { rejectWithValue }) => {
+    try {
+      const authToken = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_REPAYMENT_GET_FILE_HISTORY_PERSONAL_BORROWER}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to fetch repayment file details"
+        );
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 const initialState = {
   draftRepaymentDTOList: [
     {
@@ -229,14 +303,45 @@ const initialState = {
       accounting: "",
       userId: "",
       payAll: false,
-
     },
   ],
   openLoans: [],
   repaymentData: [],
   repaymentHeaderData: {},
   approveRepaymentData: [],
-  approveRepaymentTotalElements:[],
+  approveRepaymentTotalElements: [],
+  repaymentFileHistory:[
+    {
+        "fileId": "2d8f63ff-5b69-4417-96c0-b5f449322bdd",
+        "fileName": "repaymentBulkUpload.csv",
+        "fileCount": 2,
+        "successLinesCount": 2,
+        "failedLinesCount": 0,
+        "fileSize": 199,
+        "uploadDate": "2025-01-01 17:04:27",
+        "status": "DONE_SUCCESSFULLY"
+    },
+    {
+        "fileId": "fba67314-f564-40b7-9c54-d30e61c3208e",
+        "fileName": "carbon.Report-Configuration.json",
+        "fileCount": 437,
+        "successLinesCount": 0,
+        "failedLinesCount": 437,
+        "fileSize": 18888,
+        "uploadDate": "2025-01-01 17:05:27",
+        "status": "DONE_SUCCESSFULLY"
+    },
+    {
+        "fileId": "40df3e7e-402e-436b-8335-37669126a7f9",
+        "fileName": "debtBurdenCabCelling.xls",
+        "fileCount": null,
+        "successLinesCount": null,
+        "failedLinesCount": null,
+        "fileSize": 27136,
+        "uploadDate": "2025-01-01 17:07:14",
+        "status": "FAILED"
+    }
+],
   error: null,
   loading: false,
 };
@@ -330,8 +435,8 @@ const personalRepaymentsSlice = createSlice({
       })
       .addCase(getRepayments.fulfilled, (state, action) => {
         state.loading = false;
-        state.approveRepaymentData = action.payload.draftRepaymentDTOList
-        state.approveRepaymentTotalElements = action.payload.count
+        state.approveRepaymentData = action.payload.draftRepaymentDTOList;
+        state.approveRepaymentTotalElements = action.payload.count;
       })
       .addCase(getRepayments.rejected, (state, action) => {
         state.loading = false;
@@ -367,10 +472,14 @@ const personalRepaymentsSlice = createSlice({
         // Update the amount in the draftRepaymentDTOList
         state.draftRepaymentDTOList = state.draftRepaymentDTOList.map((entry) =>
           entry.userId === userId
-            ? { ...entry, amount: totalOutstanding, closingBalance:action.payload }
+            ? {
+                ...entry,
+                amount: totalOutstanding,
+                closingBalance: action.payload,
+              }
             : entry
         );
-        state.loading = false;        
+        state.loading = false;
       })
       .addCase(fetchClosingBalance.rejected, (state, action) => {
         state.loading = false;
@@ -390,6 +499,33 @@ const personalRepaymentsSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "File upload failed";
         toast.error(`API Error : ${action.payload}`);
+      })
+      // fetch Repayment By Field Name
+      .addCase(fetchRepaymentByField.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(fetchRepaymentByField.fulfilled, (state, action) => {
+        state.loading = false;
+        state.approveRepaymentData = action.payload;
+      })
+      .addCase(fetchRepaymentByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
+        toast.error(`API Error : ${action.payload}`);
+      })
+      // fetch Repayment File History
+      .addCase(fetchRepaymentFileHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchRepaymentFileHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.repaymentFileHistory = action.payload;
+      })
+      .addCase(fetchRepaymentFileHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });

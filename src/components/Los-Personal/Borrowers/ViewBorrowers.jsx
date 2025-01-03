@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loanOfficer, accountStatusOptions } from "../../../data/LosData";
+import { accountStatusOptions } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
@@ -15,7 +15,6 @@ import {
   setUpdateBorrower,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
-import SelectInput from "../../Common/DynamicSelect/DynamicSelect"; //Dynamic Select
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();

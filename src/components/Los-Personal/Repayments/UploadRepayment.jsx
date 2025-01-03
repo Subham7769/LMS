@@ -16,17 +16,18 @@ import {
   setRepaymentHeaderData,
   updateRepaymentHeaderData,
   uploadFile,
+  fetchRepaymentFileHistory,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import Accordion from "../../Common/Accordion/Accordion";
+import { DocumentArrowDownIcon,QuestionMarkCircleIcon,ArrowUpTrayIcon,CheckCircleIcon } from "@heroicons/react/24/outline";
 
 const UploadRepayment = () => {
   const [formData, setFormData] = useState({
     loanProduct: "",
   });
   const dispatch = useDispatch();
-  const { repaymentData, repaymentHeaderData } = useSelector(
-    (state) => state.personalRepayments
-  );
+  const { repaymentData, repaymentHeaderData, repaymentFileHistory } =
+    useSelector((state) => state.personalRepayments);
   const [showStep2, setShowStep2] = useState(false);
   const [columnArray, setColumnArray] = useState([]);
   const [saveHeadersOption, setSaveHeadersOption] = useState("");
@@ -42,6 +43,8 @@ const UploadRepayment = () => {
     if (savedHeaderData) {
       dispatch(setRepaymentHeaderData(JSON.parse(savedHeaderData)));
     }
+
+    // dispatch(fetchRepaymentFileHistory());
   }, [dispatch]);
 
   const handleInputChange = (e) => {
@@ -52,7 +55,7 @@ const UploadRepayment = () => {
   // Handle the change for each radio button
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(e.target)
+    console.log(e.target);
     setSelectedColumns((prevState) => ({
       ...prevState,
       [name]: value,
@@ -101,9 +104,12 @@ const UploadRepayment = () => {
     console.log(localStorage.getItem("repaymentHeaderData"));
   };
 
+  console.log(repaymentFileHistory);
+
   return (
     <div>
       <Accordion
+        icon={QuestionMarkCircleIcon}
         heading={"Help"}
         renderExpandedContent={() => (
           <div className="flex flex-col gap-5">
@@ -336,6 +342,7 @@ const UploadRepayment = () => {
       />
 
       <Accordion
+        icon={ArrowUpTrayIcon}
         heading={"Upload Repayment CSV File"}
         renderExpandedContent={() => (
           <div className="flex flex-col gap-5">
@@ -346,9 +353,7 @@ const UploadRepayment = () => {
                 <ul className="list-disc pl-6 space-y-2">
                   <li>
                     <a
-                      href={
-                        "/src/assets/files/sample_file_bulk_repayments.csv"
-                      }
+                      href={"/src/assets/files/sample_file_bulk_repayments.csv"}
                       className="text-blue-600 underline"
                     >
                       Click here to download a sample file.
@@ -524,9 +529,58 @@ const UploadRepayment = () => {
       />
 
       <Accordion
+        icon={CheckCircleIcon}
         heading={"History"}
         renderExpandedContent={() => (
-          <div>History Details for Uploaded files</div>
+          <div className="flex flex-col ">
+            {repaymentFileHistory.map((fileHistory) => (
+              <div className="flex flex-col gap-3 mb-5 border-b-2 p-5 relative">
+                <h2>{fileHistory.fileName}</h2>
+                <p className="text-sm text-gray-500">
+                  {new Date(fileHistory.uploadDate).toISOString().split("T")[0]}
+                </p>
+                <div className="flex justify-start items-center gap-5">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-start items-center gap-4">
+                      <span className="h-4 w-4 bg-green-500 rounded-full"></span>
+                      <span>{fileHistory.successLinesCount}</span>
+                      <span>Accepted</span>
+                    </div>
+                    <div className="flex items-center justify-start gap-3">
+                      <DocumentArrowDownIcon className="h-5 w-5 text-indigo-500 hover:cursor-pointer" />
+                      <a href="#" className="text-indigo-500  text-sm">
+                        Download Accepted Records
+                      </a>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-start items-center gap-3">
+                      <span className="h-4 w-4 bg-red-500 rounded-full"></span>
+                      <span>{fileHistory.failedLinesCount}</span>
+                      <span>Rejected</span>
+                    </div>
+                    <div className="flex items-center justify-start gap-3">
+                      <DocumentArrowDownIcon className="h-5 w-5 text-indigo-500 hover:cursor-pointer" />
+                      <a href="#" className="text-indigo-500  text-sm">
+                        Download Rejected Records
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`absolute top-1/2 right-1 font-semibold translate-x-[-50%] translate-y-[-50%] px-2 py-1 rounded-lg ${
+                    fileHistory.status === "DONE_SUCCESSFULLY"
+                      ? "bg-green-100 text-green-500"
+                      : "bg-red-100 text-red-500"
+                  }`}
+                >
+                  {fileHistory.status === "DONE_SUCCESSFULLY"
+                    ? "Success"
+                    : "Failed"}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
         isOpen={false}
       />

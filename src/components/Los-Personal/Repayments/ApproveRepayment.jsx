@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
-import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import Button from "../../Common/Button/Button";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
-import { loanOfficer, ApproveRepaymentColumns } from "../../../data/LosData";
+import { ApproveRepaymentColumns } from "../../../data/LosData";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getRepayments,
   approveRepayment,
   rejectRepayment,
+  fetchRepaymentByField,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import Pagination from "../../Common/Pagination/Pagination";
 
@@ -23,24 +23,32 @@ const ApproveRepayment = () => {
     error,
   } = useSelector((state) => state.personalRepayments);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRepayments, setFilteredRepayments] =
-    useState(approveRepaymentData);
 
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchBy, setSearchBy] = useState("");
+  const [filteredRepayments, setFilteredRepayments] = useState([]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getRepayments({ pageNumber: currentPage, pageSize: pageSize }));
   };
 
   useEffect(() => {
-    const updatedRepayments = approveRepaymentData.filter((item) =>
+    setFilteredRepayments(approveRepaymentData);
+  }, [approveRepaymentData]);
+
+  useEffect(() => {
+    const updatedRepayments = approveRepaymentData.filter((repayment) =>
       [
-        item.amount,
-        item.userId,
-        item.method,
-        item.collectionBy,
-        item.accounting,
+        repayment.userId,
+        repayment.loan,
+        repayment.collectionBy,
+        repayment.accounting,
+        repayment.method,
+        repayment.transactionId,
+        repayment.installmentId,
+        repayment.requestId,
       ].some(
         (field) =>
           field &&
@@ -108,42 +116,116 @@ const ApproveRepayment = () => {
       </div>
     </div>
   );
+  console.log(filteredRepayments.length);
+
+  // Filter Repayments Based on Search Value
+  const applyFilters = () => {
+    const filtered = approveRepaymentData.filter((repayment) => {
+      let matchesSearchValue = "";
+      if (searchBy) {
+        matchesSearchValue = searchValue
+          ? repayment[searchBy]
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
+          : true;
+      } else {
+        matchesSearchValue = searchValue
+          ? [
+              repayment.userId,
+              repayment.loan,
+              repayment.collectionBy,
+              repayment.accounting,
+              repayment.method,
+              repayment.transactionId,
+              repayment.installmentId,
+              repayment.requestId,
+            ].some((field) =>
+              field?.toLowerCase().includes(searchValue.toLowerCase())
+            )
+          : true;
+      }
+
+      return matchesSearchValue;
+    });
+
+    setFilteredRepayments(filtered);
+  };
+
+  // Trigger Filtering on Search Value Change
+  useEffect(() => {
+    applyFilters();
+  }, [searchValue]);
+
+  const handleSearchFilter = (term) => {
+    setSearchValue(term);
+    applyFilters(); // Apply filters
+  };
+
+  const handleResetSearchBy = () => {
+    if (searchBy || searchValue) {
+      setSearchBy("");
+      setSearchValue("");
+      setFilteredRepayments(approveRepaymentData); // Reset to original data
+    } else {
+      dispatch(getRepayments({ pageNumber: 0, pageSize: 20 }));
+    }
+  };
+
+  const searchOptions = [
+    { label: "User Id", value: "userId" },
+    { label: "Loan Id", value: "loan" },
+    { label: "Collection By", value: "collectionBy" },
+    { label: "Accounting", value: "accounting" },
+    { label: "Method", value: "method" },
+    { label: "Transaction Id", value: "transactionId" },
+    { label: "Installment Id", value: "installmentId" },
+    { label: "Request Id", value: "requestId" },
+  ];
+
+  const SearchRepaymentByFieldSearch = () => {
+    dispatch(fetchRepaymentByField({ field: searchBy, value: searchValue }));
+    setSearchBy("");
+    setSearchValue("");
+  };
 
   return (
     <div className={`flex flex-col gap-3`}>
+
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[95%]">
-          {/* <InputSelect
-            labelName="All Staff"
-            inputName="allStaff"
-            inputOptions={loanOfficer}
-            inputValue={allStaff}
-            onChange={(e) => setAllStaff(e.target.value)}
-          /> */}
-          <InputText
-            labelName={"Search"}
-            inputName={"searchTerm"}
-            inputValue={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeHolder={`Enter Collected By, Method, Accounting,User Id,Amount`}
+        <div className="w-[45%]">
+          <InputSelect
+            labelName="Search By"
+            inputName="searchBy"
+            inputOptions={searchOptions}
+            inputValue={searchBy}
+            onChange={(e) => setSearchBy(e.target.value)}
           />
         </div>
-        <div className="flex gap-5 justify-end">
-          {/* <Button
+        <div className="w-[45%]">
+          <InputText
+            labelName="Enter Value"
+            inputName="searchValue"
+            inputValue={searchValue}
+            onChange={(e) => handleSearchFilter(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="flex align-middle gap-5">
+          <Button
             buttonName={"Search"}
-            onClick={() => {}}
+            onClick={SearchRepaymentByFieldSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
-          /> */}
+          />
           <Button
             buttonName={"Reset"}
-            onClick={() => setSearchTerm("")}
+            onClick={handleResetSearchBy}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
           />
         </div>
       </ContainerTile>
-      
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}
