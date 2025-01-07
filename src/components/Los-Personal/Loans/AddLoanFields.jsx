@@ -3,6 +3,7 @@ import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
 import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
@@ -17,6 +18,7 @@ import {
   setFields,
 } from "../../../redux/Slices/validationSlice";
 import { tenureTypeOptions } from "../../../data/OptionsData";
+import { CreditCardIcon } from "@heroicons/react/24/outline";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
@@ -57,14 +59,14 @@ const AddLoanFields = ({ addLoanData }) => {
   }, [allBorrowersData]);
 
   const handleInputChange = (e, section) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
-    dispatch(updateLoanField({ section, field: name, value }));
+    dispatch(updateLoanField({ section, field: name, value, type, checked }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, section) => {
     const { name, files } = e.target;
-    dispatch(updateLoanField({ name, value: files[0].name }));
+    dispatch(updateLoanField({ section, field: name, value: files[0].name }));
   };
 
   // All Fields Configuration
@@ -497,7 +499,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileChange(e, sectionName)}
+                onChange={(e) => handleInputChange(e, sectionName)}
                 rowCount={field.rowCount || 3}
                 isValidation={field.validation || false}
               />
@@ -526,6 +528,81 @@ const AddLoanFields = ({ addLoanData }) => {
   const extendLoan = (extendLoan) =>
     renderDetails(extendLoan, extendLoanConfig, "extendLoan");
 
+  const requirements = (requirements) => {
+    return (
+      <>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Payslips</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="paySlips"
+              inputValue={requirements.paySlips}
+              onChange={(e) => handleInputChange(e, "requirements")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requirements?.paySlipsVerified}
+                onChange={(e) => handleInputChange(e, "requirements")}
+                inputName="paySlipsVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Employer Pre-approval Form</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="employerForm"
+              inputValue={requirements.employerForm}
+              onChange={(e) => handleInputChange(e, "requirements")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requirements?.employerFormVerified}
+                onChange={(e) => handleInputChange(e, "requirements")}
+                inputName="employerFormVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Bank Statement</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="bankStatement"
+              inputValue={requirements.bankStatement}
+              onChange={(e) => handleInputChange(e, "requirements")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requirements?.bankStatementVerified}
+                onChange={(e) => handleInputChange(e, "requirements")}
+                inputName="bankStatementVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center">
+          <div>ATM Card</div>
+          <div className="flex gap-x-5 items-baseline">
+            <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
+            <div>
+              <InputCheckbox
+                labelName={"Available"}
+                inputChecked={requirements?.atmCard}
+                onChange={(e) => handleInputChange(e, "requirements")}
+                inputName="atmCard"
+              />
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   // Validation Checks
   const isValidationFailed = (errors, fields) => {
     // Iterate over fields and check if any corresponding error is true
@@ -539,6 +616,10 @@ const AddLoanFields = ({ addLoanData }) => {
         renderExpandedContent={() => generalDetails(addLoanData.generalDetails)}
         isOpen={true}
         error={isValidationFailed(validationError, generalDetailsInputNames)}
+      />
+      <Accordion
+        heading={"Requirement"}
+        renderExpandedContent={() => requirements(addLoanData.requirements)}
       />
       {/* <Accordion
         heading={"Advance Settings (optional)"}

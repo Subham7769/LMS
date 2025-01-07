@@ -18,6 +18,7 @@ import {
   CalculatorIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
+import formatNumber from "../../../utils/formatNumber";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -168,11 +169,11 @@ const LoanOffers = () => {
                 />
                 <InfoRow
                   label="Total Credit Limit (TCL)"
-                  value={loanConfigData?.profile?.cashTCL}
+                  value={formatNumber(loanConfigData.profile.cashTCL)}
                 />
                 <InfoRow
                   label="Net Total Credit Limit"
-                  value={loanConfigData?.profile?.netCashTCL}
+                  value={formatNumber(loanConfigData?.profile?.netCashTCL)}
                 />
               </div>
             </ContainerTile>
@@ -190,8 +191,13 @@ const LoanOffers = () => {
               <div className="text-[14px]">
                 <div className="text-gray-500">Loan Range:</div>
                 <div className="font-semibold text-lg mb-2">
-                  {loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)} -{" "}
-                  {loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)}
+                  {formatNumber(
+                    loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)
+                  )}{" "}
+                  -{" "}
+                  {formatNumber(
+                    loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)
+                  )}
                 </div>
                 <div className="text-gray-500">Duration Range:</div>
                 <div className="font-semibold text-lg">
@@ -272,11 +278,11 @@ const LoanOffers = () => {
                   <div className="text-[14px]">
                     <div className="text-gray-500">Principal Amount:</div>
                     <div className="font-semibold text-lg mb-2">
-                      {ci?.principalAmount.toFixed(2)}
+                      {formatNumber(ci?.principalAmount.toFixed(2))}
                     </div>
                     <div className="text-gray-500">Total Interest:</div>
                     <div className="font-semibold text-lg mb-2">
-                      {ci?.totalInterestAmount.toFixed(2)}
+                      {formatNumber(ci?.totalInterestAmount.toFixed(2))}
                     </div>
                     <div className="text-gray-500">Service Fee:</div>
                     <div className="flex items-baseline gap-x-2">
@@ -299,7 +305,7 @@ const LoanOffers = () => {
                     <div className="border-t border-gray-300 pt-2 text-blue-600">
                       <div className="font-semibold">Total Loan Amount:</div>
                       <div className="font-bold text-lg">
-                        {ci?.totalLoanAmount.toFixed(2)}
+                        {formatNumber(ci?.totalLoanAmount.toFixed(2))}
                       </div>
                     </div>
                   </div>
@@ -323,7 +329,7 @@ const LoanOffers = () => {
                     <div className="text-[14px]">
                       <div className="text-gray-500">Total Loan Amount</div>
                       <div className="font-semibold text-lg text-blue-600">
-                        {ci?.totalLoanAmount.toFixed(2)}
+                        {formatNumber(ci?.totalLoanAmount.toFixed(2))}
                       </div>
                       <div
                         className="cursor-pointer text-blue-600 hover:underline"
@@ -337,8 +343,10 @@ const LoanOffers = () => {
                     <div className="text-[14px]">
                       <div className="text-gray-500">Monthly EMI</div>
                       <div className="font-semibold text-lg">
-                        {ci?.installmentSummaryResponse[0]?.installmentValue.toFixed(
-                          2
+                        {formatNumber(
+                          ci?.installmentSummaryResponse[0]?.installmentValue.toFixed(
+                            2
+                          )
                         )}
                       </div>
                     </div>

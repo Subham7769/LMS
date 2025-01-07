@@ -58,7 +58,7 @@ const initialState = {
       amountOfInvoice: "",
       invoiceExpectedDateOfPayment: "",
     },
-    supplierDetails: {
+    offTakerDetails: {
       nameOfCompany: "",
       industry: "",
       natureOfBusiness: "",
@@ -69,20 +69,56 @@ const initialState = {
       position: "",
       cellPhoneNumber: "",
     },
-    extendLoan: {
-      extendLoanAfterMaturity: "",
-      extendLoanInterestType: "",
-      calculateInterestOn: "",
-      loanInterestRateAfterMaturity: "",
-      recurringPeriodAfterMaturity: "",
-      per: "",
-      includeFeesAfterMaturity: "",
-      loanStatusPastMaturity: "",
-      applyToDate: "",
-      loanStatus: "",
-      selectGuarantors: "",
-      loanTitle: "",
-      description: "",
+    supplierDetails: {
+      nameOfCompany: "",
+      industry: "",
+      natureOfBusiness: "",
+      location: "",
+      province: "",
+      country: "",
+      contactperson: "",
+      position: "",
+      cellPhoneNumber: "",
+      postalAddress: "",
+      physicalAddress: "",
+      emailAddress: "",
+      phoneNumber: "",
+    },
+    collateralDetails: {
+      collateralType: "",
+      marketValue: "",
+      lastValutionDate: "",
+      insuranceStatus: "",
+      insuranceExpiryDate: "",
+      locationOfCollateral: "",
+      plotVehicleNo: "",
+      stateOfCollateral: "",
+    },
+    LHADetails: {
+      loanOfficerFindings: "",
+      business: "",
+      office: "",
+      businessOperations: "",
+      otherDetails: "",
+      otherComments: "",
+    },
+    requiredDocuments: {
+      resolutionToBorrow: null,
+      resolutionToBorrowVerified: false,
+      purchaseOrder: null,
+      purchaseOrderVerified: false,
+      invoice: null,
+      invoiceVerified: false,
+      profomaInvoice: null,
+      profomaInvoiceVerified: false,
+      quotationsFromSupplier: null,
+      quotationsFromSupplierVerified: false,
+      bankStatement: null,
+      bankStatementVerified: false,
+      creditReferenceBureauReport: null,
+      creditReferenceBureauReportVerified: false,
+      confirmationOfBankingDetails: null,
+      confirmationOfBankingDetailsVerified: false,
     },
     loanFiles: [],
   },
@@ -116,12 +152,12 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      supplierDetails: {
+      offTakerDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "09:00 - 17:00",
         cashOrBank: "Bank",
       },
-      extendLoan: {
+      supplierDetails: {
         extendLoanAfterMaturity: "No",
         extendLoanInterestType: "",
         calculateInterestOn: "",
@@ -167,12 +203,12 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "15",
       },
-      supplierDetails: {
+      offTakerDetails: {
         automaticPayments: "No",
         timeToPostBetween: "",
         cashOrBank: "Cash",
       },
-      extendLoan: {
+      supplierDetails: {
         extendLoanAfterMaturity: "Yes",
         extendLoanInterestType: "Fixed",
         calculateInterestOn: "Principal",
@@ -218,12 +254,12 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      supplierDetails: {
+      offTakerDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "08:00 - 20:00",
         cashOrBank: "Bank",
       },
-      extendLoan: {
+      supplierDetails: {
         extendLoanAfterMaturity: "No",
         extendLoanInterestType: "",
         calculateInterestOn: "",
@@ -271,12 +307,12 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      supplierDetails: {
+      offTakerDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "09:00 - 17:00",
         cashOrBank: "Bank",
       },
-      extendLoan: {
+      supplierDetails: {
         extendLoanAfterMaturity: "No",
         extendLoanInterestType: "",
         calculateInterestOn: "",
@@ -323,12 +359,12 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "15",
       },
-      supplierDetails: {
+      offTakerDetails: {
         automaticPayments: "No",
         timeToPostBetween: "",
         cashOrBank: "Cash",
       },
-      extendLoan: {
+      supplierDetails: {
         extendLoanAfterMaturity: "Yes",
         extendLoanInterestType: "Fixed",
         calculateInterestOn: "Principal",
@@ -375,12 +411,12 @@ const initialState = {
         balloonRepaymentAmount: "",
         moveFirstRepaymentDays: "10",
       },
-      supplierDetails: {
+      offTakerDetails: {
         automaticPayments: "Yes",
         timeToPostBetween: "08:00 - 20:00",
         cashOrBank: "Bank",
       },
-      extendLoan: {
+      supplierDetails: {
         extendLoanAfterMaturity: "No",
         extendLoanInterestType: "",
         calculateInterestOn: "",
@@ -409,10 +445,11 @@ const smeLoansSlice = createSlice({
   initialState,
   reducers: {
     updateLoanField: (state, action) => {
-      const { section, field, value } = action.payload;
+      const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
       if (section && state.addLoanData[section]) {
-        state.addLoanData[section][field] = value;
+        state.addLoanData[section][field] =
+          type === "checkbox" ? checked : value;
       } else {
         // If no section, update directly in addLoanData
         state.addLoanData = {

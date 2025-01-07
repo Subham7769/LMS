@@ -4,6 +4,7 @@ import { XCircleIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { convertDate } from "../../../utils/convertDate";
+import formatNumber from "../../../utils/formatNumber";
 
 const InstallmentSummery = ({ onClose, installmentConfigData }) => {
   const { loanConfigData } = useSelector((state) => state.personalLoans);
@@ -19,6 +20,10 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
   const dataWithEmiNo = installmentConfigData.map((item, index) => ({
     ...item,
     emiNo: index + 1,
+    principalValue: formatNumber(item.principalValue),
+    interestValue: formatNumber(item.interestValue),
+    totalOutstandingAmount: formatNumber(item.totalOutstandingAmount),
+    installmentValue: formatNumber(item.installmentValue),
     installmentDate: convertDate(item.installmentDate),
   }));
 
@@ -44,25 +49,25 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Term Cost</p>
           <p className="text-lg font-semibold text-black">
-            $ {rowData.termCost}
+            $ {formatNumber(rowData.termCost)}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Early Settlement Fee</p>
           <p className="text-lg font-semibold text-black">
-            $ {rowData.earlySettlementFee}
+            $ {formatNumber(rowData.earlySettlementFee)}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Saved Fee</p>
           <p className="text-lg font-semibold text-black">
-            $ {rowData.savedFee}
+            $ {formatNumber(rowData.savedFee)}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Closing Amount</p>
           <p className="text-lg font-semibold text-black">
-            $ {rowData.closingAmount}
+            $ {formatNumber(rowData.closingAmount)}
           </p>
         </div>
       </div>
@@ -103,30 +108,85 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
               renderExpandedRow={renderExpandedRow}
             />
           </div>
-          {/* <div className="grid grid-cols-7">
-            <div>Total</div>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-            <div>
-              $
-              {loanConfigData?.dynamicCashLoanOffers[0]?.principalAmount.toFixed(
-                2
-              )}
-            </div>
-            <div>
-              $
-              {loanConfigData?.dynamicCashLoanOffers[0]?.totalInterestAmount.toFixed(
-                2
-              )}
-            </div>
-            <div>-</div>
-            <div>
-              $
-              {loanConfigData?.dynamicCashLoanOffers[0]?.totalLoanAmount.toFixed(
-                2
-              )}
-            </div>
-          </div> */}
+          <table
+            className="min-w-full table-auto border-t border-gray-300"
+            role="table"
+          >
+            <thead className="sticky top-0 z-10 invisible">
+              <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
+                <th className="px-4"></th>
+                <th className="px-4">EMI No.</th>
+                <th className="px-4">Date</th>
+                <th className="px-4">Principal</th>
+                <th className="px-4">Interest</th>
+                <th className="px-4">Outstanding</th>
+                <th className="px-4">EMI Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <>
+                <tr className="hover:bg-gray-50 cursor-pointer text-xs font-medium px-4 py-6">
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    >
+                      Total
+                    </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    ></span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    ></span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    >
+                      {formatNumber(
+                        loanConfigData?.dynamicCashLoanOffers[0]?.principalAmount.toFixed(
+                          2
+                        )
+                      )}
+                    </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    >
+                      {formatNumber(
+                        loanConfigData?.dynamicCashLoanOffers[0]?.totalInterestAmount.toFixed(
+                          2
+                        )
+                      )}
+                    </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    >
+                      -
+                    </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    >
+                      {formatNumber(
+                        loanConfigData?.dynamicCashLoanOffers[0]?.totalLoanAmount.toFixed(
+                          2
+                        )
+                      )}
+                    </span>
+                  </td>
+                </tr>
+              </>
+            </tbody>
+          </table>
         </div>
       </div>
     </>

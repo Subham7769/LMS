@@ -3,14 +3,18 @@ import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import { resetAddLoanData, submitLoan } from "../../../redux/Slices/personalLoansSlice";
+import {
+  resetAddLoanData,
+  submitLoan,
+} from "../../../redux/Slices/personalLoansSlice";
 import { useNavigate } from "react-router-dom";
+import store from "../../../redux/store";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addLoanData } = useSelector((state) => state.personalLoans);
-  const isValid = useSelector((state) => state.validation.isValid);
+  // const isValid = useSelector((state) => state.validation.isValid);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -33,6 +37,9 @@ const AddLoans = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
+    console.log(addLoanData);
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
       await dispatch(submitLoan(addLoanData.generalDetails)).unwrap();
       navigate("/loan/loan-origination-system/personal/loans/loan-offers");

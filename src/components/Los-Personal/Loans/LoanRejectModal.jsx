@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputText from "../../Common/InputText/InputText";
+import InputTextArea from "../../Common/InputTextArea/InputTextArea";
 import Button from "../../Common/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { updateValidationError } from "../../../redux/Slices/validationSlice";
@@ -47,15 +47,16 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-4/5 ">
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
-            <InputText
+        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-2/5 ">
+          <form>
+            <InputTextArea
               labelName="Reason for Rejection"
               inputName="rejectionReason"
               inputValue={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               required
               isValidation={true}
+              rowCount={5}
             />
           </form>
           <div className="flex gap-3 justify-center md:justify-end">

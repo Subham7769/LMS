@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-
 import convertToTitleCase from "../../utils/convertToTitleCase";
 
 export const fetchLoanProductData = createAsyncThunk(
@@ -323,6 +322,15 @@ const initialState = {
       principalAmount: 0,
       repaymentCycle: "",
     },
+    requirements: {
+      paySlips: null,
+      paySlipsVerified: false,
+      employerForm: null,
+      employerFormVerified: false,
+      bankStatement: null,
+      bankStatementVerified: false,
+      atmCard: false,
+    },
     advanceSettings: {
       decimalPlaces: "",
       interestStartDate: "",
@@ -379,10 +387,11 @@ const personalLoansSlice = createSlice({
   initialState,
   reducers: {
     updateLoanField: (state, action) => {
-      const { section, field, value } = action.payload;
+      const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
       if (section && state.addLoanData[section]) {
-        state.addLoanData[section][field] = value;
+        state.addLoanData[section][field] =
+          type === "checkbox" ? checked : value;
       } else {
         // If no section, update directly in addLoanData
         state.addLoanData = {

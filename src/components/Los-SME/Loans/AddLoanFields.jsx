@@ -3,6 +3,8 @@ import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputEmail from "../../Common/InputEmail/InputEmail";
+import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
 import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
@@ -55,10 +57,45 @@ const AddLoanFields = ({ addLoanData }) => {
     setBorrowerOptions(options);
   }, [allBorrowersData]);
 
+  // Keys to process for document status
+  const relevantKeys = ["requiredDocuments"];
+
+  // Helper to calculate uploaded and verified documents
+  const calculateDocumentStats = () => {
+    let uploadedCount = 0;
+    let verifiedCount = 0;
+
+    // Loop through relevant document categories
+    relevantKeys.forEach((key) => {
+      const category = addLoanData[key];
+      Object.keys(category).forEach((field) => {
+        if (!field.endsWith("Verified") && category[field] !== null) {
+          uploadedCount++;
+        }
+
+        if (field.endsWith("Verified") && category[field] === true) {
+          verifiedCount++;
+        }
+      });
+    });
+
+    return { uploadedCount, verifiedCount };
+  };
+
+  const { uploadedCount, verifiedCount } = calculateDocumentStats();
+
   const handleInputChange = (e, section) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
-    dispatch(updateLoanField({ section, field: name, value }));
+    dispatch(
+      updateLoanField({
+        section,
+        field: name,
+        value: type === "file" ? value : value,
+        type,
+        checked,
+      })
+    );
   };
 
   const handleFileChange = (e) => {
@@ -242,7 +279,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
-  const supplierConfig = [
+  const offTakerConfig = [
     {
       labelName: "Name of Company",
       inputName: "nameOfCompany",
@@ -299,121 +336,179 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
-  const extendLoanConfig = [
+  const supplierDetailsConfig = [
     {
-      labelName: "Extend Loan After Maturity",
-      inputName: "extendLoanAfterMaturity",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Interest Type",
-      inputName: "extendLoanInterestType",
-      type: "select",
-      options: [
-        { value: "Fixed", label: "Fixed" },
-        { value: "Variable", label: "Variable" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Calculate Interest on",
-      inputName: "calculateInterestOn",
-      type: "select",
-      options: [
-        { value: "Principal", label: "Principal" },
-        { value: "Outstanding", label: "Outstanding" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Loan Interest Rate After Maturity %",
-      inputName: "loanInterestRateAfterMaturity",
+      labelName: "Name of Company",
+      inputName: "nameOfCompany",
       type: "text",
       validation: false,
     },
     {
-      labelName: "Recurring Period After Maturity",
-      inputName: "recurringPeriodAfterMaturity",
+      labelName: "Industry",
+      inputName: "industry",
       type: "text",
       validation: false,
     },
     {
-      labelName: "Per",
-      inputName: "per",
-      type: "select",
-      options: [
-        { value: "Month", label: "Month" },
-        { value: "Year", label: "Year" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Include Fees After Maturity",
-      inputName: "includeFeesAfterMaturity",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Loan status Past Maturity",
-      inputName: "loanStatusPastMaturity",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Apply to the date (Optional)",
-      inputName: "applyToDate",
+      labelName: "Nature of Business",
+      inputName: "natureOfBusiness",
       type: "text",
       validation: false,
     },
     {
-      labelName: "Loan Status",
-      inputName: "loanStatus",
-      type: "select",
-      options: [
-        { value: "Active", label: "Active" },
-        { value: "Past Due", label: "Past Due" },
-        { value: "Closed", label: "Closed" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Select Guarantors",
-      inputName: "selectGuarantors",
+      labelName: "Location (Town/City)",
+      inputName: "location",
       type: "text",
       validation: false,
     },
     {
-      labelName: "Loan Title",
-      inputName: "loanTitle",
+      labelName: "Province",
+      inputName: "province",
       type: "text",
       validation: false,
     },
     {
-      labelName: "Description",
-      inputName: "description",
+      labelName: "Country",
+      inputName: "country",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Contact Person (full name)",
+      inputName: "contactperson",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Position",
+      inputName: "position",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Cell phone number",
+      inputName: "cellPhoneNumber",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Postal Address",
+      inputName: "postalAddress",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Physical Address",
+      inputName: "physicalAddress",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Email Address",
+      inputName: "emailAddress",
+      type: "email",
+      validation: false,
+    },
+    {
+      labelName: "Phone Number",
+      inputName: "phoneNumber",
+      type: "number",
+      validation: false,
+    },
+  ];
+
+  const collateralDetailsConfig = [
+    {
+      labelName: "Collateral Type",
+      inputName: "collateralType",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Market Value",
+      inputName: "marketValue",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Last Valution Date",
+      inputName: "lastValutionDate",
+      type: "date",
+      validation: false,
+    },
+    {
+      labelName: "Insurance Status",
+      inputName: "insuranceStatus",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Insurance Expiry Date",
+      inputName: "insuranceExpiryDate",
+      type: "date",
+      validation: false,
+    },
+    {
+      labelName: "Location Of Collateral",
+      inputName: "locationOfCollateral",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Contact Person (full name)",
+      inputName: "contactperson",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Plot Vehicle No",
+      inputName: "plotVehicleNo",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "State Of Collateral",
+      inputName: "stateOfCollateral",
+      type: "number",
+      validation: false,
+    },
+  ];
+
+  const LHADetailsConfig = [
+    {
+      labelName: "Loan Officer Findings",
+      inputName: "loanOfficerFindings",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Business",
+      inputName: "business",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Office",
+      inputName: "office",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Business Operations",
+      inputName: "businessOperations",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Collateral search results and other details",
+      inputName: "otherDetails",
       type: "textarea",
-      rowCount: 3,
       validation: false,
     },
     {
-      labelName: "Loan Files",
-      inputName: "loanFiles",
-      type: "file",
-      accept: ".jpg,.png",
-      placeholder: "Click or drag to upload",
+      labelName: "Other Comments",
+      inputName: "otherComments",
+      type: "textarea",
       validation: false,
     },
   ];
@@ -428,10 +523,14 @@ const AddLoanFields = ({ addLoanData }) => {
   const profomaDetailsInputNames = profomaDetailsConfig.map(
     (field) => field.inputName
   );
-  const supplierInputNames = supplierConfig.map(
+  const offTakerInputNames = offTakerConfig.map((field) => field.inputName);
+  const supplierDetailsInputNames = supplierDetailsConfig.map(
     (field) => field.inputName
   );
-  const extendLoanInputNames = extendLoanConfig.map((field) => field.inputName);
+  const collateralDetailsInputNames = collateralDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const LHADetailsInputNames = LHADetailsConfig.map((field) => field.inputName);
 
   const renderDetails = (details, config, sectionName) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -516,9 +615,10 @@ const AddLoanFields = ({ addLoanData }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileChange(e, sectionName)}
+                onChange={(e) => handleInputChange(e, sectionName)}
                 rowCount={field.rowCount || 3}
                 isValidation={field.validation || false}
+                placeHolder={`Enter ${field.labelName}`}
               />
             );
           default:
@@ -535,15 +635,176 @@ const AddLoanFields = ({ addLoanData }) => {
   const profomaDetails = (profomaDetails) =>
     renderDetails(profomaDetails, profomaDetailsConfig, "profomaDetails");
 
+  const offTakerDetails = (offTakerDetails) =>
+    renderDetails(offTakerDetails, offTakerConfig, "offTakerDetails");
+
   const supplierDetails = (supplierDetails) =>
+    renderDetails(supplierDetails, supplierDetailsConfig, "supplierDetails");
+
+  const collateralDetails = (collateralDetails) =>
     renderDetails(
-      supplierDetails,
-      supplierConfig,
-      "supplierDetails"
+      collateralDetails,
+      collateralDetailsConfig,
+      "collateralDetails"
     );
 
-  const extendLoan = (extendLoan) =>
-    renderDetails(extendLoan, extendLoanConfig, "extendLoan");
+  const LHADetails = (LHADetails) =>
+    renderDetails(LHADetails, LHADetailsConfig, "LHADetails");
+
+  const requiredDocuments = (requiredDocuments) => {
+    return (
+      <>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Resolution to borrow</div>
+          <div className="flex gap-x-5 items-baseline">
+            <InputFile
+              inputName="resolutionToBorrow"
+              inputValue={requiredDocuments.resolutionToBorrow}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requiredDocuments?.resolutionToBorrowVerified}
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="resolutionToBorrowVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Purchase Order</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="purchaseOrder"
+              inputValue={requiredDocuments.purchaseOrder}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requiredDocuments?.purchaseOrderVerified}
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="purchaseOrderVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Invoice</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="invoice"
+              inputValue={requiredDocuments.invoice}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requiredDocuments?.invoiceVerified}
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="invoiceVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Profoma Invoice</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="profomaInvoice"
+              inputValue={requiredDocuments.profomaInvoice}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requiredDocuments?.profomaInvoiceVerified}
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="profomaInvoiceVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Quotations from supplier</div>
+          <div className="flex gap-x-5 items-baseline">
+            <InputFile
+              inputName="quotationsFromSupplier"
+              inputValue={requiredDocuments.quotationsFromSupplier}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requiredDocuments?.quotationsFromSupplierVerified}
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="quotationsFromSupplierVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>6 months Bank Statement</div>
+          <div className="flex gap-x-5 items-baseline">
+            <InputFile
+              inputName="bankStatement"
+              inputValue={requiredDocuments.bankStatement}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={requiredDocuments?.bankStatementVerified}
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="bankStatementVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+          <div>Credit Reference Bureau report</div>
+          <div className="flex gap-x-5 items-center">
+            <InputFile
+              inputName="creditReferenceBureauReport"
+              inputValue={requiredDocuments.creditReferenceBureauReport}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={
+                  requiredDocuments?.creditReferenceBureauReportVerified
+                }
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="creditReferenceBureauReportVerified"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center">
+          <div>Confirmation of Banking Details</div>
+          <div className="flex gap-x-5 items-baseline">
+            <InputFile
+              inputName="confirmationOfBankingDetails"
+              inputValue={requiredDocuments.confirmationOfBankingDetails}
+              onChange={(e) => handleInputChange(e, "requiredDocuments")}
+            />
+            <div>
+              <InputCheckbox
+                labelName={"Verified"}
+                inputChecked={
+                  requiredDocuments?.confirmationOfBankingDetailsVerified
+                }
+                onChange={(e) => handleInputChange(e, "requiredDocuments")}
+                inputName="confirmationOfBankingDetailsVerified"
+              />
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   // Validation Checks
   const isValidationFailed = (errors, fields) => {
@@ -565,17 +826,43 @@ const AddLoanFields = ({ addLoanData }) => {
         error={isValidationFailed(validationError, profomaDetailsInputNames)}
       />
       <Accordion
+        heading={"Off-Taker Details"}
+        subHeading="(applicable to IDF and POF)"
+        renderExpandedContent={() =>
+          offTakerDetails(addLoanData.offTakerDetails)
+        }
+        error={isValidationFailed(validationError, offTakerInputNames)}
+      />
+      <Accordion
         heading={"Supplier Details"}
+        subHeading="(Not applicable to IDF)"
         renderExpandedContent={() =>
           supplierDetails(addLoanData.supplierDetails)
         }
-        error={isValidationFailed(validationError, supplierInputNames)}
+        error={isValidationFailed(validationError, supplierDetailsInputNames)}
       />
       <Accordion
-        heading={"Extend Loan After Maturity Until Fully Paid (optional)"}
-        renderExpandedContent={() => extendLoan(addLoanData.extendLoan)}
-        error={isValidationFailed(validationError, extendLoanInputNames)}
+        heading={"Collateral Details"}
+        renderExpandedContent={() =>
+          collateralDetails(addLoanData.collateralDetails)
+        }
+        error={isValidationFailed(validationError, collateralDetailsInputNames)}
       />
+      <Accordion
+        heading={"Loan Officer's Findings"}
+        renderExpandedContent={() => LHADetails(addLoanData.LHADetails)}
+        error={isValidationFailed(validationError, LHADetailsInputNames)}
+      />
+      <Accordion
+        heading={"Required Documents"}
+        renderExpandedContent={() =>
+          requiredDocuments(addLoanData.requiredDocuments)
+        }
+      />
+      <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
+        <div>{`${uploadedCount} of 8 documents uploaded`}</div>
+        <div>{`${verifiedCount} documents verified`}</div>
+      </div>
     </>
   );
 };

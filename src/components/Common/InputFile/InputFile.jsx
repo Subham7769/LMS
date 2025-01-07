@@ -33,6 +33,14 @@ const InputFile = ({
     }
   };
 
+  const handleClearFile = () => {
+    setFileName(""); // Clear local file name
+    if (onChange) {
+      // Dispatch an update to set the Redux state field to null
+      onChange({ target: { name: inputName, value: null, type: "file" } });
+    }
+  };
+
   return (
     <div
       className={`relative border-2 border-dashed rounded-lg p-3 text-center transition-all ${
@@ -49,7 +57,9 @@ const InputFile = ({
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
     >
-        <span className="absolute -top-5 left-0 text-sm text-gary-500">{labelName}</span>
+      <span className="absolute -top-5 left-0 text-sm text-gary-500">
+        {labelName}
+      </span>
 
       {!fileName && !isDragging && (
         <>
@@ -57,11 +67,13 @@ const InputFile = ({
           <span className="text-sm text-gray-500">{placeholder}</span>
         </>
       )}
-      
+
       {isDragging && (
         <>
-         <FiDownload  className="mx-auto text-indigo-700 mb-2" size={20} />
-        <span className="text-sm text-indigo-700">Drop your file here...</span>
+          <FiDownload className="mx-auto text-indigo-700 mb-2" size={20} />
+          <span className="text-sm text-indigo-700">
+            Drop your file here...
+          </span>
         </>
       )}
       {fileName && (
@@ -75,7 +87,7 @@ const InputFile = ({
         <FiX
           className="mx-auto text-white p-1 font-semibold absolute -top-4 -right-4 bg-red-500 rounded-lg cursor-pointer"
           size={28}
-          onClick={() => setFileName("")}
+          onClick={handleClearFile}
         />
       )}
       <input

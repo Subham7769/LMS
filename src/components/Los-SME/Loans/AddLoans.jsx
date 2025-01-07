@@ -40,7 +40,7 @@ const AddLoans = () => {
     <>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Save Button */}
-      <div className="flex justify-center col-span-4">
+      <div className="text-center mt-5">
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>
