@@ -224,7 +224,6 @@ export const fetchRepaymentByField = createAsyncThunk(
   async ({ field, value }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
-      const username = localStorage.getItem("username");
       const response = await fetch(
         `${
           import.meta.env

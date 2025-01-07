@@ -315,6 +315,9 @@ const AddCompany = lazy(() =>
 const AddDirector = lazy(() =>
   import("./components/Los-SME/Borrowers/AddDirector")
 );
+const AddShareHolder = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddShareHolder")
+);
 const ViewCompany = lazy(() =>
   import("./components/Los-SME/Borrowers/ViewCompany")
 );
@@ -672,6 +675,11 @@ const routes = [
           {
             path: "add-director",
             element: <AddDirector />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-shareholder",
+            element: <AddShareHolder />,
             errorElement: <RouteErrorBoundary />,
           },
           {

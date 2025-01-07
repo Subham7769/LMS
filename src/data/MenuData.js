@@ -328,7 +328,7 @@ export const MenusInitial = [
 
   // LOAN ORIGINATION
   {
-    title: "LoS-SME",
+    title: "SME Loans",
     sectionName: "LOAN ORIGINATION",
     href: "/loan/loan-origination-system/sme",
     icon: "DocumentCurrencyRupeeIcon",
@@ -384,7 +384,7 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "LoS-Personal",
+    title: "Personal Loans",
     sectionName: "LOAN ORIGINATION",
     href: "/loan/loan-origination-system/personal",
     icon: "AtSymbolIcon",

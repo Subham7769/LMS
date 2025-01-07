@@ -3,7 +3,7 @@ import Button from "../../Common/Button/Button";
 import {
   resetBorrowerData,
   registerBorrower,
-  updateAddBorrowerField
+  updateAddBorrowerField,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -17,6 +17,17 @@ const AddBorrowers = () => {
   const { addBorrowerData, error, loading } = useSelector(
     (state) => state.personalBorrowers
   );
+
+  if (!addBorrowerData.personalDetails.loanOfficer) {
+    const loanOfficer = localStorage.getItem("username");
+    dispatch(
+      updateAddBorrowerField({
+        section: "personalDetails",
+        field: "loanOfficer",
+        value: loanOfficer,
+      })
+    );
+  }
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -35,27 +46,31 @@ const AddBorrowers = () => {
     console.log(result);
     return result;
   }
-  
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Dispatch the validation action
-  await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)))
+    // Dispatch the validation action
+    await dispatch(validateForm(flattenToSimpleObject(addBorrowerData)));
 
-  // Access the updated state directly using getState
-  const state = store.getState(); // Ensure 'store' is imported from your Redux setup
-  const isValid = state.validation.isValid; // Adjust based on your state structure
+    // Access the updated state directly using getState
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+    const isValid = state.validation.isValid; // Adjust based on your state structure
 
-  if (isValid) {
-    dispatch(registerBorrower(addBorrowerData)).unwrap()
-    navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
-  }
-};
+    if (isValid) {
+      dispatch(registerBorrower(addBorrowerData)).unwrap();
+      navigate(
+        `/loan/loan-origination-system/personal/borrowers/view-borrower`
+      );
+    }
+  };
 
   return (
     <>
-      <AddUpdateBorrowerFields BorrowerData={addBorrowerData}  handleChangeReducer={updateAddBorrowerField} />
+      <AddUpdateBorrowerFields
+        BorrowerData={addBorrowerData}
+        handleChangeReducer={updateAddBorrowerField}
+      />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
           buttonName="Reset"

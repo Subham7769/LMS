@@ -7,14 +7,17 @@ export const registerBorrower = createAsyncThunk(
   async (addCompanyData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
-      const response = await fetch(`${import.meta.env.VITE_BORROWERS_CREATE_COMPANY_BORROWER}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth}`,
-        },
-        body: JSON.stringify(addCompanyData),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_CREATE_COMPANY_BORROWER}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify(addCompanyData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -127,7 +130,7 @@ const initialState = {
     companyDetails: {
       companyName: "",
       companyShortName: "",
-      natureOfCompany: "", 
+      natureOfCompany: "",
       companyRegistrationNo: "",
       countryOfRegistration: "Zambia",
       dateOfIncorporation: "",
@@ -135,7 +138,7 @@ const initialState = {
       locationOfHQ: "",
       industry: "",
       natureOfBusiness: "",
-      numberOfPermanentEmployees: "", 
+      numberOfPermanentEmployees: "",
     },
     companyContactDetails: {
       mobile1: "",
@@ -161,7 +164,7 @@ const initialState = {
     },
     companyOtherDetails: {
       creditScore: "",
-      customerPhotoId: "",//optional
+      customerPhotoId: "", //optional
       freeCashInHand: "",
       grossSalary: "",
       groupId: "",
@@ -170,7 +173,7 @@ const initialState = {
       shareholdersNames: [],
       shareholdingStructure: "",
       sourceOfRepayment: "",
-      tradeUnion: "",//optional
+      tradeUnion: "", //optional
     },
     directorsKycDetails: [
       {
@@ -249,10 +252,41 @@ const initialState = {
           uniqueIDType: "",
         },
       },
-      
+    ],
+    shareHolderDetails: [
+      {
+        contactDetails: {
+          country: "",
+          district: "",
+          email: "",
+          houseNumber: "",
+          landlinePhone: "",
+          mobile1: "",
+          mobile2: "",
+          postBox: "",
+          province: "",
+          residentialArea: "",
+          street: "",
+        },
+        personalDetails: {
+          age: 0,
+          dateOfBirth: "",
+          firstName: "",
+          gender: "",
+          loanOfficer: "",
+          maritalStatus: "",
+          nationality: "",
+          otherName: "",
+          placeOfBirth: "",
+          surname: "",
+          title: "",
+          uniqueID: "",
+          uniqueIDType: "",
+        },
+      },
     ],
   },
-  newDirector:{
+  newDirector: {
     bankDetails: {
       accountName: "",
       accountNo: "",
@@ -308,9 +342,36 @@ const initialState = {
     },
     otherDetails: {
       customerPhotoId: "",
-      shareholdersCountryOfResidence: [],
-      shareholdersNames: [],
-      shareholdingStructure: "",
+    },
+    personalDetails: {
+      age: 0,
+      dateOfBirth: "",
+      firstName: "",
+      gender: "",
+      loanOfficer: "",
+      maritalStatus: "",
+      nationality: "",
+      otherName: "",
+      placeOfBirth: "",
+      surname: "",
+      title: "",
+      uniqueID: "",
+      uniqueIDType: "",
+    },
+  },
+  newShareHolder: {
+    contactDetails: {
+      country: "",
+      district: "",
+      email: "",
+      houseNumber: "",
+      landlinePhone: "",
+      mobile1: "",
+      mobile2: "",
+      postBox: "",
+      province: "",
+      residentialArea: "",
+      street: "",
     },
     personalDetails: {
       age: 0,
@@ -338,6 +399,7 @@ const borrowersSlice = createSlice({
   name: "smeBorrowers",
   initialState,
   reducers: {
+    // for Adding company
     updateAddCompanyField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
@@ -352,6 +414,7 @@ const borrowersSlice = createSlice({
     resetCompanyData: (state, action) => {
       state.addCompanyData = initialState.addCompanyData;
     },
+    // For Edit / Update UI
     updateCompanyUpdateField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
@@ -375,14 +438,37 @@ const borrowersSlice = createSlice({
     resetUpdateCompanyData: (state, action) => {
       state.updateBorrowerData = initialState.updateBorrowerData;
     },
-    addDirector:(state,action)=>{
+    // for Director
+    addDirector: (state, action) => {
       state.addCompanyData.directorsKycDetails.push(state.newDirector);
       toast.success("Director Added Successfully");
     },
-    removeDirector:(state,action)=>{
-      const {index} = action.payload;
-        state.addCompanyData.directorsKycDetails.splice(index, 1);
-        toast.error("Director Removed Successfully");
+    removeDirector: (state, action) => {
+      const { index } = action.payload;
+      state.addCompanyData.directorsKycDetails.splice(index, 1);
+      toast.error("Director Removed Successfully");
+    },
+    updateAddDirectorField: (state, action) => {
+      const { section, index, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.addCompanyData.directorsKycDetails[index][section]) {
+        state.addCompanyData.directorsKycDetails[index][section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in addCompanyData.directorsKycDetails
+        state.addCompanyData.directorsKycDetails[index][field] =
+          type === "checkbox" ? checked : value;
+      }
+    },
+    // for Shareholder
+    addShareholder: (state, action) => {
+      state.addCompanyData.shareHolderDetails.push(state.newShareHolder);
+      toast.success("Shareholder Added Successfully");
+    },
+    removeShareholder: (state, action) => {
+      const { index } = action.payload;
+      state.addCompanyData.shareHolderDetails.splice(index, 1);
+      toast.error("Shareholder Removed Successfully");
     },
   },
   extraReducers: (builder) => {
@@ -452,6 +538,9 @@ export const {
   resetUpdateCompanyData,
   addDirector,
   removeDirector,
+  updateAddDirectorField,
+  addShareholder,
+  removeShareholder,
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

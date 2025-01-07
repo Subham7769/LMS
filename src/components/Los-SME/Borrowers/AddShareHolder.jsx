@@ -5,25 +5,26 @@ import Accordion from "../../Common/Accordion/Accordion";
 import {
   resetCompanyData,
   registerBorrower,
-  updateAddDirectorField,
-  addDirector,
-  removeDirector,
+  updateAddCompanyField,
+  addShareholder,
+  removeShareholder,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import AddUpdateDirectorFields from "../../Los-SME/Borrowers/AddUpdateDirectorFields";
+import AddUpdateDirectorFields from "./AddUpdateDirectorFields";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { companyRegistrationOptions } from "../../../data/LosData";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
-const AddDirector = () => {
+import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
+const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
   const { addCompanyData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const [companyId, setCompanyId] = useState("");
-  
+
   function flattenToSimpleObject(nestedObject) {
     const result = {};
 
@@ -67,7 +68,7 @@ const AddDirector = () => {
         <div></div>
         {/* <Button
           buttonName="Add Director"
-          onClick={() => dispatch(addDirector())}
+          onClick={() => dispatch(addShareholder())}
           rectangle={true}
           className={"h-[70%]"}
         /> */}
@@ -75,33 +76,34 @@ const AddDirector = () => {
 
         <HoverButton
           icon={PlusIcon}
-          text="Add Director"
-          onClick={() => dispatch(addDirector())}
+          text="Add Shareholder"
+          onClick={() => dispatch(addShareholder())}
         />
         </div>
       </div>
       <div className=" flex flex-col">
-        {addCompanyData.directorsKycDetails.map((Data, index) => (
+        {addCompanyData.shareHolderDetails.map((Data, index) => (
           <div className="relative" key={`Director${index}`}>
             <Accordion
-              heading={`Director ${index + 1} Details`}
+              heading={`Shareholder ${index + 1} Details`}
               renderExpandedContent={() => (
-                <AddUpdateDirectorFields
+                <>
+                <AddUpdateShareholderFields
                   BorrowerData={Data}
-                  handleChangeReducer={updateAddDirectorField}
-                  index={index}
+                  handleChangeReducer={updateAddCompanyField}
                 />
+                </>
               )}
             />
             <XCircleIcon
-              onClick={() => dispatch(removeDirector({ index }))}
+              onClick={() => dispatch(removeShareholder({ index }))}
               className="h-7 w-7 absolute -right-3 -top-3 text-red-500 hover:text-red-600 hover:cursor-pointer"
               title="Delete Director"
             />
           </div>
         ))}
       </div>
-      {/* <AddUpdateDirectorFields BorrowerData={addCompanyData.directorsKycDetails[0]}  handleChangeReducer={updateAddDirectorField} /> */}
+      {/* <AddUpdateDirectorFields BorrowerData={addCompanyData.shareHolderDetails[0]}  handleChangeReducer={updateAddCompanyField} /> */}
       <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
         <Button
           buttonName="Reset"
@@ -115,4 +117,4 @@ const AddDirector = () => {
   );
 };
 
-export default AddDirector;
+export default AddShareHolder;
