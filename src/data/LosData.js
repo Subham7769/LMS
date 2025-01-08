@@ -256,11 +256,11 @@ export const accountType = [
 ]
 export const uniqueIDType = [
   { value: "PASSPORT", label: "PASSPORT" },
-  { value: "NRC NO.", label: "NRC NO." },
-  { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
-  { value: "NATIONAL ID", label: "NATIONAL ID" },
-  { value: "VOTER ID", label: "VOTER ID" },
-  { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
+  { value: "NRC", label: "NRC" },
+  // { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
+  // { value: "NATIONAL ID", label: "NATIONAL ID" },
+  // { value: "VOTER ID", label: "VOTER ID" },
+  // { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
 ];
 export const accountStatusOptions = [
   { value: "DEACTIVATED", label: "DEACTIVATE" },

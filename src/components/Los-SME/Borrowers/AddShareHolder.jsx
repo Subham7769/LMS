@@ -5,9 +5,10 @@ import Accordion from "../../Common/Accordion/Accordion";
 import {
   resetCompanyData,
   registerBorrower,
-  updateAddCompanyField,
+  handleChangeAddShareholderField,
   addShareholder,
   removeShareholder,
+  fetchAllCompanyBorrowersByLoanOfficer,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -20,7 +21,7 @@ import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
-  const { addCompanyData, error, loading } = useSelector(
+  const { shareHolderDetails, allCompanies, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const [companyId, setCompanyId] = useState("");
@@ -43,13 +44,19 @@ const AddShareHolder = () => {
     return result;
   }
 
+  useEffect(() => {
+    if (allCompanies.length < 1) {
+      const loanOfficer = localStorage.getItem("username");
+      dispatch(fetchAllCompanyBorrowersByLoanOfficer({ loanOfficer }));
+    }
+  }, []);
   console.log(isValid);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(validateForm(flattenToSimpleObject(addCompanyData)));
+    await dispatch(validateForm(flattenToSimpleObject(shareHolderDetails)));
     if (isValid) {
-      dispatch(registerBorrower(addCompanyData));
+      dispatch(registerBorrower(shareHolderDetails));
     }
   };
 
@@ -59,10 +66,9 @@ const AddShareHolder = () => {
         <InputSelect
           labelName={"Company"}
           inputName={"companyId"}
-          inputOptions={companyRegistrationOptions}
+          inputOptions={allCompanies}
           inputValue={companyId}
           onChange={(e) => setCompanyId(e.target.value)}
-          isValidation={true}
         />
         <div></div>
         <div></div>
@@ -73,25 +79,24 @@ const AddShareHolder = () => {
           className={"h-[70%]"}
         /> */}
         <div className="flex justify-end gap-2 h-[90%]">
-
-        <HoverButton
-          icon={PlusIcon}
-          text="Add Shareholder"
-          onClick={() => dispatch(addShareholder())}
-        />
+          <HoverButton
+            icon={PlusIcon}
+            text="Add Shareholder"
+            onClick={() => dispatch(addShareholder())}
+          />
         </div>
       </div>
       <div className=" flex flex-col">
-        {addCompanyData.shareHolderDetails.map((Data, index) => (
+        {shareHolderDetails.map((Data, index) => (
           <div className="relative" key={`Director${index}`}>
             <Accordion
               heading={`Shareholder ${index + 1} Details`}
               renderExpandedContent={() => (
                 <>
-                <AddUpdateShareholderFields
-                  BorrowerData={Data}
-                  handleChangeReducer={updateAddCompanyField}
-                />
+                  <AddUpdateShareholderFields
+                    BorrowerData={Data}
+                    handleChangeReducer={handleChangeAddShareholderField}
+                  />
                 </>
               )}
             />
@@ -103,7 +108,7 @@ const AddShareHolder = () => {
           </div>
         ))}
       </div>
-      {/* <AddUpdateDirectorFields BorrowerData={addCompanyData.shareHolderDetails[0]}  handleChangeReducer={updateAddCompanyField} /> */}
+      {/* <AddUpdateDirectorFields BorrowerData={shareHolderDetails.shareHolderDetails[0]}  handleChangeReducer={handleChangeAddShareholderField} /> */}
       <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
         <Button
           buttonName="Reset"

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
-  updateCompanyUpdateField,
+  handleChangeUpdateCompanyField,
   resetUpdateCompanyData,
   updateBorrowerInfo,
   fetchAllCompanyBorrowers,
@@ -59,7 +59,7 @@ const UpdateCompany = () => {
     <>
       <AddUpdateBorrowerFields
         BorrowerData={updateBorrowerData}
-        handleChangeReducer={updateCompanyUpdateField}
+        handleChangeReducer={handleChangeUpdateCompanyField}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button

@@ -40,6 +40,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
 
   useEffect(() => {
     const keysArray = [
+      "companyId",
       "title",
       "firstName",
       "surname",
@@ -97,11 +98,11 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
     );
   };
 
-  const handleFileUpload = (e) => {
-    const { name, value, type, checked } = e.target;
-    console.log(files[0].name);
+  const handleFileUpload = (e, section, index) => {
+    const { name, value, type, checked,files } = e.target;
+console.log(name)
     dispatch(
-      handleChangeReducer({ name, value: files[0].name, type, checked })
+      handleChangeReducer({ section, index, field: name, value: files[0], type})
     );
   };
 
@@ -434,9 +435,13 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
     },
   ];
   const otherDetailsConfig = [
-    // Uncomment this if you decide to include the file input field
-    { labelName: "Customer Photo", inputName: "customerPhotoId", type: "file", validation: true, accept: "image/*" },
-  ];
+    {
+      labelName: "Customer Photo",
+      inputName: "customerPhotoId",
+      type: "file",
+      accept: "image/*",
+      validation: false,
+    },];
 
   // Generate the Form Field
   const personalDetailsInputNames = personalDetailsConfig.map(
@@ -471,6 +476,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
                 onChange={(e) => handleInputChange(e, sectionName, index)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={fieldIndex}
               />
             );
           case "number":
@@ -483,6 +489,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
                 onChange={(e) => handleInputChange(e, sectionName, index)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={fieldIndex}
               />
             );
           case "select":
@@ -495,6 +502,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName, index)}
                 isValidation={field.validation || false}
+                isIndex={fieldIndex}
               />
             );
           case "date":
@@ -506,6 +514,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName, index)}
                   isValidation={field.validation || false}
+                  isIndex={fieldIndex}
                 />
               </div>
             );
@@ -519,6 +528,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
                 onChange={(e) => handleInputChange(e, sectionName, index)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={fieldIndex}
               />
             );
           case "file":
@@ -528,9 +538,10 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileChange(e, sectionName, index)}
+                onChange={(e) => handleFileUpload(e, sectionName, index)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
+                isIndex={fieldIndex}
               />
             );
           default:

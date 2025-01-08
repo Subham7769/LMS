@@ -3,11 +3,11 @@ import Button from "../../Common/Button/Button";
 import {
   resetCompanyData,
   registerBorrower,
-  updateAddCompanyField
+  handleChangeAddCompanyField
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
+import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import store from "../../../redux/store";
 
 const AddCompany = () => {
@@ -15,7 +15,7 @@ const AddCompany = () => {
   const { addCompanyData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
-  console.log(addCompanyData.companyDetails)
+  console.log(addCompanyData)
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -33,6 +33,18 @@ const AddCompany = () => {
     recurse(nestedObject);
     return result;
   }
+
+  if (!addCompanyData.companyDetails.loanOfficer) {
+    const loanOfficer = localStorage.getItem("username");
+    dispatch(
+      handleChangeAddCompanyField({
+        section: "companyDetails",
+        field: "loanOfficer",
+        value: loanOfficer,
+      })
+    );
+  }
+
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -52,7 +64,7 @@ const AddCompany = () => {
 
   return (
     <>
-      <AddUpdateBorrowerFields BorrowerData={addCompanyData}  handleChangeReducer={updateAddCompanyField} />
+      <AddUpdateCompanyBorrowerFields BorrowerData={addCompanyData}  handleChangeReducer={handleChangeAddCompanyField} />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
           buttonName="Reset"

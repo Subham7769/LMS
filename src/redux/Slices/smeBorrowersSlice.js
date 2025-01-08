@@ -64,6 +64,39 @@ export const fetchAllCompanyBorrowers = createAsyncThunk(
   }
 );
 
+// Fetch All Company Borrowers by Loan Officer
+export const fetchAllCompanyBorrowersByLoanOfficer = createAsyncThunk(
+  "borrowers/fetchAllCompanyBorrowersByLoanOfficer", // action type
+  async ({ loanOfficer = "superadmin" }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_READ_ALL_COMPANY_BORROWER_BY_LOAN_OFFICER
+        }${loanOfficer}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch borrowers");
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 // Change Borrower Status
 export const changeBorrowerStatus = createAsyncThunk(
   "borrowers/changeStatus", // Action type
@@ -96,20 +129,22 @@ export const changeBorrowerStatus = createAsyncThunk(
 );
 
 // Update Borrower Information
-export const updateBorrowerInfo = createAsyncThunk(
-  "borrowers/updateInfo", // Action type
-  async ({ borrowerData, uid }, { rejectWithValue }) => {
+export const updateCompanyBorrowerInfo = createAsyncThunk(
+  "borrowers/updateCompanyBorrowerInfo",
+  async ({ directorsKycDetails, companyId }, { rejectWithValue }) => {
     try {
-      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_UPDATE_COMPANY_BORROWER}${uid}`,
+        `${
+          import.meta.env.VITE_BORROWERS_ADD_DIRECTOR_COMPANY_BORROWER
+        }${companyId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth}`,
           },
-          body: JSON.stringify(borrowerData), // Send updated borrower data
+          body: JSON.stringify(directorsKycDetails),
         }
       );
 
@@ -120,7 +155,39 @@ export const updateBorrowerInfo = createAsyncThunk(
         );
       }
     } catch (error) {
-      return rejectWithValue(error.message); // Return the error message
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Async thunk for adding directors' KYC details
+export const addDirectorsKycDetails = createAsyncThunk(
+  "companyBorrowers/addDirectorsKycDetails",
+  async ({ directorsKycDetails, companyId }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_ADD_DIRECTOR_COMPANY_BORROWER
+        }${companyId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(directorsKycDetails),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to add directors KYC details"
+        );
+      }
+
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -129,16 +196,18 @@ const initialState = {
   addCompanyData: {
     companyDetails: {
       companyName: "",
-      companyShortName: "",
-      natureOfCompany: "",
       companyRegistrationNo: "",
+      companyShortName: "",
+      companyUniqueId: "",
       countryOfRegistration: "Zambia",
       dateOfIncorporation: "",
-      province: "",
-      locationOfHQ: "",
       industry: "",
+      loanOfficer: "",
+      locationOfHQ: "",
       natureOfBusiness: "",
+      natureOfCompany: "",
       numberOfPermanentEmployees: "",
+      province: "",
     },
     companyContactDetails: {
       mobile1: "",
@@ -169,123 +238,44 @@ const initialState = {
       grossSalary: "",
       groupId: "",
       reasonForBorrowing: "",
-      shareholdersCountryOfResidence: [],
-      shareholdersNames: [],
       shareholdingStructure: "",
       sourceOfRepayment: "",
       tradeUnion: "", //optional
     },
-    directorsKycDetails: [
-      {
-        bankDetails: {
-          accountName: "",
-          accountNo: "",
-          accountType: "",
-          bankName: "",
-          branch: "",
-          branchCode: "",
-          sortCode: "",
-        },
-        contactDetails: {
-          country: "",
-          district: "",
-          email: "",
-          houseNumber: "",
-          landlinePhone: "",
-          mobile1: "",
-          mobile2: "",
-          postBox: "",
-          province: "",
-          residentialArea: "",
-          street: "",
-        },
-        employmentDetails: {
-          employeeNo: "",
-          employer: "",
-          employmentDistrict: "",
-          employmentLocation: "",
-          occupation: "",
-          workPhoneNumber: "",
-          workPhysicalAddress: "",
-          workStartDate: "",
-          workType: "",
-        },
-        nextOfKinDetails: {
-          kinCountry: "",
-          kinDistrict: "",
-          kinEmail: "",
-          kinEmployer: "",
-          kinGender: "",
-          kinHouseNo: "",
-          kinLocation: "",
-          kinMobile1: "",
-          kinMobile2: "",
-          kinNrcNo: "",
-          kinOccupation: "",
-          kinOtherName: "",
-          kinProvince: "",
-          kinResidentialArea: "",
-          kinStreet: "",
-          kinSurname: "",
-          kinTitle: "",
-          kinWorkPhoneNumber: "",
-        },
-        otherDetails: {
-          customerPhotoId: "",
-          shareholdersCountryOfResidence: [],
-          shareholdersNames: [],
-          shareholdingStructure: "",
-        },
-        personalDetails: {
-          age: 0,
-          dateOfBirth: "",
-          firstName: "",
-          gender: "",
-          loanOfficer: "",
-          maritalStatus: "",
-          nationality: "",
-          otherName: "",
-          placeOfBirth: "",
-          surname: "",
-          title: "",
-          uniqueID: "",
-          uniqueIDType: "",
-        },
-      },
-    ],
-    shareHolderDetails: [
-      {
-        contactDetails: {
-          country: "",
-          district: "",
-          email: "",
-          houseNumber: "",
-          landlinePhone: "",
-          mobile1: "",
-          mobile2: "",
-          postBox: "",
-          province: "",
-          residentialArea: "",
-          street: "",
-        },
-        personalDetails: {
-          age: 0,
-          dateOfBirth: "",
-          firstName: "",
-          gender: "",
-          loanOfficer: "",
-          maritalStatus: "",
-          nationality: "",
-          otherName: "",
-          placeOfBirth: "",
-          surname: "",
-          title: "",
-          uniqueID: "",
-          uniqueIDType: "",
-        },
-      },
-    ],
   },
+  directorsKycDetails: [],
+  shareHolderDetails: [
+    {
+      contactDetails: {
+        country: "",
+        district: "",
+        email: "",
+        houseNumber: "",
+        landlinePhone: "",
+        mobile1: "",
+        mobile2: "",
+        postBox: "",
+        province: "",
+        residentialArea: "",
+        street: "",
+      },
+      personalDetails: {
+        age: 0,
+        dateOfBirth: "",
+        firstName: "",
+        gender: "",
+        loanOfficer: "",
+        maritalStatus: "",
+        nationality: "",
+        otherName: "",
+        placeOfBirth: "",
+        surname: "",
+        title: "",
+        uniqueID: "",
+        uniqueIDType: "",
+      },
+    },
+  ],
   newDirector: {
     bankDetails: {
       accountName: "",
@@ -389,6 +379,7 @@ const initialState = {
       uniqueIDType: "",
     },
   },
+  allCompanies: [],
   allBorrowersData: [],
   updateBorrowerData: {},
   error: null,
@@ -400,7 +391,7 @@ const borrowersSlice = createSlice({
   initialState,
   reducers: {
     // for Adding company
-    updateAddCompanyField: (state, action) => {
+    handleChangeAddCompanyField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
       if (section && state.addCompanyData[section]) {
@@ -415,7 +406,7 @@ const borrowersSlice = createSlice({
       state.addCompanyData = initialState.addCompanyData;
     },
     // For Edit / Update UI
-    updateCompanyUpdateField: (state, action) => {
+    handleChangeUpdateCompanyField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
       if (section && state.updateBorrowerData[section]) {
@@ -440,35 +431,61 @@ const borrowersSlice = createSlice({
     },
     // for Director
     addDirector: (state, action) => {
-      state.addCompanyData.directorsKycDetails.push(state.newDirector);
-      toast.success("Director Added Successfully");
+      const { loanOfficer, index } = action.payload;
+      state.directorsKycDetails.push({
+        ...state.newDirector,
+        personalDetails: {
+          ...state.newDirector.personalDetails,
+          loanOfficer: loanOfficer,
+        },
+      });
+      if (index !== 0) {
+        toast.success("Director Added Successfully");
+      }
     },
     removeDirector: (state, action) => {
       const { index } = action.payload;
-      state.addCompanyData.directorsKycDetails.splice(index, 1);
+      state.directorsKycDetails.splice(index, 1);
       toast.error("Director Removed Successfully");
     },
-    updateAddDirectorField: (state, action) => {
+    resetDirector: (state, action) => {
+      const { index } = action.payload;
+      state.directorsKycDetails[index] = { ...state.newDirector };
+      toast.success("Director Reset Successfully");
+    },
+    handleChangeAddDirectorField: (state, action) => {
       const { section, index, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.addCompanyData.directorsKycDetails[index][section]) {
-        state.addCompanyData.directorsKycDetails[index][section][field] =
+      if (section && state.directorsKycDetails[index][section]) {
+        state.directorsKycDetails[index][section][field] =
           type === "checkbox" ? checked : value;
       } else {
-        // If no section, update directly in addCompanyData.directorsKycDetails
-        state.addCompanyData.directorsKycDetails[index][field] =
+        // If no section, update directly in directorsKycDetails
+        state.directorsKycDetails[index][field] =
           type === "checkbox" ? checked : value;
       }
     },
     // for Shareholder
     addShareholder: (state, action) => {
-      state.addCompanyData.shareHolderDetails.push(state.newShareHolder);
+      state.shareHolderDetails.push(state.newShareHolder);
       toast.success("Shareholder Added Successfully");
     },
     removeShareholder: (state, action) => {
       const { index } = action.payload;
       state.addCompanyData.shareHolderDetails.splice(index, 1);
       toast.error("Shareholder Removed Successfully");
+    },
+    handleChangeAddShareholderField: (state, action) => {
+      const { section, index, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.shareHolderDetails[index][section]) {
+        state.shareHolderDetails[index][section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in shareHolderDetails
+        state.shareHolderDetails[index][field] =
+          type === "checkbox" ? checked : value;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -501,6 +518,28 @@ const borrowersSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(fetchAllCompanyBorrowersByLoanOfficer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchAllCompanyBorrowersByLoanOfficer.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          state.allCompanies = action.payload.map((company) => ({
+            label: company.companyBorrowerProfile.companyDetails.companyName,
+            value: company.uid,
+          }));
+        }
+      )
+      .addCase(
+        fetchAllCompanyBorrowersByLoanOfficer.rejected,
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload || "Failed to fetch borrowers";
+          toast.error(`API Error : ${action.payload}`);
+        }
+      )
       .addCase(changeBorrowerStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -514,33 +553,49 @@ const borrowersSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
-      .addCase(updateBorrowerInfo.pending, (state) => {
+      .addCase(updateCompanyBorrowerInfo.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateBorrowerInfo.fulfilled, (state, action) => {
+      .addCase(updateCompanyBorrowerInfo.fulfilled, (state, action) => {
         state.loading = false;
         toast.success("Borrower Information Updated Successfully");
       })
-      .addCase(updateBorrowerInfo.rejected, (state, action) => {
+      .addCase(updateCompanyBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(addDirectorsKycDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addDirectorsKycDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success("Director Added Successfully");
+      })
+      .addCase(addDirectorsKycDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add directors KYC details.";
         toast.error(`API Error : ${action.payload}`);
       });
   },
 });
 
 export const {
-  updateAddCompanyField,
+  handleChangeAddCompanyField,
   resetCompanyData,
-  updateCompanyUpdateField,
+  handleChangeUpdateCompanyField,
   setUpdateCompany,
   resetUpdateCompanyData,
   addDirector,
   removeDirector,
-  updateAddDirectorField,
+  resetDirector,
+  handleChangeAddDirectorField,
   addShareholder,
   removeShareholder,
+  handleChangeAddShareholderField,
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

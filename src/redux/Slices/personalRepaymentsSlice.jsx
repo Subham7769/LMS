@@ -188,7 +188,7 @@ export const uploadFile = createAsyncThunk(
   async ({ fileData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      console.log(fileData);
+
       // Create a FormData object to append the file
       const formData = new FormData();
       formData.append("file", fileData);

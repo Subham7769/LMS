@@ -29,13 +29,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
     setFilteredLocations1(
       locationOptions[BorrowerData.contactDetails.country] || []
     );
-    setFilteredLocations2(
-      locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
-    );
-  }, [
-    BorrowerData.contactDetails.country,
-    BorrowerData.nextOfKinDetails.kinCountry,
-  ]);
+  }, [BorrowerData.contactDetails.country]);
 
   useEffect(() => {
     const keysArray = [
@@ -53,7 +47,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       "street",
       "residentialArea",
       "country",
-      "email",      
+      "email",
     ];
     dispatch(setFields(keysArray));
     return () => {
@@ -217,7 +211,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
     },
   ];
 
-// Generate the Form Field
+  // Generate the Form Field
   const personalDetailsInputNames = personalDetailsConfig.map(
     (field) => field.inputName
   );
@@ -225,8 +219,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
     (field) => field.inputName
   );
 
-
-// Rendering Input Fields
+  // Rendering Input Fields
   const renderDetails = (details, config, sectionName) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {config.map((field, index) => {
@@ -241,6 +234,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={index}
               />
             );
           case "number":
@@ -253,6 +247,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={index}
               />
             );
           case "select":
@@ -265,6 +260,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
+                isIndex={index}
               />
             );
           case "date":
@@ -276,6 +272,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+                  isIndex={index}
                 />
               </div>
             );
@@ -289,6 +286,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={index}
               />
             );
           case "file":
@@ -301,6 +299,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleFileChange(e, sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
+                isIndex={index}
               />
             );
           default:
@@ -317,8 +316,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
   const contactDetails = (contactDetails) =>
     renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
 
-
-//   Validation Error Object from Validation slice to check Error state
+  //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
   );

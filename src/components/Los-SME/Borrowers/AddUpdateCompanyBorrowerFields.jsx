@@ -17,7 +17,7 @@ import {
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
+const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -39,6 +39,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       "companyName",
       "companyShortName",
       "natureOfCompany",
+      "companyUniqueId",
       "companyRegistrationNo",
       "countryOfRegistration",
       "dateOfIncorporation",
@@ -64,11 +65,8 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       "accountNo",
       
       "creditScore", 
-      "customerPhotoId", 
       "freeCashInHand", 
       "grossSalary", 
-      "shareholdersCountryOfResidence", 
-      "shareholdersNames", 
       "shareholdingStructure",  
       "tradeUnion"
     ];
@@ -86,11 +84,11 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     );
   };
 
-  const handleFileUpload = (e) => {
-    const { name, value, type, checked } = e.target;
-    console.log(files[0].name);
+  const handleFileUpload = (e,section) => {
+    const { name, value, type, checked,files } = e.target;
+
     dispatch(
-      handleChangeReducer({ name, value: files[0].name, type, checked })
+      handleChangeReducer({ section, field: name, value: files[0], type})
     );
   };
 
@@ -113,6 +111,12 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "natureOfCompany",
       type: "select",
       options: natureOfCompanyOptions,
+      validation: true,
+    },
+    {
+      labelName: "Company Unique Id",
+      inputName: "companyUniqueId",
+      type: "text",
       validation: true,
     },
     {
@@ -328,24 +332,11 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: true,
     },
     {
-      labelName: "shareholders Names",
-      inputName: "shareholdersNames",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Shareholders Country of Residence",
-      inputName: "shareholdersCountryOfResidence",
-      type: "text",
-      validation: true,
-    },
-    // Uncomment this if you decide to include the file input field
-    {
       labelName: "Customer Photo",
       inputName: "customerPhotoId",
       type: "file",
       accept: "image/*",
-      validation: true,
+      validation: false,
     },
   ];
 
@@ -438,7 +429,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileChange(e, sectionName)}
+                onChange={(e) => handleFileUpload(e, sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
               />
@@ -524,4 +515,4 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   );
 };
 
-export default AddUpdateBorrowerFields;
+export default AddUpdateCompanyBorrowerFields;
