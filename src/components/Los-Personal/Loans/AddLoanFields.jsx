@@ -12,23 +12,18 @@ import {
   updateLoanField,
 } from "../../../redux/Slices/personalLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
 import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
-import { tenureTypeOptions } from "../../../data/OptionsData";
+import { tenureTypeOptions, options } from "../../../data/OptionsData";
 import { CreditCardIcon } from "@heroicons/react/24/outline";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
-  const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
   const { loanProductOptions } = useSelector((state) => state.personalLoans);
-  const [borrowerOptions, setBorrowerOptions] = useState([]);
-
   useEffect(() => {
     dispatch(fetchLoanProductData());
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
     const keysArray = [
       "borrowerId",
       "disbursedBy",
@@ -49,15 +44,6 @@ const AddLoanFields = ({ addLoanData }) => {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    const options = allBorrowersData.map((item) => ({
-      label: `${item.borrowerProfile?.personalDetails?.title} ${item.borrowerProfile?.personalDetails?.surname} ${item.borrowerProfile?.personalDetails?.otherName}`,
-      value: item.uid,
-    }));
-
-    setBorrowerOptions(options);
-  }, [allBorrowersData]);
-
   const handleInputChange = (e, section) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
@@ -66,7 +52,7 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const handleFileChange = (e, section) => {
     const { name, files } = e.target;
-    dispatch(updateLoanField({ section, field: name, value: files[0].name }));
+    dispatch(updateLoanField({ section, field: name, value: files[0] }));
   };
 
   // All Fields Configuration
@@ -81,8 +67,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Borrower",
       inputName: "borrowerId",
-      type: "select",
-      options: borrowerOptions, // Dynamically populated
+      type: "number",
       validation: true,
     },
     {
