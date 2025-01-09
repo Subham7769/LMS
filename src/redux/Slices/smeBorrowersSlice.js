@@ -468,21 +468,20 @@ const borrowersSlice = createSlice({
     },
     // for Shareholder
     addShareholder: (state, action) => {
-      const { loanOfficer, index } = action.payload;
-      state.shareHolderDetails.push({
-        ...state.newShareHolder,
-        personalDetails: {
-          ...state.newShareHolder.personalDetails,
-          loanOfficer: loanOfficer,
-        },
-      });
-      if (index !== 0) {
-        toast.success("Shareholder Added Successfully");
+      const { loanOfficer } = action.payload;
+      if(state.shareHolderDetails.length < 1){
+        state.shareHolderDetails.push({
+          ...state.newShareHolder,
+          personalDetails: {
+            ...state.newShareHolder.personalDetails,
+            loanOfficer: loanOfficer,
+          },
+        });
       }
     },
     removeShareholder: (state, action) => {
       const { index } = action.payload;
-      state.addCompanyData.shareHolderDetails.splice(index, 1);
+      state.shareHolderDetails.splice(index, 1);
       toast.error("Shareholder Removed Successfully");
     },
     resetShareholder: (state, action) => {
@@ -491,14 +490,14 @@ const borrowersSlice = createSlice({
       toast.success("Shareholder Reset Successfully");
     },
     handleChangeAddShareholderField: (state, action) => {
-      const { section, index, field, value, type, checked } = action.payload;
+      const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.shareHolderDetails[index][section]) {
-        state.shareHolderDetails[index][section][field] =
+      if (section && state.shareHolderDetails[0][section]) {
+        state.shareHolderDetails[0][section][field] =
           type === "checkbox" ? checked : value;
       } else {
         // If no section, update directly in shareHolderDetails
-        state.shareHolderDetails[index][field] =
+        state.shareHolderDetails[0][field] =
           type === "checkbox" ? checked : value;
       }
     },

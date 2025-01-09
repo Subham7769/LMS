@@ -348,13 +348,13 @@ const ViewCompany = () => {
         </div>
       </ContainerTile>
 
-      <ExpandableTable
+      {/* <ExpandableTable
         columns={personalDetailsColumns}
         data={flattenToSimpleObjectArray(filteredBorrowers)}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
         error={error}
-      />
+      /> */}
     </div>
   );
 };

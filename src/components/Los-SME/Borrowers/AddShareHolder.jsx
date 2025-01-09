@@ -53,7 +53,7 @@ const AddShareHolder = () => {
     }
   }, [dispatch]);
 
-  console.log(isValid);
+  // console.log(isValid);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
