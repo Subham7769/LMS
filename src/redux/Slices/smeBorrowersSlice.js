@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
+
 
 // Register a Borrower
 export const registerCompanyBorrower = createAsyncThunk(
@@ -100,11 +102,13 @@ export const fetchAllCompanyBorrowersByLoanOfficer = createAsyncThunk(
 // Get Company Details by companyUniqueId
 export const fetchCompanyDetails = createAsyncThunk(
   "company/fetchCompanyDetails",
-  async ({companyId}, { rejectWithValue }) => {
+  async ({ companyId }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_GET_COMPANY_DETAILS_COMPANY_BORROWER}${companyId}`,
+        `${
+          import.meta.env.VITE_BORROWERS_GET_COMPANY_DETAILS_COMPANY_BORROWER
+        }${companyId}`,
         {
           method: "GET",
           headers: {
@@ -116,9 +120,7 @@ export const fetchCompanyDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Failed to fetch company details"
-        );
+        throw new Error(errorData.message || "Failed to fetch company details");
       }
 
       return await response.json();
@@ -502,7 +504,7 @@ const borrowersSlice = createSlice({
     // for Shareholder
     addShareholder: (state, action) => {
       const { loanOfficer } = action.payload;
-      if(state.shareHolderDetails.length < 1){
+      if (state.shareHolderDetails.length < 1) {
         state.shareHolderDetails.push({
           ...state.newShareHolder,
           personalDetails: {
@@ -533,8 +535,18 @@ const borrowersSlice = createSlice({
           type === "checkbox" ? checked : value;
       }
     },
-
-
+    handleChangeUpdateShareholderField: (state, action) => {
+      const { section, index, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.existingShareholderDetails[index][section]) {
+        state.existingShareholderDetails[index][section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in existingShareholderDetails
+        state.existingShareholderDetails[index][field] =
+          type === "checkbox" ? checked : value;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -607,8 +619,12 @@ const borrowersSlice = createSlice({
       })
       .addCase(fetchCompanyDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.companyDetails = action.payload; 
-        state.existingShareholderDetails = action.payload.shareHolderDetails
+        state.companyDetails = action.payload;
+        state.existingShareholderDetails =
+          action.payload.shareHolderDetails.map((shareHolder) => ({
+            ...shareHolder,
+            dataIndex: nanoid(),
+          }));
         state.error = null;
       })
       .addCase(fetchCompanyDetails.rejected, (state, action) => {
@@ -672,6 +688,7 @@ export const {
   removeShareholder,
   resetShareholder,
   handleChangeAddShareholderField,
+  handleChangeUpdateShareholderField
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;
