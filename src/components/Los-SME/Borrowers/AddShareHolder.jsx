@@ -9,6 +9,7 @@ import {
   resetShareholder,
   addShareholderInfo,
   fetchAllCompanyBorrowersByLoanOfficer,
+  fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -19,9 +20,13 @@ import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
-  const { shareHolderDetails, allCompanies, error, loading } = useSelector(
-    (state) => state.smeBorrowers
-  );
+  const {
+    shareHolderDetails,
+    existingShareholderDetails,
+    allCompanies,
+    error,
+    loading,
+  } = useSelector((state) => state.smeBorrowers);
   const [companyId, setCompanyId] = useState("");
 
   function flattenToSimpleObject(nestedObject) {
@@ -45,9 +50,6 @@ const AddShareHolder = () => {
   const loanOfficer = localStorage.getItem("username");
 
   useEffect(() => {
-    if (shareHolderDetails.length < 1) {
-      dispatch(addShareholder({ loanOfficer, index: 0 }));
-    }
     if (allCompanies.length < 1) {
       dispatch(fetchAllCompanyBorrowersByLoanOfficer({ loanOfficer }));
     }
@@ -59,8 +61,19 @@ const AddShareHolder = () => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(shareHolderDetails)));
     if (isValid) {
-      dispatch(addShareholderInfo({ shareHolderDetails, companyId }));
+      dispatch(addShareholderInfo({ shareHolderDetails, companyId }))
+        .unwrap()
+        .then(() => {
+          // After successful addition, fetch the updated company details
+          dispatch(fetchCompanyDetails({ companyId }));
+          dispatch(removeShareholder({ index:0 }))
+        });
     }
+  };
+
+  const changeCompany = (e) => {
+    setCompanyId(e.target.value);
+    dispatch(fetchCompanyDetails({ companyId: e.target.value }));
   };
 
   return (
@@ -71,57 +84,96 @@ const AddShareHolder = () => {
           inputName={"companyId"}
           inputOptions={allCompanies}
           inputValue={companyId}
-          onChange={(e) => setCompanyId(e.target.value)}
+          onChange={changeCompany}
         />
         <div></div>
         <div></div>
         <div className="flex justify-end gap-2 h-[90%]">
-          <HoverButton
-            icon={PlusIcon}
-            text="Add Shareholder"
-            onClick={() => dispatch(addShareholder({ loanOfficer }))}
-          />
+          {shareHolderDetails.length < 1 && (
+            <HoverButton
+              icon={PlusIcon}
+              text="Add Shareholder"
+              onClick={() => dispatch(addShareholder({ loanOfficer }))}
+            />
+          )}
         </div>
       </div>
-      <div className=" flex flex-col">
-        {shareHolderDetails.map((Data, index) => (
-          <div className="relative" key={`Director${index}`}>
-            <Accordion
-              heading={`Shareholder ${index + 1} Details`}
-              renderExpandedContent={() => (
-                <>
-                  <AddUpdateShareholderFields
-                    BorrowerData={Data}
-                    handleChangeReducer={handleChangeAddShareholderField}
-                    index={index}
-                  />
-                  <div className="flex justify-center gap-5 col-span-4 mx-10 mt-4">
-                    <Button
-                      buttonName="Reset Shareholder"
-                      onClick={() => dispatch(resetShareholder({ index }))}
-                      rectangle={true}
-                      className={"bg-red-500 hover:bg-red-600"}
+      {existingShareholderDetails.length > 0 && (
+        <div className=" flex flex-col mb-6">
+          <p className="font-semibold mb-2">Existing Shareholders</p>
+          {existingShareholderDetails.map((Data, index) => (
+            <div className="relative" key={`Shareholder${index}`}>
+              <Accordion
+                heading={`Shareholder ${index + 1} Details`}
+                renderExpandedContent={() => (
+                  <>
+                    <AddUpdateShareholderFields
+                      BorrowerData={Data}
+                      handleChangeReducer={handleChangeAddShareholderField}
+                      index={index}
                     />
-                  </div>
-                </>
-              )}
-            />
-            <XCircleIcon
-              onClick={() => dispatch(removeShareholder({ index }))}
-              className="h-7 w-7 absolute -right-3 -top-3 text-red-500 hover:text-red-600 hover:cursor-pointer"
-              title="Delete Director"
-            />
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
-        <Button
-          buttonName="Submit"
-          onClick={handleSubmit}
-          rectangle={true}
-          disabled={!companyId}
-        />
-      </div>
+                    <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
+                      <Button
+                        buttonName="Delete"
+                        onClick={() => dispatch(resetShareholder({ index }))}
+                        rectangle={true}
+                        className={"bg-red-500 hover:bg-red-600"}
+                      />
+                      <Button
+                        buttonName="Update"
+                        onClick={handleSubmit}
+                        rectangle={true}
+                        disabled={!companyId}
+                      />
+                    </div>
+                  </>
+                )}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {shareHolderDetails.length > 0 && (
+        <div className=" flex flex-col">
+          <p className="font-semibold mb-2">New Shareholder</p>
+          {shareHolderDetails.map((Data, index) => (
+            <div className="relative" key={`Shareholder${index}`}>
+              <Accordion
+                heading={`New Shareholder Details`}
+                renderExpandedContent={() => (
+                  <>
+                    <AddUpdateShareholderFields
+                      BorrowerData={Data}
+                      handleChangeReducer={handleChangeAddShareholderField}
+                      index={index}
+                    />
+                    <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
+                      <Button
+                        buttonName="Reset"
+                        onClick={() => dispatch(resetShareholder({ index }))}
+                        rectangle={true}
+                        className={"bg-red-500 hover:bg-red-600"}
+                      />
+                      <Button
+                        buttonName="Submit"
+                        onClick={handleSubmit}
+                        rectangle={true}
+                        disabled={!companyId}
+                      />
+                    </div>
+                  </>
+                )}
+              />
+              <XCircleIcon
+                onClick={() => dispatch(removeShareholder({ index }))}
+                className="h-7 w-7 absolute -right-3 -top-3 text-red-500 hover:text-red-600 hover:cursor-pointer"
+                title="Delete Shareholder"
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 };

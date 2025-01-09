@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 // Register a Borrower
-export const registerBorrower = createAsyncThunk(
-  "borrowers/register", // action type
+export const registerCompanyBorrower = createAsyncThunk(
+  "borrowers/registerCompanyBorrower", // action type
   async (addCompanyData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
@@ -97,18 +97,16 @@ export const fetchAllCompanyBorrowersByLoanOfficer = createAsyncThunk(
   }
 );
 
-// Change Borrower Status
-export const changeBorrowerStatus = createAsyncThunk(
-  "borrowers/changeStatus", // Action type
-  async ({ uid, newStatus }, { rejectWithValue }) => {
+// Get Company Details by companyUniqueId
+export const fetchCompanyDetails = createAsyncThunk(
+  "company/fetchCompanyDetails",
+  async ({companyId}, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `${
-          import.meta.env.VITE_BORROWERS_CHANGE_STATUS_COMPANY_BORROWER
-        }/${uid}/status/${newStatus}`,
+        `${import.meta.env.VITE_BORROWERS_GET_COMPANY_DETAILS_COMPANY_BORROWER}${companyId}`,
         {
-          method: "PUT",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth}`,
@@ -119,11 +117,13 @@ export const changeBorrowerStatus = createAsyncThunk(
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.message || "Failed to change borrower status"
+          errorData.message || "Failed to fetch company details"
         );
       }
+
+      return await response.json();
     } catch (error) {
-      return rejectWithValue(error.message); // Return the error message
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -224,6 +224,37 @@ export const addDirectorsKycDetails = createAsyncThunk(
   }
 );
 
+// Change Company Borrower Status
+export const changeCompanyBorrowerStatus = createAsyncThunk(
+  "borrowers/changeStatus", // Action type
+  async ({ uid, newStatus }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_CHANGE_STATUS_COMPANY_BORROWER
+        }/${uid}/status/${newStatus}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to change borrower status"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 const initialState = {
   addCompanyData: {
     companyDetails: {
@@ -275,8 +306,10 @@ const initialState = {
       tradeUnion: "", //optional
     },
   },
+  companyDetails: {},
   directorsKycDetails: [],
   shareHolderDetails: [],
+  existingShareholderDetails: [],
   newDirector: {
     bankDetails: {
       accountName: "",
@@ -482,7 +515,6 @@ const borrowersSlice = createSlice({
     removeShareholder: (state, action) => {
       const { index } = action.payload;
       state.shareHolderDetails.splice(index, 1);
-      toast.error("Shareholder Removed Successfully");
     },
     resetShareholder: (state, action) => {
       const { index } = action.payload;
@@ -501,19 +533,21 @@ const borrowersSlice = createSlice({
           type === "checkbox" ? checked : value;
       }
     },
+
+
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerBorrower.pending, (state) => {
+      .addCase(registerCompanyBorrower.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerBorrower.fulfilled, (state, action) => {
+      .addCase(registerCompanyBorrower.fulfilled, (state, action) => {
         state.loading = false;
         // state.borrower = action.payload; // Store the borrower data
         toast.success("Borrower Registered Successfully");
       })
-      .addCase(registerBorrower.rejected, (state, action) => {
+      .addCase(registerCompanyBorrower.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Store the error message
         toast.error(`API Error : ${action.payload}`); // Notify the user of the error
@@ -554,18 +588,32 @@ const borrowersSlice = createSlice({
           toast.error(`API Error : ${action.payload}`);
         }
       )
-      .addCase(changeBorrowerStatus.pending, (state) => {
+      .addCase(changeCompanyBorrowerStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(changeBorrowerStatus.fulfilled, (state, action) => {
+      .addCase(changeCompanyBorrowerStatus.fulfilled, (state, action) => {
         state.loading = false;
         toast.success("Borrower Status Changed Successfully");
       })
-      .addCase(changeBorrowerStatus.rejected, (state, action) => {
+      .addCase(changeCompanyBorrowerStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchCompanyDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCompanyDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.companyDetails = action.payload; 
+        state.existingShareholderDetails = action.payload.shareHolderDetails
+        state.error = null;
+      })
+      .addCase(fetchCompanyDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch company details";
       })
       .addCase(addDirectorInfo.pending, (state) => {
         state.loading = true;

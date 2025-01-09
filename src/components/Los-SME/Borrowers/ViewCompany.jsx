@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
   fetchAllCompanyBorrowers,
-  changeBorrowerStatus,
+  changeCompanyBorrowerStatus,
   setUpdateCompany,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useNavigate } from "react-router-dom";
@@ -151,7 +151,7 @@ const ViewCompany = () => {
     const handleChangeStatus = (uid, newStatus) => {
       console.log(uid);
       setCurrentStatus(newStatus);
-      dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
+      dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
       dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20 }));
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
