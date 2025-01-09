@@ -8,7 +8,7 @@ import {
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
+import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 const UpdateCompany = () => {
   const isValid = useSelector((state) => state.validation.isValid);
@@ -57,7 +57,7 @@ const UpdateCompany = () => {
 
   return (
     <>
-      <AddUpdateBorrowerFields
+      <AddUpdateCompanyBorrowerFields
         BorrowerData={updateBorrowerData}
         handleChangeReducer={handleChangeUpdateCompanyField}
       />

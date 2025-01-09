@@ -3,20 +3,17 @@ import Button from "../../Common/Button/Button";
 import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
-  resetCompanyData,
-  registerBorrower,
   handleChangeAddDirectorField,
   addDirector,
   removeDirector,
   resetDirector,
-  updateCompanyBorrowerInfo,
+  addDirectorInfo,
   fetchAllCompanyBorrowersByLoanOfficer,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateDirectorFields from "../../Los-SME/Borrowers/AddUpdateDirectorFields";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import { companyRegistrationOptions } from "../../../data/LosData";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 const AddDirector = () => {
@@ -49,8 +46,8 @@ const AddDirector = () => {
 
   useEffect(() => {
     if (directorsKycDetails.length < 1) {
-    dispatch(addDirector({ loanOfficer,index:0 }))
-  }
+      dispatch(addDirector({ loanOfficer, index: 0 }));
+    }
     if (allCompanies.length < 1) {
       dispatch(fetchAllCompanyBorrowersByLoanOfficer({ loanOfficer }));
     }
@@ -62,7 +59,7 @@ const AddDirector = () => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(directorsKycDetails)));
     if (isValid) {
-      dispatch(updateCompanyBorrowerInfo({ directorsKycDetails, companyId }));
+      dispatch(addDirectorInfo({ directorsKycDetails, companyId }));
     }
   };
 
@@ -75,7 +72,6 @@ const AddDirector = () => {
           inputOptions={allCompanies}
           inputValue={companyId}
           onChange={(e) => setCompanyId(e.target.value)}
-          isValidation={true}
         />
         <div></div>
         <div></div>
@@ -118,9 +114,13 @@ const AddDirector = () => {
           </div>
         ))}
       </div>
-      {/* <AddUpdateDirectorFields BorrowerData={directorsKycDetails.directorsKycDetails[0]}  handleChangeReducer={handleChangeAddDirectorField} /> */}
       <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
-        <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} disabled={!companyId}/>
+        <Button
+          buttonName="Submit"
+          onClick={handleSubmit}
+          rectangle={true}
+          disabled={!companyId}
+        />
       </div>
     </>
   );

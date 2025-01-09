@@ -3,18 +3,16 @@ import Button from "../../Common/Button/Button";
 import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
-  resetCompanyData,
-  registerBorrower,
   handleChangeAddShareholderField,
   addShareholder,
   removeShareholder,
+  resetShareholder,
+  addShareholderInfo,
   fetchAllCompanyBorrowersByLoanOfficer,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import AddUpdateDirectorFields from "./AddUpdateDirectorFields";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import { companyRegistrationOptions } from "../../../data/LosData";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
@@ -44,19 +42,24 @@ const AddShareHolder = () => {
     return result;
   }
 
+  const loanOfficer = localStorage.getItem("username");
+
   useEffect(() => {
+    if (shareHolderDetails.length < 1) {
+      dispatch(addShareholder({ loanOfficer, index: 0 }));
+    }
     if (allCompanies.length < 1) {
-      const loanOfficer = localStorage.getItem("username");
       dispatch(fetchAllCompanyBorrowersByLoanOfficer({ loanOfficer }));
     }
-  }, []);
+  }, [dispatch]);
+
   console.log(isValid);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(shareHolderDetails)));
     if (isValid) {
-      dispatch(registerBorrower(shareHolderDetails));
+      dispatch(addShareholderInfo({ shareHolderDetails, companyId }));
     }
   };
 
@@ -72,17 +75,11 @@ const AddShareHolder = () => {
         />
         <div></div>
         <div></div>
-        {/* <Button
-          buttonName="Add Director"
-          onClick={() => dispatch(addShareholder())}
-          rectangle={true}
-          className={"h-[70%]"}
-        /> */}
         <div className="flex justify-end gap-2 h-[90%]">
           <HoverButton
             icon={PlusIcon}
             text="Add Shareholder"
-            onClick={() => dispatch(addShareholder())}
+            onClick={() => dispatch(addShareholder({ loanOfficer }))}
           />
         </div>
       </div>
@@ -96,7 +93,16 @@ const AddShareHolder = () => {
                   <AddUpdateShareholderFields
                     BorrowerData={Data}
                     handleChangeReducer={handleChangeAddShareholderField}
+                    index={index}
                   />
+                  <div className="flex justify-center gap-5 col-span-4 mx-10 mt-4">
+                    <Button
+                      buttonName="Reset Shareholder"
+                      onClick={() => dispatch(resetShareholder({ index }))}
+                      rectangle={true}
+                      className={"bg-red-500 hover:bg-red-600"}
+                    />
+                  </div>
                 </>
               )}
             />
@@ -108,15 +114,13 @@ const AddShareHolder = () => {
           </div>
         ))}
       </div>
-      {/* <AddUpdateDirectorFields BorrowerData={shareHolderDetails.shareHolderDetails[0]}  handleChangeReducer={handleChangeAddShareholderField} /> */}
       <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
         <Button
-          buttonName="Reset"
-          onClick={() => dispatch(resetCompanyData())}
+          buttonName="Submit"
+          onClick={handleSubmit}
           rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          disabled={!companyId}
         />
-        <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>
   );
