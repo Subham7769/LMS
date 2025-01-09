@@ -17,7 +17,7 @@ const DebtBurdenPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={DebtBurdenStats} />
+      {/* <StatContainer stats={DebtBurdenStats} /> */}
       <ListTable
         ListName={"Debt Burden List"}
         ListNameAlign={""}
@@ -25,7 +25,7 @@ const DebtBurdenPage = () => {
         ListItem={DebtBurdenList}
         Searchable={true}
         SearchBy={"caseId"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

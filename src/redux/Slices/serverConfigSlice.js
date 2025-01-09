@@ -16,10 +16,6 @@ export const fetchData = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to read");
@@ -49,10 +45,6 @@ export const updateServerConfig = createAsyncThunk(
           body: JSON.stringify(updatedServerConfigData),
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -107,11 +99,6 @@ export const deleteServerConfig = createAsyncThunk(
         },
       }
     );
-
-    if (response.status === 401 || response.status === 403) {
-      localStorage.clear();
-      return rejectWithValue("Unauthorized");
-    }
 
     if (!response.ok) {
       const errorData = await response.json();

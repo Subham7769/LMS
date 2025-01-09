@@ -61,7 +61,7 @@ import { createNewTCL } from "../../../utils/createNewTCL";
 import { createNewCreditScoreET } from "../../../utils/createNewCreditScoreET";
 import { createNewRac as createNewDynamicRac } from "../../../utils/createNewDynamicRac";
 import { createNewReportingConfig } from "../../../utils/createNewReportingConfig";
-
+import { allSectionName } from "../../../data/MenuData.js";
 import CreateNew from "../CreateNew/CreateNew";
 
 const SideBar = () => {
@@ -69,7 +69,6 @@ const SideBar = () => {
   const { menus, loading, error, submenuStates, open } = useSelector(
     (state) => state.sidebar
   );
-
   const iconMapping = {
     HomeIcon,
     ClipboardDocumentCheckIcon,
@@ -120,7 +119,6 @@ const SideBar = () => {
 
   useEffect(() => {
     const roleName = localStorage.getItem("roleName");
-    // console.log(roleName);
     switch (roleName) {
       case "ROLE_SUPERADMIN":
         dispatch(fetchRACData());
@@ -262,78 +260,98 @@ const SideBar = () => {
       <ul
         className={`pt-2 pr-1 border-r h-auto ${
           open ? "w-52" : "w-10"
-        }  overflow-y-auto scrollbar-none border-gray-200`}
+        } overflow-y-auto scrollbar-none border-gray-200`}
       >
-        {/* Main Menu */}
-        {menus.map((menu, index) => {
-          const IconComponent = iconMapping[menu.icon];
-          const createFunction = functionMapping[menu.createFunction];
-          // console.log(menu.title + "-> "+menu.createFunction)
-          return (
-            <div
-              key={menu.title}
-              className={`${index === menus.length - 1 && "mb-52"}`}
-            >
-              <NavLink to={menu.href} className="text-gray-500">
-                <li
-                  onClick={() => handleToggleSubmenu(index)}
-                  className="w-full text-sm flex items-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
-                >
-                  <span className="text-2xl block float-left">
-                    <IconComponent className="h-5 w-5 shrink-0" />
-                  </span>
-                  <span
-                    className={`text-sm flex-1 transform duration-1000 ease-in-out ${
-                      !open && "hidden"
-                    }`}
+        {allSectionName.map((sectionName, sectionIndex) => (
+          <div key={sectionName} className={`${!open && "mb-2 "} `}>
+            {menus.some((menu) => menu.sectionName === sectionName) && (
+              <h2
+                className={`text-gray-500 text-xs font-semibold ml-4 ${
+                  !open && "hidden"
+                } ${sectionIndex !== 0 ? "mt-7" : ""}`}
+              >
+                {sectionName}
+              </h2>
+            )}
+            {menus.map((menu, index) => {
+              const IconComponent = iconMapping[menu.icon];
+              const createFunction = functionMapping[menu.createFunction];
+
+              // Ensure we return valid JSX or null for each iteration
+              if (menu.sectionName === sectionName) {
+                return (
+                  <div
+                    key={menu.title}
+                    className={`${index === menus.length - 1 && "mb-52"}`}
                   >
-                    {menu.title}
-                  </span>
-                  {menu.submenu && open && (
-                    <ChevronRightIcon
-                      className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${
-                        submenuStates[index]?.isOpen ? "rotate-90" : ""
-                      }`}
-                      onClick={() => handleToggleSubmenu(index)}
-                    />
-                  )}
-                </li>
-              </NavLink>
-              {/* SubMenu */}
-              {menu.submenu && submenuStates[index]?.isOpen && open && (
-                <ul>
-                  {
-                    // if create from Side bar Using input box
-                    menu.createButton ? (
-                      <div>
-                        <li className="py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                          <CreateNew
-                            placeholder={menu.placeholder}
-                            buttonName={menu.buttonName}
-                            createFunction={createFunction}
-                            menuTitle={menu.title}
-                            editable={menu.editable}
-                            navigateSuccess={menu.navigateSuccess}
-                            navigateFail={menu.navigateFail}
+                    <NavLink to={menu.href} className="text-gray-500">
+                      <li
+                        onClick={() => handleToggleSubmenu(index)}
+                        className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
+                      >
+                        <span
+                          className={`text-2xl block float-left group-hover:bg-indigo-100 `}
+                          title={menu.title}
+                        >
+                          <IconComponent className="h-5 w-5 shrink-0" />
+                        </span>
+                        <span
+                          className={`text-sm flex-1 transform duration-1000 ease-in-out ${
+                            !open && "hidden"
+                          }`}
+                        >
+                          {menu.title}
+                        </span>
+                        {menu.submenu && open && (
+                          <ChevronRightIcon
+                            className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${
+                              submenuStates[index]?.isOpen ? "rotate-90" : ""
+                            }`}
+                            onClick={() => handleToggleSubmenu(index)}
                           />
-                        </li>
-                      </div>
-                    ) : null
-                  }
-                  {menu.submenuItems.map((submenuItem) => (
-                    <div key={submenuItem.name}>
-                      <NavLink to={submenuItem.href} className="text-gray-500">
-                        <li className="text-xs flex items-center  gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
-                          {submenuItem.name}
-                        </li>
-                      </NavLink>
-                    </div>
-                  ))}
-                </ul>
-              )}
-            </div>
-          );
-        })}
+                        )}
+                      </li>
+                    </NavLink>
+                    {/* SubMenu */}
+                    {menu.submenu && submenuStates[index]?.isOpen && open && (
+                      <ul>
+                        {/* If create from Sidebar Using input box */}
+                        {menu.createButton && (
+                          <div>
+                            <li className="py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                              <CreateNew
+                                placeholder={menu.placeholder}
+                                buttonName={menu.buttonName}
+                                createFunction={createFunction}
+                                menuTitle={menu.title}
+                                editable={menu.editable}
+                                navigateSuccess={menu.navigateSuccess}
+                                navigateFail={menu.navigateFail}
+                              />
+                            </li>
+                          </div>
+                        )}
+                        {menu.submenuItems.map((submenuItem) => (
+                          <div key={submenuItem.name}>
+                            <NavLink
+                              to={submenuItem.href}
+                              className="text-gray-500"
+                            >
+                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                                {submenuItem.name}
+                              </li>
+                            </NavLink>
+                          </div>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                );
+              }
+              return null; // Explicitly return null for unmatched items
+            })}
+          </div>
+        ))}
       </ul>
     </div>
   );

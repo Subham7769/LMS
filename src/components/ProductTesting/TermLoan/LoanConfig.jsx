@@ -137,7 +137,7 @@ const LoanConfig = () => {
       .unwrap() // Unwrap the result for error handling
       .then((loanId) => {
         console.log("Loan ID:", loanId);
-        navigate("/loan/customer-care/" + userID + "/loan-payment-history");
+        // navigate("/loan/customer-care/" + userID + "/loan-payment-history");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -208,7 +208,14 @@ const LoanConfig = () => {
             onChange={handleChange}
             isValidation={true}
           />
-          {["CASH_LOAN_V1", "BNPL_LOAN"].includes(
+          <InputNumber
+            labelName={"Amount"}
+            inputName={"amount"}
+            inputValue={loanConfigFields.amount}
+            onChange={handleChange}
+            placeHolder={"5000"}
+          />
+          {/* {["CASH_LOAN_V1", "BNPL_LOAN"].includes(
             loanConfigFields.loanType
           ) && (
             <InputNumber
@@ -218,7 +225,7 @@ const LoanConfig = () => {
               onChange={handleChange}
               placeHolder={"5000"}
             />
-          )}
+          )} */}
           <div>
             <Button
               buttonIcon={CheckCircleIcon}

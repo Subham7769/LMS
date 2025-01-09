@@ -24,6 +24,7 @@ const InputNumber = ({
   isSectionId,
   isRuleId,
   isRangeIndex,
+  loading=false,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -136,6 +137,9 @@ const InputNumber = ({
           <span className=" block absolute right-2 text-gray-500">
             %
           </span> /* The % symbol */
+        )}
+         {loading && (
+          <div className="absolute inset-x-2 top-1/2 transform -translate-y-1/2 h-6 bg-gray-200 animate-pulse rounded-md"></div>
         )}
       </div>
     </div>

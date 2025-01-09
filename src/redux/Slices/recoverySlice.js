@@ -19,10 +19,6 @@ export const fetchName = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to read");
@@ -50,10 +46,6 @@ export const fetchData = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to read");
@@ -86,11 +78,6 @@ export const updateOrPostData = createAsyncThunk(
         body: JSON.stringify(formData),
       });
 
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
-
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to update");
@@ -117,11 +104,6 @@ export const deleteRecovery = createAsyncThunk(
       }
     );
 
-    if (response.status === 401 || response.status === 403) {
-      localStorage.clear();
-      return rejectWithValue("Unauthorized");
-    }
-
     if (!response.ok) {
       return rejectWithValue("Failed to delete");
     }
@@ -146,11 +128,6 @@ export const createClone = createAsyncThunk(
         },
       }
     );
-
-    if (response.status === 401 || response.status === 403) {
-      localStorage.clear();
-      return rejectWithValue("Unauthorized");
-    }
 
     if (!response.ok) {
       return rejectWithValue("Failed to create clone");
@@ -178,10 +155,7 @@ export const updateRecoveryName = createAsyncThunk(
         },
       });
 
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      } else if (response.ok) {
+      if (response.ok) {
         return newName;
       } else {
         return rejectWithValue("Failed to update name");
@@ -263,10 +237,10 @@ const recoverySlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           caseId: newListItem.name,
           href: newListItem.href,
-          openedOn: RecoveryList[index]?.openedOn || "14/09/2022",
-          recoveredAmount: RecoveryList[index]?.recoveredAmount || "$50M",
-          outstandingAmount: RecoveryList[index]?.outstandingAmount || "$20M",
-          status: RecoveryList[index]?.status || "Active",
+          // openedOn: RecoveryList[index]?.openedOn || "14/09/2022",
+          // recoveredAmount: RecoveryList[index]?.recoveredAmount || "$50M",
+          // outstandingAmount: RecoveryList[index]?.outstandingAmount || "$20M",
+          // status: RecoveryList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to RecoveryList

@@ -124,14 +124,14 @@ const ProductGroup = () => {
             isValidation={true}
           />
           <InputNumber
-            labelName="Finance Hard Limit"
+            labelName="Hard Limit"
             inputName="hardLimit"
             inputValue={productGroupData?.financeHardLimit?.hardLimit}
             onChange={handleInputChange}
             isValidation={true}
           />
           <InputNumber
-            labelName="Renew Credit Report"
+            labelName="Renew In Days"
             inputName="renewInDays"
             inputValue={productGroupData?.renewCreditReport?.renewInDays}
             onChange={handleInputChange}

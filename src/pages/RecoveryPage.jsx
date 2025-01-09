@@ -17,7 +17,7 @@ const RecoveryPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={RecoveryStats} />{" "}
+      {/* <StatContainer stats={RecoveryStats} />{" "} */}
       {/* Assuming there's a similar stats component for recovery */}
       <ListTable
         ListName="Recovery List"
@@ -25,7 +25,7 @@ const RecoveryPage = () => {
         ListItem={RecoveryList}
         Searchable={true}
         SearchBy={"caseId"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

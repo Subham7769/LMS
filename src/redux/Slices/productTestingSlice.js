@@ -62,13 +62,16 @@ export const getUserEligibility = createAsyncThunk(
   async ({ userID, url }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(`${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}${url}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}${url}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -119,14 +122,16 @@ export const getUserLoanOptions = createAsyncThunk(
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `${import.meta.env.VITE_USER_PRODUCT_TESTING}${userID}`,
+        `${
+          import.meta.env.VITE_USER_PRODUCT_TESTING_REGISTRATION_RESULT_GET
+        }${userID}`,
         {
-          method: "PUT",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ ...postData, idNumber: userID }),
+          // body: JSON.stringify({ ...postData, idNumber: userID }),
         }
       );
 
@@ -191,7 +196,7 @@ export const handleProceed = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS}${userID}/loans`,
+        `${import.meta.env.VITE_LOAN_SUBMIT_PUT_PERSONAL}${userID}/submit-loan`,
         {
           method: "PUT",
           headers: {
@@ -285,9 +290,9 @@ export const submitDisbursement = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to get details");
       } else {
-          setTimeout(() => {
-            navigate("/loan/customer-care/" + userID + "/loan-payment-history");
-          }, 1000);
+        setTimeout(() => {
+          navigate("/loan/customer-care/" + userID + "/loan-payment-history");
+        }, 1000);
       }
     } catch (error) {
       return rejectWithValue(error);
@@ -318,11 +323,9 @@ export const getRepaymentInfo = createAsyncThunk(
       if (!response.ok) {
         if (response.status === 500) {
           return rejectWithValue("No data found for this User Id");
-        }else {
-            const errorData = await response.json();
-            return rejectWithValue(
-              errorData.message || "Failed to get details"
-            );
+        } else {
+          const errorData = await response.json();
+          return rejectWithValue(errorData.message || "Failed to get details");
         }
       }
 
@@ -378,7 +381,6 @@ export const submitRepayment = createAsyncThunk(
           navigate("/loan/customer-care/" + userID + "/loan-payment-history");
         }, 1000);
       }
-
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -657,10 +659,17 @@ const productTestingSlice = createSlice({
           action.payload.registrationResults.projects.filter(
             (project) => project.isRegister
           );
-        state.loanOptions = eligibleProjects.map(({ loanProducts }) => ({
-          value: loanProducts[0].productName,
-          label: loanProducts[0].productName.replace(/_/g, " "),
-        }));
+        // Extract all loan products from eligible projects
+        const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
+          loanProducts.map((product) => ({
+            value: product.productName,
+            label: product.productName
+              .replace(/_/g, " ")
+              .toLowerCase()
+              .replace(/\b\w/g, (char) => char.toUpperCase()),
+          }))
+        );
+        state.loanOptions = loanOptions;
       })
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;

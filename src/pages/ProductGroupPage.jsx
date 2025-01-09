@@ -17,14 +17,14 @@ const ProductGroupPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={GroupStats} />
+      {/* <StatContainer stats={GroupStats} /> */}
       <ListTable
         ListName={"Product Group List"}
         ListHeader={HeaderList}
         ListItem={ProductGroupList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

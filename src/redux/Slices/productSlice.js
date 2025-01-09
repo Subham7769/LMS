@@ -21,10 +21,6 @@ export const fetchData = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to read");
@@ -228,6 +224,7 @@ const productInitialState = {
     overDraftPaymentPrinciplePercentage: "",
     maxOverdraftPrincipalLimit: "",
     minOverdraftPrincipalLimit: "",
+    interestMethod: "",
   },
   loading: false,
   error: null,
@@ -279,11 +276,11 @@ const productSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          createdOn: ProductList[index]?.createdOn || "14/09/2022",
-          openLoans: ProductList[index]?.openLoans || "1490",
-          totalDisbursedPrincipal:
-            ProductList[index]?.totalDisbursedPrincipal || "$750M",
-          status: ProductList[index]?.status || "Active",
+          // createdOn: ProductList[index]?.createdOn || "14/09/2022",
+          // openLoans: ProductList[index]?.openLoans || "1490",
+          // totalDisbursedPrincipal:
+          //   ProductList[index]?.totalDisbursedPrincipal || "$750M",
+          // status: ProductList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to ProductList

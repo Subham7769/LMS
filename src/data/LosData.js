@@ -64,7 +64,7 @@ export const CollateralRegisterHeaderList = [
 
 export const AddBulkRepaymentHeaderList = [
   "Row",
-  "Loan",
+  "Loan Id",
   "Amount",
   "Method",
   "Collection Date",
@@ -183,22 +183,18 @@ export const AddBulkRepaymentList = [
 
 
 export const loanOfficer = [
-  { label: "John Doe", value: "John Doe" },
-  { label: "Jane Smith", value: "Jane Smith" },
-  { label: "Michael Johnson", value: "Michael Johnson" },
-  { label: "Emily Davis", value: "Emily Davis" },
-  { label: "Chris Brown", value: "Chris Brown" },
+  { label: "Super Admin", value: "superadmin" },
+  { label: "Test", value: "test" },
 ];
 
 export const ApproveRepaymentColumns = [
   { label: "Amount", field: "amount" },
   { label: "Collection Date", field: "collectionDate" },
-  { label: "Name", field: "name" },
-  { label: "Loan Id", field: "loanId" },
-  { label: "Collected By", field: "collectedBy" },
+  { label: "User Id", field: "userId" },
+  { label: "Loan Id", field: "loan" },
+  { label: "Collected By", field: "collectionBy" },
   { label: "Method", field: "method" },
-  { label: "Staff", field: "staff" },
-  { label: "Edit Date", field: "editDate" },
+  { label: "Accounting", field: "accounting" },
 ];
 
 export const yesNoOptions = [
@@ -211,6 +207,7 @@ export const repaymentOptions = [
   { label: "Ignore", value: "ignore" },
   { label: "Amount", value: "amount" },
   { label: "Collection Method", value: "collectionMethod" },
+  { label: "Collection Date", value: "collectionDate" },
   { label: "Loan Unique Number", value: "loanUniqueNumber" },
   { label: "Collected By", value: "collectedBy" },
   { label: "Description", value: "description" },
@@ -259,9 +256,42 @@ export const accountType = [
 ]
 export const uniqueIDType = [
   { value: "PASSPORT", label: "PASSPORT" },
-  { value: "NRC NO.", label: "NRC NO." },
-  { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
-  { value: "NATIONAL ID", label: "NATIONAL ID" },
-  { value: "VOTER ID", label: "VOTER ID" },
-  { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
+  { value: "NRC", label: "NRC" },
+  // { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
+  // { value: "NATIONAL ID", label: "NATIONAL ID" },
+  // { value: "VOTER ID", label: "VOTER ID" },
+  // { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
+];
+export const accountStatusOptions = [
+  { value: "DEACTIVATED", label: "DEACTIVATE" },
+  { value: "DEFAULTER", label: "DEFAULTER" },
+];
+
+export const natureOfCompanyOptions = [
+  { value: "LIMITED", label: "Limited" },
+  { value: "BUSINESS_NAME", label: "Business Name" },
+];
+export const companyRegistrationOptions = [
+  { value: "123456789", label: "ABC Limited" },
+  { value: "987654321", label: "XYZ Business Name" },
+  { value: "456789123", label: "PQR Limited" },
+];
+export const methodOptions = [
+  { label: "User Payment", value: "USER_PAYMENT" },
+  { label: "Auto Payment", value: "AUTO_PAYMENT" },
+];
+
+export const collectionByOptions = [
+  { label: "Agent 1", value: "agent_1" },
+  { label: "Agent 2", value: "agent_2" },
+];
+
+export const accountingOptions = [
+  { label: "Cash", value: "cash" },
+  { label: "Bank", value: "bank" },
+];
+
+export const loanOptions = [
+  { label: "Loan 1", value: "loan_1" },
+  { label: "Loan 2", value: "loan_2" },
 ];

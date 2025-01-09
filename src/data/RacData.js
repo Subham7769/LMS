@@ -33,10 +33,10 @@ export const RacStats = [
 
 export const HeaderList = [
   "Name",
-  "Created On",
-  "Approved",
-  "Total Processed",
-  "Status",
+  // "Created On",
+  // "Approved",
+  // "Total Processed",
+  // "Status",
 ];
 
 export const RACList = [

@@ -77,7 +77,7 @@ const RiskGradeMatrix = () => {
         {roleName !== "ROLE_VIEWER" ? (
           <ContainerTile
           loading={loading}
-          error={error}
+          // error={error}
           >
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
               <InputNumber

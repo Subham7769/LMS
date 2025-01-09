@@ -21,10 +21,6 @@ export const fetchRules = createAsyncThunk(
       );
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to read");
       }
@@ -54,10 +50,6 @@ export const fetchName = createAsyncThunk(
       );
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to read");
       }
@@ -87,10 +79,6 @@ export const updateName = createAsyncThunk(
       );
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to update name");
       }
@@ -122,10 +110,6 @@ export const createCloneDBC = createAsyncThunk(
       );
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to create clone");
       }
@@ -160,10 +144,6 @@ export const addRule = createAsyncThunk(
       });
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to add rule");
       }
@@ -191,10 +171,6 @@ export const deleteDBC = createAsyncThunk(
       );
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to delete item");
       }
@@ -225,11 +201,6 @@ export const deleteRule = createAsyncThunk(
       console.log("Received response with status:", response.status);
 
       if (!response.ok) {
-        console.error("Failed to delete rule. Status:", response.status);
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to delete rule");
       }
@@ -264,10 +235,6 @@ export const updateRule = createAsyncThunk(
       });
 
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          return rejectWithValue("Unauthorized");
-        }
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to update rule");
       }
@@ -373,10 +340,10 @@ export const dbrConfigSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           caseId: newListItem.name,
           href: newListItem.href,
-          openedOn: DebtBurdenList[index]?.openedOn || "14/09/2022",
-          debtAmount: DebtBurdenList[index]?.debtAmount || "$100M",
-          outstandingAmount: DebtBurdenList[index]?.outstandingAmount || "$50M",
-          status: DebtBurdenList[index]?.status || "Active",
+          // openedOn: DebtBurdenList[index]?.openedOn || "14/09/2022",
+          // debtAmount: DebtBurdenList[index]?.debtAmount || "$100M",
+          // outstandingAmount: DebtBurdenList[index]?.outstandingAmount || "$50M",
+          // status: DebtBurdenList[index]?.status || "Active",
         }));
 
         // Assign the updatedList to DebtBurdenList

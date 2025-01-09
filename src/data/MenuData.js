@@ -1,13 +1,33 @@
 export const MenusInitial = [
+  // LOAN MANAGEMENT
   {
     title: "Home",
+    sectionName: "LOAN MANAGEMENT",
     href: "/loan/home",
     icon: "HomeIcon",
     count: "5",
     current: true,
   },
+  {
+    title: "Loan Product",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/loan-product",
+    icon: "CubeIcon",
+    current: false,
+    submenu: true,
+    createButton: true, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewProduct",
+    buttonName: "Create Product", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/loan-product/newProduct/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+  },
   // {
   //   title: "RAC",
+  //   sectionName:"LOAN MANAGEMENT",
   //   href: "/rac",
   //   icon: "ClipboardDocumentCheckIcon",
   //   current: false,
@@ -25,6 +45,7 @@ export const MenusInitial = [
   // },
   {
     title: "Dynamic RAC",
+    sectionName: "LOAN MANAGEMENT",
     href: "/loan/dynamic-rac",
     icon: "ClipboardDocumentCheckIcon",
     submenu: true,
@@ -40,41 +61,8 @@ export const MenusInitial = [
     current: false,
   },
   {
-    title: "Recovery",
-    href: "/loan/recovery",
-    icon: "ArrowPathRoundedSquareIcon",
-    current: false,
-    submenu: true,
-    createButton: true, //if create recovery from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewRecovery",
-    buttonName: "Create Recovery", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/recovery/", // navigation
-    navigateFail: "/login", // navigation
-    submenuItems: [],
-    isOpen: false,
-    uniqueKey: "recoveryEquationTempId",
-  },
-  {
-    title: "TCL",
-    href: "/loan/tcl",
-    icon: "CurrencyRupeeIcon",
-    current: false,
-    submenu: true,
-    createButton: true, //if create TCL from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewTCL",
-    buttonName: "Create TCL", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/tcl/", // navigation
-    navigateFail: "/login", // navigation
-    submenuItems: [],
-    isOpen: false,
-    uniqueKey: "tclFileId",
-  },
-  {
     title: "Project",
+    sectionName: "LOAN MANAGEMENT",
     href: "/loan/project", //previous -> "/project/loan-form"
     icon: "ChartPieIcon",
     current: false,
@@ -91,74 +79,44 @@ export const MenusInitial = [
     uniqueKey: "projectId",
   },
   {
-    title: "Loan Product",
-    href: "/loan/loan-product",
-    icon: "CubeIcon",
+    title: "TCL",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/tcl",
+    icon: "CurrencyRupeeIcon",
     current: false,
     submenu: true,
-    createButton: true, //if create product from Side bar Using input box
+    createButton: true, //if create TCL from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: "createNewProduct",
-    buttonName: "Create Product", //Create button text
+    createFunction: "createNewTCL",
+    buttonName: "Create TCL", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/loan-product/newProduct/", // navigation
+    navigateSuccess: "/loan/tcl/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
+    uniqueKey: "tclFileId",
   },
   {
-    title: "Eligible Tenure",
-    href: "/loan/credit-score-eligible-tenure",
-    icon: "CalculatorIcon",
+    title: "Recovery",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/recovery",
+    icon: "ArrowPathRoundedSquareIcon",
     current: false,
     submenu: true,
-    createButton: true, //if create product from Side bar Using input box
+    createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
-    createFunction: "createNewCreditScoreET", //Create function
-    buttonName: "Create New Tenure", //Create button text
+    createFunction: "createNewRecovery",
+    buttonName: "Create Recovery", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/credit-score-eligible-tenure/", // navigation
+    navigateSuccess: "/loan/recovery/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
-    uniqueKey: "creditScoreEtTempId",
-  },
-  {
-    title: "DBR Config",
-    href: "/loan/dbr-config",
-    icon: "CreditCardIcon",
-    current: false,
-    submenu: true,
-    createButton: true, //if create RAC from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewDBC",
-    buttonName: "Create DBR", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/dbr-config/", // navigation
-    navigateFail: "/login", // navigation
-    submenuItems: [],
-    isOpen: false,
-    uniqueKey: "dbcTempId",
-  },
-  {
-    title: "Blocked Employer",
-    href: "/loan/blocked-employer",
-    icon: "NoSymbolIcon",
-    current: false,
-    submenu: true,
-    createButton: true, //if create RAC from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewBE",
-    buttonName: "Create BE", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/blocked-employer/", // navigation
-    navigateFail: "/login", // navigation
-    submenuItems: [],
-    isOpen: false,
-    uniqueKey: "blockEmployersTempId",
+    uniqueKey: "recoveryEquationTempId",
   },
   {
     title: "Credit Score",
+    sectionName: "LOAN MANAGEMENT",
     href: "/loan/credit-score",
     icon: "CalculatorIcon",
     current: false,
@@ -176,6 +134,7 @@ export const MenusInitial = [
   },
   {
     title: "Rule Policy",
+    sectionName: "LOAN MANAGEMENT",
     href: "/loan/rule-policy",
     icon: "ClipboardDocumentListIcon",
     current: false,
@@ -192,23 +151,8 @@ export const MenusInitial = [
     uniqueKey: "rulePolicyTempId",
   },
   {
-    title: "Product Group",
-    href: "/loan/product-group",
-    icon: "RectangleGroupIcon",
-    current: false,
-    submenu: true,
-    createButton: false, //if create product from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewProductGroup",
-    buttonName: "Create Group", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/product-group/newProductGroup/", // navigation
-    navigateFail: "/login", // navigation
-    submenuItems: [],
-    isOpen: false,
-  },
-  {
     title: "Business Rule",
+    sectionName: "LOAN MANAGEMENT",
     href: "/loan/business-rule/1",
     icon: "AdjustmentsHorizontalIcon",
     current: false,
@@ -228,43 +172,92 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "Global Config",
-    href: "/loan/global-config/liabilities-matrix",
-    icon: "Cog6ToothIcon",
+    title: "DBR Config",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/dbr-config",
+    icon: "CreditCardIcon",
     current: false,
     submenu: true,
-    submenuItems: [
-      {
-        name: "Liabilities Matrix",
-        href: "/loan/global-config/liabilities-matrix",
-        current: false,
-      },
-      {
-        name: "Risk Grading Matrix",
-        href: "/loan/global-config/risk-grading-matrix",
-        current: false,
-      },
-      {
-        name: "Minimum Expense",
-        href: "/loan/global-config/min-expense",
-        current: false,
-      },
-      {
-        name: "Notification Text",
-        href: "/loan/global-config/notification-text",
-        current: false,
-      },
-    ],
+    createButton: true, //if create RAC from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewDBC",
+    buttonName: "Create DBR", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/dbr-config/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+    uniqueKey: "dbcTempId",
+  },
+  {
+    title: "Eligible Tenure",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/credit-score-eligible-tenure",
+    icon: "CalculatorIcon",
+    current: false,
+    submenu: true,
+    createButton: true, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewCreditScoreET", //Create function
+    buttonName: "Create New Tenure", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/credit-score-eligible-tenure/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+    uniqueKey: "creditScoreEtTempId",
+  },
+  {
+    title: "Blocked Employer",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/blocked-employer",
+    icon: "NoSymbolIcon",
+    current: false,
+    submenu: true,
+    createButton: true, //if create RAC from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewBE",
+    buttonName: "Create BE", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/blocked-employer/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+    uniqueKey: "blockEmployersTempId",
+  },
+  {
+    title: "Product Group",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/product-group",
+    icon: "RectangleGroupIcon",
+    current: false,
+    submenu: true,
+    createButton: false, //if create product from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewProductGroup",
+    buttonName: "Create Group", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/product-group/newProductGroup/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
     isOpen: false,
   },
+
+
+  // FINANCE
   {
-    title: "Customer Care",
-    href: "/loan/customer-care",
-    icon: "HeartIcon",
+    title: "General Ledger",
+    sectionName: "FINANCE",
+    href: "/loan/general-ledger",
+    icon: "BookOpenIcon",
     current: false,
   },
+
+
+  // TESTING
   {
     title: "Product Testing",
+    sectionName: "TESTING",
     href: "/loan/product-testing/term-loan",
     icon: "HandRaisedIcon",
     current: false,
@@ -284,26 +277,144 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "General Ledger",
-    href: "/loan/general-ledger",
-    icon: "BookOpenIcon",
-    current: false,
-  },
-  {
-    title: "User Management",
-    href: "/loan/user-management",
-    icon: "UserGroupIcon",
+    title: "Test Component",
+    sectionName: "TESTING",
+    href: "/loan/test",
+    icon: "BeakerIcon",
     current: false,
   },
 
+
+  // CONFIGURATION
+  {
+    title: "Global Config",
+    sectionName: "CONFIGURATION",
+    href: "/loan/global-config/risk-grading-matrix",
+    icon: "Cog6ToothIcon",
+    current: false,
+    submenu: true,
+    submenuItems: [
+      // {
+      //   name: "Liabilities Matrix",
+      //   href: "/loan/global-config/liabilities-matrix",
+      //   current: false,
+      // },
+      {
+        name: "Risk Grading Matrix",
+        href: "/loan/global-config/risk-grading-matrix",
+        current: false,
+      },
+      {
+        name: "Minimum Expense",
+        href: "/loan/global-config/min-expense",
+        current: false,
+      },
+      {
+        name: "Notification Text",
+        href: "/loan/global-config/notification-text",
+        current: false,
+      },
+    ],
+    isOpen: false,
+  },
   {
     title: "Server Config",
+    sectionName: "CONFIGURATION",
     href: "/loan/server-config",
     icon: "WrenchScrewdriverIcon",
     current: false,
   },
+
+
+  // LOAN ORIGINATION
+  {
+    title: "SME Loans",
+    sectionName: "LOAN ORIGINATION",
+    href: "/loan/loan-origination-system/sme",
+    icon: "DocumentCurrencyRupeeIcon",
+    current: false,
+    submenu: true,
+    submenuItems: [
+      {
+        name: "Borrowers",
+        href: "/loan/loan-origination-system/sme/borrowers/add-company",
+        current: false,
+      },
+      {
+        name: "Loans",
+        href: "/loan/loan-origination-system/sme/loans/add-loan",
+        current: false,
+      },
+      {
+        name: "Repayments",
+        href: "/loan/loan-origination-system/sme/repayments/add-bulk-repayment",
+        current: false,
+      },
+      // {
+      //   name: "Profile",
+      //   href: "/loan/loan-origination-system/sme/profile",
+      //   current: false,
+      // },
+      // {
+      //   name: "Manage Partner",
+      //   href: "/loan/loan-origination-system/sme/manage-partner",
+      //   current: false,
+      // },
+      // {
+      //   name: "Cash Payable",
+      //   href: "/loan/loan-origination-system/sme/cash-payable",
+      //   current: false,
+      // },
+      // {
+      //   name: "Cash Receivable",
+      //   href: "/loan/loan-origination-system/sme/cash-receivable",
+      //   current: false,
+      // },
+      // {
+      //   name: "Working Capital",
+      //   href: "/loan/loan-origination-system/sme/working-capital",
+      //   current: false,
+      // },
+      // {
+      //   name: "Project Finance",
+      //   href: "/loan/loan-origination-system/sme/project-finance",
+      //   current: false,
+      // },
+    ],
+    isOpen: false,
+  },
+  {
+    title: "Personal Loans",
+    sectionName: "LOAN ORIGINATION",
+    href: "/loan/loan-origination-system/personal",
+    icon: "AtSymbolIcon",
+    current: false,
+    submenu: true,
+    submenuItems: [
+      {
+        name: "Borrowers",
+        href: "/loan/loan-origination-system/personal/borrowers/add-borrower",
+        current: false,
+      },
+      {
+        name: "Loans",
+        href: "/loan/loan-origination-system/personal/loans/add-loan",
+        current: false,
+      },
+      {
+        name: "Repayments",
+        href: "/loan/loan-origination-system/personal/repayments/add-bulk-repayment",
+        current: false,
+      },
+    ],
+    isOpen: false,
+  },
+
+
+  // REPORTS & ANALYSIS
   {
     title: "Reporting Config",
+    sectionName: "REPORTS & ANALYSIS",
     href: "/loan/reporting-config",
     icon: "ChartBarIcon",
     submenu: true,
@@ -320,104 +431,36 @@ export const MenusInitial = [
   },
   {
     title: "Reports",
+    sectionName: "REPORTS & ANALYSIS",
     href: "/loan/reports",
     icon: "NewspaperIcon",
     current: false,
   },
+
+
+  // USER TOOLS
   {
-    title: "Invoice Discounting",
-    href: "/loan/invoice-discounting/registration",
-    icon: "DocumentCurrencyRupeeIcon",
-    current: false,
-    submenu: true,
-    submenuItems: [
-      {
-        name: "Home",
-        href: "/loan/invoice-discounting/registration",
-        current: false,
-      },
-      {
-        name: "Profile",
-        href: "/loan/invoice-discounting/profile",
-        current: false,
-      },
-      {
-        name: "Manage Partner",
-        href: "/loan/invoice-discounting/manage-partner",
-        current: false,
-      },
-      {
-        name: "Cash Payable",
-        href: "/loan/invoice-discounting/cash-payable",
-        current: false,
-      },
-      {
-        name: "Cash Receivable",
-        href: "/loan/invoice-discounting/cash-receivable",
-        current: false,
-      },
-      {
-        name: "Working Capital",
-        href: "/loan/invoice-discounting/working-capital",
-        current: false,
-      },
-      {
-        name: "Project Finance",
-        href: "/loan/invoice-discounting/project-finance",
-        current: false,
-      },
-    ],
-    isOpen: false,
-  },
-  {
-    title: "LOS-Personal",
-    href: "/loan/loan-origination-system/personal",
-    icon: "AtSymbolIcon",
-    current: false,
-    submenu: true,
-    submenuItems: [
-      {
-        name: "Borrowers",
-        href: "/loan/loan-origination-system/personal/borrowers",
-        current: false,
-      },
-      {
-        name: "Loans",
-        href: "/loan/loan-origination-system/personal/loans",
-        current: false,
-      },
-      {
-        name: "Repayments",
-        href: "/loan/loan-origination-system/personal/repayments",
-        current: false,
-      },
-      // {
-      //   name: "Cash Payable",
-      //   href: "/loan/loan-origination-system/personal/cash-payable",
-      //   current: false,
-      // },
-      // {
-      //   name: "Cash Receivable",
-      //   href: "/loan/loan-origination-system/personal/cash-receivable",
-      //   current: false,
-      // },
-      // {
-      //   name: "Working Capital",
-      //   href: "/loan/loan-origination-system/personal/working-capital",
-      //   current: false,
-      // },
-      // {
-      //   name: "Project Finance",
-      //   href: "/loan/loan-origination-system/personal/project-finance",
-      //   current: false,
-      // },
-    ],
-    isOpen: false,
-  },
-  {
-    title: "Test Component",
-    href: "/loan/test",
-    icon: "BeakerIcon",
+    title: "Customer Care",
+    sectionName: "USER TOOLS",
+    href: "/loan/customer-care",
+    icon: "HeartIcon",
     current: false,
   },
+  {
+    title: "User Management",
+    sectionName: "USER TOOLS",
+    href: "/loan/user-management",
+    icon: "UserGroupIcon",
+    current: false,
+  },
+
+];
+export const allSectionName = [
+  "LOAN MANAGEMENT",
+  "FINANCE",
+  "TESTING",
+  "CONFIGURATION",
+  "LOAN ORIGINATION",
+  "REPORTS & ANALYSIS",
+  "USER TOOLS",
 ];

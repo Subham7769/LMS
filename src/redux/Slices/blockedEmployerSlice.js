@@ -80,10 +80,6 @@ export const fetchBlockedEmployerName = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       const data = await response.json();
       if (!response.ok) {
         const errorData = await response.json();
@@ -113,10 +109,6 @@ export const updateBlockedEmployerName = createAsyncThunk(
           },
         }
       );
-      if (response.status === 401 || response.status === 403) {
-        localStorage.clear();
-        return rejectWithValue("Unauthorized");
-      }
       if (!response.ok) {
         const data = await response.json();
         return rejectWithValue(data.message || "Failed to update name");
@@ -285,13 +277,13 @@ const blockedEmployerSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           employerId: newListItem.name,
           href: newListItem.href,
-          blockedOn: BlockedEmployerList[index]?.blockedOn || "14/09/2022",
-          reasonForBlocking:
-            BlockedEmployerList[index]?.reasonForBlocking ||
-            "Fraudulent Activities",
-          totalBlockedDuration:
-            BlockedEmployerList[index]?.totalBlockedDuration || "8 months",
-          status: BlockedEmployerList[index]?.status || "Inactive",
+          // blockedOn: BlockedEmployerList[index]?.blockedOn || "14/09/2022",
+          // reasonForBlocking:
+          //   BlockedEmployerList[index]?.reasonForBlocking ||
+          //   "Fraudulent Activities",
+          // totalBlockedDuration:
+          //   BlockedEmployerList[index]?.totalBlockedDuration || "8 months",
+          // status: BlockedEmployerList[index]?.status || "Inactive",
         }));
 
         // Assign the updatedList to BlockedEmployerList

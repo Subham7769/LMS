@@ -1,0 +1,662 @@
+import React, { useEffect, useState } from "react";
+import InputText from "../../Common/InputText/InputText";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputEmail from "../../Common/InputEmail/InputEmail";
+import InputFile from "../../Common/InputFile/InputFile";
+import InputDate from "../../Common/InputDate/InputDate";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import Accordion from "../../Common/Accordion/Accordion";
+import { useDispatch, useSelector } from "react-redux";
+import { countryOptions, locationOptions } from "../../../data/CountryData";
+import {
+  maritalStatus,
+  workType,
+  title,
+  gender,
+  accountType,
+  uniqueIDType,
+} from "../../../data/LosData";
+import {
+  setFields,
+  clearValidationError,
+} from "../../../redux/Slices/validationSlice";
+
+const AddUpdateDirectorFields = ({
+  BorrowerData,
+  handleChangeReducer,
+  index,
+}) => {
+  const dispatch = useDispatch();
+  const [filteredLocations1, setFilteredLocations1] = useState([]);
+  const [filteredLocations2, setFilteredLocations2] = useState([]);
+
+  useEffect(() => {
+    setFilteredLocations1(
+      locationOptions[BorrowerData.contactDetails.country] || []
+    );
+    setFilteredLocations2(
+      locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
+    );
+  }, [
+    BorrowerData.contactDetails.country,
+    BorrowerData.nextOfKinDetails.kinCountry,
+  ]);
+
+  useEffect(() => {
+    const keysArray = [
+      "companyId",
+      "title",
+      "firstName",
+      "surname",
+      "uniqueIDType",
+      "uniqueID",
+      "gender",
+      "maritalStatus",
+      "nationality",
+      "dateOfBirth",
+      "placeOfBirth",
+      "mobile1",
+      "street",
+      "residentialArea",
+      "country",
+      "email",
+      "employer",
+      "occupation",
+      "employmentLocation",
+      "workStartDate",
+      "employeeNo",
+      "workType",
+      "bankName",
+      "accountName",
+      "accountType",
+      "branch",
+      "branchCode",
+      "sortCode",
+      "accountNo",
+      "kinTitle",
+      "kinSurname",
+      "kinNrcNo",
+      "kinGender",
+      "kinMobile1",
+      "kinEmail",
+      "kinStreet",
+      "kinResidentialArea",
+      "kinCountry",
+      "kinEmployer",
+      "kinOccupation",
+      "creditScore",
+      "freeCashInHand",
+      "grossSalary",
+    ];
+
+    const indexedKeysArray = keysArray.map((field) => `${field}_${index}`);
+    
+    dispatch(setFields(indexedKeysArray));
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
+
+  const handleInputChange = (e, section, index) => {
+    const { name, value, type, checked } = e.target;
+    // Use section to update the correct part of the state
+    dispatch(
+      handleChangeReducer({ section, index, field: name, value, type, checked })
+    );
+  };
+
+  const handleFileUpload = (e, section, index) => {
+    const { name, value, type, checked, files } = e.target;
+    console.log(name);
+    dispatch(
+      handleChangeReducer({
+        section,
+        index,
+        field: name,
+        value: files[0],
+        type,
+      })
+    );
+  };
+
+  //   All Fields Configuration
+  const personalDetailsConfig = [
+    {
+      labelName: "Title",
+      inputName: "title",
+      type: "select",
+      options: title,
+      validation: true,
+    },
+    {
+      labelName: "First Name",
+      inputName: "firstName",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Surname",
+      inputName: "surname",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Other Name",
+      inputName: "otherName",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Gender",
+      inputName: "gender",
+      type: "select",
+      options: gender,
+      validation: true,
+    },
+    {
+      labelName: "Marital Status",
+      inputName: "maritalStatus",
+      type: "select",
+      options: maritalStatus,
+      validation: true,
+    },
+    {
+      labelName: "Unique ID Type",
+      inputName: "uniqueIDType",
+      type: "select",
+      options: uniqueIDType,
+      validation: true,
+    },
+    {
+      labelName: "Unique ID",
+      inputName: "uniqueID",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Nationality",
+      inputName: "nationality",
+      type: "select",
+      options: countryOptions,
+      validation: true,
+    },
+    {
+      labelName: "Date of Birth",
+      inputName: "dateOfBirth",
+      type: "date",
+      validation: true,
+    },
+    {
+      labelName: "Place of Birth",
+      inputName: "placeOfBirth",
+      type: "text",
+      validation: true,
+    },
+  ];
+  const contactDetailsConfig = [
+    {
+      labelName: "Mobile 1",
+      inputName: "mobile1",
+      type: "number",
+      validation: true,
+    },
+    {
+      labelName: "Mobile 2",
+      inputName: "mobile2",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Landline Phone",
+      inputName: "landlinePhone",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "House Number",
+      inputName: "houseNumber",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Street",
+      inputName: "street",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Residential Area",
+      inputName: "residentialArea",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Country",
+      inputName: "country",
+      type: "select",
+      options: countryOptions,
+      validation: true,
+    },
+    {
+      labelName: "Province / State",
+      inputName: "province",
+      type: "select",
+      options: filteredLocations1,
+      validation: false,
+    },
+    {
+      labelName: "District",
+      inputName: "district",
+      type: "text",
+      validation: false,
+    },
+    { labelName: "Email", inputName: "email", type: "email", validation: true },
+    {
+      labelName: "Post Box",
+      inputName: "postBox",
+      type: "text",
+      validation: false,
+    },
+  ];
+  const employmentDetailsConfig = [
+    {
+      labelName: "Work Type",
+      inputName: "workType",
+      type: "select",
+      options: workType,
+      validation: true,
+    },
+    {
+      labelName: "Employer",
+      inputName: "employer",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Occupation",
+      inputName: "occupation",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Employee No.",
+      inputName: "employeeNo",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Work Start Date",
+      inputName: "workStartDate",
+      type: "date",
+      validation: true,
+    },
+    {
+      labelName: "Work Phone Number",
+      inputName: "workPhoneNumber",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Work Physical Address",
+      inputName: "workPhysicalAddress",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Location",
+      inputName: "employmentLocation",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "District",
+      inputName: "employmentDistrict",
+      type: "text",
+      validation: false,
+    },
+  ];
+  const bankDetailsConfig = [
+    {
+      labelName: "Name of Bank",
+      inputName: "bankName",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Account Name",
+      inputName: "accountName",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Account No.",
+      inputName: "accountNo",
+      type: "number",
+      validation: true,
+    },
+    {
+      labelName: "Type of Account",
+      inputName: "accountType",
+      type: "select",
+      options: accountType,
+      validation: true,
+    },
+    {
+      labelName: "Branch",
+      inputName: "branch",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Branch Code",
+      inputName: "branchCode",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Sort Code",
+      inputName: "sortCode",
+      type: "text",
+      validation: true,
+    },
+  ];
+  const nextOfKinConfig = [
+    {
+      labelName: "Title",
+      inputName: "kinTitle",
+      type: "select",
+      options: title,
+      validation: true,
+    },
+    {
+      labelName: "Surname",
+      inputName: "kinSurname",
+      type: "text",
+      validation: true,
+    },
+    { labelName: "Other Name", inputName: "kinOtherName", type: "text" },
+    {
+      labelName: "NRC No.",
+      inputName: "kinNrcNo",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Gender",
+      inputName: "kinGender",
+      type: "select",
+      options: gender,
+      validation: true,
+    },
+    {
+      labelName: "Mobile 1",
+      inputName: "kinMobile1",
+      type: "number",
+      validation: true,
+    },
+    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number" },
+    {
+      labelName: "Email",
+      inputName: "kinEmail",
+      type: "email",
+      validation: true,
+    },
+    { labelName: "House No.", inputName: "kinHouseNo", type: "text" },
+    {
+      labelName: "Street",
+      inputName: "kinStreet",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Residential Area",
+      inputName: "kinResidentialArea",
+      type: "text",
+      validation: true,
+    },
+    { labelName: "District", inputName: "kinDistrict", type: "text" },
+    {
+      labelName: "Country",
+      inputName: "kinCountry",
+      type: "select",
+      options: countryOptions,
+      validation: true,
+    },
+    {
+      labelName: "Province / State",
+      inputName: "kinProvince",
+      type: "select",
+      options: filteredLocations2,
+    },
+    {
+      labelName: "Employer",
+      inputName: "kinEmployer",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Occupation",
+      inputName: "kinOccupation",
+      type: "text",
+      validation: true,
+    },
+    { labelName: "Location", inputName: "kinLocation", type: "text" },
+    {
+      labelName: "Work Phone Number",
+      inputName: "kinWorkPhoneNumber",
+      type: "text",
+    },
+  ];
+  const otherDetailsConfig = [
+    {
+      labelName: "Customer Photo",
+      inputName: "customerPhotoId",
+      type: "file",
+      accept: "image/*",
+      validation: false,
+    },
+  ];
+
+  // Generate the Form Field
+  const personalDetailsInputNames = personalDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const contactDetailsInputNames = contactDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const employmentDetailsInputNames = employmentDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const bankDetailsInputNames = bankDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const nextOfKinInputNames = nextOfKinConfig.map((field) => field.inputName);
+  const otherDetailsInputNames = otherDetailsConfig.map(
+    (field) => field.inputName
+  );
+
+  // Rendering Input Fields
+  const renderDetails = (details, config, sectionName, index) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {config.map((field, fieldIndex) => {
+        switch (field.type) {
+          case "text":
+            return (
+              <InputText
+                key={fieldIndex}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
+                placeHolder={`Enter ${field.labelName}`}
+                isValidation={field.validation || false}
+                isIndex={fieldIndex}
+              />
+            );
+          case "number":
+            return (
+              <InputNumber
+                key={fieldIndex}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
+                placeHolder={`Enter ${field.labelName}`}
+                isValidation={field.validation || false}
+                isIndex={fieldIndex}
+              />
+            );
+          case "select":
+            return (
+              <InputSelect
+                key={fieldIndex}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputOptions={field.options}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
+                isValidation={field.validation || false}
+                isIndex={fieldIndex}
+              />
+            );
+          case "date":
+            return (
+              <div className="col-span-1" key={fieldIndex}>
+                <InputDate
+                  labelName={field.labelName}
+                  inputName={field.inputName}
+                  inputValue={details[field.inputName]}
+                  onChange={(e) => handleInputChange(e, sectionName, index)}
+                  isValidation={field.validation || false}
+                  isIndex={fieldIndex}
+                />
+              </div>
+            );
+          case "email":
+            return (
+              <InputEmail
+                key={fieldIndex}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
+                placeHolder={`Enter ${field.labelName}`}
+                isValidation={field.validation || false}
+                isIndex={fieldIndex}
+              />
+            );
+          case "file":
+            return (
+              <InputFile
+                key={fieldIndex}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleFileUpload(e, sectionName, index)}
+                accept={field.accept || "*"}
+                isValidation={field.validation || false}
+                isIndex={fieldIndex}
+              />
+            );
+          default:
+            return null;
+        }
+      })}
+    </div>
+  );
+
+  // Dedicated UI Components Creation
+  const personalDetails = (personalDetails, index) =>
+    renderDetails(
+      personalDetails,
+      personalDetailsConfig,
+      "personalDetails",
+      index
+    );
+
+  const contactDetails = (contactDetails, index) =>
+    renderDetails(
+      contactDetails,
+      contactDetailsConfig,
+      "contactDetails",
+      index
+    );
+
+  const employmentDetails = (employmentDetails, index) =>
+    renderDetails(
+      employmentDetails,
+      employmentDetailsConfig,
+      "employmentDetails",
+      index
+    );
+
+  const bankDetails = (bankDetails, index) =>
+    renderDetails(bankDetails, bankDetailsConfig, "bankDetails", index);
+
+  const nextOfKinDetails = (nextOfKinData, index) =>
+    renderDetails(nextOfKinData, nextOfKinConfig, "nextOfKinDetails", index);
+
+  const otherDetails = (otherDetails, index) =>
+    renderDetails(otherDetails, otherDetailsConfig, "otherDetails", index);
+
+  //   Validation Error Object from Validation slice to check Error state
+  const validationError = useSelector(
+    (state) => state.validation.validationError
+  );
+
+  //   Validation Checks
+  const isValidationFailed = (validationError, sectionInputFields) => {
+    // Iterate over fields and check if any corresponding error is true
+    return sectionInputFields.some((field) => validationError[field] === true);
+  };
+
+  return (
+    <>
+      <Accordion
+        heading={"Personal Details"}
+        renderExpandedContent={() =>
+          personalDetails(BorrowerData.personalDetails, index)
+        }
+        isOpen={true}
+        error={isValidationFailed(validationError, personalDetailsInputNames)}
+      />
+      <Accordion
+        heading={"Contact Details"}
+        renderExpandedContent={() =>
+          contactDetails(BorrowerData.contactDetails, index)
+        }
+        error={isValidationFailed(validationError, contactDetailsInputNames)}
+      />
+      <Accordion
+        heading={"Employment Details"}
+        renderExpandedContent={() =>
+          employmentDetails(BorrowerData.employmentDetails, index)
+        }
+        error={isValidationFailed(validationError, employmentDetailsInputNames)}
+      />
+      <Accordion
+        heading={"Bank Details"}
+        renderExpandedContent={() =>
+          bankDetails(BorrowerData.bankDetails, index)
+        }
+        error={isValidationFailed(validationError, bankDetailsInputNames)}
+      />
+      <Accordion
+        heading={"Next of Kin Details"}
+        renderExpandedContent={() =>
+          nextOfKinDetails(BorrowerData.nextOfKinDetails, index)
+        }
+        error={isValidationFailed(validationError, nextOfKinInputNames)}
+      />
+      <Accordion
+        heading={"Other Details"}
+        renderExpandedContent={() =>
+          otherDetails(BorrowerData.otherDetails, index)
+        }
+        error={isValidationFailed(validationError, otherDetailsInputNames)}
+      />
+    </>
+  );
+};
+
+export default AddUpdateDirectorFields;

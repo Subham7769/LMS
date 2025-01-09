@@ -17,14 +17,14 @@ const CreditScoreEqPage = () => {
   }, [dispatch, menus]);
   return (
     <>
-      <StatContainer stats={CreditScoreEqStats} />
+      {/* <StatContainer stats={CreditScoreEqStats} /> */}
       <ListTable
         ListName={"Credit Score Equation List"}
         ListHeader={HeaderList}
         ListItem={CreditScoreEqList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );

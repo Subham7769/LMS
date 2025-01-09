@@ -237,33 +237,123 @@ const ReportsPage = lazy(() => import("./pages/ReportsPage"));
 const DatePicker = lazy(() => import("./components/Reports/DatePicker"));
 
 // Invoice Discounting Imports
-const Registration = lazy(() =>
-  import("./components/InvoiceDiscounting/Registration")
-);
-const ProfilePage = lazy(() =>
-  import("./components/InvoiceDiscounting/ProfilePage")
-);
-const ManagePartner = lazy(() =>
-  import("./components/InvoiceDiscounting/ManagePartner")
-);
-const CashPayable = lazy(() =>
-  import("./components/InvoiceDiscounting/CashPayable")
-);
+const Registration = lazy(() => import("./components/Los-SME/Registration"));
+const ProfilePage = lazy(() => import("./components/Los-SME/ProfilePage"));
+const ManagePartner = lazy(() => import("./components/Los-SME/ManagePartner"));
+const CashPayable = lazy(() => import("./components/Los-SME/CashPayable"));
 const CashReceivable = lazy(() =>
-  import("./components/InvoiceDiscounting/CashReceivable")
+  import("./components/Los-SME/CashReceivable")
 );
 const WorkingCapital = lazy(() =>
-  import("./components/InvoiceDiscounting/WorkingCapital")
+  import("./components/Los-SME/WorkingCapital")
 );
 const ProjectFinance = lazy(() =>
-  import("./components/InvoiceDiscounting/ProjectFinance")
+  import("./components/Los-SME/ProjectFinance")
 );
 
-// LOS Imports
-const Los = lazy(() => import("./components/Los/Los"));
-const Borrowers = lazy(() => import("./components/Los/Borrowers/Borrowers"));
-const Loans = lazy(() => import("./components/Los/Loans/Loans"));
-const Repayments = lazy(() => import("./components/Los/Repayments/Repayments"));
+// LOS-Personal Imports
+
+//------------Borrowers-----------------
+const Los = lazy(() => import("./components/Los-Personal/Los"));
+const Borrowers = lazy(() =>
+  import("./components/Los-Personal/Borrowers/Borrowers")
+);
+const AddBorrowers = lazy(() =>
+  import("./components/Los-Personal/Borrowers/AddBorrowers")
+);
+const ViewBorrowers = lazy(() =>
+  import("./components/Los-Personal/Borrowers/ViewBorrowers")
+);
+const UpdateBorrower = lazy(() =>
+  import("./components/Los-Personal/Borrowers/UpdateBorrower")
+);
+const AddBorrowersGroup = lazy(() =>
+  import("./components/Los-Personal/Borrowers/AddBorrowersGroup")
+);
+const ViewBorrowersGroup = lazy(() =>
+  import("./components/Los-Personal/Borrowers/ViewBorrowersGroup")
+);
+
+//------------Loans-----------------
+const Loans = lazy(() => import("./components/Los-Personal/Loans/Loans"));
+const LoanOffers = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanOffers")
+);
+const ApproveLoans = lazy(() =>
+  import("./components/Los-Personal/Loans/ApproveLoans")
+);
+const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
+const LoanHistory = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanHistory")
+);
+const CollateralRegister = lazy(() =>
+  import("./components/Los-Personal/Loans/CollateralRegister")
+);
+
+//------------Repayments-----------------
+const Repayments = lazy(() =>
+  import("./components/Los-Personal/Repayments/Repayments")
+);
+const AddBulkRepayment = lazy(() =>
+  import("./components/Los-Personal/Repayments/AddBulkRepayment")
+);
+const ApproveRepayment = lazy(() =>
+  import("./components/Los-Personal/Repayments/ApproveRepayment")
+);
+const UploadRepayment = lazy(() =>
+  import("./components/Los-Personal/Repayments/UploadRepayment")
+);
+
+// LOS-SME Imports
+const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
+const BorrowersSME = lazy(() =>
+  import("./components/Los-SME/Borrowers/Borrowers")
+);
+const AddCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddCompany")
+);
+const AddDirector = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddDirector")
+);
+const AddShareHolder = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddShareHolder")
+);
+const ViewCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/ViewCompany")
+);
+const UpdateCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateCompany")
+);
+
+//------------Loans-----------------
+const LoansSME = lazy(() => import("./components/Los-SME/Loans/Loans"));
+const LoanOffersSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanOffers")
+);
+const ApproveLoansSME = lazy(() =>
+  import("./components/Los-SME/Loans/ApproveLoans")
+);
+const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
+const LoanHistorySME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanHistory")
+);
+const CollateralRegisterSME = lazy(() =>
+  import("./components/Los-SME/Loans/CollateralRegister")
+);
+//------------Repayments-----------------
+const RepaymentsSME = lazy(() =>
+  import("./components/Los-SME/Repayments/Repayments")
+);
+const AddBulkRepaymentSME = lazy(() =>
+  import("./components/Los-SME/Repayments/AddBulkRepayment")
+);
+const ApproveRepaymentSME = lazy(() =>
+  import("./components/Los-SME/Repayments/ApproveRepayment")
+);
+const UploadRepaymentSME = lazy(() =>
+  import("./components/Los-SME/Repayments/UploadRepayment")
+);
+
 
 
 // ------------------------ Deposit Section Imports -----------------------------------
@@ -568,37 +658,128 @@ const routes = [
       },
       // Accessing All New Created Child Components
       {
-        path: "invoice-discounting/registration",
+        path: "loan-origination-system/sme",
+        element: <LosSME />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-origination-system/sme/borrowers",
+        element: <BorrowersSME />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "add-company",
+            element: <AddCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-director",
+            element: <AddDirector />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-shareholder",
+            element: <AddShareHolder />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "view-company",
+            element: <ViewCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-company/:uid",
+            element: <UpdateCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "loan-origination-system/sme/loans",
+        element: <LoansSME />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "add-loan",
+            element: <AddLoansSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-offers",
+            element: <LoanOffersSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-loans",
+            element: <ApproveLoansSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history",
+            element: <LoanHistorySME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "collateral-register",
+            element: <CollateralRegisterSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "loan-origination-system/sme/repayments",
+        element: <RepaymentsSME />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "add-bulk-repayment",
+            element: <AddBulkRepaymentSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upload-repayment",
+            element: <UploadRepaymentSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-repayment",
+            element: <ApproveRepaymentSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "loan-origination-system/sme/borrowers",
         element: <Registration />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/profile",
+        path: "loan-origination-system/sme/profile",
         element: <ProfilePage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/manage-partner",
+        path: "loan-origination-system/sme/manage-partner",
         element: <ManagePartner />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/cash-payable",
+        path: "loan-origination-system/sme/cash-payable",
         element: <CashPayable />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/cash-receivable",
+        path: "loan-origination-system/sme/cash-receivable",
         element: <CashReceivable />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/working-capital",
+        path: "loan-origination-system/sme/working-capital",
         element: <WorkingCapital />,
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "invoice-discounting/project-finance",
+        path: "loan-origination-system/sme/project-finance",
         element: <ProjectFinance />,
         errorElement: <RouteErrorBoundary />,
       },
@@ -610,24 +791,88 @@ const routes = [
       {
         path: "loan-origination-system/personal/borrowers",
         element: <Borrowers />,
+        errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: "personal-info",
-            element: <PersonalInfo />,
+            path: "add-borrower",
+            element: <AddBorrowers />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "view-borrower",
+            element: <ViewBorrowers />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-borrower/:uid",
+            element: <UpdateBorrower />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-borrower-group",
+            element: <AddBorrowersGroup />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "view-borrower-group",
+            element: <ViewBorrowersGroup />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
-        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "loan-origination-system/personal/loans",
         element: <Loans />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "add-loan",
+            element: <AddLoans />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-offers",
+            element: <LoanOffers />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-loans",
+            element: <ApproveLoans />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history",
+            element: <LoanHistory />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "collateral-register",
+            element: <CollateralRegister />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "loan-origination-system/personal/repayments",
         element: <Repayments />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "add-bulk-repayment",
+            element: <AddBulkRepayment />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upload-repayment",
+            element: <UploadRepayment />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-repayment",
+            element: <ApproveRepayment />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       // Accessing All Page Component with it's Child Components
       {

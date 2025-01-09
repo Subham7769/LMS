@@ -3,11 +3,13 @@ import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import {
   countryOptions,
   currencyOptions,
+  locationOptions,
+} from "../../data/CountryData";
+import {
   interestPeriodOptions,
   loanTypeOptions,
-  locationOptions,
-  signsOptions,
-} from "../../data/CountryData";
+  operatorOptions,
+} from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputDate from "../Common/InputDate/InputDate";
@@ -282,7 +284,7 @@ const ProjectInputFields = ({
             <SelectAndNumber
               labelName={"Loan Amount"}
               inputSelectName={"minLoanOperator"}
-              inputSelectOptions={signsOptions}
+              inputSelectOptions={operatorOptions}
               inputSelectValue={projectData?.minLoanOperator}
               onChangeSelect={handleChange}
               disabledSelect={false}
@@ -293,7 +295,7 @@ const ProjectInputFields = ({
               placeHolderNumber={"Min"}
               isValidation={true}
               inputSelect2Name={"maxLoanOperator"}
-              inputSelect2Options={signsOptions}
+              inputSelect2Options={operatorOptions}
               inputSelect2Value={projectData?.maxLoanOperator}
               onChangeSelect2={handleChange}
               disabledSelect2={false}
@@ -311,7 +313,7 @@ const ProjectInputFields = ({
             <SelectAndNumber
               labelName={"No. of Installments"}
               inputSelectName={"minInstallmentsOperator"}
-              inputSelectOptions={signsOptions}
+              inputSelectOptions={operatorOptions}
               inputSelectValue={projectData?.minInstallmentsOperator}
               onChangeSelect={handleChange}
               disabledSelect={false}
@@ -322,7 +324,7 @@ const ProjectInputFields = ({
               placeHolderNumber={"Min"}
               isValidation={true}
               inputSelect2Name={"maxInstallmentsOperator"}
-              inputSelect2Options={signsOptions}
+              inputSelect2Options={operatorOptions}
               inputSelect2Value={projectData?.maxInstallmentsOperator}
               onChangeSelect2={handleChange}
               disabledSelect2={false}
@@ -343,7 +345,7 @@ const ProjectInputFields = ({
             <SelectAndNumber
               labelName={"Loan Scheme TCL"}
               inputSelectName={"tclOperator"}
-              inputSelectOptions={signsOptions}
+              inputSelectOptions={operatorOptions}
               inputSelectValue={projectData?.tclOperator}
               onChangeSelect={handleChange}
               disabledSelect={false}
@@ -358,7 +360,7 @@ const ProjectInputFields = ({
             <SelectAndNumber
               labelName={"Total Open Loans"}
               inputSelectName={"openLoanOperator"}
-              inputSelectOptions={signsOptions}
+              inputSelectOptions={operatorOptions}
               inputSelectValue={projectData?.openLoanOperator}
               onChangeSelect={handleChange}
               disabledSelect={false}
@@ -410,7 +412,7 @@ const ProjectInputFields = ({
                 projectData.loanType === "asset" && (
                   <SelectAndNumber
                     inputSelectName={"downPaymentOperator"}
-                    inputSelectOptions={signsOptions}
+                    inputSelectOptions={operatorOptions}
                     inputSelectValue={projectData?.downPaymentOperator}
                     onChangeSelect={handleChange}
                     disabledSelect={false}
