@@ -3,11 +3,18 @@ import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
+import {
+  resetAddLoanData,
+  submitLoan,
+} from "../../../redux/Slices/smeLoansSlice";
+import { useNavigate } from "react-router-dom";
+import store from "../../../redux/store";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { addLoanData } = useSelector((state) => state.smeLoans);
-  const isValid = useSelector((state) => state.validation.isValid);
+  // const isValid = useSelector((state) => state.validation.isValid);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -30,9 +37,12 @@ const AddLoans = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
+    console.log(addLoanData);
+    const state = store.getState();
+    const isValid = state.validation.isValid;
     if (isValid) {
-      // dispatch(registerBorrower(addLoanData));
-      console.log("API call made");
+      await dispatch(submitLoan(addLoanData)).unwrap();
+      navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
   };
 
@@ -40,7 +50,13 @@ const AddLoans = () => {
     <>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Save Button */}
-      <div className="text-center mt-5">
+      <div className="flex justify-end mt-5 gap-x-5">
+        <Button
+          buttonName="Reset"
+          onClick={() => dispatch(resetAddLoanData())}
+          rectangle={true}
+          className={"bg-red-600 hover:bg-red-500"}
+        />
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>

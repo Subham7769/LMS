@@ -100,16 +100,10 @@ const LoanHistory = () => {
           <p className="text-sm text-gray-600">{rowData.interestMethod}</p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-          <p className="text-sm font-semibold text-gray-600">
-            Loan Interest %:
+          <p className="text-sm font-semibold text-gray-600">Loan Interest :</p>
+          <p className="text-sm text-gray-600">
+            {rowData.loanInterest} % / {rowData.interestPer}
           </p>
-          <p className="text-sm text-gray-600">{rowData.loanInterest}</p>
-        </div>
-        <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-          <p className="text-sm font-semibold text-gray-600">
-            Per (Loan Interest):
-          </p>
-          <p className="text-sm text-gray-600">{rowData.interestPer}</p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">
@@ -125,13 +119,9 @@ const LoanHistory = () => {
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">Loan Duration:</p>
-          <p className="text-sm text-gray-600">{rowData.loanDuration}</p>
-        </div>
-        <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-          <p className="text-sm font-semibold text-gray-600">
-            Per (Loan Duration):
+          <p className="text-sm text-gray-600">
+            {rowData.loanDuration} {rowData.durationPer}
           </p>
-          <p className="text-sm text-gray-600">{rowData.durationPer}</p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">

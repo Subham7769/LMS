@@ -13,21 +13,18 @@ import {
   updateLoanField,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCompanyBorrowers } from "../../../redux/Slices/smeBorrowersSlice";
 import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
+import { tenureTypeOptions } from "../../../data/OptionsData";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
-  const { allBorrowersData } = useSelector((state) => state.smeBorrowers);
   const { loanProductOptions } = useSelector((state) => state.smeLoans);
-  const [borrowerOptions, setBorrowerOptions] = useState([]);
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
-    dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20 }));
     const keysArray = [
       "loanProduct",
       "borrower",
@@ -47,15 +44,6 @@ const AddLoanFields = ({ addLoanData }) => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
-
-  useEffect(() => {
-    const options = allBorrowersData.map((item) => ({
-      label: `${item.borrowerProfile?.personalDetails?.title} ${item.borrowerProfile?.personalDetails?.surname} ${item.borrowerProfile?.personalDetails?.otherName}`,
-      value: item.id,
-    }));
-
-    setBorrowerOptions(options);
-  }, [allBorrowersData]);
 
   // Keys to process for document status
   const relevantKeys = ["requiredDocuments"];
@@ -107,16 +95,15 @@ const AddLoanFields = ({ addLoanData }) => {
   const generalDetailsConfig = [
     {
       labelName: "Loan Product",
-      inputName: "loanProduct",
+      inputName: "loanProductId",
       type: "select",
       options: loanProductOptions, // Dynamically populated
       validation: true,
     },
     {
       labelName: "Borrower",
-      inputName: "borrower",
-      type: "select",
-      options: borrowerOptions, // Dynamically populated
+      inputName: "borrowerId",
+      type: "number",
       validation: true,
     },
     {
@@ -143,8 +130,8 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "interestMethod",
       type: "select",
       options: [
-        { value: "Flat", label: "Flat" },
-        { value: "Reducing", label: "Reducing" },
+        { value: "FLAT", label: "FLAT" },
+        { value: "REDUCING", label: "REDUCING" },
       ],
       validation: true,
     },
@@ -166,12 +153,9 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Per (Loan Interest)",
-      inputName: "interestPer",
+      inputName: "perLoanInterest",
       type: "select",
-      options: [
-        { value: "Year", label: "Year" },
-        { value: "Month", label: "Month" },
-      ],
+      options: tenureTypeOptions,
       validation: true,
     },
     {
@@ -182,12 +166,9 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Per (Loan Duration)",
-      inputName: "durationPer",
+      inputName: "perLoanDuration",
       type: "select",
-      options: [
-        { value: "Year", label: "Year" },
-        { value: "Month", label: "Month" },
-      ],
+      options: tenureTypeOptions,
       validation: true,
     },
     {

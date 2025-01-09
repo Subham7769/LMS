@@ -28,6 +28,32 @@ export const fetchLoanProductData = createAsyncThunk(
   }
 );
 
+export const fetchBorrowerById = createAsyncThunk(
+  "personalLoans/fetchBorrowerById",
+  async (uid, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_LOAN_READ_BORROWER_PROFILE}${uid}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const submitLoan = createAsyncThunk(
   "personalLoans/submitLoan",
   async (generalDetails, { rejectWithValue }) => {
@@ -307,6 +333,7 @@ export const getFullLoanDetails = createAsyncThunk(
 );
 
 const initialState = {
+  borrowerData: {},
   addLoanData: {
     generalDetails: {
       borrowerId: "",
@@ -425,6 +452,19 @@ const personalLoansSlice = createSlice({
         state.loanProductOptions = updatedLoanProductOptions;
       })
       .addCase(fetchLoanProductData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchBorrowerById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchBorrowerById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.borrowerData = action.payload;
+      })
+      .addCase(fetchBorrowerById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
