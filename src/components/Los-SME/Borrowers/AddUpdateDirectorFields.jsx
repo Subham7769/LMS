@@ -21,7 +21,11 @@ import {
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) => {
+const AddUpdateDirectorFields = ({
+  BorrowerData,
+  handleChangeReducer,
+  index,
+}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -84,7 +88,10 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
       "freeCashInHand",
       "grossSalary",
     ];
-    dispatch(setFields(keysArray));
+
+    const indexedKeysArray = keysArray.map((field) => `${field}_${index}`);
+    
+    dispatch(setFields(indexedKeysArray));
     return () => {
       dispatch(clearValidationError());
     };
@@ -99,10 +106,16 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer,index }) =>
   };
 
   const handleFileUpload = (e, section, index) => {
-    const { name, value, type, checked,files } = e.target;
-console.log(name)
+    const { name, value, type, checked, files } = e.target;
+    console.log(name);
     dispatch(
-      handleChangeReducer({ section, index, field: name, value: files[0], type})
+      handleChangeReducer({
+        section,
+        index,
+        field: name,
+        value: files[0],
+        type,
+      })
     );
   };
 
@@ -441,7 +454,8 @@ console.log(name)
       type: "file",
       accept: "image/*",
       validation: false,
-    },];
+    },
+  ];
 
   // Generate the Form Field
   const personalDetailsInputNames = personalDetailsConfig.map(
@@ -553,10 +567,20 @@ console.log(name)
 
   // Dedicated UI Components Creation
   const personalDetails = (personalDetails, index) =>
-    renderDetails(personalDetails, personalDetailsConfig, "personalDetails", index);
+    renderDetails(
+      personalDetails,
+      personalDetailsConfig,
+      "personalDetails",
+      index
+    );
 
   const contactDetails = (contactDetails, index) =>
-    renderDetails(contactDetails, contactDetailsConfig, "contactDetails", index);
+    renderDetails(
+      contactDetails,
+      contactDetailsConfig,
+      "contactDetails",
+      index
+    );
 
   const employmentDetails = (employmentDetails, index) =>
     renderDetails(
@@ -599,32 +623,36 @@ console.log(name)
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
-          contactDetails(BorrowerData.contactDetails,index)
+          contactDetails(BorrowerData.contactDetails, index)
         }
         error={isValidationFailed(validationError, contactDetailsInputNames)}
       />
       <Accordion
         heading={"Employment Details"}
         renderExpandedContent={() =>
-          employmentDetails(BorrowerData.employmentDetails,index)
+          employmentDetails(BorrowerData.employmentDetails, index)
         }
         error={isValidationFailed(validationError, employmentDetailsInputNames)}
       />
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails,index)}
+        renderExpandedContent={() =>
+          bankDetails(BorrowerData.bankDetails, index)
+        }
         error={isValidationFailed(validationError, bankDetailsInputNames)}
       />
       <Accordion
         heading={"Next of Kin Details"}
         renderExpandedContent={() =>
-          nextOfKinDetails(BorrowerData.nextOfKinDetails,index)
+          nextOfKinDetails(BorrowerData.nextOfKinDetails, index)
         }
         error={isValidationFailed(validationError, nextOfKinInputNames)}
       />
       <Accordion
         heading={"Other Details"}
-        renderExpandedContent={() => otherDetails(BorrowerData.otherDetails,index)}
+        renderExpandedContent={() =>
+          otherDetails(BorrowerData.otherDetails, index)
+        }
         error={isValidationFailed(validationError, otherDetailsInputNames)}
       />
     </>

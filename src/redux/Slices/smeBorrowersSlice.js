@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 
+
 // Register a Borrower
-export const registerBorrower = createAsyncThunk(
-  "borrowers/register", // action type
+export const registerCompanyBorrower = createAsyncThunk(
+  "borrowers/registerCompanyBorrower", // action type
   async (addCompanyData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
@@ -97,18 +99,18 @@ export const fetchAllCompanyBorrowersByLoanOfficer = createAsyncThunk(
   }
 );
 
-// Change Borrower Status
-export const changeBorrowerStatus = createAsyncThunk(
-  "borrowers/changeStatus", // Action type
-  async ({ uid, newStatus }, { rejectWithValue }) => {
+// Get Company Details by companyUniqueId
+export const fetchCompanyDetails = createAsyncThunk(
+  "company/fetchCompanyDetails",
+  async ({ companyId }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_BORROWERS_CHANGE_STATUS_COMPANY_BORROWER
-        }/${uid}/status/${newStatus}`,
+          import.meta.env.VITE_BORROWERS_GET_COMPANY_DETAILS_COMPANY_BORROWER
+        }${companyId}`,
         {
-          method: "PUT",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth}`,
@@ -118,19 +120,19 @@ export const changeBorrowerStatus = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Failed to change borrower status"
-        );
+        throw new Error(errorData.message || "Failed to fetch company details");
       }
+
+      return await response.json();
     } catch (error) {
-      return rejectWithValue(error.message); // Return the error message
+      return rejectWithValue(error.message);
     }
   }
 );
 
-// Update Borrower Information
-export const updateCompanyBorrowerInfo = createAsyncThunk(
-  "borrowers/updateCompanyBorrowerInfo",
+// Add Director Information
+export const addDirectorInfo = createAsyncThunk(
+  "borrowers/addDirectorInfo",
   async ({ directorsKycDetails, companyId }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
@@ -145,6 +147,38 @@ export const updateCompanyBorrowerInfo = createAsyncThunk(
             Authorization: `Bearer ${auth}`,
           },
           body: JSON.stringify(directorsKycDetails),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower information"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Add Shareholder Information
+export const addShareholderInfo = createAsyncThunk(
+  "borrowers/addShareholderInfo",
+  async ({ shareHolderDetails, companyId }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_ADD_SHAREHOLDER_COMPANY_BORROWER
+        }${companyId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify(shareHolderDetails),
         }
       );
 
@@ -188,6 +222,37 @@ export const addDirectorsKycDetails = createAsyncThunk(
       return await response.json();
     } catch (error) {
       return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Change Company Borrower Status
+export const changeCompanyBorrowerStatus = createAsyncThunk(
+  "borrowers/changeStatus", // Action type
+  async ({ uid, newStatus }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_CHANGE_STATUS_COMPANY_BORROWER
+        }/${uid}/status/${newStatus}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to change borrower status"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
     }
   }
 );
@@ -243,39 +308,10 @@ const initialState = {
       tradeUnion: "", //optional
     },
   },
+  companyDetails: {},
   directorsKycDetails: [],
-  shareHolderDetails: [
-    {
-      contactDetails: {
-        country: "",
-        district: "",
-        email: "",
-        houseNumber: "",
-        landlinePhone: "",
-        mobile1: "",
-        mobile2: "",
-        postBox: "",
-        province: "",
-        residentialArea: "",
-        street: "",
-      },
-      personalDetails: {
-        age: 0,
-        dateOfBirth: "",
-        firstName: "",
-        gender: "",
-        loanOfficer: "",
-        maritalStatus: "",
-        nationality: "",
-        otherName: "",
-        placeOfBirth: "",
-        surname: "",
-        title: "",
-        uniqueID: "",
-        uniqueIDType: "",
-      },
-    },
-  ],
+  shareHolderDetails: [],
+  existingShareholderDetails: [],
   newDirector: {
     bankDetails: {
       accountName: "",
@@ -467,39 +503,63 @@ const borrowersSlice = createSlice({
     },
     // for Shareholder
     addShareholder: (state, action) => {
-      state.shareHolderDetails.push(state.newShareHolder);
-      toast.success("Shareholder Added Successfully");
+      const { loanOfficer } = action.payload;
+      if (state.shareHolderDetails.length < 1) {
+        state.shareHolderDetails.push({
+          ...state.newShareHolder,
+          personalDetails: {
+            ...state.newShareHolder.personalDetails,
+            loanOfficer: loanOfficer,
+          },
+        });
+      }
     },
     removeShareholder: (state, action) => {
       const { index } = action.payload;
-      state.addCompanyData.shareHolderDetails.splice(index, 1);
-      toast.error("Shareholder Removed Successfully");
+      state.shareHolderDetails.splice(index, 1);
+    },
+    resetShareholder: (state, action) => {
+      const { index } = action.payload;
+      state.shareHolderDetails[index] = { ...state.newShareHolder };
+      toast.success("Shareholder Reset Successfully");
     },
     handleChangeAddShareholderField: (state, action) => {
-      const { section, index, field, value, type, checked } = action.payload;
+      const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.shareHolderDetails[index][section]) {
-        state.shareHolderDetails[index][section][field] =
+      if (section && state.shareHolderDetails[0][section]) {
+        state.shareHolderDetails[0][section][field] =
           type === "checkbox" ? checked : value;
       } else {
         // If no section, update directly in shareHolderDetails
-        state.shareHolderDetails[index][field] =
+        state.shareHolderDetails[0][field] =
+          type === "checkbox" ? checked : value;
+      }
+    },
+    handleChangeUpdateShareholderField: (state, action) => {
+      const { section, index, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.existingShareholderDetails[index][section]) {
+        state.existingShareholderDetails[index][section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in existingShareholderDetails
+        state.existingShareholderDetails[index][field] =
           type === "checkbox" ? checked : value;
       }
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerBorrower.pending, (state) => {
+      .addCase(registerCompanyBorrower.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerBorrower.fulfilled, (state, action) => {
+      .addCase(registerCompanyBorrower.fulfilled, (state, action) => {
         state.loading = false;
         // state.borrower = action.payload; // Store the borrower data
         toast.success("Borrower Registered Successfully");
       })
-      .addCase(registerBorrower.rejected, (state, action) => {
+      .addCase(registerCompanyBorrower.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Store the error message
         toast.error(`API Error : ${action.payload}`); // Notify the user of the error
@@ -540,28 +600,59 @@ const borrowersSlice = createSlice({
           toast.error(`API Error : ${action.payload}`);
         }
       )
-      .addCase(changeBorrowerStatus.pending, (state) => {
+      .addCase(changeCompanyBorrowerStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(changeBorrowerStatus.fulfilled, (state, action) => {
+      .addCase(changeCompanyBorrowerStatus.fulfilled, (state, action) => {
         state.loading = false;
         toast.success("Borrower Status Changed Successfully");
       })
-      .addCase(changeBorrowerStatus.rejected, (state, action) => {
+      .addCase(changeCompanyBorrowerStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
-      .addCase(updateCompanyBorrowerInfo.pending, (state) => {
+      .addCase(fetchCompanyDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateCompanyBorrowerInfo.fulfilled, (state, action) => {
+      .addCase(fetchCompanyDetails.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Borrower Information Updated Successfully");
+        state.companyDetails = action.payload;
+        state.existingShareholderDetails =
+          action.payload.shareHolderDetails.map((shareHolder) => ({
+            ...shareHolder,
+            dataIndex: nanoid(),
+          }));
+        state.error = null;
       })
-      .addCase(updateCompanyBorrowerInfo.rejected, (state, action) => {
+      .addCase(fetchCompanyDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch company details";
+      })
+      .addCase(addDirectorInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addDirectorInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Director Information Added Successfully");
+      })
+      .addCase(addDirectorInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(addShareholderInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addShareholderInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Shareholder Information Added Successfully");
+      })
+      .addCase(addShareholderInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -595,7 +686,9 @@ export const {
   handleChangeAddDirectorField,
   addShareholder,
   removeShareholder,
+  resetShareholder,
   handleChangeAddShareholderField,
+  handleChangeUpdateShareholderField
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

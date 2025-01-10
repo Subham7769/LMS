@@ -20,7 +20,7 @@ import {
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer, index }) => {
+const UpdateShareholderFields = ({ BorrowerData, handleChangeReducer, dataIndex, index }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -32,24 +32,24 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer, index }
   }, [BorrowerData.contactDetails.country]);
 
   useEffect(() => {
-    const keysArray = [
-      "title",
-      "firstName",
-      "surname",
-      "uniqueIDType",
-      "uniqueID",
-      "gender",
-      "maritalStatus",
-      "nationality",
-      "dateOfBirth",
-      "placeOfBirth",
-      "mobile1",
-      "street",
-      "residentialArea",
-      "country",
-      "email",
-    ];
-    dispatch(setFields(keysArray));
+    // const keysArray = [
+    //   "title",
+    //   "firstName",
+    //   "surname",
+    //   "uniqueIDType",
+    //   "uniqueID",
+    //   "gender",
+    //   "maritalStatus",
+    //   "nationality",
+    //   "dateOfBirth",
+    //   "placeOfBirth",
+    //   "mobile1",
+    //   "street",
+    //   "residentialArea",
+    //   "country",
+    //   "email",
+    // ];
+    // dispatch(setFields(keysArray));
     return () => {
       dispatch(clearValidationError());
     };
@@ -65,7 +65,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer, index }
 
   const handleFileUpload = (e, section, index) => {
     const { name, value, type, checked,files } = e.target;
-console.log(name)
+
     dispatch(
       handleChangeReducer({ section, index, field: name, value: files[0], type})
     );
@@ -220,81 +220,86 @@ console.log(name)
   );
 
   // Rendering Input Fields
-  const renderDetails = (details, config, sectionName) => (
+  const renderDetails = (details, config, sectionName, dataIndex,index) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
+      {config.map((field, fieldIndex) => {
         switch (field.type) {
           case "text":
             return (
               <InputText
-                key={index}
+                key={fieldIndex}
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={dataIndex}
               />
             );
           case "number":
             return (
               <InputNumber
-                key={index}
+                key={fieldIndex}
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={dataIndex}
               />
             );
           case "select":
             return (
               <InputSelect
-                key={index}
+                key={fieldIndex}
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputOptions={field.options}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
                 isValidation={field.validation || false}
+                isIndex={dataIndex}
               />
             );
           case "date":
             return (
-              <div className="col-span-1" key={index}>
+              <div className="col-span-1" key={fieldIndex}>
                 <InputDate
                   labelName={field.labelName}
                   inputName={field.inputName}
                   inputValue={details[field.inputName]}
-                  onChange={(e) => handleInputChange(e, sectionName)}
+                  onChange={(e) => handleInputChange(e, sectionName, index)}
                   isValidation={field.validation || false}
-
+                  isIndex={dataIndex}
                 />
               </div>
             );
           case "email":
             return (
               <InputEmail
-                key={index}
+                key={fieldIndex}
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
+                onChange={(e) => handleInputChange(e, sectionName, index)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                isIndex={dataIndex}
               />
             );
           case "file":
             return (
               <InputFile
-                key={index}
+                key={fieldIndex}
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileUpload(e, sectionName)}
+                onChange={(e) => handleFileUpload(e, sectionName, index)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
+                isIndex={dataIndex}
               />
             );
           default:
@@ -306,10 +311,10 @@ console.log(name)
 
   // Dedicated UI Components Creation
   const personalDetails = (personalDetails) =>
-    renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
+    renderDetails(personalDetails, personalDetailsConfig, "personalDetails", dataIndex,index);
 
   const contactDetails = (contactDetails) =>
-    renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
+    renderDetails(contactDetails, contactDetailsConfig, "contactDetails", dataIndex,index);
 
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
@@ -317,9 +322,9 @@ console.log(name)
   );
 
   //   Validation Checks
-  const isValidationFailed = (validationError, sectionInputFields) => {
+  const isValidationFailed = (validationError, sectionInputFields, dataIndex) => {
     // Iterate over fields and check if any corresponding error is true
-    return sectionInputFields.some((field) => validationError[field] === true);
+    return sectionInputFields.some((field) => validationError[`${field}_${dataIndex}`] === true);
   };
 
   return (
@@ -330,17 +335,17 @@ console.log(name)
           personalDetails(BorrowerData.personalDetails)
         }
         isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsInputNames)}
+        error={isValidationFailed(validationError, personalDetailsInputNames, dataIndex)}
       />
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
           contactDetails(BorrowerData.contactDetails)
         }
-        error={isValidationFailed(validationError, contactDetailsInputNames)}
+        error={isValidationFailed(validationError, contactDetailsInputNames, dataIndex)}
       />
     </>
   );
 };
 
-export default AddUpdateShareholderFields;
+export default UpdateShareholderFields;

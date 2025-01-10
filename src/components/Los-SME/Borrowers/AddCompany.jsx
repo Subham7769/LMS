@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetCompanyData,
-  registerBorrower,
+  registerCompanyBorrower,
   handleChangeAddCompanyField
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,7 +57,7 @@ const AddCompany = () => {
     const isValid = state.validation.isValid; // Adjust based on your state structure
   
     if (isValid) {
-      dispatch(registerBorrower(addCompanyData));
+      dispatch(registerCompanyBorrower(addCompanyData));
     }
   };
 
