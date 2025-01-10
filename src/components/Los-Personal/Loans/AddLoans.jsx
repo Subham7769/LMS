@@ -83,8 +83,12 @@ const AddLoans = () => {
     console.log(addLoanData);
     const state = store.getState();
     const isValid = state.validation.isValid;
+    const submitPayload = {
+      ...addLoanData.generalLoanDetails,
+      documents: addLoanData.documents,
+    };
     if (isValid) {
-      await dispatch(submitLoan(addLoanData)).unwrap();
+      await dispatch(submitLoan(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/personal/loans/loan-offers");
     }
   };
