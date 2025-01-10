@@ -27,8 +27,12 @@ const InputFile = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
+  // Extract the file name if inputValue is provided
+  const sanitizeFileName = (value) => (value ? value.split("\\").pop() : "");
 
-  const [fileNames, setFileNames] = useState(inputValue ? [inputValue] : []); // Local file names for display
+  const [fileNames, setFileNames] = useState(
+    inputValue ? [sanitizeFileName(inputValue)] : []
+  ); // Local file names for display
   const [isDragging, setIsDragging] = useState(false);
 
   if (!inputName || (!disabled && typeof onChange !== "function")) {
