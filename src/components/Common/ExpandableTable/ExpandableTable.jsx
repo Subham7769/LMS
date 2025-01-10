@@ -5,16 +5,15 @@ import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 const ExpandableTable = ({
   columns,
   data,
-  renderExpandedRow,
+  renderExpandedRow = null,
   ListAction = null,
   ActionId = null,
   loading = false,
   error = false,
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
-
   const handleExpand = (id) => {
-    setExpandedRow((prev) => (prev === id ? null : id));
+    if (renderExpandedRow) setExpandedRow((prev) => (prev === id ? null : id));
   };
   const ShimmerTable = () => {
     return (
@@ -32,7 +31,7 @@ const ExpandableTable = ({
       <table className="min-w-full table-auto" role="table">
         <thead className={"sticky top-0 z-10"}>
           <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
-            <th className="px-4 py-6"></th>
+            {renderExpandedRow && <th className="px-4 py-4"></th>}
             {columns.map((col, index) => (
               <th key={index} className="px-4 py-4">
                 {col.label}
@@ -59,24 +58,27 @@ const ExpandableTable = ({
                   className="hover:bg-gray-50 cursor-pointer text-xs font-medium"
                   onClick={() => handleExpand(index)}
                 >
-                  <td className=" flex justify-center items-center py-6">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleExpand(index);
-                      }}
-                      className="text-blue-600 hover:text-blue-800"
-                      aria-label={
-                        expandedRow === index ? "Collapse row" : "Expand row"
-                      }
-                    >
-                      {expandedRow === index ? (
-                        <FiChevronUp size={18} />
-                      ) : (
-                        <FiChevronDown size={18} />
-                      )}
-                    </button>
-                  </td>
+                  {renderExpandedRow && (
+                    <td className=" flex justify-center items-center py-6">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExpand(index);
+                        }}
+                        className="text-blue-600 hover:text-blue-800"
+                        aria-label={
+                          expandedRow === index ? "Collapse row" : "Expand row"
+                        }
+                      >
+                        {expandedRow === index ? (
+                          <FiChevronUp size={18} />
+                        ) : (
+                          <FiChevronDown size={18} />
+                        )}
+                      </button>
+                    </td>
+                  )}
+
                   {columns.map((col, index) => (
                     <td
                       key={index}
@@ -86,11 +88,14 @@ const ExpandableTable = ({
                         className={`px-3 py-1 rounded-full text-xs font-medium ${
                           col.field.toLowerCase().includes("status") &&
                           (rowData[col.field].toLowerCase() === "rejected" ||
-                          rowData[col.field] === "DEFAULTER"
+                          rowData[col.field] === "DEFAULTER" ||
+                          rowData[col.field] === "Cancel"
                             ? "bg-red-100 text-red-800"
-                            : rowData[col.field] === "Pending" ||
+                            : rowData[col.field] === "In Progress" ||
                               rowData[col.field] === "DEACTIVATED"
                             ? "bg-yellow-100 text-yellow-800"
+                            : rowData[col.field] === "Submitted"
+                            ? "bg-violet-100 text-violet-800"
                             : "bg-green-100 text-green-800")
                         }`}
                       >
@@ -98,7 +103,7 @@ const ExpandableTable = ({
                       </span>
                     </td>
                   ))}
-                  {ListAction && (
+                  {/* {ListAction && (
                     <ListAction
                       id={
                         columns.map((col, index) => {
@@ -107,6 +112,11 @@ const ExpandableTable = ({
                       }
                       application={data}
                     />
+                  )} */}
+                  {ListAction && (
+                    <td className="flex justify-center items-center">
+                      {ListAction(rowData)}
+                    </td>
                   )}
                 </tr>
                 {expandedRow === index && (

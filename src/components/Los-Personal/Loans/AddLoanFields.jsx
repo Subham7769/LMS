@@ -10,53 +10,55 @@ import Accordion from "../../Common/Accordion/Accordion";
 import {
   fetchLoanProductData,
   updateLoanField,
+  uploadDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
-import { tenureTypeOptions, options } from "../../../data/OptionsData";
+import { tenureTypeOptions } from "../../../data/OptionsData";
 import { CreditCardIcon } from "@heroicons/react/24/outline";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions } = useSelector((state) => state.personalLoans);
-  useEffect(() => {
-    dispatch(fetchLoanProductData());
-    const keysArray = [
-      "borrowerId",
-      "disbursedBy",
-      "interestMethod",
-      "loanDuration",
-      "loanInterest",
-      "loanProductId",
-      "loanReleaseDate",
-      "numberOfTenure",
-      "perLoanDuration",
-      "perLoanInterest",
-      "principalAmount",
-      "repaymentCycle",
-    ];
-    dispatch(setFields(keysArray));
-    return () => {
-      dispatch(clearValidationError());
-    };
-  }, [dispatch]);
 
-  const handleInputChange = (e, section) => {
+  const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
-    dispatch(updateLoanField({ section, field: name, value, type, checked }));
+    dispatch(
+      updateLoanField({ section, field: name, value, type, checked, index })
+    );
   };
 
-  const handleFileChange = (e, section) => {
-    const { name, files } = e.target;
-    dispatch(updateLoanField({ section, field: name, value: files[0] }));
+  const handleFileChange = (e, section, index) => {
+    const fileUploadParams = {
+      loanApplicationId: addLoanData.loanApplicationId,
+      documentKey: addLoanData.documents[index].documentKey,
+      verified: addLoanData.documents[index].verified,
+      borrowerType: "PERSONAL_BORROWER",
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+
+    const { name, value, type, checked, files } = e.target;
+
+    dispatch(
+      updateLoanField({ section, field: name, value, type, checked, index })
+    );
+
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      // Dispatch the upload action with the FormData
+      // console.log(fileUploadParams);
+      dispatch(uploadDocumentFile({ formData, fileUploadParams }));
+    }
   };
 
   // All Fields Configuration
-  const generalDetailsConfig = [
+  const generalLoanDetailsConfig = [
     {
       labelName: "Loan Product",
       inputName: "loanProductId",
@@ -143,267 +145,18 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
-  const advanceSettingsConfig = [
-    {
-      labelName: "Decimal Places",
-      inputName: "decimalPlaces",
-      type: "select",
-      options: [
-        { value: "2", label: "2" },
-        { value: "3", label: "3" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Interest Start Date",
-      inputName: "interestStartDate",
-      type: "date",
-      validation: false,
-    },
-    {
-      labelName: "First Repayment Date",
-      inputName: "firstRepaymentDate",
-      type: "date",
-      validation: false,
-    },
-    {
-      labelName: "First Repayment Amount",
-      inputName: "firstRepaymentAmount",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Last Repayment Amount",
-      inputName: "lastRepaymentAmount",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Override Maturity Date",
-      inputName: "overrideMaturityDate",
-      type: "date",
-      validation: false,
-    },
-    {
-      labelName: "Override Each Repayment Amount to",
-      inputName: "overrideRepaymentAmount",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Calculate Interest on Pro-Rata Basis",
-      inputName: "proRataBasis",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Interest charge Schedule",
-      inputName: "interestChargeSchedule",
-      type: "select",
-      options: [
-        { value: "Flat", label: "Flat" },
-        { value: "Reducing", label: "Reducing" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Principal charge Schedule",
-      inputName: "principalChargeSchedule",
-      type: "select",
-      options: [
-        { value: "Equal", label: "Equal" },
-        { value: "Balloon", label: "Balloon" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Balloon Repayment Amount",
-      inputName: "balloonRepaymentAmount",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Move First Repayment Days",
-      inputName: "moveFirstRepaymentDays",
-      type: "number",
-      validation: false,
-    },
-  ];
-
-  const automatedPaymentsConfig = [
-    {
-      labelName: "Add Automatic Payments?",
-      inputName: "automaticPayments",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Post Automatic Payments Between",
-      inputName: "timeToPostBetween",
-      type: "select",
-      options: [
-        { value: "Morning", label: "Morning (6AM-12PM)" },
-        { value: "Afternoon", label: "Afternoon (12PM-6PM)" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Cash or Bank?",
-      inputName: "cashOrBank",
-      type: "select",
-      options: [
-        { value: "Cash", label: "Cash" },
-        { value: "Bank", label: "Bank" },
-      ],
-      validation: false,
-    },
-  ];
-
-  const extendLoanConfig = [
-    {
-      labelName: "Extend Loan After Maturity",
-      inputName: "extendLoanAfterMaturity",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Interest Type",
-      inputName: "extendLoanInterestType",
-      type: "select",
-      options: [
-        { value: "Fixed", label: "Fixed" },
-        { value: "Variable", label: "Variable" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Calculate Interest on",
-      inputName: "calculateInterestOn",
-      type: "select",
-      options: [
-        { value: "Principal", label: "Principal" },
-        { value: "Outstanding", label: "Outstanding" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Loan Interest Rate After Maturity %",
-      inputName: "loanInterestRateAfterMaturity",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Recurring Period After Maturity",
-      inputName: "recurringPeriodAfterMaturity",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Per",
-      inputName: "per",
-      type: "select",
-      options: [
-        { value: "Month", label: "Month" },
-        { value: "Year", label: "Year" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Include Fees After Maturity",
-      inputName: "includeFeesAfterMaturity",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Loan status Past Maturity",
-      inputName: "loanStatusPastMaturity",
-      type: "select",
-      options: [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Apply to the date (Optional)",
-      inputName: "applyToDate",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Loan Status",
-      inputName: "loanStatus",
-      type: "select",
-      options: [
-        { value: "Active", label: "Active" },
-        { value: "Past Due", label: "Past Due" },
-        { value: "Closed", label: "Closed" },
-      ],
-      validation: false,
-    },
-    {
-      labelName: "Select Guarantors",
-      inputName: "selectGuarantors",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Loan Title",
-      inputName: "loanTitle",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Description",
-      inputName: "description",
-      type: "textarea",
-      rowCount: 3,
-      validation: false,
-    },
-    {
-      labelName: "Loan Files",
-      inputName: "loanFiles",
-      type: "file",
-      accept: ".jpg,.png",
-      placeholder: "Click or drag to upload",
-      validation: false,
-    },
-  ];
-
   const validationError = useSelector(
     (state) => state.validation.validationError
   );
 
-  const generalDetailsInputNames = generalDetailsConfig.map(
+  const generalLoanDetailsInputNames = generalLoanDetailsConfig.map(
     (field) => field.inputName
   );
-  const advanceSettingsInputNames = advanceSettingsConfig.map(
-    (field) => field.inputName
-  );
-  const automatedPaymentsInputNames = automatedPaymentsConfig.map(
-    (field) => field.inputName
-  );
-  const extendLoanInputNames = extendLoanConfig.map((field) => field.inputName);
 
   const renderDetails = (details, config, sectionName) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {config.map((field, index) => {
+        const value = details[field.inputName] ?? ""; // Fallback to empty string
         switch (field.type) {
           case "text":
             return (
@@ -411,7 +164,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
@@ -423,7 +176,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
@@ -436,7 +189,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputOptions={field.options}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
               />
@@ -447,7 +200,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 <InputDate
                   labelName={field.labelName}
                   inputName={field.inputName}
-                  inputValue={details[field.inputName]}
+                  inputValue={value}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
                 />
@@ -459,7 +212,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
@@ -471,7 +224,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleFileChange(e, sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
@@ -483,7 +236,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 rowCount={field.rowCount || 3}
                 isValidation={field.validation || false}
@@ -497,39 +250,32 @@ const AddLoanFields = ({ addLoanData }) => {
   );
 
   // Dedicated UI Components
-  const generalDetails = (generalDetails) =>
-    renderDetails(generalDetails, generalDetailsConfig, "generalDetails");
-
-  const advanceSettings = (advanceSettings) =>
-    renderDetails(advanceSettings, advanceSettingsConfig, "advanceSettings");
-
-  const automatedPayments = (automatedPayments) =>
+  const generalLoanDetails = (generalLoanDetails) =>
     renderDetails(
-      automatedPayments,
-      automatedPaymentsConfig,
-      "automatedPayments"
+      generalLoanDetails,
+      generalLoanDetailsConfig,
+      "generalLoanDetails"
     );
 
-  const extendLoan = (extendLoan) =>
-    renderDetails(extendLoan, extendLoanConfig, "extendLoan");
+  console.log(addLoanData);
 
-  const requirements = (requirements) => {
+  const requirements = (documents) => {
     return (
       <>
         <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
           <div>Payslips</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
-              inputName="paySlips"
-              inputValue={requirements.paySlips}
-              onChange={(e) => handleInputChange(e, "requirements")}
+              inputName="docName"
+              inputValue={documents[0]?.docName}
+              onChange={(e) => handleFileChange(e, "documents", 0)}
             />
             <div>
               <InputCheckbox
                 labelName={"Verified"}
-                inputChecked={requirements?.paySlipsVerified}
-                onChange={(e) => handleInputChange(e, "requirements")}
-                inputName="paySlipsVerified"
+                inputChecked={documents[0]?.verified}
+                onChange={(e) => handleInputChange(e, "documents", 0)}
+                inputName="verified"
               />
             </div>
           </div>
@@ -538,16 +284,17 @@ const AddLoanFields = ({ addLoanData }) => {
           <div>Employer Pre-approval Form</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
-              inputName="employerForm"
-              inputValue={requirements.employerForm}
-              onChange={(e) => handleInputChange(e, "requirements")}
+              inputName="docName"
+              // inputValue={documents[1]?.docId}
+              inputValue={documents[1]?.docName}
+              onChange={(e) => handleFileChange(e, "documents", 1)}
             />
             <div>
               <InputCheckbox
                 labelName={"Verified"}
-                inputChecked={requirements?.employerFormVerified}
-                onChange={(e) => handleInputChange(e, "requirements")}
-                inputName="employerFormVerified"
+                inputChecked={documents[1]?.verified}
+                onChange={(e) => handleInputChange(e, "documents", 1)}
+                inputName="verified"
               />
             </div>
           </div>
@@ -556,16 +303,17 @@ const AddLoanFields = ({ addLoanData }) => {
           <div>Bank Statement</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
-              inputName="bankStatement"
-              inputValue={requirements.bankStatement}
-              onChange={(e) => handleInputChange(e, "requirements")}
+              inputName="docName"
+              // inputValue={documents[2]?.docId}
+              inputValue={documents[2]?.docName}
+              onChange={(e) => handleFileChange(e, "documents", 2)}
             />
             <div>
               <InputCheckbox
                 labelName={"Verified"}
-                inputChecked={requirements?.bankStatementVerified}
-                onChange={(e) => handleInputChange(e, "requirements")}
-                inputName="bankStatementVerified"
+                inputChecked={documents[2]?.verified}
+                onChange={(e) => handleInputChange(e, "documents", 2)}
+                inputName="verified"
               />
             </div>
           </div>
@@ -576,10 +324,10 @@ const AddLoanFields = ({ addLoanData }) => {
             <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
             <div>
               <InputCheckbox
-                labelName={"Available"}
-                inputChecked={requirements?.atmCard}
-                onChange={(e) => handleInputChange(e, "requirements")}
-                inputName="atmCard"
+                labelName={"Verified"}
+                inputChecked={documents[3]?.verified}
+                onChange={(e) => handleInputChange(e, "documents", 3)}
+                inputName="verified"
               />
             </div>
           </div>
@@ -598,33 +346,19 @@ const AddLoanFields = ({ addLoanData }) => {
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() => generalDetails(addLoanData.generalDetails)}
+        renderExpandedContent={() =>
+          generalLoanDetails(addLoanData?.generalLoanDetails)
+        }
         isOpen={true}
-        error={isValidationFailed(validationError, generalDetailsInputNames)}
+        error={isValidationFailed(
+          validationError,
+          generalLoanDetailsInputNames
+        )}
       />
       <Accordion
         heading={"Requirement"}
-        renderExpandedContent={() => requirements(addLoanData.requirements)}
+        renderExpandedContent={() => requirements(addLoanData.documents)}
       />
-      {/* <Accordion
-        heading={"Advance Settings (optional)"}
-        renderExpandedContent={() =>
-          advanceSettings(addLoanData.advanceSettings)
-        }
-        error={isValidationFailed(validationError, advanceSettingsInputNames)}
-      />
-      <Accordion
-        heading={"Automated Payments (optional)"}
-        renderExpandedContent={() =>
-          automatedPayments(addLoanData.automatedPayments)
-        }
-        error={isValidationFailed(validationError, automatedPaymentsInputNames)}
-      />
-      <Accordion
-        heading={"Extend Loan After Maturity Until Fully Paid (optional)"}
-        renderExpandedContent={() => extendLoan(addLoanData.extendLoan)}
-        error={isValidationFailed(validationError, extendLoanInputNames)}
-      /> */}
     </>
   );
 };

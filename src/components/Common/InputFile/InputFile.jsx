@@ -22,12 +22,13 @@ const InputFile = ({
   isValidation = false,
   isIndex,
   multiple = false, // Allow multiple file uploads
+  inputValue,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
 
-  const [fileNames, setFileNames] = useState([]); // Local file names for display
+  const [fileNames, setFileNames] = useState(inputValue ? [inputValue] : []); // Local file names for display
   const [isDragging, setIsDragging] = useState(false);
 
   if (!inputName || (!disabled && typeof onChange !== "function")) {
@@ -85,6 +86,8 @@ const InputFile = ({
     }
   };
 
+  console.log(fileNames);
+
   const handleClearFiles = () => {
     setFileNames([]); // Clear local file names
     if (onChange) {
@@ -101,9 +104,7 @@ const InputFile = ({
           ? "bg-indigo-50 border-indigo-500"
           : "bg-gray-100 hover:border-indigo-500 hover:bg-indigo-50"
       }
-    ${
-      validationError[validationKey] ? "border-red-600" : "border-gray-500"
-    }`}
+    ${validationError[validationKey] ? "border-red-600" : "border-gray-500"}`}
       onDragOver={(e) => {
         e.preventDefault();
         setIsDragging(true);

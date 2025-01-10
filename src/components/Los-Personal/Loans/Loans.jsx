@@ -4,16 +4,21 @@ import Tab from "../../Common/Tab/Tab";
 import { Outlet, useLocation } from "react-router-dom";
 
 const Loans = () => {
-  const [activeTab, setActiveTab] = useState("add-loan");
+  const [activeTab, setActiveTab] = useState("loan-application");
   const location = useLocation();
   const currentPath = location.pathname;
 
   const tabs = [
     {
-      id: "add-loan",
-      path: "/loan/loan-origination-system/personal/loans/add-loan",
-      label: "Add Loan",
+      id: "loan-application",
+      path: "/loan/loan-origination-system/personal/loans/loan-application",
+      label: "Loan Application",
     },
+    // {
+    //   id: "add-loan",
+    //   path: "/loan/loan-origination-system/personal/loans/add-loan",
+    //   label: "Add Loan",
+    // },
     {
       id: "loan-offers",
       path: "/loan/loan-origination-system/personal/loans/loan-offers",

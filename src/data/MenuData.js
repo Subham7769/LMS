@@ -243,7 +243,6 @@ export const MenusInitial = [
     isOpen: false,
   },
 
-
   // FINANCE
   {
     title: "General Ledger",
@@ -252,7 +251,6 @@ export const MenusInitial = [
     icon: "BookOpenIcon",
     current: false,
   },
-
 
   // TESTING
   {
@@ -283,7 +281,6 @@ export const MenusInitial = [
     icon: "BeakerIcon",
     current: false,
   },
-
 
   // CONFIGURATION
   {
@@ -325,7 +322,6 @@ export const MenusInitial = [
     current: false,
   },
 
-
   // LOAN ORIGINATION
   {
     title: "SME Loans",
@@ -342,7 +338,7 @@ export const MenusInitial = [
       },
       {
         name: "Loans",
-        href: "/loan/loan-origination-system/sme/loans/add-loan",
+        href: "/loan/loan-origination-system/sme/loans/loan-application",
         current: false,
       },
       {
@@ -398,7 +394,7 @@ export const MenusInitial = [
       },
       {
         name: "Loans",
-        href: "/loan/loan-origination-system/personal/loans/add-loan",
+        href: "/loan/loan-origination-system/personal/loans/loan-application",
         current: false,
       },
       {
@@ -409,7 +405,6 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
-
 
   // REPORTS & ANALYSIS
   {
@@ -437,7 +432,6 @@ export const MenusInitial = [
     current: false,
   },
 
-
   // USER TOOLS
   {
     title: "Customer Care",
@@ -453,7 +447,6 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
-
 ];
 export const allSectionName = [
   "LOAN MANAGEMENT",

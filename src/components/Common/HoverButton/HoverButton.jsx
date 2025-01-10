@@ -8,7 +8,7 @@ const HoverButton = ({ icon: Icon, text, onClick }) => {
       onClick={onClick}
     >
       {Icon && <Icon className="h-5 w-5" />}
-      <span className={`text-sm mt-1`}>{text}</span>
+      <span className={`text-sm`}>{text}</span>
     </div>
   );
 };
