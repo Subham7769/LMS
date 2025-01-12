@@ -18,7 +18,7 @@ const ProductPage = () => {
 
   return (
     <>
-      <StatContainer stats={ProductStats} />{" "}
+      {/* <StatContainer stats={ProductStats} />{" "} */}
       {/* Assuming there's a similar stats component for recovery */}
       <ListTable
         ListName="Loan Product List"

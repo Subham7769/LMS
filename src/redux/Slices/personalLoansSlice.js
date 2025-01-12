@@ -709,8 +709,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadDocumentFile.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // state.loading = true;
       })
       .addCase(uploadDocumentFile.fulfilled, (state, action) => {
         state.loading = false;
@@ -721,7 +720,7 @@ const personalLoansSlice = createSlice({
               ? { ...doc, docId } // Update the matching document
               : doc // Keep other documents unchanged
         );
-        console.log(state.addLoanData.documents);
+        toast.success("File uploaded successfully");
       })
       .addCase(uploadDocumentFile.rejected, (state, action) => {
         state.loading = false;
@@ -735,6 +734,7 @@ const personalLoansSlice = createSlice({
       .addCase(saveDraftLoanData.fulfilled, (state, action) => {
         state.loading = false;
         toast(`Draft Saved Successfully`);
+        state.addLoanData = initialState.addLoanData;
       })
       .addCase(saveDraftLoanData.rejected, (state, action) => {
         state.loading = false;

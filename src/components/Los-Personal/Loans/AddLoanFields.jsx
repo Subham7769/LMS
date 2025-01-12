@@ -257,7 +257,7 @@ const AddLoanFields = ({ addLoanData }) => {
       "generalLoanDetails"
     );
 
-  console.log(addLoanData);
+  // console.log(addLoanData);
 
   const requirements = (documents) => {
     return (

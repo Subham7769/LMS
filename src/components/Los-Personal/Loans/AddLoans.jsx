@@ -93,6 +93,11 @@ const AddLoans = () => {
     }
   };
 
+  const handleDraft = async () => {
+    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+    navigate("/loan/loan-origination-system/personal/loans/loan-application");
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
@@ -117,7 +122,7 @@ const AddLoans = () => {
       <div className="flex justify-end mt-5 gap-x-5">
         <Button
           buttonName="Save Draft"
-          onClick={() => dispatch(saveDraftLoanData(addLoanData))}
+          onClick={handleDraft}
           rectangle={true}
           className={"bg-gray-900 hover:bg-gray-700"}
         />

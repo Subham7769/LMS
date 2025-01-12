@@ -103,7 +103,7 @@ const LoanApplication = () => {
   };
 
   const renderActionList = (rowData) => {
-    if (rowData.applicationStatus === "Submitted") {
+    if (rowData.status === "Submitted" || rowData.status === "Cancel") {
       return <div className="py-6">-</div>;
     }
     return (

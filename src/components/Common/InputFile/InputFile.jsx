@@ -90,8 +90,6 @@ const InputFile = ({
     }
   };
 
-  console.log(fileNames);
-
   const handleClearFiles = () => {
     setFileNames([]); // Clear local file names
     if (onChange) {

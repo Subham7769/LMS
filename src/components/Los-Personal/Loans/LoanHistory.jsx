@@ -23,9 +23,9 @@ function transformData(inputArray) {
     loanReleaseDate: convertDate(item?.loanReleaseDate),
     interestMethod: item?.interestMethod,
     loanInterest: item?.loanInterest,
-    interestPer: item?.interestPer,
+    perLoanInterest: item?.perLoanInterest,
     loanDuration: item?.loanDuration,
-    durationPer: item?.durationPer,
+    perLoanDuration: item?.perLoanDuration,
     repaymentCycle: item?.repaymentCycle,
     numberOfTenure: item?.numberOfTenure,
     loanFiles: item?.loanFiles,
@@ -102,7 +102,7 @@ const LoanHistory = () => {
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">Loan Interest :</p>
           <p className="text-sm text-gray-600">
-            {rowData.loanInterest} % / {rowData.interestPer}
+            {rowData.loanInterest} % / {rowData.perLoanInterest}
           </p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
@@ -120,7 +120,7 @@ const LoanHistory = () => {
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">Loan Duration:</p>
           <p className="text-sm text-gray-600">
-            {rowData.loanDuration} {rowData.durationPer}
+            {rowData.loanDuration} {rowData.perLoanDuration}
           </p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
