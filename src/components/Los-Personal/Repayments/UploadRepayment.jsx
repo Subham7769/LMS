@@ -372,7 +372,7 @@ const UploadRepayment = () => {
                 <ul className="list-disc pl-6 space-y-2">
                   <li>
                     <a
-                      href={"/src/assets/sample_file_bulk_repayments.csv"}
+                      href={"/src/assets/files/sample_file_bulk_repayments.csv"}
                       className="text-blue-600 underline"
                     >
                       Click here to download a sample file.
