@@ -8,7 +8,7 @@ import Button from "../Common/Button/Button";
 import { typeOptions, options } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import InputSelectNew from "../Common/DynamicSelect/InputSelect";
+import InputSelectNew from "../Common/InputSelectMulti/InputSelect";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,7 +53,7 @@ const MinimumExpense = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       await dispatch(addExpenseField(expenseForm)).unwrap();
-      dispatch(resetExpenseFormData())
+      dispatch(resetExpenseFormData());
     }
   };
 
@@ -77,12 +77,12 @@ const MinimumExpense = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(saveExpenseField(id))
+      dispatch(saveExpenseField(id));
     }
   };
 
   const handleDelete = async (id) => {
-    dispatch(deleteExpenseField(id))
+    dispatch(deleteExpenseField(id));
   };
 
   return (
@@ -98,8 +98,8 @@ const MinimumExpense = () => {
       <div className="flex flex-col gap-5">
         {roleName !== "ROLE_VIEWER" ? (
           <ContainerTile
-          loading={loading}
-          // error={error}
+            loading={loading}
+            // error={error}
           >
             <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
               <InputText
@@ -147,9 +147,9 @@ const MinimumExpense = () => {
 
         {allExpenseData?.map((expenseData, index) => (
           <ContainerTile
-          loading={loading}
-          error={error}
-          key={"Expense"+index}
+            loading={loading}
+            error={error}
+            key={"Expense" + index}
           >
             <div
               key={expenseData.id}
