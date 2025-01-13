@@ -259,7 +259,7 @@ export const fetchRepaymentByField = createAsyncThunk(
 
 // Fetch Repayment Files
 export const fetchRepaymentFileHistory = createAsyncThunk(
-  "repayments/fetchRepaymentFileHistory", 
+  "repayments/fetchRepaymentFileHistory",
   async (_, { rejectWithValue }) => {
     try {
       const authToken = localStorage.getItem("authToken");
@@ -290,6 +290,96 @@ export const fetchRepaymentFileHistory = createAsyncThunk(
   }
 );
 
+export const downloadAcceptRecords = createAsyncThunk(
+  "repayments/downloadAcceptRecords",
+  async ({ fileId, fileName }, { rejectWithValue }) => {
+    try {
+      const authToken = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_REPAYMENT_GET_RECORDS_PERSONAL_BORROWER
+        }${fileId}/success`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to download");
+      }
+
+      const responseText = await response.text();
+      console.log("Response Text:", responseText);
+
+      // Decode the Base64 content
+      const decodedContent = atob(responseText.trim());
+      console.log("Decoded Content:", decodedContent);
+
+      // Create a Blob for the CSV content
+      const blob = new Blob([decodedContent], { type: "text/csv" });
+
+      // Create a link to download the file
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${fileName}_accepted_records.csv`; // Set the desired file name
+      link.click(); // Trigger the download
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+export const downloadRejectedRecords = createAsyncThunk(
+  "repayments/downloadRejectedRecords",
+  async ({ fileId, fileName }, { rejectWithValue }) => {
+    try {
+      const authToken = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_REPAYMENT_GET_RECORDS_PERSONAL_BORROWER
+        }${fileId}/failures`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to download");
+      }
+
+      const responseText = await response.text();
+      console.log("Response Text:", responseText);
+
+      // Decode the Base64 content
+      const decodedContent = atob(responseText.trim());
+      console.log("Decoded Content:", decodedContent);
+
+      // Create a Blob for the CSV content
+      const blob = new Blob([decodedContent], { type: "text/csv" });
+
+      // Create a link to download the file
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${fileName}_rejected_records.csv`; // Set the desired file name
+      link.click(); // Trigger the download
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 const initialState = {
   draftRepaymentDTOList: [
     {
@@ -309,38 +399,38 @@ const initialState = {
   repaymentHeaderData: {},
   approveRepaymentData: [],
   approveRepaymentTotalElements: [],
-  repaymentFileHistory:[
+  repaymentFileHistory: [
     {
-        "fileId": "2d8f63ff-5b69-4417-96c0-b5f449322bdd",
-        "fileName": "repaymentBulkUpload.csv",
-        "fileCount": 2,
-        "successLinesCount": 2,
-        "failedLinesCount": 0,
-        "fileSize": 199,
-        "uploadDate": "2025-01-01 17:04:27",
-        "status": "DONE_SUCCESSFULLY"
+      fileId: "2d8f63ff-5b69-4417-96c0-b5f449322bdd",
+      fileName: "repaymentBulkUpload.csv",
+      fileCount: 2,
+      successLinesCount: 2,
+      failedLinesCount: 0,
+      fileSize: 199,
+      uploadDate: "2025-01-01 17:04:27",
+      status: "DONE_SUCCESSFULLY",
     },
     {
-        "fileId": "fba67314-f564-40b7-9c54-d30e61c3208e",
-        "fileName": "carbon.Report-Configuration.json",
-        "fileCount": 437,
-        "successLinesCount": 0,
-        "failedLinesCount": 437,
-        "fileSize": 18888,
-        "uploadDate": "2025-01-01 17:05:27",
-        "status": "DONE_SUCCESSFULLY"
+      fileId: "fba67314-f564-40b7-9c54-d30e61c3208e",
+      fileName: "carbon.Report-Configuration.json",
+      fileCount: 437,
+      successLinesCount: 0,
+      failedLinesCount: 437,
+      fileSize: 18888,
+      uploadDate: "2025-01-01 17:05:27",
+      status: "DONE_SUCCESSFULLY",
     },
     {
-        "fileId": "40df3e7e-402e-436b-8335-37669126a7f9",
-        "fileName": "debtBurdenCabCelling.xls",
-        "fileCount": null,
-        "successLinesCount": null,
-        "failedLinesCount": null,
-        "fileSize": 27136,
-        "uploadDate": "2025-01-01 17:07:14",
-        "status": "FAILED"
-    }
-],
+      fileId: "40df3e7e-402e-436b-8335-37669126a7f9",
+      fileName: "debtBurdenCabCelling.xls",
+      fileCount: null,
+      successLinesCount: null,
+      failedLinesCount: null,
+      fileSize: 27136,
+      uploadDate: "2025-01-01 17:07:14",
+      status: "FAILED",
+    },
+  ],
   error: null,
   loading: false,
 };
@@ -523,6 +613,30 @@ const personalRepaymentsSlice = createSlice({
         state.repaymentFileHistory = action.payload;
       })
       .addCase(fetchRepaymentFileHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+      .addCase(downloadAcceptRecords.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(downloadAcceptRecords.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("File downloaded successfully!");
+      })
+      .addCase(downloadAcceptRecords.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+      .addCase(downloadRejectedRecords.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(downloadRejectedRecords.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("File downloaded successfully!");
+      })
+      .addCase(downloadRejectedRecords.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
       });

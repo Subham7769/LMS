@@ -58,10 +58,11 @@ const AddBorrowers = () => {
     const isValid = state.validation.isValid; // Adjust based on your state structure
 
     if (isValid) {
-      dispatch(registerBorrower(addBorrowerData)).unwrap();
-      navigate(
-        `/loan/loan-origination-system/personal/borrowers/view-borrower`
-      );
+      dispatch(registerBorrower(addBorrowerData))
+      .unwrap()
+      .then(() => {
+        navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
+      })
     }
   };
 

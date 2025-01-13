@@ -282,6 +282,9 @@ const LoanOffers = lazy(() =>
 const ApproveLoans = lazy(() =>
   import("./components/Los-Personal/Loans/ApproveLoans")
 );
+const LoanApplication = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanApplication")
+);
 const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
 const LoanHistory = lazy(() =>
   import("./components/Los-Personal/Loans/LoanHistory")
@@ -324,6 +327,12 @@ const ViewCompany = lazy(() =>
 const UpdateCompany = lazy(() =>
   import("./components/Los-SME/Borrowers/UpdateCompany")
 );
+const UpdateDirector = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateDirector")
+);
+const UpdateShareholder = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateShareholder")
+);
 
 //------------Loans-----------------
 const LoansSME = lazy(() => import("./components/Los-SME/Loans/Loans"));
@@ -332,6 +341,9 @@ const LoanOffersSME = lazy(() =>
 );
 const ApproveLoansSME = lazy(() =>
   import("./components/Los-SME/Loans/ApproveLoans")
+);
+const LoanApplicationSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanApplication")
 );
 const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
 const LoanHistorySME = lazy(() =>
@@ -353,8 +365,6 @@ const ApproveRepaymentSME = lazy(() =>
 const UploadRepaymentSME = lazy(() =>
   import("./components/Los-SME/Repayments/UploadRepayment")
 );
-
-
 
 // ------------------------ Deposit Section Imports -----------------------------------
 
@@ -692,6 +702,16 @@ const routes = [
             element: <UpdateCompany />,
             errorElement: <RouteErrorBoundary />,
           },
+          {
+            path: "update-director/:uid",
+            element: <UpdateDirector />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-shareholder/:uid",
+            element: <UpdateShareholder />,
+            errorElement: <RouteErrorBoundary />,
+          },
         ],
       },
       {
@@ -699,6 +719,11 @@ const routes = [
         element: <LoansSME />,
         errorElement: <RouteErrorBoundary />,
         children: [
+          {
+            path: "loan-application",
+            element: <LoanApplicationSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
           {
             path: "add-loan",
             element: <AddLoansSME />,
@@ -826,7 +851,12 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: "add-loan",
+            path: "loan-application",
+            element: <LoanApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-loan/:loanApplicationId",
             element: <AddLoans />,
             errorElement: <RouteErrorBoundary />,
           },

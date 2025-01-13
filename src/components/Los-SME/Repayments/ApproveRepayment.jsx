@@ -4,7 +4,7 @@ import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
-import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
+import InputSelectMulti from "../../Common/InputSelectMulti/InputSelectMulti";
 import { loanOfficer,ApproveRepaymentColumns } from "../../../data/LosData";
 
 
@@ -111,7 +111,7 @@ const ApproveRepayments = () => {
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`grid grid-cols-[85%_15%] gap-5`}>
-        <SelectInput
+        <InputSelectMulti
           labelName="All Staff"
           inputName="allStaff"
           inputOptions={loanOfficer}

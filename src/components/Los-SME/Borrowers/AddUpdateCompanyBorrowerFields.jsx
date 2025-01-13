@@ -476,7 +476,7 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
   return (
     <>
       <Accordion
-        heading={"Company Details"}
+        heading={"General Details"}
         renderExpandedContent={() =>
           companyDetails(BorrowerData.companyDetails)
         }
@@ -485,7 +485,7 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
       />
 
       <Accordion
-        heading={"Company Contact Details"}
+        heading={"Contact Details"}
         renderExpandedContent={() =>
           companyContactDetails(BorrowerData.companyContactDetails)
         }
@@ -496,13 +496,13 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
       />
 
       <Accordion
-        heading={"Company Bank Details"}
+        heading={"Bank Details"}
         renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
         error={isValidationFailed(validationError, bankDetailsInputNames)}
       />
 
       <Accordion
-        heading={"Company Other Details"}
+        heading={"Other Details"}
         renderExpandedContent={() =>
           companyOtherDetails(BorrowerData.companyOtherDetails)
         }

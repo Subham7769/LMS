@@ -44,6 +44,7 @@ const LoanOffers = () => {
     const uid = loanOfferFields.uid;
     const proceedPayload = {
       transactionId: transactionId,
+      loanApplicationId: loanConfigData.loanApplicationId,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
     navigate(`/loan/loan-origination-system/personal/loans/approve-loans`);
@@ -364,8 +365,13 @@ const LoanOffers = () => {
                   </div>
                 </div>
               </ContainerTile>
-              <div className="text-center text-gray-500">
-                Loan Summary Id : {ci?.transactionId}
+              <div className="flex justify-center gap-5">
+                <div className="text-center text-gray-500 border-r border-gray-500 pr-5">
+                  Loan Summary Id : {ci?.transactionId}
+                </div>
+                <div className="text-center text-gray-500">
+                  Loan Application Id : {loanConfigData?.loanApplicationId}
+                </div>
               </div>
             </React.Fragment>
           ))}

@@ -3,7 +3,7 @@ import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import InputEmail from "../Common/InputEmail/InputEmail";
 import InputPassword from "../Common/InputPassword/InputPassword";
-import SelectInput from "../Common/DynamicSelect/DynamicSelect";
+import InputSelectMulti from "../Common/InputSelectMulti/InputSelectMulti";
 import { toast } from "react-toastify";
 import {
   createUser,
@@ -117,7 +117,7 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               required
               isValidation={true}
             />
-            <SelectInput
+            <InputSelectMulti
               labelName="Roles"
               inputName="userRole"
               inputOptions={role}

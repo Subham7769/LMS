@@ -7,7 +7,7 @@ import {
   setValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const SelectInput = ({
+const InputSelectMulti = ({
   labelName,
   inputName,
   inputValue,
@@ -68,7 +68,7 @@ const SelectInput = ({
 const WithErrorBoundary = (props) => {
   return (
     <ElementErrorBoundary>
-      <SelectInput {...props} />
+      <InputSelectMulti {...props} />
     </ElementErrorBoundary>
   );
 };

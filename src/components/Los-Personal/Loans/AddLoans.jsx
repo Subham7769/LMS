@@ -1,20 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import {
-  resetAddLoanData,
+  saveDraftLoanData,
   submitLoan,
+  getLoanApplicationsByID,
+  fetchLoanProductData,
+  setLoanApplicationId,
 } from "../../../redux/Slices/personalLoansSlice";
-import { useNavigate } from "react-router-dom";
+import {
+  clearValidationError,
+  setFields,
+} from "../../../redux/Slices/validationSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
+
+const ShimmerTable = () => {
+  return (
+    <div className="grid grid-cols-4 gap-4 animate-pulse">
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+    </div>
+  );
+};
 
 const AddLoans = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { addLoanData } = useSelector((state) => state.personalLoans);
+  const { loanApplicationId } = useParams();
+  const { addLoanData, loading } = useSelector((state) => state.personalLoans);
   // const isValid = useSelector((state) => state.validation.isValid);
+
+  useEffect(() => {
+    dispatch(getLoanApplicationsByID(loanApplicationId));
+    dispatch(fetchLoanProductData());
+    const keysArray = [
+      "borrowerId",
+      "disbursedBy",
+      "interestMethod",
+      "loanDuration",
+      "loanInterest",
+      "loanProductId",
+      "loanReleaseDate",
+      "numberOfTenure",
+      "perLoanDuration",
+      "perLoanInterest",
+      "principalAmount",
+      "repaymentCycle",
+    ];
+    dispatch(setFields(keysArray));
+    dispatch(setLoanApplicationId(loanApplicationId));
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch, loanApplicationId]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -36,27 +79,56 @@ const AddLoans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     console.log(addLoanData);
     const state = store.getState();
     const isValid = state.validation.isValid;
+    const submitPayload = {
+      ...addLoanData.generalLoanDetails,
+      documents: addLoanData.documents,
+      loanApplicationId: addLoanData.loanApplicationId,
+    };
     if (isValid) {
-      await dispatch(submitLoan(addLoanData.generalDetails)).unwrap();
+      await dispatch(submitLoan(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/personal/loans/loan-offers");
     }
   };
 
+  const handleDraft = async () => {
+    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+    navigate("/loan/loan-origination-system/personal/loans/loan-application");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
+
   return (
     <>
+      <div
+        className={`border rounded-lg shadow-sm bg-gray-50 mb-3 hover:bg-indigo-50 px-4 py-4`}
+      >
+        <div className="text-gray-500">
+          Loan Application ID: {addLoanData?.loanApplicationId}
+        </div>
+      </div>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Save Button */}
       <div className="flex justify-end mt-5 gap-x-5">
-        <Button
-          buttonName="Reset"
-          onClick={() => dispatch(resetAddLoanData())}
-          rectangle={true}
-          className={"bg-red-600 hover:bg-red-500"}
-        />
+        <button
+          type="button"
+          onClick={handleDraft}
+          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-300 shadow-sm hover:bg-gray-400 focus-visible:outline-indigo-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
+        >
+          <span className="text-center w-full">Save Draft</span>
+        </button>
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>

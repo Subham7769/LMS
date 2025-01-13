@@ -17,9 +17,16 @@ import {
   updateRepaymentHeaderData,
   uploadFile,
   fetchRepaymentFileHistory,
+  downloadAcceptRecords,
+  downloadRejectedRecords,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import Accordion from "../../Common/Accordion/Accordion";
-import { DocumentArrowDownIcon,QuestionMarkCircleIcon,ArrowUpTrayIcon,CheckCircleIcon } from "@heroicons/react/24/outline";
+import {
+  DocumentArrowDownIcon,
+  QuestionMarkCircleIcon,
+  ArrowUpTrayIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline";
 
 const UploadRepayment = () => {
   const [formData, setFormData] = useState({
@@ -44,7 +51,7 @@ const UploadRepayment = () => {
       dispatch(setRepaymentHeaderData(JSON.parse(savedHeaderData)));
     }
 
-    // dispatch(fetchRepaymentFileHistory());
+    dispatch(fetchRepaymentFileHistory());
   }, [dispatch]);
 
   const handleInputChange = (e) => {
@@ -104,7 +111,19 @@ const UploadRepayment = () => {
     console.log(localStorage.getItem("repaymentHeaderData"));
   };
 
-  console.log(repaymentFileHistory);
+  // console.log(repaymentFileHistory);
+
+  const handleAcceptRecords = (fileId, fileName) => {
+    const nameWithoutExtension = fileName.split(".").slice(0, -1).join(".");
+    dispatch(downloadAcceptRecords({ fileId, fileName: nameWithoutExtension }));
+  };
+
+  const handleRejectedRecords = (fileId, fileName) => {
+    const nameWithoutExtension = fileName.split(".").slice(0, -1).join(".");
+    dispatch(
+      downloadRejectedRecords({ fileId, fileName: nameWithoutExtension })
+    );
+  };
 
   return (
     <div>
@@ -353,7 +372,7 @@ const UploadRepayment = () => {
                 <ul className="list-disc pl-6 space-y-2">
                   <li>
                     <a
-                      href={"/src/assets/files/sample_file_bulk_repayments.csv"}
+                      href={"/assets/files/sample_file_bulk_repayments.csv"}
                       className="text-blue-600 underline"
                     >
                       Click here to download a sample file.
@@ -546,11 +565,19 @@ const UploadRepayment = () => {
                       <span>{fileHistory.successLinesCount}</span>
                       <span>Accepted</span>
                     </div>
-                    <div className="flex items-center justify-start gap-3">
+                    <div
+                      className="flex items-center justify-start gap-3 cursor-pointer"
+                      onClick={() =>
+                        handleAcceptRecords(
+                          fileHistory.fileId,
+                          fileHistory.fileName
+                        )
+                      }
+                    >
                       <DocumentArrowDownIcon className="h-5 w-5 text-indigo-500 hover:cursor-pointer" />
-                      <a href="#" className="text-indigo-500  text-sm">
+                      <div className="text-indigo-500  text-sm">
                         Download Accepted Records
-                      </a>
+                      </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -559,9 +586,17 @@ const UploadRepayment = () => {
                       <span>{fileHistory.failedLinesCount}</span>
                       <span>Rejected</span>
                     </div>
-                    <div className="flex items-center justify-start gap-3">
+                    <div
+                      className="flex items-center justify-start gap-3 cursor-pointer"
+                      onClick={() =>
+                        handleRejectedRecords(
+                          fileHistory.fileId,
+                          fileHistory.fileName
+                        )
+                      }
+                    >
                       <DocumentArrowDownIcon className="h-5 w-5 text-indigo-500 hover:cursor-pointer" />
-                      <a href="#" className="text-indigo-500  text-sm">
+                      <a className="text-indigo-500  text-sm">
                         Download Rejected Records
                       </a>
                     </div>

@@ -5,7 +5,7 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
-import SelectInput from "../../Common/DynamicSelect/DynamicSelect";
+import InputSelectMulti from "../../Common/InputSelectMulti/InputSelectMulti";
 
 const ViewBorrowers = () => {
   const loanOfficer = ["A", "B", "C", "D", "E"];
@@ -46,7 +46,7 @@ const ViewBorrowers = () => {
           required
           isValidation={true}
         />
-        <SelectInput
+        <InputSelectMulti
           labelName="All Loan Officers"
           inputName="allLoanOfficer"
           inputOptions={loanOfficer}
