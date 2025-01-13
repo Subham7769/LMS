@@ -8,21 +8,42 @@ import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile 
 import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
 import {
+  deleteDocumentFile,
   fetchLoanProductData,
   updateLoanField,
   uploadDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearValidationError,
-  setFields,
-} from "../../../redux/Slices/validationSlice";
 import { tenureTypeOptions } from "../../../data/OptionsData";
 import { CreditCardIcon } from "@heroicons/react/24/outline";
+import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions } = useSelector((state) => state.personalLoans);
+
+  // Helper to calculate uploaded and verified documents
+  const calculateDocumentStats = () => {
+    let uploadedCount = 0;
+    let verifiedCount = 0;
+
+    // Loop through the documents array
+    addLoanData.documents.forEach((document) => {
+      // Check if docName is not empty for uploaded count
+      if (document.docName) {
+        uploadedCount++;
+      }
+
+      // Check if verified is true for verified count
+      if (document.verified === true) {
+        verifiedCount++;
+      }
+    });
+
+    return { uploadedCount, verifiedCount };
+  };
+
+  const { uploadedCount, verifiedCount } = calculateDocumentStats();
 
   const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
@@ -257,67 +278,50 @@ const AddLoanFields = ({ addLoanData }) => {
       "generalLoanDetails"
     );
 
-  // console.log(addLoanData);
+  console.log(addLoanData);
+
+  const handleDeleteDocument = (docId) => {
+    if (!docId) return;
+    const fileDeleteParams = {
+      docId: docId,
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+    dispatch(deleteDocumentFile(fileDeleteParams));
+  };
 
   const requirements = (documents) => {
     return (
       <>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Payslips</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="docName"
-              inputValue={documents[0]?.docName}
-              onChange={(e) => handleFileChange(e, "documents", 0)}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={documents[0]?.verified}
-                onChange={(e) => handleInputChange(e, "documents", 0)}
-                inputName="verified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Employer Pre-approval Form</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="docName"
-              // inputValue={documents[1]?.docId}
-              inputValue={documents[1]?.docName}
-              onChange={(e) => handleFileChange(e, "documents", 1)}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={documents[1]?.verified}
-                onChange={(e) => handleInputChange(e, "documents", 1)}
-                inputName="verified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Bank Statement</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="docName"
-              // inputValue={documents[2]?.docId}
-              inputValue={documents[2]?.docName}
-              onChange={(e) => handleFileChange(e, "documents", 2)}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={documents[2]?.verified}
-                onChange={(e) => handleInputChange(e, "documents", 2)}
-                inputName="verified"
-              />
-            </div>
-          </div>
-        </div>
+        <DocumentUploaderVerifier
+          label="Payslips"
+          inputFileName="docName"
+          inputFileValue={documents[0]?.docName}
+          onFileChange={(e) => handleFileChange(e, "documents", 0)}
+          onFileDelete={() => handleDeleteDocument(documents[0]?.docId)}
+          checkboxName="verified"
+          checkboxChecked={documents[0]?.verified}
+          onCheckboxChange={(e) => handleInputChange(e, "documents", 0)}
+        />
+        <DocumentUploaderVerifier
+          label="Employer Pre-approval Form"
+          inputFileName="docName"
+          inputFileValue={documents[1]?.docName}
+          onFileChange={(e) => handleFileChange(e, "documents", 1)}
+          onFileDelete={() => handleDeleteDocument(documents[1]?.docId)}
+          checkboxName="verified"
+          checkboxChecked={documents[1]?.verified}
+          onCheckboxChange={(e) => handleInputChange(e, "documents", 1)}
+        />
+        <DocumentUploaderVerifier
+          label="Bank Statement"
+          inputFileName="docName"
+          inputFileValue={documents[2]?.docName}
+          onFileChange={(e) => handleFileChange(e, "documents", 2)}
+          onFileDelete={() => handleDeleteDocument(documents[2]?.docId)}
+          checkboxName="verified"
+          checkboxChecked={documents[2]?.verified}
+          onCheckboxChange={(e) => handleInputChange(e, "documents", 2)}
+        />
         <div className="flex justify-between items-center">
           <div>ATM Card</div>
           <div className="flex gap-x-5 items-baseline">
@@ -359,6 +363,10 @@ const AddLoanFields = ({ addLoanData }) => {
         heading={"Requirement"}
         renderExpandedContent={() => requirements(addLoanData.documents)}
       />
+      <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
+        <div>{`${uploadedCount} of 3 documents uploaded`}</div>
+        <div>{`${verifiedCount} documents verified`}</div>
+      </div>
     </>
   );
 };

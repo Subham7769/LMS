@@ -169,7 +169,7 @@ export const uploadDocumentFile = createAsyncThunk(
   "personalLoans/uploadDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("authToken");
+      // const token = localStorage.getItem("authToken");
       const {
         loanApplicationId,
         documentKey,
@@ -196,6 +196,32 @@ export const uploadDocumentFile = createAsyncThunk(
       }
       const responseData = await response.json();
       return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteDocumentFile = createAsyncThunk(
+  "personalLoans/deleteDocumentFile",
+  async (fileDeleteParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken } = fileDeleteParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -278,6 +304,32 @@ export const getLoanOffers = createAsyncThunk(
       }
       const responseData = await response.json();
       return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteLoanOffers = createAsyncThunk(
+  "personalLoans/deleteLoanOffers",
+  async (loanApplicationId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_DELETE_LOAN_OFFERS_PERSONAL
+        }${loanApplicationId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -583,9 +635,9 @@ const personalLoansSlice = createSlice({
   name: "personalLoans",
   initialState,
   reducers: {
-    // generateLoanApplicationId: (state, action) => {
-    //   state.addLoanData.loanApplicationId = nanoid();
-    // },
+    resetAddLoanData: (state, action) => {
+      state.addLoanData = initialState.addLoanData;
+    },
     updateLoanField: (state, action) => {
       const { section, field, value, type, checked, index } = action.payload;
       // If section is provided, update specific field in that section
@@ -727,6 +779,19 @@ const personalLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(deleteDocumentFile.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        toast(`Document deleted Successfully`);
+      })
+      .addCase(deleteDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(saveDraftLoanData.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -734,7 +799,6 @@ const personalLoansSlice = createSlice({
       .addCase(saveDraftLoanData.fulfilled, (state, action) => {
         state.loading = false;
         toast(`Draft Saved Successfully`);
-        state.addLoanData = initialState.addLoanData;
       })
       .addCase(saveDraftLoanData.rejected, (state, action) => {
         state.loading = false;
@@ -769,6 +833,18 @@ const personalLoansSlice = createSlice({
         state.loanConfigData = action.payload;
       })
       .addCase(getLoanOffers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(deleteLoanOffers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteLoanOffers.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteLoanOffers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
@@ -900,7 +976,7 @@ const personalLoansSlice = createSlice({
 });
 
 export const {
-  // generateLoanApplicationId,
+  resetAddLoanData,
   updateLoanField,
   updateLoanOfferFields,
   setLoanApplicationId,

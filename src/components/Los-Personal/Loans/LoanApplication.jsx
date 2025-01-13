@@ -17,6 +17,8 @@ import {
   getLoanApplicationsByID,
   cancelLoanApplicationsByID,
   getLoanApplicationByField,
+  resetAddLoanData,
+  deleteLoanOffers,
 } from "../../../redux/Slices/personalLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 
@@ -35,12 +37,8 @@ const LoanApplication = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const navigate = useNavigate();
-  const {
-    addLoanData,
-    loanApplications,
-    loading,
-    loanApplicationsTotalElements,
-  } = useSelector((state) => state.personalLoans);
+  const { loanApplications, loading, loanApplicationsTotalElements } =
+    useSelector((state) => state.personalLoans);
 
   const [pageSize, setPageSize] = useState(10);
 
@@ -78,6 +76,7 @@ const LoanApplication = () => {
   };
 
   const handleNewApplication = async () => {
+    dispatch(resetAddLoanData());
     try {
       const loanApplicationId = await dispatch(
         generateLoanApplicationId()
@@ -90,10 +89,15 @@ const LoanApplication = () => {
     }
   };
 
-  const handleEditApplication = async (loanApplicationId) => {
-    await dispatch(getLoanApplicationsByID(loanApplicationId)).unwrap();
+  const handleEditApplication = async (rowData) => {
+    if (rowData.status === "Submitted") {
+      await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
+    }
+    await dispatch(
+      getLoanApplicationsByID(rowData?.loanApplicationId)
+    ).unwrap();
     navigate(
-      `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}`
+      `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
     );
   };
 
@@ -103,13 +107,13 @@ const LoanApplication = () => {
   };
 
   const renderActionList = (rowData) => {
-    if (rowData.status === "Submitted" || rowData.status === "Cancel") {
+    if (rowData.status === "Completed" || rowData.status === "Cancel") {
       return <div className="py-6">-</div>;
     }
     return (
       <div className="flex justify-center gap-4 px-5">
         <Button
-          onClick={() => handleEditApplication(rowData.loanApplicationId)}
+          onClick={() => handleEditApplication(rowData)}
           buttonIcon={PencilIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}
