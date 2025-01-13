@@ -7,6 +7,7 @@ const DocumentUploaderVerifier = ({
   inputFileName,
   inputFileValue,
   onFileChange,
+  onFileDelete,
   checkboxName,
   checkboxChecked,
   onCheckboxChange,
@@ -19,6 +20,7 @@ const DocumentUploaderVerifier = ({
           inputName={inputFileName}
           inputValue={inputFileValue}
           onChange={onFileChange}
+          onDelete={onFileDelete}
         />
         <div>
           <InputCheckbox

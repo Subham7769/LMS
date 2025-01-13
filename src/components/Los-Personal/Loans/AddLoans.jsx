@@ -79,6 +79,7 @@ const AddLoans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     console.log(addLoanData);
     const state = store.getState();
@@ -86,6 +87,7 @@ const AddLoans = () => {
     const submitPayload = {
       ...addLoanData.generalLoanDetails,
       documents: addLoanData.documents,
+      loanApplicationId: addLoanData.loanApplicationId,
     };
     if (isValid) {
       await dispatch(submitLoan(submitPayload)).unwrap();
@@ -96,7 +98,7 @@ const AddLoans = () => {
   const handleDraft = async () => {
     await dispatch(saveDraftLoanData(addLoanData)).unwrap();
     navigate("/loan/loan-origination-system/personal/loans/loan-application");
-  }
+  };
 
   if (loading) {
     return (
@@ -120,12 +122,13 @@ const AddLoans = () => {
       <AddLoanFields addLoanData={addLoanData} />
       {/* Save Button */}
       <div className="flex justify-end mt-5 gap-x-5">
-        <Button
-          buttonName="Save Draft"
+        <button
+          type="button"
           onClick={handleDraft}
-          rectangle={true}
-          className={"bg-gray-900 hover:bg-gray-700"}
-        />
+          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-300 shadow-sm hover:bg-gray-400 focus-visible:outline-indigo-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
+        >
+          <span className="text-center w-full">Save Draft</span>
+        </button>
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>
     </>

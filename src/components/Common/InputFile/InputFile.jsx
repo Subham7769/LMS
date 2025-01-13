@@ -23,6 +23,7 @@ const InputFile = ({
   isIndex,
   multiple = false, // Allow multiple file uploads
   inputValue,
+  onDelete,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -94,6 +95,9 @@ const InputFile = ({
     setFileNames([]); // Clear local file names
     if (onChange) {
       onChange({ target: { name: inputName, value: null, type: "file" } });
+    }
+    if (onDelete) {
+      onDelete();
     }
   };
 
