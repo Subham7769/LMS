@@ -9,7 +9,7 @@ import {
   removeShareholder,
   resetShareholder,
   addShareholderInfo,
-  fetchAllCompanyBorrowersByLoanOfficer,
+  fetchAllCompanyBorrowersListByLoanOfficer,
   fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,7 +53,7 @@ const AddShareHolder = () => {
 
   useEffect(() => {
     if (allCompanies.length < 1) {
-      dispatch(fetchAllCompanyBorrowersByLoanOfficer({ loanOfficer }));
+      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
     }
   }, [dispatch]);
 

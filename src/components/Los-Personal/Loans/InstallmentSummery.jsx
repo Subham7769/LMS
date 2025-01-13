@@ -114,13 +114,13 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
           >
             <thead className="sticky top-0 z-10 invisible">
               <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
-                <th className="px-4"></th>
                 <th className="px-4">EMI No.</th>
                 <th className="px-4">Date</th>
                 <th className="px-4">Principal</th>
                 <th className="px-4">Interest</th>
                 <th className="px-4">Outstanding</th>
                 <th className="px-4">EMI Amount</th>
+                <th className="px-4"></th>
               </tr>
             </thead>
             <tbody>
@@ -135,13 +135,8 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
-                    ></span>
-                  </td>
-                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
-                    ></span>
+                      className={`px-3 py-1 rounded-full text-xs font-medium invisible`}
+                    >1 Mar 2025</span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
@@ -182,6 +177,11 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                         )
                       )}
                     </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    ></span>
                   </td>
                 </tr>
               </>

@@ -8,7 +8,7 @@ import {
   removeDirector,
   resetDirector,
   addDirectorInfo,
-  fetchAllCompanyBorrowersByLoanOfficer,
+  fetchAllCompanyBorrowersListByLoanOfficer,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -23,6 +23,8 @@ const AddDirector = () => {
     (state) => state.smeBorrowers
   );
   const [companyId, setCompanyId] = useState("");
+  const loanOfficer = localStorage.getItem("username");
+
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -42,14 +44,13 @@ const AddDirector = () => {
     return result;
   }
 
-  const loanOfficer = localStorage.getItem("username");
 
   useEffect(() => {
     if (directorsKycDetails.length < 1) {
       dispatch(addDirector({ loanOfficer, index: 0 }));
     }
     if (allCompanies.length < 1) {
-      dispatch(fetchAllCompanyBorrowersByLoanOfficer({ loanOfficer }));
+      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
     }
   }, [dispatch]);
 

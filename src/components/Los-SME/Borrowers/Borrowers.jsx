@@ -30,9 +30,11 @@ const Borrowers = () => {
       path: "/loan/loan-origination-system/sme/borrowers/view-company",
       label: "View Company",
     },
-    // { id: "update-borrower", path: "/loan/loan-origination-system/personal/borrowers/update-borrower/:uid", label: "Update Borrower" },
-    // { id: "add-borrower-group", path: "/borrowers/add-borrower-group", label: "Add Borrower Group" },
-    // { id: "view-borrower-group", path: "/borrowers/view-borrower-group", label: "View Borrower Group" },
+    // {
+    //   id: "update-company",
+    //   path: "/loan/loan-origination-system/sme/borrowers/update-company/:uid",
+    //   label: "Update Company",
+    // },
   ];
 
   // Update activeTab based on the current route

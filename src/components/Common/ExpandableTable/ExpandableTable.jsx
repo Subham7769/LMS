@@ -31,13 +31,13 @@ const ExpandableTable = ({
       <table className="min-w-full table-auto" role="table">
         <thead className={"sticky top-0 z-10"}>
           <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
-            {renderExpandedRow && <th className="px-4 py-4"></th>}
             {columns.map((col, index) => (
               <th key={index} className="px-4 py-4">
                 {col.label}
               </th>
             ))}
             {ListAction && <th className="px-4 py-4">Actions</th>}
+            {renderExpandedRow && <th className="px-4 py-4"></th>}
           </tr>
         </thead>
         <tbody>
@@ -58,31 +58,10 @@ const ExpandableTable = ({
                   className="hover:bg-gray-50 cursor-pointer text-xs font-medium"
                   onClick={() => handleExpand(index)}
                 >
-                  {renderExpandedRow && (
-                    <td className=" flex justify-center items-center py-6">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleExpand(index);
-                        }}
-                        className="text-blue-600 hover:text-blue-800"
-                        aria-label={
-                          expandedRow === index ? "Collapse row" : "Expand row"
-                        }
-                      >
-                        {expandedRow === index ? (
-                          <FiChevronUp size={18} />
-                        ) : (
-                          <FiChevronDown size={18} />
-                        )}
-                      </button>
-                    </td>
-                  )}
-
                   {columns.map((col, index) => (
                     <td
                       key={index}
-                      className="max-w-28 break-words px- py-6 text-sm text-center text-gray-800"
+                      className="max-w-28 break-words py-6 text-sm text-center text-gray-800"
                     >
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -114,8 +93,28 @@ const ExpandableTable = ({
                     />
                   )} */}
                   {ListAction && (
-                    <td className="flex justify-center items-center">
+                    <td className="flex justify-center items-center ">
                       {ListAction(rowData)}
+                    </td>
+                  )}
+                  {renderExpandedRow && (
+                    <td className="max-w-28 break-words py-6 text-sm text-center text-gray-800">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExpand(index);
+                        }}
+                        className="text-blue-600 hover:text-blue-800"
+                        aria-label={
+                          expandedRow === index ? "Collapse row" : "Expand row"
+                        }
+                      >
+                        {expandedRow === index ? (
+                          <FiChevronUp size={18} />
+                        ) : (
+                          <FiChevronDown size={18} />
+                        )}
+                      </button>
                     </td>
                   )}
                 </tr>

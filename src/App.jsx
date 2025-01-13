@@ -327,6 +327,12 @@ const ViewCompany = lazy(() =>
 const UpdateCompany = lazy(() =>
   import("./components/Los-SME/Borrowers/UpdateCompany")
 );
+const UpdateDirector = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateDirector")
+);
+const UpdateShareholder = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateShareholder")
+);
 
 //------------Loans-----------------
 const LoansSME = lazy(() => import("./components/Los-SME/Loans/Loans"));
@@ -694,6 +700,16 @@ const routes = [
           {
             path: "update-company/:uid",
             element: <UpdateCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-director/:uid",
+            element: <UpdateDirector />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-shareholder/:uid",
+            element: <UpdateShareholder />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
