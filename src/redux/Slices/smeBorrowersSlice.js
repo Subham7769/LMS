@@ -298,18 +298,20 @@ export const fetchCompanyBorrowerByField = createAsyncThunk(
 // Update Company Borrower Information
 export const updateCompanyBorrowerInfo = createAsyncThunk(
   "borrowers/updateCompanyBorrowerInfo", // Action type
-  async ({ borrowerData, uid }, { rejectWithValue }) => {
+  async ({ UpdateCompanyData, uid }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken"); // Retrieve the auth token
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_UPDATE_COMPANY_DETAILS_COMPANY_BORROWER}${uid}`,
+        `${
+          import.meta.env.VITE_BORROWERS_UPDATE_COMPANY_DETAILS_COMPANY_BORROWER
+        }${uid}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth}`,
           },
-          body: JSON.stringify(borrowerData), // Send updated borrower data
+          body: JSON.stringify({ ...UpdateCompanyData }), // Send updated borrower data
         }
       );
 
@@ -317,6 +319,134 @@ export const updateCompanyBorrowerInfo = createAsyncThunk(
         const errorData = await response.json();
         throw new Error(
           errorData.message || "Failed to update borrower information"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Update Director Information
+export const updateDirectorInfo = createAsyncThunk(
+  "borrowers/updateDirectorInfo", // Action type
+  async ({ updateDirectorData, uid }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_UPDATE_DIRECTOR_DETAILS_COMPANY_BORROWER
+        }${uid}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify([{ ...updateDirectorData }]), // Send updated borrower data
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower information"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Update Shareholder Information
+export const updateShareholderInfo = createAsyncThunk(
+  "borrowers/updateShareholderInfo", // Action type
+  async ({ updateShareholderData, uid }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_UPDATE_SHAREHOLDER_DETAILS_COMPANY_BORROWER
+        }${uid}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify([{ ...updateShareholderData }]), // Send updated borrower data
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower information"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Delete Director Information
+export const deleteDirectorInfo = createAsyncThunk(
+  "borrowers/deleteDirectorInfo", // Action type
+  async ({ companyId, directorId }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_DELETE_DIRECTOR_DETAILS_COMPANY_BORROWER
+        }${companyId}/directors-kyc/${directorId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to delete director information"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Delete Shareholder Information
+export const deleteShareholderInfo = createAsyncThunk(
+  "borrowers/deleteShareholderInfo", // Action type
+  async ({ companyId, shareholderId }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_DELETE_SHAREHOLDER_DETAILS_COMPANY_BORROWER
+        }${companyId}/share-holder/${shareholderId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to delete shareholder information"
         );
       }
     } catch (error) {
@@ -378,6 +508,7 @@ const initialState = {
   },
   companyDetails: {},
   directorsKycDetails: [],
+  existingDirectorDetails: [],
   shareHolderDetails: [],
   existingShareholderDetails: [],
   newDirector: {
@@ -486,7 +617,9 @@ const initialState = {
   allCompanies: [],
   allBorrowersData: [],
   allBorrowersTotalElements: "",
-  updateBorrowerData: {},
+  updateCompanyData: {},
+  updateDirectorData: {},
+  updateShareholderData: {},
   error: null,
   loading: false,
 };
@@ -510,16 +643,16 @@ const borrowersSlice = createSlice({
     resetCompanyData: (state, action) => {
       state.addCompanyData = initialState.addCompanyData;
     },
-    // For Edit / Update UI
+    // For Edit / Update UI Company
     handleChangeUpdateCompanyField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.updateBorrowerData[section]) {
-        state.updateBorrowerData[section][field] =
+      if (section && state.updateCompanyData[section]) {
+        state.updateCompanyData[section][field] =
           type === "checkbox" ? checked : value;
       } else {
-        // If no section, update directly in updateBorrowerData
-        state.updateBorrowerData[field] = type === "checkbox" ? checked : value;
+        // If no section, update directly in updateCompanyData
+        state.updateCompanyData[field] = type === "checkbox" ? checked : value;
       }
     },
     setUpdateCompany: (state, action) => {
@@ -529,32 +662,31 @@ const borrowersSlice = createSlice({
         console.log(borrower);
         const { shareHolderDetails, directorsKycDetails, ...rest } =
           borrower.companyBorrowerProfile;
-        state.updateBorrowerData = rest;
+        state.updateCompanyData = rest;
       } else {
-        state.updateBorrowerData = null; // Reset if no match found
+        state.updateCompanyData = null; // Reset if no match found
       }
     },
     resetUpdateCompanyData: (state, action) => {
-      state.updateBorrowerData = initialState.updateBorrowerData;
+      state.updateCompanyData = initialState.updateCompanyData;
     },
+
     // for Director
     addDirector: (state, action) => {
-      const { loanOfficer, index } = action.payload;
-      state.directorsKycDetails.push({
-        ...state.newDirector,
-        personalDetails: {
-          ...state.newDirector.personalDetails,
-          loanOfficer: loanOfficer,
-        },
-      });
-      if (index !== 0) {
-        toast.success("Director Added Successfully");
+      const { loanOfficer } = action.payload;
+      if (state.directorsKycDetails.length < 1) {
+        state.directorsKycDetails.push({
+          ...state.newDirector,
+          personalDetails: {
+            ...state.newDirector.personalDetails,
+            loanOfficer: loanOfficer,
+          },
+        });
       }
     },
     removeDirector: (state, action) => {
       const { index } = action.payload;
       state.directorsKycDetails.splice(index, 1);
-      toast.error("Director Removed Successfully");
     },
     resetDirector: (state, action) => {
       const { index } = action.payload;
@@ -562,17 +694,70 @@ const borrowersSlice = createSlice({
       toast.success("Director Reset Successfully");
     },
     handleChangeAddDirectorField: (state, action) => {
-      const { section, index, field, value, type, checked } = action.payload;
+      const { section, field, value, type, checked } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.directorsKycDetails[index][section]) {
-        state.directorsKycDetails[index][section][field] =
+      if (section && state.directorsKycDetails[0][section]) {
+        state.directorsKycDetails[0][section][field] =
           type === "checkbox" ? checked : value;
       } else {
         // If no section, update directly in directorsKycDetails
-        state.directorsKycDetails[index][field] =
+        state.directorsKycDetails[0][field] =
           type === "checkbox" ? checked : value;
       }
     },
+    // For Edit / Update UI Director
+    handleChangeUpdateDirectorField: (state, action) => {
+      const { section, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.updateDirectorData[section]) {
+        state.updateDirectorData[section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in updateDirectorData
+        state.updateDirectorData[field] = type === "checkbox" ? checked : value;
+      }
+    },
+    setUpdateDirector: (state, action) => {
+      const { uid, uniqueID } = action.payload;
+
+      // Step 1: Find the borrower by `uid`
+      const borrower = state.allBorrowersData.find((item) => item.uid === uid);
+
+      if (borrower) {
+        // Step 2: Find the specific director by `uniqueID` within `directorKYCDetails`
+        const director =
+          borrower.companyBorrowerProfile.directorsKycDetails?.find(
+            (director) => director.personalDetails.uniqueID === uniqueID
+          );
+        if (director) {
+          state.updateDirectorData = director;
+        } else {
+          // No matching shareholder found
+          state.updateDirectorData = null;
+        }
+      } else {
+        // No matching borrower found
+        state.updateDirectorData = null;
+      }
+    },
+    setUpdateExistingDirector: (state, action) => {
+      const { uid, uniqueID } = action.payload;
+
+      // Step 1: Find the borrower by `uid`
+      const director = state.existingDirectorDetails.find(
+        (item) => item.uid === uid && item.personalDetails.uniqueID === uniqueID
+      );
+      if (director) {
+        state.updateDirectorData = director;
+      } else {
+        // No matching borrower found
+        state.updateDirectorData = null;
+      }
+    },
+    resetUpdateDirectorData: (state, action) => {
+      state.updateDirectorData = initialState.updateDirectorData;
+    },
+
     // for Shareholder
     addShareholder: (state, action) => {
       const { loanOfficer } = action.payload;
@@ -619,6 +804,45 @@ const borrowersSlice = createSlice({
           type === "checkbox" ? checked : value;
       }
     },
+    // For Edit / Update UI Shareholder
+    handleChangeUpdateShareholderField: (state, action) => {
+      const { section, field, value, type, checked } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section && state.updateDirectorData[section]) {
+        state.updateShareholderData[section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in updateShareholderData
+        state.updateShareholderData[field] =
+          type === "checkbox" ? checked : value;
+      }
+    },
+    setUpdateShareholder: (state, action) => {
+      const { uid, uniqueID } = action.payload;
+
+      // Step 1: Find the borrower by `uid`
+      const borrower = state.allBorrowersData.find((item) => item.uid === uid);
+
+      if (borrower) {
+        // Step 2: Find the specific shareholder by `uniqueID` within `shareHolderDetails`
+        const shareholder =
+          borrower.companyBorrowerProfile.shareHolderDetails?.find(
+            (shareholder) => shareholder.personalDetails.uniqueID === uniqueID
+          );
+        if (shareholder) {
+          state.updateShareholderData = shareholder;
+        } else {
+          // No matching shareholder found
+          state.updateShareholderData = null;
+        }
+      } else {
+        // No matching borrower found
+        state.updateShareholderData = null;
+      }
+    },
+    resetUpdateShareholderData: (state, action) => {
+      state.updateShareholderData = initialState.updateShareholderData;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -643,6 +867,7 @@ const borrowersSlice = createSlice({
         state.loading = false;
         // Update state with the borrowers array
         state.allBorrowersData = action.payload.content;
+        state.allBorrowersTotalElements= action.payload.totalElements
         state.error = null;
       })
       .addCase(fetchAllCompanyBorrowers.rejected, (state, action) => {
@@ -692,11 +917,20 @@ const borrowersSlice = createSlice({
       .addCase(fetchCompanyDetails.fulfilled, (state, action) => {
         state.loading = false;
         state.companyDetails = action.payload;
+
         state.existingShareholderDetails =
           action.payload.shareHolderDetails.map((shareHolder) => ({
             ...shareHolder,
             dataIndex: nanoid(),
+            uid: action.payload.companyDetails.companyUniqueId,
           }));
+        state.existingDirectorDetails = action.payload.directorsKycDetails.map(
+          (director) => ({
+            ...director,
+            dataIndex: nanoid(),
+            uid: action.payload.companyDetails.companyUniqueId,
+          })
+        );
         state.error = null;
       })
       .addCase(fetchCompanyDetails.rejected, (state, action) => {
@@ -762,12 +996,67 @@ const borrowersSlice = createSlice({
       })
       .addCase(updateCompanyBorrowerInfo.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Borrower Information Updated Successfully");
+        toast.success("Company Information Updated Successfully");
       })
       .addCase(updateCompanyBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateShareholderInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateShareholderInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Shareholder Information Updated Successfully");
+      })
+      .addCase(updateShareholderInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateDirectorInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateDirectorInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Director Information Updated Successfully");
+      })
+      .addCase(updateDirectorInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(deleteDirectorInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDirectorInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Director Information Deleted Successfully");
+      })
+      .addCase(deleteDirectorInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload || "Failed to delete director information.";
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(deleteShareholderInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteShareholderInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success("Shareholder deleted successfully");
+      })
+      .addCase(deleteShareholderInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload || "Failed to delete shareholder information";
+        toast.error(`API Error: ${action.payload}`);
       });
   },
 });
@@ -782,11 +1071,17 @@ export const {
   removeDirector,
   resetDirector,
   handleChangeAddDirectorField,
+  handleChangeUpdateDirectorField,
+  setUpdateDirector,
+  setUpdateExistingDirector,
+  resetUpdateDirectorData,
   addShareholder,
   removeShareholder,
   resetShareholder,
   handleChangeAddShareholderField,
   handleChangeUpdateShareholderField,
+  setUpdateShareholder,
+  resetUpdateShareholderData,
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;

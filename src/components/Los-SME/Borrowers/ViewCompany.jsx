@@ -12,6 +12,8 @@ import {
   changeCompanyBorrowerStatus,
   fetchCompanyBorrowerByField,
   setUpdateCompany,
+  setUpdateDirector,
+  setUpdateShareholder,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useNavigate } from "react-router-dom";
 import Accordion from "../../Common/Accordion/Accordion";
@@ -171,18 +173,18 @@ const ViewCompany = () => {
       console.log(uid);
     };
 
-    const handleEditDirector = (uid) => {
-      dispatch(setUpdateCompany({ uid }));
+    const handleEditDirector = (uid,uniqueID) => {
+      dispatch(setUpdateDirector({ uid,uniqueID }));
       navigate(
-        `/loan/loan-origination-system/personal/borrowers/update-director/${uid}`
+        `/loan/loan-origination-system/sme/borrowers/update-director/${uid}`
       );
       console.log(uid);
     };
 
-    const handleEditShareholder = (uid) => {
-      dispatch(setUpdateCompany({ uid }));
+    const handleEditShareholder = (uid,uniqueID) => {
+      dispatch(setUpdateShareholder({ uid,uniqueID }));
       navigate(
-        `/loan/loan-origination-system/personal/borrowers/update-shareholder/${uid}`
+        `/loan/loan-origination-system/sme/borrowers/update-shareholder/${uid}`
       );
       console.log(uid);
     };
@@ -200,7 +202,7 @@ const ViewCompany = () => {
         <Accordion
           heading={"Company Details"}
           renderExpandedContent={() => (
-            <div className="grid grid-cols-[88%_12%] gap-4">
+            <div className="grid grid-cols-[85%_15%] gap-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                 {/* Company Details */}
                 <div className="space-y-2">
@@ -391,7 +393,7 @@ const ViewCompany = () => {
                       ${director.personalDetails.surname} 
                       ${director.personalDetails.otherName}`}
                   renderExpandedContent={() => (
-                    <div className="grid grid-cols-[88%_12%] gap-4">
+                    <div className="grid grid-cols-[85%_15%] gap-1">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                         {/* Director Personal Details */}
                         <div className="space-y-2">
@@ -559,7 +561,7 @@ const ViewCompany = () => {
                           buttonName={"Edit"}
                           onClick={() =>
                             handleEditDirector(
-                              director.personalDetails.uniqueID
+                              rowData.uid,director.personalDetails.uniqueID
                             )
                           }
                           className={"text-center"}
@@ -587,7 +589,7 @@ const ViewCompany = () => {
                       ${shareholder.personalDetails.surname} 
                       ${shareholder.personalDetails.otherName}`}
                     renderExpandedContent={() => (
-                      <div className="grid grid-cols-[88%_12%] gap-4">
+                      <div className="grid grid-cols-[85%_15%] gap-1">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                           {/* Shareholder Personal Details */}
                           <div className="space-y-2">
@@ -684,9 +686,7 @@ const ViewCompany = () => {
                           <Button
                             buttonName={"Edit"}
                             onClick={() =>
-                              handleEditShareholder(
-                                shareholder.personalDetails.uniqueID
-                              )
+                              handleEditShareholder(rowData.uid,shareholder.personalDetails.uniqueID)
                             }
                             className={"text-center"}
                             rectangle={true}

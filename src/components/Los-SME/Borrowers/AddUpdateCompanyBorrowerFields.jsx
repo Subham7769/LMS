@@ -20,18 +20,13 @@ import {
 const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
-  const [filteredLocations2, setFilteredLocations2] = useState([]);
 
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.companyContactDetails.country] || []
     );
-    // setFilteredLocations2(
-    //   locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
-    // );
   }, [
     BorrowerData.companyContactDetails.country,
-    // BorrowerData.nextOfKinDetails.kinCountry,
   ]);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
   handleChangeUpdateCompanyField,
-  // resetUpdateBorrowerData,
+  resetUpdateCompanyData,
   updateCompanyBorrowerInfo,
   fetchAllCompanyBorrowers,
 } from "../../../redux/Slices/smeBorrowersSlice";
@@ -12,8 +12,8 @@ import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 
-const UpdateBorrower = () => {
-  const { updateBorrowerData, error, loading } = useSelector(
+const UpdateCompany = () => {
+  const { updateCompanyData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
@@ -40,31 +40,31 @@ const UpdateBorrower = () => {
   }
 
   const handleUpdate = async (uid) => {
-    const { registrationDate, ...restUpdateBorrowerData } = updateBorrowerData;
+    const { registrationDate, ...restUpdateCompanyData } = updateCompanyData;
 
-    await dispatch(validateForm(flattenToSimpleObject(restUpdateBorrowerData)));
+    await dispatch(validateForm(flattenToSimpleObject(restUpdateCompanyData)));
 
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
       dispatch(
-        updateCompanyBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
+        updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
       ).unwrap();
       dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
     }
-    navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
+    navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
   };
 
   const handleCancel = () => {
-    // dispatch(resetUpdateBorrowerData());
-    navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
+    dispatch(resetUpdateCompanyData());
+    navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
   };
-console.log(updateBorrowerData)
+
   return (
     <>
       <AddUpdateCompanyBorrowerFields
-        BorrowerData={updateBorrowerData}
+        BorrowerData={updateCompanyData}
         handleChangeReducer={handleChangeUpdateCompanyField}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
@@ -84,4 +84,4 @@ console.log(updateBorrowerData)
   );
 };
 
-export default UpdateBorrower;
+export default UpdateCompany;

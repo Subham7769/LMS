@@ -4,13 +4,14 @@ import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   handleChangeAddShareholderField,
-  handleChangeUpdateShareholderField,
   addShareholder,
   removeShareholder,
   resetShareholder,
   addShareholderInfo,
   fetchAllCompanyBorrowersListByLoanOfficer,
   fetchCompanyDetails,
+  setUpdateShareholder,
+  deleteShareholderInfo,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -18,10 +19,12 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
-import UpdateShareholderFields from "./UpdateShareholderFields";
+import { useNavigate } from "react-router-dom";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     shareHolderDetails,
     existingShareholderDetails,
@@ -30,6 +33,7 @@ const AddShareHolder = () => {
     loading,
   } = useSelector((state) => state.smeBorrowers);
   const [companyId, setCompanyId] = useState("");
+  const loanOfficer = localStorage.getItem("username");
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -49,8 +53,6 @@ const AddShareHolder = () => {
     return result;
   }
 
-  const loanOfficer = localStorage.getItem("username");
-
   useEffect(() => {
     if (allCompanies.length < 1) {
       dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
@@ -68,22 +70,7 @@ const AddShareHolder = () => {
         .then(() => {
           // After successful addition, fetch the updated company details
           dispatch(fetchCompanyDetails({ companyId }));
-          dispatch(removeShareholder({ index:0 }))
-        });
-    }
-  };
-  const handleSubmitExistingShareholder = async (e,index) => {
-    e.preventDefault();
-    console.log(index)
-    await dispatch(validateForm(flattenToSimpleObject(existingShareholderDetails[index])));
-    if (isValid) {
-      const {dataIndex, ...shareHolderDetailsUpdates} =  existingShareholderDetails[index]
-      dispatch(addShareholderInfo({ shareHolderDetails:shareHolderDetailsUpdates, companyId }))
-        .unwrap()
-        .then(() => {
-          // After successful addition, fetch the updated company details
-          dispatch(fetchCompanyDetails({ companyId }));
-          dispatch(removeShareholder({ index:0 }))
+          dispatch(removeShareholder({ index: 0 }));
         });
     }
   };
@@ -91,6 +78,21 @@ const AddShareHolder = () => {
   const changeCompany = (e) => {
     setCompanyId(e.target.value);
     dispatch(fetchCompanyDetails({ companyId: e.target.value }));
+  };
+
+  const handleEditShareholder = (uid, uniqueID) => {
+    dispatch(setUpdateShareholder({ uid, uniqueID }));
+    navigate(
+      `/loan/loan-origination-system/sme/borrowers/update-shareholder/${uid}`
+    );
+  };
+
+  const handleDeleteShareholder = (uid, uniqueID) => {
+    dispatch(deleteShareholderInfo({ companyId: uid, shareholderId: uniqueID }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchCompanyDetails({ companyId: uid }));
+      });
   };
 
   return (
@@ -115,39 +117,139 @@ const AddShareHolder = () => {
           )}
         </div>
       </div>
-      {existingShareholderDetails.length > 0 && (
+
+      {existingShareholderDetails.length > 0 && companyId && (
         <div className=" flex flex-col mb-6">
           <p className="font-semibold mb-2">Existing Shareholders</p>
-          {existingShareholderDetails.map((Data, index) => (
-            <div className="relative" key={`Shareholder${index}`}>
+          {existingShareholderDetails.map((shareholder, index) => (
+            <>
               <Accordion
-                heading={`Shareholder ${index + 1} Details`}
+                heading={`${shareholder.personalDetails.title} 
+                      ${shareholder.personalDetails.firstName} 
+                      ${shareholder.personalDetails.surname} 
+                      ${shareholder.personalDetails.otherName}`}
                 renderExpandedContent={() => (
-                  <>
-                    <UpdateShareholderFields
-                      BorrowerData={Data}
-                      handleChangeReducer={handleChangeUpdateShareholderField}
-                      dataIndex={Data.dataIndex}
-                      index={index}
-                    />
-                    <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
+                  <div className="grid grid-cols-[80%_20%] gap-4 px-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+                      {/* Shareholder Personal Details */}
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-lg text-gray-800">
+                          Personal Details
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <p>
+                            <strong>Name:</strong>{" "}
+                            {shareholder.personalDetails.title}{" "}
+                            {shareholder.personalDetails.firstName}{" "}
+                            {shareholder.personalDetails.surname}{" "}
+                            {shareholder.personalDetails.otherName}
+                          </p>
+                          <p>
+                            <strong>Unique Id Type:</strong>{" "}
+                            {shareholder.personalDetails.uniqueIDType}
+                          </p>
+                          <p>
+                            <strong>Unique ID:</strong>{" "}
+                            {shareholder.personalDetails.uniqueID}
+                          </p>
+                          <p>
+                            <strong>Gender:</strong>{" "}
+                            {shareholder.personalDetails.gender}
+                          </p>
+                          <p>
+                            <strong>Marital Status:</strong>{" "}
+                            {shareholder.personalDetails.maritalStatus}
+                          </p>
+                          <p>
+                            <strong>nationality:</strong>{" "}
+                            {shareholder.personalDetails.nationality}
+                          </p>
+                          <p>
+                            <strong>Date of Birth:</strong>{" "}
+                            {shareholder.personalDetails.dateOfBirth}
+                          </p>
+                          <p>
+                            <strong>Age:</strong>{" "}
+                            {shareholder.personalDetails.age}
+                          </p>
+                          <p>
+                            <strong>Place of Birth:</strong>{" "}
+                            {shareholder.personalDetails.placeOfBirth}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/*Shareholder Contact Details */}
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-lg text-gray-800">
+                          Contact Details
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <p>
+                            <strong>Mobile 1:</strong>{" "}
+                            {shareholder.contactDetails.mobile1}
+                          </p>
+                          <p>
+                            <strong>Mobile 2:</strong>{" "}
+                            {shareholder.contactDetails.mobile2}
+                          </p>
+                          <p>
+                            <strong>Landline:</strong>{" "}
+                            {shareholder.contactDetails.landlinePhone}
+                          </p>
+                          <p>
+                            <strong>Email:</strong>{" "}
+                            {shareholder.contactDetails.email}
+                          </p>
+                          <p>
+                            <strong>Address:</strong>{" "}
+                            {[
+                              shareholder.contactDetails.houseNumber,
+                              shareholder.contactDetails.street,
+                              shareholder.contactDetails.residentialArea,
+                              shareholder.contactDetails.province,
+                              shareholder.contactDetails.district,
+                              shareholder.contactDetails.country,
+                            ]
+                              .filter(Boolean)
+                              .join(", ")}
+                          </p>
+                          <p>
+                            <strong>Post Box:</strong>{" "}
+                            {shareholder.contactDetails.postBox}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    {/*Shareholder Actions */}
+                    <div className="flex justify-start gap-5 flex-col mt-4">
                       <Button
-                        buttonName="Delete"
-                        onClick={() => dispatch(resetShareholder({ index }))}
+                        buttonName={"Edit"}
+                        onClick={() =>
+                          handleEditShareholder(
+                            shareholder.uid,
+                            shareholder.personalDetails.uniqueID
+                          )
+                        }
+                        className={"text-center"}
                         rectangle={true}
-                        className={"bg-red-500 hover:bg-red-600"}
                       />
                       <Button
-                        buttonName="Update"
-                        onClick={(e)=>handleSubmitExistingShareholder(e,index)}
+                        buttonName={"Delete"}
+                        onClick={() =>
+                          handleDeleteShareholder(
+                            shareholder.uid,
+                            shareholder.personalDetails.uniqueID
+                          )
+                        }
+                        className={"text-center bg-red-500 hover:bg-red-600"}
                         rectangle={true}
-                        disabled={!companyId}
                       />
                     </div>
-                  </>
+                  </div>
                 )}
               />
-            </div>
+            </>
           ))}
         </div>
       )}
