@@ -10,16 +10,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { convertDate } from "../../../utils/convertDate";
-import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
 import Pagination from "../../Common/Pagination/Pagination";
+import {
+  generateLoanApplicationId,
+  getLoanApplications,
+  getLoanApplicationsByID,
+  cancelLoanApplicationsByID,
+  getLoanApplicationByField,
+  resetAddLoanData,
+} from "../../../redux/Slices/smeLoansSlice";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
-    applicationID: item?.applicationID,
-    borrower: item?.borrower,
-    createdDate: convertDate(item?.createdDate),
-    lastUpdated: convertDate(item?.lastUpdated),
-    applicationStatus: item?.applicationStatus,
+    loanApplicationId: item?.loanApplicationId,
+    borrowerId: item?.generalLoanDetails?.borrowerId,
+    creationDate: convertDate(item?.creationDate),
+    lastUpdate: item?.lastUpdate ? convertDate(item?.lastUpdate) : " - ",
+    status: convertToTitleCase(item?.status),
   }));
 }
 
@@ -34,26 +42,28 @@ const LoanApplication = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    // dispatch(getPendingLoans({ page: currentPage, size: pageSize }));
+    dispatch(getLoanApplications({ page: currentPage, size: pageSize }));
   };
 
   const searchOptions = [
-    { label: "Borrower Name", value: "borrowerName" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Loan Application Id", value: "loanApplicationId" },
+    { label: "Borrower ID", value: "borrowerId" },
   ];
 
   const columns = [
-    { label: "Application ID", field: "applicationID" },
-    { label: "Borrower Name", field: "borrower" },
-    { label: "Created Date", field: "createdDate" },
-    { label: "Last Updated", field: "lastUpdated" },
-    { label: "Status", field: "applicationStatus" },
+    { label: "Loan Application ID", field: "loanApplicationId" },
+    { label: "Borrower ID", field: "borrowerId" },
+    { label: "Created Date", field: "creationDate" },
+    { label: "Last Updated", field: "lastUpdate" },
+    { label: "Status", field: "status" },
   ];
 
   const loanApplicationsData = transformData(loanApplications);
 
   const handleSearch = () => {
-    // dispatch(getLoansByField({ field: searchBy, value: searchValue }));
+    dispatch(
+      getLoanApplicationByField({ field: searchBy, value: searchValue })
+    );
     setSearchBy("");
     setSearchValue("");
   };
@@ -61,33 +71,49 @@ const LoanApplication = () => {
   const handleReset = () => {
     setSearchBy("");
     setSearchValue("");
-    // dispatch(getPendingLoans({ page: 0, size: 20 }));
+    dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
-  const handleNewApplication = () => {
-    // dispatch(addDirector({ loanOfficer }));
-    navigate(`/loan/loan-origination-system/sme/loans/add-loan`);
+  const handleNewApplication = async () => {
+    dispatch(resetAddLoanData());
+    try {
+      const loanApplicationId = await dispatch(
+        generateLoanApplicationId()
+      ).unwrap();
+      navigate(
+        `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`
+      );
+    } catch (error) {
+      console.error("Failed to generate loan application ID:", error);
+    }
   };
 
-  const handleEditApplication = () => {
-    // dispatch(addDirector({ loanOfficer }));
-    navigate(`/loan/loan-origination-system/sme/loans/add-loan`);
+  const handleEditApplication = async (loanApplicationId) => {
+    await dispatch(getLoanApplicationsByID(loanApplicationId)).unwrap();
+    navigate(
+      `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`
+    );
+  };
+
+  const handleRejectApplication = async (loanApplicationId) => {
+    await dispatch(cancelLoanApplicationsByID(loanApplicationId)).unwrap();
+    dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
   const renderActionList = (rowData) => {
-    if (rowData.applicationStatus === "Submitted") {
+    if (rowData.status === "Completed" || rowData.status === "Cancel") {
       return <div className="py-6">-</div>;
     }
     return (
       <div className="flex justify-center gap-4 px-5">
         <Button
-          onClick={handleEditApplication}
+          onClick={() => handleEditApplication(rowData.loanApplicationId)}
           buttonIcon={PencilIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}
         />
         <Button
-          onClick={handleEditApplication}
+          onClick={() => handleRejectApplication(rowData.loanApplicationId)}
           buttonIcon={TrashIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}

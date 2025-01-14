@@ -1,5 +1,117 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import convertToTitleCase from "../../utils/convertToTitleCase";
+import { nanoid } from "nanoid";
+
+export const getLoanApplications = createAsyncThunk(
+  "smeLoans/getLoanApplications",
+  async ({ page, size }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_LOAN_APPLICATION_PERSONAL
+        }?page=${page}&size=${size}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getLoanApplicationsByID = createAsyncThunk(
+  "smeLoans/getLoanApplicationsByID",
+  async (loanApplicationId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_LOAN_APPLICATION_BY_ID_PERSONAL
+        }${loanApplicationId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const cancelLoanApplicationsByID = createAsyncThunk(
+  "smeLoans/cancelLoanApplicationsByID",
+  async (loanApplicationId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_CANCEL_APPLICATION_BY_ID_PERSONAL
+        }${loanApplicationId}/status?status=CANCEL`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getLoanApplicationByField = createAsyncThunk(
+  "smeLoans/getLoanApplicationByField",
+  async ({ field, value }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_LOAN_APPLICATION_BY_FIELD_PERSONAL
+        }${field}&value=${value}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const fetchLoanProductData = createAsyncThunk(
   "smeLoans/fetchLoanProductData",
@@ -331,81 +443,22 @@ export const getFullLoanDetails = createAsyncThunk(
   }
 );
 
+export const generateLoanApplicationId = createAsyncThunk(
+  "smeLoans/generateLoanApplicationId",
+  async (_, { getState }) => {
+    const id = nanoid();
+    // You can perform any async operations here if needed
+    return id;
+  }
+);
+
 const initialState = {
   borrowerData: {},
-  loanApplications: [
-    {
-      applicationID: "APP001",
-      loanProduct: "Home Loan",
-      borrower: "John Doe",
-      loanReleaseDate: "2024-01-01",
-      createdDate: "2023-12-01",
-      lastUpdated: "2023-12-15",
-      applicationStatus: "New",
-      principalAmount: "500,000",
-      loanDuration: "20 Years",
-      repaymentCycle: "Monthly",
-      interestRate: "7.5%",
-    },
-    {
-      applicationID: "APP002",
-      loanProduct: "Car Loan",
-      borrower: "Alice Johnson",
-      disbursedBy: "Bob Brown",
-      loanReleaseDate: "2024-02-15",
-      createdDate: "2023-12-10",
-      lastUpdated: "2024-01-05",
-      applicationStatus: "Pending",
-      principalAmount: "50,000",
-      loanDuration: "5 Years",
-      repaymentCycle: "Monthly",
-      interestRate: "6.5%",
-    },
-    {
-      applicationID: "APP003",
-      loanProduct: "Personal Loan",
-      borrower: "Charlie Wilson",
-      disbursedBy: "Diana Green",
-      loanReleaseDate: "2024-03-10",
-      createdDate: "2023-12-20",
-      lastUpdated: "2024-01-10",
-      applicationStatus: "Submitted",
-      principalAmount: "10,000",
-      loanDuration: "3 Years",
-      repaymentCycle: "Quarterly",
-      interestRate: "8.0%",
-    },
-    {
-      applicationID: "APP004",
-      loanProduct: "Business Loan",
-      borrower: "Edward Davis",
-      disbursedBy: "Frank White",
-      loanReleaseDate: "2024-04-05",
-      createdDate: "2023-11-25",
-      lastUpdated: "2024-01-15",
-      applicationStatus: "Pending",
-      principalAmount: "1,000,000",
-      loanDuration: "10 Years",
-      repaymentCycle: "Yearly",
-      interestRate: "5.0%",
-    },
-    {
-      applicationID: "APP005",
-      loanProduct: "Education Loan",
-      borrower: "Grace Evans",
-      disbursedBy: "Helen Black",
-      loanReleaseDate: "2024-05-20",
-      createdDate: "2023-12-05",
-      lastUpdated: "2024-01-20",
-      applicationStatus: "Submitted",
-      principalAmount: "20,000",
-      loanDuration: "7 Years",
-      repaymentCycle: "Monthly",
-      interestRate: "4.5%",
-    },
-  ],
+  loanApplications: [],
   loanApplicationsTotalElements: 0,
   addLoanData: {
+    borrowerName: "",
+    borrowerType: "COMPANY_BORROWER",
     generalDetails: {
       borrowerId: "",
       disbursedBy: "",
@@ -479,24 +532,57 @@ const initialState = {
       otherDetails: "",
       otherComments: "",
     },
-    requiredDocuments: {
-      resolutionToBorrow: null,
-      resolutionToBorrowVerified: false,
-      purchaseOrder: null,
-      purchaseOrderVerified: false,
-      invoice: null,
-      invoiceVerified: false,
-      profomaInvoice: null,
-      profomaInvoiceVerified: false,
-      quotationsFromSupplier: null,
-      quotationsFromSupplierVerified: false,
-      bankStatement: null,
-      bankStatementVerified: false,
-      creditReferenceBureauReport: null,
-      creditReferenceBureauReportVerified: false,
-      confirmationOfBankingDetails: null,
-      confirmationOfBankingDetailsVerified: false,
-    },
+    documents: [
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "RESOLUTION_TO_BORROW",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "PURCHASE_ORDER",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "INVOICE",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "PROFOMA_INVOICE",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "QUOTATIONS_FROM_SUPPLIER",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "SIX_MONTHS_BANK_STATEMENT",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "CREDIT_REFERENCE_BUREAU_REPORT",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "CONFIRMATION_OF_BANKING_DETAILS",
+      },
+    ],
+    loanApplicationId: "",
   },
   approveLoans: [],
   approveLoansTotalElements: 0,
@@ -517,10 +603,16 @@ const smeLoansSlice = createSlice({
   name: "smeLoans",
   initialState,
   reducers: {
+    resetAddLoanData: (state, action) => {
+      state.addLoanData = initialState.addLoanData;
+    },
     updateLoanField: (state, action) => {
-      const { section, field, value, type, checked } = action.payload;
+      const { section, field, value, type, checked, index } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.addLoanData[section]) {
+      if (section === "documents") {
+        state.addLoanData.documents[index][field] =
+          type === "checkbox" ? checked : value;
+      } else if (section && state.addLoanData[section]) {
         state.addLoanData[section][field] =
           type === "checkbox" ? checked : value;
       } else {
@@ -535,12 +627,75 @@ const smeLoansSlice = createSlice({
       const { name, value } = action.payload;
       state.loanOfferFields[name] = value; // Dynamically update the field in loanConfigFields
     },
-    resetAddLoanData: (state, action) => {
-      state.addLoanData = initialState.addLoanData;
+    setLoanApplicationId: (state, action) => {
+      state.addLoanData.loanApplicationId = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(generateLoanApplicationId.fulfilled, (state, action) => {
+        state.addLoanData.loanApplicationId = action.payload;
+      })
+      .addCase(getLoanApplications.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLoanApplications.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanApplications = action.payload.content;
+        state.loanApplicationsTotalElements = action.payload.totalElements;
+      })
+      .addCase(getLoanApplications.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getLoanApplicationsByID.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLoanApplicationsByID.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData = action.payload;
+      })
+      .addCase(getLoanApplicationsByID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        // toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(cancelLoanApplicationsByID.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(cancelLoanApplicationsByID.fulfilled, (state, action) => {
+        state.loading = false;
+        toast("Loan Application Cancelled!!");
+      })
+      .addCase(cancelLoanApplicationsByID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getLoanApplicationByField.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLoanApplicationByField.fulfilled, (state, action) => {
+        state.loading = false;
+
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+
+        // Check if loanId is null in each object and filter accordingly
+        state.loanApplications = payload;
+      })
+      .addCase(getLoanApplicationByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
       .addCase(fetchLoanProductData.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -550,11 +705,10 @@ const smeLoansSlice = createSlice({
         const updatedLoanProductOptions = action.payload
           .filter((item) => item.eligibleCustomerType === "CORPORATE")
           .map((item) => ({
-            label: item.productType.replace(/_/g, " "),
+            label: convertToTitleCase(item.productType),
             value: item.loanProductId,
           }));
         state.loanProductOptions = updatedLoanProductOptions;
-        console.log(state.loanProductOptions);
       })
       .addCase(fetchLoanProductData.rejected, (state, action) => {
         state.loading = false;
