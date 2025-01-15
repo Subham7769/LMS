@@ -145,7 +145,7 @@ const initialState = {
         productType: "",
       },
     ],
-    financeHardLimit: {
+    carbonFinanceHardLimit: {
       hardLimit: "",
       lastUpdatedDate: "",
       userName: "",
@@ -156,7 +156,7 @@ const initialState = {
       percentageFromEmi: "",
       userName: "",
     },
-    renewCreditReport: {
+    carbonRenewCreditTp: {
       lastUpdatedDate: "",
       renewInDays: "",
       userName: "",
@@ -189,16 +189,16 @@ const productGroupSlice = createSlice({
       const isOverDuePercentage =
         state.productGroupData.overDuePercentage.hasOwnProperty(name);
       const isFinanceHardLimit =
-        state.productGroupData.financeHardLimit.hasOwnProperty(name);
+        state.productGroupData.carbonFinanceHardLimit.hasOwnProperty(name);
       const isRenewCreditReport =
-        state.productGroupData.renewCreditReport.hasOwnProperty(name);
+        state.productGroupData.carbonRenewCreditTp.hasOwnProperty(name);
 
       if (isOverDuePercentage) {
         state.productGroupData.overDuePercentage[name] = value;
       } else if (isFinanceHardLimit) {
-        state.productGroupData.financeHardLimit[name] = value;
+        state.productGroupData.carbonFinanceHardLimit[name] = value;
       } else if (isRenewCreditReport) {
-        state.productGroupData.renewCreditReport[name] = value;
+        state.productGroupData.carbonRenewCreditTp[name] = value;
       } else {
         state.productGroupData = {
           ...state.productGroupData,

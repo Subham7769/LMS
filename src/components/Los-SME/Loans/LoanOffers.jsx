@@ -12,7 +12,7 @@ import {
   updateLoanOfferFields,
 } from "../../../redux/Slices/smeLoansSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputText from "../../Common/InputText/InputText";
 import {
   UserIcon,
   CogIcon,
@@ -44,6 +44,7 @@ const LoanOffers = () => {
     const uid = loanOfferFields.uid;
     const proceedPayload = {
       transactionId: transactionId,
+      loanApplicationId: loanConfigData.loanApplicationId,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
     navigate(`/loan/loan-origination-system/sme/loans/approve-loans`);
@@ -95,7 +96,7 @@ const LoanOffers = () => {
             inputValue={loanOfferFields.loanProductId}
             onChange={handleChange}
           />
-          <InputNumber
+          <InputText
             labelName={"Borrower"}
             inputName="uid"
             inputValue={loanOfferFields.uid}
@@ -146,9 +147,7 @@ const LoanOffers = () => {
                 </div>
               </div>
               <div className="font-semibold text-[15px] mb-2">
-                {borrowerData?.personalDetails?.title}{" "}
-                {borrowerData?.personalDetails?.firstName}{" "}
-                {borrowerData?.personalDetails?.surname}
+                {borrowerData?.companyDetails?.companyName}{" "}
               </div>
               <div className="text-[14px]">
                 <InfoRow
@@ -364,8 +363,13 @@ const LoanOffers = () => {
                   </div>
                 </div>
               </ContainerTile>
-              <div className="text-center text-gray-500">
-                Loan Summary Id : {ci?.transactionId}
+              <div>
+                <div className="text-center text-gray-500">
+                  Loan Summary Id : {ci?.transactionId}
+                </div>
+                <div className="text-center text-gray-500">
+                  Loan Application Id : {loanConfigData?.loanApplicationId}
+                </div>
               </div>
             </React.Fragment>
           ))}

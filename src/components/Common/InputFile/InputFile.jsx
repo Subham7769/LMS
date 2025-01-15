@@ -1,5 +1,5 @@
 import { FiUpload, FiFile, FiX, FiDownload } from "react-icons/fi";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import { useDispatch } from "react-redux";
 import {
@@ -28,6 +28,7 @@ const InputFile = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
+  const fileInputRef = useRef(null); // Add a ref for the file input
   // Extract the file name if inputValue is provided
   const sanitizeFileName = (value) => (value ? value.split("\\").pop() : "");
 
@@ -93,6 +94,9 @@ const InputFile = ({
 
   const handleClearFiles = () => {
     setFileNames([]); // Clear local file names
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Reset the input value
+    }
     if (onChange) {
       onChange({ target: { name: inputName, value: null, type: "file" } });
     }
@@ -170,6 +174,7 @@ const InputFile = ({
       <input
         type="file"
         name={inputName}
+        ref={fileInputRef} // Attach the ref to the input
         onChange={handleFileChange}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         accept={accept}

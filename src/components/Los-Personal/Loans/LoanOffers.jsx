@@ -365,8 +365,8 @@ const LoanOffers = () => {
                   </div>
                 </div>
               </ContainerTile>
-              <div className="flex justify-center gap-5">
-                <div className="text-center text-gray-500 border-r border-gray-500 pr-5">
+              <div>
+                <div className="text-center text-gray-500">
                   Loan Summary Id : {ci?.transactionId}
                 </div>
                 <div className="text-center text-gray-500">

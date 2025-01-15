@@ -33,6 +33,7 @@ function transformData(inputArray) {
     rejectionReason: item?.rejectionReason,
     loanId: item?.loanId,
     uid: item?.uid,
+    loanStatus: item?.loanStatus,
   }));
 }
 
@@ -87,7 +88,8 @@ const LoanHistory = () => {
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
-    { label: "Status", field: "applicationStatus" },
+    // { label: "Status", field: "applicationStatus" },
+    { label: "Loan Status", field: "loanStatus" },
   ];
 
   const renderExpandedRow = (rowData) => (
@@ -102,7 +104,7 @@ const LoanHistory = () => {
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">Loan Interest :</p>
           <p className="text-sm text-gray-600">
-            {rowData.loanInterest} % / {rowData.perLoanInterest}
+            {rowData.loanInterest}% / {rowData.perLoanInterest}
           </p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
@@ -125,7 +127,7 @@ const LoanHistory = () => {
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">
-            {rowData.applicationStatus === "REJECTED" ? "Rejection Reason" : ""}
+            {rowData.rejectionReason ? "Rejection Reason" : ""}
           </p>
           <p className="text-sm text-gray-600">{rowData?.rejectionReason}</p>
         </div>

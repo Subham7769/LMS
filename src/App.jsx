@@ -725,7 +725,7 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "add-loan",
+            path: "add-loan/:loanApplicationId",
             element: <AddLoansSME />,
             errorElement: <RouteErrorBoundary />,
           },

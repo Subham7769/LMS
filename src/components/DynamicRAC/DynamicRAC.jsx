@@ -177,7 +177,7 @@ const DynamicRAC = () => {
   const createCloneDynamicRac = (racId, racName) => {
     dispatch(cloneDynamicRac({ racId, racName })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
-        navigate(`/dynamic-rac/${action.payload.racId}`);
+        navigate(`/loan/dynamic-rac/${action.payload.racId}`);
         dispatch(fetchDynamicRacData());
       }
     });
@@ -240,10 +240,10 @@ const DynamicRAC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSectionSettings = ({sectionId}) => {
-    setIsOpenSectionSettings(!isOpenSectionSettings)
-    dispatch(setSectionSettings({sectionId,newSize}));
-    setNewSize("")
+  const handleSectionSettings = ({ sectionId }) => {
+    setIsOpenSectionSettings(!isOpenSectionSettings);
+    dispatch(setSectionSettings({ sectionId, newSize }));
+    setNewSize("");
   };
 
   const closeModal = () => {
