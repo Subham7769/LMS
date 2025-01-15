@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import ProjectInputFields from "./ProjectInputFields";
 
 const Project = () => {
-  const [clientIdsString, setClientIdsString] = useState("lmsClient");
+  const [clientIdsString, setClientIdsString] = useState("");
   const { projectId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -35,6 +35,12 @@ const Project = () => {
       dispatch(clearValidationError());
     };
   }, [dispatch, projectId]);
+
+  useEffect(() => {
+    if (projectData.clientIds.length > 0) {
+      setClientIdsString(projectData.clientIds[0]);
+    }
+  }, [projectData]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target; // Extracting only the name and value properties
@@ -74,7 +80,6 @@ const Project = () => {
         handleNameUpdate={updateName}
         handleDelete={handleDelete}
         loading={loading}
-        error={error}
       />
       <form className="flex flex-col gap-5">
         <ProjectInputFields
@@ -84,7 +89,6 @@ const Project = () => {
           clientIdsString={clientIdsString}
           setClientIdsString={setClientIdsString}
           loading={loading}
-          error={error}
         />
 
         {roleName !== "ROLE_VIEWER" ? (

@@ -391,6 +391,7 @@ const initialState = {
       description: "",
       accounting: "",
       userId: "",
+      repaymentType: "PERSONAL",
       payAll: false,
     },
   ],

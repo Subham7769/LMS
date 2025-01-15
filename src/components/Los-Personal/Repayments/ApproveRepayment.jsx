@@ -58,14 +58,14 @@ const ApproveRepayment = () => {
     setFilteredRepayments(updatedRepayments);
   }, [searchTerm, approveRepaymentData]);
 
-  const handleApprove = (transactionId) => {
-    dispatch(approveRepayment({ transactionId })).unwrap();
-    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
+  const handleApprove = async (transactionId) => {
+    await dispatch(approveRepayment({ transactionId })).unwrap();
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: 0 }));
   };
 
-  const handleReject = (transactionId) => {
-    dispatch(rejectRepayment({ transactionId })).unwrap();
-    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
+  const handleReject = async (transactionId) => {
+    await dispatch(rejectRepayment({ transactionId })).unwrap();
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: 0 }));
   };
 
   const renderExpandedRow = (rowData) => (

@@ -77,6 +77,17 @@ const AddLoanFields = ({ addLoanData }) => {
     }
   };
 
+  const getTwoDaysFromNow = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 2); // Add 2 days
+    return date.toISOString().split("T")[0]; // Format as yyyy-MM-dd
+  };
+
+  const getTodayDate = () => {
+    const date = new Date();
+    return date.toISOString().split("T")[0]; // Format as yyyy-MM-dd
+  };
+
   // All Fields Configuration
   const generalLoanDetailsConfig = [
     {
@@ -195,6 +206,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "orderExpiryDate",
       type: "date",
       validation: false,
+      minSelectableDate: getTwoDaysFromNow(),
     },
     {
       labelName: "Proforma Invoice No.",
@@ -207,6 +219,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "proformaInvoiceDate",
       type: "date",
       validation: false,
+      maxSelectableDate: getTodayDate(),
     },
     {
       labelName: "Amount of Proforma",
@@ -231,6 +244,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "invoiceDate",
       type: "date",
       validation: false,
+      maxSelectableDate: getTodayDate(),
     },
     {
       labelName: "Amount of Invoice",
@@ -549,6 +563,8 @@ const AddLoanFields = ({ addLoanData }) => {
                   inputValue={value}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
                 />
               </div>
             );
