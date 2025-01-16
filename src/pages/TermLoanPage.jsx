@@ -6,7 +6,7 @@ import SearchBox from "../components/Common/SearchBox/SearchBox";
 const TermLoanPage = () => {
   return (
     <>
-      <StatContainer stats={NewUserStats} />
+      {/* <StatContainer stats={NewUserStats} /> */}
       <SearchBox />
     </>
   );

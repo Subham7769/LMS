@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
-import { FiCheckCircle, FiDownload, FiXCircle } from "react-icons/fi";
+import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import {
   approveLoan,
@@ -15,33 +15,22 @@ import { useNavigate } from "react-router-dom";
 import LoanRejectModal from "./LoanRejectModal";
 import Pagination from "../../Common/Pagination/Pagination";
 import { convertDate } from "../../../utils/convertDate";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
+import FullLoanDetailModal from "./FullLoanDetailModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
-    loanProduct: item?.loanProductName?.replace(/_/g, " "),
-    borrower: item?.borrowerName,
-    disbursedBy: item?.disbursedBy,
-    principalAmount: item?.principalAmount,
+    loanProduct: convertToTitleCase(item?.loanProductName),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
-    interestMethod: item?.interestMethod,
-    loanInterest: item?.loanInterest,
-    interestPer: item?.perLoanInterest,
-    loanDuration: item?.loanDuration,
-    durationPer: item?.perLoanDuration,
-    repaymentCycle: item?.repaymentCycle,
-    numberOfTenure: item?.numberOfTenure,
-    loanId: item?.loanId,
-    uid: item?.uid,
-    // loanFiles: item.loanFiles,
   }));
 }
 
 const ApproveLoans = () => {
   const dispatch = useDispatch();
-  const { approveLoans, loading, approveLoansTotalElements } = useSelector(
-    (state) => state.smeLoans
-  );
+  const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
+    useSelector((state) => state.smeLoans);
   const [showModal, setShowModal] = useState(false);
+  const [showLoanModal, setShowLoanModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
@@ -67,6 +56,17 @@ const ApproveLoans = () => {
     setSearchBy("");
     setSearchValue("");
     dispatch(getPendingLoans({ page: 0, size: 20 }));
+  };
+
+  const handleFullLoanDetails = async (loanId, uid) => {
+    await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
+    if (!loading) {
+      setShowLoanModal(true);
+    }
+  };
+
+  const closeFullLoanDetailModal = () => {
+    setShowLoanModal(false);
   };
 
   const handleApprove = async (rowData) => {
@@ -97,7 +97,7 @@ const ApproveLoans = () => {
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
-    { label: "Borrower", field: "borrower" },
+    { label: "Borrower", field: "borrowerName" },
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
@@ -119,7 +119,7 @@ const ApproveLoans = () => {
                 Loan Interest:
               </p>
               <p className="text-sm text-gray-600">
-                {rowData.loanInterest}% / {rowData.interestPer}
+                {rowData.loanInterest}% / {rowData.perLoanInterest}
               </p>
             </div>
             <div className="flex justify-between border-r border-gray-300 py-2 px-4">
@@ -139,7 +139,7 @@ const ApproveLoans = () => {
                 Loan Duration:
               </p>
               <p className="text-sm text-gray-600">
-                {rowData.loanDuration} {rowData.durationPer}
+                {rowData.loanDuration} {rowData.perLoanDuration}
               </p>
             </div>
           </div>
@@ -147,27 +147,26 @@ const ApproveLoans = () => {
         <div className="w-full flex justify-start  flex-col gap-4 px-5">
           <button
             onClick={() => handleApprove(rowData)}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+            className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
             disabled={rowData.approvalStatus === "Yes"}
           >
-            <FiCheckCircle className="mr-2" />
+            <FiCheckCircle className="-ml-0.5 h-5 w-5" />
             Approve
           </button>
           <button
             onClick={() => handleReject(rowData)}
-            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
             disabled={rowData.approvalStatus === "No"}
           >
-            <FiXCircle className="mr-2" />
+            <FiXCircle className="-ml-0.5 h-5 w-5" />
             Reject
           </button>
-          {/* <button
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              onClick={() => window.alert("PDF viewer would open here")}
-            >
-              <FiDownload className="mr-2" />
-              View PDF
-            </button> */}
+          <Button
+            buttonIcon={FiInfo}
+            buttonName="More Details"
+            onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+            rectangle={true}
+          />
         </div>
       </div>
     </div>
@@ -225,6 +224,11 @@ const ApproveLoans = () => {
         isOpen={showModal}
         onClose={closeRejectModal}
         userDetails={currentRowData}
+      />
+      <FullLoanDetailModal
+        isOpen={showLoanModal}
+        onClose={closeFullLoanDetailModal}
+        loanDetails={fullLoanDetails}
       />
     </div>
   );

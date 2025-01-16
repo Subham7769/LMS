@@ -74,29 +74,31 @@ const ApproveRepayment = () => {
     <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
       <div className="grid grid-cols-3 md:grid-cols-[80%_20%] gap-4">
         <div className="space-y-2">
-          <div className="grid grid-cols-2 gap-4 py-5">
+          <div className="grid grid-cols-2 py-5">
             {/* Additional Information */}
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Installment Id:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.installmentId}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Request Id:</p>
-              <p className="text-sm text-gray-600">{rowData.requestId}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
+            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
+              <p className="text-sm font-semibold text-gray-600 ">
                 Transaction Id:
               </p>
               <p className="text-sm text-gray-600">{rowData.transactionId}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between px-4 py-2">
               <p className="text-sm font-semibold text-gray-600">
                 Description:
               </p>
               <p className="text-sm text-gray-600">{rowData.description}</p>
+            </div>
+            <div className="flex justify-between border-r border-gray-300 px-4">
+              <p className="text-sm font-semibold text-gray-600">
+                {rowData.installmentId ? "Installment Id:" : ""}
+              </p>
+              <p className="text-sm text-gray-600">{rowData.installmentId}</p>
+            </div>
+            <div className="flex justify-between px-4">
+              <p className="text-sm font-semibold text-gray-600">
+                {rowData.requestId ? "Request Id:" : ""}
+              </p>
+              <p className="text-sm text-gray-600">{rowData.requestId}</p>
             </div>
           </div>
         </div>
@@ -118,7 +120,6 @@ const ApproveRepayment = () => {
       </div>
     </div>
   );
-  console.log(filteredRepayments.length);
 
   // Filter Repayments Based on Search Value
   const applyFilters = () => {

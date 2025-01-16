@@ -16,24 +16,9 @@ import { convertDate } from "../../../utils/convertDate";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
+    ...item,
     loanProduct: item?.loanProductName?.replace(/_/g, " "),
-    borrower: item?.borrowerName,
-    disbursedBy: item?.disbursedBy,
-    principalAmount: item?.principalAmount,
     loanReleaseDate: convertDate(item?.loanReleaseDate),
-    interestMethod: item?.interestMethod,
-    loanInterest: item?.loanInterest,
-    perLoanInterest: item?.perLoanInterest,
-    loanDuration: item?.loanDuration,
-    perLoanDuration: item?.perLoanDuration,
-    repaymentCycle: item?.repaymentCycle,
-    numberOfTenure: item?.numberOfTenure,
-    loanFiles: item?.loanFiles,
-    applicationStatus: item?.applicationStatus,
-    rejectionReason: item?.rejectionReason,
-    loanId: item?.loanId,
-    uid: item?.uid,
-    loanStatus: item?.loanStatus,
   }));
 }
 
@@ -84,7 +69,7 @@ const LoanHistory = () => {
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
-    { label: "Borrower", field: "borrower" },
+    { label: "Borrower", field: "borrowerName" },
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },

@@ -13,27 +13,13 @@ import InputText from "../../Common/InputText/InputText";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
-    loanProduct: item?.loanProductName?.replace(/_/g, " "),
-    borrower: item?.borrowerName,
-    disbursedBy: item?.disbursedBy,
-    principalAmount: item?.principalAmount,
+    ...item,
+    loanProduct: convertToTitleCase(item?.loanProductName),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
-    interestMethod: item?.interestMethod,
-    loanInterest: item?.loanInterest,
-    perLoanInterest: item?.perLoanInterest,
-    loanDuration: item?.loanDuration,
-    perLoanDuration: item?.perLoanDuration,
-    repaymentCycle: item?.repaymentCycle,
-    numberOfTenure: item?.numberOfTenure,
-    loanFiles: item?.loanFiles,
-    // applicationStatus: item?.applicationStatus,
-    rejectionReason: item?.rejectionReason,
-    loanId: item?.loanId,
-    uid: item?.uid,
-    loanStatus: item?.loanStatus,
   }));
 }
 
@@ -84,11 +70,10 @@ const LoanHistory = () => {
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
-    { label: "Borrower", field: "borrower" },
+    { label: "Borrower", field: "borrowerName" },
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
-    // { label: "Status", field: "applicationStatus" },
     { label: "Loan Status", field: "loanStatus" },
   ];
 
