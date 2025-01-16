@@ -5,6 +5,7 @@ import {
   resetUpdateDirectorData,
   updateDirectorInfo,
   fetchAllCompanyBorrowers,
+  fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -13,14 +14,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 
 const UpdateDirector = () => {
-  const { updateDirectorData, error, loading } = useSelector(
+  const {companyId,updateDirectorData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
   const { uid } = useParams();
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
-
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -38,10 +38,9 @@ const UpdateDirector = () => {
     recurse(nestedObject);
     return result;
   }
-  console.log(updateDirectorData)
+  console.log(updateDirectorData);
 
   const handleUpdate = async (uid) => {
-
     await dispatch(validateForm(flattenToSimpleObject(updateDirectorData)));
 
     // Access the updated state directly using getState
@@ -51,9 +50,13 @@ const UpdateDirector = () => {
       dispatch(updateDirectorInfo({ updateDirectorData, uid }))
         .unwrap()
         .then(() => {
-          dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+          dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }))
+            .unwrap()
+            .then(() => {
+              dispatch(fetchCompanyDetails({ companyId }));
+            });
           navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
-        })
+        });
     }
   };
 

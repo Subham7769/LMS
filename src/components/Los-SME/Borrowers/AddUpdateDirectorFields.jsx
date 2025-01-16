@@ -567,6 +567,7 @@ console.log(name)
   const otherDetails = (otherDetails) =>
     renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
 
+  
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError

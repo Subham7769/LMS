@@ -61,19 +61,21 @@ const ViewCompany = () => {
 
   const applyFilters = () => {
     const filtered = allBorrowersData.filter((borrower) => {
-      const companyDetails =
-        borrower.companyBorrowerProfile?.companyDetails || {};
-      const companyContactDetails =
-        borrower.companyBorrowerProfile?.companyContactDetails || {};
-      let matchesSearchValue = "";
-
+      const companyDetails = borrower.companyBorrowerProfile?.companyDetails || {};
+      const companyContactDetails = borrower.companyBorrowerProfile?.companyContactDetails || {};
+  
+      console.log('companyContactDetails:', companyContactDetails);
+      console.log('searchValue:', searchValue);
+  
+      let matchesSearchValue = false;
+  
+      // If 'searchBy' is specified, search based on that field
       if (searchBy) {
         matchesSearchValue = searchValue
-          ? companyDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
+          ? companyDetails[searchBy]?.toLowerCase().includes(searchValue.toLowerCase())
           : true;
       } else {
+        // Search through multiple fields if no specific 'searchBy'
         matchesSearchValue = searchValue
           ? [
               companyDetails.companyName,
@@ -82,16 +84,19 @@ const ViewCompany = () => {
               companyDetails.companyRegistrationNo,
               companyContactDetails.email,
               companyContactDetails.mobile1,
-            ].some((field) =>
-              field?.toLowerCase().includes(searchValue.toLowerCase())
-            )
+            ]
+              .map((field) => field ? field.toString().toLowerCase() : "")  // Ensure each field is a string and lowercase
+              .some((field) => field.includes(searchValue.toLowerCase()))  // Check if any field matches
           : true;
       }
+  
       return matchesSearchValue;
     });
-
+  
     setFilteredBorrowers(filtered);
   };
+  
+  
 
   const handleSearchFilter = (term) => {
     setSearchValue(term);
@@ -194,7 +199,7 @@ const ViewCompany = () => {
       setCurrentStatus(newStatus);
       dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
       dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
-      navigate(`/loan/loan-origination-system/sme/borrowers/view-borrower`);
+      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     };
 
     return (

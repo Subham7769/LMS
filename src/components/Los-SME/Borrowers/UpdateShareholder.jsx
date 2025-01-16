@@ -5,6 +5,7 @@ import {
   resetUpdateShareholderData,
   updateShareholderInfo,
   fetchAllCompanyBorrowers,
+  fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -13,7 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 
 const UpdateShareholder = () => {
-  const { updateShareholderData, error, loading } = useSelector(
+  const { companyId,updateShareholderData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ const UpdateShareholder = () => {
         .unwrap()
         .then(() => {
           dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+          dispatch(fetchCompanyDetails({ companyId }))
           navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
         })
     }

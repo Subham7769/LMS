@@ -3,6 +3,7 @@ import Button from "../../Common/Button/Button";
 import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
+  setCompanyId,
   handleChangeAddDirectorField,
   addDirector,
   removeDirector,
@@ -26,14 +27,22 @@ const AddDirector = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
+    companyId,
     directorsKycDetails,
     existingDirectorDetails,
     allCompanies,
     error,
     loading,
   } = useSelector((state) => state.smeBorrowers);
-  const [companyId, setCompanyId] = useState("");
   const loanOfficer = localStorage.getItem("username");
+
+  useEffect(() => {
+    if (allCompanies.length < 1) {
+      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
+    }
+  }, [dispatch]);
+
+  console.log(directorsKycDetails);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -53,14 +62,6 @@ const AddDirector = () => {
     return result;
   }
 
-  useEffect(() => {
-    if (allCompanies.length < 1) {
-      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
-    }
-  }, [dispatch]);
-
-  console.log(existingDirectorDetails);
-
   const handleSubmitNewDirector = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(directorsKycDetails)));
@@ -76,7 +77,7 @@ const AddDirector = () => {
   };
 
   const changeCompany = (e) => {
-    setCompanyId(e.target.value);
+    dispatch(setCompanyId({ companyId: e.target.value }));
     dispatch(fetchCompanyDetails({ companyId: e.target.value }));
   };
 
@@ -91,7 +92,10 @@ const AddDirector = () => {
     dispatch(deleteDirectorInfo({ companyId: uid, directorId: uniqueID }))
       .unwrap()
       .then(() => {
-        dispatch(fetchCompanyDetails({ companyId: uid }));
+        dispatch(fetchCompanyDetails({ companyId: uid })).unwrap()
+        .then(() => {
+          
+        })
       });
   };
 

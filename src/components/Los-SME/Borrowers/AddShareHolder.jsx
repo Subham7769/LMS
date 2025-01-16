@@ -3,6 +3,7 @@ import Button from "../../Common/Button/Button";
 import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
+  setCompanyId,
   handleChangeAddShareholderField,
   addShareholder,
   removeShareholder,
@@ -10,7 +11,7 @@ import {
   addShareholderInfo,
   fetchAllCompanyBorrowersListByLoanOfficer,
   fetchCompanyDetails,
-  setUpdateShareholder,
+  setUpdateExistingShareholder,
   deleteShareholderInfo,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,13 +27,13 @@ const AddShareHolder = () => {
   const navigate = useNavigate();
 
   const {
+    companyId,
     shareHolderDetails,
     existingShareholderDetails,
     allCompanies,
     error,
     loading,
   } = useSelector((state) => state.smeBorrowers);
-  const [companyId, setCompanyId] = useState("");
   const loanOfficer = localStorage.getItem("username");
 
   function flattenToSimpleObject(nestedObject) {
@@ -76,12 +77,12 @@ const AddShareHolder = () => {
   };
 
   const changeCompany = (e) => {
-    setCompanyId(e.target.value);
+    dispatch(setCompanyId({ companyId: e.target.value }));
     dispatch(fetchCompanyDetails({ companyId: e.target.value }));
   };
 
   const handleEditShareholder = (uid, uniqueID) => {
-    dispatch(setUpdateShareholder({ uid, uniqueID }));
+    dispatch(setUpdateExistingShareholder({ uid, uniqueID }));
     navigate(
       `/loan/loan-origination-system/sme/borrowers/update-shareholder/${uid}`
     );
