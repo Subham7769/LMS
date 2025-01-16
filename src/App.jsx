@@ -40,7 +40,7 @@ const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 // *************************************TEST******************************************************
 
 const TestComponent = lazy(() =>
-  import("./components/TestComponent/TestComponent11")
+  import("./components/TestComponent/Los/ApproveLoansTest")
 );
 
 // *************************************TEST******************************************************
@@ -234,7 +234,6 @@ const CreateNewReportingConfig = lazy(() =>
 
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
-const DatePicker = lazy(() => import("./components/Reports/DatePicker"));
 
 // Invoice Discounting Imports
 const Registration = lazy(() => import("./components/Los-SME/Registration"));
@@ -526,7 +525,7 @@ const routes = [
       },
       {
         path: "test",
-        element: <DatePicker />,
+        element: <TestComponent />,
         errorElement: <RouteErrorBoundary />,
       },
       {
