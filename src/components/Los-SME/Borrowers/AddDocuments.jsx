@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
+import Button from "../../Common/Button/Button";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import {
   setCompanyId,
@@ -9,7 +10,9 @@ import {
   fetchCompanyDocuments,
   uploadCompanyDocumentFile,
   deleteDocumentFile,
+  uploadDirectorDocumentFile,
   handleChangeDirectorDocuments,
+  verifyDocumentInfo,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import InputSelect from "../../Common/InputSelect/InputSelect";
@@ -23,6 +26,7 @@ const AddDocuments = () => {
     existingDirectorDetails,
     allCompanies,
     companyDocuments,
+    directorDocuments,
     error,
     loading,
   } = useSelector((state) => state.smeBorrowers);
@@ -49,20 +53,15 @@ const AddDocuments = () => {
   };
 
   // Company
-  const companyHandleFileChange = (e, index, directorId) => {
+  const companyHandleFileChange = (e, index) => {
     const fileUploadParams = {
       companyBorrowerId: companyId,
       documentKey: companyDocuments[index].documentKey,
       verified: companyDocuments[index].verified,
-      directorId: directorId,
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
 
     const { name, value, type, checked, files } = e.target;
-
-    dispatch(
-      handleChangeCompanyDocuments({ field: name, value, type, checked, index })
-    );
 
     if (files && files[0]) {
       const formData = new FormData();
@@ -90,6 +89,21 @@ const AddDocuments = () => {
     );
   };
 
+  const handleCompanyVerification = () => {
+    // Perform verification on company documents
+    const verifyDocumentData = companyDocuments.map((doc) => ({
+      docId: doc.docId,
+      verified: doc.verified,
+    }));
+    console.log(verifyDocumentData)
+    dispatch(
+      verifyDocumentInfo({
+        verifyDocumentData,
+        auth: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+      })
+    );
+  };
+
   const companyDocumentRequirements = (documents) => {
     return (
       <div>
@@ -110,6 +124,13 @@ const AddDocuments = () => {
                 onCheckboxChange={(e) => companyHandleInputChange(e, index)}
               />
             ))}
+            <div className="flex justify-end">
+              <Button
+                buttonName="Submit Verification"
+                onClick={handleCompanyVerification}
+                rectangle={true}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -117,27 +138,34 @@ const AddDocuments = () => {
   };
 
   // Director
-  const directorHandleFileChange = (e, index, directorId) => {
+  const directorHandleFileChange = (e, index, directorId, documentId) => {
+    // Find the director by directorId
+    const director = existingDirectorDetails.find(
+      (director) => director.personalDetails.uniqueID === directorId
+    );
+
+    // Find the document by documentId (docId)
+    const document = director.documents.find((doc) => doc.docId === documentId);
+
+    // Extract documentKey and verified values
+    const { documentKey, verified } = document;
+
     const fileUploadParams = {
       companyBorrowerId: companyId,
-      documentKey: companyDocuments[index].documentKey,
-      verified: companyDocuments[index].verified,
+      documentKey: documentKey,
+      verified: verified,
       directorId: directorId,
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
 
     const { name, value, type, checked, files } = e.target;
 
-    dispatch(
-      handleChangeCompanyDocuments({ field: name, value, type, checked, index })
-    );
-
     if (files && files[0]) {
       const formData = new FormData();
       formData.append("file", files[0]);
 
       // Dispatch the upload action with the FormData
-      dispatch(uploadCompanyDocumentFile({ formData, fileUploadParams }));
+      dispatch(uploadDirectorDocumentFile({ formData, fileUploadParams }));
     }
   };
 
@@ -150,15 +178,53 @@ const AddDocuments = () => {
     dispatch(deleteDocumentFile(fileDeleteParams));
   };
 
-  const directorHandleInputChange = (e, index) => {
+  const directorHandleInputChange = (e, index, directorId, documentId) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
     dispatch(
-      handleChangeCompanyDocuments({ field: name, value, type, checked, index })
+      handleChangeDirectorDocuments({
+        field: name,
+        value,
+        type,
+        checked,
+        index,
+        directorId,
+        documentId,
+      })
     );
   };
 
-  const directorDocumentRequirements = (documents) => {
+  const handleDirectorVerification = (directorId) => {
+    // Find the director using directorId
+    console.log(directorId)
+    const director = existingDirectorDetails.find(
+      (director) => director.personalDetails.uniqueID === directorId
+    );
+  
+    if (director) {
+      // Extract the documents of the found director
+      const verifyDocumentData = director.documents
+      .filter((doc) => doc.docId)  // Ensure docId exists
+      .map((doc) => ({
+        docId: doc.docId,
+        verified: doc.verified,
+      }));
+  
+      console.log(verifyDocumentData);
+  
+      // Dispatch the action to verify documents
+      dispatch(
+        verifyDocumentInfo({
+          verifyDocumentData,
+          auth: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+        })
+      );
+    } else {
+      console.log("Director not found");
+    }
+  };
+
+  const directorDocumentRequirements = (documents, directorId) => {
     return (
       <div>
         {loading ? (
@@ -171,13 +237,31 @@ const AddDocuments = () => {
                 label={document.documentKey.replace(/_/g, " ")} // Convert documentKey to a more readable label
                 inputFileName="docName"
                 inputFileValue={document.docName}
-                onFileChange={(e) => directorHandleFileChange(e, index)}
-                onFileDelete={() => directorHandleDeleteDocument(document.docId)}
+                onFileChange={(e) =>
+                  directorHandleFileChange(e, index, directorId, document.docId)
+                }
+                onFileDelete={() =>
+                  directorHandleDeleteDocument(document.docId)
+                }
                 checkboxName="verified"
                 checkboxChecked={document.verified}
-                onCheckboxChange={(e) => directorHandleInputChange(e, index)}
+                onCheckboxChange={(e) =>
+                  directorHandleInputChange(
+                    e,
+                    index,
+                    directorId,
+                    document.docId
+                  )
+                }
               />
             ))}
+            <div className="flex justify-end">
+              <Button
+                buttonName="Submit Verification"
+                onClick={()=>handleDirectorVerification(directorId)}
+                rectangle={true}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -210,9 +294,7 @@ const AddDocuments = () => {
           <Accordion
             heading={`${heading}`}
             renderExpandedContent={() => (
-              <div className="">
-                {companyDocumentRequirements(companyDocuments)}
-              </div>
+              <>{companyDocumentRequirements(companyDocuments)}</>
             )}
           />
         </div>
@@ -232,7 +314,10 @@ const AddDocuments = () => {
                       `}
                 renderExpandedContent={() => (
                   <div className="px-5">
-                    {directorDocumentRequirements(director.documents)}
+                    {directorDocumentRequirements(
+                      director.documents,
+                      director.personalDetails.uniqueID
+                    )}
                   </div>
                 )}
               />

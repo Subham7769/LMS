@@ -493,6 +493,44 @@ export const uploadCompanyDocumentFile = createAsyncThunk(
   }
 );
 
+export const uploadDirectorDocumentFile = createAsyncThunk(
+  "borrowers/uploadDirectorDocumentFile",
+  async ({ formData, fileUploadParams }, { rejectWithValue }) => {
+    try {
+      // const token = localStorage.getItem("authToken");
+      const {
+        companyBorrowerId,
+        documentKey,
+        verified,
+        borrowerType,
+        authToken,
+        directorId,
+      } = fileUploadParams;
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_FILE_UPLOAD_COMPANY_BORROWER
+        }?companyUniqueId=${companyBorrowerId}&directorId=${directorId}&documentKey=${documentKey}&verified=${verified}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Delete Documents
 export const deleteDocumentFile = createAsyncThunk(
   "borrowers/deleteDocumentFile",
@@ -522,36 +560,71 @@ export const deleteDocumentFile = createAsyncThunk(
   }
 );
 
-// Fetch Company Documents
-export const fetchCompanyDocuments = createAsyncThunk(
-  "company/fetchDocuments", // Action type
-  async ({ companyId, auth }, { rejectWithValue }) => {
+// Verify Document Information
+export const verifyDocumentInfo = createAsyncThunk(
+  "documents/verifyDocumentInfo",
+  async ({ verifyDocumentData, auth }, { rejectWithValue }) => {
     try {
-      // const auth = localStorage.getItem("authToken"); // Retrieve auth token
+      // const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `${
-          import.meta.env.VITE_BORROWERS_GET_COMPANY_DOCUMENTS_COMPANY_BORROWER
-        }${companyId}`,
+        `${import.meta.env.VITE_BORROWERS_VERIFY_DOCUMENTS_COMPANY_BORROWER}`,
         {
-          method: "GET",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `${auth}`,
           },
+          body: JSON.stringify(verifyDocumentData),
         }
       );
 
+      // Handle the response
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.message || "Failed to fetch company documents"
+          errorData.message || "Failed to verify document information"
         );
       }
 
-      const data = await response.json();
-      return data; // Return the fetched documents as the action payload
     } catch (error) {
-      return rejectWithValue(error.message); // Return the error message
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Fetch Company Documents
+export const fetchCompanyDocuments = createAsyncThunk(
+  "company/fetchDocuments", // Action type
+  async ({ companyId, auth }, { rejectWithValue }) => {
+    if (companyId) {
+      try {
+        // const auth = localStorage.getItem("authToken"); // Retrieve auth token
+        const response = await fetch(
+          `${
+            import.meta.env
+              .VITE_BORROWERS_GET_COMPANY_DOCUMENTS_COMPANY_BORROWER
+          }${companyId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${auth}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Failed to fetch company documents"
+          );
+        }
+
+        const data = await response.json();
+        return data; // Return the fetched documents as the action payload
+      } catch (error) {
+        return rejectWithValue(error.message); // Return the error message
+      }
     }
   }
 );
@@ -682,6 +755,7 @@ const initialState = {
       verified: false,
     },
   ],
+  directorDocuments: [],
   directorsKycDetails: [],
   existingDirectorDetails: [],
   shareHolderDetails: [],
@@ -1052,10 +1126,33 @@ const borrowersSlice = createSlice({
         type === "checkbox" ? checked : value;
     },
     handleChangeDirectorDocuments: (state, action) => {
-      const { field, value, type, checked, index } = action.payload;
-      // If section is provided, update specific field in that section
-      state.existingDirectorDetails.documents[index][field] =
-        type === "checkbox" ? checked : value;
+      const { field, value, type, checked, directorId, documentId } =
+        action.payload;
+
+      // Find the director by directorId
+      state.existingDirectorDetails = state.existingDirectorDetails.map(
+        (director) => {
+          if (director.personalDetails.uniqueID === directorId) {
+            // Find the document by documentId (docId)
+            const updatedDocuments = director.documents.map((doc) => {
+              if (doc.docId === documentId) {
+                // Update the specified field in the document
+                return {
+                  ...doc,
+                  [field]: type === "checkbox" ? checked : value, // Update field value based on type
+                };
+              }
+              return doc; // Keep other documents unchanged
+            });
+
+            return {
+              ...director,
+              documents: updatedDocuments, // Assign the updated documents array
+            };
+          }
+          return director; // Keep other directors unchanged
+        }
+      );
     },
   },
   extraReducers: (builder) => {
@@ -1118,21 +1215,25 @@ const borrowersSlice = createSlice({
       .addCase(fetchCompanyDetails.fulfilled, (state, action) => {
         state.loading = false;
         state.companyDetails = action.payload;
-      
+
         // Check if shareHolderDetails is null or undefined, and assign an empty array if true
-        state.existingShareholderDetails = (action.payload.shareHolderDetails ?? []).map((shareHolder) => ({
+        state.existingShareholderDetails = (
+          action.payload.shareHolderDetails ?? []
+        ).map((shareHolder) => ({
           ...shareHolder,
           dataIndex: nanoid(),
           uid: action.payload.companyDetails.companyUniqueId,
         }));
-      
+
         // Check if directorsKycDetails is null or undefined, and assign an empty array if true
-        state.existingDirectorDetails = (action.payload.directorsKycDetails ?? []).map((director) => ({
+        state.existingDirectorDetails = (
+          action.payload.directorsKycDetails ?? []
+        ).map((director) => ({
           ...director,
           dataIndex: nanoid(),
           uid: action.payload.companyDetails.companyUniqueId,
         }));
-      
+
         state.error = null;
       })
       .addCase(fetchCompanyDetails.rejected, (state, action) => {
@@ -1278,16 +1379,51 @@ const borrowersSlice = createSlice({
       })
       .addCase(uploadCompanyDocumentFile.fulfilled, (state, action) => {
         state.loading = false;
-        const { docId, documentKey } = action.payload;
+        const { documentKey } = action.payload;
         state.companyDocuments = state.companyDocuments.map(
           (doc) =>
             doc.documentKey === documentKey
-              ? { ...doc, docId } // Update the matching document
+              ? { ...action.payload } // Update the matching document
               : doc // Keep other documents unchanged
         );
         toast.success("File uploaded successfully");
       })
       .addCase(uploadCompanyDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(uploadDirectorDocumentFile.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(uploadDirectorDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        const { directorId, documentKey } = action.payload;
+
+        // Find the director and update the matching document
+        state.existingDirectorDetails = state.existingDirectorDetails.map(
+          (director) => {
+            if (director.personalDetails.uniqueID === directorId) {
+              // Update the document within the director's documents array
+              const updatedDocuments = director.documents.map(
+                (doc) =>
+                  doc.documentKey === documentKey
+                    ? { ...doc, ...action.payload } // Update the matching document
+                    : doc // Keep other documents unchanged
+              );
+
+              return {
+                ...director,
+                documents: updatedDocuments, // Assign the updated documents array
+              };
+            }
+            return director; // Keep other directors unchanged
+          }
+        );
+
+        toast.success("File uploaded successfully");
+      })
+      .addCase(uploadDirectorDocumentFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -1311,11 +1447,47 @@ const borrowersSlice = createSlice({
       })
       .addCase(fetchCompanyDocuments.fulfilled, (state, action) => {
         state.loading = false;
-        state.companyDocuments = action.payload;
+        state.companyDocuments = action.payload.filter(
+          (doc) =>
+            doc.hasOwnProperty("companyBorrowerId") &&
+            !doc.hasOwnProperty("directorId")
+        );
+
+        let directorDocuments = action.payload.filter(
+          (doc) =>
+            doc.hasOwnProperty("companyBorrowerId") &&
+            doc.hasOwnProperty("directorId")
+        );
+
+        // Map through existingDirectorDetails to assign documents
+        state.existingDirectorDetails = state.existingDirectorDetails.map(
+          (director) => {
+            const matchedDocuments = directorDocuments.filter(
+              (doc) => doc.directorId === director.personalDetails.uniqueID
+            );
+            return {
+              ...director,
+              documents: matchedDocuments, // Assign matched documents
+            };
+          }
+        );
       })
       .addCase(fetchCompanyDocuments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(verifyDocumentInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyDocumentInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success(`Document Verification Submitted Successfully`);
+      })
+      .addCase(verifyDocumentInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to verify document";
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });
