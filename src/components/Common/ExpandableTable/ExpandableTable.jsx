@@ -64,17 +64,24 @@ const ExpandableTable = ({
                       className="max-w-28 break-words py-6 text-sm text-center text-gray-800"
                     >
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${
                           col.field.toLowerCase().includes("status") &&
                           (rowData[col.field].toLowerCase() === "rejected" ||
                           rowData[col.field] === "DEFAULTER" ||
-                          rowData[col.field] === "Cancel"
+                          rowData[col.field] === "DEFAULTED" ||
+                          rowData[col.field].toLowerCase().includes("cancel")
                             ? "bg-red-100 text-red-800"
                             : rowData[col.field] === "In Progress" ||
-                              rowData[col.field] === "DEACTIVATED"
+                              rowData[col.field] === "DEACTIVATED" ||
+                              rowData[col.field] === "LATE"
                             ? "bg-yellow-100 text-yellow-800"
-                            : rowData[col.field] === "Submitted"
+                            : rowData[col.field] === "Submitted" ||
+                              rowData[col.field] === "ROLL OVERED"
                             ? "bg-violet-100 text-violet-800"
+                            : rowData[col.field] === "CLOSED"
+                            ? "bg-gray-100 text-gray-800"
+                            : rowData[col.field] === "FROZEN"
+                            ? "bg-blue-100 text-blue-800"
                             : "bg-green-100 text-green-800")
                         }`}
                       >

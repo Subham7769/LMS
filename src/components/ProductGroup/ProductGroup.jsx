@@ -112,9 +112,8 @@ const ProductGroup = () => {
         itemName={productGroupData?.configName}
         handleNameUpdate={handleUpdatePGName}
         loading={loading}
-        error={error}
       />
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading}>
         <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
           <InputNumber
             labelName="Percentage from Equated Installments"
@@ -126,14 +125,14 @@ const ProductGroup = () => {
           <InputNumber
             labelName="Hard Limit"
             inputName="hardLimit"
-            inputValue={productGroupData?.financeHardLimit?.hardLimit}
+            inputValue={productGroupData?.carbonFinanceHardLimit?.hardLimit}
             onChange={handleInputChange}
             isValidation={true}
           />
           <InputNumber
             labelName="Renew In Days"
             inputName="renewInDays"
-            inputValue={productGroupData?.renewCreditReport?.renewInDays}
+            inputValue={productGroupData?.carbonRenewCreditTp?.renewInDays}
             onChange={handleInputChange}
             isValidation={true}
           />

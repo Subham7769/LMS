@@ -7,7 +7,7 @@ import { convertDate } from "../../../utils/convertDate";
 import formatNumber from "../../../utils/formatNumber";
 
 const InstallmentSummery = ({ onClose, installmentConfigData }) => {
-  const { loanConfigData } = useSelector((state) => state.personalLoans);
+  const { loanConfigData } = useSelector((state) => state.smeLoans);
   const columns = [
     { label: "EMI No.", field: "emiNo" },
     { label: "Date", field: "installmentDate" },
@@ -114,13 +114,13 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
           >
             <thead className="sticky top-0 z-10 invisible">
               <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
-                <th className="px-4"></th>
                 <th className="px-4">EMI No.</th>
                 <th className="px-4">Date</th>
                 <th className="px-4">Principal</th>
                 <th className="px-4">Interest</th>
                 <th className="px-4">Outstanding</th>
                 <th className="px-4">EMI Amount</th>
+                <th className="px-4"></th>
               </tr>
             </thead>
             <tbody>
@@ -128,24 +128,21 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                 <tr className="hover:bg-gray-50 cursor-pointer text-xs font-medium px-4 py-6">
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       Total
                     </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
-                    ></span>
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium invisible`}
+                    >
+                      1 Mar 2025
+                    </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
-                    ></span>
-                  </td>
-                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       {formatNumber(
                         loanConfigData?.dynamicCashLoanOffers[0]?.principalAmount.toFixed(
@@ -156,7 +153,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       {formatNumber(
                         loanConfigData?.dynamicCashLoanOffers[0]?.totalInterestAmount.toFixed(
@@ -167,14 +164,14 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       -
                     </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       {formatNumber(
                         loanConfigData?.dynamicCashLoanOffers[0]?.totalLoanAmount.toFixed(
@@ -182,6 +179,11 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                         )
                       )}
                     </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                    ></span>
                   </td>
                 </tr>
               </>

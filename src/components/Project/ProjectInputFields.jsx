@@ -28,7 +28,6 @@ const ProjectInputFields = ({
   loading,
   error,
 }) => {
-
   const [filteredLocations, setFilteredLocations] = useState([]);
   const location = useLocation();
   const isNewProject = location.pathname.includes("newProject");
@@ -44,11 +43,11 @@ const ProjectInputFields = ({
     setFilteredLocations(locationOptions[projectData.country] || []);
   }, [projectData.country]);
 
-//   console.log(projectData)
+  // console.log(projectData)
 
   return (
     <>
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading}>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {/* Name */}
           {isNewProject && (
@@ -276,7 +275,7 @@ const ProjectInputFields = ({
         </div>
       </ContainerTile>
 
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading}>
         {/* Row 1 */}
         <div className="grid grid-cols-2 gap-5 mb-[24px]">
           {/* Loan Amount */}
@@ -465,7 +464,7 @@ const ProjectInputFields = ({
         </div>
       </ContainerTile>
 
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading}>
         <div className="gap-5">
           <div>
             <InputTextArea

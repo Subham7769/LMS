@@ -9,10 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { countryOptions, locationOptions } from "../../../data/CountryData";
 import {
   maritalStatus,
-  workType,
   title,
   gender,
-  accountType,
   uniqueIDType,
 } from "../../../data/LosData";
 import {
@@ -20,7 +18,7 @@ import {
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer, index }) => {
+const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -55,19 +53,19 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer, index }
     };
   }, [dispatch]);
 
-  const handleInputChange = (e, section, index) => {
+  const handleInputChange = (e, section) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
     dispatch(
-      handleChangeReducer({ section, index, field: name, value, type, checked })
+      handleChangeReducer({ section, field: name, value, type, checked })
     );
   };
 
-  const handleFileUpload = (e, section, index) => {
+  const handleFileUpload = (e, section) => {
     const { name, value, type, checked,files } = e.target;
 console.log(name)
     dispatch(
-      handleChangeReducer({ section, index, field: name, value: files[0], type})
+      handleChangeReducer({ section, field: name, value: files[0], type})
     );
   };
 

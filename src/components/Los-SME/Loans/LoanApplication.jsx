@@ -18,6 +18,7 @@ import {
   cancelLoanApplicationsByID,
   getLoanApplicationByField,
   resetAddLoanData,
+  deleteLoanOffers,
 } from "../../../redux/Slices/smeLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 
@@ -89,10 +90,13 @@ const LoanApplication = () => {
   };
 
   const handleEditApplication = async (loanApplicationId) => {
-    await dispatch(getLoanApplicationsByID(loanApplicationId)).unwrap();
     navigate(
       `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`
     );
+    if (rowData.status === "Submitted") {
+      await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
+    }
+    await dispatch(getLoanApplicationsByID(loanApplicationId)).unwrap();
   };
 
   const handleRejectApplication = async (loanApplicationId) => {

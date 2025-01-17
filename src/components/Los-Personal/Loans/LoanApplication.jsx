@@ -90,15 +90,15 @@ const LoanApplication = () => {
   };
 
   const handleEditApplication = async (rowData) => {
+    navigate(
+      `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
+    );
     if (rowData.status === "Submitted") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
     }
     await dispatch(
       getLoanApplicationsByID(rowData?.loanApplicationId)
     ).unwrap();
-    navigate(
-      `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
-    );
   };
 
   const handleRejectApplication = async (loanApplicationId) => {

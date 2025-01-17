@@ -128,19 +128,21 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                 <tr className="hover:bg-gray-50 cursor-pointer text-xs font-medium px-4 py-6">
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       Total
                     </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium invisible`}
-                    >1 Mar 2025</span>
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium invisible`}
+                    >
+                      1 Mar 2025
+                    </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       {formatNumber(
                         loanConfigData?.dynamicCashLoanOffers[0]?.principalAmount.toFixed(
@@ -151,7 +153,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       {formatNumber(
                         loanConfigData?.dynamicCashLoanOffers[0]?.totalInterestAmount.toFixed(
@@ -162,14 +164,14 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       -
                     </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium`}
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
                       {formatNumber(
                         loanConfigData?.dynamicCashLoanOffers[0]?.totalLoanAmount.toFixed(

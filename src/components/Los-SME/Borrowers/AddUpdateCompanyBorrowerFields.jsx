@@ -8,31 +8,24 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import { countryOptions, locationOptions } from "../../../data/CountryData";
-import {
-  accountType,
-  natureOfCompanyOptions,
-} from "../../../data/LosData";
+import { accountType, natureOfCompanyOptions } from "../../../data/LosData";
 import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
+const AddUpdateCompanyBorrowerFields = ({
+  BorrowerData,
+  handleChangeReducer,
+}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
-  const [filteredLocations2, setFilteredLocations2] = useState([]);
 
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.companyContactDetails.country] || []
     );
-    // setFilteredLocations2(
-    //   locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
-    // );
-  }, [
-    BorrowerData.companyContactDetails.country,
-    // BorrowerData.nextOfKinDetails.kinCountry,
-  ]);
+  }, [BorrowerData.companyContactDetails.country]);
 
   useEffect(() => {
     const keysArray = [
@@ -63,12 +56,12 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
       "branchCode",
       "sortCode",
       "accountNo",
-      
-      "creditScore", 
-      "freeCashInHand", 
-      "grossSalary", 
-      "shareholdingStructure",  
-      "tradeUnion"
+
+      "creditScore",
+      "freeCashInHand",
+      "grossSalary",
+      "shareholdingStructure",
+      "tradeUnion",
     ];
     dispatch(setFields(keysArray));
     return () => {
@@ -76,19 +69,19 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
     };
   }, [dispatch]);
 
-  const handleInputChange = (e, section) => {
+  const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
     dispatch(
-      handleChangeReducer({ section, field: name, value, type, checked })
+      handleChangeReducer({ section, field: name, value, type, checked, index })
     );
   };
 
-  const handleFileUpload = (e,section) => {
-    const { name, value, type, checked,files } = e.target;
+  const handleFileUpload = (e, section) => {
+    const { name, value, type, checked, files } = e.target;
 
     dispatch(
-      handleChangeReducer({ section, field: name, value: files[0], type})
+      handleChangeReducer({ section, field: name, value: files[0], type })
     );
   };
 
@@ -176,6 +169,7 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
       validation: true,
     },
   ];
+
   const companyContactDetailsConfig = [
     {
       labelName: "Mobile 1",
@@ -511,6 +505,7 @@ const AddUpdateCompanyBorrowerFields = ({ BorrowerData, handleChangeReducer }) =
           companyOtherDetailsInputNames
         )}
       />
+
     </>
   );
 };

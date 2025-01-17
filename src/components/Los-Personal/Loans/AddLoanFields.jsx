@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
@@ -9,7 +9,6 @@ import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assumin
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
-  fetchLoanProductData,
   updateLoanField,
   uploadDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
@@ -278,7 +277,7 @@ const AddLoanFields = ({ addLoanData }) => {
       "generalLoanDetails"
     );
 
-  console.log(addLoanData);
+  // console.log(addLoanData);
 
   const handleDeleteDocument = (docId) => {
     if (!docId) return;

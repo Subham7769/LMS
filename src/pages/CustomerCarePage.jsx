@@ -7,7 +7,7 @@ import SearchBox from '../components/Common/SearchBox/SearchBox';
 const CustomerCarePage = () => {
     return (
         <>
-            <StatContainer stats={CustomerCareStats} />
+            {/* <StatContainer stats={CustomerCareStats} /> */}
             <SearchBox/>
         </>
     )

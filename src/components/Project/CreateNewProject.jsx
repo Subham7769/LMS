@@ -21,7 +21,7 @@ import ProjectInputFields from "./ProjectInputFields";
 const CreateNewProject = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
-  const [clientIdsString, setClientIdsString] = useState("lmsClient");
+  const [clientIdsString, setClientIdsString] = useState("");
   const dispatch = useDispatch();
   const { projectData } = useSelector((state) => state.project);
 

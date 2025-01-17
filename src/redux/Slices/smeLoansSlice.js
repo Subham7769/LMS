@@ -10,7 +10,7 @@ export const getLoanApplications = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_APPLICATION_PERSONAL
+          import.meta.env.VITE_LOAN_READ_LOAN_APPLICATION_COMPANY
         }?page=${page}&size=${size}`,
         {
           method: "GET",
@@ -145,7 +145,7 @@ export const fetchBorrowerById = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_LOAN_READ_BORROWER_PROFILE}${uid}`,
+        `${import.meta.env.VITE_LOAN_READ_COMPANY_PROFILE}${uid}`,
         {
           method: "GET",
           headers: {
@@ -165,9 +165,98 @@ export const fetchBorrowerById = createAsyncThunk(
   }
 );
 
+export const uploadDocumentFile = createAsyncThunk(
+  "smeLoans/uploadDocumentFile",
+  async ({ formData, fileUploadParams }, { rejectWithValue }) => {
+    try {
+      // const token = localStorage.getItem("authToken");
+      const {
+        loanApplicationId,
+        documentKey,
+        verified,
+        borrowerType,
+        authToken,
+      } = fileUploadParams;
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_FILE_UPLOAD_COMPANY
+        }?loanApplicationId=${loanApplicationId}&documentKey=${documentKey}&verified=${verified}&borrowerType=${borrowerType}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteDocumentFile = createAsyncThunk(
+  "smeLoans/deleteDocumentFile",
+  async (fileDeleteParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken } = fileDeleteParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_COMPANY}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const saveDraftLoanData = createAsyncThunk(
+  "smeLoans/saveDraftLoanData",
+  async (addLoanData, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_SAVE_DRAFT_PERSONAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(addLoanData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const submitLoan = createAsyncThunk(
   "smeLoans/submitLoan",
-  async (generalDetails, { rejectWithValue }) => {
+  async (generalLoanDetails, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${import.meta.env.VITE_LOAN_SUBMIT_CREATE_PERSONAL}`;
 
@@ -178,7 +267,7 @@ export const submitLoan = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(generalDetails),
+        body: JSON.stringify(generalLoanDetails),
       });
 
       if (!response.ok) {
@@ -215,6 +304,32 @@ export const getLoanOffers = createAsyncThunk(
       }
       const responseData = await response.json();
       return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteLoanOffers = createAsyncThunk(
+  "smeLoans/deleteLoanOffers",
+  async (loanApplicationId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_DELETE_LOAN_OFFERS_PERSONAL
+        }${loanApplicationId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -258,7 +373,7 @@ export const getPendingLoans = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_PERSONAL
+          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_COMPANY
         }?page=${page}&size=${size}`,
         {
           method: "GET",
@@ -286,7 +401,7 @@ export const getLoansByField = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_BY_FIELD_PERSONAL
+          import.meta.env.VITE_LOAN_READ_LOAN_PENDING_BY_FIELD_COMPANY
         }${field}&value=${value}`,
         {
           method: "GET",
@@ -366,7 +481,7 @@ export const getLoanHistory = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_PERSONAL
+          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_COMPANY
         }?page=${page}&size=${size}`,
         {
           method: "GET",
@@ -394,7 +509,7 @@ export const getLoanHistoryByField = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_BY_FIELD_PERSONAL
+          import.meta.env.VITE_LOAN_READ_LOAN_HISTORY_BY_FIELD_COMPANY
         }${field}&value=${value}`,
         {
           method: "GET",
@@ -459,7 +574,7 @@ const initialState = {
   addLoanData: {
     borrowerName: "",
     borrowerType: "COMPANY_BORROWER",
-    generalDetails: {
+    generalLoanDetails: {
       borrowerId: "",
       disbursedBy: "",
       interestMethod: "",
@@ -474,57 +589,58 @@ const initialState = {
       repaymentCycle: "",
       reasonForBorrowing: "",
     },
-    profomaDetails: {
-      orderNo: "",
-      orderDate: "",
-      amountOfOrder: "",
-      orderExpiryDate: "",
-      proformaInvoiceNo: "",
-      proformaInvoiceDate: "",
-      amountofProforma: "",
-      proformaExpectedDateOfPayment: "",
-      invoiceNo: "",
-      invoiceDate: "",
+    proformaDetails: {
       amountOfInvoice: "",
+      amountOfOrder: "",
+      amountOfProforma: "",
+      invoiceDate: "",
       invoiceExpectedDateOfPayment: "",
+      invoiceNo: "",
+      orderDate: "",
+      orderExpiryDate: "",
+      orderNo: "",
+      proformaExpectedDateOfPayment: "",
+      proformaInvoiceDate: "",
+      proformaInvoiceNo: "",
     },
     offTakerDetails: {
-      nameOfCompany: "",
-      industry: "",
-      natureOfBusiness: "",
-      location: "",
-      province: "",
-      country: "",
-      contactperson: "",
-      position: "",
       cellPhoneNumber: "",
+      contactperson: "",
+      country: "",
+      industry: "",
+      location: "",
+      nameOfCompany: "",
+      natureOfBusiness: "",
+      position: "",
+      province: "",
     },
     supplierDetails: {
-      nameOfCompany: "",
-      industry: "",
-      natureOfBusiness: "",
-      location: "",
-      province: "",
-      country: "",
-      contactperson: "",
-      position: "",
       cellPhoneNumber: "",
-      postalAddress: "",
-      physicalAddress: "",
+      contactperson: "",
+      country: "",
       emailAddress: "",
+      industry: "",
+      location: "",
+      nameOfCompany: "",
+      natureOfBusiness: "",
       phoneNumber: "",
+      physicalAddress: "",
+      position: "",
+      postalAddress: "",
+      province: "",
     },
     collateralDetails: {
+      contactPerson: "",
       collateralType: "",
       marketValue: "",
-      lastValutionDate: "",
+      lastValuationDate: "",
       insuranceStatus: "",
       insuranceExpiryDate: "",
       locationOfCollateral: "",
       plotVehicleNo: "",
       stateOfCollateral: "",
     },
-    LHADetails: {
+    lhaDetails: {
       loanOfficerFindings: "",
       business: "",
       office: "",
@@ -728,6 +844,51 @@ const smeLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(uploadDocumentFile.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(uploadDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        const { docId, documentKey } = action.payload;
+        state.addLoanData.documents = state.addLoanData.documents.map(
+          (doc) =>
+            doc.documentKey === documentKey
+              ? { ...doc, docId } // Update the matching document
+              : doc // Keep other documents unchanged
+        );
+        toast.success("File uploaded successfully");
+      })
+      .addCase(uploadDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(deleteDocumentFile.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        toast(`Document deleted Successfully`);
+      })
+      .addCase(deleteDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(saveDraftLoanData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(saveDraftLoanData.fulfilled, (state, action) => {
+        state.loading = false;
+        toast(`Draft Saved Successfully`);
+      })
+      .addCase(saveDraftLoanData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(submitLoan.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -736,8 +897,9 @@ const smeLoansSlice = createSlice({
         state.loading = false;
         state.loanConfigData = action.payload;
         state.loanOfferFields.loanProductId =
-          state.addLoanData.generalDetails.loanProductId;
-        state.loanOfferFields.uid = state.addLoanData.generalDetails.borrowerId;
+          state.addLoanData.generalLoanDetails.loanProductId;
+        state.loanOfferFields.uid =
+          state.addLoanData.generalLoanDetails.borrowerId;
         state.addLoanData = initialState.addLoanData;
         toast.success("Offer generated successfully");
       })
@@ -755,6 +917,18 @@ const smeLoansSlice = createSlice({
         state.loanConfigData = action.payload;
       })
       .addCase(getLoanOffers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(deleteLoanOffers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteLoanOffers.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteLoanOffers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
@@ -885,7 +1059,11 @@ const smeLoansSlice = createSlice({
   },
 });
 
-export const { updateLoanField, updateLoanOfferFields, resetAddLoanData } =
-  smeLoansSlice.actions;
+export const {
+  resetAddLoanData,
+  updateLoanField,
+  updateLoanOfferFields,
+  setLoanApplicationId,
+} = smeLoansSlice.actions;
 
 export default smeLoansSlice.reducer;

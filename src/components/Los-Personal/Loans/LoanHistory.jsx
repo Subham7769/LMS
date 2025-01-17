@@ -16,23 +16,9 @@ import { convertDate } from "../../../utils/convertDate";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
+    ...item,
     loanProduct: item?.loanProductName?.replace(/_/g, " "),
-    borrower: item?.borrowerName,
-    disbursedBy: item?.disbursedBy,
-    principalAmount: item?.principalAmount,
     loanReleaseDate: convertDate(item?.loanReleaseDate),
-    interestMethod: item?.interestMethod,
-    loanInterest: item?.loanInterest,
-    perLoanInterest: item?.perLoanInterest,
-    loanDuration: item?.loanDuration,
-    perLoanDuration: item?.perLoanDuration,
-    repaymentCycle: item?.repaymentCycle,
-    numberOfTenure: item?.numberOfTenure,
-    loanFiles: item?.loanFiles,
-    applicationStatus: item?.applicationStatus,
-    rejectionReason: item?.rejectionReason,
-    loanId: item?.loanId,
-    uid: item?.uid,
   }));
 }
 
@@ -83,11 +69,12 @@ const LoanHistory = () => {
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
-    { label: "Borrower", field: "borrower" },
+    { label: "Borrower", field: "borrowerName" },
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
-    { label: "Status", field: "applicationStatus" },
+    // { label: "Status", field: "applicationStatus" },
+    { label: "Loan Status", field: "loanStatus" },
   ];
 
   const renderExpandedRow = (rowData) => (
@@ -102,7 +89,7 @@ const LoanHistory = () => {
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">Loan Interest :</p>
           <p className="text-sm text-gray-600">
-            {rowData.loanInterest} % / {rowData.perLoanInterest}
+            {rowData.loanInterest}% / {rowData.perLoanInterest}
           </p>
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
@@ -125,7 +112,7 @@ const LoanHistory = () => {
         </div>
         <div className="flex justify-between border-r border-gray-300 py-2 px-4">
           <p className="text-sm font-semibold text-gray-600">
-            {rowData.applicationStatus === "REJECTED" ? "Rejection Reason" : ""}
+            {rowData.rejectionReason ? "Rejection Reason" : ""}
           </p>
           <p className="text-sm text-gray-600">{rowData?.rejectionReason}</p>
         </div>

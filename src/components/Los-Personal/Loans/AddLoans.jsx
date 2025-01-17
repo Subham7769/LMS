@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
@@ -120,12 +120,12 @@ const AddLoans = () => {
         </div>
       </div>
       <AddLoanFields addLoanData={addLoanData} />
-      {/* Save Button */}
+      {/* Resuable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
       <div className="flex justify-end mt-5 gap-x-5">
         <button
           type="button"
           onClick={handleDraft}
-          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-300 shadow-sm hover:bg-gray-400 focus-visible:outline-indigo-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
+          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-300 shadow-sm hover:bg-gray-400 focus-visible:outline-gray-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
         >
           <span className="text-center w-full">Save Draft</span>
         </button>

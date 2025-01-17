@@ -58,14 +58,14 @@ const ApproveRepayment = () => {
     setFilteredRepayments(updatedRepayments);
   }, [searchTerm, approveRepaymentData]);
 
-  const handleApprove = (transactionId) => {
-    dispatch(approveRepayment({ transactionId })).unwrap();
-    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
+  const handleApprove = async (transactionId) => {
+    await dispatch(approveRepayment({ transactionId })).unwrap();
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: 0 }));
   };
 
-  const handleReject = (transactionId) => {
-    dispatch(rejectRepayment({ transactionId })).unwrap();
-    dispatch(getRepayments({ pageSize: pageSize, pageNumber: currentPage }));
+  const handleReject = async (transactionId) => {
+    await dispatch(rejectRepayment({ transactionId })).unwrap();
+    dispatch(getRepayments({ pageSize: pageSize, pageNumber: 0 }));
   };
 
   const renderExpandedRow = (rowData) => (
@@ -74,27 +74,29 @@ const ApproveRepayment = () => {
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-4 py-5">
             {/* Additional Information */}
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
-                Installment Id:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.installmentId}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">Request Id:</p>
-              <p className="text-sm text-gray-600">{rowData.requestId}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-sm font-semibold text-gray-600">
+            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
+              <p className="text-sm font-semibold text-gray-600 ">
                 Transaction Id:
               </p>
               <p className="text-sm text-gray-600">{rowData.transactionId}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between px-4 py-2">
               <p className="text-sm font-semibold text-gray-600">
                 Description:
               </p>
               <p className="text-sm text-gray-600">{rowData.description}</p>
+            </div>
+            <div className="flex justify-between border-r border-gray-300 px-4">
+              <p className="text-sm font-semibold text-gray-600">
+                {rowData.installmentId ? "Installment Id:" : ""}
+              </p>
+              <p className="text-sm text-gray-600">{rowData.installmentId}</p>
+            </div>
+            <div className="flex justify-between px-4">
+              <p className="text-sm font-semibold text-gray-600">
+                {rowData.requestId ? "Request Id:" : ""}
+              </p>
+              <p className="text-sm text-gray-600">{rowData.requestId}</p>
             </div>
           </div>
         </div>
@@ -190,7 +192,6 @@ const ApproveRepayment = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
         <div className="w-[45%]">
           <InputSelect

@@ -1,3 +1,3 @@
-UserId,LoanId,TransactionId,Amount,CollectionDate,collectionBy,Method,payAll
-12344xxx,test,TXNtest,500,2024-01-15,USER_PAYMENT,SarieTransfer,FALSE
-12345xxx,test,TXNtest1,501,2024-01-16,USER_PAYMENT,SarieTransfer,FALSE
+UserId,LoanId,RepaymentType,Amount,CollectionDate,collectionBy,Method,payAll
+12344xxx,test,PERSONAL,500,2024-01-15,USER_PAYMENT,SarieTransfer,FALSE
+12345xxx,test,COMPANY,501,2024-01-16,USER_PAYMENT,SarieTransfer,FALSE

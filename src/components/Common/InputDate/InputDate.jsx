@@ -15,6 +15,8 @@ const InputDate = ({
   isValidation = false,
   isIndex,
   isDisabled = false,
+  minSelectableDate = null,
+  maxSelectableDate = null,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -75,6 +77,8 @@ const InputDate = ({
           } 
           sm:text-sm sm:leading-6 `}
         disabled={isDisabled}
+        min={minSelectableDate} // Apply the min attribute if provided
+        max={maxSelectableDate} // Apply the max attribute if provided
       />
     </>
   );

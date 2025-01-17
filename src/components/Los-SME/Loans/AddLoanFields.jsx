@@ -1,70 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputEmail from "../../Common/InputEmail/InputEmail";
-import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
 import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
 import {
-  fetchLoanProductData,
+  deleteDocumentFile,
   updateLoanField,
+  uploadDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearValidationError,
-  setFields,
-} from "../../../redux/Slices/validationSlice";
 import { tenureTypeOptions } from "../../../data/OptionsData";
+import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions } = useSelector((state) => state.smeLoans);
-
-  useEffect(() => {
-    dispatch(fetchLoanProductData());
-    const keysArray = [
-      "loanProduct",
-      "borrower",
-      "disbursedBy",
-      "principalAmount",
-      "loanReleaseDate",
-      "interestMethod",
-      "repaymentCycle",
-      "loanInterest",
-      "interestPer",
-      "loanDuration",
-      "durationPer",
-      "numberOfTenure",
-    ];
-    dispatch(setFields(keysArray));
-    return () => {
-      dispatch(clearValidationError());
-    };
-  }, [dispatch]);
-
-  // Keys to process for document status
-  const relevantKeys = ["requiredDocuments"];
 
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
     let uploadedCount = 0;
     let verifiedCount = 0;
 
-    // Loop through relevant document categories
-    relevantKeys.forEach((key) => {
-      const category = addLoanData[key];
-      Object.keys(category).forEach((field) => {
-        if (!field.endsWith("Verified") && category[field] !== null) {
-          uploadedCount++;
-        }
+    // Loop through the documents array
+    addLoanData.documents.forEach((document) => {
+      // Check if docName is not empty for uploaded count
+      if (document.docName) {
+        uploadedCount++;
+      }
 
-        if (field.endsWith("Verified") && category[field] === true) {
-          verifiedCount++;
-        }
-      });
+      // Check if verified is true for verified count
+      if (document.verified === true) {
+        verifiedCount++;
+      }
     });
 
     return { uploadedCount, verifiedCount };
@@ -72,27 +44,52 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const { uploadedCount, verifiedCount } = calculateDocumentStats();
 
-  const handleInputChange = (e, section) => {
+  const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
     dispatch(
-      updateLoanField({
-        section,
-        field: name,
-        value: type === "file" ? value : value,
-        type,
-        checked,
-      })
+      updateLoanField({ section, field: name, value, type, checked, index })
     );
   };
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    dispatch(updateLoanField({ name, value: files[0].name }));
+  const handleFileChange = (e, section, index) => {
+    const fileUploadParams = {
+      loanApplicationId: addLoanData.loanApplicationId,
+      documentKey: addLoanData.documents[index].documentKey,
+      verified: addLoanData.documents[index].verified,
+      borrowerType: "COMPANY_BORROWER",
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+
+    const { name, value, type, checked, files } = e.target;
+
+    dispatch(
+      updateLoanField({ section, field: name, value, type, checked, index })
+    );
+
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      // Dispatch the upload action with the FormData
+      // console.log(fileUploadParams);
+      dispatch(uploadDocumentFile({ formData, fileUploadParams }));
+    }
+  };
+
+  const getTwoDaysFromNow = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 2); // Add 2 days
+    return date.toISOString().split("T")[0]; // Format as yyyy-MM-dd
+  };
+
+  const getTodayDate = () => {
+    const date = new Date();
+    return date.toISOString().split("T")[0]; // Format as yyyy-MM-dd
   };
 
   // All Fields Configuration
-  const generalDetailsConfig = [
+  const generalLoanDetailsConfig = [
     {
       labelName: "Loan Product",
       inputName: "loanProductId",
@@ -103,7 +100,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Borrower",
       inputName: "borrowerId",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -185,7 +182,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
-  const profomaDetailsConfig = [
+  const proformaDetailsConfig = [
     {
       labelName: "Order No. ",
       inputName: "orderNo",
@@ -209,6 +206,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "orderExpiryDate",
       type: "date",
       validation: false,
+      minSelectableDate: getTwoDaysFromNow(),
     },
     {
       labelName: "Proforma Invoice No.",
@@ -221,10 +219,11 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "proformaInvoiceDate",
       type: "date",
       validation: false,
+      maxSelectableDate: getTodayDate(),
     },
     {
       labelName: "Amount of Proforma",
-      inputName: "amountofProforma",
+      inputName: "amountOfProforma",
       type: "number",
       validation: false,
     },
@@ -245,6 +244,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "invoiceDate",
       type: "date",
       validation: false,
+      maxSelectableDate: getTodayDate(),
     },
     {
       labelName: "Amount of Invoice",
@@ -413,7 +413,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Last Valution Date",
-      inputName: "lastValutionDate",
+      inputName: "lastValuationDate",
       type: "date",
       validation: false,
     },
@@ -437,7 +437,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Contact Person (full name)",
-      inputName: "contactperson",
+      inputName: "contactPerson",
       type: "text",
       validation: false,
     },
@@ -450,12 +450,12 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "State Of Collateral",
       inputName: "stateOfCollateral",
-      type: "number",
+      type: "text",
       validation: false,
     },
   ];
 
-  const LHADetailsConfig = [
+  const lhaDetailsConfig = [
     {
       labelName: "Loan Officer Findings",
       inputName: "loanOfficerFindings",
@@ -498,10 +498,10 @@ const AddLoanFields = ({ addLoanData }) => {
     (state) => state.validation.validationError
   );
 
-  const generalDetailsInputNames = generalDetailsConfig.map(
+  const generalLoanDetailsInputNames = generalLoanDetailsConfig.map(
     (field) => field.inputName
   );
-  const profomaDetailsInputNames = profomaDetailsConfig.map(
+  const proformaDetailsInputNames = proformaDetailsConfig.map(
     (field) => field.inputName
   );
   const offTakerInputNames = offTakerConfig.map((field) => field.inputName);
@@ -511,11 +511,12 @@ const AddLoanFields = ({ addLoanData }) => {
   const collateralDetailsInputNames = collateralDetailsConfig.map(
     (field) => field.inputName
   );
-  const LHADetailsInputNames = LHADetailsConfig.map((field) => field.inputName);
+  const lhaDetailsInputNames = lhaDetailsConfig.map((field) => field.inputName);
 
   const renderDetails = (details, config, sectionName) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {config.map((field, index) => {
+        const value = details[field.inputName] ?? ""; // Fallback to empty string
         switch (field.type) {
           case "text":
             return (
@@ -523,7 +524,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
@@ -535,7 +536,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
@@ -548,7 +549,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputOptions={field.options}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
               />
@@ -559,9 +560,11 @@ const AddLoanFields = ({ addLoanData }) => {
                 <InputDate
                   labelName={field.labelName}
                   inputName={field.inputName}
-                  inputValue={details[field.inputName]}
+                  inputValue={value}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
                 />
               </div>
             );
@@ -571,7 +574,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
@@ -583,7 +586,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleFileChange(e, sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
@@ -595,11 +598,10 @@ const AddLoanFields = ({ addLoanData }) => {
                 key={index}
                 labelName={field.labelName}
                 inputName={field.inputName}
-                inputValue={details[field.inputName]}
+                inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 rowCount={field.rowCount || 3}
                 isValidation={field.validation || false}
-                placeHolder={`Enter ${field.labelName}`}
               />
             );
           default:
@@ -610,11 +612,15 @@ const AddLoanFields = ({ addLoanData }) => {
   );
 
   // Dedicated UI Components
-  const generalDetails = (generalDetails) =>
-    renderDetails(generalDetails, generalDetailsConfig, "generalDetails");
+  const generalLoanDetails = (generalLoanDetails) =>
+    renderDetails(
+      generalLoanDetails,
+      generalLoanDetailsConfig,
+      "generalLoanDetails"
+    );
 
-  const profomaDetails = (profomaDetails) =>
-    renderDetails(profomaDetails, profomaDetailsConfig, "profomaDetails");
+  const proformaDetails = (proformaDetails) =>
+    renderDetails(proformaDetails, proformaDetailsConfig, "proformaDetails");
 
   const offTakerDetails = (offTakerDetails) =>
     renderDetails(offTakerDetails, offTakerConfig, "offTakerDetails");
@@ -629,162 +635,35 @@ const AddLoanFields = ({ addLoanData }) => {
       "collateralDetails"
     );
 
-  const LHADetails = (LHADetails) =>
-    renderDetails(LHADetails, LHADetailsConfig, "LHADetails");
+  const lhaDetails = (lhaDetails) =>
+    renderDetails(lhaDetails, lhaDetailsConfig, "lhaDetails");
 
-  const requiredDocuments = (requiredDocuments) => {
-    return (
-      <>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Resolution to borrow</div>
-          <div className="flex gap-x-5 items-baseline">
-            <InputFile
-              inputName="resolutionToBorrow"
-              inputValue={requiredDocuments.resolutionToBorrow}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={requiredDocuments?.resolutionToBorrowVerified}
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="resolutionToBorrowVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Purchase Order</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="purchaseOrder"
-              inputValue={requiredDocuments.purchaseOrder}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={requiredDocuments?.purchaseOrderVerified}
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="purchaseOrderVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Invoice</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="invoice"
-              inputValue={requiredDocuments.invoice}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={requiredDocuments?.invoiceVerified}
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="invoiceVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Profoma Invoice</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="profomaInvoice"
-              inputValue={requiredDocuments.profomaInvoice}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={requiredDocuments?.profomaInvoiceVerified}
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="profomaInvoiceVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Quotations from supplier</div>
-          <div className="flex gap-x-5 items-baseline">
-            <InputFile
-              inputName="quotationsFromSupplier"
-              inputValue={requiredDocuments.quotationsFromSupplier}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={requiredDocuments?.quotationsFromSupplierVerified}
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="quotationsFromSupplierVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>6 months Bank Statement</div>
-          <div className="flex gap-x-5 items-baseline">
-            <InputFile
-              inputName="bankStatement"
-              inputValue={requiredDocuments.bankStatement}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={requiredDocuments?.bankStatementVerified}
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="bankStatementVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
-          <div>Credit Reference Bureau report</div>
-          <div className="flex gap-x-5 items-center">
-            <InputFile
-              inputName="creditReferenceBureauReport"
-              inputValue={requiredDocuments.creditReferenceBureauReport}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={
-                  requiredDocuments?.creditReferenceBureauReportVerified
-                }
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="creditReferenceBureauReportVerified"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between items-center">
-          <div>Confirmation of Banking Details</div>
-          <div className="flex gap-x-5 items-baseline">
-            <InputFile
-              inputName="confirmationOfBankingDetails"
-              inputValue={requiredDocuments.confirmationOfBankingDetails}
-              onChange={(e) => handleInputChange(e, "requiredDocuments")}
-            />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={
-                  requiredDocuments?.confirmationOfBankingDetailsVerified
-                }
-                onChange={(e) => handleInputChange(e, "requiredDocuments")}
-                inputName="confirmationOfBankingDetailsVerified"
-              />
-            </div>
-          </div>
-        </div>
-      </>
-    );
+  const handleDeleteDocument = (docId) => {
+    if (!docId) return;
+    const fileDeleteParams = {
+      docId: docId,
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+    dispatch(deleteDocumentFile(fileDeleteParams));
+  };
+
+  console.log(addLoanData);
+
+  const requiredDocuments = (documents) => {
+    return documents.map((document, index) => (
+      <React.Fragment key={document.documentKey}>
+        <DocumentUploaderVerifier
+          label={convertToTitleCase(document.documentKey)}
+          inputFileName="docName"
+          inputFileValue={documents[index]?.docName}
+          onFileChange={(e) => handleFileChange(e, "documents", index)}
+          onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
+          checkboxName="verified"
+          checkboxChecked={documents[index]?.verified}
+          onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
+        />
+      </React.Fragment>
+    ));
   };
 
   // Validation Checks
@@ -797,14 +676,21 @@ const AddLoanFields = ({ addLoanData }) => {
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() => generalDetails(addLoanData.generalDetails)}
+        renderExpandedContent={() =>
+          generalLoanDetails(addLoanData?.generalLoanDetails)
+        }
         isOpen={true}
-        error={isValidationFailed(validationError, generalDetailsInputNames)}
+        error={isValidationFailed(
+          validationError,
+          generalLoanDetailsInputNames
+        )}
       />
       <Accordion
         heading={"Profoma Details"}
-        renderExpandedContent={() => profomaDetails(addLoanData.profomaDetails)}
-        error={isValidationFailed(validationError, profomaDetailsInputNames)}
+        renderExpandedContent={() =>
+          proformaDetails(addLoanData?.proformaDetails)
+        }
+        error={isValidationFailed(validationError, proformaDetailsInputNames)}
       />
       <Accordion
         heading={"Off-Taker Details"}
@@ -831,14 +717,12 @@ const AddLoanFields = ({ addLoanData }) => {
       />
       <Accordion
         heading={"Loan Officer's Findings"}
-        renderExpandedContent={() => LHADetails(addLoanData.LHADetails)}
-        error={isValidationFailed(validationError, LHADetailsInputNames)}
+        renderExpandedContent={() => lhaDetails(addLoanData.lhaDetails)}
+        error={isValidationFailed(validationError, lhaDetailsInputNames)}
       />
       <Accordion
         heading={"Required Documents"}
-        renderExpandedContent={() =>
-          requiredDocuments(addLoanData.requiredDocuments)
-        }
+        renderExpandedContent={() => requiredDocuments(addLoanData.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
         <div>{`${uploadedCount} of 8 documents uploaded`}</div>

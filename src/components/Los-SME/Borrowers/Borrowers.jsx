@@ -24,7 +24,11 @@ const Borrowers = () => {
       path: "/loan/loan-origination-system/sme/borrowers/add-shareholder",
       label: "Add Shareholder",
     },
-
+    {
+      id: "add-documents",
+      path: "/loan/loan-origination-system/sme/borrowers/add-documents",
+      label: "Add/Edit Documents",
+    },
     {
       id: "view-company",
       path: "/loan/loan-origination-system/sme/borrowers/view-company",
