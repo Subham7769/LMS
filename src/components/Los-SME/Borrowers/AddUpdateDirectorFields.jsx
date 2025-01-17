@@ -435,15 +435,15 @@ console.log(name)
       type: "text",
     },
   ];
-  const otherDetailsConfig = [
-    {
-      labelName: "Customer Photo",
-      inputName: "customerPhotoId",
-      type: "file",
-      accept: "image/*",
-      validation: false,
-    },
-  ];
+  // const otherDetailsConfig = [
+  //   {
+  //     labelName: "Customer Photo",
+  //     inputName: "customerPhotoId",
+  //     type: "file",
+  //     accept: "image/*",
+  //     validation: false,
+  //   },
+  // ];
 
   // Generate the Form Field
   const personalDetailsInputNames = personalDetailsConfig.map(
@@ -459,9 +459,9 @@ console.log(name)
     (field) => field.inputName
   );
   const nextOfKinInputNames = nextOfKinConfig.map((field) => field.inputName);
-  const otherDetailsInputNames = otherDetailsConfig.map(
-    (field) => field.inputName
-  );
+  // const otherDetailsInputNames = otherDetailsConfig.map(
+  //   (field) => field.inputName
+  // );
 
   // Rendering Input Fields
   const renderDetails = (details, config, sectionName) => (
@@ -564,8 +564,8 @@ console.log(name)
   const nextOfKinDetails = (nextOfKinData) =>
     renderDetails(nextOfKinData, nextOfKinConfig, "nextOfKinDetails");
 
-  const otherDetails = (otherDetails) =>
-    renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
+  // const otherDetails = (otherDetails) =>
+  //   renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
 
   
   //   Validation Error Object from Validation slice to check Error state
@@ -617,13 +617,13 @@ console.log(name)
         }
         error={isValidationFailed(validationError, nextOfKinInputNames)}
       />
-      <Accordion
+      {/* <Accordion
         heading={"Other Details"}
         renderExpandedContent={() =>
           otherDetails(BorrowerData.otherDetails)
         }
         error={isValidationFailed(validationError, otherDetailsInputNames)}
-      />
+      /> */}
     </>
   );
 };

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetBorrowerData,
+  resetBorrowerFile,
   registerBorrower,
   updateAddBorrowerField,
+  uploadBorrowerPhotoFile,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -71,6 +73,8 @@ const AddBorrowers = () => {
       <AddUpdateBorrowerFields
         BorrowerData={addBorrowerData}
         handleChangeReducer={updateAddBorrowerField}
+        handleFileReset={resetBorrowerFile}
+        handleFileUpload={uploadBorrowerPhotoFile}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button

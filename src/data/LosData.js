@@ -195,6 +195,7 @@ export const ApproveRepaymentColumns = [
   { label: "Collected By", field: "collectionBy" },
   { label: "Method", field: "method" },
   { label: "Accounting", field: "accounting" },
+  { label: "Aging", field: "aging" },
 ];
 
 export const yesNoOptions = [
@@ -263,6 +264,7 @@ export const uniqueIDType = [
   // { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
 ];
 export const accountStatusOptions = [
+  { value: "ACTIVE", label: "ACTIVE" },
   { value: "DEACTIVATED", label: "DEACTIVATE" },
   { value: "DEFAULTER", label: "DEFAULTER" },
 ];

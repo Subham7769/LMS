@@ -52,10 +52,8 @@ const LoanHistory = () => {
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
+    setShowModal(true);
     await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
-    if (!loading) {
-      setShowModal(true);
-    }
   };
 
   const closeFullLoanDetailModal = () => {
@@ -179,6 +177,7 @@ const LoanHistory = () => {
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
+        loading={loading}
       />
     </div>
   );

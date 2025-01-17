@@ -113,7 +113,18 @@ const InstallmentScheduleTable = ({ loansarrModal }) => (
   </div>
 );
 
-const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
+const ShimmerTable = () => {
+  return (
+    <div className="grid grid-cols-4 gap-4 animate-pulse">
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+    </div>
+  );
+};
+
+const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(loanDetails.loanId);
@@ -128,6 +139,20 @@ const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
   const handleOnClose = (e) => {
     if (e.target.id === "loanInfoContainer") onClose();
   };
+
+  if (loading) {
+    return (
+      <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
+        <div className="bg-white border border-red-600 p-8 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
+          <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+            <ShimmerTable />
+            <ShimmerTable />
+            <ShimmerTable />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -172,4 +197,4 @@ const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
   );
 };
 
-export default LoanInfoModal;
+export default FullLoanDetailModal;
