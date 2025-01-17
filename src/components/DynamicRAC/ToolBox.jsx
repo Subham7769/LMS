@@ -206,6 +206,7 @@ const Toolbox = () => {
               onChange={handleChange}
               dropdownTextSize={"small"}
               isValidation={true}
+              searchable={true}
             />
           </div>
           <div className={`grid gap-3 px-5 grid-cols-1 text-[12px]`}>

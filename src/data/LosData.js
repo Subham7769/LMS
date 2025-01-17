@@ -195,6 +195,7 @@ export const ApproveRepaymentColumns = [
   { label: "Collected By", field: "collectionBy" },
   { label: "Method", field: "method" },
   { label: "Accounting", field: "accounting" },
+  { label: "Aging", field: "aging" },
 ];
 
 export const yesNoOptions = [

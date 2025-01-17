@@ -61,10 +61,8 @@ const ApproveLoans = () => {
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
+    setShowLoanModal(true);
     await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
-    if (!loading) {
-      setShowLoanModal(true);
-    }
   };
 
   const closeFullLoanDetailModal = () => {
@@ -231,6 +229,7 @@ const ApproveLoans = () => {
         isOpen={showLoanModal}
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
+        loading={loading}
       />
     </div>
   );
