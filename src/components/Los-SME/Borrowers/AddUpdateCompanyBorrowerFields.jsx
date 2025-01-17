@@ -290,7 +290,7 @@ const AddUpdateCompanyBorrowerFields = ({
       validation: true,
     },
     {
-      labelName: "Gross Salary",
+      labelName: "Monthly Revenue",
       inputName: "grossSalary",
       type: "number",
       validation: true,
@@ -325,13 +325,13 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "text",
       validation: true,
     },
-    {
-      labelName: "Customer Photo",
-      inputName: "customerPhotoId",
-      type: "file",
-      accept: "image/*",
-      validation: false,
-    },
+    // {
+    //   labelName: "Customer Photo",
+    //   inputName: "customerPhotoId",
+    //   type: "file",
+    //   accept: "image/*",
+    //   validation: false,
+    // },
   ];
 
   // Generate the Form Field
@@ -376,7 +376,7 @@ const AddUpdateCompanyBorrowerFields = ({
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
+                placeHolder={field.labelName === "Credit Score" ? "Enter between 0 to 1" : `Enter ${field.labelName}`}
                 isValidation={field.validation || false}
               />
             );

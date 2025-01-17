@@ -4,6 +4,7 @@ import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputEmail from "../../Common/InputEmail/InputEmail";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputFile from "../../Common/InputFile/InputFile";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import { countryOptions, locationOptions } from "../../../data/CountryData";
@@ -20,7 +21,12 @@ import {
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
+const AddUpdateBorrowerFields = ({
+  BorrowerData,
+  handleChangeReducer,
+  handleFileReset,
+  handleFileUpload,
+}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -96,11 +102,29 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     );
   };
 
-  const handleFileUpload = (e) => {
-    const { name, value, type, checked } = e.target;
-    console.log(files[0].name);
+  const handleFileUploads = (e) => {
+    const { files } = e.target;
+
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      
+      // Dispatch the upload action with the FormData
+      dispatch(handleFileUpload({ formData, authToken:"Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==" }));
+    }
+  }
+
+
+
+  const handleFileRemove = (section) => {
+    console.log("customerPhotoId remove");
     dispatch(
-      handleChangeReducer({ name, value: files[0].name, type, checked })
+      handleFileReset({
+        section,
+        field: "customerPhotoId",
+        value: "",
+        type: "file",
+      })
     );
   };
 
@@ -462,10 +486,16 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "text",
     },
     // Uncomment this if you decide to include the file input field
-    // { labelName: "Customer Photo", inputName: "customerPhoto", type: "file", validation: true, accept: "image/*" },
+    {
+      labelName: "Customer Photo",
+      inputName: "customerPhotoId",
+      type: "file",
+      validation: true,
+      accept: "image/*",
+    },
   ];
 
-// Generate the Form Field
+  // Generate the Form Field
   const personalDetailsInputNames = personalDetailsConfig.map(
     (field) => field.inputName
   );
@@ -483,7 +513,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     (field) => field.inputName
   );
 
-// Rendering Input Fields
+  // Rendering Input Fields
   const renderDetails = (details, config, sectionName) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {config.map((field, index) => {
@@ -555,7 +585,8 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileChange(e, sectionName)}
+                onChange={(e) => handleFileUploads(e)}
+                onDelete={() => handleFileRemove(sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
               />
@@ -590,7 +621,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   const otherDetails = (otherDetails) =>
     renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
 
-//   Validation Error Object from Validation slice to check Error state
+  //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
   );

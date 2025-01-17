@@ -42,6 +42,9 @@ const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 const TestComponent = lazy(() =>
   import("./components/TestComponent/Los/ApproveLoansTest")
 );
+const TestComponent1 = lazy(() =>
+  import("./components/TestComponent/Los/ApproveRepaymentTest")
+);
 
 // *************************************TEST******************************************************
 
@@ -529,6 +532,11 @@ const routes = [
       {
         path: "test",
         element: <TestComponent />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "test1",
+        element: <TestComponent1 />,
         errorElement: <RouteErrorBoundary />,
       },
       {

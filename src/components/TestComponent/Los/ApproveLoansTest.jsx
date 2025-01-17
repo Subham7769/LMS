@@ -89,10 +89,8 @@ const ApproveLoansTest = () => {
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
+    setShowLoanModal(true);
     await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
-    if (!loading) {
-      setShowLoanModal(true);
-    }
   };
 
   const closeFullLoanDetailModal = () => {
@@ -224,24 +222,23 @@ const ApproveLoansTest = () => {
         </div>
       </div>
       <div className="w-full flex justify-end gap-2 px-5">
-        <Button
-          buttonIcon={FiInfo}
-          buttonName="View Documents"
-          onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-          rectangle={true}
-        />
         <button
-          onClick={() => handleReject(rowData)}
+          onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+        >
+          <FiInfo className="-ml-0.5 h-5 w-5" />
+          View Documents
+        </button>
+        <button
+          onClick={() => handleReject(rowData.transactionId)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-          disabled={rowData.approvalStatus === "No"}
         >
           <FiXCircle className="-ml-0.5 h-5 w-5" />
           Reject
         </button>
         <button
-          onClick={() => handleApprove(rowData)}
+          onClick={() => handleApprove(rowData.transactionId)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-          disabled={rowData.approvalStatus === "Yes"}
         >
           <FiCheckCircle className="-ml-0.5 h-5 w-5" />
           Approve
@@ -307,6 +304,7 @@ const ApproveLoansTest = () => {
         isOpen={showLoanModal}
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
+        loading={loading}
       />
     </div>
   );
