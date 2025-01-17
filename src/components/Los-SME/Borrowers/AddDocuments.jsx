@@ -113,7 +113,7 @@ const AddDocuments = () => {
           <div>
             {documents.map((document, index) => (
               <DocumentUploaderVerifier
-                key={document.docId} // Unique key for React
+                key={document.documentKey} // Unique key for React
                 label={document.documentKey.replace(/_/g, " ")} // Convert documentKey to a more readable label
                 inputFileName="docName"
                 inputFileValue={document.docName}
@@ -138,17 +138,17 @@ const AddDocuments = () => {
   };
 
   // Director
-  const directorHandleFileChange = (e, index, directorId, documentId) => {
+  const directorHandleFileChange = (e, index, directorId, documentKey) => {
     // Find the director by directorId
     const director = existingDirectorDetails.find(
       (director) => director.personalDetails.uniqueID === directorId
     );
 
     // Find the document by documentId (docId)
-    const document = director.documents.find((doc) => doc.docId === documentId);
+    const document = director.documents.find((doc) => doc.documentKey === documentKey);
 
     // Extract documentKey and verified values
-    const { documentKey, verified } = document;
+    const { verified } = document;
 
     const fileUploadParams = {
       companyBorrowerId: companyId,
@@ -233,12 +233,12 @@ const AddDocuments = () => {
           <div>
             {documents.map((document, index) => (
               <DocumentUploaderVerifier
-                key={document.docId} // Unique key for React
+                key={document.documentKey} // Unique key for React
                 label={document.documentKey.replace(/_/g, " ")} // Convert documentKey to a more readable label
                 inputFileName="docName"
                 inputFileValue={document.docName}
                 onFileChange={(e) =>
-                  directorHandleFileChange(e, index, directorId, document.docId)
+                  directorHandleFileChange(e, index, directorId, document.documentKey)
                 }
                 onFileDelete={() =>
                   directorHandleDeleteDocument(document.docId)

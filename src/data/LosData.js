@@ -263,6 +263,7 @@ export const uniqueIDType = [
   // { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
 ];
 export const accountStatusOptions = [
+  { value: "ACTIVE", label: "ACTIVE" },
   { value: "DEACTIVATED", label: "DEACTIVATE" },
   { value: "DEFAULTER", label: "DEFAULTER" },
 ];
