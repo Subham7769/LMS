@@ -7,14 +7,17 @@ export const registerBorrower = createAsyncThunk(
   async (addBorrowerData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
-      const response = await fetch(`${import.meta.env.VITE_BORROWERS_CREATE_PERSONAL_BORROWER}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth}`,
-        },
-        body: JSON.stringify(addBorrowerData),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_CREATE_PERSONAL_BORROWER}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify(addBorrowerData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -37,7 +40,10 @@ export const fetchAllBorrowers = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const username = localStorage.getItem("username");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_READ_ALL_BY_LOAN_OFFICER_PERSONAL_BORROWER}${username}?page=${page}&size=${size}`,
+        `${
+          import.meta.env
+            .VITE_BORROWERS_READ_ALL_BY_LOAN_OFFICER_PERSONAL_BORROWER
+        }${username}?page=${page}&size=${size}`,
         {
           method: "GET",
           headers: {
@@ -63,12 +69,15 @@ export const fetchAllBorrowers = createAsyncThunk(
 // Fetch Borrower By Field
 export const fetchBorrowerByField = createAsyncThunk(
   "borrowers/fetchBorrowerByField", // action type
-  async ({ field, value,}, { rejectWithValue }) => {
+  async ({ field, value }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
       const username = localStorage.getItem("username");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER}?fieldName=${field}&value=${value}`,
+        `${
+          import.meta.env
+            .VITE_BORROWERS_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER
+        }?fieldName=${field}&value=${value}`,
         {
           method: "GET",
           headers: {
@@ -80,12 +89,14 @@ export const fetchBorrowerByField = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch borrower by field");
+        throw new Error(
+          errorData.message || "Failed to fetch borrower by field"
+        );
       }
 
       const data = await response.json();
       const length = data.length;
-      if(length<1){
+      if (length < 1) {
         throw new Error("User not Found");
       }
       return data; // This will be the action payload
@@ -128,7 +139,7 @@ export const changeBorrowerStatus = createAsyncThunk(
 
 // Update Borrower Information
 export const updateBorrowerInfo = createAsyncThunk(
-  "borrowers/updateInfo", // Action type
+  "borrowers/updateBorrowerInfo", // Action type
   async ({ borrowerData, uid }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken"); // Retrieve the auth token
@@ -150,9 +161,36 @@ export const updateBorrowerInfo = createAsyncThunk(
           errorData.message || "Failed to update borrower information"
         );
       }
-
     } catch (error) {
       return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+export const uploadBorrowerPhotoFile = createAsyncThunk(
+  "borrowers/uploadBorrowerPhotoFile",
+  async ({ formData, authToken }, { rejectWithValue }) => {
+    try {
+      // const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_UPLOAD_PHOTO_PERSONAL_BORROWER}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -161,7 +199,7 @@ const initialState = {
   addBorrowerData: {
     personalDetails: {
       title: "",
-      firstName:"",
+      firstName: "",
       surname: "",
       otherName: "", //optional
       uniqueIDType: "",
@@ -233,10 +271,11 @@ const initialState = {
       creditScore: "",
       freeCashInHand: "",
       grossSalary: "",
+      customerPhotoId: "",
     },
   },
   allBorrowersData: [],
-  allBorrowersTotalElements:0,
+  allBorrowersTotalElements: 0,
   updateBorrowerData: {},
   error: null,
   loading: false,
@@ -259,6 +298,13 @@ const borrowersSlice = createSlice({
     },
     resetBorrowerData: (state, action) => {
       state.addBorrowerData = initialState.addBorrowerData;
+    },
+    resetBorrowerFile: (state, action) => {
+      const { section, field, value, type, checked } = action.payload;
+      if (section && state.addBorrowerData[section]) {
+        state.addBorrowerData[section][field] =
+          type === "checkbox" ? checked : value;
+      }
     },
     updateBorrowerUpdateField: (state, action) => {
       const { section, field, value, type, checked } = action.payload;
@@ -352,6 +398,20 @@ const borrowersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(uploadBorrowerPhotoFile.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(uploadBorrowerPhotoFile.fulfilled, (state, action) => {
+        state.loading = false;
+        const { docId} = action.payload;
+        state.addBorrowerData.otherDetails.customerPhotoId = docId;
+        toast.success("File uploaded successfully");
+      })
+      .addCase(uploadBorrowerPhotoFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });
@@ -362,6 +422,7 @@ export const {
   updateBorrowerUpdateField,
   setUpdateBorrower,
   resetUpdateBorrowerData,
+  resetBorrowerFile,
 } = borrowersSlice.actions;
 
 export default borrowersSlice.reducer;
