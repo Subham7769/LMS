@@ -6,7 +6,7 @@ import SearchBox from "../components/Common/SearchBox/SearchBox";
 const OverdraftLoanPage = () => {
   return (
     <>
-      <StatContainer stats={OverdraftLoanStats} />
+      {/* <StatContainer stats={OverdraftLoanStats} /> */}
       <SearchBox />
     </>
   );

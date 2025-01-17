@@ -7,7 +7,7 @@ import { convertDate } from "../../../utils/convertDate";
 import formatNumber from "../../../utils/formatNumber";
 
 const InstallmentSummery = ({ onClose, installmentConfigData }) => {
-  const { loanConfigData } = useSelector((state) => state.personalLoans);
+  const { loanConfigData } = useSelector((state) => state.smeLoans);
   const columns = [
     { label: "EMI No.", field: "emiNo" },
     { label: "Date", field: "installmentDate" },

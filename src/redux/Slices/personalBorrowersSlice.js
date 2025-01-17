@@ -171,7 +171,7 @@ const initialState = {
       nationality: "Zambia",
       dateOfBirth: "",
       placeOfBirth: "",
-      loanOfficer: localStorage.getItem("username"),
+      loanOfficer: "",
     },
     contactDetails: {
       mobile1: "",

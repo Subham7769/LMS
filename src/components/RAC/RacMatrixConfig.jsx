@@ -5,7 +5,7 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useRacRules from "../../utils/useRACRules";
-import SelectInput from "../Common/DynamicSelect/DynamicSelect";
+import InputSelectMulti from "../Common/InputSelectMulti/InputSelectMulti";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { toast } from "react-toastify";
 
@@ -1476,7 +1476,7 @@ const RacMatrixConfig = () => {
                 Nationality
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   inputOptions={options}
                   inputValue={selectedOption}
                   onChange={(selectedOption) => {
@@ -1509,7 +1509,7 @@ const RacMatrixConfig = () => {
                 Gender
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   className="w-[230px]"
                   inputOptions={gender}
                   inputValue={GEselectedOption}
@@ -1542,7 +1542,7 @@ const RacMatrixConfig = () => {
                 Marital Status
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   className="w-[230px]"
                   inputOptions={maritalStatus}
                   inputValue={MSselectedOption}
@@ -1575,7 +1575,7 @@ const RacMatrixConfig = () => {
                 Residential Status
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   className="w-[230px]"
                   inputOptions={residantialStatus}
                   inputValue={RSselectedOption}
@@ -1610,7 +1610,7 @@ const RacMatrixConfig = () => {
                 Blocked Occupation
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   className="w-[230px]"
                   inputOptions={options}
                   inputValue={selectedOccupation}
@@ -1644,7 +1644,7 @@ const RacMatrixConfig = () => {
                 Blocked Region
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   className="w-[230px]"
                   inputOptions={options}
                   inputValue={selectedRegion}
@@ -1678,7 +1678,7 @@ const RacMatrixConfig = () => {
                 Blocked Sector
               </label>
               <div className="flex items-center justify-between">
-                <SelectInput
+                <InputSelectMulti
                   className="w-[230px]"
                   inputOptions={options}
                   inputValue={selectedSector}
@@ -1768,7 +1768,7 @@ const RacMatrixConfig = () => {
                 Applicants Minimum Write Off
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   defaultValue={operatorOptions[3]}
                   inputOptions={operatorOptions}
@@ -1791,7 +1791,7 @@ const RacMatrixConfig = () => {
                 Applicants Maximum Write Off
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondWriteOffOperator}
@@ -1813,7 +1813,7 @@ const RacMatrixConfig = () => {
                 Resident Minimum Write Off
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={firstWriteOffOperatorOption}
@@ -1835,7 +1835,7 @@ const RacMatrixConfig = () => {
                 Resident Maximum Write Off
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondWriteOffOperator}
@@ -1873,7 +1873,7 @@ const RacMatrixConfig = () => {
                 Applicants gross salary
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={GSoperator}
@@ -1893,7 +1893,7 @@ const RacMatrixConfig = () => {
                 Resident gross salary
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={GSoperator}
@@ -1929,7 +1929,7 @@ const RacMatrixConfig = () => {
                 Applicants Credit Bureau Score
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={SSoperator}
@@ -1949,7 +1949,7 @@ const RacMatrixConfig = () => {
                 Resident Credit Bureau Score
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={SSoperator}
@@ -1985,7 +1985,7 @@ const RacMatrixConfig = () => {
                 Minimum Active Rule
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={minActiveOperator}
@@ -2007,7 +2007,7 @@ const RacMatrixConfig = () => {
                 Maximum Active Rule
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={maxActiveOperator}
@@ -2047,7 +2047,7 @@ const RacMatrixConfig = () => {
                 Applicants Minimum Age
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={firstAgeOperator}
@@ -2069,7 +2069,7 @@ const RacMatrixConfig = () => {
                 Applicants Maximum Age
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondAgeOperator}
@@ -2091,7 +2091,7 @@ const RacMatrixConfig = () => {
                 Resident Minimum Age
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={firstAgeOperator}
@@ -2113,7 +2113,7 @@ const RacMatrixConfig = () => {
                 Resident Maximum Age
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={secondAgeOperator}
@@ -2151,7 +2151,7 @@ const RacMatrixConfig = () => {
                 Applicants Number Of Working Months
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={losOperator}
@@ -2171,7 +2171,7 @@ const RacMatrixConfig = () => {
                 Resident Number Of Working Months
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={losOperator}
@@ -2206,7 +2206,7 @@ const RacMatrixConfig = () => {
                 Applicants Disposableincome
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={dispOperator}
@@ -2226,7 +2226,7 @@ const RacMatrixConfig = () => {
                 Resident Disposableincome
               </label>
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={dispOperator}
@@ -2262,7 +2262,7 @@ const RacMatrixConfig = () => {
 
             <div className="flex items-center gap-4 justify-between">
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={depOperator}
@@ -2299,7 +2299,7 @@ const RacMatrixConfig = () => {
 
             <div className="flex items-center gap-4 justify-between">
               <div className="flex gap-4">
-                <SelectInput
+                <InputSelectMulti
                   className="min-w-20"
                   inputOptions={operatorOptions}
                   inputValue={csOperator}

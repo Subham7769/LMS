@@ -2,75 +2,50 @@ import React, { useEffect, useState } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputEmail from "../../Common/InputEmail/InputEmail";
-import InputFile from "../../Common/InputFile/InputFile";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import { countryOptions, locationOptions } from "../../../data/CountryData";
 import {
-  accountType,
-  natureOfCompanyOptions,
+  maritalStatus,
+  title,
+  gender,
+  uniqueIDType,
 } from "../../../data/LosData";
 import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
+const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
 
   useEffect(() => {
     setFilteredLocations1(
-      locationOptions[BorrowerData.companyContactDetails.country] || []
+      locationOptions[BorrowerData.contactDetails.country] || []
     );
-    // setFilteredLocations2(
-    //   locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
-    // );
-  }, [
-    BorrowerData.companyContactDetails.country,
-    // BorrowerData.nextOfKinDetails.kinCountry,
-  ]);
+  }, [BorrowerData.contactDetails.country]);
 
   useEffect(() => {
     const keysArray = [
-      "companyName",
-      "companyShortName",
-      "natureOfCompany",
-      "companyRegistrationNo",
-      "countryOfRegistration",
-      "dateOfIncorporation",
-      "province",
-      "district",
-      "locationOfHQ",
-      "industry",
-      "natureOfBusiness",
-      "numberOfPermanentEmployees",
-
+      "title",
+      "firstName",
+      "surname",
+      "uniqueIDType",
+      "uniqueID",
+      "gender",
+      "maritalStatus",
+      "nationality",
+      "dateOfBirth",
+      "placeOfBirth",
       "mobile1",
       "street",
       "residentialArea",
       "country",
       "email",
-
-      "bankName",
-      "accountName",
-      "accountType",
-      "branch",
-      "branchCode",
-      "sortCode",
-      "accountNo",
-      
-      "creditScore", 
-      "customerPhotoId", 
-      "freeCashInHand", 
-      "grossSalary", 
-      "shareholdersCountryOfResidence", 
-      "shareholdersNames", 
-      "shareholdingStructure",  
-      "tradeUnion"
     ];
     dispatch(setFields(keysArray));
     return () => {
@@ -86,93 +61,89 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     );
   };
 
-  const handleFileUpload = (e) => {
-    const { name, value, type, checked } = e.target;
-    console.log(files[0].name);
+  const handleFileUpload = (e, section) => {
+    const { name, value, type, checked,files } = e.target;
+console.log(name)
     dispatch(
-      handleChangeReducer({ name, value: files[0].name, type, checked })
+      handleChangeReducer({ section, field: name, value: files[0], type})
     );
   };
 
   //   All Fields Configuration
-  const companyDetailsConfig = [
+  const personalDetailsConfig = [
     {
-      labelName: "Company Name",
-      inputName: "companyName",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Company Short Name",
-      inputName: "companyShortName",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Nature of Company",
-      inputName: "natureOfCompany",
+      labelName: "Title",
+      inputName: "title",
       type: "select",
-      options: natureOfCompanyOptions,
+      options: title,
       validation: true,
     },
     {
-      labelName: "Company Registration No.",
-      inputName: "companyRegistrationNo",
+      labelName: "First Name",
+      inputName: "firstName",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Country of Registration",
-      inputName: "countryOfRegistration",
+      labelName: "Surname",
+      inputName: "surname",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Other Name",
+      inputName: "otherName",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Gender",
+      inputName: "gender",
+      type: "select",
+      options: gender,
+      validation: true,
+    },
+    {
+      labelName: "Marital Status",
+      inputName: "maritalStatus",
+      type: "select",
+      options: maritalStatus,
+      validation: true,
+    },
+    {
+      labelName: "Unique ID Type",
+      inputName: "uniqueIDType",
+      type: "select",
+      options: uniqueIDType,
+      validation: true,
+    },
+    {
+      labelName: "Unique ID",
+      inputName: "uniqueID",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Nationality",
+      inputName: "nationality",
       type: "select",
       options: countryOptions,
       validation: true,
     },
     {
-      labelName: "Date of Registration",
-      inputName: "dateOfIncorporation",
+      labelName: "Date of Birth",
+      inputName: "dateOfBirth",
       type: "date",
       validation: true,
     },
     {
-      labelName: "Province / State",
-      inputName: "province",
-      type: "select",
-      options: filteredLocations1,
-      validation: true,
-    },
-    {
-      labelName: "District",
-      inputName: "district",
+      labelName: "Place of Birth",
+      inputName: "placeOfBirth",
       type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Location of HQ",
-      inputName: "locationOfHQ",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Industry",
-      inputName: "industry",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Nature of Business",
-      inputName: "natureOfBusiness",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "No. of Permanent Employees",
-      inputName: "numberOfPermanentEmployees",
-      type: "number",
       validation: true,
     },
   ];
-  const companyContactDetailsConfig = [
+  const contactDetailsConfig = [
     {
       labelName: "Mobile 1",
       inputName: "mobile1",
@@ -238,131 +209,11 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
     },
   ];
 
-  const bankDetailsConfig = [
-    {
-      labelName: "Name of Bank",
-      inputName: "bankName",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Account Name",
-      inputName: "accountName",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Account No.",
-      inputName: "accountNo",
-      type: "number",
-      validation: true,
-    },
-    {
-      labelName: "Type of Account",
-      inputName: "accountType",
-      type: "select",
-      options: accountType,
-      validation: true,
-    },
-    {
-      labelName: "Branch",
-      inputName: "branch",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Branch Code",
-      inputName: "branchCode",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Sort Code",
-      inputName: "sortCode",
-      type: "text",
-      validation: true,
-    },
-  ];
-
-  const companyOtherDetailsConfig = [
-    {
-      labelName: "Free Cash In Hand",
-      inputName: "freeCashInHand",
-      type: "number",
-      validation: true,
-    },
-    {
-      labelName: "Gross Salary",
-      inputName: "grossSalary",
-      type: "number",
-      validation: true,
-    },
-    {
-      labelName: "Credit Score",
-      inputName: "creditScore",
-      type: "number",
-      validation: true,
-    },
-    {
-      labelName: "Reason for Borrowing",
-      inputName: "reasonForBorrowing",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Source of Repayment",
-      inputName: "sourceOfRepayment",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Trade Union",
-      inputName: "tradeUnion",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Shareholding Structure",
-      inputName: "shareholdingStructure",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "shareholders Names",
-      inputName: "shareholdersNames",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Shareholders Country of Residence",
-      inputName: "shareholdersCountryOfResidence",
-      type: "text",
-      validation: true,
-    },
-    // Uncomment this if you decide to include the file input field
-    {
-      labelName: "Customer Photo",
-      inputName: "customerPhotoId",
-      type: "file",
-      accept: "image/*",
-      validation: true,
-    },
-  ];
-
   // Generate the Form Field
-  const companyDetailsInputNames = companyDetailsConfig.map(
+  const personalDetailsInputNames = personalDetailsConfig.map(
     (field) => field.inputName
   );
-
-  const companyContactDetailsInputNames = companyContactDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const bankDetailsInputNames = bankDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const companyOtherDetailsInputNames = companyOtherDetailsConfig.map(
+  const contactDetailsInputNames = contactDetailsConfig.map(
     (field) => field.inputName
   );
 
@@ -416,6 +267,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+
                 />
               </div>
             );
@@ -438,7 +290,7 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
                 labelName={field.labelName}
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
-                onChange={(e) => handleFileChange(e, sectionName)}
+                onChange={(e) => handleFileUpload(e, sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
               />
@@ -451,25 +303,11 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   );
 
   // Dedicated UI Components Creation
-  const companyDetails = (companyDetails) =>
-    renderDetails(companyDetails, companyDetailsConfig, "companyDetails");
+  const personalDetails = (personalDetails) =>
+    renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
 
-  const companyContactDetails = (companyContactDetails) =>
-    renderDetails(
-      companyContactDetails,
-      companyContactDetailsConfig,
-      "companyContactDetails"
-    );
-
-  const bankDetails = (bankDetails) =>
-    renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
-
-  const companyOtherDetails = (companyOtherDetails) =>
-    renderDetails(
-      companyOtherDetails,
-      companyOtherDetailsConfig,
-      "companyOtherDetails"
-    );
+  const contactDetails = (contactDetails) =>
+    renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
 
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
@@ -485,43 +323,22 @@ const AddUpdateBorrowerFields = ({ BorrowerData, handleChangeReducer }) => {
   return (
     <>
       <Accordion
-        heading={"Company Details"}
+        heading={"Personal Details"}
         renderExpandedContent={() =>
-          companyDetails(BorrowerData.companyDetails)
+          personalDetails(BorrowerData.personalDetails)
         }
         isOpen={true}
-        error={isValidationFailed(validationError, companyDetailsInputNames)}
+        error={isValidationFailed(validationError, personalDetailsInputNames)}
       />
-
       <Accordion
-        heading={"Company Contact Details"}
+        heading={"Contact Details"}
         renderExpandedContent={() =>
-          companyContactDetails(BorrowerData.companyContactDetails)
+          contactDetails(BorrowerData.contactDetails)
         }
-        error={isValidationFailed(
-          validationError,
-          companyContactDetailsInputNames
-        )}
-      />
-
-      <Accordion
-        heading={"Company Bank Details"}
-        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
-        error={isValidationFailed(validationError, bankDetailsInputNames)}
-      />
-
-      <Accordion
-        heading={"Company Other Details"}
-        renderExpandedContent={() =>
-          companyOtherDetails(BorrowerData.companyOtherDetails)
-        }
-        error={isValidationFailed(
-          validationError,
-          companyOtherDetailsInputNames
-        )}
+        error={isValidationFailed(validationError, contactDetailsInputNames)}
       />
     </>
   );
 };
 
-export default AddUpdateBorrowerFields;
+export default AddUpdateShareholderFields;

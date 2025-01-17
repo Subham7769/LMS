@@ -15,6 +15,35 @@ import {
   setUpdateBorrower,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
+import { convertDate } from "../../../utils/convertDate";
+
+function flattenToSimpleObjectArray(filteredBorrowers) {
+  return filteredBorrowers.map((borrower) => {
+    const result = {};
+
+    function recurse(current) {
+      for (const key in current) {
+        if (typeof current[key] === "object" && current[key] !== null) {
+          recurse(current[key]);
+        } else {
+          result[key] = current[key];
+        }
+      }
+    }
+
+    recurse(borrower);
+    return result;
+  });
+}
+
+function transformData(inputArray) {
+  return inputArray.map((item) => ({
+    ...item,
+    fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
+    dateOfBirth: convertDate(item?.dateOfBirth),
+    workStartDate: convertDate(item?.workStartDate),
+  }));
+}
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -95,24 +124,11 @@ const ViewBorrowers = () => {
     }
   };
 
-  function flattenToSimpleObjectArray(filteredBorrowers) {
-    return filteredBorrowers.map((borrower) => {
-      const result = {};
+  const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
 
-      function recurse(current) {
-        for (const key in current) {
-          if (typeof current[key] === "object" && current[key] !== null) {
-            recurse(current[key]);
-          } else {
-            result[key] = current[key];
-          }
-        }
-      }
+  console.log(flattenData);
 
-      recurse(borrower);
-      return result;
-    });
-  }
+  const transformFlattenData = transformData(flattenData);
 
   const searchOptions = [
     { label: "First Name", value: "firstName" },
@@ -125,10 +141,7 @@ const ViewBorrowers = () => {
   ];
 
   const personalDetailsColumns = [
-    { label: "Title", field: "title" },
-    { label: "First Name", field: "firstName" },
-    { label: "Surname", field: "surname" },
-    { label: "Other Name", field: "otherName" },
+    { label: "Name", field: "fullName" },
     { label: "Unique ID", field: "uniqueID" },
     { label: "Email", field: "email" },
     { label: "Mobile", field: "mobile1" },
@@ -145,6 +158,7 @@ const ViewBorrowers = () => {
         [rowData.uid]: newStatus, // Update the status for this borrower
       }));
     };
+
     const handleEdit = (uid) => {
       dispatch(setUpdateBorrower({ uid }));
       navigate(
@@ -377,7 +391,7 @@ const ViewBorrowers = () => {
 
       <ExpandableTable
         columns={personalDetailsColumns}
-        data={flattenToSimpleObjectArray(filteredBorrowers)}
+        data={transformFlattenData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
         error={error}

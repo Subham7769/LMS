@@ -150,27 +150,27 @@ export const MenusInitial = [
     isOpen: false,
     uniqueKey: "rulePolicyTempId",
   },
-  {
-    title: "Business Rule",
-    sectionName: "LOAN MANAGEMENT",
-    href: "/loan/business-rule/1",
-    icon: "AdjustmentsHorizontalIcon",
-    current: false,
-    submenu: true,
-    // createButton: true, //if create product from Side bar Using input box
-    // editable: false, //if Button takes input string
-    // createFunction: null,
-    // buttonName: "Create Rule", //Create button text
-    // placeholder: "Enter Name", //required placeholder for input box
-    // navigateSuccess: "/business-rule/1", // navigation
-    // navigateFail: "/login", // navigation
-    submenuItems: [
-      { name: "Business Rule 1", href: "/business-rule/1" },
-      { name: "Business Rule 2", href: "/business-rule/2" },
-      { name: "Business Rule 3", href: "/loan/business-rule/3" },
-    ],
-    isOpen: false,
-  },
+  // {
+  //   title: "Business Rule",
+  //   sectionName: "LOAN MANAGEMENT",
+  //   href: "/loan/business-rule/1",
+  //   icon: "AdjustmentsHorizontalIcon",
+  //   current: false,
+  //   submenu: true,
+  //   // createButton: true, //if create product from Side bar Using input box
+  //   // editable: false, //if Button takes input string
+  //   // createFunction: null,
+  //   // buttonName: "Create Rule", //Create button text
+  //   // placeholder: "Enter Name", //required placeholder for input box
+  //   // navigateSuccess: "/business-rule/1", // navigation
+  //   // navigateFail: "/login", // navigation
+  //   submenuItems: [
+  //     { name: "Business Rule 1", href: "/business-rule/1" },
+  //     { name: "Business Rule 2", href: "/business-rule/2" },
+  //     { name: "Business Rule 3", href: "/loan/business-rule/3" },
+  //   ],
+  //   isOpen: false,
+  // },
   {
     title: "DBR Config",
     sectionName: "LOAN MANAGEMENT",
@@ -243,7 +243,6 @@ export const MenusInitial = [
     isOpen: false,
   },
 
-
   // FINANCE
   {
     title: "General Ledger",
@@ -252,7 +251,6 @@ export const MenusInitial = [
     icon: "BookOpenIcon",
     current: false,
   },
-
 
   // TESTING
   {
@@ -276,14 +274,13 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
-  {
-    title: "Test Component",
-    sectionName: "TESTING",
-    href: "/loan/test",
-    icon: "BeakerIcon",
-    current: false,
-  },
-
+  // {
+  //   title: "Test Component",
+  //   sectionName: "TESTING",
+  //   href: "/loan/test",
+  //   icon: "BeakerIcon",
+  //   current: false,
+  // },
 
   // CONFIGURATION
   {
@@ -325,12 +322,11 @@ export const MenusInitial = [
     current: false,
   },
 
-
   // LOAN ORIGINATION
   {
-    title: "LoS-SME",
+    title: "SME Loans",
     sectionName: "LOAN ORIGINATION",
-    href: "/loan/loan-origination-system/sme",
+    href: "/loan/loan-origination-system/sme/borrowers/add-company",
     icon: "DocumentCurrencyRupeeIcon",
     current: false,
     submenu: true,
@@ -342,7 +338,7 @@ export const MenusInitial = [
       },
       {
         name: "Loans",
-        href: "/loan/loan-origination-system/sme/loans/add-loan",
+        href: "/loan/loan-origination-system/sme/loans/loan-application",
         current: false,
       },
       {
@@ -384,9 +380,9 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "LoS-Personal",
+    title: "Personal Loans",
     sectionName: "LOAN ORIGINATION",
-    href: "/loan/loan-origination-system/personal",
+    href: "/loan/loan-origination-system/personal/borrowers/add-borrower",
     icon: "AtSymbolIcon",
     current: false,
     submenu: true,
@@ -398,7 +394,7 @@ export const MenusInitial = [
       },
       {
         name: "Loans",
-        href: "/loan/loan-origination-system/personal/loans/add-loan",
+        href: "/loan/loan-origination-system/personal/loans/loan-application",
         current: false,
       },
       {
@@ -409,7 +405,6 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
-
 
   // REPORTS & ANALYSIS
   {
@@ -437,7 +432,6 @@ export const MenusInitial = [
     current: false,
   },
 
-
   // USER TOOLS
   {
     title: "Customer Care",
@@ -453,7 +447,6 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
-
 ];
 export const allSectionName = [
   "LOAN MANAGEMENT",

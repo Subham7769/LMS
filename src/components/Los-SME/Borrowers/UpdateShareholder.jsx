@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
-  handleChangeUpdateCompanyField,
-  resetUpdateCompanyData,
-  updateCompanyBorrowerInfo,
+  handleChangeUpdateShareholderField,
+  resetUpdateShareholderData,
+  updateShareholderInfo,
   fetchAllCompanyBorrowers,
+  fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
-import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
+import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 
-const UpdateCompany = () => {
-  const { updateCompanyData, error, loading } = useSelector(
+const UpdateShareholder = () => {
+  const { companyId,updateShareholderData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
@@ -38,34 +39,36 @@ const UpdateCompany = () => {
     recurse(nestedObject);
     return result;
   }
+  console.log(updateShareholderData)
 
   const handleUpdate = async (uid) => {
-    const { registrationDate, ...restUpdateCompanyData } = updateCompanyData;
 
-    await dispatch(validateForm(flattenToSimpleObject(restUpdateCompanyData)));
+    await dispatch(validateForm(flattenToSimpleObject(updateShareholderData)));
 
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
-      dispatch(
-        updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
-      ).unwrap();
-      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+      dispatch(updateShareholderInfo({ updateShareholderData, uid }))
+        .unwrap()
+        .then(() => {
+          dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+          dispatch(fetchCompanyDetails({ companyId }))
+          navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+        })
     }
-    navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
   };
 
   const handleCancel = () => {
-    dispatch(resetUpdateCompanyData());
+    dispatch(resetUpdateShareholderData());
     navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
   };
 
   return (
     <>
-      <AddUpdateCompanyBorrowerFields
-        BorrowerData={updateCompanyData}
-        handleChangeReducer={handleChangeUpdateCompanyField}
+      <AddUpdateShareholderFields
+        BorrowerData={updateShareholderData}
+        handleChangeReducer={handleChangeUpdateShareholderField}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
@@ -84,4 +87,4 @@ const UpdateCompany = () => {
   );
 };
 
-export default UpdateCompany;
+export default UpdateShareholder;

@@ -6,7 +6,7 @@ import { updateValidationError } from "../../../redux/Slices/validationSlice";
 import {
   getPendingLoans,
   rejectLoan,
-} from "../../../redux/Slices/personalLoansSlice";
+} from "../../../redux/Slices/smeLoansSlice";
 import { useNavigate } from "react-router-dom";
 
 const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
@@ -35,7 +35,7 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
       await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
       await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
       onClose();
-      navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+      navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
       setRejectionReason("");
     }
   };

@@ -5,54 +5,46 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../../Common/Button/Button";
 import {
+  fetchBorrowerById,
   fetchLoanProductData,
   getLoanOffers,
   handleProceed,
   updateLoanOfferFields,
 } from "../../../redux/Slices/personalLoansSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import { fetchAllBorrowers } from "../../../redux/Slices/personalBorrowersSlice";
+import InputNumber from "../../Common/InputNumber/InputNumber";
 import {
   UserIcon,
   CogIcon,
   CalculatorIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
+import formatNumber from "../../../utils/formatNumber";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
-  const [borrowerOptions, setBorrowerOptions] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
 
   const {
+    borrowerData,
     loanProductOptions,
     loanConfigData,
     loanOfferFields,
     loading,
     error,
   } = useSelector((state) => state.personalLoans);
-  const { allBorrowersData } = useSelector((state) => state.personalBorrowers);
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
-    dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
   }, [dispatch]);
-
-  useEffect(() => {
-    const options = allBorrowersData.map((item) => ({
-      label: `${item.borrowerProfile?.personalDetails?.title} ${item.borrowerProfile?.personalDetails?.surname} ${item.borrowerProfile?.personalDetails?.otherName}`,
-      value: item.uid,
-    }));
-
-    setBorrowerOptions(options);
-  }, [allBorrowersData]);
 
   const SubmitProceed = async (transactionId, index) => {
     const uid = loanOfferFields.uid;
     const proceedPayload = {
       transactionId: transactionId,
+      loanApplicationId: loanConfigData.loanApplicationId,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
     navigate(`/loan/loan-origination-system/personal/loans/approve-loans`);
@@ -66,6 +58,7 @@ const LoanOffers = () => {
 
   const handleGetOffers = () => {
     dispatch(getLoanOffers(loanOfferFields));
+    dispatch(fetchBorrowerById(loanOfferFields?.uid));
   };
 
   const handleInstallmentModal = (data) => {
@@ -103,10 +96,9 @@ const LoanOffers = () => {
             inputValue={loanOfferFields.loanProductId}
             onChange={handleChange}
           />
-          <InputSelect
+          <InputNumber
             labelName={"Borrower"}
             inputName="uid"
-            inputOptions={borrowerOptions}
             inputValue={loanOfferFields.uid}
             onChange={handleChange}
           />
@@ -155,11 +147,9 @@ const LoanOffers = () => {
                 </div>
               </div>
               <div className="font-semibold text-[15px] mb-2">
-                {
-                  borrowerOptions.find(
-                    (item) => item.value == loanOfferFields.uid
-                  )?.label
-                }
+                {borrowerData?.personalDetails?.title}{" "}
+                {borrowerData?.personalDetails?.firstName}{" "}
+                {borrowerData?.personalDetails?.surname}
               </div>
               <div className="text-[14px]">
                 <InfoRow
@@ -168,11 +158,11 @@ const LoanOffers = () => {
                 />
                 <InfoRow
                   label="Total Credit Limit (TCL)"
-                  value={loanConfigData?.profile?.cashTCL}
+                  value={formatNumber(loanConfigData.profile.cashTCL)}
                 />
                 <InfoRow
                   label="Net Total Credit Limit"
-                  value={loanConfigData?.profile?.netCashTCL}
+                  value={formatNumber(loanConfigData?.profile?.netCashTCL)}
                 />
               </div>
             </ContainerTile>
@@ -190,8 +180,13 @@ const LoanOffers = () => {
               <div className="text-[14px]">
                 <div className="text-gray-500">Loan Range:</div>
                 <div className="font-semibold text-lg mb-2">
-                  {loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)} -{" "}
-                  {loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)}
+                  {formatNumber(
+                    loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)
+                  )}{" "}
+                  -{" "}
+                  {formatNumber(
+                    loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)
+                  )}
                 </div>
                 <div className="text-gray-500">Duration Range:</div>
                 <div className="font-semibold text-lg">
@@ -272,11 +267,11 @@ const LoanOffers = () => {
                   <div className="text-[14px]">
                     <div className="text-gray-500">Principal Amount:</div>
                     <div className="font-semibold text-lg mb-2">
-                      {ci?.principalAmount.toFixed(2)}
+                      {formatNumber(ci?.principalAmount.toFixed(2))}
                     </div>
                     <div className="text-gray-500">Total Interest:</div>
                     <div className="font-semibold text-lg mb-2">
-                      {ci?.totalInterestAmount.toFixed(2)}
+                      {formatNumber(ci?.totalInterestAmount.toFixed(2))}
                     </div>
                     <div className="text-gray-500">Service Fee:</div>
                     <div className="flex items-baseline gap-x-2">
@@ -299,7 +294,7 @@ const LoanOffers = () => {
                     <div className="border-t border-gray-300 pt-2 text-blue-600">
                       <div className="font-semibold">Total Loan Amount:</div>
                       <div className="font-bold text-lg">
-                        {ci?.totalLoanAmount.toFixed(2)}
+                        {formatNumber(ci?.totalLoanAmount.toFixed(2))}
                       </div>
                     </div>
                   </div>
@@ -323,7 +318,7 @@ const LoanOffers = () => {
                     <div className="text-[14px]">
                       <div className="text-gray-500">Total Loan Amount</div>
                       <div className="font-semibold text-lg text-blue-600">
-                        {ci?.totalLoanAmount.toFixed(2)}
+                        {formatNumber(ci?.totalLoanAmount.toFixed(2))}
                       </div>
                       <div
                         className="cursor-pointer text-blue-600 hover:underline"
@@ -337,8 +332,10 @@ const LoanOffers = () => {
                     <div className="text-[14px]">
                       <div className="text-gray-500">Monthly EMI</div>
                       <div className="font-semibold text-lg">
-                        {ci?.installmentSummaryResponse[0]?.installmentValue.toFixed(
-                          2
+                        {formatNumber(
+                          ci?.installmentSummaryResponse[0]?.installmentValue.toFixed(
+                            2
+                          )
                         )}
                       </div>
                     </div>
@@ -368,8 +365,13 @@ const LoanOffers = () => {
                   </div>
                 </div>
               </ContainerTile>
-              <div className="text-center text-gray-500">
-                Loan Summary Id : {ci?.transactionId}
+              <div>
+                <div className="text-center text-gray-500">
+                  Loan Summary Id : {ci?.transactionId}
+                </div>
+                <div className="text-center text-gray-500">
+                  Loan Application Id : {loanConfigData?.loanApplicationId}
+                </div>
               </div>
             </React.Fragment>
           ))}

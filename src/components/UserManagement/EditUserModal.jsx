@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
-import SelectInput from "../Common/DynamicSelect/DynamicSelect";
+import InputSelectMulti from "../Common/InputSelectMulti/InputSelectMulti";
 import {
   clearFormData,
   setFormData,
@@ -80,7 +80,7 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
               required
               isValidation={true}
             />
-            <SelectInput
+            <InputSelectMulti
               labelName="Roles"
               inputName="userRole"
               inputOptions={role}

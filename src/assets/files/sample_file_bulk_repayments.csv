@@ -1,25 +1,3 @@
-Loan #,Amount,Method,Collection Date,Collection By,Description,payAll
-427,315,Cash,10/06/2017,Jake Copland,Paid in full,false
-428,252,Cash,11/07/2017,Jake Copland,false
-429,252,Cheque,10/08/2017,Jake Copland,true
-430,315,Cheque,10/06/2017,Jake Copland,false
-431,252,Cheque,12/12/2017,Jake Copland,false
-432,252,Cash,12/12/2017,Jake Copland,Will pay rest of the amount next month,true
-433,353.1,Cash,12/12/2017,Jake Copland,true
-434,252,Cash,12/12/2017,Randy Ong,false
-435,252,Cash,11/07/2017,Randy Ong,true
-436,222,Cheque,11/07/2017,Randy Ong,Paid in half,true
-437,315,Cash,11/07/2017,Jake Copland,false
-438,252,Cash,11/07/2017,Jake Copland,false
-439,189,ATM,10/04/2017,Jake Copland,false
-440,315,Cash,10/04/2017,Jake Copland,Paid more than due,true
-441,252,Cash,10/05/2017,Randy Ong,true
-442,252,ATM,10/04/2017,Jake Copland,false
-443,454,Cheque,11/07/2017,Randy Ong,true
-444,45,Cash,11/07/2017,Jake Copland,true
-445,87,Cash,11/07/2017,Jake Copland,false
-446,45.09,ATM,10/04/2017,Jake Copland,false
-447,34,Cash,10/04/2017,Jake Copland,true
-448,252,Cash,10/05/2017,Randy Ong,false
-449,252,ATM,10/04/2017,Jake Copland,true
-450,5,Cash,11/07/2017,Jake Copland,false
+UserId,LoanId,RepaymentType,Amount,CollectionDate,collectionBy,Method,payAll
+12344xxx,test,PERSONAL,500,2024-01-15,USER_PAYMENT,SarieTransfer,FALSE
+12345xxx,test,COMPANY,501,2024-01-16,USER_PAYMENT,SarieTransfer,FALSE

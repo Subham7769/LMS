@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { convertDate } from "../../../utils/convertDate";
 
 const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
-  <div className="flex border-b border-gray-300 pb-5">
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 pr-4">
+  <div className="grid grid-cols-4 gap-5 border-b border-gray-300 pb-5">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
       <div>Loan Id</div>
       <div className="font-bold text-black flex w-[120px] items-center">
         : <span className="mr-2">{""}</span>
@@ -34,7 +34,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.totalAmount}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 px-4">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
       <div>Remaining Principal</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -46,7 +46,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.remainingInterest}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 px-4">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
       <div>Loan Status</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -58,7 +58,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.totalOutstanding}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 pl-4">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2">
       <div>Submit Date</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -114,6 +114,7 @@ const InstallmentScheduleTable = ({ loansarrModal }) => (
 );
 
 const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
+
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(loanDetails.loanId);

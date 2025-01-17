@@ -8,60 +8,47 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import { countryOptions, locationOptions } from "../../../data/CountryData";
-import {
-  maritalStatus,
-  workType,
-  title,
-  gender,
-  accountType,
-  uniqueIDType,
-} from "../../../data/LosData";
+import { accountType, natureOfCompanyOptions } from "../../../data/LosData";
 import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
 
-const AddUpdateDirectorFields = ({BorrowerData, handleChangeReducer}) => {
+const AddUpdateCompanyBorrowerFields = ({
+  BorrowerData,
+  handleChangeReducer,
+}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
-  const [filteredLocations2, setFilteredLocations2] = useState([]);
 
   useEffect(() => {
     setFilteredLocations1(
-      locationOptions[BorrowerData.contactDetails.country] || []
+      locationOptions[BorrowerData.companyContactDetails.country] || []
     );
-    setFilteredLocations2(
-      locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
-    );
-  }, [
-    BorrowerData.contactDetails.country,
-    BorrowerData.nextOfKinDetails.kinCountry,
-  ]);
+  }, [BorrowerData.companyContactDetails.country]);
 
   useEffect(() => {
     const keysArray = [
-      "companyId",
-      "title",
-      "firstName",
-      "surname",
-      "uniqueIDType",
-      "uniqueID",
-      "gender",
-      "maritalStatus",
-      "nationality",
-      "dateOfBirth",
-      "placeOfBirth",
+      "companyName",
+      "companyShortName",
+      "natureOfCompany",
+      "companyUniqueId",
+      "companyRegistrationNo",
+      "countryOfRegistration",
+      "dateOfIncorporation",
+      "province",
+      "district",
+      "locationOfHQ",
+      "industry",
+      "natureOfBusiness",
+      "numberOfPermanentEmployees",
+
       "mobile1",
       "street",
       "residentialArea",
       "country",
       "email",
-      "employer",
-      "occupation",
-      "employmentLocation",
-      "workStartDate",
-      "employeeNo",
-      "workType",
+
       "bankName",
       "accountName",
       "accountType",
@@ -69,119 +56,121 @@ const AddUpdateDirectorFields = ({BorrowerData, handleChangeReducer}) => {
       "branchCode",
       "sortCode",
       "accountNo",
-      "kinTitle",
-      "kinSurname",
-      "kinNrcNo",
-      "kinGender",
-      "kinMobile1",
-      "kinEmail",
-      "kinStreet",
-      "kinResidentialArea",
-      "kinCountry",
-      "kinEmployer",
-      "kinOccupation",
+
       "creditScore",
       "freeCashInHand",
       "grossSalary",
+      "shareholdingStructure",
+      "tradeUnion",
     ];
-    
     dispatch(setFields(keysArray));
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
 
-  const handleInputChange = (e, section) => {
+  const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
     // Use section to update the correct part of the state
     dispatch(
-      handleChangeReducer({ section, field: name, value, type, checked })
+      handleChangeReducer({ section, field: name, value, type, checked, index })
     );
   };
 
   const handleFileUpload = (e, section) => {
-    const { name, value, type, checked,files } = e.target;
-console.log(name)
+    const { name, value, type, checked, files } = e.target;
+
     dispatch(
-      handleChangeReducer({ section, field: name, value: files[0], type})
+      handleChangeReducer({ section, field: name, value: files[0], type })
     );
   };
 
   //   All Fields Configuration
-  const personalDetailsConfig = [
+  const companyDetailsConfig = [
     {
-      labelName: "Title",
-      inputName: "title",
-      type: "select",
-      options: title,
-      validation: true,
-    },
-    {
-      labelName: "First Name",
-      inputName: "firstName",
+      labelName: "Company Name",
+      inputName: "companyName",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Surname",
-      inputName: "surname",
+      labelName: "Company Short Name",
+      inputName: "companyShortName",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Other Name",
-      inputName: "otherName",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Gender",
-      inputName: "gender",
+      labelName: "Nature of Company",
+      inputName: "natureOfCompany",
       type: "select",
-      options: gender,
+      options: natureOfCompanyOptions,
       validation: true,
     },
     {
-      labelName: "Marital Status",
-      inputName: "maritalStatus",
-      type: "select",
-      options: maritalStatus,
-      validation: true,
-    },
-    {
-      labelName: "Unique ID Type",
-      inputName: "uniqueIDType",
-      type: "select",
-      options: uniqueIDType,
-      validation: true,
-    },
-    {
-      labelName: "Unique ID",
-      inputName: "uniqueID",
+      labelName: "Company Unique Id",
+      inputName: "companyUniqueId",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Nationality",
-      inputName: "nationality",
+      labelName: "Company Registration No.",
+      inputName: "companyRegistrationNo",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Country of Registration",
+      inputName: "countryOfRegistration",
       type: "select",
       options: countryOptions,
       validation: true,
     },
     {
-      labelName: "Date of Birth",
-      inputName: "dateOfBirth",
+      labelName: "Date of Registration",
+      inputName: "dateOfIncorporation",
       type: "date",
       validation: true,
     },
     {
-      labelName: "Place of Birth",
-      inputName: "placeOfBirth",
+      labelName: "Province / State",
+      inputName: "province",
+      type: "select",
+      options: filteredLocations1,
+      validation: true,
+    },
+    {
+      labelName: "District",
+      inputName: "district",
       type: "text",
       validation: true,
     },
+    {
+      labelName: "Location of HQ",
+      inputName: "locationOfHQ",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Industry",
+      inputName: "industry",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Nature of Business",
+      inputName: "natureOfBusiness",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "No. of Permanent Employees",
+      inputName: "numberOfPermanentEmployees",
+      type: "number",
+      validation: true,
+    },
   ];
-  const contactDetailsConfig = [
+
+  const companyContactDetailsConfig = [
     {
       labelName: "Mobile 1",
       inputName: "mobile1",
@@ -246,63 +235,7 @@ console.log(name)
       validation: false,
     },
   ];
-  const employmentDetailsConfig = [
-    {
-      labelName: "Work Type",
-      inputName: "workType",
-      type: "select",
-      options: workType,
-      validation: true,
-    },
-    {
-      labelName: "Employer",
-      inputName: "employer",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Occupation",
-      inputName: "occupation",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Employee No.",
-      inputName: "employeeNo",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Work Start Date",
-      inputName: "workStartDate",
-      type: "date",
-      validation: true,
-    },
-    {
-      labelName: "Work Phone Number",
-      inputName: "workPhoneNumber",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Work Physical Address",
-      inputName: "workPhysicalAddress",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Location",
-      inputName: "employmentLocation",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "District",
-      inputName: "employmentDistrict",
-      type: "text",
-      validation: false,
-    },
-  ];
+
   const bankDetailsConfig = [
     {
       labelName: "Name of Bank",
@@ -348,94 +281,50 @@ console.log(name)
       validation: true,
     },
   ];
-  const nextOfKinConfig = [
+
+  const companyOtherDetailsConfig = [
     {
-      labelName: "Title",
-      inputName: "kinTitle",
-      type: "select",
-      options: title,
-      validation: true,
-    },
-    {
-      labelName: "Surname",
-      inputName: "kinSurname",
-      type: "text",
-      validation: true,
-    },
-    { labelName: "Other Name", inputName: "kinOtherName", type: "text" },
-    {
-      labelName: "NRC No.",
-      inputName: "kinNrcNo",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Gender",
-      inputName: "kinGender",
-      type: "select",
-      options: gender,
-      validation: true,
-    },
-    {
-      labelName: "Mobile 1",
-      inputName: "kinMobile1",
+      labelName: "Free Cash In Hand",
+      inputName: "freeCashInHand",
       type: "number",
       validation: true,
     },
-    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number" },
     {
-      labelName: "Email",
-      inputName: "kinEmail",
-      type: "email",
+      labelName: "Gross Salary",
+      inputName: "grossSalary",
+      type: "number",
       validation: true,
     },
-    { labelName: "House No.", inputName: "kinHouseNo", type: "text" },
     {
-      labelName: "Street",
-      inputName: "kinStreet",
+      labelName: "Credit Score",
+      inputName: "creditScore",
+      type: "number",
+      validation: true,
+    },
+    {
+      labelName: "Reason for Borrowing",
+      inputName: "reasonForBorrowing",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Residential Area",
-      inputName: "kinResidentialArea",
-      type: "text",
-      validation: true,
-    },
-    { labelName: "District", inputName: "kinDistrict", type: "text" },
-    {
-      labelName: "Country",
-      inputName: "kinCountry",
-      type: "select",
-      options: countryOptions,
-      validation: true,
-    },
-    {
-      labelName: "Province / State",
-      inputName: "kinProvince",
-      type: "select",
-      options: filteredLocations2,
-    },
-    {
-      labelName: "Employer",
-      inputName: "kinEmployer",
+      labelName: "Source of Repayment",
+      inputName: "sourceOfRepayment",
       type: "text",
       validation: true,
     },
     {
-      labelName: "Occupation",
-      inputName: "kinOccupation",
+      labelName: "Trade Union",
+      inputName: "tradeUnion",
       type: "text",
       validation: true,
     },
-    { labelName: "Location", inputName: "kinLocation", type: "text" },
     {
-      labelName: "Work Phone Number",
-      inputName: "kinWorkPhoneNumber",
+      labelName: "Shareholding Structure",
+      inputName: "shareholdingStructure",
       type: "text",
+      validation: true,
     },
-  ];
-  const otherDetailsConfig = [
     {
       labelName: "Customer Photo",
       inputName: "customerPhotoId",
@@ -446,20 +335,19 @@ console.log(name)
   ];
 
   // Generate the Form Field
-  const personalDetailsInputNames = personalDetailsConfig.map(
+  const companyDetailsInputNames = companyDetailsConfig.map(
     (field) => field.inputName
   );
-  const contactDetailsInputNames = contactDetailsConfig.map(
+
+  const companyContactDetailsInputNames = companyContactDetailsConfig.map(
     (field) => field.inputName
   );
-  const employmentDetailsInputNames = employmentDetailsConfig.map(
-    (field) => field.inputName
-  );
+
   const bankDetailsInputNames = bankDetailsConfig.map(
     (field) => field.inputName
   );
-  const nextOfKinInputNames = nextOfKinConfig.map((field) => field.inputName);
-  const otherDetailsInputNames = otherDetailsConfig.map(
+
+  const companyOtherDetailsInputNames = companyOtherDetailsConfig.map(
     (field) => field.inputName
   );
 
@@ -513,7 +401,6 @@ console.log(name)
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
-
                 />
               </div>
             );
@@ -549,25 +436,26 @@ console.log(name)
   );
 
   // Dedicated UI Components Creation
-  const personalDetails = (personalDetails) =>
-    renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
+  const companyDetails = (companyDetails) =>
+    renderDetails(companyDetails, companyDetailsConfig, "companyDetails");
 
-  const contactDetails = (contactDetails) =>
-    renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
-
-  const employmentDetails = (employmentDetails) =>
-    renderDetails(employmentDetails, employmentDetailsConfig, "employmentDetails");
+  const companyContactDetails = (companyContactDetails) =>
+    renderDetails(
+      companyContactDetails,
+      companyContactDetailsConfig,
+      "companyContactDetails"
+    );
 
   const bankDetails = (bankDetails) =>
     renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
 
-  const nextOfKinDetails = (nextOfKinData) =>
-    renderDetails(nextOfKinData, nextOfKinConfig, "nextOfKinDetails");
+  const companyOtherDetails = (companyOtherDetails) =>
+    renderDetails(
+      companyOtherDetails,
+      companyOtherDetailsConfig,
+      "companyOtherDetails"
+    );
 
-  const otherDetails = (otherDetails) =>
-    renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
-
-  
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
@@ -582,50 +470,44 @@ console.log(name)
   return (
     <>
       <Accordion
-        heading={"Personal Details"}
+        heading={"General Details"}
         renderExpandedContent={() =>
-          personalDetails(BorrowerData.personalDetails)
+          companyDetails(BorrowerData.companyDetails)
         }
         isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsInputNames)}
+        error={isValidationFailed(validationError, companyDetailsInputNames)}
       />
+
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
-          contactDetails(BorrowerData.contactDetails)
+          companyContactDetails(BorrowerData.companyContactDetails)
         }
-        error={isValidationFailed(validationError, contactDetailsInputNames)}
+        error={isValidationFailed(
+          validationError,
+          companyContactDetailsInputNames
+        )}
       />
-      <Accordion
-        heading={"Employment Details"}
-        renderExpandedContent={() =>
-          employmentDetails(BorrowerData.employmentDetails)
-        }
-        error={isValidationFailed(validationError, employmentDetailsInputNames)}
-      />
+
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() =>
-          bankDetails(BorrowerData.bankDetails)
-        }
+        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
         error={isValidationFailed(validationError, bankDetailsInputNames)}
       />
-      <Accordion
-        heading={"Next of Kin Details"}
-        renderExpandedContent={() =>
-          nextOfKinDetails(BorrowerData.nextOfKinDetails)
-        }
-        error={isValidationFailed(validationError, nextOfKinInputNames)}
-      />
+
       <Accordion
         heading={"Other Details"}
         renderExpandedContent={() =>
-          otherDetails(BorrowerData.otherDetails)
+          companyOtherDetails(BorrowerData.companyOtherDetails)
         }
-        error={isValidationFailed(validationError, otherDetailsInputNames)}
+        error={isValidationFailed(
+          validationError,
+          companyOtherDetailsInputNames
+        )}
       />
+
     </>
   );
 };
 
-export default AddUpdateDirectorFields;
+export default AddUpdateCompanyBorrowerFields;

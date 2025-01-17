@@ -5,16 +5,15 @@ import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 const ExpandableTable = ({
   columns,
   data,
-  renderExpandedRow,
+  renderExpandedRow = null,
   ListAction = null,
   ActionId = null,
   loading = false,
   error = false,
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
-
   const handleExpand = (id) => {
-    setExpandedRow((prev) => (prev === id ? null : id));
+    if (renderExpandedRow) setExpandedRow((prev) => (prev === id ? null : id));
   };
   const ShimmerTable = () => {
     return (
@@ -32,13 +31,13 @@ const ExpandableTable = ({
       <table className="min-w-full table-auto" role="table">
         <thead className={"sticky top-0 z-10"}>
           <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
-            <th className="px-4 py-6"></th>
             {columns.map((col, index) => (
               <th key={index} className="px-4 py-4">
                 {col.label}
               </th>
             ))}
             {ListAction && <th className="px-4 py-4">Actions</th>}
+            {renderExpandedRow && <th className="px-4 py-4"></th>}
           </tr>
         </thead>
         <tbody>
@@ -59,38 +58,30 @@ const ExpandableTable = ({
                   className="hover:bg-gray-50 cursor-pointer text-xs font-medium"
                   onClick={() => handleExpand(index)}
                 >
-                  <td className=" flex justify-center items-center py-6">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleExpand(index);
-                      }}
-                      className="text-blue-600 hover:text-blue-800"
-                      aria-label={
-                        expandedRow === index ? "Collapse row" : "Expand row"
-                      }
-                    >
-                      {expandedRow === index ? (
-                        <FiChevronUp size={18} />
-                      ) : (
-                        <FiChevronDown size={18} />
-                      )}
-                    </button>
-                  </td>
                   {columns.map((col, index) => (
                     <td
                       key={index}
-                      className="max-w-28 break-words px- py-6 text-sm text-center text-gray-800"
+                      className="max-w-28 break-words py-6 text-sm text-center text-gray-800"
                     >
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${
                           col.field.toLowerCase().includes("status") &&
                           (rowData[col.field].toLowerCase() === "rejected" ||
-                          rowData[col.field] === "DEFAULTER"
+                          rowData[col.field] === "DEFAULTER" ||
+                          rowData[col.field] === "DEFAULTED" ||
+                          rowData[col.field].toLowerCase().includes("cancel")
                             ? "bg-red-100 text-red-800"
-                            : rowData[col.field] === "Pending" ||
-                              rowData[col.field] === "DEACTIVATED"
+                            : rowData[col.field] === "In Progress" ||
+                              rowData[col.field] === "DEACTIVATED" ||
+                              rowData[col.field] === "LATE"
                             ? "bg-yellow-100 text-yellow-800"
+                            : rowData[col.field] === "Submitted" ||
+                              rowData[col.field] === "ROLL OVERED"
+                            ? "bg-violet-100 text-violet-800"
+                            : rowData[col.field] === "CLOSED"
+                            ? "bg-gray-100 text-gray-800"
+                            : rowData[col.field] === "FROZEN"
+                            ? "bg-blue-100 text-blue-800"
                             : "bg-green-100 text-green-800")
                         }`}
                       >
@@ -98,7 +89,7 @@ const ExpandableTable = ({
                       </span>
                     </td>
                   ))}
-                  {ListAction && (
+                  {/* {ListAction && (
                     <ListAction
                       id={
                         columns.map((col, index) => {
@@ -107,6 +98,31 @@ const ExpandableTable = ({
                       }
                       application={data}
                     />
+                  )} */}
+                  {ListAction && (
+                    <td className="flex justify-center items-center ">
+                      {ListAction(rowData)}
+                    </td>
+                  )}
+                  {renderExpandedRow && (
+                    <td className="max-w-28 break-words py-6 text-sm text-center text-gray-800">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExpand(index);
+                        }}
+                        className="text-blue-600 hover:text-blue-800"
+                        aria-label={
+                          expandedRow === index ? "Collapse row" : "Expand row"
+                        }
+                      >
+                        {expandedRow === index ? (
+                          <FiChevronUp size={18} />
+                        ) : (
+                          <FiChevronDown size={18} />
+                        )}
+                      </button>
+                    </td>
                   )}
                 </tr>
                 {expandedRow === index && (

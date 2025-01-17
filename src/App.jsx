@@ -40,7 +40,7 @@ const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 // *************************************TEST******************************************************
 
 const TestComponent = lazy(() =>
-  import("./components/TestComponent/TestComponent11")
+  import("./components/TestComponent/Los/ApproveLoansTest")
 );
 
 // *************************************TEST******************************************************
@@ -234,7 +234,6 @@ const CreateNewReportingConfig = lazy(() =>
 
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
-const DatePicker = lazy(() => import("./components/Reports/DatePicker"));
 
 // Invoice Discounting Imports
 const Registration = lazy(() => import("./components/Los-SME/Registration"));
@@ -282,6 +281,9 @@ const LoanOffers = lazy(() =>
 const ApproveLoans = lazy(() =>
   import("./components/Los-Personal/Loans/ApproveLoans")
 );
+const LoanApplication = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanApplication")
+);
 const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
 const LoanHistory = lazy(() =>
   import("./components/Los-Personal/Loans/LoanHistory")
@@ -315,11 +317,23 @@ const AddCompany = lazy(() =>
 const AddDirector = lazy(() =>
   import("./components/Los-SME/Borrowers/AddDirector")
 );
+const AddShareHolder = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddShareHolder")
+);
+const AddDocuments = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddDocuments")
+);
 const ViewCompany = lazy(() =>
   import("./components/Los-SME/Borrowers/ViewCompany")
 );
 const UpdateCompany = lazy(() =>
   import("./components/Los-SME/Borrowers/UpdateCompany")
+);
+const UpdateDirector = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateDirector")
+);
+const UpdateShareholder = lazy(() =>
+  import("./components/Los-SME/Borrowers/UpdateShareholder")
 );
 
 //------------Loans-----------------
@@ -329,6 +343,9 @@ const LoanOffersSME = lazy(() =>
 );
 const ApproveLoansSME = lazy(() =>
   import("./components/Los-SME/Loans/ApproveLoans")
+);
+const LoanApplicationSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanApplication")
 );
 const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
 const LoanHistorySME = lazy(() =>
@@ -350,8 +367,6 @@ const ApproveRepaymentSME = lazy(() =>
 const UploadRepaymentSME = lazy(() =>
   import("./components/Los-SME/Repayments/UploadRepayment")
 );
-
-
 
 // ------------------------ Deposit Section Imports -----------------------------------
 
@@ -513,7 +528,7 @@ const routes = [
       },
       {
         path: "test",
-        element: <DatePicker />,
+        element: <TestComponent />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -675,6 +690,16 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-shareholder",
+            element: <AddShareHolder />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-documents",
+            element: <AddDocuments />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "view-company",
             element: <ViewCompany />,
             errorElement: <RouteErrorBoundary />,
@@ -682,6 +707,16 @@ const routes = [
           {
             path: "update-company/:uid",
             element: <UpdateCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-director/:uid",
+            element: <UpdateDirector />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-shareholder/:uid",
+            element: <UpdateShareholder />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -692,7 +727,12 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: "add-loan",
+            path: "loan-application",
+            element: <LoanApplicationSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-loan/:loanApplicationId",
             element: <AddLoansSME />,
             errorElement: <RouteErrorBoundary />,
           },
@@ -818,7 +858,12 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: "add-loan",
+            path: "loan-application",
+            element: <LoanApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-loan/:loanApplicationId",
             element: <AddLoans />,
             errorElement: <RouteErrorBoundary />,
           },
