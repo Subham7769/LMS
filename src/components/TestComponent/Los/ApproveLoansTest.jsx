@@ -19,6 +19,7 @@ import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import CardInfo from "../../Common/CardInfo/CardInfo";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -134,76 +135,70 @@ const ApproveLoansTest = () => {
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <div className="font-semibold text-xl mb-3">Borrower Information</div>
-          <div className="bg-white p-3 shadow rounded-md">
-            <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Employment</div>
-                <div className="font-semibold">Tech Co Ltd</div>
-                <div className="text-gray-500 font-light text-xs">3 years</div>
-              </div>
-              <div>
-                <div className="text-gray-500">Monthly Income</div>
-                <div className="font-semibold">$5000</div>
-              </div>
+        <CardInfo cardTitle="Borrower Information" className={"bg-white"}>
+          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Employment</div>
+              <div className="font-semibold">Tech Co Ltd</div>
+              <div className="text-gray-500 font-light text-xs">3 years</div>
             </div>
-            <div className="grid grid-cols-3">
-              <div>
-                <div className="text-gray-500">Credit Score</div>
-                <div className="font-semibold">720</div>
-              </div>
-              <div>
-                <div className="text-gray-500">Active Loans</div>
-                <div className="font-semibold">1</div>
-              </div>
-              <div>
-                <div className="text-gray-500">Payment History</div>
-                <div className="font-semibold">No Defaults</div>
+            <div>
+              <div className="text-gray-500">Monthly Income</div>
+              <div className="font-semibold">$5000</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3">
+            <div>
+              <div className="text-gray-500">Credit Score</div>
+              <div className="font-semibold">720</div>
+            </div>
+            <div>
+              <div className="text-gray-500">Active Loans</div>
+              <div className="font-semibold">1</div>
+            </div>
+            <div>
+              <div className="text-gray-500">Payment History</div>
+              <div className="font-semibold">No Defaults</div>
+            </div>
+          </div>
+        </CardInfo>
+        <CardInfo cardTitle="Loan Information" className={"bg-white"}>
+          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Principal Amount</div>
+              <div className="font-semibold">${rowData.principalAmount}</div>
+            </div>
+            <div>
+              <div className="text-gray-500">Interest Rate</div>
+              <div className="font-semibold">
+                {rowData.loanInterest}% {rowData.interestMethod} per{" "}
+                {rowData.perLoanInterest}
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div className="font-semibold text-xl  mb-3">Loan Information</div>
-          <div className="bg-white p-3 shadow rounded-md">
-            <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Principal Amount</div>
-                <div className="font-semibold">${rowData.principalAmount}</div>
-              </div>
-              <div>
-                <div className="text-gray-500">Interest Rate</div>
-                <div className="font-semibold">
-                  {rowData.loanInterest}% {rowData.interestMethod} per{" "}
-                  {rowData.perLoanInterest}
-                </div>
+          <div className="grid grid-cols-3 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Tenure</div>
+              <div className="font-semibold">
+                {rowData.loanDuration} {rowData.perLoanDuration}
               </div>
             </div>
-            <div className="grid grid-cols-3 border-b border-gray-300 pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Tenure</div>
-                <div className="font-semibold">
-                  {rowData.loanDuration} {rowData.perLoanDuration}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Monthly EMI</div>
-                <div className="font-semibold">$ 120</div>
-              </div>
-              <div>
-                <div className="text-gray-500">First Payment</div>
-                <div className="font-semibold">Feb 01</div>
-              </div>
+            <div>
+              <div className="text-gray-500">Monthly EMI</div>
+              <div className="font-semibold">$ 120</div>
             </div>
-            <div
-              className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-              onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-            >
-              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+            <div>
+              <div className="text-gray-500">First Payment</div>
+              <div className="font-semibold">Feb 01</div>
             </div>
           </div>
-        </div>
+          <div
+            className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+            onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+          >
+            <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+          </div>
+        </CardInfo>
       </div>
       <div className="bg-white p-3 shadow rounded-md my-5">
         <div className="font-semibold text-xl mb-3">

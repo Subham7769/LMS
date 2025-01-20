@@ -79,6 +79,7 @@ const AddLoans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     console.log(addLoanData);
     const state = store.getState();

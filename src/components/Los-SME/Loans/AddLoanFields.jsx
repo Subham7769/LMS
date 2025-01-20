@@ -133,16 +133,6 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Repayment Cycle",
-      inputName: "repaymentCycle",
-      type: "select",
-      options: [
-        { value: "Monthly", label: "Monthly" },
-        { value: "Quarterly", label: "Quarterly" },
-      ],
-      validation: true,
-    },
-    {
       labelName: "Loan Interest %",
       inputName: "loanInterest",
       type: "text",
@@ -169,6 +159,16 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
+      labelName: "Repayment Cycle",
+      inputName: "repaymentCycle",
+      type: "select",
+      options: [
+        { value: "Monthly", label: "Monthly" },
+        { value: "Quarterly", label: "Quarterly" },
+      ],
+      validation: true,
+    },
+    {
       labelName: "Number of Tenure",
       inputName: "numberOfTenure",
       type: "number",
@@ -179,6 +179,30 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "reasonForBorrowing",
       type: "text",
       validation: true,
+    },
+    {
+      labelName: "Refinanced Loan ID",
+      inputName: "refinancedLoanId",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Branch",
+      inputName: "branch",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Agent Name",
+      inputName: "agentName",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "CO Name",
+      inputName: "lhacoName",
+      type: "text",
+      validation: false,
     },
   ];
 

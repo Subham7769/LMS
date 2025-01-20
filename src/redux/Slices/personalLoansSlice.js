@@ -587,6 +587,10 @@ const initialState = {
       perLoanInterest: "",
       principalAmount: 0,
       repaymentCycle: "",
+      refinancedLoanId: "",
+      branch: "",
+      agentName: "",
+      lhacoName: "",
     },
     documents: [
       {

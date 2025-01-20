@@ -293,6 +293,22 @@ const ProductInputFields = ({ productData, handleChange }) => {
             onChange={handleChange}
             isValidation={true}
           />
+          <InputText
+            labelName="Insurance Fee"
+            inputName="insuranceFee"
+            inputValue={productData?.insuranceFee}
+            onChange={handleChange}
+            placeHolder="4%"
+            isValidation={true}
+          />
+          <InputText
+            labelName="Insurance Levy"
+            inputName="insuranceLevy"
+            inputValue={productData?.insuranceLevy}
+            onChange={handleChange}
+            placeHolder="3%"
+            isValidation={true}
+          />
 
           <div className="col-span-5 grid grid-cols-5 gap-5 items-end border-t-2 ">
             <InputCheckbox
