@@ -20,7 +20,6 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
-import PrintView from "../../Common/PrintView/PrintView";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -244,7 +243,6 @@ const ApproveLoansTest = () => {
   );
 
   return (
-    <PrintView buttonLabel="Print">
       <div className={`flex flex-col gap-3`}>
         <ContainerTile className={`flex justify-between gap-5 align-middle`}>
           <div className="w-[45%]">
@@ -304,7 +302,6 @@ const ApproveLoansTest = () => {
           loading={loading}
         />
       </div>
-    </PrintView>
   );
 };
 

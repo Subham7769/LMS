@@ -181,12 +181,12 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "text",
       validation: false,
     },
-    {
-      labelName: "CO Name",
-      inputName: "lhacoName",
-      type: "text",
-      validation: false,
-    },
+    // {
+    //   labelName: "CO Name",
+    //   inputName: "lhacoName",
+    //   type: "text",
+    //   validation: false,
+    // },
   ];
 
   const validationError = useSelector(
