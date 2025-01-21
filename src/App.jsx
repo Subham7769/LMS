@@ -43,7 +43,7 @@ const TestComponent = lazy(() =>
   import("./components/TestComponent/Los/ApproveLoansTest")
 );
 const TestComponent1 = lazy(() =>
-  import("./components/TestComponent/Los/ApproveRepaymentTest")
+  import("./components/TestComponent/TestComponent11")
 );
 
 // *************************************TEST******************************************************

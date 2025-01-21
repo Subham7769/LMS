@@ -277,22 +277,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
             placeHolder="15%"
             isValidation={true}
           />
-          <InputNumber
-            labelName="No. of Early Settlement Installments"
-            inputName="numberOfEmisForEarlySettlement"
-            inputValue={productData?.numberOfEmisForEarlySettlement}
-            onChange={handleChange}
-            placeHolder="3"
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Interest Method"
-            inputOptions={interestMethodOptions}
-            inputName="interestMethod"
-            inputValue={productData?.interestMethod}
-            onChange={handleChange}
-            isValidation={true}
-          />
           <InputText
             labelName="Insurance Fee"
             inputName="insuranceFee"
@@ -307,6 +291,22 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.insuranceLevy}
             onChange={handleChange}
             placeHolder="3%"
+            isValidation={true}
+          />
+          <InputNumber
+            labelName="No. of Early Settlement Installments"
+            inputName="numberOfEmisForEarlySettlement"
+            inputValue={productData?.numberOfEmisForEarlySettlement}
+            onChange={handleChange}
+            placeHolder="3"
+            isValidation={true}
+          />
+          <InputSelect
+            labelName="Interest Method"
+            inputOptions={interestMethodOptions}
+            inputName="interestMethod"
+            inputValue={productData?.interestMethod}
+            onChange={handleChange}
             isValidation={true}
           />
 

@@ -1,5 +1,6 @@
 import React from "react";
 import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
+import PrintView from "../Common/PrintView/PrintView";
 
 const ApplicationsTable = () => {
   const applications = [
@@ -87,13 +88,13 @@ const ApplicationsTable = () => {
   );
 
   return (
-    <>
+    <PrintView>
       <ExpandableTable
         columns={columns}
         data={applications}
         renderExpandedRow={renderExpandedRow}
       />
-    </>
+    </PrintView>
   );
 };
 

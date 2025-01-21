@@ -20,6 +20,7 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import PrintView from "../../Common/PrintView/PrintView";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -243,65 +244,67 @@ const ApproveLoansTest = () => {
   );
 
   return (
-    <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
-          <InputSelect
-            labelName="Search By"
-            inputName="searchBy"
-            inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
-          />
-        </div>
-        <div className="w-[45%]">
-          <InputText
-            labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            required
-          />
-        </div>
+    <PrintView buttonLabel="Print">
+      <div className={`flex flex-col gap-3`}>
+        <ContainerTile className={`flex justify-between gap-5 align-middle`}>
+          <div className="w-[45%]">
+            <InputSelect
+              labelName="Search By"
+              inputName="searchBy"
+              inputOptions={searchOptions}
+              inputValue={searchBy}
+              onChange={(e) => setSearchBy(e.target.value)}
+            />
+          </div>
+          <div className="w-[45%]">
+            <InputText
+              labelName="Enter Value"
+              inputName="searchValue"
+              inputValue={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className="flex align-middle gap-5">
-          <Button
-            buttonName={"Search"}
-            onClick={handleSearch}
-            rectangle={true}
-            className={`mt-4 h-fit self-center`}
-          />
-          <Button
-            buttonName={"Reset"}
-            onClick={handleReset}
-            rectangle={true}
-            className={`mt-4 h-fit self-center`}
-          />
-        </div>
-      </ContainerTile>
-      <ExpandableTable
-        columns={columns}
-        data={approveLoansData}
-        renderExpandedRow={renderExpandedRow}
-        loading={loading}
-      />
-      <Pagination
-        totalElements={approveLoansTotalElements}
-        dispatcherFunction={dispatcherFunction}
-        pageSize={pageSize}
-      />
-      <LoanRejectModal
-        isOpen={showModal}
-        onClose={closeRejectModal}
-        userDetails={currentRowData}
-      />
-      <FullLoanDetailModal
-        isOpen={showLoanModal}
-        onClose={closeFullLoanDetailModal}
-        loanDetails={fullLoanDetails}
-        loading={loading}
-      />
-    </div>
+          <div className="flex align-middle gap-5">
+            <Button
+              buttonName={"Search"}
+              onClick={handleSearch}
+              rectangle={true}
+              className={`mt-4 h-fit self-center`}
+            />
+            <Button
+              buttonName={"Reset"}
+              onClick={handleReset}
+              rectangle={true}
+              className={`mt-4 h-fit self-center`}
+            />
+          </div>
+        </ContainerTile>
+        <ExpandableTable
+          columns={columns}
+          data={approveLoansData}
+          renderExpandedRow={renderExpandedRow}
+          loading={loading}
+        />
+        <Pagination
+          totalElements={approveLoansTotalElements}
+          dispatcherFunction={dispatcherFunction}
+          pageSize={pageSize}
+        />
+        <LoanRejectModal
+          isOpen={showModal}
+          onClose={closeRejectModal}
+          userDetails={currentRowData}
+        />
+        <FullLoanDetailModal
+          isOpen={showLoanModal}
+          onClose={closeFullLoanDetailModal}
+          loanDetails={fullLoanDetails}
+          loading={loading}
+        />
+      </div>
+    </PrintView>
   );
 };
 
