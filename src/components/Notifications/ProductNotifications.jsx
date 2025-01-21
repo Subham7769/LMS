@@ -4,16 +4,17 @@ import { fetchNotificationsHistory } from "../../redux/Slices/notificationSlice"
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import {convertDate} from "../../utils/convertDate"
+import { convertDate } from "../../utils/convertDate";
 const ProductNotifications = () => {
   const { notificationsHistory, error, loading } = useSelector(
     (state) => state.notification // Ensure state structure matches
   );
   const [expandedRow, setExpandedRow] = useState(null);
-  const [notificationsHistoryFiltered, setNotificationsHistoryFiltered] = useState(notificationsHistory);
+  const [notificationsHistoryFiltered, setNotificationsHistoryFiltered] =
+    useState(notificationsHistory);
   const [statusFilter, setStatusFilter] = useState("APPROVED");
   const dispatch = useDispatch();
-  const filterOptions =[
+  const filterOptions = [
     {
       label: "APPROVED",
       value: "APPROVED",
@@ -22,7 +23,7 @@ const ProductNotifications = () => {
       label: "REJECTED",
       value: "REJECTED",
     },
-  ]
+  ];
 
   console.log(notificationsHistory);
 
@@ -33,9 +34,11 @@ const ProductNotifications = () => {
 
   useEffect(() => {
     setNotificationsHistoryFiltered(
-      notificationsHistory.filter((notification) => notification.status === statusFilter)
+      notificationsHistory.filter(
+        (notification) => notification.status === statusFilter
+      )
     );
-  },[statusFilter,notificationsHistory])
+  }, [statusFilter, notificationsHistory]);
 
   // Handle row expand/collapse
   const handleExpand = (id) => {
@@ -54,7 +57,9 @@ const ProductNotifications = () => {
             Notification History
           </h2>
           <div className="flex gap-5 w-1/8">
-          <span className="mt-6">{notificationsHistoryFiltered.length + 1 + " results" }</span>
+            <span className="mt-6">
+              {notificationsHistoryFiltered.length + 1 + " results"}
+            </span>
             <InputSelect
               labelName="Status"
               inputOptions={filterOptions}
@@ -108,9 +113,7 @@ const ProductNotifications = () => {
                     <td className="px-6 py-4">
                       {notification.fieldName || "N/A"}
                     </td>
-                    <td className="px-6 py-4">
-                      {notification.type || "N/A"}
-                    </td>
+                    <td className="px-6 py-4">{notification.type || "N/A"}</td>
                     <td className="px-6 py-4">
                       {notification?.oldValue || "N/A"}
                     </td>
@@ -156,7 +159,9 @@ const ProductNotifications = () => {
                           </div>
                           <div className="flex justify-between flex-col">
                             <p className="font-semibold">Requested At:</p>
-                            <p>{convertDate(notification.requestedAt) || "N/A"}</p>
+                            <p>
+                              {convertDate(notification.requestedAt) || "N/A"}
+                            </p>
                           </div>
                           <div className="flex justify-between flex-col">
                             <p className="font-semibold">Type:</p>

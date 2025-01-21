@@ -20,6 +20,7 @@ import {
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 import formatNumber from "../../../utils/formatNumber";
+import CardInfo from "../../Common/CardInfo/CardInfo";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -136,18 +137,17 @@ const LoanOffers = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-5">
-            <ContainerTile loading={loading} className={"bg-gray-50"}>
-              <div className="flex justify-between items-baseline mb-3 text-blue-600">
-                <div className="font-semibold text-lg flex gap-x-2 items-center">
-                  <UserIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />{" "}
-                  Meet Our Borrower
-                </div>
-                <div className="bg-blue-100 rounded-full h-7 w-7 text-center pt-0.5">
-                  1
-                </div>
-              </div>
+            <CardInfo
+              cardTitle="Meet Our Borrower"
+              className={"rounded-xl"}
+              cardIcon={UserIcon}
+              cardHeaderClassName={"text-blue-600"}
+              cardNumber="1"
+              numberClassName={"bg-blue-100"}
+              loading={loading}
+            >
               <div className="font-semibold text-[15px] mb-2">
-                {borrowerData?.companyDetails?.companyName}{" "}
+                {borrowerData?.companyDetails?.companyName}
               </div>
               <div className="text-[14px]">
                 <InfoRow
@@ -163,18 +163,16 @@ const LoanOffers = () => {
                   value={formatNumber(loanConfigData?.profile?.netCashTCL)}
                 />
               </div>
-            </ContainerTile>
-            <ContainerTile loading={loading} className={"bg-gray-50"}>
-              <div className="flex justify-between items-baseline mb-3 text-green-600">
-                <div className="font-semibold text-lg flex gap-x-2 items-center ">
-                  <CogIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />{" "}
-                  Avialable Loan Range
-                </div>
-                <div className="bg-green-100 rounded-full h-7 w-7 text-center pt-0.5">
-                  2
-                </div>
-              </div>
-
+            </CardInfo>
+            <CardInfo
+              cardTitle="Avialable Loan Range"
+              className={"rounded-xl"}
+              cardIcon={CogIcon}
+              cardHeaderClassName={"text-green-600"}
+              cardNumber="2"
+              numberClassName={"bg-green-100"}
+              loading={loading}
+            >
               <div className="text-[14px]">
                 <div className="text-gray-500">Loan Range:</div>
                 <div className="font-semibold text-lg mb-2">
@@ -191,36 +189,31 @@ const LoanOffers = () => {
                   {loanConfigData?.cashLoanStats?.minLoanDuration} -{" "}
                   {loanConfigData?.cashLoanStats?.maxLoanDuration} days
                 </div>
-                <div className="text-gray-500">
+                <div className="text-gray-500 mb-2">
                   ({loanConfigData?.cashLoanStats?.minLoanDurationMonths} -{" "}
                   {loanConfigData?.cashLoanStats?.maxLoanDurationMonths} months)
                 </div>
-                <div className="text-gray-500">
-                  Average Installments:{" "}
+                <div className="text-gray-500">Average Installments: </div>
+                <div className="font-semibold text-lg">
                   {loanConfigData?.dynamicCashLoanOffers[0]?.avrageNumberOfenstallment.toFixed(
                     2
                   )}
                 </div>
               </div>
-            </ContainerTile>
+            </CardInfo>
           </div>
           {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => (
             <React.Fragment key={index}>
               <div className="grid grid-cols-2 gap-5">
-                <ContainerTile loading={loading} className={"bg-gray-50"}>
-                  <div className="flex justify-between items-baseline mb-3 text-violet-600">
-                    <div className="font-semibold text-lg flex gap-x-2 items-center text-violet-600">
-                      <CalculatorIcon
-                        className="-ml-0.5 h-5 w-5"
-                        aria-hidden="true"
-                      />{" "}
-                      Interest Rates
-                    </div>
-                    <div className="bg-violet-100 rounded-full h-7 w-7 text-center pt-0.5">
-                      3
-                    </div>
-                  </div>
-
+                <CardInfo
+                  cardTitle="Interest Rates"
+                  className={"rounded-xl"}
+                  cardIcon={CalculatorIcon}
+                  cardHeaderClassName={"text-violet-600"}
+                  cardNumber="3"
+                  numberClassName={"bg-violet-100"}
+                  loading={loading}
+                >
                   <div className="text-[14px]">
                     <InfoRow2
                       label="Annual Rate (APR)"
@@ -241,27 +234,22 @@ const LoanOffers = () => {
                           {ci?.monthlyFlatRatePercent}%
                         </div>
                         <div className="text-gray-500">
-                          (daily: {ci?.loanFlatRate}, annual:{" "}
-                          {ci?.annualFlatRatePercent})
+                          (daily: {ci?.loanFlatRate}%, annual:{" "}
+                          {ci?.annualFlatRatePercent}%)
                         </div>
                       </div>
                     </div>
                   </div>
-                </ContainerTile>
-                <ContainerTile loading={loading} className={"bg-gray-50"}>
-                  <div className="flex justify-between items-baseline mb-3 text-orange-600">
-                    <div className="font-semibold text-lg flex gap-x-2 items-center text-orange-600">
-                      <CalculatorIcon
-                        className="-ml-0.5 h-5 w-5"
-                        aria-hidden="true"
-                      />{" "}
-                      Financial Breakdown
-                    </div>
-                    <div className="bg-orange-100 rounded-full h-7 w-7 text-center pt-0.5">
-                      4
-                    </div>
-                  </div>
-
+                </CardInfo>
+                <CardInfo
+                  cardTitle="Financial Breakdown"
+                  className={"rounded-xl"}
+                  cardIcon={CalculatorIcon}
+                  cardHeaderClassName={"text-orange-600"}
+                  cardNumber="4"
+                  numberClassName={"bg-orange-100"}
+                  loading={loading}
+                >
                   <div className="text-[14px]">
                     <div className="text-gray-500">Principal Amount:</div>
                     <div className="font-semibold text-lg mb-2">
@@ -296,19 +284,17 @@ const LoanOffers = () => {
                       </div>
                     </div>
                   </div>
-                </ContainerTile>
+                </CardInfo>
               </div>
-              <ContainerTile
+              <CardInfo
+                cardTitle="Final Offer Summary"
+                className={
+                  "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
+                }
+                cardIcon={CurrencyDollarIcon}
+                cardHeaderClassName={"text-blue-600"}
                 loading={loading}
-                className={"bg-gray-50 border-blue-400 border-2"}
               >
-                <div className="font-semibold -mt-3 mb-4 text-lg flex gap-x-2 items-center text-blue-600">
-                  <CurrencyDollarIcon
-                    className="-ml-0.5 h-5 w-5"
-                    aria-hidden="true"
-                  />{" "}
-                  Final Offer Summary
-                </div>
                 <div
                   className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5"}
                 >
@@ -331,7 +317,7 @@ const LoanOffers = () => {
                       <div className="text-gray-500">Monthly EMI</div>
                       <div className="font-semibold text-lg">
                         {formatNumber(
-                          ci?.installmentSummaryResponse[0]?.installmentValue.toFixed(
+                          ci?.installmentSummaryResponse[0]?.totalRequiredAmount.toFixed(
                             2
                           )
                         )}
@@ -362,7 +348,7 @@ const LoanOffers = () => {
                     </div>
                   </div>
                 </div>
-              </ContainerTile>
+              </CardInfo>
               <div>
                 <div className="text-center text-gray-500">
                   Loan Summary Id : {ci?.transactionId}

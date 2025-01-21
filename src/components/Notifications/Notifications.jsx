@@ -15,8 +15,8 @@ const tabComponents = {
 
 const tabs = [
   { id: "ProductNotifications", label: "Product" },
-  { id: "ProjectNotifications", label: "Project" },
-  { id: "RecoveryNotifications", label: "Recovery" },
+  // { id: "ProjectNotifications", label: "Project" },
+  // { id: "RecoveryNotifications", label: "Recovery" },
 ];
 
 
@@ -26,16 +26,18 @@ const Notifications = () => {
 
   return (
     <div className="mt-4">
-      <div className="flex flex-wrap w-full items-center mb-10 gap-2">
-        {tabs.map((tab) => (
-          <Tab
-            key={`${tab.id}-${tab.label}`}
-            id={tab.id}
-            label={tab.label}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-        ))}
+      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-5">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={`${tab.id}-${tab.label}`}
+              id={tab.id}
+              label={tab.label}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          ))}
+        </ul>
       </div>
       <Suspense fallback={<LoadingState />}>
         <ActiveComponent />

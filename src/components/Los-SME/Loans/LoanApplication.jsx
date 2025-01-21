@@ -89,14 +89,16 @@ const LoanApplication = () => {
     }
   };
 
-  const handleEditApplication = async (loanApplicationId) => {
+  const handleEditApplication = async (rowData) => {
     navigate(
-      `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`
+      `/loan/loan-origination-system/sme/loans/add-loan/${rowData?.loanApplicationId}`
     );
     if (rowData.status === "Submitted") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
     }
-    await dispatch(getLoanApplicationsByID(loanApplicationId)).unwrap();
+    await dispatch(
+      getLoanApplicationsByID(rowData?.loanApplicationId)
+    ).unwrap();
   };
 
   const handleRejectApplication = async (loanApplicationId) => {
@@ -111,7 +113,7 @@ const LoanApplication = () => {
     return (
       <div className="flex justify-center gap-4 px-5">
         <Button
-          onClick={() => handleEditApplication(rowData.loanApplicationId)}
+          onClick={() => handleEditApplication(rowData)}
           buttonIcon={PencilIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}

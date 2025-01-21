@@ -558,6 +558,34 @@ export const getFullLoanDetails = createAsyncThunk(
   }
 );
 
+export const getLoanAgreement = createAsyncThunk(
+  "personalLoans/getLoanAgreement",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_FULL_LOAN_DETAILS_BY_ID_PERSONAL
+        }${uid}/loan-agreement/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const generateLoanApplicationId = createAsyncThunk(
   "personalLoans/generateLoanApplicationId",
   async (_, { getState }) => {
@@ -587,6 +615,10 @@ const initialState = {
       perLoanInterest: "",
       principalAmount: 0,
       repaymentCycle: "",
+      refinancedLoanId: "",
+      branch: "",
+      agentName: "",
+      lhacoName: "",
     },
     documents: [
       {
@@ -627,6 +659,7 @@ const initialState = {
     uid: "",
   },
   fullLoanDetails: {},
+  loanAgreementData: {},
   error: null,
   loading: false,
 };
@@ -968,6 +1001,19 @@ const personalLoansSlice = createSlice({
         state.fullLoanDetails = action.payload;
       })
       .addCase(getFullLoanDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getLoanAgreement.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLoanAgreement.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanAgreementData = action.payload;
+      })
+      .addCase(getLoanAgreement.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);

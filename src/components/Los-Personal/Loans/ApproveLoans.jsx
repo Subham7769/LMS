@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   approveLoan,
   getFullLoanDetails,
+  getLoanAgreement,
   getLoansByField,
   getPendingLoans,
 } from "../../../redux/Slices/personalLoansSlice";
@@ -90,6 +91,13 @@ const ApproveLoans = () => {
     setShowModal(false);
   };
 
+  const handleLoanAgreement = async (loanId, uid) => {
+      navigate(
+        `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
+      );
+      await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+    };
+
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Unique ID", value: "uid" },
@@ -161,12 +169,19 @@ const ApproveLoans = () => {
             <FiXCircle className="-ml-0.5 h-5 w-5" />
             Reject
           </button>
-          <Button
-            buttonIcon={FiInfo}
-            buttonName="More Details"
+          <button
             onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-            rectangle={true}
-          />
+            className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:bg-red-700 transition-colors border border-gray-300"
+          >
+            <FiInfo className="-ml-0.5 h-5 w-5" />
+            More Details
+          </button>
+          <button
+            onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
+            className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+          >
+            View Loan Agreement
+          </button>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import {
   getFullLoanDetails,
   getLoanHistory,
   getLoanHistoryByField,
+  getLoanAgreement,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -13,6 +14,7 @@ import InputText from "../../Common/InputText/InputText";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
+import { useNavigate, useParams } from "react-router-dom";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -24,6 +26,7 @@ function transformData(inputArray) {
 
 const LoanHistory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loanHistory, loading, loanHistoryTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
   const [showModal, setShowModal] = useState(false);
@@ -58,6 +61,13 @@ const LoanHistory = () => {
 
   const closeFullLoanDetailModal = () => {
     setShowModal(false);
+  };
+
+  const handleLoanAgreement = async (loanId, uid) => {
+    navigate(
+      `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
+    );
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
   const searchOptions = [
@@ -116,6 +126,12 @@ const LoanHistory = () => {
         </div>
       </div>
       <div className="text-right">
+        <button
+          onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
+          className="mr-5 px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+        >
+          View Loan Agreement
+        </button>
         <Button
           buttonName={"More Details"}
           onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}

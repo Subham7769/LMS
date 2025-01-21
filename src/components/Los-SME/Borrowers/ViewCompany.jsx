@@ -194,10 +194,10 @@ const ViewCompany = () => {
       console.log(uid);
     };
 
-    const handleChangeStatus = (uid, newStatus) => {
+    const handleChangeStatus = async (uid, newStatus) => {
       console.log(uid);
       setCurrentStatus(newStatus);
-      dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
+      await dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
       dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
       navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     };

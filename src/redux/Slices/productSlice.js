@@ -225,6 +225,8 @@ const productInitialState = {
     maxOverdraftPrincipalLimit: "",
     minOverdraftPrincipalLimit: "",
     interestMethod: "",
+    insuranceFee: "",
+    insuranceLevy: "",
   },
   loading: false,
   error: null,
