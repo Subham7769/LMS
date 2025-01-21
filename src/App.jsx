@@ -291,6 +291,9 @@ const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
 const LoanHistory = lazy(() =>
   import("./components/Los-Personal/Loans/LoanHistory")
 );
+const LoanAgreement = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanAgreement")
+);
 const CollateralRegister = lazy(() =>
   import("./components/Los-Personal/Loans/CollateralRegister")
 );
@@ -888,6 +891,11 @@ const routes = [
           {
             path: "loan-history",
             element: <LoanHistory />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-agreement/:loanApplicationId/:userId",
+            element: <LoanAgreement />,
             errorElement: <RouteErrorBoundary />,
           },
           {

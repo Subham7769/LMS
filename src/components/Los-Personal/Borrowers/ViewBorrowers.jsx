@@ -167,10 +167,10 @@ const ViewBorrowers = () => {
       console.log(uid);
     };
 
-    const handleChangeStatus = (uid, newStatus) => {
+    const handleChangeStatus = async (uid, newStatus) => {
       console.log(uid);
       setCurrentStatus(newStatus);
-      dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
+      await dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
       dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`

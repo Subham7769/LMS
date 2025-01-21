@@ -277,6 +277,22 @@ const ProductInputFields = ({ productData, handleChange }) => {
             placeHolder="15%"
             isValidation={true}
           />
+          <InputText
+            labelName="Insurance Fee"
+            inputName="insuranceFee"
+            inputValue={productData?.insuranceFee}
+            onChange={handleChange}
+            placeHolder="4%"
+            isValidation={true}
+          />
+          <InputText
+            labelName="Insurance Levy"
+            inputName="insuranceLevy"
+            inputValue={productData?.insuranceLevy}
+            onChange={handleChange}
+            placeHolder="3%"
+            isValidation={true}
+          />
           <InputNumber
             labelName="No. of Early Settlement Installments"
             inputName="numberOfEmisForEarlySettlement"

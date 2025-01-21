@@ -58,37 +58,64 @@ const ExpandableTable = ({
                   className="hover:bg-gray-50 cursor-pointer text-xs font-medium"
                   onClick={() => handleExpand(index)}
                 >
-                  {columns.map((col, index) => (
-                    <td
-                      key={index}
-                      className="max-w-28 break-words py-6 text-sm text-center text-gray-800"
-                    >
-                      <span
-                        className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${
-                          col.field.toLowerCase().includes("status") &&
-                          (rowData[col.field].toLowerCase() === "rejected" ||
-                          rowData[col.field] === "DEFAULTER" ||
-                          rowData[col.field] === "DEFAULTED" ||
-                          rowData[col.field].toLowerCase().includes("cancel")
-                            ? "bg-red-100 text-red-800"
-                            : rowData[col.field] === "In Progress" ||
-                              rowData[col.field] === "DEACTIVATED" ||
-                              rowData[col.field] === "LATE"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : rowData[col.field] === "Submitted" ||
-                              rowData[col.field] === "ROLL OVERED"
-                            ? "bg-violet-100 text-violet-800"
-                            : rowData[col.field] === "CLOSED"
-                            ? "bg-gray-100 text-gray-800"
-                            : rowData[col.field] === "FROZEN"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-green-100 text-green-800")
-                        }`}
+                  {columns.map((col, index) => {
+                    const getStatusClass = (status) => {
+                      const normalizedStatus = status?.toLowerCase();
+                      const statusClasses = {
+                        rejected: "bg-red-100 text-red-800",
+                        defaulter: "bg-red-100 text-red-800",
+                        defaulted: "bg-red-100 text-red-800",
+                        "in progress": "bg-yellow-100 text-yellow-800",
+                        deactivated: "bg-yellow-100 text-yellow-800",
+                        late: "bg-yellow-100 text-yellow-800",
+                        submitted: "bg-violet-100 text-violet-800",
+                        "roll overed": "bg-violet-100 text-violet-800",
+                        closed: "bg-gray-100 text-gray-800",
+                        frozen: "bg-blue-100 text-blue-800",
+                        cancel: "bg-red-100 text-red-800",
+                      };
+
+                      // Default class for unknown statuses
+                      return (
+                        Object.entries(statusClasses).find(([key]) =>
+                          normalizedStatus?.includes(key)
+                        )?.[1] || "bg-green-100 text-green-800"
+                      );
+                    };
+
+                    const getAgingClass = (days) => {
+                      if (days <= 2) return "bg-green-100 text-green-800";
+                      if (days >= 3 && days <= 5)
+                        return "bg-amber-100 text-amber-800";
+                      if (days >= 6 && days <= 8)
+                        return "bg-orange-100 text-orange-800";
+                      if (days >= 9) return "bg-red-100 text-red-800";
+                      return "";
+                    };
+
+                    const cellClass = col.field.toLowerCase().includes("status")
+                      ? getStatusClass(rowData[col.field])
+                      : col.field.toLowerCase() === "aging"
+                      ? getAgingClass(Number(rowData[col.field]))
+                      : "";
+
+                    return (
+                      <td
+                        key={index}
+                        className="max-w-28 break-words py-6 text-sm text-center text-gray-800"
                       >
-                        {rowData[col.field] ?? "-"}
-                      </span>
-                    </td>
-                  ))}
+                        <span
+                          className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${cellClass}`}
+                        >
+                          {col.field.toLowerCase() === "aging" &&
+                          rowData[col.field] !== undefined
+                            ? `${rowData[col.field]} Days`
+                            : rowData[col.field] ?? "-"}
+                        </span>
+                      </td>
+                    );
+                  })}
+
                   {/* {ListAction && (
                     <ListAction
                       id={

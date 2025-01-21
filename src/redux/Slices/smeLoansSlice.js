@@ -588,6 +588,10 @@ const initialState = {
       principalAmount: 0,
       repaymentCycle: "",
       reasonForBorrowing: "",
+      refinancedLoanId: "",
+      branch: "",
+      agentName: "",
+      lhacoName: "",
     },
     proformaDetails: {
       amountOfInvoice: "",

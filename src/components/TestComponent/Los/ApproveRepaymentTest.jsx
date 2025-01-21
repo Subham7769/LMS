@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
+import CardInfo from "../../Common/CardInfo/CardInfo";
 
 const paymentsData = [
   {
@@ -51,7 +52,7 @@ function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     collectionDate: convertDate(item?.collectionDate),
-    aging: "4 Days"
+    aging: 4,
   }));
 }
 
@@ -71,10 +72,35 @@ const ApproveRepaymentTest = () => {
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
+  const [filteredRepayments, setFilteredRepayments] = useState([]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getRepayments({ pageNumber: currentPage, pageSize: pageSize }));
   };
+
+  useEffect(() => {
+    setFilteredRepayments(approveRepaymentData);
+  }, [approveRepaymentData]);
+
+  useEffect(() => {
+    const updatedRepayments = approveRepaymentData.filter((repayment) =>
+      [
+        repayment.userId,
+        repayment.loan,
+        repayment.collectionBy,
+        repayment.accounting,
+        repayment.method,
+        repayment.transactionId,
+        repayment.installmentId,
+        repayment.requestId,
+      ].some(
+        (field) =>
+          field &&
+          field.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredRepayments(updatedRepayments);
+  }, [searchTerm, approveRepaymentData]);
 
   const handleApprove = async (transactionId) => {
     await dispatch(approveRepayment({ transactionId })).unwrap();
@@ -86,7 +112,7 @@ const ApproveRepaymentTest = () => {
     dispatch(getRepayments({ pageSize: pageSize, pageNumber: 0 }));
   };
 
-  const transformedRepaymentData = transformData(approveRepaymentData);
+  const transformedRepaymentData = transformData(filteredRepayments);
 
   const copyToClipboard = async (transactionId) => {
     try {
@@ -100,11 +126,12 @@ const ApproveRepaymentTest = () => {
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5">
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white shadow p-3 rounded">
-          <div className="text-lg font-semibold flex gap-2 items-center mb-4">
-            <CurrencyDollarIcon className="-ml-0.5 h-5 w-5 text-blue-500" />
-            Payment Details
-          </div>
+        <CardInfo
+          cardTitle="Payment Details"
+          className={"bg-white"}
+          cardIcon={CurrencyDollarIcon}
+          iconClassName={"text-blue-500"}
+        >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Loan Product</div>
             <div className="font-semibold">Payroll Backed Loan</div>
@@ -139,12 +166,13 @@ const ApproveRepaymentTest = () => {
               On time
             </div>
           </div>
-        </div>
-        <div className="bg-white shadow p-3 rounded">
-          <div className="text-lg font-semibold flex gap-2 items-center mb-4">
-            <UserIcon className="-ml-0.5 h-5 w-5 text-blue-500" />
-            Borrower Profile
-          </div>
+        </CardInfo>
+        <CardInfo
+          cardTitle="Borrower Profile"
+          className={"bg-white"}
+          cardIcon={UserIcon}
+          iconClassName={"text-blue-500"}
+        >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Name</div>
             <div className="text-gray-700">John Doe</div>
@@ -161,12 +189,13 @@ const ApproveRepaymentTest = () => {
             <div className="text-gray-500">Phone</div>
             <div className="text-gray-700">+1 (555) 123-4567</div>
           </div>
-        </div>
-        <div className="bg-white shadow p-3 rounded">
-          <div className="text-lg font-semibold flex gap-2 items-center mb-4">
-            <ClockIcon className="-ml-0.5 h-5 w-5 text-blue-500" />
-            Recent Payments
-          </div>
+        </CardInfo>
+        <CardInfo
+          cardTitle="Recent Payments"
+          className={"bg-white"}
+          cardIcon={ClockIcon}
+          iconClassName={"text-blue-500"}
+        >
           {paymentsData.map((payment) => (
             <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
               <div>
@@ -185,7 +214,7 @@ const ApproveRepaymentTest = () => {
               </div>
             </div>
           ))}
-        </div>
+        </CardInfo>
       </div>
       <div className="w-full flex justify-end gap-2 px-5 mt-5">
         <button
@@ -212,6 +241,43 @@ const ApproveRepaymentTest = () => {
       </div>
     </div>
   );
+
+  const applyFilters = () => {
+    const filtered = approveRepaymentData.filter((repayment) => {
+      let matchesSearchValue = "";
+      if (searchBy) {
+        matchesSearchValue = searchValue
+          ? repayment[searchBy]
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
+          : true;
+      } else {
+        matchesSearchValue = searchValue
+          ? [
+              repayment.userId,
+              repayment.loan,
+              repayment.collectionBy,
+              repayment.accounting,
+              repayment.method,
+              repayment.transactionId,
+              repayment.installmentId,
+              repayment.requestId,
+            ].some((field) =>
+              field?.toLowerCase().includes(searchValue.toLowerCase())
+            )
+          : true;
+      }
+
+      return matchesSearchValue;
+    });
+
+    setFilteredRepayments(filtered);
+  };
+
+  // Trigger Filtering on Search Value Change
+  useEffect(() => {
+    applyFilters();
+  }, [searchValue]);
 
   const handleSearchFilter = (term) => {
     setSearchValue(term);
