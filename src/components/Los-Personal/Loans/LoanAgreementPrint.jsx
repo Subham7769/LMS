@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import Button from "../../Common/Button/Button";
 import { PrinterIcon } from "@heroicons/react/24/outline";
@@ -19,6 +19,7 @@ const ShimmerTable = () => {
 
 const LoanAgreementPrint = () => {
   const dispatch = useDispatch();
+  const [isPrintVisisble, setIsPrintVisisble] = useState(true);
   const { loanApplicationId, userId } = useParams();
   const { loanAgreementData, loading } = useSelector(
     (state) => state.personalLoans
@@ -26,7 +27,16 @@ const LoanAgreementPrint = () => {
 
   useEffect(() => {
     dispatch(getLoanAgreement({ loanId: loanApplicationId, uid: userId }));
-  }, [dispatch, loanApplicationId, userId]);
+
+    if (!location.pathname.includes("loan-origination-system")) {
+      const timeoutId = setTimeout(() => {
+        window.print();
+      }, 1000);
+
+      // Cleanup to avoid potential memory leaks
+      return () => clearTimeout(timeoutId);
+    }
+  }, [dispatch, loanApplicationId, userId, location.pathname]);
 
   const {
     personalDetails = {},
@@ -48,11 +58,10 @@ const LoanAgreementPrint = () => {
     );
   }
 
+
   return (
     <>
-      <div
-        className={"flex flex-col justify-center align-middle gap-5 m-10"}
-      >
+      <div className={"flex flex-col justify-center align-middle gap-5 m-10"}>
         <div className="text-xl font-semibold text-center">
           LOAN AGREEMENT - PART A
         </div>

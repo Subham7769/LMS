@@ -20,7 +20,7 @@ const LoanAgreement = () => {
       <div className={"text-right"}>
         <Button
           buttonIcon={PrinterIcon}
-          buttonName={"Print"}
+          buttonName={"View Print Layout"}
           onClick={handlePrint}
           rectangle={true}
         />

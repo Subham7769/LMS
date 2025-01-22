@@ -45,9 +45,6 @@ const TestComponent = lazy(() =>
 const TestComponent1 = lazy(() =>
   import("./components/TestComponent/Los/ApproveRepaymentTest")
 );
-const TestComponent2 = lazy(() =>
-  import("./components/TestComponent/Los/TestPrinting")
-);
 
 // *************************************TEST******************************************************
 
@@ -546,11 +543,6 @@ const routes = [
       {
         path: "test1",
         element: <TestComponent1 />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "test2",
-        element: <TestComponent2 />,
         errorElement: <RouteErrorBoundary />,
       },
       {
