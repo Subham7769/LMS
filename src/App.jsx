@@ -45,6 +45,9 @@ const TestComponent = lazy(() =>
 const TestComponent1 = lazy(() =>
   import("./components/TestComponent/Los/ApproveRepaymentTest")
 );
+const TestComponent2 = lazy(() =>
+  import("./components/TestComponent/Los/TestPrinting")
+);
 
 // *************************************TEST******************************************************
 
@@ -294,6 +297,9 @@ const LoanHistory = lazy(() =>
 const LoanAgreement = lazy(() =>
   import("./components/Los-Personal/Loans/LoanAgreement")
 );
+const LoanAgreementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanAgreementPrint")
+);
 const CollateralRegister = lazy(() =>
   import("./components/Los-Personal/Loans/CollateralRegister")
 );
@@ -540,6 +546,11 @@ const routes = [
       {
         path: "test1",
         element: <TestComponent1 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "test2",
+        element: <TestComponent2 />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -1119,6 +1130,12 @@ const routes = [
         ],
       },
     ],
+  },
+
+  {
+    path: "/loan-agreement/:loanApplicationId/:userId",
+    element: <LoanAgreementPrint />,
+    errorElement: <RouteErrorBoundary />,
   },
 
   // Access Denied Route
