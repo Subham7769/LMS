@@ -139,11 +139,9 @@ const LoanOffers = () => {
           <div className="grid grid-cols-2 gap-5">
             <CardInfo
               cardTitle="Meet Our Borrower"
-              className={"rounded-xl"}
               cardIcon={UserIcon}
-              cardHeaderClassName={"text-blue-600"}
+              color={"blue"}
               cardNumber="1"
-              numberClassName={"bg-blue-100"}
               loading={loading}
             >
               <div className="font-semibold text-[15px] mb-2">
@@ -168,11 +166,9 @@ const LoanOffers = () => {
             </CardInfo>
             <CardInfo
               cardTitle="Avialable Loan Range"
-              className={"rounded-xl"}
               cardIcon={CogIcon}
-              cardHeaderClassName={"text-green-600"}
+              color={"green"}
               cardNumber="2"
-              numberClassName={"bg-green-100"}
               loading={loading}
             >
               <div className="text-[14px]">
@@ -209,11 +205,9 @@ const LoanOffers = () => {
               <div className="grid grid-cols-2 gap-5">
                 <CardInfo
                   cardTitle="Interest Rates"
-                  className={"rounded-xl"}
                   cardIcon={CalculatorIcon}
-                  cardHeaderClassName={"text-violet-600"}
+                  color={"violet"}
                   cardNumber="3"
-                  numberClassName={"bg-violet-100"}
                   loading={loading}
                 >
                   <div className="text-[14px]">
@@ -245,17 +239,21 @@ const LoanOffers = () => {
                 </CardInfo>
                 <CardInfo
                   cardTitle="Financial Breakdown"
-                  className={"rounded-xl"}
                   cardIcon={CalculatorIcon}
-                  cardHeaderClassName={"text-orange-600"}
+                  color={"orange"}
                   cardNumber="4"
-                  numberClassName={"bg-orange-100"}
                   loading={loading}
                 >
                   <div className="text-[14px]">
                     <div className="text-gray-500">Principal Amount:</div>
-                    <div className="font-semibold text-lg mb-2">
-                      {formatNumber(ci?.principalAmount.toFixed(2))}
+                    <div className="flex items-baseline gap-x-2">
+                      <div className="font-semibold text-lg mb-2">
+                        {formatNumber(ci?.principalAmount.toFixed(2))}
+                      </div>
+                      <div className="text-gray-500">
+                        (Disbursed Amt:{" "}
+                        {formatNumber(ci?.disbursedAmount.toFixed(2))})
+                      </div>
                     </div>
                     <div className="text-gray-500">Total Interest:</div>
                     <div className="font-semibold text-lg mb-2">
@@ -279,6 +277,15 @@ const LoanOffers = () => {
                         (VAT: {ci?.totalManagementVatFee.toFixed(2)})
                       </div>
                     </div>
+                    <div className="text-gray-500">Insurance Fee:</div>
+                    <div className="flex items-baseline gap-x-2">
+                      <div className="font-semibold text-lg mb-2">
+                        {ci?.insuranceFee.toFixed(2)}
+                      </div>
+                      <div className="text-gray-500">
+                        (Levy: {ci?.insuranceLevy.toFixed(2)})
+                      </div>
+                    </div>
                     <div className="border-t border-gray-300 pt-2 text-blue-600">
                       <div className="font-semibold">Total Loan Amount:</div>
                       <div className="font-bold text-lg">
@@ -294,7 +301,7 @@ const LoanOffers = () => {
                   "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
                 }
                 cardIcon={CurrencyDollarIcon}
-                cardHeaderClassName={"text-blue-600"}
+                color={"blue"}
                 loading={loading}
               >
                 <div

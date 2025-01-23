@@ -130,7 +130,7 @@ const ApproveRepaymentTest = () => {
           cardTitle="Payment Details"
           className={"bg-white"}
           cardIcon={CurrencyDollarIcon}
-          iconClassName={"text-blue-500"}
+          color={"blue"}
         >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Loan Product</div>
@@ -171,7 +171,7 @@ const ApproveRepaymentTest = () => {
           cardTitle="Borrower Profile"
           className={"bg-white"}
           cardIcon={UserIcon}
-          iconClassName={"text-blue-500"}
+          color={"blue"}
         >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Name</div>
@@ -194,7 +194,7 @@ const ApproveRepaymentTest = () => {
           cardTitle="Recent Payments"
           className={"bg-white"}
           cardIcon={ClockIcon}
-          iconClassName={"text-blue-500"}
+          color={"blue"}
         >
           {paymentsData.map((payment) => (
             <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">

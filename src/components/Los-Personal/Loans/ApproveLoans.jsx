@@ -21,14 +21,75 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import calculateAging from "../../../utils/calculateAging";
+import ViewDocumentsModal from "./ViewDocumentsModal";
 
+const approveLoansTest = [
+  {
+    uid: "7777773",
+    loanId: "92a9f4dd-7fcb-49b2-8d89-8e6ed002bb9d",
+    borrowerName: "Mr.Jack Sparrow",
+    lmsUserStatus: "ACTIVE",
+    loanProductName: "PAYROLL_BACKED_LOANS",
+    disbursedBy: "Bank",
+    loanReleaseDate: "2025-01-17",
+    principalAmount: 1000.0,
+    interestMethod: "FLAT",
+    repaymentCycle: "Monthly",
+    numberOfTenure: 12,
+    loanInterest: 12.0,
+    perLoanInterest: "MONTH",
+    loanDuration: 1,
+    perLoanDuration: "YEAR",
+    applicationStatus: null,
+    rejectionReason: null,
+    loanStatus: "ACTIVATED",
+    monthlyEMI: 120,
+    firstEmiPayment: "01/02/2025",
+    loanCreationDate: "2025-01-20",
+    borrowerDetails: {
+      employerName: "Tech Co Ltd",
+      employmentDuration: "3 years",
+      monthlyIncome: "2000",
+      creditScore: 720,
+      activeLoans: 1,
+      paymentHistory: "No defaults",
+    },
+    verifiedDocuments: [
+      {
+        docName: "",
+        docId: "",
+        verified: true,
+        documentKey: "PAY_SLIP",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "EMPLOYER_FROM",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: true,
+        documentKey: "BANK_STATEMENT",
+      },
+      {
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "ATM_CARD",
+      },
+    ],
+  },
+];
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     loanProduct: convertToTitleCase(item?.loanProductName),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
-    aging: 4,
+    aging: calculateAging(item?.loanCreationDate),
   }));
 }
 
@@ -38,7 +99,9 @@ const ApproveLoans = () => {
     useSelector((state) => state.personalLoans);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
+  const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
+  const [documentsData, setDocumentsData] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const navigate = useNavigate();
@@ -95,6 +158,15 @@ const ApproveLoans = () => {
     setShowModal(false);
   };
 
+  const handleViewDocuments = (verifiedDocuments) => {
+    setDocumentsData(verifiedDocuments);
+    setDocumentsLoanModal(true);
+  };
+
+  const closeViewDocumentModal = () => {
+    setDocumentsLoanModal(false);
+  };
+
   const handleLoanAgreement = async (loanId, uid) => {
     navigate(
       `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
@@ -110,7 +182,7 @@ const ApproveLoans = () => {
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Disbursed By", field: "disbursedBy" },
+    { label: "Borrower ID", field: "uid" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },
@@ -206,12 +278,14 @@ const ApproveLoans = () => {
           </span>
         </div>
         <div className="flex gap-10">
-          {rowData?.verifiedDocuments?.map((doc) => (
-            <div className="flex gap-1.5">
-              <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
-              {convertToTitleCase(doc.documentKey)}
-            </div>
-          ))}
+          {rowData?.verifiedDocuments
+            ?.filter((doc) => doc.verified) // Filter only verified documents
+            .map((doc) => (
+              <div className="flex gap-1.5" key={doc.docId}>
+                <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
+                {convertToTitleCase(doc.documentKey)}
+              </div>
+            ))}
         </div>
       </div>
       <div className="w-full flex justify-end gap-2 px-5">
@@ -222,8 +296,8 @@ const ApproveLoans = () => {
           View Loan Agreement
         </button>
         <button
-          onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+          onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
         >
           <FiInfo className="-ml-0.5 h-5 w-5" />
           View Documents
@@ -304,6 +378,11 @@ const ApproveLoans = () => {
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
         loading={loading}
+      />
+      <ViewDocumentsModal
+        isOpen={showDocumentsModal}
+        onClose={closeViewDocumentModal}
+        documents={documentsData}
       />
     </div>
   );

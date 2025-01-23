@@ -38,10 +38,6 @@ const Notifications = lazy(() =>
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 
 // *************************************TEST******************************************************
-
-const TestComponent = lazy(() =>
-  import("./components/TestComponent/Los/ApproveLoansTest")
-);
 const TestComponent1 = lazy(() =>
   import("./components/TestComponent/Los/ApproveRepaymentTest")
 );
@@ -533,11 +529,6 @@ const routes = [
       {
         path: "settings",
         element: <UploadLogo />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "test",
-        element: <TestComponent />,
         errorElement: <RouteErrorBoundary />,
       },
       {
