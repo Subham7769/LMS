@@ -14,6 +14,8 @@ const InputNumber = ({
   labelName,
   inputName,
   inputValue,
+  inputValueMin,
+  inputValueMax,
   inputId,
   onChange,
   placeHolder = "",
@@ -24,7 +26,7 @@ const InputNumber = ({
   isSectionId,
   isRuleId,
   isRangeIndex,
-  loading=false,
+  loading = false,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -114,6 +116,8 @@ const InputNumber = ({
           id={inputId}
           name={inputName}
           value={inputValue}
+          min={inputValueMin}
+          max={inputValueMax}
           onChange={handleChange}
           onFocus={() => {
             dispatch(setValidationError(validationKey));
@@ -138,7 +142,7 @@ const InputNumber = ({
             %
           </span> /* The % symbol */
         )}
-         {loading && (
+        {loading && (
           <div className="absolute inset-x-2 top-1/2 transform -translate-y-1/2 h-6 bg-gray-200 animate-pulse rounded-md"></div>
         )}
       </div>

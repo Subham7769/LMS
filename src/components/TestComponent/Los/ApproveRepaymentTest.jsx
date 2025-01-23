@@ -27,26 +27,6 @@ import FullLoanDetailModal from "./FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 
-const paymentsData = [
-  {
-    paymentDate: "16 Dec 2024",
-    paymentType: "Regular Payment",
-    paymentAmount: "$445.00",
-    paymentStatus: "Completed",
-  },
-  {
-    paymentDate: "17 Dec 2024",
-    paymentType: "Regular Payment",
-    paymentAmount: "$445.00",
-    paymentStatus: "Completed",
-  },
-  {
-    paymentDate: "18 Dec 2024",
-    paymentType: "Regular Payment",
-    paymentAmount: "$445.00",
-    paymentStatus: "Completed",
-  },
-];
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -134,7 +114,7 @@ const ApproveRepaymentTest = () => {
         >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Loan Product</div>
-            <div className="font-semibold">Payroll Backed Loan</div>
+            <div className="font-semibold">{rowData.description}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Transaction ID</div>
@@ -150,20 +130,20 @@ const ApproveRepaymentTest = () => {
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Original Loan Amount</div>
-            <div className="font-semibold">$5000</div>
+            <div className="font-semibold">{rowData.originalLoanAmount}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Outstanding Balance</div>
-            <div className="font-semibold">$3560</div>
+            <div className="font-semibold">{rowData.outstandingBalance}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Due Date</div>
-            <div className="font-semibold">20 Jan 2025</div>
+            <div className="font-semibold">{rowData.dueDate}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Status</div>
             <div className="text-xs bg-black text-white py-1 px-2 rounded">
-              On time
+              {rowData.status}
             </div>
           </div>
         </CardInfo>
@@ -175,7 +155,7 @@ const ApproveRepaymentTest = () => {
         >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Name</div>
-            <div className="text-gray-700">John Doe</div>
+            <div className="text-gray-700">{rowData.borrowerProfile.name}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">User ID</div>
@@ -183,11 +163,11 @@ const ApproveRepaymentTest = () => {
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Email</div>
-            <div className="text-gray-700">john.doe@example.com</div>
+            <div className="text-gray-700">{rowData.borrowerProfile.email}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Phone</div>
-            <div className="text-gray-700">+1 (555) 123-4567</div>
+            <div className="text-gray-700">{rowData.borrowerProfile.phone}</div>
           </div>
         </CardInfo>
         <CardInfo
@@ -196,7 +176,7 @@ const ApproveRepaymentTest = () => {
           cardIcon={ClockIcon}
           color={"blue"}
         >
-          {paymentsData.map((payment) => (
+          {rowData.paymentsData.map((payment) => (
             <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
               <div>
                 <div className="text-black font-semibold">
