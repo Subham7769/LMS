@@ -14,7 +14,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
     { label: "Principal", field: "principalValue" },
     { label: "Interest", field: "interestValue" },
     { label: "Outstanding", field: "totalOutstandingAmount" },
-    { label: "EMI Amount", field: "installmentValue" },
+    { label: "EMI Amount", field: "totalRequiredAmount" },
   ];
 
   const dataWithEmiNo = installmentConfigData.map((item, index) => ({
@@ -23,7 +23,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
     principalValue: formatNumber(item.principalValue),
     interestValue: formatNumber(item.interestValue),
     totalOutstandingAmount: formatNumber(item.totalOutstandingAmount),
-    installmentValue: formatNumber(item.installmentValue),
+    totalRequiredAmount: formatNumber(item.totalRequiredAmount),
     installmentDate: convertDate(item.installmentDate),
   }));
 

@@ -24,66 +24,6 @@ import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
 import ViewDocumentsModal from "./ViewDocumentsModal";
 
-const approveLoansTest = [
-  {
-    uid: "7777773",
-    loanId: "92a9f4dd-7fcb-49b2-8d89-8e6ed002bb9d",
-    borrowerName: "Mr.Jack Sparrow",
-    lmsUserStatus: "ACTIVE",
-    loanProductName: "PAYROLL_BACKED_LOANS",
-    disbursedBy: "Bank",
-    loanReleaseDate: "2025-01-17",
-    principalAmount: 1000.0,
-    interestMethod: "FLAT",
-    repaymentCycle: "Monthly",
-    numberOfTenure: 12,
-    loanInterest: 12.0,
-    perLoanInterest: "MONTH",
-    loanDuration: 1,
-    perLoanDuration: "YEAR",
-    applicationStatus: null,
-    rejectionReason: null,
-    loanStatus: "ACTIVATED",
-    monthlyEMI: 120,
-    firstEmiPayment: "01/02/2025",
-    loanCreationDate: "2025-01-20",
-    borrowerDetails: {
-      employerName: "Tech Co Ltd",
-      employmentDuration: "3 years",
-      monthlyIncome: "2000",
-      creditScore: 720,
-      activeLoans: 1,
-      paymentHistory: "No defaults",
-    },
-    verifiedDocuments: [
-      {
-        docName: "",
-        docId: "",
-        verified: true,
-        documentKey: "PAY_SLIP",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "EMPLOYER_FROM",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: true,
-        documentKey: "BANK_STATEMENT",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "ATM_CARD",
-      },
-    ],
-  },
-];
-
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
