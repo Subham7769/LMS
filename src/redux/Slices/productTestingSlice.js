@@ -661,14 +661,13 @@ const productTestingSlice = createSlice({
         state.loading = false;
 
         const { registrationResults } = action.payload;
+        const eligibleProjects = registrationResults.projects.filter(
+          (project) => project.isRegister
+        );
 
         // Check if borrowerType is PERSONAL_BORROWER
         if (registrationResults.borrowerType === "PERSONAL_BORROWER") {
           // Filter eligible projects
-          const eligibleProjects = registrationResults.projects.filter(
-            (project) => project.isRegister
-          );
-
           // Extract loan products where customerType is CONSUMER
           const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
             loanProducts
@@ -705,7 +704,7 @@ const productTestingSlice = createSlice({
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
+        // toast.error(`API Error : ${action.payload}`);
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;

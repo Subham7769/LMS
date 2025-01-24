@@ -40,7 +40,7 @@ const LoanConfig = () => {
     loading,
     error,
   } = useSelector((state) => state.productTesting);
-  const { borrowerData } = useSelector((state) => state.personalLoans);
+  // const { borrowerData } = useSelector((state) => state.personalLoans);
   const { validationError } = useSelector((state) => state.validation);
   const { userID } = useParams();
   const dispatch = useDispatch();
@@ -48,9 +48,9 @@ const LoanConfig = () => {
 
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
-    if (userID) {
-      dispatch(fetchBorrowerById(userID));
-    }
+    // if (userID) {
+    //   dispatch(fetchBorrowerById(userID));
+    // }
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
@@ -175,11 +175,11 @@ const LoanConfig = () => {
                 cardNumber="1"
                 loading={loading}
               >
-                <div className="font-semibold text-[15px] mb-2">
+                {/* <div className="font-semibold text-[15px] mb-2">
                   {borrowerData?.personalDetails?.title}{" "}
                   {borrowerData?.personalDetails?.firstName}{" "}
                   {borrowerData?.personalDetails?.surname}
-                </div>
+                </div> */}
                 <div className="text-[14px]">
                   <InfoRow
                     label="Credit Score"
