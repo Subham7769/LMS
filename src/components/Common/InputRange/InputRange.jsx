@@ -23,7 +23,10 @@ const InputRange = ({
   readOnly = false,
   isAutoFocus = false,
 }) => {
-  const values = [Math.min(inputValueMin, max), Math.min(inputValueMax, max)];
+  const values = [
+    Math.max(min, Math.min(inputValueMin, max)),
+    Math.max(min, Math.min(inputValueMax, max)),
+  ];
 
   const onChangeRange = (values) => {
     handleMinChange({
