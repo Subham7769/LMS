@@ -34,6 +34,7 @@ const LoanConfig = () => {
     loanConfigFields,
     loanConfigData,
     showModal,
+    consumerType,
     loading,
     error,
   } = useSelector((state) => state.productTesting);
@@ -170,6 +171,7 @@ const LoanConfig = () => {
           loanType: loanConfigFields.loanType,
           amount: loanConfigFields.amount,
           userID,
+          consumerType,
         })
       );
     }
@@ -215,17 +217,6 @@ const LoanConfig = () => {
             onChange={handleChange}
             placeHolder={"5000"}
           />
-          {/* {["CASH_LOAN_V1", "BNPL_LOAN"].includes(
-            loanConfigFields.loanType
-          ) && (
-            <InputNumber
-              labelName={"Amount"}
-              inputName={"amount"}
-              inputValue={loanConfigFields.amount}
-              onChange={handleChange}
-              placeHolder={"5000"}
-            />
-          )} */}
           <div>
             <Button
               buttonIcon={CheckCircleIcon}
