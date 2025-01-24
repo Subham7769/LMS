@@ -653,6 +653,9 @@ const productTestingSlice = createSlice({
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.showModal = false;
+        state.loanOptions = [];
+        state.loanConfigFields = initialState.loanConfigFields; // Reset loanConfigFields
       })
       .addCase(getUserLoanOptions.fulfilled, (state, action) => {
         state.loading = false;
@@ -680,7 +683,7 @@ const productTestingSlice = createSlice({
           );
 
           state.loanOptions = loanOptions;
-          state.consumerType = "CONSUMER"
+          state.consumerType = "CONSUMER";
         } else {
           // If borrowerType is not PERSONAL_BORROWER, set loanOptions to an empty array
           const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>

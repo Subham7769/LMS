@@ -330,6 +330,18 @@ const ProductInputFields = ({ productData, handleChange }) => {
               onChange={handleChange}
               inputName="disableRac"
             />
+            <InputCheckbox
+              labelName="oneSettleLoan"
+              inputChecked={productData?.oneSettleLoan}
+              onChange={handleChange}
+              inputName="oneSettleLoan"
+            />
+            <InputCheckbox
+              labelName="Advance Discount"
+              inputChecked={productData?.advanceDiscount}
+              onChange={handleChange}
+              inputName="advanceDiscount"
+            />
           </div>
           {/* Newly added fields */}
           {productData?.overdraft && (
