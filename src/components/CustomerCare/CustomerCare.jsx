@@ -15,16 +15,16 @@ const CustomerCare = () => {
       path: `/loan/customer-care/${subID}/personal-info`,
       label: "Personal Info",
     },
-    {
-      id: "credit-profile",
-      path: `/loan/customer-care/${subID}/credit-profile`,
-      label: "Credit Profile",
-    },
-    {
-      id: "kyc-details",
-      path: `/loan/customer-care/${subID}/kyc-details`,
-      label: "KYC Details",
-    },
+    // {
+    //   id: "credit-profile",
+    //   path: `/loan/customer-care/${subID}/credit-profile`,
+    //   label: "Credit Profile",
+    // },
+    // {
+    //   id: "kyc-details",
+    //   path: `/loan/customer-care/${subID}/kyc-details`,
+    //   label: "KYC Details",
+    // },
     {
       id: "loan-payment-history",
       path: `/loan/customer-care/${subID}/loan-payment-history`,
@@ -35,11 +35,11 @@ const CustomerCare = () => {
       path: `/loan/customer-care/${subID}/rejection-history`,
       label: "Rejection History",
     },
-    {
-      id: "credit-bureau-details",
-      path: `/loan/customer-care/${subID}/credit-bureau-details`,
-      label: "Credit Bureau Details",
-    },
+    // {
+    //   id: "credit-bureau-details",
+    //   path: `/loan/customer-care/${subID}/credit-bureau-details`,
+    //   label: "Credit Bureau Details",
+    // },
     {
       id: "back-to-user-page",
       path: `/loan/product-testing/term-loan/${subID}/eligibilty`,
