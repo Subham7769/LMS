@@ -78,6 +78,7 @@ const ApproveLoans = () => {
   };
 
   const handleApprove = async (rowData) => {
+    console.log(rowData);
     const approveLoanPayload = {
       amount: rowData.principalAmount,
       applicationStatus: "APPROVED",
@@ -243,14 +244,14 @@ const ApproveLoans = () => {
           View Documents
         </button>
         <button
-          onClick={() => handleReject(rowData.transactionId)}
+          onClick={() => handleReject(rowData)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
         >
           <FiXCircle className="-ml-0.5 h-5 w-5" />
           Reject
         </button>
         <button
-          onClick={() => handleApprove(rowData.transactionId)}
+          onClick={() => handleApprove(rowData)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
         >
           <FiCheckCircle className="-ml-0.5 h-5 w-5" />
