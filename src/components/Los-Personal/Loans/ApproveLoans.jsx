@@ -19,12 +19,17 @@ import Pagination from "../../Common/Pagination/Pagination";
 import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import FullLoanDetailModal from "./FullLoanDetailModal";
+import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import CardInfo from "../../Common/CardInfo/CardInfo";
+import calculateAging from "../../../utils/calculateAging";
+import ViewDocumentsModal from "./ViewDocumentsModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     loanProduct: convertToTitleCase(item?.loanProductName),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
+    aging: calculateAging(item?.loanCreationDate),
   }));
 }
 
@@ -34,7 +39,9 @@ const ApproveLoans = () => {
     useSelector((state) => state.personalLoans);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
+  const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
+  const [documentsData, setDocumentsData] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const navigate = useNavigate();
@@ -71,6 +78,7 @@ const ApproveLoans = () => {
   };
 
   const handleApprove = async (rowData) => {
+    console.log(rowData);
     const approveLoanPayload = {
       amount: rowData.principalAmount,
       applicationStatus: "APPROVED",
@@ -91,12 +99,21 @@ const ApproveLoans = () => {
     setShowModal(false);
   };
 
+  const handleViewDocuments = (verifiedDocuments) => {
+    setDocumentsData(verifiedDocuments);
+    setDocumentsLoanModal(true);
+  };
+
+  const closeViewDocumentModal = () => {
+    setDocumentsLoanModal(false);
+  };
+
   const handleLoanAgreement = async (loanId, uid) => {
-      navigate(
-        `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
-      );
-      await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
-    };
+    navigate(
+      `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
+    );
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
@@ -106,83 +123,140 @@ const ApproveLoans = () => {
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Disbursed By", field: "disbursedBy" },
+    { label: "Borrower ID", field: "uid" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
+    { label: "Aging", field: "aging" },
   ];
 
   const renderExpandedRow = (rowData) => (
-    <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
-      <div className="grid grid-cols-3 md:grid-cols-[80%_20%] gap-4 items-center">
-        <div className="space-y-2">
-          <div className="grid grid-cols-3">
-            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                Interest Method:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.interestMethod}</p>
+    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+      <div className="grid grid-cols-2 gap-4">
+        <CardInfo cardTitle="Borrower Information" className={"bg-white"}>
+          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Employment</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.employerName}
+              </div>
+              <div className="text-gray-500 font-light text-xs">
+                {rowData?.borrowerDetails?.employmentDuration}
+              </div>
             </div>
-            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                Loan Interest:
-              </p>
-              <p className="text-sm text-gray-600">
-                {rowData.loanInterest}% / {rowData.perLoanInterest}
-              </p>
-            </div>
-            <div className="flex justify-between py-2 px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                Repayment Cycle:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.repaymentCycle}</p>
-            </div>
-            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                Number of Tenure:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.numberOfTenure}</p>
-            </div>
-            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                Loan Duration:
-              </p>
-              <p className="text-sm text-gray-600">
-                {rowData.loanDuration} {rowData.perLoanDuration}
-              </p>
+            <div>
+              <div className="text-gray-500">Monthly Income</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.monthlyIncome}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full flex justify-start flex-col gap-2 px-5">
-          <button
-            onClick={() => handleApprove(rowData)}
-            className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-            disabled={rowData.approvalStatus === "Yes"}
-          >
-            <FiCheckCircle className="-ml-0.5 h-5 w-5" />
-            Approve
-          </button>
-          <button
-            onClick={() => handleReject(rowData)}
-            className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-            disabled={rowData.approvalStatus === "No"}
-          >
-            <FiXCircle className="-ml-0.5 h-5 w-5" />
-            Reject
-          </button>
-          <button
+          <div className="grid grid-cols-3">
+            <div>
+              <div className="text-gray-500">Credit Score</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.creditScore}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Active Loans</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.activeLoans}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Payment History</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.paymentHistory}
+              </div>
+            </div>
+          </div>
+        </CardInfo>
+        <CardInfo cardTitle="Loan Information" className={"bg-white"}>
+          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Principal Amount</div>
+              <div className="font-semibold">{rowData.principalAmount}</div>
+            </div>
+            <div>
+              <div className="text-gray-500">Interest Rate</div>
+              <div className="font-semibold">
+                {rowData.loanInterest}% {rowData.interestMethod} per{" "}
+                {rowData.perLoanInterest}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Tenure</div>
+              <div className="font-semibold">
+                {rowData.loanDuration} {rowData.perLoanDuration}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Monthly EMI</div>
+              <div className="font-semibold">{rowData.monthlyEMI}</div>
+            </div>
+            <div>
+              <div className="text-gray-500">First Payment</div>
+              <div className="font-semibold">
+                {convertDate(rowData.firstEmiPayment)}
+              </div>
+            </div>
+          </div>
+          <div
+            className="text-blue-600 font-semibold cursor-pointer flex gap-2"
             onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-            className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:bg-red-700 transition-colors border border-gray-300"
           >
-            <FiInfo className="-ml-0.5 h-5 w-5" />
-            More Details
-          </button>
-          <button
-            onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-            className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
-          >
-            View Loan Agreement
-          </button>
+            <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+          </div>
+        </CardInfo>
+      </div>
+      <div className="bg-white p-3 shadow rounded-md my-5">
+        <div className="font-semibold text-xl mb-3">
+          Verified Documents{" "}
+          <span className="font-light text-xs">
+            ({rowData?.verifiedDocuments?.length} documents)
+          </span>
         </div>
+        <div className="flex gap-10">
+          {rowData?.verifiedDocuments
+            ?.filter((doc) => doc.verified) // Filter only verified documents
+            .map((doc) => (
+              <div className="flex gap-1.5" key={doc.docId}>
+                <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
+                {convertToTitleCase(doc.documentKey)}
+              </div>
+            ))}
+        </div>
+      </div>
+      <div className="w-full flex justify-end gap-2 px-5">
+        <button
+          onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
+          className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+        >
+          View Loan Agreement
+        </button>
+        <button
+          onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+        >
+          <FiInfo className="-ml-0.5 h-5 w-5" />
+          View Documents
+        </button>
+        <button
+          onClick={() => handleReject(rowData)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+        >
+          <FiXCircle className="-ml-0.5 h-5 w-5" />
+          Reject
+        </button>
+        <button
+          onClick={() => handleApprove(rowData)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+        >
+          <FiCheckCircle className="-ml-0.5 h-5 w-5" />
+          Approve
+        </button>
       </div>
     </div>
   );
@@ -245,6 +319,11 @@ const ApproveLoans = () => {
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
         loading={loading}
+      />
+      <ViewDocumentsModal
+        isOpen={showDocumentsModal}
+        onClose={closeViewDocumentModal}
+        documents={documentsData}
       />
     </div>
   );

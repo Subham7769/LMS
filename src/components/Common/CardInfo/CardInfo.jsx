@@ -5,10 +5,8 @@ const CardInfo = ({
   cardTitle,
   children,
   className,
-  iconClassName,
-  cardHeaderClassName,
   cardNumber,
-  numberClassName,
+  color,
   loading = false,
   error = false,
 }) => {
@@ -32,20 +30,17 @@ const CardInfo = ({
       ) : (
         <>
           <div
-            className={`flex justify-between items-baseline mb-3 ${cardHeaderClassName}`}
+            className={`flex justify-between items-baseline mb-3 text-${color}-600 `}
           >
             <div className={`text-lg font-semibold flex gap-2 items-center`}>
               {CardIcon && (
-                <CardIcon
-                  className={`-ml-0.5 h-5 w-5 ${iconClassName}`}
-                  aria-hidden="true"
-                />
+                <CardIcon className={`-ml-0.5 h-5 w-5`} aria-hidden="true" />
               )}
               {cardTitle}
             </div>
             {cardNumber && (
               <div
-                className={`rounded-full h-7 w-7 text-center pt-0.5 ${numberClassName}`}
+                className={`rounded-full h-7 w-7 text-center pt-0.5 bg-${color}-100 `}
               >
                 {cardNumber}
               </div>

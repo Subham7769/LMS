@@ -141,9 +141,8 @@ const LoanOffers = () => {
               cardTitle="Meet Our Borrower"
               className={"rounded-xl"}
               cardIcon={UserIcon}
-              cardHeaderClassName={"text-blue-600"}
+              color={"blue"}
               cardNumber="1"
-              numberClassName={"bg-blue-100"}
               loading={loading}
             >
               <div className="font-semibold text-[15px] mb-2">
@@ -168,9 +167,8 @@ const LoanOffers = () => {
               cardTitle="Avialable Loan Range"
               className={"rounded-xl"}
               cardIcon={CogIcon}
-              cardHeaderClassName={"text-green-600"}
+              color={"green"}
               cardNumber="2"
-              numberClassName={"bg-green-100"}
               loading={loading}
             >
               <div className="text-[14px]">
@@ -209,9 +207,8 @@ const LoanOffers = () => {
                   cardTitle="Interest Rates"
                   className={"rounded-xl"}
                   cardIcon={CalculatorIcon}
-                  cardHeaderClassName={"text-violet-600"}
+                  color={"violet"}
                   cardNumber="3"
-                  numberClassName={"bg-violet-100"}
                   loading={loading}
                 >
                   <div className="text-[14px]">
@@ -245,9 +242,8 @@ const LoanOffers = () => {
                   cardTitle="Financial Breakdown"
                   className={"rounded-xl"}
                   cardIcon={CalculatorIcon}
-                  cardHeaderClassName={"text-orange-600"}
+                  color={"orange"}
                   cardNumber="4"
-                  numberClassName={"bg-orange-100"}
                   loading={loading}
                 >
                   <div className="text-[14px]">
@@ -292,7 +288,7 @@ const LoanOffers = () => {
                   "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
                 }
                 cardIcon={CurrencyDollarIcon}
-                cardHeaderClassName={"text-blue-600"}
+                color={"blue"}
                 loading={loading}
               >
                 <div

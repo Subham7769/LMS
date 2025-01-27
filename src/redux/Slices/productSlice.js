@@ -206,6 +206,8 @@ const productInitialState = {
     creditScoreEtTempId: "",
     dbcTempId: "",
     disableRac: false,
+    oneSettleLoan: false,
+    advanceDiscount: false,
     eligibleCustomerType: "",
     fee: "",
     interestEligibleTenure: [],
@@ -227,6 +229,14 @@ const productInitialState = {
     interestMethod: "",
     insuranceFee: "",
     insuranceLevy: "",
+    approvalFormData: {
+      name: "Approval Hierarchy",
+      role: "",
+      limit: "",
+      tags: [],
+      approved: [],
+    },
+    approvalData: [],
   },
   loading: false,
   error: null,
@@ -246,6 +256,37 @@ const productSlice = createSlice({
         ...action.payload, // Apply the new changes
         productType: productType || state.productData.productType, // Ensure name field is set
       };
+    },
+    setApprovalFormData: (state, action) => {
+      const { name, value } = action.payload;
+      state.productData.approvalFormData[name] = value;
+    },
+    addApprovalData(state, action) {
+      state.productData.approvalFormData.tags.push({
+        index: state.productData.approvalFormData.tags.length,
+        role: state.productData.approvalFormData.role,
+        limit: state.productData.approvalFormData.limit,
+      });
+      state.productData.approvalFormData.approved.push({
+        role: state.productData.approvalFormData.role,
+        limit: state.productData.approvalFormData.limit,
+      });
+      state.productData.approvalFormData.role = "";
+      state.productData.approvalFormData.limit = "";
+    },
+    deleteApprovalData: (state, action) => {
+      console.log(action.payload);
+      const { tag } = action.payload;
+      const { index, role, limit } = tag;
+      // Delete the tenure from the rules array
+      state.productData.approvalFormData.tags =
+        state.productData.approvalFormData.tags.filter(
+          (tag) => tag.index !== index && tag.role !== role
+        );
+      state.productData.approvalFormData.approved =
+        state.productData.approvalFormData.approved.filter(
+          (approved) => approved !== role
+        );
     },
     setError: (state, action) => {
       state.error = action.error.message;
@@ -300,6 +341,7 @@ const productSlice = createSlice({
 
         // Create a copy of action.payload and add dataIndex for interestEligibleTenure
         const updatedProductData = {
+          ...state.productData,
           ...action.payload,
           interestEligibleTenure: action.payload.interestEligibleTenure.map(
             (tenure) => ({
@@ -373,6 +415,9 @@ const productSlice = createSlice({
 export const {
   setLoading,
   setProductData,
+  setApprovalFormData,
+  addApprovalData,
+  deleteApprovalData,
   setError,
   updateProductDataField,
   updateInterestTenure,

@@ -149,10 +149,10 @@ export const getUserLoanOptions = createAsyncThunk(
 
 export const submitLoanConfiguration = createAsyncThunk(
   "loanConfig/submitLoanConfiguration",
-  async ({ loanType, amount, userID }, { rejectWithValue }) => {
+  async ({ loanType, amount, userID, consumerType }, { rejectWithValue }) => {
     const postData1 = {
       loan_type: loanType,
-      customer_type: "CONSUMER",
+      customer_type: consumerType,
       amount,
     };
 
@@ -580,6 +580,7 @@ const initialState = {
     establishmentActivity: "",
   },
   loanId: "",
+  consumerType: "",
   showModal: false,
   loading: false,
   error: null,
@@ -652,29 +653,58 @@ const productTestingSlice = createSlice({
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.showModal = false;
+        state.loanOptions = [];
+        state.loanConfigFields = initialState.loanConfigFields; // Reset loanConfigFields
       })
       .addCase(getUserLoanOptions.fulfilled, (state, action) => {
         state.loading = false;
-        const eligibleProjects =
-          action.payload.registrationResults.projects.filter(
-            (project) => project.isRegister
-          );
-        // Extract all loan products from eligible projects
-        const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
-          loanProducts.map((product) => ({
-            value: product.productName,
-            label: product.productName
-              .replace(/_/g, " ")
-              .toLowerCase()
-              .replace(/\b\w/g, (char) => char.toUpperCase()),
-          }))
+
+        const { registrationResults } = action.payload;
+        const eligibleProjects = registrationResults.projects.filter(
+          (project) => project.isRegister
         );
-        state.loanOptions = loanOptions;
+
+        // Check if borrowerType is PERSONAL_BORROWER
+        if (registrationResults.borrowerType === "PERSONAL_BORROWER") {
+          // Filter eligible projects
+          // Extract loan products where customerType is CONSUMER
+          const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
+            loanProducts
+              .filter((product) => product.customerType === "CONSUMER") // Only include CONSUMER products
+              .map((product) => ({
+                value: product.productName,
+                label: product.productName
+                  .replace(/_/g, " ")
+                  .toLowerCase()
+                  .replace(/\b\w/g, (char) => char.toUpperCase()),
+              }))
+          );
+
+          state.loanOptions = loanOptions;
+          state.consumerType = "CONSUMER";
+        } else {
+          // If borrowerType is not PERSONAL_BORROWER, set loanOptions to an empty array
+          const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
+            loanProducts
+              .filter((product) => product.customerType === "CORPORATE") // Only include CONSUMER products
+              .map((product) => ({
+                value: product.productName,
+                label: product.productName
+                  .replace(/_/g, " ")
+                  .toLowerCase()
+                  .replace(/\b\w/g, (char) => char.toUpperCase()),
+              }))
+          );
+
+          state.loanOptions = loanOptions;
+          state.consumerType = "CORPORATE";
+        }
       })
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
+        // toast.error(`API Error : ${action.payload}`);
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;

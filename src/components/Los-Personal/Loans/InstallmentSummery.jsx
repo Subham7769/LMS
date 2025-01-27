@@ -13,8 +13,9 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
     { label: "Date", field: "installmentDate" },
     { label: "Principal", field: "principalValue" },
     { label: "Interest", field: "interestValue" },
+    { label: "Service Fee", field: "serviceFee" },
     { label: "Outstanding", field: "totalOutstandingAmount" },
-    { label: "EMI Amount", field: "installmentValue" },
+    { label: "EMI Amount", field: "totalRequiredAmount" },
   ];
 
   const dataWithEmiNo = installmentConfigData.map((item, index) => ({
@@ -23,7 +24,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
     principalValue: formatNumber(item.principalValue),
     interestValue: formatNumber(item.interestValue),
     totalOutstandingAmount: formatNumber(item.totalOutstandingAmount),
-    installmentValue: formatNumber(item.installmentValue),
+    totalRequiredAmount: formatNumber(item.totalRequiredAmount),
     installmentDate: convertDate(item.installmentDate),
   }));
 
@@ -91,7 +92,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
             <div className="text-sm">
               <div className="text-gray-500">Monthly EMI Amount</div>
               <div className="font-semibold text-lg">
-                {installmentConfigData[0]?.installmentValue}
+                {installmentConfigData[0]?.totalRequiredAmount}
               </div>
             </div>
             <div className="text-sm">
@@ -118,6 +119,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                 <th className="px-4">Date</th>
                 <th className="px-4">Principal</th>
                 <th className="px-4">Interest</th>
+                <th className="px-4">Service Fee</th>
                 <th className="px-4">Outstanding</th>
                 <th className="px-4">EMI Amount</th>
                 <th className="px-4"></th>
@@ -161,6 +163,11 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                         )
                       )}
                     </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                    <span
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
+                    ></span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span

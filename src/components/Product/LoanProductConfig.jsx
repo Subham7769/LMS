@@ -37,6 +37,8 @@ import {
   clearUpdateMap,
   setUpdateMap,
 } from "../../redux/Slices/notificationSlice";
+import ApprovalCard from "./ApprovalCard";
+import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -52,9 +54,11 @@ const LoanProductConfig = () => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const { updateMap } = useSelector((state) => state.notification);
+  const { roleData } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
     dispatch(fetchData(productType));
+    dispatch(fetchRoles());
     return () => {
       dispatch(clearValidationError());
       dispatch(clearUpdateMap());
@@ -508,6 +512,11 @@ const LoanProductConfig = () => {
               disabled={currentPage === totalPages || currentItems.length < 1}
             />
           </div>
+          {/* <ApprovalCard
+            approvalData={productData?.approvalData}
+            role={roleData}
+          /> */}
+
           {roleName !== "ROLE_VIEWER" ? (
             <div className="text-right mt-5">
               <Button
