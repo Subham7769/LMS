@@ -33,41 +33,41 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Management Fee</p>
           <p className="text-lg font-semibold text-black">
-            $ {rowData.managementFee}
+            {rowData.managementFee}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Vat Fee</p>
-          <p className="text-lg font-semibold text-black">$ {rowData.vatFee}</p>
+          <p className="text-lg font-semibold text-black">{rowData.vatFee}</p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Third Party Cost</p>
           <p className="text-lg font-semibold text-black">
-            $ {rowData.thirdPartyCost}
+            {rowData.thirdPartyCost}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Term Cost</p>
           <p className="text-lg font-semibold text-black">
-            $ {formatNumber(rowData.termCost)}
+            {formatNumber(rowData.termCost)}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Early Settlement Fee</p>
           <p className="text-lg font-semibold text-black">
-            $ {formatNumber(rowData.earlySettlementFee)}
+            {formatNumber(rowData.earlySettlementFee)}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Saved Fee</p>
           <p className="text-lg font-semibold text-black">
-            $ {formatNumber(rowData.savedFee)}
+            {formatNumber(rowData.savedFee)}
           </p>
         </div>
         <div className="border-r border-gray-300 py-2 px-4">
           <p>Closing Amount</p>
           <p className="text-lg font-semibold text-black">
-            $ {formatNumber(rowData.closingAmount)}
+            {formatNumber(rowData.closingAmount)}
           </p>
         </div>
       </div>

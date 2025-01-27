@@ -14,12 +14,12 @@ import InputText from "../../Common/InputText/InputText";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "./FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "./ViewDocumentsModal";
 import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
+import { FiInfo } from "react-icons/fi";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -97,7 +97,6 @@ const LoanHistory = () => {
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
-    // { label: "Status", field: "applicationStatus" },
     { label: "Loan Status", field: "loanStatus" },
   ];
 
@@ -187,7 +186,8 @@ const LoanHistory = () => {
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
-            ({rowData?.verifiedDocuments?.length} documents)
+            ({rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
+            documents)
           </span>
         </div>
         <div className="flex gap-10">
