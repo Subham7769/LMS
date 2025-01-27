@@ -232,12 +232,12 @@ const ApproveLoans = () => {
         </div>
       </div>
       <div className="w-full flex justify-end gap-2 px-5">
-        <button
+        {/* <button
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
           className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
         >
           View Loan Agreement
-        </button>
+        </button> */}
         <button
           onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
