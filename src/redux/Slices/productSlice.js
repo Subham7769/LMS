@@ -206,6 +206,8 @@ const productInitialState = {
     creditScoreEtTempId: "",
     dbcTempId: "",
     disableRac: false,
+    oneSettleLoan: false,
+    advanceDiscount: false,
     eligibleCustomerType: "",
     fee: "",
     interestEligibleTenure: [],

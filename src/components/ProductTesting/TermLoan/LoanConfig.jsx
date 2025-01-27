@@ -1,23 +1,27 @@
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import InstallmentSummery from "./InstallmentSummery";
-import { useEffect, useState } from "react";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import Button from "../../Common/Button/Button";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputNumber from "../../Common/InputNumber/InputNumber";
-import Button from "../../Common/Button/Button";
+import InstallmentSummery from "./InstallmentSummery";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import { useDispatch, useSelector } from "react-redux";
+import CardInfo from "../../Common/CardInfo/CardInfo";
+import formatNumber from "../../../utils/formatNumber";
+import {
+  UserIcon,
+  CogIcon,
+  CalculatorIcon,
+  CurrencyDollarIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline";
 import {
   getUserLoanOptions,
   submitLoanConfiguration,
   updateLoanConfigFieldsField,
   handleProceed,
 } from "../../../redux/Slices/productTestingSlice";
-import { useNavigate } from "react-router-dom";
+import { fetchBorrowerById } from "../../../redux/Slices/personalLoansSlice";
 import {
   clearValidationError,
   validateForm,
@@ -25,8 +29,6 @@ import {
 import store from "../../../redux/store";
 
 const LoanConfig = () => {
-  const [settings, setSettings] = useState({});
-  const [sliderContainWidth, setSliderContainWidth] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
   const {
@@ -38,6 +40,7 @@ const LoanConfig = () => {
     loading,
     error,
   } = useSelector((state) => state.productTesting);
+  // const { borrowerData } = useSelector((state) => state.personalLoans);
   const { validationError } = useSelector((state) => state.validation);
   const { userID } = useParams();
   const dispatch = useDispatch();
@@ -45,93 +48,14 @@ const LoanConfig = () => {
 
   useEffect(() => {
     dispatch(getUserLoanOptions(userID));
+    // if (userID) {
+    //   dispatch(fetchBorrowerById(userID));
+    // }
     // Cleanup function to clear validation errors on unmount
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch, userID]);
-
-  useEffect(() => {
-    if (["CASH_LOAN_V1", "BNPL_LOAN"].includes(loanConfigFields.loanType)) {
-      dispatch(updateLoanConfigFieldsField({ name: "amount", value: "" }));
-    }
-  }, [loanConfigFields.loanType]);
-
-  useEffect(() => {
-    if (loanConfigData) {
-      const arrowVis = loanConfigData?.dynamicCashLoanOffers?.length;
-      const width =
-        arrowVis < 4 ? arrowVis * 201 : window.innerWidth < 1280 ? 603 : 804; // Calculate width
-      setSettings({
-        dots: false,
-        infinite: false,
-        speed: 500,
-        slidesToShow: arrowVis < 4 ? arrowVis : 4,
-        slidesToScroll: 2,
-        nextArrow: arrowVis < 4 ? "" : <SampleNextArrow />,
-        prevArrow: arrowVis < 4 ? "" : <SamplePrevArrow />,
-        responsive: [
-          {
-            breakpoint: 1280,
-            settings: {
-              slidesToShow: arrowVis < 3 ? arrowVis : 3,
-              slidesToScroll: 2,
-            },
-          },
-        ],
-      });
-
-      setSliderContainWidth(`w-[${width}px]`);
-    }
-  }, [loanConfigData]);
-
-  function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div className={className} style={style} onClick={onClick}>
-        <div className="bg-[#E3735E] h-6 w-6 rounded-full p-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
-      </div>
-    );
-  }
-
-  function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div className={className} style={style} onClick={onClick}>
-        <div className="bg-[#E3735E] h-6 w-6 rounded-full p-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </div>
-      </div>
-    );
-  }
 
   const SubmitProceed = async (transactionId, index) => {
     dispatch(handleProceed({ transactionId, userID }))
@@ -143,16 +67,6 @@ const LoanConfig = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  };
-
-  const handleInstallmentModal = (data) => {
-    setIsModalOpen(true);
-    setSelectedInstallmentData(data); // Set the selected installment data
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedInstallmentData(null); // Clear the data when closing the modal
   };
 
   const handleChange = (e) => {
@@ -177,26 +91,31 @@ const LoanConfig = () => {
     }
   };
 
-  console.log(validationError);
+  const handleInstallmentModal = (data) => {
+    setIsModalOpen(true);
+    setSelectedInstallmentData(data); // Set the selected installment data
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedInstallmentData(null); // Clear the data when closing the modal
+  };
 
   const InfoRow = ({ label, value }) => (
-    <div className="grid grid-cols-3 py-2">
-      <div className="col-span-2">{label}:</div>
-      <div>{value}</div>
+    <div className="mb-1.5">
+      <div className="text-gray-600">{label}:</div>
+      <div className="font-semibold text-lg">{value}</div>
     </div>
   );
 
-  const LoanOfferRow = ({ label }) => (
-    <tr className="divide-x divide-gray-200 h-[58px]">
-      <td className="py-2 text-[14px] text-gray-500 text-center">{label}</td>
-    </tr>
+  const InfoRow2 = ({ label, value }) => (
+    <div className="mb-2">
+      <div className="text-gray-500">{label}:</div>
+      <div className="font-semibold text-lg">{value} %</div>
+    </div>
   );
 
-  const tileClass = "py-2 text-[14px] text-gray-500";
-  const tableDividerStyle =
-    "divide-x divide-gray-200 text-center w-full h-[58px]";
-  const tableSliderStyle =
-    "whitespace-nowrap text-[14px] px-3 py-2 text-gray-500";
+  console.log(showModal);
 
   return (
     <div className="flex flex-col gap-5 mt-4">
@@ -227,248 +146,272 @@ const LoanConfig = () => {
           </div>
         </div>
       </ContainerTile>
-
       {showModal && (
         <>
-          <div className="grid grid-cols-2 gap-5">
-            <ContainerTile loading={loading} error={error}>
-              <div className="font-semibold text-center -mt-3 mb-3">
-                Profile :{" "}
+          <div className="flex flex-col gap-5 mt-4">
+            <div className="text-center">
+              <div className="text-xl font-semibold ">Your Loan Offer</div>
+              <div className="text-gray-500">
+                Let's review the details of your{" "}
+                {
+                  loanOptions.find(
+                    (item) => item.value == loanConfigFields.loanType
+                  )?.label
+                }{" "}
+                offer
               </div>
-              <div className="grid grid-cols-2 gap-5 text-[14px]">
-                <InfoRow
-                  label="Cash Credit Score"
-                  value={loanConfigData?.profile?.cashCreditScore}
-                />
-                <InfoRow
-                  label="Cash TCL"
-                  value={loanConfigData?.profile?.cashTCL}
-                />
-                <InfoRow
-                  label="Net Cash TCL"
-                  value={loanConfigData?.profile?.netCashTCL}
-                />
-              </div>
-            </ContainerTile>
-            <ContainerTile loading={loading} error={error}>
-              <div className="font-semibold text-center -mt-3 mb-3">
-                Cash Loan Stats :{" "}
-              </div>
-              <div className="grid grid-cols-2 gap-5 text-[14px]">
-                <InfoRow
-                  label="Max Loan Amount"
-                  value={loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(
-                    2
-                  )}
-                />
-                <InfoRow
-                  label="Min Loan Amount"
-                  value={loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(
-                    2
-                  )}
-                />
-                <InfoRow
-                  label="Max Loan Duration Days"
-                  value={loanConfigData?.cashLoanStats?.maxLoanDuration}
-                />
-                <InfoRow
-                  label="Min Loan Duration Days"
-                  value={loanConfigData?.cashLoanStats?.minLoanDuration}
-                />
-                <InfoRow
-                  label="Max Tenure Months"
-                  value={loanConfigData?.cashLoanStats?.maxTenure}
-                />
-                <InfoRow
-                  label="Min Tenure Months"
-                  value={loanConfigData?.cashLoanStats?.minTenure}
-                />
-              </div>
-            </ContainerTile>
-          </div>
-          <ContainerTile
-            className="flex items-start w-full"
-            loading={loading}
-            error={error}
-          >
-            <div className="w-[330px]">
-              <table className="divide-y divide-gray-300  w-full border-r border-gray-300">
-                <thead className="bg-gray-50">
-                  <tr className={tableDividerStyle}>
-                    <th className="py-3.5  text-center ">
-                      Dynamic Cash Loan Offers
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {[
-                    "Transaction Id",
-                    "Annual Flat Rate Percent",
-                    "Annual Interest Rate Percent",
-                    "Annual Interest Rate Percent Without Fee",
-                    "APR As Per Tenure Percent",
-                    "APR Per Month Percent",
-                    "APR Without Fee Per Month Percent",
-                    "Average Number Of Installments",
-                    "Daily Interest Rate",
-                    "Daily Interest Rate Percent Without Fee",
-                    "Duration",
-                    "Duration In Months",
-                    "Tenure",
-                    "Installments Summary Response",
-                    "Loan Flat Rate",
-                    "Monthly Flat Rate Percent",
-                    "Monthly Interest Rate Percent",
-                    "Monthly Interest Rate Percent Without Fee",
-                    "Principal Amount",
-                    "Schema",
-                    "Service Fee",
-                    "Service Fee Tax",
-                    "Total Interest Amount",
-                    "Total Loan Amount",
-                    "Total Management Fee",
-                    "Total Management VAT Fee",
-                    "Action",
-                  ].map((label) => (
-                    <tr className={tableDividerStyle} key={label}>
-                      <td className={tileClass}>{label}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
-            <div className={sliderContainWidth}>
-              {/* <div className="w-[804px]"> */}
-              <Slider {...settings}>
-                {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => {
-                  return (
-                    <table
-                      key={index}
-                      className="divide-y divide-gray-300 border-r border-gray-300 w-full"
-                    >
-                      <thead className="bg-gray-50">
-                        <tr className="divide-x divide-gray-200 h-[58px]">
-                          <th className="py-3.5 text-center">{index + 1}</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr className={tableDividerStyle}>
-                          <td className={tableSliderStyle}>
-                            <div
-                              title={ci?.transactionId}
-                              className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
-                            >
-                              <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {ci?.transactionId}
-                              </div>
-                              <div>
-                                <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <LoanOfferRow label={ci?.annualFlatRatePercent} />
-                        <LoanOfferRow label={ci?.annualInterestRatePercent} />
-                        <LoanOfferRow
-                          label={ci?.annualInterestRatePercentWithoutFee}
-                        />
-                        <LoanOfferRow label={ci?.aprAsPerTenorPercent} />
-                        <LoanOfferRow label={ci?.aprPerMonthPercent} />
-                        <LoanOfferRow
-                          label={ci?.aprWithoutFeePerMonthPercent}
-                        />
-                        <LoanOfferRow label={ci?.avrageNumberOfenstallment} />
-                        <tr className={tableDividerStyle}>
-                          <td className={tableSliderStyle}>
-                            <div
-                              title={ci?.dailyInterestRate}
-                              className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
-                            >
-                              <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {ci?.dailyInterestRate}
-                              </div>
-                              <div>
-                                <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <LoanOfferRow
-                          label={ci?.dailyInterestRatePercentWithoutFee}
-                        />
-                        <LoanOfferRow label={ci?.duration} />
-                        <LoanOfferRow label={ci?.durationInMonths} />
-                        <LoanOfferRow label={ci?.instalmentsNumber} />
-                        <tr className={tableDividerStyle}>
-                          <td className={tableSliderStyle}>
-                            <div className="w-[100px] mx-auto white-space-nowrap overflow-hidden text-ellipsis">
-                              <div
-                                className="cursor-pointer"
-                                onClick={() =>
-                                  handleInstallmentModal(
-                                    ci?.installmentSummaryResponse
-                                  )
-                                }
-                              >
-                                EMI Details
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <LoanOfferRow label={ci?.loanFlatRate} />
-                        <LoanOfferRow label={ci?.monthlyFlatRatePercent} />
-                        <LoanOfferRow label={ci?.monthlyInterestRatePercent} />
-                        <LoanOfferRow
-                          label={ci?.monthlyInterestRatePercentWithoutFee}
-                        />
-                        <LoanOfferRow label={ci?.principalAmount} />
-                        <tr className={tableDividerStyle}>
-                          <td className={tableSliderStyle}>
-                            <div
-                              title={ci?.schema}
-                              className="w-[168px] cursor-pointer flex mx-auto hover:text-gray-900"
-                            >
-                              <div className="w-[152px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {ci?.schema}
-                              </div>
-                              <div>
-                                <InformationCircleIcon className="h-4 w-4 inline-block text-gray-500 hover:text-black" />
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <LoanOfferRow label={ci?.serviceFee} />
-                        <LoanOfferRow label={ci?.serviceFeeTax} />
-                        <LoanOfferRow label={ci?.totalInterestAmount} />
-                        <LoanOfferRow label={ci?.totalLoanAmount} />
-                        <LoanOfferRow label={ci?.totalManagementFee} />
-                        <LoanOfferRow label={ci?.totalManagementVatFee} />
-                        <tr className={tableDividerStyle}>
-                          <td className={tableSliderStyle}>
-                            <div
-                              className="text-white bg-indigo-500 rounded py-1 px-1.5 cursor-pointer font-medium"
-                              onClick={() =>
-                                SubmitProceed(ci.transactionId, index)
-                              }
-                            >
-                              Proceed
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  );
-                })}
-              </Slider>
+            <div className="text-right -mt-14">
+              <div className="text-gray-500 text-xs">Applied Schema</div>
+              <div className="text-sm">
+                {loanConfigData?.dynamicCashLoanOffers[0]?.schema}
+              </div>
             </div>
+            <div className="grid grid-cols-2 gap-5">
+              <CardInfo
+                cardTitle="Meet Our Borrower"
+                cardIcon={UserIcon}
+                color={"blue"}
+                cardNumber="1"
+                loading={loading}
+              >
+                {/* <div className="font-semibold text-[15px] mb-2">
+                  {borrowerData?.personalDetails?.title}{" "}
+                  {borrowerData?.personalDetails?.firstName}{" "}
+                  {borrowerData?.personalDetails?.surname}
+                </div> */}
+                <div className="text-[14px]">
+                  <InfoRow
+                    label="Credit Score"
+                    value={loanConfigData?.profile?.cashCreditScore}
+                  />
+                  <InfoRow
+                    label="Total Credit Limit (TCL)"
+                    value={formatNumber(loanConfigData.profile.cashTCL)}
+                  />
+                  <InfoRow
+                    label="Net Total Credit Limit"
+                    value={formatNumber(loanConfigData?.profile?.netCashTCL)}
+                  />
+                </div>
+              </CardInfo>
+              <CardInfo
+                cardTitle="Avialable Loan Range"
+                cardIcon={CogIcon}
+                color={"green"}
+                cardNumber="2"
+                loading={loading}
+              >
+                <div className="text-[14px]">
+                  <div className="text-gray-500">Loan Range:</div>
+                  <div className="font-semibold text-lg mb-2">
+                    {formatNumber(
+                      loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)
+                    )}{" "}
+                    -{" "}
+                    {formatNumber(
+                      loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)
+                    )}
+                  </div>
+                  <div className="text-gray-500">Duration Range:</div>
+                  <div className="font-semibold text-lg">
+                    {loanConfigData?.cashLoanStats?.minLoanDuration} -{" "}
+                    {loanConfigData?.cashLoanStats?.maxLoanDuration} days
+                  </div>
+                  <div className="text-gray-500 mb-2">
+                    ({loanConfigData?.cashLoanStats?.minLoanDurationMonths} -{" "}
+                    {loanConfigData?.cashLoanStats?.maxLoanDurationMonths}{" "}
+                    months)
+                  </div>
+                  <div className="text-gray-500">Average Installments: </div>
+                  <div className="font-semibold text-lg">
+                    {loanConfigData?.dynamicCashLoanOffers[0]?.avrageNumberOfenstallment.toFixed(
+                      2
+                    )}
+                  </div>
+                </div>
+              </CardInfo>
+            </div>
+            {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => (
+              <React.Fragment key={index}>
+                <div className="grid grid-cols-2 gap-5">
+                  <CardInfo
+                    cardTitle="Interest Rates"
+                    cardIcon={CalculatorIcon}
+                    color={"violet"}
+                    // cardNumber={index + 3}
+                    loading={loading}
+                  >
+                    <div className="text-[14px]">
+                      <InfoRow2
+                        label="Annual Rate (APR)"
+                        value={ci?.annualInterestRatePercentWithoutFee}
+                      />
+                      <InfoRow2
+                        label="Monthly Rate"
+                        value={ci?.aprPerMonthPercent}
+                      />
+                      <InfoRow2
+                        label="Daily Rate"
+                        value={ci?.dailyInterestRatePercentWithoutFee}
+                      />
+                      <div className="border-t border-gray-300 pt-2">
+                        <div className="text-gray-500">Monthly Flat Rate</div>
+                        <div className="flex gap-x-2 items-baseline">
+                          <div className="font-semibold text-lg">
+                            {ci?.monthlyFlatRatePercent}%
+                          </div>
+                          <div className="text-gray-500">
+                            (daily: {ci?.loanFlatRate}%, annual:{" "}
+                            {ci?.annualFlatRatePercent}%)
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardInfo>
+                  <CardInfo
+                    cardTitle="Financial Breakdown"
+                    cardIcon={CalculatorIcon}
+                    color={"red"}
+                    // cardNumber={index + 4}
+                    loading={loading}
+                  >
+                    <div className="text-[14px]">
+                      <div className="text-gray-500">Principal Amount:</div>
+                      <div className="flex items-baseline gap-x-2">
+                        <div className="font-semibold text-lg mb-2">
+                          {formatNumber(ci?.principalAmount.toFixed(2))}
+                        </div>
+                        <div className="text-gray-500">
+                          (Disbursed Amt:{" "}
+                          {formatNumber(ci?.disbursedAmount.toFixed(2))})
+                        </div>
+                      </div>
+                      <div className="text-gray-500">Total Interest:</div>
+                      <div className="font-semibold text-lg mb-2">
+                        {formatNumber(ci?.totalInterestAmount.toFixed(2))}
+                      </div>
+                      <div className="text-gray-500">Service Fee:</div>
+                      <div className="flex items-baseline gap-x-2">
+                        <div className="font-semibold text-lg mb-2">
+                          {ci?.serviceFee.toFixed(2)}
+                        </div>
+                        <div className="text-gray-500">
+                          (tax: {ci?.serviceFeeTax.toFixed(2)})
+                        </div>
+                      </div>
+                      <div className="text-gray-500">Management Fee:</div>
+                      <div className="flex items-baseline gap-x-2">
+                        <div className="font-semibold text-lg mb-2">
+                          {ci?.totalManagementFee.toFixed(2)}
+                        </div>
+                        <div className="text-gray-500">
+                          (VAT: {ci?.totalManagementVatFee.toFixed(2)})
+                        </div>
+                      </div>
+                      <div className="text-gray-500">Insurance Fee:</div>
+                      <div className="flex items-baseline gap-x-2">
+                        <div className="font-semibold text-lg mb-2">
+                          {ci?.insuranceFee.toFixed(2)}
+                        </div>
+                        <div className="text-gray-500">
+                          (Levy: {ci?.insuranceLevy.toFixed(2)})
+                        </div>
+                      </div>
+                      <div className="border-t border-gray-300 pt-2 text-blue-600">
+                        <div className="font-semibold">Total Loan Amount:</div>
+                        <div className="font-bold text-lg">
+                          {formatNumber(ci?.totalLoanAmount.toFixed(2))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardInfo>
+                </div>
+                <CardInfo
+                  cardTitle="Final Offer Summary"
+                  className={
+                    "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
+                  }
+                  cardIcon={CurrencyDollarIcon}
+                  color={"blue"}
+                  loading={loading}
+                >
+                  <div
+                    className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5"}
+                  >
+                    <div className="grid grid-cols-5 gap-4 items-center">
+                      <div className="text-[14px]">
+                        <div className="text-gray-500">Total Loan Amount</div>
+                        <div className="font-semibold text-lg text-blue-600">
+                          {formatNumber(ci?.totalLoanAmount.toFixed(2))}
+                        </div>
+                        <div
+                          className="cursor-pointer text-blue-600 hover:underline"
+                          onClick={() =>
+                            handleInstallmentModal(
+                              ci?.installmentSummaryResponse
+                            )
+                          }
+                        >
+                          View EMI Schedule
+                        </div>
+                      </div>
+                      <div className="text-[14px]">
+                        <div className="text-gray-500">Monthly EMI</div>
+                        <div className="font-semibold text-lg">
+                          {formatNumber(
+                            ci?.installmentSummaryResponse[0]?.totalRequiredAmount.toFixed(
+                              2
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-[14px]">
+                        <div className="text-gray-500">Tenure</div>
+                        <div className="font-semibold text-lg">
+                          {ci?.durationInMonths} Months
+                        </div>
+                        <div className="text-gray-500">
+                          ({ci?.duration} Days)
+                        </div>
+                      </div>
+                      <div className="text-[14px]">
+                        <div className="text-gray-500">Interest Rate</div>
+                        <div className="font-semibold text-lg">
+                          {ci?.monthlyInterestRatePercent}% Monthly
+                        </div>
+                        <div className="text-gray-500">
+                          ({ci?.annualInterestRatePercent}% APR)
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        {/* <Button
+                          buttonName="Proceed"
+                          onClick={() => SubmitProceed(ci.transactionId, index)}
+                          rectangle={true}
+                        /> */}
+                      </div>
+                    </div>
+                  </div>
+                </CardInfo>
+                <div>
+                  <div className="text-center text-gray-500 border-b border-gray-300 mb-5 pb-5">
+                    Loan Summary Id : {ci?.transactionId}
+                  </div>
+                  {/* <div className="text-center text-gray-500">
+                    Loan Application Id : {loanConfigData?.loanApplicationId}
+                  </div> */}
+                </div>
+              </React.Fragment>
+            ))}
             {isModalOpen && selectedInstallmentData && (
               <InstallmentSummery
                 isOpen={isModalOpen}
                 onClose={closeModal}
-                installDataProp={selectedInstallmentData}
+                installmentConfigData={selectedInstallmentData}
               />
             )}
-          </ContainerTile>
+          </div>
         </>
       )}
     </div>

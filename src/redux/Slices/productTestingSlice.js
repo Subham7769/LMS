@@ -653,19 +653,21 @@ const productTestingSlice = createSlice({
       .addCase(getUserLoanOptions.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.showModal = false;
+        state.loanOptions = [];
+        state.loanConfigFields = initialState.loanConfigFields; // Reset loanConfigFields
       })
       .addCase(getUserLoanOptions.fulfilled, (state, action) => {
         state.loading = false;
 
         const { registrationResults } = action.payload;
+        const eligibleProjects = registrationResults.projects.filter(
+          (project) => project.isRegister
+        );
 
         // Check if borrowerType is PERSONAL_BORROWER
         if (registrationResults.borrowerType === "PERSONAL_BORROWER") {
           // Filter eligible projects
-          const eligibleProjects = registrationResults.projects.filter(
-            (project) => project.isRegister
-          );
-
           // Extract loan products where customerType is CONSUMER
           const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
             loanProducts
@@ -680,7 +682,7 @@ const productTestingSlice = createSlice({
           );
 
           state.loanOptions = loanOptions;
-          state.consumerType = "CONSUMER"
+          state.consumerType = "CONSUMER";
         } else {
           // If borrowerType is not PERSONAL_BORROWER, set loanOptions to an empty array
           const loanOptions = eligibleProjects.flatMap(({ loanProducts }) =>
@@ -702,7 +704,7 @@ const productTestingSlice = createSlice({
       .addCase(getUserLoanOptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
+        // toast.error(`API Error : ${action.payload}`);
       })
       .addCase(submitLoanConfiguration.pending, (state) => {
         state.loading = true;

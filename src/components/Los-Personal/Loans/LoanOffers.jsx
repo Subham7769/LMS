@@ -39,6 +39,9 @@ const LoanOffers = () => {
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
+    if (loanOfferFields?.uid) {
+      dispatch(fetchBorrowerById(loanOfferFields?.uid));
+    }
   }, [dispatch]);
 
   const SubmitProceed = async (transactionId, index) => {
@@ -240,7 +243,7 @@ const LoanOffers = () => {
                 <CardInfo
                   cardTitle="Financial Breakdown"
                   cardIcon={CalculatorIcon}
-                  color={"orange"}
+                  color={"red"}
                   cardNumber="4"
                   loading={loading}
                 >
@@ -370,7 +373,6 @@ const LoanOffers = () => {
           ))}
           {isModalOpen && selectedInstallmentData && (
             <InstallmentSummery
-              isOpen={isModalOpen}
               onClose={closeModal}
               installmentConfigData={selectedInstallmentData}
             />
