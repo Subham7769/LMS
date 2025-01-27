@@ -31,6 +31,7 @@ function transformData(inputArray) {
 
 const LoanHistory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loanHistory, loading, loanHistoryTotalElements, fullLoanDetails } =
     useSelector((state) => state.smeLoans);
   const [showModal, setShowModal] = useState(false);

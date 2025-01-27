@@ -356,6 +356,12 @@ const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
 const LoanHistorySME = lazy(() =>
   import("./components/Los-SME/Loans/LoanHistory")
 );
+const LoanAgreementSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanAgreement")
+);
+const LoanAgreementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanAgreementPrint")
+);
 const CollateralRegisterSME = lazy(() =>
   import("./components/Los-SME/Loans/CollateralRegister")
 );
@@ -753,7 +759,7 @@ const routes = [
           },
           {
             path: "loan-agreement/:loanApplicationId/:userId",
-            element: <LoanAgreement />,
+            element: <LoanAgreementSME />,
             errorElement: <RouteErrorBoundary />,
           },
           {
@@ -1123,6 +1129,11 @@ const routes = [
   {
     path: "/loan-agreement/:loanApplicationId/:userId",
     element: <LoanAgreementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/loan-agreement-sme/:loanApplicationId/:userId",
+    element: <LoanAgreementPrintSME />,
     errorElement: <RouteErrorBoundary />,
   },
 
