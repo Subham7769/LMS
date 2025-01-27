@@ -10,6 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import store from "../../../redux/store";
 import { fetchAccountDetailsById } from "../../../redux/Slices/accountsSlice";
+import SearchView from "./SearchView";
 
 const SearchBox = () => {
   const location = useLocation();
@@ -128,9 +129,36 @@ const SearchBox = () => {
     }
   };
 
+
+
+  const CustomerCareSearchIDArray = [
+    "For individuals: Passport (AB123456) or NRC (12/AHKANA(N)123456)",
+    "For companies: Business Registration (87654321) or Tax ID",
+    "Enter the exact ID number used during borrower/company registration"
+  ];
+
+  const CustomerCareSearchShowArray = [
+    "Complete customer profile and details",
+    "Loan application history and status",
+    "Active and past loan records",
+    "Repayment history and schedule",
+    "Previous rejection records"
+  ];
+  const ProductTestingSearchIDArray = [
+    "For individuals: Passport (AB123456) or NRC (12/AHKANA(N)123456)",
+    "For companies: Business Registration (87654321) or Tax ID",
+    "Enter the exact ID number used during borrower/company registration"
+  ];
+
+  const ProductTestingSearchShowArray = [
+    "Available loan products based on eligibility",
+    "Maximum loan amounts and terms",
+    "Interest rates and fees",
+  ];
+
   return (
     <>
-      <div className="flex items-center gap-5 justify-center mt-10">
+      {/* <div className="flex items-center gap-5 justify-center mt-10">
         <div>
           {location.pathname === "/loan/customer-care"
             ? "Customer ID"
@@ -158,12 +186,62 @@ const SearchBox = () => {
             rectangle={true}
           />
         </div>
-      </div>
-      {borrowerNotFound && (
+      </div> */}
+      {/* {borrowerNotFound && (
         <div className="text-red-600 mt-4 text-center p-5 bg-red-300 ">
           User Not Found or Invalid ID
         </div>
-      )}
+      )} */}
+
+      {
+        <div>
+          {location.pathname === "/loan/customer-care" ? (
+            <SearchView
+              heading="Customer Care - Borrower Search"
+              subHeading="Search registered borrowers or companies using their identification numbers"
+              borrowerID={borrowerID}
+              borrowerNotFound={borrowerNotFound}
+              onChange={(e) => setBorrowerID(e.target.value)}
+              handleSearch={handleClick}
+              searchIDArray={CustomerCareSearchIDArray}
+              searchShowArray={CustomerCareSearchShowArray}
+            />
+          ) : location.pathname === "/deposit/savings/accounts" ? (
+            <SearchView
+              heading="Accounts - Borrower Search"
+              subHeading="Search registered borrowers or companies using their identification numbers"
+              borrowerID={borrowerID}
+              borrowerNotFound={borrowerNotFound}
+              onChange={(e) => setBorrowerID(e.target.value)}
+              handleSearch={handleClick}
+              searchIDArray={["ID1", "ID2", "ID3"]}
+              searchShowArray={["Info1", "Info2", "Info3"]}
+            />
+          ) : location.pathname === "/loan/product-testing/term-loan" ? (
+            <SearchView
+              heading="Product Testing - Borrower Search"
+              subHeading="Search registered borrowers or companies using their identification numbers"
+              borrowerID={borrowerID}
+              borrowerNotFound={borrowerNotFound}
+              onChange={(e) => setBorrowerID(e.target.value)}
+              handleSearch={handleClick}
+              searchIDArray={ProductTestingSearchIDArray}
+              searchShowArray={ProductTestingSearchShowArray}
+            />
+          ) : (
+            <SearchView
+              heading="Product Testing - Borrower Search"
+              subHeading="Search registered borrowers or companies using their identification numbers"
+              borrowerID={borrowerID}
+              borrowerNotFound={borrowerNotFound}
+              onChange={(e) => setBorrowerID(e.target.value)}
+              handleSearch={handleClick}
+              searchIDArray={ProductTestingSearchIDArray}
+              searchShowArray={ProductTestingSearchShowArray}
+            />
+          )}
+        </div>
+      }
     </>
   );
 };

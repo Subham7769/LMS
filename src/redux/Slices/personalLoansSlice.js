@@ -228,6 +228,52 @@ export const deleteDocumentFile = createAsyncThunk(
   }
 );
 
+export const downloadDocumentFile = createAsyncThunk(
+  "personalLoans/downloadDocumentFile",
+  async (fileDeleteParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken, docName } = fileDeleteParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_DOWNLOAD_PERSONAL}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
+
+      // Convert response to a Blob
+      const blob = await response.blob();
+
+      // Create a URL for the Blob
+      const downloadUrl = URL.createObjectURL(blob);
+
+      // Create an anchor element to trigger the download
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+
+      a.download = docName;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up the URL object and remove the anchor element
+      URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(a);
+
+      return "File downloaded successfully";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const saveDraftLoanData = createAsyncThunk(
   "personalLoans/saveDraftLoanData",
   async (addLoanData, { rejectWithValue }) => {
@@ -821,6 +867,19 @@ const personalLoansSlice = createSlice({
         toast(`Document deleted Successfully`);
       })
       .addCase(deleteDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(downloadDocumentFile.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(downloadDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success(`Document downloaded Successfully`);
+      })
+      .addCase(downloadDocumentFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
