@@ -36,7 +36,7 @@ function transformData(inputArray) {
   }));
 }
 
-const ApproveRepaymentTest = () => {
+const ApproveRepayment = () => {
   const dispatch = useDispatch();
   const {
     approveRepaymentData,
@@ -205,14 +205,14 @@ const ApproveRepaymentTest = () => {
           View EMI Schedule
         </button>
         <button
-          onClick={() => handleReject(rowData)}
+          onClick={() => handleReject(rowData.transactionId)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
         >
           <FiXCircle className="-ml-0.5 h-5 w-5" />
           Reject
         </button>
         <button
-          onClick={() => handleApprove(rowData)}
+          onClick={() => handleApprove(rowData.transactionId)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
         >
           <FiCheckCircle className="-ml-0.5 h-5 w-5" />
@@ -353,4 +353,4 @@ const ApproveRepaymentTest = () => {
   );
 };
 
-export default ApproveRepaymentTest;
+export default ApproveRepayment;
