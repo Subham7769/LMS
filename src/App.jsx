@@ -752,6 +752,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "loan-agreement/:loanApplicationId/:userId",
+            element: <LoanAgreement />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "loan-history",
             element: <LoanHistorySME />,
             errorElement: <RouteErrorBoundary />,
