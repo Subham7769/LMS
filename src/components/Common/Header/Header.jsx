@@ -1,12 +1,10 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, {  useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BoltIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import useOnline from "../../../utils/useOnline";
-import "react-toastify/dist/ReactToastify.css";
 import NotificationWindow from "../../Notifications/NotificationWindow";
-import Tab from "../Tab/Tab";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/Slices/authSlice";

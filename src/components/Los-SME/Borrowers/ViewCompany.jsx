@@ -3,6 +3,8 @@ import { accountStatusOptions } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
+import CardInfo from "../../Common/CardInfo/CardInfo";
+import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
@@ -18,6 +20,27 @@ import {
 import { useNavigate } from "react-router-dom";
 import Accordion from "../../Common/Accordion/Accordion";
 import Pagination from "../../Common/Pagination/Pagination";
+import {
+  CurrencyDollarIcon,
+  BuildingOffice2Icon,
+  EnvelopeIcon,
+  PhoneIcon,
+  UserIcon,
+  ArchiveBoxIcon,
+  HomeIcon,
+  BriefcaseIcon,
+  WindowIcon,
+  MapPinIcon,
+  CalendarIcon,
+  UserCircleIcon,
+  BanknotesIcon,
+  PencilIcon,
+  XMarkIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  ClockIcon,
+  ChartPieIcon,
+} from "@heroicons/react/24/outline";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -28,6 +51,7 @@ const ViewCompany = () => {
   const [searchBy, setSearchBy] = useState("");
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
+  const [showEditModal, setEditModal] = useState(false);
 
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
@@ -61,18 +85,22 @@ const ViewCompany = () => {
 
   const applyFilters = () => {
     const filtered = allBorrowersData.filter((borrower) => {
-      const companyDetails = borrower.companyBorrowerProfile?.companyDetails || {};
-      const companyContactDetails = borrower.companyBorrowerProfile?.companyContactDetails || {};
-  
-      console.log('companyContactDetails:', companyContactDetails);
-      console.log('searchValue:', searchValue);
-  
+      const companyDetails =
+        borrower.companyBorrowerProfile?.companyDetails || {};
+      const companyContactDetails =
+        borrower.companyBorrowerProfile?.companyContactDetails || {};
+
+      // console.log("companyContactDetails:", companyContactDetails);
+      // console.log("searchValue:", searchValue);
+
       let matchesSearchValue = false;
-  
+
       // If 'searchBy' is specified, search based on that field
       if (searchBy) {
         matchesSearchValue = searchValue
-          ? companyDetails[searchBy]?.toLowerCase().includes(searchValue.toLowerCase())
+          ? companyDetails[searchBy]
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
           : true;
       } else {
         // Search through multiple fields if no specific 'searchBy'
@@ -85,18 +113,16 @@ const ViewCompany = () => {
               companyContactDetails.email,
               companyContactDetails.mobile1,
             ]
-              .map((field) => field ? field.toString().toLowerCase() : "")  // Ensure each field is a string and lowercase
-              .some((field) => field.includes(searchValue.toLowerCase()))  // Check if any field matches
+              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
           : true;
       }
-  
+
       return matchesSearchValue;
     });
-  
+
     setFilteredBorrowers(filtered);
   };
-  
-  
 
   const handleSearchFilter = (term) => {
     setSearchValue(term);
@@ -138,6 +164,21 @@ const ViewCompany = () => {
     });
   }
 
+  function transformData(inputArray) {
+    return inputArray.map((item) => ({
+      ...item,
+      fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
+      dateOfBirth: convertDate(item?.dateOfBirth),
+      workStartDate: convertDate(item?.workStartDate),
+    }));
+  }
+
+  // const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
+
+  // console.log(flattenData);
+
+  // const transformFlattenData = transformData(flattenData);
+
   const searchOptions = [
     { label: "Name", value: "companyName" },
     { label: "Short Name", value: "companyShortName" },
@@ -159,208 +200,54 @@ const ViewCompany = () => {
     { label: "Status", field: "lmsUserStatus" },
   ];
 
+  const SearchBorrowerByFieldSearch = () => {
+    dispatch(
+      fetchCompanyBorrowerByField({ field: searchBy, value: searchValue })
+    );
+    setSearchBy("");
+    setSearchValue("");
+  };
+
   const renderExpandedRow = (rowData) => {
     const currentStatus =
       borrowerStatuses[rowData.uid] || rowData.lmsUserStatus; // Get the current status for this borrower
-
     const setCurrentStatus = (newStatus) => {
       setBorrowerStatuses((prevStatuses) => ({
         ...prevStatuses,
         [rowData.uid]: newStatus, // Update the status for this borrower
       }));
     };
-    
-    const handleEdit = (uid) => {
-      dispatch(setUpdateCompany({ uid }));
-      navigate(
-        `/loan/loan-origination-system/sme/borrowers/update-company/${uid}`
-      );
-      console.log(uid);
-    };
 
-    const handleEditDirector = (uid,uniqueID) => {
-      dispatch(setUpdateDirector({ uid,uniqueID }));
-      navigate(
-        `/loan/loan-origination-system/sme/borrowers/update-director/${uid}`
-      );
-      console.log(uid);
-    };
+    const ViewEditModal = ({ isOpen, onClose }) => {
+      if (!isOpen) return null;
 
-    const handleEditShareholder = (uid,uniqueID) => {
-      dispatch(setUpdateShareholder({ uid,uniqueID }));
-      navigate(
-        `/loan/loan-origination-system/sme/borrowers/update-shareholder/${uid}`
-      );
-      console.log(uid);
-    };
+      const handleEdit = (uid) => {
+        dispatch(setUpdateCompany({ uid }));
+        navigate(
+          `/loan/loan-origination-system/sme/borrowers/update-company/${uid}`
+        );
+        console.log(uid);
+      };
 
-    const handleChangeStatus = async (uid, newStatus) => {
-      console.log(uid);
-      setCurrentStatus(newStatus);
-      await dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
-      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
-      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
-    };
+      const handleChangeStatus = async (uid, newStatus) => {
+        console.log(uid);
+        setCurrentStatus(newStatus);
+        await dispatch(
+          changeCompanyBorrowerStatus({ uid, newStatus })
+        ).unwrap();
+        dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+        navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+        onClose();
+      };
 
-    return (
-      <div className="space-y-2 text-sm text-gray-600 border-y-2 py-2">
-        <Accordion
-          heading={"Company Details"}
-          renderExpandedContent={() => (
-            <div className="grid grid-cols-[85%_15%] gap-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
-                {/* Company Details */}
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg text-gray-800">
-                    General Details
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <p>
-                      <strong>Name:</strong> {rowData.companyName}{" "}
-                      {rowData.companyName}
-                    </p>
-                    <p>
-                      <strong>Unique ID:</strong> {rowData.companyUniqueId}
-                    </p>
-                    <p>
-                      <strong>Registration No:</strong>{" "}
-                      {rowData.companyRegistrationNo}
-                    </p>
-                    <p>
-                      <strong>Nature of Company:</strong>{" "}
-                      {rowData.natureOfCompany}
-                    </p>
-                    <p>
-                      <strong>Industry:</strong> {rowData.industry}
-                    </p>
-                    <p>
-                      <strong>Nature of Business:</strong>{" "}
-                      {rowData.natureOfBusiness}
-                    </p>
-                    <p>
-                      <strong>Date of Incorporation:</strong>{" "}
-                      {rowData.dateOfIncorporation}
-                    </p>
-                    <p>
-                      <strong>Country of Registration:</strong>{" "}
-                      {rowData.countryOfRegistration}
-                    </p>
-                    <p>
-                      <strong>Permanent Employees:</strong>{" "}
-                      {rowData.numberOfPermanentEmployees}
-                    </p>
-                    <p>
-                      <strong>Address:</strong> {rowData.locationOfHQ}{" "}
-                      {rowData.province}
-                    </p>
-                  </div>
-                </div>
-
-                {/*Company Contact Details */}
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg text-gray-800">
-                    Contact Details
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <p>
-                      <strong>Mobile 1:</strong> {rowData.mobile1}
-                    </p>
-                    <p>
-                      <strong>Mobile 2:</strong> {rowData.mobile2}
-                    </p>
-                    <p>
-                      <strong>Landline:</strong> {rowData.landlinePhone}
-                    </p>
-                    <p>
-                      <strong>Email:</strong> {rowData.email}
-                    </p>
-                    <p>
-                      <strong>Address:</strong>{" "}
-                      {[
-                        rowData.houseNumber,
-                        rowData.street,
-                        rowData.residentialArea,
-                        rowData.province,
-                        rowData.district,
-                        rowData.country,
-                      ]
-                        .filter(Boolean)
-                        .join(", ")}
-                    </p>
-                    <p>
-                      <strong>Post Box:</strong> {rowData.postBox}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Banking Details */}
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg text-gray-800">
-                    Banking Details
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <p>
-                      <strong>Bank Name:</strong> {rowData.bankName}
-                    </p>
-                    <p>
-                      <strong>Account Name:</strong> {rowData.accountName}
-                    </p>
-                    <p>
-                      <strong>Account Type:</strong> {rowData.accountType}
-                    </p>
-                    <p>
-                      <strong>Account No:</strong> {rowData.accountNo}
-                    </p>
-                    <p>
-                      <strong>Branch:</strong> {rowData.branch}
-                    </p>
-                    <p>
-                      <strong>Branch Code:</strong> {rowData.branchCode}
-                    </p>
-                    <p>
-                      <strong>Sort Code:</strong> {rowData.sortCode}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Company Other Details */}
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg text-gray-800">
-                    Other Details
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <p>
-                      <strong>Reason For Borrowing:</strong>{" "}
-                      {rowData.reasonForBorrowing}
-                    </p>
-                    <p>
-                      <strong>Source of Repayment:</strong>{" "}
-                      {rowData.sourceOfRepayment}
-                    </p>
-                    <p>
-                      <strong>Shareholding Structure:</strong>{" "}
-                      {rowData.shareholdingStructure}
-                    </p>
-                    <p>
-                      <strong>Trade Union:</strong> {rowData.tradeUnion}
-                    </p>
-                    <p>
-                      <strong>Group Id:</strong> {rowData.groupId}
-                    </p>
-                    <p>
-                      <strong>Credit Score:</strong> {rowData.creditScore}
-                    </p>
-                    <p>
-                      <strong>Free Cash In Hand:</strong>{" "}
-                      {rowData.freeCashInHand}
-                    </p>
-                    <p>
-                      <strong>Gross Salary:</strong> {rowData.grossSalary}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* Actions */}
+      return (
+        <>
+          <div className="fixed inset-0 z-20 flex items-center justify-center bg-stone-200/10 backdrop-blur-sm">
+            <div className="relative w-1/3 p-8 bg-white border border-red-600 rounded-xl shadow-lg transition-all duration-500 ease-in-out">
+              <XMarkIcon
+                onClick={onClose}
+                className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
+              />
               <div className="flex justify-start gap-5 flex-col mt-4">
                 <Button
                   buttonName={"Edit"}
@@ -383,336 +270,559 @@ const ViewCompany = () => {
                 />
               </div>
             </div>
+          </div>
+        </>
+      );
+    };
+
+    const handleEdit = (uid) => {
+      dispatch(setUpdateCompany({ uid }));
+      navigate(
+        `/loan/loan-origination-system/sme/borrowers/update-company/${uid}`
+      );
+      console.log(uid);
+    };
+
+    const handleEditDirector = (uid, uniqueID) => {
+      dispatch(setUpdateDirector({ uid, uniqueID }));
+      navigate(
+        `/loan/loan-origination-system/sme/borrowers/update-director/${uid}`
+      );
+      console.log(uid);
+    };
+
+    const handleEditShareholder = (uid, uniqueID) => {
+      dispatch(setUpdateShareholder({ uid, uniqueID }));
+      navigate(
+        `/loan/loan-origination-system/sme/borrowers/update-shareholder/${uid}`
+      );
+      console.log(uid);
+    };
+
+    const handleChangeStatus = async (uid, newStatus) => {
+      console.log(uid);
+      setCurrentStatus(newStatus);
+      await dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
+      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+    };
+
+    return (
+      <div className="space-y-2 text-sm text-gray-600 border-y-2 py-2">
+        <Accordion
+          heading={"Company Details"}
+          renderExpandedContent={() => (
+            <div className="grid grid-cols-1 gap-1 relative">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+                {/* Company Details */}
+                <CardInfo
+                  cardTitle="Company Overview"
+                  cardIcon={BuildingOffice2Icon}
+                  color={"blue"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <p>
+                      {rowData.companyName} is a {rowData.natureOfCompany}{" "}
+                      company operating in the {rowData.industry}.
+                    </p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <CardInfoRow
+                        icon={DocumentTextIcon}
+                        label="Registration No"
+                        value={rowData.companyRegistrationNo}
+                      />
+                      <CardInfoRow
+                        icon={WindowIcon}
+                        label="Unique ID"
+                        value={rowData.companyUniqueId}
+                      />
+                      <CardInfoRow
+                        icon={CalendarIcon}
+                        label="Incorporated"
+                        value={rowData.dateOfIncorporation}
+                      />
+                      <CardInfoRow
+                        icon={UsersIcon}
+                        label="Employees"
+                        value={rowData.numberOfPermanentEmployees}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+
+                {/*Company Contact Details */}
+                <CardInfo
+                  cardTitle="Contact Information"
+                  cardIcon={PhoneIcon}
+                  color={"green"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <CardInfoRow
+                        icon={PhoneIcon}
+                        label="Mobile"
+                        value={rowData.mobile1}
+                      />
+                      <CardInfoRow
+                        icon={EnvelopeIcon}
+                        label="Email"
+                        value={rowData.email}
+                      />
+
+                      <CardInfoRow
+                        icon={ArchiveBoxIcon}
+                        label="Post Box"
+                        value={rowData.postBox}
+                      />
+                      <CardInfoRow
+                        icon={MapPinIcon}
+                        label="Address"
+                        value={[
+                          rowData.houseNumber,
+                          rowData.street,
+                          rowData.residentialArea,
+                          rowData.province,
+                          rowData.district,
+                          rowData.country,
+                        ]
+                          .filter(Boolean)
+                          .join(", ")}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+
+                {/* Banking Details */}
+                <CardInfo
+                  cardTitle="Financial Profile"
+                  cardIcon={BuildingOffice2Icon}
+                  color={"red"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <CardInfoRow
+                        icon={BuildingOffice2Icon}
+                        label="Bank"
+                        value={rowData.bankName}
+                      />
+                      <CardInfoRow
+                        icon={WindowIcon}
+                        label="Account"
+                        value={rowData.accountNo}
+                      />
+                      <CardInfoRow
+                        icon={MapPinIcon}
+                        label="Branch"
+                        value={rowData.branch + " (" + rowData.branchCode + ")"}
+                      />
+                      <CardInfoRow
+                        icon={DocumentTextIcon}
+                        label="Sort Code"
+                        value={rowData.sortCode}
+                      />
+                      <CardInfoRow
+                        icon={CurrencyDollarIcon}
+                        label="Free Cash"
+                        value={rowData.freeCashInHand}
+                      />
+                      <CardInfoRow
+                        icon={BanknotesIcon}
+                        label="Gross Revenue"
+                        value={rowData.grossSalary}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+
+                {/* Company Other Details */}
+                <CardInfo
+                  cardTitle="Other Details"
+                  cardIcon={BriefcaseIcon}
+                  color={"violet"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <div className="grid grid-cols-1 gap-4">
+                      <CardInfoRow
+                        icon={DocumentTextIcon}
+                        label="Purpose"
+                        value={rowData.reasonForBorrowing}
+                      />
+                      <CardInfoRow
+                        icon={CurrencyDollarIcon}
+                        label="Repayment Source"
+                        value={rowData.sourceOfRepayment}
+                      />
+                      <CardInfoRow
+                        icon={ChartPieIcon}
+                        label="Shareholding"
+                        value={rowData.shareholdingStructure}
+                      />
+                      <CardInfoRow
+                        icon={UsersIcon}
+                        label="Trade Union"
+                        value={rowData.tradeUnion}
+                      />
+                      <CardInfoRow
+                        icon={WindowIcon}
+                        label="Credit Score"
+                        value={rowData.creditScore}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+              </div>
+              {/* Actions */}
+              <div className="absolute top-0 right-0">
+                <button
+                  className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                  onClick={() => setEditModal(true)}
+                >
+                  <PencilIcon className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
+              <ViewEditModal
+                isOpen={showEditModal}
+                onClose={() => setEditModal(false)}
+              />
+            </div>
           )}
         />
-
         {/* Directors Kyc Details Details */}
-        <Accordion
-          heading={"Directors Details"}
-          renderExpandedContent={() => (
-            <>
-              {rowData.directorsKycDetails.map((director) => (
-                <Accordion
-                  heading={`${director.personalDetails.title} 
+        {rowData?.directorsKycDetails?.length > 0 && (
+          <Accordion
+            heading={"Directors Details"}
+            renderExpandedContent={() => (
+              <>
+                {rowData.directorsKycDetails.map((director) => (
+                  <Accordion
+                    heading={`${director.personalDetails.title} 
                       ${director.personalDetails.firstName} 
                       ${director.personalDetails.surname} 
                       ${director.personalDetails.otherName}`}
-                  renderExpandedContent={() => (
-                    <div className="grid grid-cols-[85%_15%] gap-1">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
-                        {/* Director Personal Details */}
-                        <div className="space-y-2">
-                          <h3 className="font-semibold text-lg text-gray-800">
-                            Personal Details
-                          </h3>
-                          <div className="grid grid-cols-2 gap-4">
-                            <p>
-                              <strong>Name:</strong>{" "}
-                              {director.personalDetails.title}{" "}
-                              {director.personalDetails.firstName}{" "}
-                              {director.personalDetails.surname}{" "}
-                              {director.personalDetails.otherName}
-                            </p>
-                            <p>
-                              <strong>Unique Id Type:</strong>{" "}
-                              {director.personalDetails.uniqueIDType}
-                            </p>
-                            <p>
-                              <strong>Unique ID:</strong>{" "}
-                              {director.personalDetails.uniqueID}
-                            </p>
-                            <p>
-                              <strong>Gender:</strong>{" "}
-                              {director.personalDetails.gender}
-                            </p>
-                            <p>
-                              <strong>Marital Status:</strong>{" "}
-                              {director.personalDetails.maritalStatus}
-                            </p>
-                            <p>
-                              <strong>nationality:</strong>{" "}
-                              {director.personalDetails.nationality}
-                            </p>
-                            <p>
-                              <strong>Date of Birth:</strong>{" "}
-                              {director.personalDetails.dateOfBirth}
-                            </p>
-                            <p>
-                              <strong>Age:</strong>{" "}
-                              {director.personalDetails.age}
-                            </p>
-                            <p>
-                              <strong>Place of Birth:</strong>{" "}
-                              {director.personalDetails.placeOfBirth}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/*Director Contact Details */}
-                        <div className="space-y-2">
-                          <h3 className="font-semibold text-lg text-gray-800">
-                            Contact Details
-                          </h3>
-                          <div className="grid grid-cols-2 gap-4">
-                            <p>
-                              <strong>Mobile 1:</strong>{" "}
-                              {director.contactDetails.mobile1}
-                            </p>
-                            <p>
-                              <strong>Mobile 2:</strong>{" "}
-                              {director.contactDetails.mobile2}
-                            </p>
-                            <p>
-                              <strong>Landline:</strong>{" "}
-                              {director.contactDetails.landlinePhone}
-                            </p>
-                            <p>
-                              <strong>Email:</strong>{" "}
-                              {director.contactDetails.email}
-                            </p>
-                            <p>
-                              <strong>Address:</strong>{" "}
-                              {[
-                                director.contactDetails.houseNumber,
-                                director.contactDetails.street,
-                                director.contactDetails.residentialArea,
-                                director.contactDetails.province,
-                                director.contactDetails.district,
-                                director.contactDetails.country,
-                              ]
-                                .filter(Boolean)
-                                .join(", ")}
-                            </p>
-                            <p>
-                              <strong>Post Box:</strong>{" "}
-                              {director.contactDetails.postBox}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/*Director Employment Details */}
-                        <div className="space-y-2">
-                          <h3 className="font-semibold text-lg text-gray-800">
-                            Employment Details
-                          </h3>
-                          <div className="grid grid-cols-2 gap-4">
-                            <p>
-                              <strong>Employer:</strong>{" "}
-                              {director.employmentDetails.employer}
-                            </p>
-                            <p>
-                              <strong>Occupation:</strong>{" "}
-                              {director.employmentDetails.occupation}
-                            </p>
-                            <p>
-                              <strong>Work Start Date:</strong>{" "}
-                              {director.employmentDetails.workStartDate}
-                            </p>
-                            <p>
-                              <strong>Work Phone:</strong>{" "}
-                              {director.employmentDetails.workPhoneNumber}
-                            </p>
-                            <p>
-                              <strong>Work Address:</strong>{" "}
-                              {director.employmentDetails.workPhysicalAddress}
-                            </p>
-                            <p>
-                              <strong>Employment Type:</strong>{" "}
-                              {director.employmentDetails.workType}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/*Director Banking Details */}
-                        <div className="space-y-2">
-                          <h3 className="font-semibold text-lg text-gray-800">
-                            Banking Details
-                          </h3>
-                          <div className="grid grid-cols-2 gap-4">
-                            <p>
-                              <strong>Bank Name:</strong>{" "}
-                              {director.bankDetails.bankName}
-                            </p>
-                            <p>
-                              <strong>Account Name:</strong>{" "}
-                              {director.bankDetails.accountName}
-                            </p>
-                            <p>
-                              <strong>Account Type:</strong>{" "}
-                              {director.bankDetails.accountType}
-                            </p>
-                            <p>
-                              <strong>Account No:</strong>{" "}
-                              {director.bankDetails.accountNo}
-                            </p>
-                            <p>
-                              <strong>Branch:</strong>{" "}
-                              {director.bankDetails.branch}
-                            </p>
-                            <p>
-                              <strong>Branch Code:</strong>{" "}
-                              {director.bankDetails.branchCode}
-                            </p>
-                            <p>
-                              <strong>Sort Code:</strong>{" "}
-                              {director.bankDetails.sortCode}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      {/*Director Actions */}
-                      <div className="flex justify-start gap-5 flex-col mt-4">
-                        <Button
-                          buttonName={"Edit"}
-                          onClick={() =>
-                            handleEditDirector(
-                              rowData.uid,director.personalDetails.uniqueID
-                            )
-                          }
-                          className={"text-center"}
-                          rectangle={true}
-                        />
-                      </div>
-                    </div>
-                  )}
-                />
-              ))}
-            </>
-          )}
-        />
-
-        {/* Shareholder Details */}
-        <Accordion
-          heading={"Shareholder Details"}
-          renderExpandedContent={() => (
-            <>
-              {rowData.shareHolderDetails.map((shareholder, index) => (
-                <>
-                  <Accordion
-                    heading={`${shareholder.personalDetails.title} 
-                      ${shareholder.personalDetails.firstName} 
-                      ${shareholder.personalDetails.surname} 
-                      ${shareholder.personalDetails.otherName}`}
                     renderExpandedContent={() => (
-                      <div className="grid grid-cols-[85%_15%] gap-1">
+                      <div className="grid grid-cols-1 gap-1 relative">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
-                          {/* Shareholder Personal Details */}
-                          <div className="space-y-2">
-                            <h3 className="font-semibold text-lg text-gray-800">
-                              Personal Details
-                            </h3>
-                            <div className="grid grid-cols-2 gap-4">
+                          {/* Director Personal Details */}
+                          <CardInfo
+                            cardTitle="Personal Details"
+                            cardIcon={UserIcon}
+                            color={"blue"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
                               <p>
-                                <strong>Name:</strong>{" "}
-                                {shareholder.personalDetails.title}{" "}
-                                {shareholder.personalDetails.firstName}{" "}
-                                {shareholder.personalDetails.surname}{" "}
-                                {shareholder.personalDetails.otherName}
-                              </p>
-                              <p>
-                                <strong>Unique Id Type:</strong>{" "}
-                                {shareholder.personalDetails.uniqueIDType}
-                              </p>
-                              <p>
-                                <strong>Unique ID:</strong>{" "}
-                                {shareholder.personalDetails.uniqueID}
-                              </p>
-                              <p>
-                                <strong>Gender:</strong>{" "}
-                                {shareholder.personalDetails.gender}
-                              </p>
-                              <p>
-                                <strong>Marital Status:</strong>{" "}
-                                {shareholder.personalDetails.maritalStatus}
-                              </p>
-                              <p>
-                                <strong>nationality:</strong>{" "}
-                                {shareholder.personalDetails.nationality}
-                              </p>
-                              <p>
-                                <strong>Date of Birth:</strong>{" "}
-                                {shareholder.personalDetails.dateOfBirth}
-                              </p>
-                              <p>
-                                <strong>Age:</strong>{" "}
-                                {shareholder.personalDetails.age}
-                              </p>
-                              <p>
-                                <strong>Place of Birth:</strong>{" "}
-                                {shareholder.personalDetails.placeOfBirth}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/*Shareholder Contact Details */}
-                          <div className="space-y-2">
-                            <h3 className="font-semibold text-lg text-gray-800">
-                              Contact Details
-                            </h3>
-                            <div className="grid grid-cols-2 gap-4">
-                              <p>
-                                <strong>Mobile 1:</strong>{" "}
-                                {shareholder.contactDetails.mobile1}
-                              </p>
-                              <p>
-                                <strong>Mobile 2:</strong>{" "}
-                                {shareholder.contactDetails.mobile2}
-                              </p>
-                              <p>
-                                <strong>Landline:</strong>{" "}
-                                {shareholder.contactDetails.landlinePhone}
-                              </p>
-                              <p>
-                                <strong>Email:</strong>{" "}
-                                {shareholder.contactDetails.email}
-                              </p>
-                              <p>
-                                <strong>Address:</strong>{" "}
                                 {[
-                                  shareholder.contactDetails.houseNumber,
-                                  shareholder.contactDetails.street,
-                                  shareholder.contactDetails.residentialArea,
-                                  shareholder.contactDetails.province,
-                                  shareholder.contactDetails.district,
-                                  shareholder.contactDetails.country,
+                                  director.personalDetails.title,
+                                  director.personalDetails.firstName,
+                                  director.personalDetails.surname,
+                                  director.personalDetails.otherName,
+                                ]
+                                  .filter(Boolean)
+                                  .join(" ")}{" "}
+                                is a {director.personalDetails.age}-year-old{" "}
+                                {director.personalDetails.nationality} national.
+                                They are{" "}
+                                {director.personalDetails.maritalStatus} and
+                                identify as {director.personalDetails.gender}.
+                              </p>
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={CalendarIcon}
+                                  label="Born"
+                                  value={director.personalDetails.dateOfBirth}
+                                />
+                                <CardInfoRow
+                                  icon={MapPinIcon}
+                                  label="Place"
+                                  value={director.personalDetails.placeOfBirth}
+                                />
+                                <CardInfoRow
+                                  icon={WindowIcon}
+                                  label={director.personalDetails.uniqueIDType}
+                                  value={director.personalDetails.uniqueID}
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
+
+                          {/*Director Contact Details */}
+                          <CardInfo
+                            cardTitle="Contact Details"
+                            cardIcon={PhoneIcon}
+                            color={"green"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                Currently residing in{" "}
+                                {[
+                                  director.contactDetails.houseNumber,
+                                  director.contactDetails.street,
+                                  director.contactDetails.residentialArea,
+                                  director.contactDetails.province,
+                                  director.contactDetails.district,
+                                  director.contactDetails.country,
                                 ]
                                   .filter(Boolean)
                                   .join(", ")}
                               </p>
-                              <p>
-                                <strong>Post Box:</strong>{" "}
-                                {shareholder.contactDetails.postBox}
-                              </p>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={PhoneIcon}
+                                  label="Mobile"
+                                  value={director.contactDetails.mobile1}
+                                />
+                                <CardInfoRow
+                                  icon={EnvelopeIcon}
+                                  label="Email"
+                                  value={director.contactDetails.email}
+                                />
+                                <CardInfoRow
+                                  icon={ArchiveBoxIcon}
+                                  label="Post Box"
+                                  value={director.contactDetails.postBox}
+                                />
+                              </div>
                             </div>
-                          </div>
+                          </CardInfo>
+
+                          {/*Director Employment Details */}
+                          <CardInfo
+                            cardTitle="Employment Details"
+                            cardIcon={BriefcaseIcon}
+                            color={"violet"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                Working as a{" "}
+                                {director.employmentDetails.occupation} at{" "}
+                                {director.employmentDetails.employer} since{" "}
+                                {director.employmentDetails.workStartDate} in a{" "}
+                                {director.employmentDetails.workType} capacity.
+                              </p>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={PhoneIcon}
+                                  label="Work Phone"
+                                  value={
+                                    director.employmentDetails.workPhoneNumber
+                                  }
+                                />
+                                <CardInfoRow
+                                  icon={MapPinIcon}
+                                  label="Work Location"
+                                  value={
+                                    director.employmentDetails
+                                      .workPhysicalAddress
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
+
+                          {/*Director Banking Details */}
+                          <CardInfo
+                            cardTitle="Banking Details"
+                            cardIcon={BuildingOffice2Icon}
+                            color={"red"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                Maintain a {director.bankDetails.accountType}{" "}
+                                account with {director.bankDetails.bankName}.
+                              </p>
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={WindowIcon}
+                                  label={"Account"}
+                                  value={director.bankDetails.accountNo}
+                                />
+                                <CardInfoRow
+                                  icon={UserIcon}
+                                  label="Name"
+                                  value={director.bankDetails.accountName}
+                                />
+                                <CardInfoRow
+                                  icon={MapPinIcon}
+                                  label="Branch"
+                                  value={
+                                    director.bankDetails.branch +
+                                    " " +
+                                    "(" +
+                                    director.bankDetails.branchCode +
+                                    ")"
+                                  }
+                                />
+                                <CardInfoRow
+                                  icon={WindowIcon}
+                                  label={"Sort Code"}
+                                  value={director.bankDetails.sortCode}
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
                         </div>
-                        {/*Shareholder Actions */}
-                        <div className="flex justify-start gap-5 flex-col mt-4">
-                          <Button
-                            buttonName={"Edit"}
+                        {/*Director Actions */}
+                        <div className="absolute top-0 right-0">
+                          <button
+                            className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
                             onClick={() =>
-                              handleEditShareholder(rowData.uid,shareholder.personalDetails.uniqueID)
+                              handleEditDirector(
+                                rowData.uid,
+                                director.personalDetails.uniqueID
+                              )
                             }
-                            className={"text-center"}
-                            rectangle={true}
-                          />
+                          >
+                            <PencilIcon className="h-5 w-5 text-gray-500" />
+                          </button>
                         </div>
                       </div>
                     )}
                   />
-                </>
-              ))}
-            </>
-          )}
-        />
+                ))}
+              </>
+            )}
+          />
+        )}
+
+        {/* Shareholder Details */}
+        {rowData?.shareHolderDetails?.length > 0 && (
+          <Accordion
+            heading={"Shareholder Details"}
+            renderExpandedContent={() => (
+              <>
+                {rowData.shareHolderDetails.map((shareholder, index) => (
+                  <>
+                    <Accordion
+                      heading={`${shareholder.personalDetails.title} 
+                      ${shareholder.personalDetails.firstName} 
+                      ${shareholder.personalDetails.surname} 
+                      ${shareholder.personalDetails.otherName}`}
+                      renderExpandedContent={() => (
+                        <div className="grid grid-cols-1 gap-1 relative">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+                            {/* Shareholder Personal Details */}
+                            <CardInfo
+                              cardTitle="Shareholder Personal Details"
+                              cardIcon={UserIcon}
+                              color={"blue"}
+                              coloredBG={true}
+                            >
+                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                                <p>
+                                  <b>
+                                    {shareholder.personalDetails.title}{" "}
+                                    {shareholder.personalDetails.firstName}{" "}
+                                    {shareholder.personalDetails.surname}{" "}
+                                    {shareholder.personalDetails.otherName}
+                                  </b>
+                                  ,a {shareholder.personalDetails.gender}{" "}
+                                  {shareholder.personalDetails.maritalStatus}{" "}
+                                  individual from{" "}
+                                  {shareholder.personalDetails.nationality}.
+                                </p>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <CardInfoRow
+                                    icon={WindowIcon}
+                                    label={
+                                      shareholder.personalDetails.uniqueIDType
+                                    }
+                                    value={shareholder.personalDetails.uniqueID}
+                                  />
+                                  <CardInfoRow
+                                    icon={CalendarIcon}
+                                    label="Born"
+                                    value={
+                                      shareholder.personalDetails.dateOfBirth
+                                    }
+                                  />
+                                  <CardInfoRow
+                                    icon={MapPinIcon}
+                                    label="Place"
+                                    value={
+                                      shareholder.personalDetails.placeOfBirth
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </CardInfo>
+
+                            {/*Shareholder Contact Details */}
+                            <CardInfo
+                              cardTitle="Shareholder Contact Details"
+                              cardIcon={PhoneIcon}
+                              color={"green"}
+                              coloredBG={true}
+                            >
+                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <CardInfoRow
+                                    icon={PhoneIcon}
+                                    label="Mobile"
+                                    value={shareholder.contactDetails.mobile1}
+                                  />
+                                  <CardInfoRow
+                                    icon={EnvelopeIcon}
+                                    label="Email"
+                                    value={shareholder.contactDetails.email}
+                                  />
+                                  <CardInfoRow
+                                    icon={MapPinIcon}
+                                    label="Address"
+                                    value={[
+                                      shareholder.contactDetails.houseNumber,
+                                      shareholder.contactDetails.street,
+                                      shareholder.contactDetails
+                                        .residentialArea,
+                                      shareholder.contactDetails.province,
+                                      shareholder.contactDetails.district,
+                                      shareholder.contactDetails.country,
+                                    ]
+                                      .filter(Boolean)
+                                      .join(", ")}
+                                  />
+                                  <CardInfoRow
+                                    icon={ArchiveBoxIcon}
+                                    label="Post Box"
+                                    value={shareholder.contactDetails.postBox}
+                                  />
+                                </div>
+                              </div>
+                            </CardInfo>
+                          </div>
+                          {/*Shareholder Actions */}
+                          <div className="absolute top-0 right-0">
+                            <button
+                              className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                              onClick={() =>
+                                handleEditShareholder(
+                                  rowData.uid,
+                                  shareholder.personalDetails.uniqueID
+                                )
+                              }
+                            >
+                              <PencilIcon className="h-5 w-5 text-gray-500" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </>
+                ))}
+              </>
+            )}
+          />
+        )}
       </div>
     );
-  };
-
-  const SearchBorrowerByFieldSearch = () => {
-    dispatch(fetchCompanyBorrowerByField({ field: searchBy, value: searchValue }));
-    setSearchBy("");
-    setSearchValue("");
   };
 
   return (

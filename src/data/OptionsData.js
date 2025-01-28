@@ -66,6 +66,19 @@ export const loanStatusOptions = [
   { value: 9, label: "Defaulted" },
 ];
 
+export const loanStatusOptionsNew = [
+  { value: "", label: "ALL" },
+  { value: "PENDING", label: "PENDING" },
+  { value: "ACTIVATED", label: "ACTIVATED" },
+  { value: "CLOSED", label: "CLOSED" },
+  { value: "FROZEN", label: "FROZEN" },
+  { value: "ROLL OVERED", label: "ROLL OVERED" },
+  { value: "CANCELLED", label: "CANCELLED" },
+  { value: "LATE", label: "LATE" },
+  { value: "RETURNED", label: "RETURNED" },
+  { value: "DEFAULTED", label: "DEFAULTED" },
+];
+
 export const nationalityOptions = [
   { value: "Indian", label: "Indian" },
   { value: "American", label: "American" },

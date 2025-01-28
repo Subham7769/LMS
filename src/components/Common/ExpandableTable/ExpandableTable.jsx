@@ -153,7 +153,7 @@ const ExpandableTable = ({
                   )}
                 </tr>
                 {expandedRow === index && (
-                  <tr className="bg-gray-50">
+                  <tr className="">
                     <td
                       colSpan={
                         ListAction ? columns.length + 2 : columns.length + 1
