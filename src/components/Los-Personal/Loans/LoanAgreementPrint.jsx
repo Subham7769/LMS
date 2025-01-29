@@ -58,7 +58,6 @@ const LoanAgreementPrint = () => {
     );
   }
 
-
   return (
     <>
       <div className={"flex flex-col justify-center align-middle gap-5 m-10"}>

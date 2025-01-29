@@ -12,12 +12,18 @@ import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import Pagination from "../../Common/Pagination/Pagination";
-import FullLoanDetailModal from "./FullLoanDetailModal";
+import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
 import { useNavigate } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "./ViewDocumentsModal";
-import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import {
+  CalendarDaysIcon,
+  CheckCircleIcon,
+  NewspaperIcon,
+  CurrencyDollarIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 
@@ -62,10 +68,8 @@ const LoanHistory = () => {
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
+    setShowModal(true);
     await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
-    if (!loading) {
-      setShowModal(true);
-    }
   };
 
   const closeFullLoanDetailModal = () => {
@@ -105,7 +109,12 @@ const LoanHistory = () => {
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <CardInfo cardTitle="Borrower Information" className={"bg-white"}>
+        <CardInfo
+          cardIcon={UserIcon}
+          cardTitle="Borrower Information"
+          className={"bg-white"}
+          color="blue"
+        >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
             <div>
               <div className="text-gray-500">Employment</div>
@@ -144,11 +153,16 @@ const LoanHistory = () => {
             </div>
           </div>
         </CardInfo>
-        <CardInfo cardTitle="Loan Information" className={"bg-white"}>
+        <CardInfo
+          cardIcon={CurrencyDollarIcon}
+          cardTitle="Loan Information"
+          className={"bg-white"}
+          color="blue"
+        >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Principal Amount</div>
-              <div className="font-semibold">{rowData.principalAmount}</div>
+              <div className="text-gray-500">Disbursed Amount</div>
+              <div className="font-semibold">{rowData?.disbursedAmount}</div>
             </div>
             <div>
               <div className="text-gray-500">Interest Rate</div>
@@ -204,12 +218,13 @@ const LoanHistory = () => {
         </div>
       </div>
       <div className="w-full flex justify-end gap-2 px-5">
-        {/* <button
+        <button
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-          className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
         >
+          <NewspaperIcon className="-ml-0.5 h-5 w-5" />
           View Loan Agreement
-        </button> */}
+        </button>
         <button
           onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
@@ -273,6 +288,7 @@ const LoanHistory = () => {
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
+        loading={loading}
       />
       <ViewDocumentsModal
         isOpen={showDocumentsModal}

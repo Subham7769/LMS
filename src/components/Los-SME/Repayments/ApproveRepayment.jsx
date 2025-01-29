@@ -12,7 +12,29 @@ import {
   rejectRepayment,
   fetchRepaymentByField,
 } from "../../../redux/Slices/smeRepaymentsSlice";
+import { getFullLoanDetails } from "../../../redux/Slices/smeLoansSlice";
 import Pagination from "../../Common/Pagination/Pagination";
+import {
+  CurrencyDollarIcon,
+  ClipboardDocumentListIcon,
+  UserIcon,
+  ClockIcon,
+  CalendarDaysIcon,
+} from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
+import { convertDate } from "../../../utils/convertDate";
+import CardInfo from "../../Common/CardInfo/CardInfo";
+import calculateAging from "../../../utils/calculateAging";
+
+function transformData(inputArray) {
+  return inputArray.map((item) => ({
+    ...item,
+    collectionDate: convertDate(item?.collectionDate),
+    aging: calculateAging(item?.loanCreationDate),
+  }));
+}
 
 const ApproveRepayment = () => {
   const dispatch = useDispatch();
@@ -22,8 +44,10 @@ const ApproveRepayment = () => {
     loading,
     error,
   } = useSelector((state) => state.smeRepayments);
+  const { fullLoanDetails } = useSelector((state) => state.smeLoans);
+  const loading2 = useSelector((state) => state.smeLoans.loading);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [showLoanModal, setShowLoanModal] = useState(false);
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
@@ -70,53 +94,132 @@ const ApproveRepayment = () => {
     dispatch(getRepayments({ pageSize: pageSize, pageNumber: 0 }));
   };
 
+  const transformedRepaymentData = transformData(filteredRepayments);
+
+  const copyToClipboard = async (transactionId) => {
+    try {
+      await navigator.clipboard.writeText(transactionId);
+      toast.success("ID was copied successfully!");
+    } catch (err) {
+      toast.error("The ID was not copied!");
+    }
+  };
+
   const renderExpandedRow = (rowData) => (
-    <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
-      <div className="grid grid-cols-3 md:grid-cols-[80%_20%] gap-4">
-        <div className="space-y-2">
-          <div className="grid grid-cols-2 py-5">
-            {/* Additional Information */}
-            <div className="flex justify-between border-r border-gray-300 py-2 px-4">
-              <p className="text-sm font-semibold text-gray-600 ">
-                Transaction Id:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.transactionId}</p>
-            </div>
-            <div className="flex justify-between px-4 py-2">
-              <p className="text-sm font-semibold text-gray-600">
-                Description:
-              </p>
-              <p className="text-sm text-gray-600">{rowData.description}</p>
-            </div>
-            <div className="flex justify-between border-r border-gray-300 px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                {rowData.installmentId ? "Installment Id:" : ""}
-              </p>
-              <p className="text-sm text-gray-600">{rowData.installmentId}</p>
-            </div>
-            <div className="flex justify-between px-4">
-              <p className="text-sm font-semibold text-gray-600">
-                {rowData.requestId ? "Request Id:" : ""}
-              </p>
-              <p className="text-sm text-gray-600">{rowData.requestId}</p>
+    <div className="text-sm text-gray-600 border-y-2 py-5">
+      <div className="grid grid-cols-3 gap-4">
+        <CardInfo
+          cardTitle="Payment Details"
+          className={"bg-white"}
+          cardIcon={CurrencyDollarIcon}
+          color={"blue"}
+        >
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Loan Product</div>
+            <div className="font-semibold">{rowData.description}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Transaction ID</div>
+            <div className="flex">
+              <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
+                {rowData.transactionId}
+              </div>
+              <ClipboardDocumentListIcon
+                onClick={() => copyToClipboard(rowData.transactionId)}
+                className="-ml-0.5 h-5 w-5 cursor-pointer"
+              />
             </div>
           </div>
-        </div>
-        <div className="w-full flex justify-end flex-col gap-4 p-5">
-          <Button
-            buttonName={"Approve"}
-            onClick={() => handleApprove(rowData.transactionId)}
-            rectangle={true}
-            className={`bg-green-700`}
-          />
-          <Button
-            buttonName={"Reject"}
-            onClick={() => handleReject(rowData.transactionId)}
-            rectangle={true}
-            className={`bg-red-600 text-white rounded-md hover:bg-red-700 `}
-            disabled={rowData.approvalStatus === "No"}
-          />
-        </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Original Loan Amount</div>
+            <div className="font-semibold">{rowData.originalLoanAmount}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Outstanding Balance</div>
+            <div className="font-semibold">{rowData.outstandingBalance}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Due Date</div>
+            <div className="font-semibold">{rowData.dueDate}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Status</div>
+            <div className="text-xs bg-black text-white py-1 px-2 rounded">
+              {rowData.status}
+            </div>
+          </div>
+        </CardInfo>
+        <CardInfo
+          cardTitle="Borrower Profile"
+          className={"bg-white"}
+          cardIcon={UserIcon}
+          color={"blue"}
+        >
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Name</div>
+            <div className="text-gray-700">{rowData.borrowerProfile.name}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">User ID</div>
+            <div className="text-gray-700">{rowData.userId}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Email</div>
+            <div className="text-gray-700">{rowData.borrowerProfile.email}</div>
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="text-gray-500">Phone</div>
+            <div className="text-gray-700">{rowData.borrowerProfile.phone}</div>
+          </div>
+        </CardInfo>
+        <CardInfo
+          cardTitle="Recent Payments"
+          className={"bg-white"}
+          cardIcon={ClockIcon}
+          color={"blue"}
+        >
+          {rowData.paymentsData.map((payment) => (
+            <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
+              <div>
+                <div className="text-black font-semibold">
+                  {payment.paymentDate}
+                </div>
+                <div className="font-light">{payment.paymentType}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-black font-semibold">
+                  {payment.paymentAmount}
+                </div>
+                <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs text-black">
+                  {payment.paymentStatus}
+                </div>
+              </div>
+            </div>
+          ))}
+        </CardInfo>
+      </div>
+      <div className="w-full flex justify-end gap-2 px-5 mt-5">
+        <button
+          onClick={() => handleFullLoanDetails(rowData.loan, rowData.userId)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors"
+        >
+          <CalendarDaysIcon className="-ml-0.5 h-5 w-5" />
+          View EMI Schedule
+        </button>
+        <button
+          onClick={() => handleReject(rowData.transactionId)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+        >
+          <FiXCircle className="-ml-0.5 h-5 w-5" />
+          Reject
+        </button>
+        <button
+          onClick={() => handleApprove(rowData.transactionId)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+        >
+          <FiCheckCircle className="-ml-0.5 h-5 w-5" />
+          Approve
+        </button>
       </div>
     </div>
   );
@@ -165,13 +268,16 @@ const ApproveRepayment = () => {
   };
 
   const handleResetSearchBy = () => {
-    if (searchBy || searchValue) {
-      setSearchBy("");
-      setSearchValue("");
-      setFilteredRepayments(approveRepaymentData); // Reset to original data
-    } else {
-      dispatch(getRepayments({ pageNumber: 0, pageSize: 10 }));
-    }
+    dispatch(getRepayments({ pageNumber: 0, pageSize: 20 }));
+  };
+
+  const handleFullLoanDetails = async (loanId, uid) => {
+    setShowLoanModal(true);
+    await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
+  };
+
+  const closeFullLoanDetailModal = () => {
+    setShowLoanModal(false);
   };
 
   const searchOptions = [
@@ -231,7 +337,7 @@ const ApproveRepayment = () => {
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}
-        data={filteredRepayments}
+        data={transformedRepaymentData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
         error={error}
@@ -240,6 +346,12 @@ const ApproveRepayment = () => {
         totalElements={approveRepaymentTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+      />
+      <FullLoanDetailModal
+        isOpen={showLoanModal}
+        onClose={closeFullLoanDetailModal}
+        loanDetails={fullLoanDetails}
+        loading={loading2}
       />
     </div>
   );

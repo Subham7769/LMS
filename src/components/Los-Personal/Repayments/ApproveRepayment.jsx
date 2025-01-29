@@ -22,17 +22,18 @@ import {
   CalendarDaysIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
-import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
-import FullLoanDetailModal from "./FullLoanDetailModal";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import FullLoanDetailModal from "../FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import calculateAging from "../../../utils/calculateAging";
 
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     collectionDate: convertDate(item?.collectionDate),
-    aging: 4,
+    aging: calculateAging(item?.loanCreationDate),
   }));
 }
 
