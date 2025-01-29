@@ -9,12 +9,13 @@ const CardInfo = ({
   color,
   loading = false,
   error = false,
+  coloredBG = false,
 }) => {
   return (
     <div
-      className={`shadow-md p-3 rounded-md border border-gray-300 ${
-        !loading && !error ? className : ""
-      }`}
+      className={`shadow-md p-3 rounded-md  ${
+        coloredBG ? `bg-${color}-100` : "bg-white"
+      } ${!loading && !error ? className : ""}`}
     >
       {loading ? (
         <div className="flex flex-col gap-3 animate-pulse">

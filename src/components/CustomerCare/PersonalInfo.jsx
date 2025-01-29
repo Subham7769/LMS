@@ -1,28 +1,83 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import useDateExtract from "../../utils/useDateExtract";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import { fetchBorrowerData } from "../../redux/Slices/customerCareSlice";
-import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
+import CardInfo from "../Common/CardInfo/CardInfo";
+import CardInfoRow from "../Common/CardInfoRow/CardInfoRow";
+import Accordion from "../Common/Accordion/Accordion";
+import { fetchBorrowerDataPersonalInfo } from "../../redux/Slices/customerCareSlice";
+import { convertDate } from "../../utils/convertDate";
+import {
+  CurrencyDollarIcon,
+  BuildingOffice2Icon,
+  EnvelopeIcon,
+  PhoneIcon,
+  UserIcon,
+  ArchiveBoxIcon,
+  HomeIcon,
+  BriefcaseIcon,
+  WindowIcon,
+  MapPinIcon,
+  CalendarIcon,
+  UserCircleIcon,
+  BanknotesIcon,
+  PencilIcon,
+  XMarkIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  ClockIcon,
+  ChartPieIcon,
+} from "@heroicons/react/24/outline";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
   const dispatch = useDispatch();
-
-  // Set the correct URL for the API endpoint
-  const url = ``;
 
   // Access state from Redux store
   const { personalInfo, loading, error } = useSelector(
     (state) => state.customerCare
   );
 
+  console.log(personalInfo);
+  function flattenToSimpleObjectArray(filteredBorrowers) {
+    return filteredBorrowers.map((borrower) => {
+      const result = {};
+
+      function recurse(current) {
+        for (const key in current) {
+          // Skip flattening for `directorsKycDetails` and `shareHolderDetails`
+          if (key === "directorsKycDetails" || key === "shareHolderDetails") {
+            result[key] = current[key]; // Retain these properties as is
+          } else if (
+            typeof current[key] === "object" &&
+            current[key] !== null
+          ) {
+            recurse(current[key]);
+          } else {
+            result[key] = current[key];
+          }
+        }
+      }
+
+      recurse(borrower);
+      return result;
+    });
+  }
+
+  function transformData(inputArray) {
+    return inputArray.map((item) => ({
+      ...item,
+      fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
+      dateOfBirth: convertDate(item?.dateOfBirth),
+      workStartDate: convertDate(item?.workStartDate),
+    }));
+  }
+
   useEffect(() => {
     try {
       if (subID) {
         // Dispatch the fetchBorrowerData thunk
-        dispatch(fetchBorrowerData({ subID, url }));
+        dispatch(fetchBorrowerDataPersonalInfo({ subID }));
       }
     } catch (error) {
       console.error("Caught error in useEffect: ", error);
@@ -30,106 +85,694 @@ const PersonalInfo = () => {
     }
   }, [dispatch, subID]);
 
-  // Add null or undefined checks to avoid errors before data is loaded
-  const borrowerProfile = personalInfo?.borrowerProfile || {};
-  const residenceDetails = borrowerProfile?.residenceDetails || {};
-  const maritalDetails = borrowerProfile?.maritalDetails || {};
+  const flattenData = flattenToSimpleObjectArray([
+    personalInfo?.borrowerProfile,
+  ]);
+  const flattenDataCompany = flattenToSimpleObjectArray([
+    personalInfo?.companyBorrowerProfile,
+  ]);
 
-  const formattedDateOfBirth = useDateExtract(borrowerProfile.dateOfBirth);
-  const regiDate = useDateExtract(borrowerProfile.registrationDate);
+  console.log(flattenData);
 
-  // Subcomponents for cleaner structure
-  const InfoRow = ({ label, value }) => (
-    <div className="py-2 grid grid-cols-3">
-      <div className="font-semibold">{label}:</div>
-      <div className="col-span-2">{value || "N/A"}</div>
-    </div>
-  );
+  const transformFlattenData = transformData(flattenData);
+  const transformFlattenDataCompany = transformData(flattenDataCompany);
 
-  const Content = () => (
-    <>
-      <img
-        className="rounded-full w-12"
-        src="https://lmscarbon.com/assets/index.png"
-        alt=""
-      />
-      <div className="text-xl font-semibold">Borrower Id: {subID}</div>
-    </>
-  );
+  const renderExpandedRowPersonal = (rowData) => {
+    console.log(rowData);
+    return (
+      <div className="space-y-2 text-sm text-gray-600 p-5 relative">
+        {rowData ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+              {/* Personal Details */}
+              <CardInfo
+                cardTitle="Personal Details"
+                cardIcon={CurrencyDollarIcon}
+                color={"blue"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <p>
+                    {[
+                      rowData.title,
+                      rowData.firstName,
+                      rowData.surname,
+                      rowData.otherName,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}{" "}
+                    is a {rowData.age}-year-old {rowData.nationality} national.
+                    They are {rowData.maritalStatus} and identify as{" "}
+                    {rowData.gender}.
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={CalendarIcon}
+                      label="Born"
+                      value={rowData.dateOfBirth}
+                    />
+                    <CardInfoRow
+                      icon={MapPinIcon}
+                      label="Place"
+                      value={rowData.placeOfBirth}
+                    />
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label={rowData.uniqueIDType}
+                      value={rowData.uniqueID}
+                    />
+                  </div>
+                </div>
+              </CardInfo>
 
-  const Content2 = () => (
-    <>
-      <div className="text-sm mb-2 font-semibold">Personal Details</div>
-      <div className="grid grid-cols-2 gap-4 border-b border-gray-300 mb-10 text-[14px] pb-2">
-        <InfoRow
-          label="Full Name"
-          value={`${borrowerProfile?.firstNameEn} ${borrowerProfile?.middleNameEn} ${borrowerProfile?.lastNameEn}`}
-        />
-        <InfoRow label="Gender" value={borrowerProfile?.gender} />
-        <InfoRow label="Date of Birth" value={formattedDateOfBirth} />
-        <InfoRow label="Active Id Type" value={borrowerProfile?.idType} />
-        <InfoRow label="Occupation" value={borrowerProfile?.occupation} />
-        <InfoRow
-          label="Monthly Expenses"
-          value={borrowerProfile?.totalMonthlyExpenses}
-        />
-        <InfoRow label="Account Creation Date" value={regiDate} />
+              {/* Contact Details */}
+              <CardInfo
+                cardTitle="Contact Details"
+                cardIcon={HomeIcon}
+                color={"green"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <p>
+                    Currently residing in{" "}
+                    {[
+                      rowData.houseNumber,
+                      rowData.street,
+                      rowData.residentialArea,
+                      rowData.province,
+                      rowData.district,
+                      rowData.country,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={PhoneIcon}
+                      label="Mobile"
+                      value={rowData.mobile1}
+                    />
+                    <CardInfoRow
+                      icon={EnvelopeIcon}
+                      label="Email"
+                      value={rowData.email}
+                    />
+                    <CardInfoRow
+                      icon={ArchiveBoxIcon}
+                      label="Post Box"
+                      value={rowData.postBox}
+                    />
+                  </div>
+                </div>
+              </CardInfo>
+
+              {/* Employment Details */}
+              <CardInfo
+                cardTitle="Professional Journey"
+                cardIcon={BriefcaseIcon}
+                color={"violet"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <p>
+                    Working as a {rowData.occupation} at {rowData.employer}{" "}
+                    since {rowData.workStartDate} in a {rowData.workType}{" "}
+                    capacity.
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={PhoneIcon}
+                      label="Work Phone"
+                      value={rowData.workPhoneNumber}
+                    />
+                    <CardInfoRow
+                      icon={MapPinIcon}
+                      label="Work Location"
+                      value={rowData.workPhysicalAddress}
+                    />
+                  </div>
+                </div>
+              </CardInfo>
+
+              {/* Banking Details */}
+              <CardInfo
+                cardTitle="Financial Profile"
+                cardIcon={BuildingOffice2Icon}
+                color={"red"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <p>
+                    Maintain a {rowData.accountType} account with{" "}
+                    {rowData.bankName}.
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label={"Account"}
+                      value={rowData.accountNo}
+                    />
+                    <CardInfoRow
+                      icon={UserIcon}
+                      label="Name"
+                      value={rowData.accountName}
+                    />
+                    <CardInfoRow
+                      icon={MapPinIcon}
+                      label="Branch"
+                      value={
+                        rowData.branch + " " + "(" + rowData.branchCode + ")"
+                      }
+                    />
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label={"Sort Code"}
+                      value={rowData.sortCode}
+                    />
+                  </div>
+                </div>
+              </CardInfo>
+            </div>
+          </>
+        ) : (
+          <p>No data found</p>
+        )}
       </div>
+    );
+  };
 
-      <div className="text-sm mb-2 font-semibold">Family Details</div>
-      <div className="grid grid-cols-2 gap-4 border-b border-gray-300 mb-10 text-[14px] pb-2">
-        <InfoRow label="Marital Status" value={maritalDetails?.maritalStatus} />
-        <InfoRow label="No Of Children" value={maritalDetails?.noOfChildren} />
-        <InfoRow
-          label="No of Domestic Workers"
-          value={maritalDetails?.noOfDomesticWorkers}
-        />
-        <InfoRow
-          label="Total Dependent"
-          value={maritalDetails?.totalDependent}
-        />
-      </div>
+  const personalDetailsColumns = [
+    { label: "Name", field: "fullName" },
+    { label: "Unique ID", field: "uniqueID" },
+    { label: "Email", field: "email" },
+    { label: "Mobile", field: "mobile1" },
+    { label: "Loan Officer", field: "loanOfficer" },
+    { label: "Status", field: "lmsUserStatus" },
+  ];
 
-      <div className="text-sm mb-2 font-semibold">Residential Details</div>
-      <div className="grid grid-cols-2 gap-4 border-gray-300 text-[14px]">
-        <InfoRow
-          label="Address"
-          value={`${residenceDetails?.buildingNumber}, ${residenceDetails?.streetName}, ${residenceDetails?.city}`}
+  const renderExpandedRowCompany = (rowData) => {
+    return (
+      <div className="space-y-2 text-sm text-gray-600 py-2">
+        <Accordion
+          heading={"Company Details"}
+          isOpen={true}
+          renderExpandedContent={() => (
+            <div className="grid grid-cols-1 gap-1 relative">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+                {/* Company Details */}
+                <CardInfo
+                  cardTitle="Company Overview"
+                  cardIcon={BuildingOffice2Icon}
+                  color={"blue"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <p>
+                      {rowData.companyName} is a {rowData.natureOfCompany}{" "}
+                      company operating in the {rowData.industry}.
+                    </p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <CardInfoRow
+                        icon={DocumentTextIcon}
+                        label="Registration No"
+                        value={rowData.companyRegistrationNo}
+                      />
+                      <CardInfoRow
+                        icon={WindowIcon}
+                        label="Unique ID"
+                        value={rowData.companyUniqueId}
+                      />
+                      <CardInfoRow
+                        icon={CalendarIcon}
+                        label="Incorporated"
+                        value={rowData.dateOfIncorporation}
+                      />
+                      <CardInfoRow
+                        icon={UsersIcon}
+                        label="Employees"
+                        value={rowData.numberOfPermanentEmployees}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+
+                {/*Company Contact Details */}
+                <CardInfo
+                  cardTitle="Contact Information"
+                  cardIcon={PhoneIcon}
+                  color={"green"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <CardInfoRow
+                        icon={PhoneIcon}
+                        label="Mobile"
+                        value={rowData.mobile1}
+                      />
+                      <CardInfoRow
+                        icon={EnvelopeIcon}
+                        label="Email"
+                        value={rowData.email}
+                      />
+
+                      <CardInfoRow
+                        icon={ArchiveBoxIcon}
+                        label="Post Box"
+                        value={rowData.postBox}
+                      />
+                      <CardInfoRow
+                        icon={MapPinIcon}
+                        label="Address"
+                        value={[
+                          rowData.houseNumber,
+                          rowData.street,
+                          rowData.residentialArea,
+                          rowData.province,
+                          rowData.district,
+                          rowData.country,
+                        ]
+                          .filter(Boolean)
+                          .join(", ")}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+
+                {/* Banking Details */}
+                <CardInfo
+                  cardTitle="Financial Profile"
+                  cardIcon={BuildingOffice2Icon}
+                  color={"red"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <CardInfoRow
+                        icon={BuildingOffice2Icon}
+                        label="Bank"
+                        value={rowData.bankName}
+                      />
+                      <CardInfoRow
+                        icon={WindowIcon}
+                        label="Account"
+                        value={rowData.accountNo}
+                      />
+                      <CardInfoRow
+                        icon={MapPinIcon}
+                        label="Branch"
+                        value={rowData.branch + " (" + rowData.branchCode + ")"}
+                      />
+                      <CardInfoRow
+                        icon={DocumentTextIcon}
+                        label="Sort Code"
+                        value={rowData.sortCode}
+                      />
+                      <CardInfoRow
+                        icon={CurrencyDollarIcon}
+                        label="Free Cash"
+                        value={rowData.freeCashInHand}
+                      />
+                      <CardInfoRow
+                        icon={BanknotesIcon}
+                        label="Gross Revenue"
+                        value={rowData.grossSalary}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+
+                {/* Company Other Details */}
+                <CardInfo
+                  cardTitle="Other Details"
+                  cardIcon={BriefcaseIcon}
+                  color={"violet"}
+                  coloredBG={true}
+                >
+                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                    <div className="grid grid-cols-1 gap-4">
+                      <CardInfoRow
+                        icon={DocumentTextIcon}
+                        label="Purpose"
+                        value={rowData.reasonForBorrowing}
+                      />
+                      <CardInfoRow
+                        icon={CurrencyDollarIcon}
+                        label="Repayment Source"
+                        value={rowData.sourceOfRepayment}
+                      />
+                      <CardInfoRow
+                        icon={ChartPieIcon}
+                        label="Shareholding"
+                        value={rowData.shareholdingStructure}
+                      />
+                      <CardInfoRow
+                        icon={UsersIcon}
+                        label="Trade Union"
+                        value={rowData.tradeUnion}
+                      />
+                      <CardInfoRow
+                        icon={WindowIcon}
+                        label="Credit Score"
+                        value={rowData.creditScore}
+                      />
+                    </div>
+                  </div>
+                </CardInfo>
+              </div>
+            </div>
+          )}
         />
-        <InfoRow label="Street Name" value={residenceDetails?.streetName} />
-        <InfoRow label="Postal Code" value={residenceDetails?.postOfficeBox} />
-        <InfoRow
-          label="Additional Number"
-          value={residenceDetails?.additionalNumbers}
-        />
-        <InfoRow label="Neighborhood" value={residenceDetails?.neighborhood} />
-        <InfoRow label="City" value={residenceDetails?.city} />
-        <InfoRow
-          label="Building Number"
-          value={residenceDetails?.buildingNumber}
-        />
-        <InfoRow label="House is Rented" value={residenceDetails?.rent} />
+        {/* Directors Kyc Details Details */}
+        {rowData?.directorsKycDetails?.length > 0 && (
+          <Accordion
+            heading={"Directors Details"}
+            renderExpandedContent={() => (
+              <>
+                {rowData.directorsKycDetails.map((director) => (
+                  <Accordion
+                    heading={`${director.personalDetails.title} 
+                      ${director.personalDetails.firstName} 
+                      ${director.personalDetails.surname} 
+                      ${director.personalDetails.otherName}`}
+                    renderExpandedContent={() => (
+                      <div className="grid grid-cols-1 gap-1 relative">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+                          {/* Director Personal Details */}
+                          <CardInfo
+                            cardTitle="Personal Details"
+                            cardIcon={UserIcon}
+                            color={"blue"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                {[
+                                  director.personalDetails.title,
+                                  director.personalDetails.firstName,
+                                  director.personalDetails.surname,
+                                  director.personalDetails.otherName,
+                                ]
+                                  .filter(Boolean)
+                                  .join(" ")}{" "}
+                                is a {director.personalDetails.age}-year-old{" "}
+                                {director.personalDetails.nationality} national.
+                                They are{" "}
+                                {director.personalDetails.maritalStatus} and
+                                identify as {director.personalDetails.gender}.
+                              </p>
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={CalendarIcon}
+                                  label="Born"
+                                  value={director.personalDetails.dateOfBirth}
+                                />
+                                <CardInfoRow
+                                  icon={MapPinIcon}
+                                  label="Place"
+                                  value={director.personalDetails.placeOfBirth}
+                                />
+                                <CardInfoRow
+                                  icon={WindowIcon}
+                                  label={director.personalDetails.uniqueIDType}
+                                  value={director.personalDetails.uniqueID}
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
+
+                          {/*Director Contact Details */}
+                          <CardInfo
+                            cardTitle="Contact Details"
+                            cardIcon={PhoneIcon}
+                            color={"green"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                Currently residing in{" "}
+                                {[
+                                  director.contactDetails.houseNumber,
+                                  director.contactDetails.street,
+                                  director.contactDetails.residentialArea,
+                                  director.contactDetails.province,
+                                  director.contactDetails.district,
+                                  director.contactDetails.country,
+                                ]
+                                  .filter(Boolean)
+                                  .join(", ")}
+                              </p>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={PhoneIcon}
+                                  label="Mobile"
+                                  value={director.contactDetails.mobile1}
+                                />
+                                <CardInfoRow
+                                  icon={EnvelopeIcon}
+                                  label="Email"
+                                  value={director.contactDetails.email}
+                                />
+                                <CardInfoRow
+                                  icon={ArchiveBoxIcon}
+                                  label="Post Box"
+                                  value={director.contactDetails.postBox}
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
+
+                          {/*Director Employment Details */}
+                          <CardInfo
+                            cardTitle="Employment Details"
+                            cardIcon={BriefcaseIcon}
+                            color={"violet"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                Working as a{" "}
+                                {director.employmentDetails.occupation} at{" "}
+                                {director.employmentDetails.employer} since{" "}
+                                {director.employmentDetails.workStartDate} in a{" "}
+                                {director.employmentDetails.workType} capacity.
+                              </p>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={PhoneIcon}
+                                  label="Work Phone"
+                                  value={
+                                    director.employmentDetails.workPhoneNumber
+                                  }
+                                />
+                                <CardInfoRow
+                                  icon={MapPinIcon}
+                                  label="Work Location"
+                                  value={
+                                    director.employmentDetails
+                                      .workPhysicalAddress
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
+
+                          {/*Director Banking Details */}
+                          <CardInfo
+                            cardTitle="Banking Details"
+                            cardIcon={BuildingOffice2Icon}
+                            color={"red"}
+                            coloredBG={true}
+                          >
+                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <p>
+                                Maintain a {director.bankDetails.accountType}{" "}
+                                account with {director.bankDetails.bankName}.
+                              </p>
+                              <div className="grid grid-cols-2 gap-4">
+                                <CardInfoRow
+                                  icon={WindowIcon}
+                                  label={"Account"}
+                                  value={director.bankDetails.accountNo}
+                                />
+                                <CardInfoRow
+                                  icon={UserIcon}
+                                  label="Name"
+                                  value={director.bankDetails.accountName}
+                                />
+                                <CardInfoRow
+                                  icon={MapPinIcon}
+                                  label="Branch"
+                                  value={
+                                    director.bankDetails.branch +
+                                    " " +
+                                    "(" +
+                                    director.bankDetails.branchCode +
+                                    ")"
+                                  }
+                                />
+                                <CardInfoRow
+                                  icon={WindowIcon}
+                                  label={"Sort Code"}
+                                  value={director.bankDetails.sortCode}
+                                />
+                              </div>
+                            </div>
+                          </CardInfo>
+                        </div>
+                      </div>
+                    )}
+                  />
+                ))}
+              </>
+            )}
+          />
+        )}
+
+        {/* Shareholder Details */}
+        {rowData?.shareHolderDetails?.length > 0 && (
+          <Accordion
+            heading={"Shareholder Details"}
+            renderExpandedContent={() => (
+              <>
+                {rowData.shareHolderDetails.map((shareholder, index) => (
+                  <>
+                    <Accordion
+                      heading={`${shareholder.personalDetails.title} 
+                      ${shareholder.personalDetails.firstName} 
+                      ${shareholder.personalDetails.surname} 
+                      ${shareholder.personalDetails.otherName}`}
+                      renderExpandedContent={() => (
+                        <div className="grid grid-cols-1 gap-1 relative">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+                            {/* Shareholder Personal Details */}
+                            <CardInfo
+                              cardTitle="Shareholder Personal Details"
+                              cardIcon={UserIcon}
+                              color={"blue"}
+                              coloredBG={true}
+                            >
+                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                                <p>
+                                  <b>
+                                    {shareholder.personalDetails.title}{" "}
+                                    {shareholder.personalDetails.firstName}{" "}
+                                    {shareholder.personalDetails.surname}{" "}
+                                    {shareholder.personalDetails.otherName}
+                                  </b>
+                                  ,a {shareholder.personalDetails.gender}{" "}
+                                  {shareholder.personalDetails.maritalStatus}{" "}
+                                  individual from{" "}
+                                  {shareholder.personalDetails.nationality}.
+                                </p>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <CardInfoRow
+                                    icon={WindowIcon}
+                                    label={
+                                      shareholder.personalDetails.uniqueIDType
+                                    }
+                                    value={shareholder.personalDetails.uniqueID}
+                                  />
+                                  <CardInfoRow
+                                    icon={CalendarIcon}
+                                    label="Born"
+                                    value={
+                                      shareholder.personalDetails.dateOfBirth
+                                    }
+                                  />
+                                  <CardInfoRow
+                                    icon={MapPinIcon}
+                                    label="Place"
+                                    value={
+                                      shareholder.personalDetails.placeOfBirth
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </CardInfo>
+
+                            {/*Shareholder Contact Details */}
+                            <CardInfo
+                              cardTitle="Shareholder Contact Details"
+                              cardIcon={PhoneIcon}
+                              color={"green"}
+                              coloredBG={true}
+                            >
+                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <CardInfoRow
+                                    icon={PhoneIcon}
+                                    label="Mobile"
+                                    value={shareholder.contactDetails.mobile1}
+                                  />
+                                  <CardInfoRow
+                                    icon={EnvelopeIcon}
+                                    label="Email"
+                                    value={shareholder.contactDetails.email}
+                                  />
+                                  <CardInfoRow
+                                    icon={MapPinIcon}
+                                    label="Address"
+                                    value={[
+                                      shareholder.contactDetails.houseNumber,
+                                      shareholder.contactDetails.street,
+                                      shareholder.contactDetails
+                                        .residentialArea,
+                                      shareholder.contactDetails.province,
+                                      shareholder.contactDetails.district,
+                                      shareholder.contactDetails.country,
+                                    ]
+                                      .filter(Boolean)
+                                      .join(", ")}
+                                  />
+                                  <CardInfoRow
+                                    icon={ArchiveBoxIcon}
+                                    label="Post Box"
+                                    value={shareholder.contactDetails.postBox}
+                                  />
+                                </div>
+                              </div>
+                            </CardInfo>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </>
+                ))}
+              </>
+            )}
+          />
+        )}
       </div>
-    </>
-  );
+    );
+  };
 
   return (
     <>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2">
         <ContainerTile
-          className="flex items-center gap-5"
+          className="flex items-center gap-2"
           loading={loading}
           // error={error}
         >
-        <SectionErrorBoundary>
-          <Content />
-        </SectionErrorBoundary>
+          <img
+            className="rounded-full w-12"
+            src="https://lmscarbon.com/assets/index.png"
+            alt=""
+          />
+          <div className="text-xl font-semibold">Borrower Id: {subID}</div>
         </ContainerTile>
-        <ContainerTile loading={loading}>
-          <SectionErrorBoundary>
-            <Content2 />
-          </SectionErrorBoundary>
-        </ContainerTile>
+        <>
+          {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (
+            <>{renderExpandedRowPersonal(...transformFlattenData)}</>
+          ) : (
+            <>{renderExpandedRowCompany(...transformFlattenDataCompany)}</>
+          )}
+        </>
       </div>
     </>
   );
