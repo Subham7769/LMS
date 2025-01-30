@@ -414,7 +414,7 @@ export const handleProceed = createAsyncThunk(
 
 export const getPendingLoans = createAsyncThunk(
   "personalLoans/getPendingLoans",
-  async ({ page, size }, { rejectWithValue }) => {
+  async ({ page, size, getPayload }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
@@ -422,10 +422,12 @@ export const getPendingLoans = createAsyncThunk(
           import.meta.env.VITE_LOAN_READ_LOAN_PENDING_PERSONAL
         }?page=${page}&size=${size}`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify(getPayload),
         }
       );
       if (!response.ok) {

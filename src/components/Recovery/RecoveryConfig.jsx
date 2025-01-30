@@ -39,28 +39,22 @@ const RecoveryConfig = () => {
     (state) => state.recovery
   );
   const { userData } = useSelector((state) => state.auth);
-  const roleName = useMemo(() => userData?.roles[0]?.name, [userData]);
+  const roleName = userData?.roles[0]?.name;
 
-  const handleChangeWrapper = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      dispatch(handleChange({ name, value }));
-    },
-    [dispatch]
-  );
+  const handleChangeWrapper = (e) => {
+    const { name, value } = e.target;
+    dispatch(handleChange({ name, value }));
+  };
 
-  const handleNameUpdate = useCallback(
-    async (newName) => {
-      try {
-        await dispatch(updateRecoveryName({ recoveryEquationTempId, newName }));
-        dispatch(fetchName(recoveryEquationTempId));
-        dispatch(fetchRecoveryData());
-      } catch (error) {
-        console.error("Failed to update name:", error);
-      }
-    },
-    [dispatch, recoveryEquationTempId]
-  );
+  const handleNameUpdate = async (newName) => {
+    try {
+      await dispatch(updateRecoveryName({ recoveryEquationTempId, newName }));
+      dispatch(fetchName(recoveryEquationTempId));
+      dispatch(fetchRecoveryData());
+    } catch (error) {
+      console.error("Failed to update name:", error);
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchName(recoveryEquationTempId));

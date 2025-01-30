@@ -112,7 +112,7 @@ const LoanHistory = () => {
         <CardInfo
           cardIcon={UserIcon}
           cardTitle="Borrower Information"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           color="blue"
         >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
@@ -156,7 +156,7 @@ const LoanHistory = () => {
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           color="blue"
         >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">

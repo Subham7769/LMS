@@ -32,6 +32,7 @@ import personalRepaymentsSlice from "./Slices/personalRepaymentsSlice.jsx";
 import smeBorrowersSlice from "./Slices/smeBorrowersSlice";
 import smeLoansSlice from "./Slices/smeLoansSlice";
 import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";
+import affordabilitySlice from "./Slices/affordabilitySlice.js";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
 
@@ -69,6 +70,7 @@ const store = configureStore({
     smeBorrowers: smeBorrowersSlice,
     smeLoans: smeLoansSlice,
     smeRepayments: smeRepaymentsSlice,
+    affordability: affordabilitySlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(checkTokenMiddleware),

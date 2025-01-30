@@ -109,7 +109,7 @@ const ApproveRepayment = () => {
       <div className="grid grid-cols-3 gap-4">
         <CardInfo
           cardTitle="Payment Details"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={CurrencyDollarIcon}
           color={"blue"}
         >
@@ -150,7 +150,7 @@ const ApproveRepayment = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Borrower Profile"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={UserIcon}
           color={"blue"}
         >
@@ -173,7 +173,7 @@ const ApproveRepayment = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Recent Payments"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={ClockIcon}
           color={"blue"}
         >

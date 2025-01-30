@@ -114,6 +114,24 @@ export const MenusInitial = [
     isOpen: false,
     uniqueKey: "recoveryEquationTempId",
   },
+  // {
+  //   title: "Affordability",
+  //   sectionName: "LOAN MANAGEMENT",
+  //   href: "/loan/affordability",
+  //   icon: "HandThumbUpIcon",
+  //   current: false,
+  //   submenu: true,
+  //   createButton: true, //if create recovery from Side bar Using input box
+  //   editable: true, //if Button takes input string
+  //   createFunction: "createNewAffordability",
+  //   buttonName: "Create Affordability", //Create button text
+  //   placeholder: "Enter Name", //required placeholder for input box
+  //   navigateSuccess: "/loan/affordability/", // navigation
+  //   navigateFail: "/login", // navigation
+  //   submenuItems: [],
+  //   isOpen: false,
+  //   uniqueKey: "affordabilityCriteriaTempId",
+  // },
   {
     title: "Credit Score",
     sectionName: "LOAN MANAGEMENT",

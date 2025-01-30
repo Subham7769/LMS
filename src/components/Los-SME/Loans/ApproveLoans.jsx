@@ -43,6 +43,7 @@ const ApproveLoans = () => {
   const dispatch = useDispatch();
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.smeLoans);
+  const { userData } = useSelector((state) => state.auth);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
@@ -55,9 +56,16 @@ const ApproveLoans = () => {
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
+  const roleNames = userData.roles.map((role) => role.name); // Extract role names
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    dispatch(getPendingLoans({ page: currentPage, size: pageSize }));
+    dispatch(
+      getPendingLoans({
+        page: currentPage,
+        size: pageSize,
+        getPayload: roleNames,
+      })
+    );
   };
 
   const approveLoansData = transformData(approveLoans);
@@ -71,7 +79,7 @@ const ApproveLoans = () => {
   const handleReset = () => {
     setSearchBy("");
     setSearchValue("");
-    dispatch(getPendingLoans({ page: 0, size: 20 }));
+    dispatch(getPendingLoans({ page: 0, size: 20, getPayload: roleNames }));
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
@@ -86,10 +94,15 @@ const ApproveLoans = () => {
   const handleApprove = async (rowData) => {
     const approveLoanPayload = {
       amount: rowData.principalAmount,
-      applicationStatus: "APPROVED",
+      applicationStatus: rowData?.rolePermissions?.finalApprove
+        ? "APPROVED"
+        : "RECOMMENDED",
       loanId: rowData.loanId,
       uid: rowData.uid,
+      username: userData.username,
+      roleName: roleNames,
     };
+
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
     await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
     navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
@@ -140,7 +153,7 @@ const ApproveLoans = () => {
         <CardInfo
           cardIcon={UserIcon}
           cardTitle="Borrower Information"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           color="blue"
         >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
@@ -184,7 +197,7 @@ const ApproveLoans = () => {
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           color="blue"
         >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
@@ -272,7 +285,7 @@ const ApproveLoans = () => {
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
         >
           <FiCheckCircle className="-ml-0.5 h-5 w-5" />
-          Approve
+          {rowData?.rolePermissions?.finalApprove ? "Approve" : "Recommend"}
         </button>
       </div>
     </div>

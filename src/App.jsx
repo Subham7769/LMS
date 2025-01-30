@@ -57,6 +57,12 @@ const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
 );
 
+// Affordibility Imports
+const AffordabilityPage = lazy(() => import("./pages/AffordabilityPage"));
+const Affordability = lazy(() =>
+  import("./components/Affordability/Affordability")
+);
+
 // TCL Imports
 const TclPage = lazy(() => import("./pages/TclPage"));
 const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
@@ -457,6 +463,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "affordability",
+        element: <AffordabilityPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "tcl",
         element: <TclPage />,
         errorElement: <RouteErrorBoundary />,
@@ -558,6 +569,11 @@ const routes = [
       {
         path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "affordability/:affordabilityCriteriaTempId",
+        element: <Affordability />,
         errorElement: <RouteErrorBoundary />,
       },
       {

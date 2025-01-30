@@ -235,6 +235,25 @@ const initialState = {
       employeeNo: "",
       workType: "",
     },
+    incomeOnPaySlip: {
+      basicPay: "",
+      housingAllowance: "",
+      transportAllowance: "",
+      ruralHardshipAllowance: "",
+      infectiousHealthRisk: "",
+      healthShiftAllowance: "",
+      interfaceAllowance: "",
+      responsibilityAllowance: "",
+      doubleClassAllowance: "",
+      actingAllowance: "",
+      otherAllowances: "",
+    },
+    deductionOnPaySlip: {
+      payee: "",
+      napsa: "",
+      unionContribution: "",
+      totalOfOtherDeductions: "",
+    },
     bankDetails: {
       bankName: "",
       accountName: "",
@@ -269,8 +288,6 @@ const initialState = {
       sourceOfRepayment: "", //optional
       groupId: "",
       creditScore: "",
-      freeCashInHand: "",
-      grossSalary: "",
       customerPhotoId: "",
     },
   },
@@ -404,7 +421,7 @@ const borrowersSlice = createSlice({
       })
       .addCase(uploadBorrowerPhotoFile.fulfilled, (state, action) => {
         state.loading = false;
-        const { docId} = action.payload;
+        const { docId } = action.payload;
         state.addBorrowerData.otherDetails.customerPhotoId = docId;
         toast.success("File uploaded successfully");
       })
