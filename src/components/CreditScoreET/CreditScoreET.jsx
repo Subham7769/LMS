@@ -36,6 +36,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
@@ -194,7 +195,7 @@ const CreditScoreET = () => {
         }
         initialName={creditScoreETName}
       />
-      {roleName !== "ROLE_VIEWER" ? (
+      {!hasViewOnlyAccess(roleName) ? (
         <ContainerTile
         loading={loading}
         error={error}
@@ -315,7 +316,7 @@ const CreditScoreET = () => {
                   orderReverse={true}
                   tagsPerRow={5}
                 />
-                {roleName !== "ROLE_VIEWER" ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   <div className="flex gap-4 justify-end items-center mt-1">
                     <Button
                       buttonName={"Save"}

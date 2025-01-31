@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { accountStatusOptions } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
 import Pagination from "../../Common/Pagination/Pagination";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import CardInfo from "../../Common/CardInfo/CardInfo";
+import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -16,34 +18,23 @@ import {
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
 import { convertDate } from "../../../utils/convertDate";
-
-function flattenToSimpleObjectArray(filteredBorrowers) {
-  return filteredBorrowers.map((borrower) => {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(borrower);
-    return result;
-  });
-}
-
-function transformData(inputArray) {
-  return inputArray.map((item) => ({
-    ...item,
-    fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
-    dateOfBirth: convertDate(item?.dateOfBirth),
-    workStartDate: convertDate(item?.workStartDate),
-  }));
-}
+import {
+  CurrencyDollarIcon,
+  BuildingOffice2Icon,
+  EnvelopeIcon,
+  PhoneIcon,
+  UserIcon,
+  ArchiveBoxIcon,
+  HomeIcon,
+  BriefcaseIcon,
+  WindowIcon,
+  MapPinIcon,
+  CalendarIcon,
+  UserCircleIcon,
+  PencilIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { Menu, Transition } from "@headlessui/react";
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -54,6 +45,7 @@ const ViewBorrowers = () => {
   const [searchBy, setSearchBy] = useState("");
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
+  const [showEditModal, setEditModal] = useState(false);
 
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
@@ -124,6 +116,34 @@ const ViewBorrowers = () => {
     }
   };
 
+  function flattenToSimpleObjectArray(filteredBorrowers) {
+    return filteredBorrowers.map((borrower) => {
+      const result = {};
+
+      function recurse(current) {
+        for (const key in current) {
+          if (typeof current[key] === "object" && current[key] !== null) {
+            recurse(current[key]);
+          } else {
+            result[key] = current[key];
+          }
+        }
+      }
+
+      recurse(borrower);
+      return result;
+    });
+  }
+
+  function transformData(inputArray) {
+    return inputArray.map((item) => ({
+      ...item,
+      fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
+      dateOfBirth: convertDate(item?.dateOfBirth),
+      workStartDate: convertDate(item?.workStartDate),
+    }));
+  }
+
   const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
 
   console.log(flattenData);
@@ -149,6 +169,12 @@ const ViewBorrowers = () => {
     { label: "Status", field: "lmsUserStatus" },
   ];
 
+  const SearchBorrowerByFieldSearch = () => {
+    dispatch(fetchBorrowerByField({ field: searchBy, value: searchValue }));
+    setSearchBy("");
+    setSearchValue("");
+  };
+
   const renderExpandedRow = (rowData) => {
     const currentStatus =
       borrowerStatuses[rowData.uid] || rowData.lmsUserStatus; // Get the current status for this borrower
@@ -159,88 +185,119 @@ const ViewBorrowers = () => {
       }));
     };
 
-    const handleEdit = (uid) => {
-      dispatch(setUpdateBorrower({ uid }));
-      navigate(
-        `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
-      );
-      console.log(uid);
-    };
+    const ViewEditModal = ({ isOpen, onClose }) => {
+      if (!isOpen) return null;
 
-    const handleChangeStatus = async (uid, newStatus) => {
-      console.log(uid);
-      setCurrentStatus(newStatus);
-      await dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
-      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
-      navigate(
-        `/loan/loan-origination-system/personal/borrowers/view-borrower`
+      const handleEdit = (uid) => {
+        dispatch(setUpdateBorrower({ uid }));
+        navigate(
+          `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
+        );
+        console.log(uid);
+      };
+
+      const handleChangeStatus = async (uid, newStatus) => {
+        console.log(uid);
+        setCurrentStatus(newStatus);
+        await dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
+        dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+        navigate(
+          `/loan/loan-origination-system/personal/borrowers/view-borrower`
+        );
+        onClose();
+      };
+
+      return (
+        <>
+          <div className="fixed inset-0 z-20 flex items-center justify-center bg-stone-200/10 backdrop-blur-sm">
+            <div className="relative w-1/3 p-8 bg-white border border-red-600 rounded-xl shadow-lg transition-all duration-500 ease-in-out">
+              <XMarkIcon
+                onClick={onClose}
+                className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
+              />
+              <div className="flex justify-start gap-5 flex-col mt-4">
+                <Button
+                  buttonName={"Edit"}
+                  onClick={() => handleEdit(rowData.uid)}
+                  className={"text-center"}
+                  rectangle={true}
+                />
+                <InputSelect
+                  labelName={"Account Status"}
+                  inputName={"accountStatus"}
+                  inputOptions={accountStatusOptions}
+                  inputValue={currentStatus}
+                  onChange={(e) => setCurrentStatus(e.target.value)}
+                />
+                <Button
+                  buttonName={"Change Status"}
+                  onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
+                  className={"bg-red-500 hover:bg-red-600"}
+                  rectangle={true}
+                />
+              </div>
+            </div>
+          </div>
+        </>
       );
     };
 
     return (
-      <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5">
+      <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5 relative">
         {rowData ? (
-          <div className="grid grid-cols-[80%_20%] gap-4">
+          <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
               {/* Personal Details */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg text-gray-800">
-                  Personal Details
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
+              <CardInfo
+                cardTitle="Personal Details"
+                cardIcon={CurrencyDollarIcon}
+                color={"blue"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
-                    <strong>Name:</strong>{" "}
-                    {[rowData.firstName, rowData.surname, rowData.otherName]
+                    {[
+                      rowData.title,
+                      rowData.firstName,
+                      rowData.surname,
+                      rowData.otherName,
+                    ]
                       .filter(Boolean)
-                      .join(" ")}
+                      .join(" ")}{" "}
+                    is a {rowData.age}-year-old {rowData.nationality} national.
+                    They are {rowData.maritalStatus} and identify as{" "}
+                    {rowData.gender}.
                   </p>
-                  <p>
-                    <strong>Unique ID Type:</strong> {rowData.uniqueIDType}
-                  </p>
-                  <p>
-                    <strong>Unique ID:</strong> {rowData.uniqueID}
-                  </p>
-                  <p>
-                    <strong>Gender:</strong> {rowData.gender}
-                  </p>
-                  <p>
-                    <strong>Marital Status:</strong> {rowData.maritalStatus}
-                  </p>
-                  <p>
-                    <strong>Nationality:</strong> {rowData.nationality}
-                  </p>
-                  <p>
-                    <strong>Age:</strong> {rowData.age}
-                  </p>
-                  <p>
-                    <strong>Date of Birth:</strong> {rowData.dateOfBirth}
-                  </p>
-                  <p>
-                    <strong>Place of Birth:</strong> {rowData.placeOfBirth}
-                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={CalendarIcon}
+                      label="Born"
+                      value={rowData.dateOfBirth}
+                    />
+                    <CardInfoRow
+                      icon={MapPinIcon}
+                      label="Place"
+                      value={rowData.placeOfBirth}
+                    />
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label={rowData.uniqueIDType}
+                      value={rowData.uniqueID}
+                    />
+                  </div>
                 </div>
-              </div>
+              </CardInfo>
 
               {/* Contact Details */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg text-gray-800">
-                  Contact Details
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
+              <CardInfo
+                cardTitle="Contact Details"
+                cardIcon={HomeIcon}
+                color={"green"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
-                    <strong>Mobile 1:</strong> {rowData.mobile1}
-                  </p>
-                  <p>
-                    <strong>Mobile 2:</strong> {rowData.mobile2}
-                  </p>
-                  <p>
-                    <strong>Landline:</strong> {rowData.landlinePhone}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {rowData.email}
-                  </p>
-                  <p>
-                    <strong>Address:</strong>{" "}
+                    Currently residing in{" "}
                     {[
                       rowData.houseNumber,
                       rowData.street,
@@ -252,103 +309,114 @@ const ViewBorrowers = () => {
                       .filter(Boolean)
                       .join(", ")}
                   </p>
-                  <p>
-                    <strong>Post Box:</strong> {rowData.postBox}
-                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={PhoneIcon}
+                      label="Mobile"
+                      value={rowData.mobile1}
+                    />
+                    <CardInfoRow
+                      icon={EnvelopeIcon}
+                      label="Email"
+                      value={rowData.email}
+                    />
+                    <CardInfoRow
+                      icon={ArchiveBoxIcon}
+                      label="Post Box"
+                      value={rowData.postBox}
+                    />
+                  </div>
                 </div>
-              </div>
+              </CardInfo>
 
               {/* Employment Details */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg text-gray-800">
-                  Employment Details
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
+              <CardInfo
+                cardTitle="Professional Journey"
+                cardIcon={BriefcaseIcon}
+                color={"violet"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
-                    <strong>Employer:</strong> {rowData.employer}
+                    Working as a {rowData.occupation} at {rowData.employer}{" "}
+                    since {rowData.workStartDate} in a {rowData.workType}{" "}
+                    capacity.
                   </p>
-                  <p>
-                    <strong>Occupation:</strong> {rowData.occupation}
-                  </p>
-                  <p>
-                    <strong>Work Start Date:</strong> {rowData.workStartDate}
-                  </p>
-                  <p>
-                    <strong>Work Phone:</strong> {rowData.workPhoneNumber}
-                  </p>
-                  <p>
-                    <strong>Work Address:</strong> {rowData.workPhysicalAddress}
-                  </p>
-                  <p>
-                    <strong>Employment Type:</strong> {rowData.workType}
-                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={PhoneIcon}
+                      label="Work Phone"
+                      value={rowData.workPhoneNumber}
+                    />
+                    <CardInfoRow
+                      icon={MapPinIcon}
+                      label="Work Location"
+                      value={rowData.workPhysicalAddress}
+                    />
+                  </div>
                 </div>
-              </div>
+              </CardInfo>
 
               {/* Banking Details */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg text-gray-800">
-                  Banking Details
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
+              <CardInfo
+                cardTitle="Financial Profile"
+                cardIcon={BuildingOffice2Icon}
+                color={"red"}
+                coloredBG={true}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
-                    <strong>Bank Name:</strong> {rowData.bankName}
+                    Maintain a {rowData.accountType} account with{" "}
+                    {rowData.bankName}.
                   </p>
-                  <p>
-                    <strong>Account Name:</strong> {rowData.accountName}
-                  </p>
-                  <p>
-                    <strong>Account Type:</strong> {rowData.accountType}
-                  </p>
-                  <p>
-                    <strong>Account No:</strong> {rowData.accountNo}
-                  </p>
-                  <p>
-                    <strong>Branch:</strong> {rowData.branch}
-                  </p>
-                  <p>
-                    <strong>Branch Code:</strong> {rowData.branchCode}
-                  </p>
-                  <p>
-                    <strong>Sort Code:</strong> {rowData.sortCode}
-                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label={"Account"}
+                      value={rowData.accountNo}
+                    />
+                    <CardInfoRow
+                      icon={UserIcon}
+                      label="Name"
+                      value={rowData.accountName}
+                    />
+                    <CardInfoRow
+                      icon={MapPinIcon}
+                      label="Branch"
+                      value={
+                        rowData.branch + " " + "(" + rowData.branchCode + ")"
+                      }
+                    />
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label={"Sort Code"}
+                      value={rowData.sortCode}
+                    />
+                  </div>
                 </div>
-              </div>
+              </CardInfo>
             </div>
             {/* Actions */}
-            <div className="flex justify-start gap-5 flex-col mt-4">
-              <Button
-                buttonName={"Edit"}
-                onClick={() => handleEdit(rowData.uid)}
-                className={"text-center"}
-                rectangle={true}
-              />
-              <InputSelect
-                labelName={"Account Status"}
-                inputName={"accountStatus"}
-                inputOptions={accountStatusOptions}
-                inputValue={currentStatus}
-                onChange={(e) => setCurrentStatus(e.target.value)}
-              />
-              <Button
-                buttonName={"Change Status"}
-                onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
-                className={"bg-red-500 hover:bg-red-600"}
-                rectangle={true}
-              />
+            <div className="absolute top-0 right-0">
+              <button
+                className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                onClick={() => setEditModal(true)}
+              >
+                <PencilIcon className="h-5 w-5 text-gray-500" />
+              </button>
             </div>
-          </div>
+            <ViewEditModal
+              isOpen={showEditModal}
+              onClose={() => setEditModal(false)}
+            />
+          </>
         ) : (
           <p>No data found</p>
         )}
       </div>
     );
-  };
-
-  const SearchBorrowerByFieldSearch = () => {
-    dispatch(fetchBorrowerByField({ field: searchBy, value: searchValue }));
-    setSearchBy("");
-    setSearchValue("");
   };
 
   return (

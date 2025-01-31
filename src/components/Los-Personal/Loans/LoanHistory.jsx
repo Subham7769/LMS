@@ -12,14 +12,20 @@ import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import Pagination from "../../Common/Pagination/Pagination";
-import FullLoanDetailModal from "./FullLoanDetailModal";
+import FullLoanDetailModal from "../FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "./ViewDocumentsModal";
-import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import {
+  CalendarDaysIcon,
+  CheckCircleIcon,
+  NewspaperIcon,
+  CurrencyDollarIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
+import { FiInfo } from "react-icons/fi";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -97,14 +103,18 @@ const LoanHistory = () => {
     { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
-    // { label: "Status", field: "applicationStatus" },
     { label: "Loan Status", field: "loanStatus" },
   ];
 
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <CardInfo cardTitle="Borrower Information" className={"bg-white"}>
+        <CardInfo
+          cardIcon={UserIcon}
+          cardTitle="Borrower Information"
+          className={"bg-white border-gray-300 border"}
+          color="blue"
+        >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
             <div>
               <div className="text-gray-500">Employment</div>
@@ -143,11 +153,16 @@ const LoanHistory = () => {
             </div>
           </div>
         </CardInfo>
-        <CardInfo cardTitle="Loan Information" className={"bg-white"}>
+        <CardInfo
+          cardIcon={CurrencyDollarIcon}
+          cardTitle="Loan Information"
+          className={"bg-white border-gray-300 border"}
+          color="blue"
+        >
           <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Principal Amount</div>
-              <div className="font-semibold">{rowData.principalAmount}</div>
+              <div className="text-gray-500">Disbursed Amount</div>
+              <div className="font-semibold">{rowData?.disbursedAmount}</div>
             </div>
             <div>
               <div className="text-gray-500">Interest Rate</div>
@@ -183,11 +198,12 @@ const LoanHistory = () => {
           </div>
         </CardInfo>
       </div>
-      <div className="bg-white p-3 shadow rounded-md my-5">
+      <div className="bg-white p-3 shadow-md  rounded-md my-5">
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
-            ({rowData?.verifiedDocuments?.length} documents)
+            ({rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
+            documents)
           </span>
         </div>
         <div className="flex gap-10">
@@ -204,8 +220,9 @@ const LoanHistory = () => {
       <div className="w-full flex justify-end gap-2 px-5">
         <button
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-          className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
         >
+          <NewspaperIcon className="-ml-0.5 h-5 w-5" />
           View Loan Agreement
         </button>
         <button

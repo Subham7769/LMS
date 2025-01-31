@@ -248,8 +248,14 @@ const LoanOffers = () => {
                 >
                   <div className="text-[14px]">
                     <div className="text-gray-500">Principal Amount:</div>
-                    <div className="font-semibold text-lg mb-2">
-                      {formatNumber(ci?.principalAmount.toFixed(2))}
+                    <div className="flex items-baseline gap-x-2">
+                      <div className="font-semibold text-lg mb-2">
+                        {formatNumber(ci?.principalAmount.toFixed(2))}
+                      </div>
+                      <div className="text-gray-500">
+                        (Disbursed Amt:{" "}
+                        {formatNumber(ci?.disbursedAmount.toFixed(2))})
+                      </div>
                     </div>
                     <div className="text-gray-500">Total Interest:</div>
                     <div className="font-semibold text-lg mb-2">
@@ -271,6 +277,15 @@ const LoanOffers = () => {
                       </div>
                       <div className="text-gray-500">
                         (VAT: {ci?.totalManagementVatFee.toFixed(2)})
+                      </div>
+                    </div>
+                    <div className="text-gray-500">Insurance Fee:</div>
+                    <div className="flex items-baseline gap-x-2">
+                      <div className="font-semibold text-lg mb-2">
+                        {ci?.insuranceFee.toFixed(2)}
+                      </div>
+                      <div className="text-gray-500">
+                        (Levy: {ci?.insuranceLevy.toFixed(2)})
                       </div>
                     </div>
                     <div className="border-t border-gray-300 pt-2 text-blue-600">

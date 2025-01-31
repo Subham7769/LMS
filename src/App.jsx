@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 // Error Handlers Imports
@@ -54,6 +55,12 @@ const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
 const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
+);
+
+// Affordibility Imports
+const AffordabilityPage = lazy(() => import("./pages/AffordabilityPage"));
+const Affordability = lazy(() =>
+  import("./components/Affordability/Affordability")
 );
 
 // TCL Imports
@@ -356,6 +363,12 @@ const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
 const LoanHistorySME = lazy(() =>
   import("./components/Los-SME/Loans/LoanHistory")
 );
+const LoanAgreementSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanAgreement")
+);
+const LoanAgreementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanAgreementPrint")
+);
 const CollateralRegisterSME = lazy(() =>
   import("./components/Los-SME/Loans/CollateralRegister")
 );
@@ -447,6 +460,11 @@ const routes = [
       {
         path: "recovery",
         element: <RecoveryPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "affordability",
+        element: <AffordabilityPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -551,6 +569,11 @@ const routes = [
       {
         path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "affordability/:affordabilityCriteriaTempId",
+        element: <Affordability />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -749,6 +772,11 @@ const routes = [
           {
             path: "approve-loans",
             element: <ApproveLoansSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-agreement/:loanApplicationId/:userId",
+            element: <LoanAgreementSME />,
             errorElement: <RouteErrorBoundary />,
           },
           {
@@ -1118,6 +1146,11 @@ const routes = [
   {
     path: "/loan-agreement/:loanApplicationId/:userId",
     element: <LoanAgreementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/loan-agreement-sme/:loanApplicationId/:userId",
+    element: <LoanAgreementPrintSME />,
     errorElement: <RouteErrorBoundary />,
   },
 

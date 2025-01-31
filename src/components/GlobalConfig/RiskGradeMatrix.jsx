@@ -22,6 +22,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const RiskGradeMatrix = () => {
         </b>
       </h2>
       <div className="flex flex-col gap-5">
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccessGroup2(roleName) ? (
           <ContainerTile
           loading={loading}
           // error={error}
@@ -202,7 +203,7 @@ const RiskGradeMatrix = () => {
                 isValidation={true}
                 isIndex={riskGradingData.dataIndex}
               />
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccessGroup2(roleName) ? (
                 <div className="flex items-center gap-2 mt-4">
                   <Button
                     onClick={() => handleSave(riskGradingData.id, index)}

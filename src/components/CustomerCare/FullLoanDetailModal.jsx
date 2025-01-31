@@ -1,10 +1,10 @@
-import { loanStatusOptions } from "../../../data/OptionsData";
+import { loanStatusOptions } from "../../data/OptionsData";
 import { toast } from "react-toastify";
-import { convertDate } from "../../../utils/convertDate";
+import { convertDate } from "../../utils/convertDate";
 
 const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
-  <div className="grid grid-cols-4 gap-5 border-b border-gray-300 pb-5">
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
+  <div className="flex border-b border-gray-300 pb-5">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 pr-4">
       <div>Loan Id</div>
       <div className="font-bold text-black flex w-[120px] items-center">
         : <span className="mr-2">{""}</span>
@@ -34,7 +34,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.totalAmount}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 px-4">
       <div>Remaining Principal</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -46,7 +46,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.remainingInterest}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 px-4">
       <div>Loan Status</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -58,7 +58,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.totalOutstanding}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 pl-4">
       <div>Submit Date</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -113,8 +113,18 @@ const InstallmentScheduleTable = ({ loansarrModal }) => (
   </div>
 );
 
-const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
+const ShimmerTable = () => {
+  return (
+    <div className="grid grid-cols-4 gap-4 animate-pulse">
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-gray-300 rounded"></div>
+    </div>
+  );
+};
 
+const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(loanDetails.loanId);
@@ -129,6 +139,20 @@ const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
   const handleOnClose = (e) => {
     if (e.target.id === "loanInfoContainer") onClose();
   };
+
+  if (loading) {
+    return (
+      <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
+        <div className="bg-white border border-red-600 p-8 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
+          <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+            <ShimmerTable />
+            <ShimmerTable />
+            <ShimmerTable />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -173,4 +197,4 @@ const LoanInfoModal = ({ isOpen, onClose, loanDetails }) => {
   );
 };
 
-export default LoanInfoModal;
+export default FullLoanDetailModal;

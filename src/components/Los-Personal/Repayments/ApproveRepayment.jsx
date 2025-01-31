@@ -22,21 +22,22 @@ import {
   CalendarDaysIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
-import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
-import FullLoanDetailModal from "./FullLoanDetailModal";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import FullLoanDetailModal from "../FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import calculateAging from "../../../utils/calculateAging";
 
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     collectionDate: convertDate(item?.collectionDate),
-    aging: 4,
+    aging: calculateAging(item?.loanCreationDate),
   }));
 }
 
-const ApproveRepaymentTest = () => {
+const ApproveRepayment = () => {
   const dispatch = useDispatch();
   const {
     approveRepaymentData,
@@ -108,7 +109,7 @@ const ApproveRepaymentTest = () => {
       <div className="grid grid-cols-3 gap-4">
         <CardInfo
           cardTitle="Payment Details"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={CurrencyDollarIcon}
           color={"blue"}
         >
@@ -138,7 +139,7 @@ const ApproveRepaymentTest = () => {
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Due Date</div>
-            <div className="font-semibold">{rowData.dueDate}</div>
+            <div className="font-semibold">{convertDate(rowData.dueDate)}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Status</div>
@@ -149,7 +150,7 @@ const ApproveRepaymentTest = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Borrower Profile"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={UserIcon}
           color={"blue"}
         >
@@ -172,15 +173,15 @@ const ApproveRepaymentTest = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Recent Payments"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={ClockIcon}
           color={"blue"}
         >
-          {rowData.paymentsData.map((payment) => (
+          {rowData.paymentsData.slice(-3).map((payment) => (
             <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
               <div>
                 <div className="text-black font-semibold">
-                  {payment.paymentDate}
+                  {convertDate(payment.paymentDate)}
                 </div>
                 <div className="font-light">{payment.paymentType}</div>
               </div>
@@ -205,14 +206,14 @@ const ApproveRepaymentTest = () => {
           View EMI Schedule
         </button>
         <button
-          onClick={() => handleReject(rowData)}
+          onClick={() => handleReject(rowData.transactionId)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
         >
           <FiXCircle className="-ml-0.5 h-5 w-5" />
           Reject
         </button>
         <button
-          onClick={() => handleApprove(rowData)}
+          onClick={() => handleApprove(rowData.transactionId)}
           className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
         >
           <FiCheckCircle className="-ml-0.5 h-5 w-5" />
@@ -353,4 +354,4 @@ const ApproveRepaymentTest = () => {
   );
 };
 
-export default ApproveRepaymentTest;
+export default ApproveRepayment;

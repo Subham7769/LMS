@@ -2,6 +2,7 @@ import DynamicName from "../DynamicName/DynamicName";
 import Button from "../Button/Button";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
+import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 
 const DynamicHeader = ({
   itemName,
@@ -41,9 +42,9 @@ const DynamicHeader = ({
       <DynamicName
         initialName={itemName}
         onSave={handleNameUpdate}
-        editable={roleName !== "ROLE_VIEWER" && isEditable}
+        editable={!hasViewOnlyAccess(roleName) && isEditable}
       />
-      {roleName !== "ROLE_VIEWER" && (
+      {!hasViewOnlyAccess(roleName) && (
         <div className="flex items-center gap-4">
           {handleClone && (
             <Button

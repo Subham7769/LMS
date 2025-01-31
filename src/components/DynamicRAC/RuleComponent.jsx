@@ -7,8 +7,10 @@ import {
   fetchOptionList,
   updateRuleNumberCriteria,
   handleChangeStringRule,
+  handleChangeBlocked,
 } from "../../redux/Slices/dynamicRacSlice";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
 import { operatorOptions } from "../../data/OptionsData";
@@ -27,6 +29,7 @@ const RuleComponent = ({
   isEditorMode,
   sectionId,
 }) => {
+  console.log(rule);
   const dispatch = useDispatch();
   const roleName = localStorage.getItem("roleName");
 
@@ -80,6 +83,10 @@ const RuleComponent = ({
     dispatch(
       handleChangeStringRule({ sectionId, dynamicRacRuleId, values: newValues })
     ); // Dispatch to Redux
+  };
+  const handleBlockedInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    dispatch(handleChangeBlocked({ sectionId, dynamicRacRuleId, checked })); // Dispatch to Redux
   };
 
   const handleStatusChange = async ({ dynamicRacRuleId, status }) => {
@@ -197,6 +204,18 @@ const RuleComponent = ({
               </div>
             )}
 
+          {/* Blocked Checkbox */}
+          {/* <div className="relative group">
+            <InputCheckbox
+              labelName="Block"
+              inputChecked={rule.blocked}
+              onChange={handleBlockedInputChange}
+              inputName="blocked"
+              className={"text-[10px]"}
+              upperLabel={true}
+            />
+          </div> */}
+
           {roleName !== "ROLE_MAKER_ADMIN" &&
             roleName !== "ROLE_VIEWER" &&
             isEditorMode &&
@@ -283,6 +302,18 @@ const RuleComponent = ({
                 </div>
               </div>
             )}
+
+          {/* Blocked Checkbox */}
+          <div className="relative group">
+            <InputCheckbox
+              labelName="Block"
+              inputChecked={rule.blocked}
+              onChange={handleBlockedInputChange}
+              inputName="blocked"
+              className={"text-[10px]"}
+              upperLabel={true}
+            />
+          </div>
 
           {roleName !== "ROLE_MAKER_ADMIN" &&
             roleName !== "ROLE_VIEWER" &&

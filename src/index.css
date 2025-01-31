@@ -49,3 +49,30 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #6366f1;
 }
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-table {
+    width: 100% !important;
+    max-width: 100%;
+    overflow: hidden !important;
+    white-space: normal !important;
+    table-layout: fixed !important;
+    word-wrap: break-word !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    word-break: break-word;
+    font-size: 12px !important;
+    padding: 4px !important;
+  }
+
+  .no-scroll {
+    overflow: visible !important;
+  }
+}

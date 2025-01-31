@@ -1,45 +1,77 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-const initialState = {
-  personalInfo: {
-    borrowerProfile: {
-      firstNameEn: "",
-      middleNameEn: "",
-      lastNameEn: "",
-      gender: "",
-      dateOfBirth: "",
-      idExpiryDate: "",
-      occupation: "N/A",
-      nationality: "",
-      residenceDetails: {
-        buildingNumber: "",
-        streetName: "",
-        city: "",
-        postOfficeBox: "",
-        neighborhood: "",
-        additionalNumbers: "",
-        rent: false,
-      },
-      maritalDetails: {
-        maritalStatus: "",
-        noOfDomesticWorkers: 0,
-        noOfChildren: 0,
-        totalDependent: 0,
-      },
-    },
-  },
-  creditProfile: [],
-  loanOffersCalculations: {},
-  loanHistory: [],
-  paymentHistory: [],
-  rejectionHistory: [],
-  CreditBureauDetails: {},
-  loading: false,
-  error: null,
-  downloadLoading: false,
-  downloadError: null,
-};
+export const fetchBorrowerDataPersonalInfo = createAsyncThunk(
+  "borrower/fetchBorrowerDataPersonalInfo",
+  async ({ subID }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWER_INFO_PERSONAL_INFO}${subID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 404) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Borrower Not Found");
+      }
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchBorrowerDataLoanHistory = createAsyncThunk(
+  "borrower/fetchBorrowerDataLoanHistory",
+  async ({ subID }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWER_INFO_LOAN_HISTORY}${subID}/all-loans`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 404) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Borrower Not Found");
+      }
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
 
 export const fetchBorrowerData = createAsyncThunk(
   "borrower/fetchBorrowerData",
@@ -62,7 +94,7 @@ export const fetchBorrowerData = createAsyncThunk(
       }
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue({ message: "Unauthorized" });
       }
       if (!response.ok) {
         const errorData = await response.json();
@@ -160,12 +192,186 @@ export const downloadFile = createAsyncThunk(
   }
 );
 
+const initialState = {
+  personalInfo: {
+    "id": "",
+    "uid": "",
+    "borrowerProfile": {
+        "personalDetails": {
+            "title": "",
+            "surname": "",
+            "firstName": "",
+            "otherName": "",
+            "uniqueIDType": "",
+            "uniqueID": "",
+            "gender": "",
+            "maritalStatus": "",
+            "nationality": "",
+            "dateOfBirth": "",
+            "age": null,
+            "placeOfBirth": "",
+            "loanOfficer": ""
+        },
+        "contactDetails": {
+            "mobile1": "",
+            "mobile2": "",
+            "landlinePhone": "",
+            "houseNumber": "",
+            "street": "",
+            "residentialArea": "",
+            "country": "",
+            "province": "",
+            "district": "",
+            "email": "",
+            "postBox": ""
+        },
+        "employmentDetails": {
+            "employer": "",
+            "occupation": "",
+            "employmentDistrict": "",
+            "employmentLocation": "",
+            "workStartDate": "",
+            "workPhoneNumber": "",
+            "workPhysicalAddress": "",
+            "employeeNo": "",
+            "workType": ""
+        },
+        "bankDetails": {
+            "bankName": "",
+            "accountName": "",
+            "accountType": "",
+            "branch": "",
+            "branchCode": "",
+            "sortCode": "",
+            "accountNo": ""
+        },
+        "nextOfKinDetails": {
+            "kinTitle": "",
+            "kinSurname": "",
+            "kinOtherName": "",
+            "kinNrcNo": "",
+            "kinGender": "",
+            "kinMobile1": "",
+            "kinMobile2": "",
+            "kinEmail": "",
+            "kinHouseNo": "",
+            "kinStreet": "",
+            "kinResidentialArea": "",
+            "kinDistrict": "",
+            "kinCountry": "",
+            "kinProvince": "",
+            "kinEmployer": "",
+            "kinOccupation": "",
+            "kinLocation": "",
+            "kinWorkPhoneNumber": ""
+        },
+        "otherDetails": {
+            "reasonForBorrowing": "",
+            "sourceOfRepayment": "",
+            "customerPhotoId": null,
+            "groupId": "",
+            "creditScore": null,
+            "freeCashInHand": null,
+            "grossSalary": null
+        },
+        "registrationDate": "",
+        "customerPhotoUploaded": false,
+        "paySlipsUploaded": false,
+        "paySlipsVerified": false,
+        "employerFormUploaded": false,
+        "employerFormVerified": false,
+        "bankStatementUploaded": false,
+        "bankStatementVerified": false,
+        "atmCardUploaded": false,
+        "atmCardVerified": false
+    },
+    "borrowerProfileType": "",
+    "borrowerProjectsEligibilityStatus": {},
+    "borrowerProductsEligibilityStatus": {},
+    "lmsProductsTclAmounts": {},
+    "lmsFreqCapForProject": null,
+    "deactivated": false,
+    "creationDate": "",
+    "lmsUserStatus": "",
+    "loans": {},
+    "requiredToRegisters": {},
+    "registrationResults": {
+        "projects": [],
+        "borrowerType": null
+    },
+    "resident": false
+},
+  creditProfile: [],
+  loanOffersCalculations: {},
+  loanHistory: [
+    {
+      "uid": "",
+      "loanId": "",
+      "borrowerName": "",
+      "lmsUserStatus": "",
+      "loanProductName": "",
+      "disbursedBy": "",
+      "loanReleaseDate": "",
+      "principalAmount": null,
+      "interestMethod": "",
+      "repaymentCycle": "",
+      "numberOfTenure": null,
+      "loanInterest": null,
+      "perLoanInterest": "",
+      "loanDuration": null,
+      "perLoanDuration": "",
+      "applicationStatus": "",
+      "loanStatus": "",
+      "monthlyEMI": null,
+      "firstEmiPayment": "",
+      "loanCreationDate": "",
+      "borrowerDetails": {
+        "employerName": "",
+        "employmentDuration": "",
+        "creditScore": null,
+        "monthlyIncome": null,
+        "activeLoans": null,
+        "paymentHistory": ""
+      },
+      "verifiedDocuments": [
+        {
+          "docId": "",
+          "verified": false,
+          "docName": "",
+          "documentKey": ""
+        }
+      ],
+      "loanApplicationId": ""
+    },
+  ],
+  paymentHistory: [],
+  rejectionHistory: [],
+  CreditBureauDetails: {},
+  loading: false,
+  error: null,
+  downloadLoading: false,
+  downloadError: null,
+};
+
 const customerCareSlice = createSlice({
   name: "borrower",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchBorrowerDataPersonalInfo.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(fetchBorrowerDataPersonalInfo.fulfilled, (state, action) => {
+        state.personalInfo = action.payload;
+        console.log(action.payload);
+        state.loading = false;
+      })
+      .addCase(fetchBorrowerDataPersonalInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(fetchBorrowerData.pending, (state, action) => {
         state.loading = true;
       })
@@ -177,7 +383,7 @@ const customerCareSlice = createSlice({
           state.loanOffersCalculations = action.payload;
         } else if (url.includes("/loans")) {
           state.loanHistory = action.payload;
-          console.log(action.payload)
+          console.log(action.payload);
         } else if (url.includes("/repayments")) {
           state.paymentHistory = action.payload;
         } else if (url.includes("/rejection-history")) {
@@ -191,6 +397,18 @@ const customerCareSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchBorrowerData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchBorrowerDataLoanHistory.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(fetchBorrowerDataLoanHistory.fulfilled, (state, action) => {
+        state.loanHistory = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchBorrowerDataLoanHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);

@@ -13,15 +13,20 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
   const [rejectionReason, setRejectionReason] = useState("");
   const dispatch = useDispatch();
   const { validationError } = useSelector((state) => state.validation);
+  const { userData } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const handleRejection = async (rowData) => {
+    const roleNames = userData.roles.map((role) => role.name); // Extract role names
+
     const rejectLoanPayload = {
       amount: rowData.principalAmount,
       applicationStatus: "REJECTED",
       loanId: rowData.loanId,
       uid: rowData.uid,
       rejectionReason: rejectionReason,
+      username: userData.username,
+      roleName: roleNames,
     };
     console.log(rejectLoanPayload);
     let isValid = true;
@@ -33,7 +38,13 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
     }
     if (isValid) {
       await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
-      await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+      await dispatch(
+        getPendingLoans({
+          page: 0,
+          size: 20,
+          getPayload: { roleNames: roleNames },
+        })
+      ).unwrap();
       onClose();
       navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
       setRejectionReason("");

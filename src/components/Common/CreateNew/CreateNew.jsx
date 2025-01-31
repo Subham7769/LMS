@@ -12,6 +12,7 @@ import {
   fetchTCLData,
   fetchProdGroupData,
   fetchRecoveryData,
+  fetchAffordibilityData,
   fetchCreditScoreEligibleTenureData,
   fetchDynamicRacData,
   fetchReportingConfigData,
@@ -57,6 +58,8 @@ const CreateNew = ({
         return fetchProdGroupData;
       case "Recovery":
         return fetchRecoveryData;
+      case "Affordability":
+        return fetchAffordibilityData;
       case "Eligible Tenure":
         return fetchCreditScoreEligibleTenureData;
       case "Dynamic RAC":

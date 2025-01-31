@@ -1,155 +1,228 @@
-import LoanInfoModal from "./LoanInfoModal";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import Button from "../Common/Button/Button";
-import ListTable from "../Common/ListTable/ListTable";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { loanStatusOptions } from "../../data/OptionsData";
+import React, { useEffect, useState } from "react";
+import { FiInfo } from "react-icons/fi";
+import { CalendarDaysIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
+import InputSelect from "../Common/InputSelect/InputSelect";
+import CardInfo from "../Common/CardInfo/CardInfo";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
+import { loanStatusOptionsNew } from "../../data/OptionsData";
+import { convertDate } from "../../utils/convertDate";
+import convertToTitleCase from "../../utils/convertToTitleCase";
+import { fetchBorrowerDataLoanHistory } from "../../redux/Slices/customerCareSlice";
+
 import {
-  fetchBorrowerData,
-  downloadClearanceLetter,
-} from "../../redux/Slices/customerCareSlice";
+  getFullLoanDetails,
+  getLoanAgreement,
+} from "../../redux/Slices/personalLoansSlice";
+
+import ViewDocumentsModal from "./ViewDocumentsModal";
+import FullLoanDetailModal from "./FullLoanDetailModal";
 
 const LoanHistory = () => {
-  const { subID } = useParams();
   const dispatch = useDispatch();
-  const { loanHistory, error, loading } =
-    useSelector((state) => state.customerCare);
-  const url = "/loans";
+  const navigate = useNavigate();
+  const { subID } = useParams();
+
   const [showModal, setShowModal] = useState(false);
-  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
+  const [documentsData, setDocumentsData] = useState(null);
+  const { loanHistory, error, loading } = useSelector(
+    (state) => state.customerCare
+  );
+
+  console.log(loanHistory);
+
+  function transformData(inputArray) {
+    return inputArray.map((item) => ({
+      ...item,
+      loanProduct: item?.loanProductName?.replace(/_/g, " "),
+      loanReleaseDate: convertDate(item?.loanReleaseDate),
+    }));
+  }
+
+  const { fullLoanDetails } = useSelector((state) => state.personalLoans);
 
   useEffect(() => {
-    dispatch(fetchBorrowerData({ subID, url }));
+    dispatch(fetchBorrowerDataLoanHistory({ subID }));
   }, [dispatch]);
 
-  const [loansarr, setLoansarr] = useState(
-    loanHistory.map((loan) => ({
-      ...loan,
-      formattedSubmitDate: "",
-      formattedPaidDate: "",
-    }))
-  );
-
   useEffect(() => {
-    if (loanHistory) {
-      const formattedLoans = loanHistory.map((loan) => {
-        const dateObjSubmit = new Date(loan.submitDate);
-        const yearSubmit = dateObjSubmit.getFullYear();
-
-        // Month formatting with leading zero and to lowercase
-        const monthSubmit = String(dateObjSubmit.getMonth() + 1).padStart(
-          2,
-          "0"
-        );
-        const monthNameSubmit = new Date(
-          yearSubmit,
-          monthSubmit - 1
-        ).toLocaleString("en-US", { month: "short" });
-        const daySubmit = String(dateObjSubmit.getDate()).padStart(2, "0");
-        const formattedSubmitDate = `${daySubmit} ${monthNameSubmit} ${yearSubmit}`;
-
-        const dateObjPaid = new Date(loan.paidDate); // Assuming paidDate exists
-        const yearPaid = dateObjPaid.getFullYear();
-        const monthPaid = String(dateObjPaid.getMonth() + 1).padStart(2, "0");
-        const monthNamePaid = new Date(yearPaid, monthPaid - 1).toLocaleString(
-          "en-US",
-          { month: "short" }
-        );
-        const dayPaid = String(dateObjPaid.getDate()).padStart(2, "0");
-        const formattedPaidDate = `${dayPaid} ${monthNamePaid} ${yearPaid}`;
-
-        return {
-          ...loan,
-          formattedSubmitDate: formattedSubmitDate,
-          formattedPaidDate: formattedPaidDate,
-        };
-      });
-      setLoansarr(formattedLoans);
-      setFilteredLoansarr(formattedLoans);
-    }
+    setFilteredLoans(loanHistory);
   }, [loanHistory]);
 
-  const [filteredLoansarr, setFilteredLoansarr] = useState(loansarr);
-  const [selectedOption, setSelctedOption] = useState(
-    loanStatusOptions[0].value
-  );
+  const [filteredLoans, setFilteredLoans] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
+  const loanHistoryData = transformData(filteredLoans);
 
-  const handleChange = (event) => {
-    const selectedOption = event.target.value;
-    setSelctedOption(selectedOption);
-    if (selectedOption === 0) {
-      setFilteredLoansarr(loansarr);
+  const handleChange = (e) => {
+    const selectedOption = e.target.value;
+    console.log(selectedOption);
+    setSelectedOption(selectedOption);
+    if (selectedOption === "") {
+      setFilteredLoans(loanHistory);
     } else {
-      const filterData = loansarr.filter((loanStat) => {
-        return loanStat.loanStatus === selectedOption;
+      const filterData = loanHistory.filter((loan) => {
+        return loan.loanStatus === selectedOption;
       });
-      setFilteredLoansarr(filterData);
+      setFilteredLoans(filterData);
     }
   };
 
-  useEffect(() => {
-    setFilteredLoansarr(loansarr);
-  }, [loansarr]);
-
-  const handleViewDetails = (loan) => {
-    setSelectedLoan(loan);
+  const handleFullLoanDetails = async (loanId, uid) => {
     setShowModal(true);
+    await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
   };
 
-  const headerList = [
-    "Loan ID",
-    "Loan Status",
-    "Loan Type",
-    "View Details",
-    "Loan Amount",
-    "Loan Origination",
-    "Loan Disbursement",
-    "Outstanding Principal",
-    "Missed Installments Number",
-    "Clearance Letter",
+  const closeFullLoanDetailModal = () => {
+    setShowModal(false);
+  };
+
+  const handleViewDocuments = (verifiedDocuments) => {
+    setDocumentsData(verifiedDocuments);
+    setDocumentsLoanModal(true);
+  };
+
+  const closeViewDocumentModal = () => {
+    setDocumentsLoanModal(false);
+  };
+
+  const handleLoanAgreement = async (loanId, uid) => {
+    navigate(`/loan-agreement/${loanId}/${uid}`);
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  const columns = [
+    { label: "Loan Product", field: "loanProduct" },
+    { label: "Borrower", field: "borrowerName" },
+    { label: "Disbursed By", field: "disbursedBy" },
+    { label: "Loan Release Date", field: "loanReleaseDate" },
+    { label: "Principal Amount", field: "principalAmount" },
+    { label: "Loan Status", field: "loanStatus" },
   ];
 
-  const itemList = filteredLoansarr.map((loan) => ({
-    loanId: loan.loanId,
-    loanStatus: loanStatusOptions[loan.loanStatus].label,
-    loanType: loan.loanType,
-    viewDetails: (
-      <>
-        <Button
-          buttonName={"View Details"}
-          onClick={() => handleViewDetails(loan)}
-          rectangle={true}
-          className={"text-[10px] py-0 px-0"}
-        />
-        <LoanInfoModal
-          onClose={() => setShowModal(false)}
-          visible={showModal}
-          loanDetails={selectedLoan}
-        />
-      </>
-    ),
-    loanAmount: loan.loanAmount.toFixed(2),
-    loanOrigination: loan.formattedSubmitDate,
-    loanDisbursement: loan.formattedPaidDate,
-    outstandingPrincipal: loan.outstandingPrincipal,
-    missedInstallMents: loan.missedInstallmentsNumber,
-    clearanceLetter: (
-      <Button
-        buttonName={"PDF"}
-        onClick={() =>
-          dispatch(downloadClearanceLetter({ subID, loanId: loan.loanId }))
-        }
-        rectangle={true}
-        className={"text-[10px] py-0 px-0"}
-      />
-    ),
-  }));
-
+  const renderExpandedRow = (rowData) => (
+    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+      <div className="grid grid-cols-2 gap-4">
+        <CardInfo cardTitle="Borrower Information" className={"bg-white"}>
+          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Employment</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.employerName}
+              </div>
+              <div className="text-gray-500 font-light text-xs">
+                {rowData?.borrowerDetails?.employmentDuration}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Monthly Income</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.monthlyIncome}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3">
+            <div>
+              <div className="text-gray-500">Credit Score</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.creditScore}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Active Loans</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.activeLoans}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Payment History</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.paymentHistory}
+              </div>
+            </div>
+          </div>
+        </CardInfo>
+        <CardInfo cardTitle="Loan Information" className={"bg-white"}>
+          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Principal Amount</div>
+              <div className="font-semibold">{rowData.principalAmount}</div>
+            </div>
+            <div>
+              <div className="text-gray-500">Interest Rate</div>
+              <div className="font-semibold">
+                {rowData.loanInterest}% {rowData.interestMethod} per{" "}
+                {rowData.perLoanInterest}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 border-b border-gray-300 pb-3 mb-3">
+            <div>
+              <div className="text-gray-500">Tenure</div>
+              <div className="font-semibold">
+                {rowData.loanDuration} {rowData.perLoanDuration}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Monthly EMI</div>
+              <div className="font-semibold">{rowData.monthlyEMI}</div>
+            </div>
+            <div>
+              <div className="text-gray-500">First Payment</div>
+              <div className="font-semibold">
+                {convertDate(rowData.firstEmiPayment)}
+              </div>
+            </div>
+          </div>
+          <div
+            className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+            onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+          >
+            <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+          </div>
+        </CardInfo>
+      </div>
+      <div className="bg-white p-3 shadow rounded-md my-5">
+        <div className="font-semibold text-xl mb-3">
+          Verified Documents{" "}
+          <span className="font-light text-xs">
+            ({rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
+            documents)
+          </span>
+        </div>
+        <div className="flex gap-10">
+          {rowData?.verifiedDocuments
+            ?.filter((doc) => doc.verified) // Filter only verified documents
+            .map((doc) => (
+              <div className="flex gap-1.5" key={doc.docId}>
+                <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
+                {convertToTitleCase(doc.documentKey)}
+              </div>
+            ))}
+        </div>
+      </div>
+      <div className="w-full flex justify-end gap-2 px-5">
+        <button
+          onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
+          className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+        >
+          View Loan Agreement
+        </button>
+        <button
+          onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+        >
+          <FiInfo className="-ml-0.5 h-5 w-5" />
+          View Documents
+        </button>
+      </div>
+    </div>
+  );
 
   return (
-    <>
+    <div className={`flex flex-col gap-3`}>
       <div className="flex items-center  w-full justify-between">
         <div className="w-1/3">&nbsp;</div>
         <div className="w-1/3">&nbsp;</div>
@@ -157,7 +230,7 @@ const LoanHistory = () => {
           <div className="w-full">
             <InputSelect
               labelName="Select Loan Status"
-              inputOptions={loanStatusOptions}
+              inputOptions={loanStatusOptionsNew}
               inputId="loanStatus"
               inputName="loanStatus"
               inputValue={selectedOption}
@@ -166,20 +239,25 @@ const LoanHistory = () => {
           </div>
         </div>
       </div>
-      {filteredLoansarr.length === 0 ? (
-        <div className="text-center shadow-md bg-gray-100 border-gray-300 border py-5 rounded-xl mt-4 px-5">
-          No Loan Data
-        </div>
-      ) : (
-        <ListTable
-          ListHeader={headerList}
-          ListItem={itemList}
-          Divider={true}
-          Searchable={true}
-          loading={loading}
-        />
-      )}
-    </>
+      <ExpandableTable
+        columns={columns}
+        data={loanHistoryData}
+        renderExpandedRow={renderExpandedRow}
+        loading={loading}
+      />
+      <FullLoanDetailModal
+        isOpen={showModal}
+        onClose={closeFullLoanDetailModal}
+        loanDetails={fullLoanDetails}
+        loading={loading}
+      />
+      <ViewDocumentsModal
+        isOpen={showDocumentsModal}
+        onClose={closeViewDocumentModal}
+        documents={documentsData}
+      />
+    </div>
   );
 };
+
 export default LoanHistory;

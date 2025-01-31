@@ -3,6 +3,7 @@ import Select from "react-select";
 import Button from "../Common/Button/Button";
 import { setValidationError } from "../../redux/Slices/validationSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 export default function Table({
   getSortIcon,
@@ -34,7 +35,7 @@ export default function Table({
     { name: "GDBR (with MTG)", sortKey: "gdbrWithMTG" },
   ];
 
-  if (roleName !== "ROLE_VIEWER") {
+  if (!hasViewOnlyAccess(roleName)) {
     tableColumns.push({ name: "Actions", sortKey: null });
   }
   return (
@@ -164,7 +165,7 @@ export default function Table({
                   )}
                 </td>
               ))}
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccess(roleName) ? (
                 <td className="px-4 py-2 text-sm font-medium flex gap-2 justify-center">
                   <div onClick={() => toggleEdit(index)} type="button">
                     <Button

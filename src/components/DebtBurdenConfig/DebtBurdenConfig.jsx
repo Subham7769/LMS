@@ -41,6 +41,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const DebtBurdenConfig = () => {
   const navigate = useNavigate();
@@ -262,7 +263,7 @@ const DebtBurdenConfig = () => {
         initialName={name}
       />
       <ContainerTile loading={loading} error={error}>
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="grid grid-cols-10 gap-2 items-end mt-2 border-b pb-5 mb-2">
             <div className="relative">
               <InputSelect
@@ -410,7 +411,7 @@ const DebtBurdenConfig = () => {
               <ChevronRightIcon className="w-5 h-5" />
             </button>
           </div>
-          {roleName !== "ROLE_VIEWER" ? (
+          {!hasViewOnlyAccess(roleName) ? (
             <div className="text-right ">
               <button
                 type="button"

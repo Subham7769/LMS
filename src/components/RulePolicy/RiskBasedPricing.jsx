@@ -28,6 +28,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -187,7 +188,7 @@ const RiskBasedPricing = ({ loading, error }) => {
         error={error}
       >
         <div className="text-lg mb-4">Risk Based Pricing</div>
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="grid grid-cols-5 gap-8 my-5 items-end">
             <SelectAndNumber
               labelName={"Minimum Risk Based Pricing"}
@@ -288,7 +289,7 @@ const RiskBasedPricing = ({ loading, error }) => {
                   PER {getSortIcon("interestPeriodType")}
                 </div>
               </th>
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccess(roleName) ? (
                 <th
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -408,7 +409,7 @@ const RiskBasedPricing = ({ loading, error }) => {
                       </span>
                     )}
                   </td>
-                  {roleName !== "ROLE_VIEWER" ? (
+                  {!hasViewOnlyAccess(roleName) ? (
                     <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                       <button onClick={() => toggleEdit(index)} type="button">
                         {editingIndex === index ? (

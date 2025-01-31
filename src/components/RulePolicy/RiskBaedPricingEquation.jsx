@@ -14,6 +14,7 @@ import { TrashIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const RiskBasedPricingEquation = ({ loading, error }) => {
   const dispatch = useDispatch();
@@ -105,7 +106,7 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
               <th className="py-3.5 px-2 text-center text-gray-900">B</th>
               <th className="py-3.5 px-2 text-center text-gray-900">C</th>
               <th className="py-3.5 px-2 text-center text-gray-900">D</th>
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccess(roleName) ? (
                 <th className="py-3.5 px-2 text-center text-gray-900">
                   Action
                 </th>
@@ -115,7 +116,7 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {roleName !== "ROLE_VIEWER" ? (
+            {!hasViewOnlyAccess(roleName) ? (
               <tr className="divide-x divide-gray-200 text-center">
                 <td className="whitespace-nowrap py-4 px-5 text-gray-500">
                   <InputNumber
@@ -215,7 +216,7 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
                     isIndex={item.dataIndex}
                   />
                 </td>
-                {roleName !== "ROLE_VIEWER" ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   <td className="py-4 flex gap-2 px-4">
                     <Button
                       buttonIcon={CheckCircleIcon}

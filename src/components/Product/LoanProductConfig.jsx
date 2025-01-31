@@ -39,6 +39,7 @@ import {
 } from "../../redux/Slices/notificationSlice";
 import ApprovalCard from "./ApprovalCard";
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -232,8 +233,8 @@ const LoanProductConfig = () => {
     },
   ];
 
-  // Conditionally add the "Actions" column if roleName is not "ROLE_VIEWER"
-  if (roleName !== "ROLE_VIEWER") {
+  // Conditionally add the "Actions" column if roleName has view only access
+  if (!hasViewOnlyAccess(roleName)) {
     columns.push({ label: "Actions", key: "actions", sortable: false });
   }
 
@@ -433,7 +434,7 @@ const LoanProductConfig = () => {
                         </span>
                       )}
                     </td>
-                    {roleName !== "ROLE_VIEWER" ? (
+                    {!hasViewOnlyAccess(roleName) ? (
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                         <button
                           onClick={() => {
@@ -517,7 +518,7 @@ const LoanProductConfig = () => {
             role={roleData}
           /> */}
 
-          {roleName !== "ROLE_VIEWER" ? (
+          {!hasViewOnlyAccess(roleName) ? (
             <div className="text-right mt-5">
               <Button
                 buttonIcon={CheckCircleIcon}

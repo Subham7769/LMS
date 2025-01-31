@@ -479,6 +479,26 @@ const dynamicRacSlice = createSlice({
         return section;
       });
     },
+    handleChangeBlocked(state, action) {
+      const { sectionId, dynamicRacRuleId, checked } = action.payload;
+      state.racConfig.sections = state.racConfig.sections.map((section) => {
+        if (section.sectionId === sectionId) {
+          return {
+            ...section,
+            rules: section.rules.map((rule) => {
+              if (rule.dynamicRacRuleId === dynamicRacRuleId) {
+                return {
+                  ...rule,
+                  blocked: checked,
+                };
+              }
+              return rule;
+            }),
+          };
+        }
+        return section;
+      });
+    },
     removeTag: (state, action) => {
       const { sectionId, dynamicRacRuleId, tagToRemove } = action.payload;
       const section = state.racConfig.sections.find(
@@ -659,6 +679,7 @@ export const {
   updateRuleNumberCriteria,
   handleChangeNumberRule,
   handleChangeStringRule,
+  handleChangeBlocked,
   removeTag,
 } = dynamicRacSlice.actions;
 export default dynamicRacSlice.reducer;

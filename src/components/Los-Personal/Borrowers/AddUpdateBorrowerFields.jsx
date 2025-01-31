@@ -108,13 +108,16 @@ const AddUpdateBorrowerFields = ({
     if (files && files[0]) {
       const formData = new FormData();
       formData.append("file", files[0]);
-      
+
       // Dispatch the upload action with the FormData
-      dispatch(handleFileUpload({ formData, authToken:"Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==" }));
+      dispatch(
+        handleFileUpload({
+          formData,
+          authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+        })
+      );
     }
-  }
-
-
+  };
 
   const handleFileRemove = (section) => {
     console.log("customerPhotoId remove");
@@ -324,6 +327,100 @@ const AddUpdateBorrowerFields = ({
       validation: false,
     },
   ];
+  const incomeOnPaySlipConfig = [
+    {
+      labelName: "Basic Pay",
+      inputName: "basicPay",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Housing Allowance",
+      inputName: "housingAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Transport Allowance",
+      inputName: "transportAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Rural/Remote Hardship Allowance",
+      inputName: "ruralHardshipAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Infectious Health Risk",
+      inputName: "infectiousHealthRisk",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Health Shift Allowance",
+      inputName: "healthShiftAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Interface Allowance",
+      inputName: "interfaceAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Responsibility Allowance",
+      inputName: "responsibilityAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Double Class Allowance",
+      inputName: "doubleClassAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Acting Allowance",
+      inputName: "actingAllowance",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Other Allowances",
+      inputName: "otherAllowances",
+      type: "number",
+      validation: false,
+    },
+  ];
+  const deductionOnPaySlipConfig = [
+    {
+      labelName: "Payee",
+      inputName: "payee",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "NAPSA",
+      inputName: "napsa",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Union Contribution",
+      inputName: "unionContribution",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Total of Other Deductions",
+      inputName: "totalOfOtherDeductions",
+      type: "number",
+      validation: false,
+    },
+  ];
   const bankDetailsConfig = [
     {
       labelName: "Name of Bank",
@@ -458,18 +555,6 @@ const AddUpdateBorrowerFields = ({
   ];
   const otherDetailsConfig = [
     {
-      labelName: "Free Cash In Hand",
-      inputName: "freeCashInHand",
-      type: "number",
-      validation: true,
-    },
-    {
-      labelName: "Gross Salary",
-      inputName: "grossSalary",
-      type: "number",
-      validation: true,
-    },
-    {
       labelName: "Credit Score",
       inputName: "creditScore",
       type: "number",
@@ -503,6 +588,12 @@ const AddUpdateBorrowerFields = ({
     (field) => field.inputName
   );
   const employmentDetailsInputNames = employmentDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const incomeOnPaySlipInputNames = incomeOnPaySlipConfig.map(
+    (field) => field.inputName
+  );
+  const deductionOnPaySlipInputNames = deductionOnPaySlipConfig.map(
     (field) => field.inputName
   );
   const bankDetailsInputNames = bankDetailsConfig.map(
@@ -612,6 +703,16 @@ const AddUpdateBorrowerFields = ({
       "employmentDetails"
     );
 
+  const incomeOnPaySlip = (incomeOnPaySlip) =>
+    renderDetails(incomeOnPaySlip, incomeOnPaySlipConfig, "incomeOnPaySlip");
+
+  const deductionOnPaySlip = (deductionOnPaySlip) =>
+    renderDetails(
+      deductionOnPaySlip,
+      deductionOnPaySlipConfig,
+      "deductionOnPaySlip"
+    );
+
   const bankDetails = (bankDetails) =>
     renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
 
@@ -656,6 +757,34 @@ const AddUpdateBorrowerFields = ({
         }
         error={isValidationFailed(validationError, employmentDetailsInputNames)}
       />
+      <Accordion
+        heading={`Salary Details`}
+        renderExpandedContent={() => (
+          <>
+            <Accordion
+              heading={"Income on PaySlip"}
+              renderExpandedContent={() =>
+                incomeOnPaySlip(BorrowerData.incomeOnPaySlip)
+              }
+              error={isValidationFailed(
+                validationError,
+                incomeOnPaySlipInputNames
+              )}
+            />
+            <Accordion
+              heading={"Deduction on PaySlip"}
+              renderExpandedContent={() =>
+                deductionOnPaySlip(BorrowerData.deductionOnPaySlip)
+              }
+              error={isValidationFailed(
+                validationError,
+                deductionOnPaySlipInputNames
+              )}
+            />
+          </>
+        )}
+      />
+
       <Accordion
         heading={"Bank Details"}
         renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import convertToReadableString from "../../../utils/convertToReadableString";
-import Button from "../../Common/Button/Button";
-import { PrinterIcon } from "@heroicons/react/24/outline";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
+import TermsNConditions from "./TermsNConditions";
+import longHornLogo from "../../../assets/image/longhorn-logo.png";
+import KeyStatements from "./KeyStatements";
 
 const ShimmerTable = () => {
   return (
@@ -19,7 +20,6 @@ const ShimmerTable = () => {
 
 const LoanAgreementPrint = () => {
   const dispatch = useDispatch();
-  const [isPrintVisisble, setIsPrintVisisble] = useState(true);
   const { loanApplicationId, userId } = useParams();
   const { loanAgreementData, loading } = useSelector(
     (state) => state.personalLoans
@@ -31,7 +31,7 @@ const LoanAgreementPrint = () => {
     if (!location.pathname.includes("loan-origination-system")) {
       const timeoutId = setTimeout(() => {
         window.print();
-      }, 1000);
+      }, 1500);
 
       // Cleanup to avoid potential memory leaks
       return () => clearTimeout(timeoutId);
@@ -58,16 +58,20 @@ const LoanAgreementPrint = () => {
     );
   }
 
-
   return (
     <>
       <div className={"flex flex-col justify-center align-middle gap-5 m-10"}>
-        <div className="text-xl font-semibold text-center">
-          LOAN AGREEMENT - PART A
+        <div className="flex w-full items-center">
+          <div className="">
+            <img src={longHornLogo} className="w-32" />
+          </div>
+          <div className="text-xl font-semibold text-center flex-1">
+            LOAN AGREEMENT - PART A
+          </div>
         </div>
         <div className="grid grid-cols-2 border-2 border-gray-500 text-sm">
           <div className="border-r border-gray-500">
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               PERSONAL DETAILS
             </div>
             <div className="grid grid-cols-2 mb-5">
@@ -89,7 +93,7 @@ const LoanAgreementPrint = () => {
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               LOAN DETAILS
             </div>
             <div className="grid grid-cols-2 mb-5">
@@ -114,7 +118,7 @@ const LoanAgreementPrint = () => {
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               LOAN OFFICER DETAILS
             </div>
             <div className="grid grid-cols-2 mb-5">
@@ -136,7 +140,7 @@ const LoanAgreementPrint = () => {
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               CUSTOMER
             </div>
             <div className="grid grid-cols-2 mb-5">
@@ -160,7 +164,7 @@ const LoanAgreementPrint = () => {
             </div>
           </div>
           <div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               CONTACT DETAILS
             </div>
             <div className="grid grid-cols-[45%,55%] mb-5">
@@ -182,7 +186,7 @@ const LoanAgreementPrint = () => {
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               EMPLOYMENT DETAILS
             </div>
             <div className="grid grid-cols-[45%,55%] mb-5">
@@ -204,7 +208,7 @@ const LoanAgreementPrint = () => {
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
               NEXT OF KIN DETAILS
             </div>
             <div className="grid grid-cols-[45%,55%] mb-5">
@@ -231,12 +235,14 @@ const LoanAgreementPrint = () => {
             </div>
           </div>
           <div className="col-span-2">
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200 mb-24">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500 mb-24">
               CUSTOMER SIGNATURE
             </div>
           </div>
         </div>
       </div>
+      <TermsNConditions />
+      {/* <KeyStatements loanDetails={loanDetails} /> */}
     </>
   );
 };

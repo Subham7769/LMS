@@ -28,7 +28,16 @@ const NotificationWindow = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchNotifications());
+    if (
+      roleName !== "LOAN_OFFICER" &&
+      roleName !== "CHIEF_EXECUTIVE_OFFICER" &&
+      roleName !== "MANAGEMENT_CREDIT_COMMITTEE" &&
+      roleName !== "BOARD"
+    ) {
+      console.log("Fetching notifications...");
+      console.log(roleName);
+      dispatch(fetchNotifications());
+    }
   }, [dispatch]);
 
   useEffect(() => {

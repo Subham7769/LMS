@@ -26,6 +26,7 @@ const Toolbox = () => {
   const initialState = {
     fieldType: "",
     criteriaType: "",
+    blocked: false,
     name: "",
     sectionId: "",
     sectionName: "",

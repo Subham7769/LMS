@@ -144,7 +144,7 @@ export const approveRepayment = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify([(transactionId = transactionId)]),
+          body: JSON.stringify([transactionId]),
         }
       );
     } catch (error) {
@@ -167,7 +167,7 @@ export const rejectRepayment = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify([(transactionId = transactionId)]),
+          body: JSON.stringify([transactionId]),
         }
       );
       if (!response.ok) {

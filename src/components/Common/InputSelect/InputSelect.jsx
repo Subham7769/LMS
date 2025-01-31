@@ -63,8 +63,8 @@ const InputSelect = ({
     control: (provided) => ({
       ...provided,
       border: "1px solid #ccc",
-      height:"30px",
-      padding:0,
+      height: "30px",
+      padding: 0,
       boxShadow: "none",
       "&:hover": {
         border: "1px solid #aaa",
@@ -85,7 +85,6 @@ const InputSelect = ({
     }),
   };
 
-  
   let validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
 
   if (isSectionId && isRuleId) {
@@ -106,10 +105,10 @@ const InputSelect = ({
   }, [inputName, dispatch]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" onClick={(e) => e.stopPropagation()}>
       {labelName && (
         <label
-          className={`block  text-sm font-semibold ${
+          className={`block text-sm font-semibold ${
             validationError[validationKey] ? "text-red-600" : "text-gray-700"
           } px-1`}
           htmlFor={inputName}
