@@ -221,6 +221,28 @@ const SideBar = () => {
         dispatch(fetchDynamicRacData());
         break;
 
+      case "LOAN_OFFICER":
+      case "CREDIT_OFFICER":
+      case "CCO_AND_FINTECH_OFFICER":
+      case "CHIEF_EXECUTIVE_OFFICER":
+      case "MANAGEMENT_CREDIT_COMMITTEE":
+      case "BOARD":
+        dispatch(fetchRACData());
+        dispatch(fetchDBRData());
+        dispatch(fetchBEData());
+        dispatch(fetchProjectData());
+        dispatch(fetchProductData());
+        dispatch(fetchCreditScoreEqData());
+        dispatch(fetchRulePolicyData());
+        dispatch(fetchTCLData());
+        dispatch(fetchProdGroupData());
+        dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
+        dispatch(fetchCreditScoreEligibleTenureData());
+        dispatch(fetchDynamicRacData());
+        dispatch(fetchReportingConfigData());
+        break;
+
       default:
         break;
     }

@@ -5,6 +5,7 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import { useSelector } from "react-redux";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const TagInput = ({
   inputSelectName,
@@ -67,7 +68,7 @@ const TagInput = ({
             isIndex={isIndex2}
           />
         )}
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="">
             <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
           </div>
@@ -175,7 +176,7 @@ const TagInput = ({
                 <div>{tag[inputTextName]}</div>
               )}
             </div>
-            {roleName !== "ROLE_VIEWER" ? (
+            {!hasViewOnlyAccess(roleName) ? (
               <XCircleIcon
                 onClick={() => deleteTag(tag)}
                 className="ml-4 block h-5 w-5 cursor-pointer text-gray-900 hover:text-red-600"

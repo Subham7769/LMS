@@ -30,6 +30,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const LiabilitiesMatrix = () => {
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ const LiabilitiesMatrix = () => {
         </b>
       </h2>
       <div className="flex flex-col gap-5 relative">
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccessGroup2(roleName) ? (
           <ContainerTile
             loading={loading}
             // error={error}
@@ -261,7 +262,7 @@ const LiabilitiesMatrix = () => {
                     inputValue={item?.defaultConsideredInSIMAHscore}
                     onChange={(e) => handleInputChange(e, index)}
                   />
-                  {roleName !== "ROLE_VIEWER" ? (
+                  {!hasViewOnlyAccessGroup2(roleName) ? (
                     <div className="flex items-center gap-4">
                       <Button
                         buttonIcon={CheckCircleIcon}

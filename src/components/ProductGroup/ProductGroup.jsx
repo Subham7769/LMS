@@ -23,6 +23,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const ProductGroup = () => {
   const dispatch = useDispatch();
@@ -153,7 +154,7 @@ const ProductGroup = () => {
             tagsPerRow={3}
           />
         </div>
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="text-center md:text-right mt-5">
             <Button
               buttonIcon={CheckCircleIcon}

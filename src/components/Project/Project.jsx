@@ -19,6 +19,7 @@ import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { toast } from "react-toastify";
 import ProjectInputFields from "./ProjectInputFields";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const Project = () => {
   const [clientIdsString, setClientIdsString] = useState("");
@@ -91,7 +92,7 @@ const Project = () => {
           loading={loading}
         />
 
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) && (
           <div className="flex items-center justify-end gap-4 mt-2">
             {!loading && (
               <Button
@@ -102,8 +103,6 @@ const Project = () => {
               />
             )}
           </div>
-        ) : (
-          ""
         )}
       </form>
     </>

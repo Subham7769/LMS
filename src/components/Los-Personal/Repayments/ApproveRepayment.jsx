@@ -139,7 +139,7 @@ const ApproveRepayment = () => {
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Due Date</div>
-            <div className="font-semibold">{rowData.dueDate}</div>
+            <div className="font-semibold">{convertDate(rowData.dueDate)}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Status</div>
@@ -177,11 +177,11 @@ const ApproveRepayment = () => {
           cardIcon={ClockIcon}
           color={"blue"}
         >
-          {rowData.paymentsData.map((payment) => (
+          {rowData.paymentsData.slice(-3).map((payment) => (
             <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
               <div>
                 <div className="text-black font-semibold">
-                  {payment.paymentDate}
+                  {convertDate(payment.paymentDate)}
                 </div>
                 <div className="font-light">{payment.paymentType}</div>
               </div>

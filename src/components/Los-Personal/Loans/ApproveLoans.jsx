@@ -63,7 +63,7 @@ const ApproveLoans = () => {
       getPendingLoans({
         page: currentPage,
         size: pageSize,
-        getPayload: roleNames,
+        getPayload: { roleNames: roleNames },
       })
     );
   };
@@ -71,7 +71,13 @@ const ApproveLoans = () => {
   const approveLoansData = transformData(approveLoans);
 
   const handleSearch = () => {
-    dispatch(getLoansByField({ field: searchBy, value: searchValue }));
+    dispatch(
+      getLoansByField({
+        field: searchBy,
+        value: searchValue,
+        getPayload: { roleNames: roleNames },
+      })
+    );
     setSearchBy("");
     setSearchValue("");
   };
@@ -83,7 +89,7 @@ const ApproveLoans = () => {
       getPendingLoans({
         page: 0,
         size: pageSize,
-        getPayload: roleNames,
+        getPayload: { roleNames: roleNames },
       })
     );
   };
@@ -110,10 +116,14 @@ const ApproveLoans = () => {
       roleName: roleNames,
     };
 
-    console.log(approveLoanPayload);
-
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
-    await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+    await dispatch(
+      getPendingLoans({
+        page: 0,
+        size: 20,
+        getPayload: { roleNames: roleNames },
+      })
+    ).unwrap();
     navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
 

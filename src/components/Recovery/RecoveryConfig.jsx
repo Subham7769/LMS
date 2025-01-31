@@ -28,6 +28,7 @@ import {
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { toast } from "react-toastify";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -208,7 +209,7 @@ const RecoveryConfig = () => {
                   </ul>
                 </div>
 
-                {roleName !== "ROLE_VIEWER" ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   isEditingEquation ? (
                     <Button
                       buttonIcon={CheckCircleIcon}
@@ -233,7 +234,7 @@ const RecoveryConfig = () => {
               </p>
             )}
           </div>
-          {roleName !== "ROLE_VIEWER" ? (
+          {!hasViewOnlyAccess(roleName) ? (
             <div className="text-right mt-5">
               <Button
                 buttonIcon={CheckCircleIcon}

@@ -38,7 +38,13 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
     }
     if (isValid) {
       await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
-      await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+      await dispatch(
+        getPendingLoans({
+          page: 0,
+          size: 20,
+          getPayload: { roleNames: roleNames },
+        })
+      ).unwrap();
       onClose();
       navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
       setRejectionReason("");

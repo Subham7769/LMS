@@ -17,6 +17,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const NotificationText = () => {
   const dispatch = useDispatch();
@@ -141,7 +142,7 @@ const NotificationText = () => {
                 disabled
                 placeHolder="2 days before the upcoming installment"
               />
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccessGroup2(roleName) ? (
                 <div>
                   <Button
                     buttonIcon={CheckCircleIcon}

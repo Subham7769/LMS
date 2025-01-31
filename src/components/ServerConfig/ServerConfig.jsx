@@ -15,7 +15,11 @@ import {
   deleteServerConfig,
 } from "../../redux/Slices/serverConfigSlice";
 import store from "../../redux/store";
-import { clearValidationError, validateForm } from "../../redux/Slices/validationSlice";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../redux/Slices/validationSlice";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const ServerConfig = () => {
   const [bindingData, setBindingData] = useState({});
@@ -25,6 +29,8 @@ const ServerConfig = () => {
   const { serverConfigData, newServerConfigData, loading, error } = useSelector(
     (state) => state.serverConfig
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchData());
@@ -159,101 +165,105 @@ const ServerConfig = () => {
 
   return (
     <>
-      <ContainerTile loading={loading} error={error} className="mb-5">
-        <div className="grid grid-cols-3 gap-2 mb-5 items-end">
-          <InputText
-            labelName="Server Name"
-            inputName="name"
-            inputValue={newServerConfigData?.name}
-            onChange={(e) => handleChangeNew(e)}
-            placeHolder="ELK"
-            isValidation={true}
-          />
-          <InputText
-            labelName="Service IP"
-            inputName="serviceIp"
-            inputValue={newServerConfigData?.serviceIp}
-            onChange={(e) => handleChangeNew(e)}
-            placeHolder="xxx.xxx.xxx.xxx"
-            isValidation={true}
-          />
-          <InputText
-            labelName="Service Port"
-            inputName="servicePort"
-            inputValue={newServerConfigData?.servicePort}
-            onChange={(e) => handleChangeNew(e)}
-            placeHolder="e.g., 8080"
-            isValidation={true}
-          />
-        </div>
-        {/* Bindings Section */}
-        <div className="grid grid-cols-3 gap-2 mb-5 items-end">
-          <InputText
-            labelName="Header Key"
-            inputName="bindingKey"
-            inputValue={bindingKey}
-            onChange={(e) => setBindingKey(e.target.value)}
-            placeHolder="Enter key"
-            isValidation={true}
-          />
-          <InputText
-            labelName="Header Value"
-            inputName="bindingValue"
-            inputValue={bindingValue}
-            onChange={(e) => setBindingValue(e.target.value)}
-            placeHolder="Enter value"
-            isValidation={true}
-          />
-          <Button
-            buttonIcon={PlusIcon}
-            onClick={() => handleAddBindingNew()}
-            circle={true}
-          />
-        </div>
-        {/* Display existing bindings with new design */}
-        <div className="grid grid-cols-1 gap-2 mb-5 items-center">
-          <div className="grid grid-cols-4 gap-2 mb-5 items-center">
-            {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
-              <p>No bindings added</p>
-            ) : (
-              Object.keys(newServerConfigData.bindings).map(
-                (key, bindingIndex) => (
-                  <div
-                    key={bindingIndex}
-                    className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
-                  >
-                    {/* Display the key */}
-                    <div>
-                      <b>{key}</b>
-                    </div>
-
-                    {/* Display the value */}
-                    <div>|</div>
-                    <div>{newServerConfigData.bindings[key]}</div>
-
-                    {/* Delete icon */}
-                    <div>
-                      <XCircleIcon
-                        onClick={() => handleRemoveBindingNew(key)}
-                        className="block h-5 w-5 cursor-pointer text-gray-900"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                )
-              )
-            )}
+      {!hasViewOnlyAccessGroup2(roleName) ? (
+        <ContainerTile loading={loading} error={error} className="mb-5">
+          <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+            <InputText
+              labelName="Server Name"
+              inputName="name"
+              inputValue={newServerConfigData?.name}
+              onChange={(e) => handleChangeNew(e)}
+              placeHolder="ELK"
+              isValidation={true}
+            />
+            <InputText
+              labelName="Service IP"
+              inputName="serviceIp"
+              inputValue={newServerConfigData?.serviceIp}
+              onChange={(e) => handleChangeNew(e)}
+              placeHolder="xxx.xxx.xxx.xxx"
+              isValidation={true}
+            />
+            <InputText
+              labelName="Service Port"
+              inputName="servicePort"
+              inputValue={newServerConfigData?.servicePort}
+              onChange={(e) => handleChangeNew(e)}
+              placeHolder="e.g., 8080"
+              isValidation={true}
+            />
           </div>
-        </div>
+          {/* Bindings Section */}
+          <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+            <InputText
+              labelName="Header Key"
+              inputName="bindingKey"
+              inputValue={bindingKey}
+              onChange={(e) => setBindingKey(e.target.value)}
+              placeHolder="Enter key"
+              isValidation={true}
+            />
+            <InputText
+              labelName="Header Value"
+              inputName="bindingValue"
+              inputValue={bindingValue}
+              onChange={(e) => setBindingValue(e.target.value)}
+              placeHolder="Enter value"
+              isValidation={true}
+            />
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={() => handleAddBindingNew()}
+              circle={true}
+            />
+          </div>
+          {/* Display existing bindings with new design */}
+          <div className="grid grid-cols-1 gap-2 mb-5 items-center">
+            <div className="grid grid-cols-4 gap-2 mb-5 items-center">
+              {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
+                <p>No bindings added</p>
+              ) : (
+                Object.keys(newServerConfigData.bindings).map(
+                  (key, bindingIndex) => (
+                    <div
+                      key={bindingIndex}
+                      className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
+                    >
+                      {/* Display the key */}
+                      <div>
+                        <b>{key}</b>
+                      </div>
 
-        <div className="flex gap-4 justify-end items-center">
-          <Button
-            buttonName={"Create"}
-            rectangle={true}
-            onClick={handleCreateServerConfig}
-          />
-        </div>
-      </ContainerTile>
+                      {/* Display the value */}
+                      <div>|</div>
+                      <div>{newServerConfigData.bindings[key]}</div>
+
+                      {/* Delete icon */}
+                      <div>
+                        <XCircleIcon
+                          onClick={() => handleRemoveBindingNew(key)}
+                          className="block h-5 w-5 cursor-pointer text-gray-900"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </div>
+                  )
+                )
+              )}
+            </div>
+          </div>
+
+          <div className="flex gap-4 justify-end items-center">
+            <Button
+              buttonName={"Create"}
+              rectangle={true}
+              onClick={handleCreateServerConfig}
+            />
+          </div>
+        </ContainerTile>
+      ) : (
+        ""
+      )}
 
       {/* -------------------- Existing Servers ---------------------------------- */}
 
@@ -268,13 +278,15 @@ const ServerConfig = () => {
           >
             <div className="mb-4 flex items-center justify-between">
               <div className="font-semibold text-lg">Server: {scData.name}</div>
-              <div className="flex gap-4">
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => handleDelete(scData.name)}
-                  circle={true}
-                />
-              </div>
+              {!hasViewOnlyAccessGroup2(roleName) && (
+                <div className="flex gap-4">
+                  <Button
+                    buttonIcon={TrashIcon}
+                    onClick={() => handleDelete(scData.name)}
+                    circle={true}
+                  />
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-3 gap-2 mb-5 items-end">
               <InputText
@@ -351,14 +363,15 @@ const ServerConfig = () => {
                 )}
               </div>
             </div>
-
-            <div className="flex gap-4 justify-end items-center">
-              <Button
-                buttonName={"Update"}
-                rectangle={true}
-                onClick={() => handleUpdateServerConfig(scData.name, index)}
-              />
-            </div>
+            {!hasViewOnlyAccessGroup2(roleName) && (
+              <div className="flex gap-4 justify-end items-center">
+                <Button
+                  buttonName={"Update"}
+                  rectangle={true}
+                  onClick={() => handleUpdateServerConfig(scData.name, index)}
+                />
+              </div>
+            )}
           </ContainerTile>
         );
       })}

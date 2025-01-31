@@ -63,7 +63,7 @@ const ApproveLoans = () => {
       getPendingLoans({
         page: currentPage,
         size: pageSize,
-        getPayload: roleNames,
+        getPayload: { roleNames: roleNames },
       })
     );
   };
@@ -71,7 +71,13 @@ const ApproveLoans = () => {
   const approveLoansData = transformData(approveLoans);
 
   const handleSearch = () => {
-    dispatch(getLoansByField({ field: searchBy, value: searchValue }));
+    dispatch(
+      getLoansByField({
+        field: searchBy,
+        value: searchValue,
+        getPayload: { roleNames: roleNames },
+      })
+    );
     setSearchBy("");
     setSearchValue("");
   };
@@ -79,7 +85,13 @@ const ApproveLoans = () => {
   const handleReset = () => {
     setSearchBy("");
     setSearchValue("");
-    dispatch(getPendingLoans({ page: 0, size: 20, getPayload: roleNames }));
+    dispatch(
+      getPendingLoans({
+        page: 0,
+        size: 20,
+        getPayload: { roleNames: roleNames },
+      })
+    );
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
@@ -104,7 +116,13 @@ const ApproveLoans = () => {
     };
 
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
-    await dispatch(getPendingLoans({ page: 0, size: 20 })).unwrap();
+    await dispatch(
+      getPendingLoans({
+        page: 0,
+        size: 20,
+        getPayload: { roleNames: roleNames },
+      })
+    ).unwrap();
     navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
   };
 

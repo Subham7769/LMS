@@ -388,11 +388,34 @@ const ROLE_VIEWER = [
   "Product Group",
   "Business Rule",
   "Global Config",
+  "Server Config",
   "Customer Care",
   "General Ledger",
   "Dynamic RAC",
   "Reporting Config",
   "Reports",
+];
+
+const LOAN_OFFICER = [
+  "Home",
+  "RAC",
+  "Recovery",
+  "Affordability",
+  "TCL",
+  "Project",
+  "Loan Product",
+  "Eligible Tenure",
+  "DBR Config",
+  "Blocked Employer",
+  "Credit Score",
+  "Rule Policy",
+  "Product Group",
+  "Customer Care",
+  "Dynamic RAC",
+  "Reporting Config",
+  "Reports",
+  "SME Loans",
+  "Personal Loans",
 ];
 
 const initialState = {
@@ -480,6 +503,32 @@ const sidebarSlice = createSlice({
           state.menus = MenusInitial.filter((item) =>
             ROLE_CHECKER_ADMIN.includes(item.title)
           );
+          break;
+
+        case "LOAN_OFFICER":
+          state.menus = MenusInitial.map((menu) => ({
+            ...menu, // Spread all the other properties of the menu
+            createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists
+          })).filter((item) => LOAN_OFFICER.includes(item.title));
+          break;
+
+        case "CREDIT_OFFICER":
+          state.menus = MenusInitial.filter((item) =>
+            LOAN_OFFICER.includes(item.title)
+          );
+          break;
+
+        case "CCO_AND_FINTECH_OFFICER":
+          state.menus = MenusInitial;
+          break;
+
+        case "CHIEF_EXECUTIVE_OFFICER":
+        case "MANAGEMENT_CREDIT_COMMITTEE":
+        case "BOARD":
+          state.menus = MenusInitial.map((menu) => ({
+            ...menu, // Spread all the other properties of the menu
+            createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists
+          }));
           break;
 
         default:

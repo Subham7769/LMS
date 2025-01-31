@@ -37,9 +37,6 @@ const CityCard = ({ cityData, loading, error }) => {
     }
   }, [cityData]);
 
-  console.log(cityData);
-  console.log(cityFormData);
-
   useEffect(() => {
     // if (tags.length > 0) {
     dispatch(setCityFormData({ name: "tags", value: tags }));

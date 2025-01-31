@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { TclViewListHeaderList } from "../../data/TclData";
 import ListTable from "../Common/ListTable/ListTable";
 import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,6 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
@@ -125,16 +125,15 @@ const TCLViewList = () => {
   };
 
   // actions to be executed in list
-  const ActionList =
-    roleName !== "ROLE_VIEWER"
-      ? [
-          {
-            icon: TrashIcon,
-            circle: true,
-            action: handleDelete,
-          },
-        ]
-      : [];
+  const ActionList = !hasViewOnlyAccess(roleName)
+    ? [
+        {
+          icon: TrashIcon,
+          circle: true,
+          action: handleDelete,
+        },
+      ]
+    : [];
 
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
@@ -143,6 +142,27 @@ const TCLViewList = () => {
   const handleFileClick = () => {
     fileInputRef.current.click();
   };
+
+  const TclViewListHeaderList = !hasViewOnlyAccess(roleName)
+    ? [
+        "File Name",
+        "Min TCL",
+        "Avg TCL",
+        "Max TCL",
+        "Total User",
+        "Uploaded Date",
+        "Total Rows",
+        "Actions",
+      ] // Show "Actions" for non-viewers
+    : [
+        "File Name",
+        "Min TCL",
+        "Avg TCL",
+        "Max TCL",
+        "Total User",
+        "Uploaded Date",
+        "Total Rows",
+      ];
 
   return (
     <div className="flex flex-col gap-5">
@@ -167,7 +187,7 @@ const TCLViewList = () => {
           ButtonName={"Add to List"}
           onClick={addData}
         />
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="w-3/4 flex justify-end items-center gap-5">
             <input
               type="file"

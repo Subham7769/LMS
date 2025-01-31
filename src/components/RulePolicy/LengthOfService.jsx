@@ -25,6 +25,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const operatorOptions = [
   { value: "==", label: "==" },
@@ -176,7 +177,7 @@ const LengthofService = ({ loading, error }) => {
         error={error}
       >
         <div className="text-lg mb-4">Length of Service</div>
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
             <SelectAndNumber
               labelName={"Minimum Length Of Service"}
@@ -258,7 +259,7 @@ const LengthofService = ({ loading, error }) => {
                   Point {getSortIcon("point")}
                 </div>
               </th>
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccess(roleName) ? (
                 <th
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -360,7 +361,7 @@ const LengthofService = ({ loading, error }) => {
                       </span>
                     )}
                   </td>
-                  {roleName !== "ROLE_VIEWER" ? (
+                  {!hasViewOnlyAccess(roleName) ? (
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                       <button onClick={() => toggleEdit(index)} type="button">
                         {editingIndex === index ? (

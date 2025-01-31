@@ -95,14 +95,3 @@ export const TclViewListData = [
     totalRows: 30,
   },
 ];
-
-export const TclViewListHeaderList = [
-  "File Name",
-  "Min TCL",
-  "Avg TCL",
-  "Max TCL",
-  "Total User",
-  "Uploaded Date",
-  "Total Rows",
-  "Actions",
-];

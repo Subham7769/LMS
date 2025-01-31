@@ -24,6 +24,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const options = [
   { value: "==", label: "==" },
@@ -394,7 +395,7 @@ const CreditScore = () => {
           </div>
         </div>
       </ContainerTile>
-      {roleName !== "ROLE_VIEWER" && !loading ? (
+      {!hasViewOnlyAccess(roleName) && !loading ? (
         <div className="text-right mt-8">
           <Button
             buttonIcon={CheckCircleIcon}
