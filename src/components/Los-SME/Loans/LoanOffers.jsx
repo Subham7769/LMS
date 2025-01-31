@@ -21,6 +21,7 @@ import {
 } from "@heroicons/react/24/outline";
 import formatNumber from "../../../utils/formatNumber";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +37,8 @@ const LoanOffers = () => {
     loading,
     error,
   } = useSelector((state) => state.smeLoans);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
@@ -351,11 +354,13 @@ const LoanOffers = () => {
                       </div>
                     </div>
                     <div className="text-center">
-                      <Button
-                        buttonName="Proceed"
-                        onClick={() => SubmitProceed(ci.transactionId, index)}
-                        rectangle={true}
-                      />
+                      {!hasViewOnlyAccessGroup3(roleName) && (
+                        <Button
+                          buttonName="Proceed"
+                          onClick={() => SubmitProceed(ci.transactionId, index)}
+                          rectangle={true}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
