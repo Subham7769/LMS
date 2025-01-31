@@ -221,13 +221,12 @@ const SideBar = () => {
         dispatch(fetchDynamicRacData());
         break;
 
-      case "LOAN_OFFICER":
-      case "CREDIT_OFFICER":
-      case "CCO_AND_FINTECH_OFFICER":
-      case "CHIEF_EXECUTIVE_OFFICER":
-      case "MANAGEMENT_CREDIT_COMMITTEE":
-      case "BOARD":
-        dispatch(fetchRACData());
+      case "ROLE_LOAN_OFFICER":
+      case "ROLE_CREDIT_OFFICER":
+      case "ROLE_CCO_AND_FINTECH_OFFICER":
+      case "ROLE_CHIEF_EXECUTIVE_OFFICER":
+      case "ROLE_MANAGEMENT_CREDIT_COMMITTEE":
+      case "ROLE_BOARD":
         dispatch(fetchDBRData());
         dispatch(fetchBEData());
         dispatch(fetchProjectData());

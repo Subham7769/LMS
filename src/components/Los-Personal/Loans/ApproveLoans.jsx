@@ -57,6 +57,7 @@ const ApproveLoans = () => {
 
   const [pageSize, setPageSize] = useState(10);
   const roleNames = userData.roles.map((role) => role.name); // Extract role names
+  const roleName = userData?.roles[0]?.name;
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
@@ -291,20 +292,24 @@ const ApproveLoans = () => {
           <FiInfo className="-ml-0.5 h-5 w-5" />
           View Documents
         </button>
-        <button
-          onClick={() => handleReject(rowData)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-        >
-          <FiXCircle className="-ml-0.5 h-5 w-5" />
-          Reject
-        </button>
-        <button
-          onClick={() => handleApprove(rowData)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-        >
-          <FiCheckCircle className="-ml-0.5 h-5 w-5" />
-          {rowData?.rolePermissions?.finalApprove ? "Approve" : "Recommend"}
-        </button>
+        {roleName !== "ROLE_LOAN_OFFICER" && (
+          <>
+            <button
+              onClick={() => handleReject(rowData)}
+              className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            >
+              <FiXCircle className="-ml-0.5 h-5 w-5" />
+              Reject
+            </button>
+            <button
+              onClick={() => handleApprove(rowData)}
+              className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+            >
+              <FiCheckCircle className="-ml-0.5 h-5 w-5" />
+              {rowData?.rolePermissions?.finalApprove ? "Approve" : "Recommend"}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

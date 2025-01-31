@@ -29,10 +29,10 @@ const NotificationWindow = () => {
 
   useEffect(() => {
     if (
-      roleName !== "LOAN_OFFICER" &&
-      roleName !== "CHIEF_EXECUTIVE_OFFICER" &&
-      roleName !== "MANAGEMENT_CREDIT_COMMITTEE" &&
-      roleName !== "BOARD"
+      roleName !== "ROLE_LOAN_OFFICER" &&
+      roleName !== "ROLE_CHIEF_EXECUTIVE_OFFICER" &&
+      roleName !== "ROLE_MANAGEMENT_CREDIT_COMMITTEE" &&
+      roleName !== "ROLE_BOARD"
     ) {
       console.log("Fetching notifications...");
       console.log(roleName);

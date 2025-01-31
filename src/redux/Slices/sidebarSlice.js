@@ -374,7 +374,6 @@ const ROLE_CHECKER_ADMIN = [
 const ROLE_TECHNICAL = ["Customer Care", "Product Testing", "General Ledger"];
 const ROLE_VIEWER = [
   "Home",
-  "RAC",
   "Recovery",
   "Affordability",
   "TCL",
@@ -396,9 +395,8 @@ const ROLE_VIEWER = [
   "Reports",
 ];
 
-const LOAN_OFFICER = [
+const ROLE_LOAN_OFFICER = [
   "Home",
-  "RAC",
   "Recovery",
   "Affordability",
   "TCL",
@@ -505,26 +503,26 @@ const sidebarSlice = createSlice({
           );
           break;
 
-        case "LOAN_OFFICER":
+        case "ROLE_LOAN_OFFICER":
           state.menus = MenusInitial.map((menu) => ({
             ...menu, // Spread all the other properties of the menu
             createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists
-          })).filter((item) => LOAN_OFFICER.includes(item.title));
+          })).filter((item) => ROLE_LOAN_OFFICER.includes(item.title));
           break;
 
-        case "CREDIT_OFFICER":
+        case "ROLE_CREDIT_OFFICER":
           state.menus = MenusInitial.filter((item) =>
-            LOAN_OFFICER.includes(item.title)
+            ROLE_LOAN_OFFICER.includes(item.title)
           );
           break;
 
-        case "CCO_AND_FINTECH_OFFICER":
+        case "ROLE_CCO_AND_FINTECH_OFFICER":
           state.menus = MenusInitial;
           break;
 
-        case "CHIEF_EXECUTIVE_OFFICER":
-        case "MANAGEMENT_CREDIT_COMMITTEE":
-        case "BOARD":
+        case "ROLE_CHIEF_EXECUTIVE_OFFICER":
+        case "ROLE_MANAGEMENT_CREDIT_COMMITTEE":
+        case "ROLE_BOARD":
           state.menus = MenusInitial.map((menu) => ({
             ...menu, // Spread all the other properties of the menu
             createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists

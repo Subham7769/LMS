@@ -225,24 +225,24 @@ export const MenusInitial = [
     isOpen: false,
     uniqueKey: "creditScoreEtTempId",
   },
-  {
-    title: "Blocked Employer",
-    sectionName: "LOAN MANAGEMENT",
-    href: "/loan/blocked-employer",
-    icon: "NoSymbolIcon",
-    current: false,
-    submenu: true,
-    createButton: true, //if create RAC from Side bar Using input box
-    editable: true, //if Button takes input string
-    createFunction: "createNewBE",
-    buttonName: "Create BE", //Create button text
-    placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/blocked-employer/", // navigation
-    navigateFail: "/login", // navigation
-    submenuItems: [],
-    isOpen: false,
-    uniqueKey: "blockEmployersTempId",
-  },
+  // {
+  //   title: "Blocked Employer",
+  //   sectionName: "LOAN MANAGEMENT",
+  //   href: "/loan/blocked-employer",
+  //   icon: "NoSymbolIcon",
+  //   current: false,
+  //   submenu: true,
+  //   createButton: true, //if create RAC from Side bar Using input box
+  //   editable: true, //if Button takes input string
+  //   createFunction: "createNewBE",
+  //   buttonName: "Create BE", //Create button text
+  //   placeholder: "Enter Name", //required placeholder for input box
+  //   navigateSuccess: "/loan/blocked-employer/", // navigation
+  //   navigateFail: "/login", // navigation
+  //   submenuItems: [],
+  //   isOpen: false,
+  //   uniqueKey: "blockEmployersTempId",
+  // },
   {
     title: "Product Group",
     sectionName: "LOAN MANAGEMENT",
