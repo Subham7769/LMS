@@ -73,6 +73,7 @@ const ExpandableTable = ({
                         closed: "bg-gray-100 text-gray-800",
                         frozen: "bg-blue-100 text-blue-800",
                         cancel: "bg-red-100 text-red-800",
+                        unpaid: "bg-yellow-100 text-yellow-800",
                       };
 
                       // Default class for unknown statuses

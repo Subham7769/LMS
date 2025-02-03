@@ -83,6 +83,24 @@ export const fetchRecoveryData = createAsyncThunk(
   }
 );
 
+export const fetchAffordibilityData = createAsyncThunk(
+  "fetchAffordibilityData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_AFFORDABILITY_READ_ALL_CRITERIA}`;
+    const transformData = (data) => {
+      return data.map(({ name, affordabilityCriteriaTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/loan/affordability/" + affordabilityCriteriaTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchTCLData = createAsyncThunk(
   "fetchTCLData",
   async (_, { rejectWithValue }) => {
@@ -301,6 +319,7 @@ const ROLE_CREDITOR_ADMIN = [
   "Home",
   "RAC",
   "Recovery",
+  "Affordability",
   "TCL",
   "Project",
   "Loan Product",
@@ -320,6 +339,7 @@ const ROLE_MAKER_ADMIN = [
   "Home",
   "RAC",
   "Recovery",
+  "Affordability",
   "TCL",
   "Project",
   "Loan Product",
@@ -337,6 +357,7 @@ const ROLE_CHECKER_ADMIN = [
   "Home",
   "RAC",
   "Recovery",
+  "Affordability",
   "TCL",
   "Project",
   "Loan Product",
@@ -353,8 +374,8 @@ const ROLE_CHECKER_ADMIN = [
 const ROLE_TECHNICAL = ["Customer Care", "Product Testing", "General Ledger"];
 const ROLE_VIEWER = [
   "Home",
-  "RAC",
   "Recovery",
+  "Affordability",
   "TCL",
   "Project",
   "Loan Product",
@@ -366,11 +387,33 @@ const ROLE_VIEWER = [
   "Product Group",
   "Business Rule",
   "Global Config",
+  "Server Config",
   "Customer Care",
   "General Ledger",
   "Dynamic RAC",
   "Reporting Config",
   "Reports",
+];
+
+const ROLE_LOAN_OFFICER = [
+  "Home",
+  "Recovery",
+  "Affordability",
+  "TCL",
+  "Project",
+  "Loan Product",
+  "Eligible Tenure",
+  "DBR Config",
+  "Blocked Employer",
+  "Credit Score",
+  "Rule Policy",
+  "Product Group",
+  "Customer Care",
+  "Dynamic RAC",
+  "Reporting Config",
+  "Reports",
+  "SME Loans",
+  "Personal Loans",
 ];
 
 const initialState = {
@@ -458,6 +501,32 @@ const sidebarSlice = createSlice({
           state.menus = MenusInitial.filter((item) =>
             ROLE_CHECKER_ADMIN.includes(item.title)
           );
+          break;
+
+        case "ROLE_LOAN_OFFICER":
+          state.menus = MenusInitial.map((menu) => ({
+            ...menu, // Spread all the other properties of the menu
+            createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists
+          })).filter((item) => ROLE_LOAN_OFFICER.includes(item.title));
+          break;
+
+        case "ROLE_CREDIT_OFFICER":
+          state.menus = MenusInitial.filter((item) =>
+            ROLE_LOAN_OFFICER.includes(item.title)
+          );
+          break;
+
+        case "ROLE_CCO_AND_FINTECH_OFFICER":
+          state.menus = MenusInitial;
+          break;
+
+        case "ROLE_CHIEF_EXECUTIVE_OFFICER":
+        case "ROLE_MANAGEMENT_CREDIT_COMMITTEE":
+        case "ROLE_BOARD":
+          state.menus = MenusInitial.map((menu) => ({
+            ...menu, // Spread all the other properties of the menu
+            createButton: menu.createButton ? false : menu.createButton, // Set createButton to false if it exists
+          }));
           break;
 
         default:
@@ -673,6 +742,27 @@ const sidebarSlice = createSlice({
         state.menus = updatedMenus;
       })
       .addCase(fetchRecoveryData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
+      })
+
+      .addCase(fetchAffordibilityData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAffordibilityData.fulfilled, (state, action) => {
+        state.loading = false;
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "Affordability") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+      })
+      .addCase(fetchAffordibilityData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         toast.error(`API Error : ${action.error.message}`);

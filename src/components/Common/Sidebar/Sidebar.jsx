@@ -15,6 +15,7 @@ import {
   fetchTCLData,
   fetchProdGroupData,
   fetchRecoveryData,
+  fetchAffordibilityData,
   fetchCreditScoreEligibleTenureData,
   fetchDynamicRacData,
   fetchReportingConfigData,
@@ -23,6 +24,7 @@ import {
 import {
   RectangleGroupIcon,
   ArrowPathRoundedSquareIcon,
+  HandThumbUpIcon,
   ChartPieIcon,
   CubeIcon,
   CurrencyRupeeIcon,
@@ -52,6 +54,7 @@ import { createNewRac } from "../../../utils/createNewRac";
 import { createNewProduct } from "../../../utils/createNewProduct";
 import { createNewProject } from "../../../utils/createNewProject";
 import { createNewRecovery } from "../../../utils/createNewRecovery";
+import { createNewAffordability } from "../../../utils/createNewAffordability";
 import { createNewProductGroup } from "../../../utils/createNewProductGroup";
 import { createNewDBC } from "../../../utils/createNewDBC";
 import { createNewBE } from "../../../utils/createNewBE";
@@ -73,6 +76,7 @@ const SideBar = () => {
     HomeIcon,
     ClipboardDocumentCheckIcon,
     ArrowPathRoundedSquareIcon,
+    HandThumbUpIcon,
     CurrencyRupeeIcon,
     ChartPieIcon,
     CubeIcon,
@@ -102,6 +106,7 @@ const SideBar = () => {
     createNewProduct,
     createNewProject,
     createNewRecovery,
+    createNewAffordability,
     createNewProductGroup,
     createNewDBC,
     createNewBE,
@@ -131,6 +136,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -147,6 +153,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -166,6 +173,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -193,6 +201,7 @@ const SideBar = () => {
         dispatch(fetchRulePolicyData());
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         break;
@@ -207,8 +216,30 @@ const SideBar = () => {
         dispatch(fetchRulePolicyData());
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
+        break;
+
+      case "ROLE_LOAN_OFFICER":
+      case "ROLE_CREDIT_OFFICER":
+      case "ROLE_CCO_AND_FINTECH_OFFICER":
+      case "ROLE_CHIEF_EXECUTIVE_OFFICER":
+      case "ROLE_MANAGEMENT_CREDIT_COMMITTEE":
+      case "ROLE_BOARD":
+        dispatch(fetchDBRData());
+        dispatch(fetchBEData());
+        dispatch(fetchProjectData());
+        dispatch(fetchProductData());
+        dispatch(fetchCreditScoreEqData());
+        dispatch(fetchRulePolicyData());
+        dispatch(fetchTCLData());
+        dispatch(fetchProdGroupData());
+        dispatch(fetchRecoveryData());
+        dispatch(fetchAffordibilityData());
+        dispatch(fetchCreditScoreEligibleTenureData());
+        dispatch(fetchDynamicRacData());
+        dispatch(fetchReportingConfigData());
         break;
 
       default:

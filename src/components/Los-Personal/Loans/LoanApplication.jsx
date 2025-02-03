@@ -21,6 +21,7 @@ import {
   deleteLoanOffers,
 } from "../../../redux/Slices/personalLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -39,7 +40,8 @@ const LoanApplication = () => {
   const navigate = useNavigate();
   const { loanApplications, loading, loanApplicationsTotalElements } =
     useSelector((state) => state.personalLoans);
-
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
 
   const dispatcherFunction = (currentPage, pageSize) => {
@@ -135,11 +137,13 @@ const LoanApplication = () => {
         <div></div>
         <div></div>
         <div className="flex justify-end gap-2 h-12">
-          <HoverButton
-            icon={PlusIcon}
-            text="New Application"
-            onClick={handleNewApplication}
-          />
+          {!hasViewOnlyAccessGroup3(roleName) && (
+            <HoverButton
+              icon={PlusIcon}
+              text="New Application"
+              onClick={handleNewApplication}
+            />
+          )}
         </div>
       </div>
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>

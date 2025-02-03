@@ -16,6 +16,7 @@ import {
 import { fetchReportingConfigData } from "../../redux/Slices/sidebarSlice";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import store from "../../redux/store";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const CreateNewReportingConfig = () => {
   const { RCName } = useParams();
@@ -24,6 +25,8 @@ const CreateNewReportingConfig = () => {
   const { reportingConfigData, loading, error } = useSelector(
     (state) => state.reportingConfig
   );
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     dispatch(fetchReportingConfig(RCName));
@@ -115,13 +118,15 @@ const CreateNewReportingConfig = () => {
           />
         </div>
 
-        <div className="flex gap-4 justify-end items-center">
-          <Button
-            buttonName={"Update"}
-            rectangle={true}
-            onClick={handleUpdateReportingConfig}
-          />
-        </div>
+        {!hasViewOnlyAccessGroup2(roleName) && (
+          <div className="flex gap-4 justify-end items-center">
+            <Button
+              buttonName={"Update"}
+              rectangle={true}
+              onClick={handleUpdateReportingConfig}
+            />
+          </div>
+        )}
       </ContainerTile>
     </>
   );

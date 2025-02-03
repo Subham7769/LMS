@@ -26,6 +26,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const MinimumExpense = () => {
   const dispatch = useDispatch();
@@ -96,7 +97,7 @@ const MinimumExpense = () => {
         </b>
       </h2>
       <div className="flex flex-col gap-5">
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccessGroup2(roleName) ? (
           <ContainerTile
             loading={loading}
             // error={error}
@@ -205,7 +206,7 @@ const MinimumExpense = () => {
                 isValidation={true}
                 isIndex={expenseData.dataIndex}
               />
-              {roleName !== "ROLE_VIEWER" ? (
+              {!hasViewOnlyAccessGroup2(roleName) ? (
                 <div className="flex items-center gap-4">
                   <Button
                     buttonIcon={CheckCircleIcon}

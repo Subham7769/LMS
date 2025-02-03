@@ -17,6 +17,7 @@ import {
 import ListTable from "../Common/ListTable/ListTable";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
   const { rulePolicyId } = useParams();
@@ -91,36 +92,34 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
     }
   };
 
-  const ActionList =
-    roleName !== "ROLE_VIEWER"
-      ? [
-          {
-            icon: PencilIcon,
-            circle: true,
-            action: handleUpdate,
-          },
-          {
-            icon: TrashIcon,
-            circle: true,
-            action: handleDelete,
-          },
-        ]
-      : [];
+  const ActionList = !hasViewOnlyAccess(roleName)
+    ? [
+        {
+          icon: PencilIcon,
+          circle: true,
+          action: handleUpdate,
+        },
+        {
+          icon: TrashIcon,
+          circle: true,
+          action: handleDelete,
+        },
+      ]
+    : [];
 
   const tableDataWithoutId = inputList.map(
     ({ ruleName, rulePolicyTempId, fieldType, ...rest }) => rest
   );
 
-  const MaxFinAmtHeaderList =
-    roleName !== "ROLE_VIEWER"
-      ? ["Finance Amount", "tenure", "Actions"] // Show "Actions" for non-viewers
-      : ["Finance Amount", "tenure"];
+  const MaxFinAmtHeaderList = !hasViewOnlyAccess(roleName)
+    ? ["Finance Amount", "tenure", "Actions"] // Show "Actions" for non-viewers
+    : ["Finance Amount", "tenure"];
 
   return (
     <>
       <ContainerTile loading={loading} error={error}>
         <div className="text-lg mb-5">Max Finance Amount With Tenure</div>
-        {roleName !== "ROLE_VIEWER" ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <div className="grid grid-cols-3 gap-5 items-end">
             <InputNumber
               labelName={"Amount"}

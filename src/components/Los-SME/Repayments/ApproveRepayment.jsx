@@ -110,7 +110,7 @@ const ApproveRepayment = () => {
       <div className="grid grid-cols-3 gap-4">
         <CardInfo
           cardTitle="Payment Details"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={CurrencyDollarIcon}
           color={"blue"}
         >
@@ -140,7 +140,7 @@ const ApproveRepayment = () => {
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Due Date</div>
-            <div className="font-semibold">{rowData.dueDate}</div>
+            <div className="font-semibold">{convertDate(rowData.dueDate)}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Status</div>
@@ -151,7 +151,7 @@ const ApproveRepayment = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Borrower Profile"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={UserIcon}
           color={"blue"}
         >
@@ -174,15 +174,15 @@ const ApproveRepayment = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Recent Payments"
-          className={"bg-white"}
+          className={"bg-white border-gray-300 border"}
           cardIcon={ClockIcon}
           color={"blue"}
         >
-          {rowData.paymentsData.map((payment) => (
+          {rowData.paymentsData.slice(-3).map((payment) => (
             <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
               <div>
                 <div className="text-black font-semibold">
-                  {payment.paymentDate}
+                  {convertDate(payment.paymentDate)}
                 </div>
                 <div className="font-light">{payment.paymentType}</div>
               </div>

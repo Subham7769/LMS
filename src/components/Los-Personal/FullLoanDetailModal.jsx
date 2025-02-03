@@ -40,6 +40,11 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
     { label: "Status", field: "status" },
   ];
 
+  const today = new Date();
+  const nextDueDate = loanDetails?.installments?.find(
+    (installment) => new Date(installment.installmentDate) > today
+  )?.installmentDate;
+
   const dataWithEmiNo = loanDetails?.installments?.map((item, index) => ({
     ...item,
     emiNo: index + 1,
@@ -71,7 +76,7 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
             EMI Schedule Details
           </div>
           <div className="grid grid-cols-3 gap-5 my-3 shadow bg-gray-100 rounded-lg py-3 px-5 text-sm">
-            <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
+            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-gray-300">
               <div>Loan Id</div>
               <div className="font-bold text-black flex w-[120px] items-center">
                 : <span className="mr-2">{""}</span>
@@ -106,7 +111,7 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                 {loanDetails.carbonLoanStatus}
               </div>
             </div>
-            <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
+            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-gray-300">
               <div>Remaining Principal</div>
               <div className="font-bold text-black">
                 : <span className="mr-2">{""}</span>
@@ -123,7 +128,7 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                 {loanDetails.xcClosingAmount}
               </div>
             </div>
-            <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300">
+            <div className="grid grid-cols-[auto,1fr] gap-2">
               <div>Total Outstanding</div>
               <div className="font-bold text-black">
                 : <span className="mr-2">{""}</span>
@@ -133,6 +138,11 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
               <div className="font-bold text-black">
                 : <span className="mr-2">{""}</span>
                 {convertDate(loanDetails.submitDate)}
+              </div>
+              <div>Due Date</div>
+              <div className="font-bold text-black">
+                : <span className="mr-2">{""}</span>
+                {convertDate(nextDueDate)}
               </div>
             </div>
           </div>

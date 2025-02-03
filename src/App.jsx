@@ -57,6 +57,15 @@ const RecoveryConfig = lazy(() =>
   import("./components/Recovery/RecoveryConfig")
 );
 
+// Affordibility Imports
+const AffordabilityPage = lazy(() => import("./pages/AffordabilityPage"));
+const Affordability = lazy(() =>
+  import("./components/Affordability/Affordability")
+);
+
+// Employer Imports
+const Employer = lazy(() => import("./components/Employer/Employer"));
+
 // TCL Imports
 const TclPage = lazy(() => import("./pages/TclPage"));
 const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
@@ -457,6 +466,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "affordability",
+        element: <AffordabilityPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "tcl",
         element: <TclPage />,
         errorElement: <RouteErrorBoundary />,
@@ -598,6 +612,16 @@ const routes = [
       {
         path: "product-group/:configId",
         element: <ProductGroup />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "affordability/:affordabilityCriteriaTempId",
+        element: <Affordability />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "employer",
+        element: <Employer />,
         errorElement: <RouteErrorBoundary />,
       },
       {
