@@ -14,6 +14,7 @@ import {
   createClone,
   handleChangeAffordabilityData,
   updateOrPostData,
+  fetchData,
 } from "../../redux/Slices/affordabilitySlice";
 import { fetchAffordibilityData } from "../../redux/Slices/sidebarSlice";
 import {
@@ -34,9 +35,30 @@ const Affordability = () => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
 
+  const incomeOnPaySlipFields = {
+    actingAllowance: "",
+    basicPay: "",
+    doubleClassAllowance: "",
+    healthShiftAllowance: "",
+    housingAllowance: "",
+    infectiousHealthRisk: "",
+    interfaceAllowance: "",
+    otherAllowances: "",
+    responsibilityAllowance: "",
+    ruralRemoteHardshipAllowance: "",
+    transportAllowance: "",
+  };
+
+  const deductionsOnPaySlipFields = {
+    napsa: "",
+    payee: "",
+    totalOtherDeductions: "",
+    unionContribution: "",
+  };
+
   useEffect(() => {
     dispatch(fetchName(affordabilityCriteriaTempId));
-    // dispatch(fetchData(affordabilityCriteriaTempId));
+    dispatch(fetchData(affordabilityCriteriaTempId));
     return () => {
       dispatch(clearValidationError());
     };
@@ -83,11 +105,14 @@ const Affordability = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      console.log(affordabilityData?.affordabilityCriteriaTempId ? true : false);
+      console.log(
+        affordabilityData?.affordabilityCriteriaRuleId ? true : false
+      );
+      console.log(affordabilityData)
       dispatch(
         updateOrPostData({
           formData: affordabilityData,
-          isUpdate: affordabilityData.affordabilityCriteriaTempId
+          isUpdate: affordabilityData.affordabilityCriteriaRuleId
             ? true
             : false,
         })
@@ -110,35 +135,50 @@ const Affordability = () => {
         onCreateClone={createCloneAffordability}
         initialName={itemName}
       />
-      <ContainerTile loading={loading}>
+      <ContainerTile className={"mb-5"} loading={loading}>
+        <div className="text-lg font-semibold mb-5">Income on Pay Slip</div>
         <div className="grid grid-cols-4 gap-4">
-          {Object.keys(affordabilityData)
-            .filter((key) => key !== "affordabilityCriteriaTempId")
-            .map((key) => (
-              <div key={key}>
-                <InputText
-                  labelName={convertToReadableString(key)}
-                  inputName={key}
-                  inputValue={affordabilityData[key]}
-                  onChange={handleChange}
-                  placeHolder="10%"
-                />
-              </div>
-            ))}
+          {Object.keys(incomeOnPaySlipFields).map((key) => (
+            <div key={key}>
+              <InputText
+                labelName={convertToReadableString(key)}
+                inputName={key}
+                inputValue={affordabilityData[key]}
+                onChange={handleChange}
+                placeHolder="10%"
+              />
+            </div>
+          ))}
         </div>
-        {roleName !== "ROLE_VIEWER" ? (
-          <div className="text-right mt-5">
-            <Button
-              buttonIcon={CheckCircleIcon}
-              buttonName={"Update"}
-              onClick={handleUpdate}
-              rectangle={true}
-            />
-          </div>
-        ) : (
-          ""
-        )}
       </ContainerTile>
+      <ContainerTile loading={loading}>
+        <div className="text-lg font-semibold mb-5">Deductions on Pay Slip</div>
+        <div className="grid grid-cols-4 gap-4">
+          {Object.keys(deductionsOnPaySlipFields).map((key) => (
+            <div key={key}>
+              <InputText
+                labelName={convertToReadableString(key)}
+                inputName={key}
+                inputValue={affordabilityData[key]}
+                onChange={handleChange}
+                placeHolder="10%"
+              />
+            </div>
+          ))}
+        </div>
+      </ContainerTile>
+      {roleName !== "ROLE_VIEWER" ? (
+        <div className="text-right mt-5">
+          <Button
+            buttonIcon={CheckCircleIcon}
+            buttonName={"Update"}
+            onClick={handleUpdate}
+            rectangle={true}
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 };

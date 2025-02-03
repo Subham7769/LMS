@@ -13,9 +13,10 @@ const InputTextMulti = ({
   setTag,
   sectionId,
   dynamicRacRuleId,
-  disabled,
+  disabled = false,
   isValidation,
 }) => {
+  const [included, setIncluded] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -34,8 +35,15 @@ const InputTextMulti = ({
       if (trimmedValue && !tag.includes(trimmedValue)) {
         setTag([...tag, trimmedValue]); // Add new tag if it's valid
         setInputValue(""); // Reset input value after adding tag
+      } else {
+        setIncluded(true);
       }
     }
+  };
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+    setIncluded(false)
   };
 
   if (isValidation) {
@@ -54,22 +62,29 @@ const InputTextMulti = ({
   return (
     <div className="w-full">
       <label
-        className={`block ${
+        className={`block relative ${
           validationError[validationKey] ? "text-red-600" : "text-gray-700"
         } px-1 text-sm font-semibold`}
       >
         {validationError[validationKey] ? "Field required" : label}
+        <span
+          className={
+            "absolute right-1 -bottom-7 text-xs text-red-500 font-light"
+          }
+        >
+          {included && "Value already included"}
+        </span>
       </label>
 
-      <div className="border gap-2 border-gray-300 rounded-md flex flex-col flex-wrap items-between">
+      <div className=" gap-2 border-gray-300 rounded-md flex flex-col flex-wrap items-between">
         <input
           type="text"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={handleChange}
           onKeyDown={handleAddTag} // Handle key down events
           onFocus={() => dispatch(setValidationError(validationKey))}
           placeholder="Type and press Enter"
-          className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
+          className={`block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
           ${
             validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"

@@ -196,3 +196,12 @@ export const interestMethodOptions = [
   { label: "FLAT", value: "FLAT" },
   { label: "REDUCING", value: "REDUCING" },
 ];
+
+export const conditionsOptions = [
+  { label: "Less than", value: "Less than" },
+  { label: "Less than or equal to", value: "Less than or equal to" },
+  { label: "Between", value: "Between" },
+  { label: "Equal to", value: "Equal to" },
+  { label: "Greater than", value: "Greater than" },
+  { label: "Greater than or equal to", value: "Greater than or equal to" },
+];

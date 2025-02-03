@@ -39,8 +39,8 @@ const Notifications = lazy(() =>
 const UploadLogo = lazy(() => import("./components/UploadLogo/UploadLogo"));
 
 // *************************************TEST******************************************************
-const TestComponent1 = lazy(() =>
-  import("./components/TestComponent/Los/ApproveRepaymentTest")
+const TestComponent = lazy(() =>
+  import("./components/TestComponent/TestComponent")
 );
 
 // *************************************TEST******************************************************
@@ -62,6 +62,9 @@ const AffordabilityPage = lazy(() => import("./pages/AffordabilityPage"));
 const Affordability = lazy(() =>
   import("./components/Affordability/Affordability")
 );
+
+// Employer Imports
+const Employer = lazy(() => import("./components/Employer/Employer"));
 
 // TCL Imports
 const TclPage = lazy(() => import("./pages/TclPage"));
@@ -550,8 +553,8 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "test1",
-        element: <TestComponent1 />,
+        path: "TestComponent",
+        element: <TestComponent />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -569,11 +572,6 @@ const routes = [
       {
         path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "affordability/:affordabilityCriteriaTempId",
-        element: <Affordability />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -614,6 +612,16 @@ const routes = [
       {
         path: "product-group/:configId",
         element: <ProductGroup />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "affordability/:affordabilityCriteriaTempId",
+        element: <Affordability />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "employer",
+        element: <Employer />,
         errorElement: <RouteErrorBoundary />,
       },
       {

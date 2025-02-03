@@ -118,10 +118,10 @@ export const updateOrPostData = createAsyncThunk(
   async ({ formData, isUpdate }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = isUpdate
-      ? `${import.meta.env.VITE_RECOVERY_UPDATE}${
-          formData.affordabilityCriteriaTempId
+      ? `${import.meta.env.VITE_AFFORDABILITY_UPDATE}${
+          formData.affordabilityCriteriaRuleId
         }`
-      : import.meta.env.VITE_RECOVERY_CREATE_CREATE_DATA;
+      : import.meta.env.VITE_AFFORDABILITY_CREATE_NEW_CRITERIA;
     const method = isUpdate ? "PUT" : "POST";
 
     try {
@@ -151,7 +151,9 @@ export const fetchData = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_AFFORDABILITY_READ}${affordabilityCriteriaTempId}`,
+        `${
+          import.meta.env.VITE_AFFORDABILITY_READ
+        }${affordabilityCriteriaTempId}`,
         {
           method: "GET",
           headers: {
@@ -319,32 +321,26 @@ const affordabilitySlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchData.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload[0] != null) {
+          state.affordabilityData = action.payload[0];
+        } else {
+          state.affordabilityData = {
+            ...affordabilityInitialState.affordabilityData,
+            affordabilityCriteriaTempId: action.meta.arg,
+          };
+        }
+      })
+      .addCase(fetchData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
-    // .addCase(fetchData.pending, (state) => {
-    //   state.loading = true;
-    // })
-    // .addCase(fetchData.fulfilled, (state, action) => {
-    //   state.loading = false;
-    //   if (action.payload[0] != null) {
-    //     state.data = action.payload[0];
-    //   } else {
-    //     state.data = {
-    //       id: "",
-    //       recoveryEquationId: "",
-    //       affordabilityCriteriaTempId: action.meta.arg, // Assuming affordabilityCriteriaTempId is passed as an argument
-    //       tenure: "",
-    //       tenureType: "",
-    //       recoveryEquation: "",
-    //     };
-    //     console.log(state.data);
-    //   }
-    // })
-    // .addCase(fetchData.rejected, (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload;
-    //   toast.error(`API Error : ${action.payload}`);
-    // })
-
   },
 });
 
