@@ -11,6 +11,9 @@ import {
   PencilSquareIcon,
   ViewfinderCircleIcon,
   ArrowDownOnSquareIcon,
+  DocumentDuplicateIcon,
+  EllipsisVerticalIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
@@ -49,7 +52,9 @@ const DynamicRAC = () => {
   const [isEditorMode, setIsEditorMode] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
+  const [showRuleModal, setRuleModal] = useState(false);
   const [newSize, setNewSize] = useState("");
+  const [selectedSectionId, setSelectedSectionId] = useState(null);
   const { racConfig, loading, error } = useSelector(
     (state) => state.dynamicRac
   );
@@ -272,6 +277,38 @@ const DynamicRAC = () => {
     dispatch(addSection());
     toast("Section Added successfully");
   };
+  const handleAddRule = (sectionId) => {
+    setSelectedSectionId(sectionId); // Update sectionId first
+    setTimeout(() => setRuleModal(true), 0); // Open modal after state updates
+  };
+
+  const ViewRuleModal = ({ isOpen, onClose, sectionId }) => {
+    if (!isOpen) return null;
+
+    return (
+      <>
+        <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
+          <div className="relative w-[50%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
+            <div
+              className={
+                "sticky bg-white z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
+              }
+            >
+              <p className={"font-semibold text-2xl"}>Add New Rule</p>
+              <XMarkIcon
+                onClick={onClose}
+                className=" h-8 w-8 text-gray-500 rounded-full cursor-pointer"
+              />
+            </div>
+            <Toolbox
+              sectionId={sectionId}
+              onClose={() => setRuleModal(false)}
+            />
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className="relative">
@@ -312,29 +349,13 @@ const DynamicRAC = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center w-full">
+          <div className="flex justify-between gap-2  items-center w-full">
             <div className="flex-1 flex items-center justify-between mr-5">
               <DynamicName
                 initialName={name}
                 onSave={(newName) => handleUpdateName(racId, newName)}
                 editable={roleName !== "ROLE_VIEWER"}
               />
-              {roleName !== "ROLE_VIEWER" ? (
-                <div className="flex gap-4">
-                  <Button
-                    buttonName={"Clone"}
-                    onClick={handleClone}
-                    rectangle={true}
-                  />
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => handleDelete(racId)}
-                    circle={true}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
             </div>
             <CloneModal
               isOpen={isModalOpen}
@@ -342,7 +363,16 @@ const DynamicRAC = () => {
               onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
               initialName={name}
             />
-
+            <div>
+              {!sections.length < 1 && (
+                <Button
+                  buttonIcon={PlusIcon}
+                  buttonName="Add Section"
+                  rectangle={true}
+                  onClick={() => handleAddSection()}
+                />
+              )}
+            </div>
             <div className="flex justify-center items-center">
               <label className="flex items-center cursor-pointer">
                 <input
@@ -366,15 +396,8 @@ const DynamicRAC = () => {
           </div>
           <div className="flex justify-between items-center">
             {isEditorMode && roleName !== "ROLE_VIEWER" && (
-              <div className="flex justify-between gap-5 w-full">
-                <div className="flex gap-2">
-                  <HoverButton
-                    icon={PlusIcon}
-                    text="Add Section"
-                    color="green" // Automatically sets hover and background colors
-                    onClick={() => handleAddSection()}
-                  />
-                </div>
+              <div className="flex justify-between gap-5 w-full  border-b-2 pb-5">
+                <div className="flex gap-2"></div>
                 <div className="flex gap-2 items-end">
                   <HoverButton
                     icon={ArrowDownOnSquareIcon}
@@ -395,16 +418,28 @@ const DynamicRAC = () => {
                     style={{ display: "none" }}
                     onChange={handleUploadConfig}
                   />
+                  {roleName !== "ROLE_VIEWER" ? (
+                    <div className="flex gap-4">
+                      <HoverButton
+                        text={"Clone"}
+                        icon={DocumentDuplicateIcon}
+                        onClick={handleClone}
+                      />
+                      <div className="rounded-full border text-red-500 border-red-500 p-2 hover:bg-red-500 hover:text-white hover:cursor-pointer">
+                        <TrashIcon className="h-5 w-5" onClick={() => handleDelete(racId)}/>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             )}
           </div>
           <div
-            className={`flex items-start ${
-              isEditorMode ? " max-h-[550px]" : "max-h-screen"
-            }`}
+            className={`flex items-start "max-h-screen"`}
           >
-            {isEditorMode && roleName !== "ROLE_VIEWER" && <Toolbox />}
+            {/* {isEditorMode && roleName !== "ROLE_VIEWER" && <Toolbox />} */}
             <div
               className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${
                 isEditorMode ? " max-h-[550px]" : "max-h-screen"
@@ -412,6 +447,45 @@ const DynamicRAC = () => {
             >
               <DragDropContext onDragEnd={onDragEnd}>
                 <div className="flex flex-col justify-center gap-3">
+                  {/* Add first Section */}
+                  {sections.length < 1 && (
+                    <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
+                      <div className="bg-blue-50 rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
+                        <span className="font-bold text-3xl text-blue-500">
+                          +
+                        </span>
+                      </div>
+                      <h2 className="font-semibold">Create New Rac</h2>
+                      <p className="flex flex-col items-center text-gray-500">
+                        <span>
+                          Start by adding sections to your Risk Assessment
+                          Criteria. You{" "}
+                        </span>
+                        <span>
+                          can also use an existing template as a starting point
+                        </span>
+                      </p>
+                      <div className="flex gap-5">
+                        <Button
+                          buttonIcon={PlusIcon}
+                          buttonName="Add First Section"
+                          rectangle={true}
+                          onClick={() => handleAddSection()}
+                        />
+                        <HoverButton
+                          icon={ArrowUpOnSquareIcon}
+                          text="Use Template"
+                          onClick={() => {}}
+                          // onClick={() => fileInputRef.current.click()}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <ViewRuleModal
+                    isOpen={showRuleModal}
+                    onClose={() => setRuleModal(false)}
+                    sectionId={selectedSectionId}
+                  />
                   {sections?.map((section) => (
                     <Droppable
                       key={section.sectionId}
@@ -421,7 +495,7 @@ const DynamicRAC = () => {
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className={`shadow-md border-gray-300 border rounded-xl p-5 ${
+                          className={`shadow-md border-gray-300 border rounded-xl overflow-hidden ${
                             section.size === "full"
                               ? "col-span-3"
                               : section.size === "half"
@@ -429,25 +503,40 @@ const DynamicRAC = () => {
                               : "col-span-1"
                           }`}
                         >
-                          <div className="flex justify-between items-center mb-2">
-                            <DynamicName
-                              initialName={section.sectionName}
-                              editable={roleName !== "ROLE_VIEWER"}
-                              onSave={(name) =>
-                                dispatch(
-                                  updateSection({
-                                    sectionId: section.sectionId,
-                                    name,
-                                  })
-                                )
-                              }
-                            />
+                          <div className="flex justify-between items-center p-5 bg-white">
+                            <div className="flex justify-center align-middle">
+                              <EllipsisVerticalIcon className="h-7 text-gray-500 " />
+                              <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
+                              <DynamicName
+                                initialName={section.sectionName}
+                                editable={roleName !== "ROLE_VIEWER"}
+                                onSave={(name) =>
+                                  dispatch(
+                                    updateSection({
+                                      sectionId: section.sectionId,
+                                      name,
+                                    })
+                                  )
+                                }
+                              />
+                            </div>
                             {isEditorMode && roleName !== "ROLE_VIEWER" && (
-                              <div className="flex justify-between items-center gap-2">
+                              <div className="flex justify-between items-center gap-5">
+                                <div
+                                  className={"flex text-blue-500"}
+                                  onClick={() =>
+                                    handleAddRule(section.sectionId)
+                                  }
+                                >
+                                  <PlusIcon className="h-5 w-5" />
+                                  <p>Add Rule</p>
+                                </div>
+
                                 {/* <Cog6ToothIcon
                                   onClick={() =>handleSectionSettings({sectionId: section.sectionId})}
                                   className="h-5 w-5 hover:text-indigo-500"
                                 /> */}
+
                                 <TrashIcon
                                   onClick={() =>
                                     handleDeleteSection({
@@ -461,6 +550,31 @@ const DynamicRAC = () => {
                             )}
                           </div>
 
+                          {section?.rules.length < 1 && (
+                            <div className="bg-gray-100 flex justify-center flex-col items-center p-5 gap-3">
+                              <div className="rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
+                                <span className="font-bold text-3xl text-gray-500">
+                                  +
+                                </span>
+                              </div>
+                              <p className="flex flex-col items-center text-gray-500">
+                                <span>
+                                  Click to add criteria to this section
+                                </span>
+                              </p>
+                              <div className="flex gap-5">
+                                <HoverButton
+                                  icon={PlusIcon}
+                                  text="Add Criteria"
+                                  onClick={() =>
+                                    handleAddRule(section.sectionId)
+                                  }
+                                  // onClick={() => fileInputRef.current.click()}
+                                />
+                              </div>
+                            </div>
+                          )}
+
                           {section?.rules?.map((rule, index) => (
                             <Draggable
                               key={rule.dynamicRacRuleId}
@@ -473,7 +587,7 @@ const DynamicRAC = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="mb-4"
+                                  className="mb-4 px-5"
                                 >
                                   <RuleComponent
                                     rule={rule}

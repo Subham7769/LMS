@@ -152,7 +152,7 @@ export const deleteRuleById = createAsyncThunk(
 
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_DYNAMIC_RAC_DELETE_RULE}${dynamicRacRuleId}`,
+        `${import.meta.env.VITE_DYNAMIC_RAC_DELETE_RULE}/${dynamicRacRuleId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
