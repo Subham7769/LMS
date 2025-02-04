@@ -1,7 +1,7 @@
 import React from "react";
 import formatNumber from "../../../utils/formatNumber";
 
-const KeyStatements = ({ loanDetails }) => {
+const KeyStatements = ({ keyFactStatements, upfrontFees }) => {
   return (
     <div className="flex flex-col justify-center align-middle gap-5 m-10">
       <div className="text-xl font-semibold text-center">
@@ -13,42 +13,302 @@ const KeyStatements = ({ loanDetails }) => {
           *You have the right to get a copy of the full loan agreement.*
         </div>
       </div>
-      <table>
-        <tr>
-          <td colSpan={6}>SECTION I: KEY TERMS </td>
+
+      {/* Section 1 Key Term */}
+      <table className="w-full border border-gray-300 border-collapse">
+        <tr className="border border-gray-300">
+          <td
+            colSpan={6}
+            className="border border-gray-300 p-2 text-center font-semibold"
+          >
+            SECTION I: KEY TERMS
+          </td>
         </tr>
-        <tr>
-          <td colSpan={2}>LOAN SUMMARY</td>
-          <td colSpan={2}>COST OF CREDIT</td>
-          <td colSpan={2}>REPAYMENT SCHEDULE</td>
+        <tr className="border border-gray-300 text-center font-semibold">
+          <td colSpan={2} className="border border-gray-300 p-2">
+            LOAN SUMMARY
+          </td>
+          <td colSpan={2} className="border border-gray-300 p-2">
+            COST OF CREDIT
+          </td>
+          <td colSpan={2} className="border border-gray-300 p-2">
+            REPAYMENT SCHEDULE
+          </td>
         </tr>
-        <tr>
-          <td rowSpan={2}>
+        <tr className="border border-gray-300">
+          <td rowSpan={2} className="border border-gray-300 p-2">
             <div className="font-semibold">1. Amount of Loan</div>
-            <div className="italic">Amount you are borrowing</div>
+            <div className="italic text-sm">Amount you are borrowing</div>
           </td>
-          <td rowSpan={2} className="font-semibold">
+          <td
+            rowSpan={2}
+            className="border border-gray-300 p-2 font-semibold text-center"
+          >
             <div>(ZMW)</div>
-            <div>{formatNumber(loanDetails.loanAmount)}</div>
+            <div>{formatNumber(keyFactStatements?.amountOfLoan)}</div>
           </td>
-          <td rowSpan={2}>
+          <td rowSpan={2} className="border border-gray-300 p-2">
             <div className="font-semibold">4. Interest</div>
-            <div className="italic">
+            <div className="italic text-sm">
               Interest you will be charged on the loan
             </div>
           </td>
-          <td rowSpan={2} className="font-semibold">
+          <td
+            rowSpan={2}
+            className="border border-gray-300 p-2 font-semibold text-center"
+          >
             <div>(ZMW)</div>
-            <div>{formatNumber(loanDetails.loanAmount)}</div>
+            <div>{formatNumber(keyFactStatements.interest)}</div>
           </td>
-          <td className="font-semibold">8. Date First Payment Due</td>
-          <td>{} 28 Jan 2025</td>
+          <td className="border border-gray-300 p-2 font-semibold">
+            8. Date First Payment Due
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {keyFactStatements?.dateFirstPaymentDue}
+          </td>
         </tr>
-        <tr>
-          <td className="font-semibold">9. Number of Payments</td>
-          <td>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2 font-semibold">
+            9. Number of Payments
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
             <div>(MONTHS)</div>
-            <div>10</div>
+            <div>{keyFactStatements?.numberOfPayment}</div>
+          </td>
+        </tr>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2 font-semibold">
+            2. Duration of Loan Agreement
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            <div>(MONTHS)</div>
+            <div>{keyFactStatements?.durationOfLoanAgreement}</div>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <div className="font-semibold">5. Other Fees and Charges</div>
+            <div className="italic text-sm">See details in Section IV</div>
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            <div>(ZMW)</div>
+            <div>{formatNumber(keyFactStatements?.otherFeesAndCharges)}</div>
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold">
+            10. Payment Frequency
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            {keyFactStatements?.paymentFrequency}
+          </td>
+        </tr>
+        <tr className="align-top">
+          <td className="border border-gray-300 p-2">
+            <div className="font-semibold">3. Amount Received</div>
+            <div className="italic text-sm my-2">
+              Amount you actually receive from the lender
+            </div>
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            <div>(ZMW)</div>
+            <div className="my-2">
+              {formatNumber(keyFactStatements?.amountReceived)}
+            </div>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <div className="font-semibold">6. Annual Percentage Rate</div>
+            <div className="italic text-sm my-2">
+              Total Cost of Credit as a comparable annual percentage
+            </div>
+            <div className="italic text-sm text-center">
+              {keyFactStatements?.annualPercentageRate}
+            </div>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <div className="font-semibold">7. Total Cost of Credit</div>
+            <div className="italic text-sm my-2">
+              All costs for the loan, including interest and fees
+            </div>
+            <div className="font-semibold text-center">(ZMW)</div>
+            <div className="font-semibold text-center">
+              {formatNumber(keyFactStatements?.totalCostOfCredit)}
+            </div>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <div className="font-semibold">11. Amount PER Payment</div>
+            <div className="italic text-sm my-2">
+              Includes capital, interest, and recurring fees{" "}
+            </div>
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            <div>(ZMW)</div>
+            <div className="my-2">
+              {formatNumber(keyFactStatements?.amountPerPayment)}
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div className="grid grid-cols-8">
+        <div className="col-span-2 border border-gray-300 p-2 grid gap-y-2">
+          <div className="font-semibold">1. Amount of Loan</div>
+          <div className="italic text-sm">Amount you are borrowing</div>
+          <div className="font-semibold">(ZMW)</div>
+          <div className="font-semibold">{keyFactStatements?.amountOfLoan}</div>
+        </div>
+        <div className="grid justify-center items-center text-5xl">+</div>
+        <div className="col-span-2 border border-gray-300 p-2 grid gap-y-2">
+          <div className="font-semibold">7. Total Cost of Credit</div>
+          <div className="italic text-sm">
+            All costs for the loan, including interest and fees
+          </div>
+          <div className="font-semibold">(ZMW)</div>
+          <div className="font-semibold">
+            {keyFactStatements?.totalCostOfCredit}
+          </div>
+        </div>
+        <div className="grid justify-center items-center text-5xl">=</div>
+        <div className="col-span-2 border border-gray-300 p-2 grid gap-y-2">
+          <div className="font-semibold">11. TOTAL AMOUNT YOU PAY</div>
+          <div className="italic text-sm">
+            Total amount you pay after making all payments
+          </div>
+          <div className="font-semibold">(ZMW)</div>
+          <div className="font-semibold">
+            {keyFactStatements?.amountOfLoan +
+              keyFactStatements?.totalCostOfCredit}
+          </div>
+        </div>
+      </div>
+
+      {/* Section 2 Risks */}
+      <div className="mt-5 font-semibold text-center border border-gray-300 p-1">
+        SECTION II: RISKS TO YOU
+      </div>
+      <div className="italic text-red-500 font-semibold">
+        <div>
+          * Late or missing payments may be reported to a credit reference
+          bureau and may severely affect your financial situation, collateral,
+          and ability to reborrow. *
+        </div>
+        <div>
+          * Your interest rate will change based on changes in the Bank of
+          Zambia’s Policy Rate. This change will affect the duration of your
+          loan and your repayment amount. *
+        </div>
+      </div>
+
+      {/* Section 3 Your rights */}
+      <div className="mt-5 font-semibold text-center border border-gray-300 p-1">
+        SECTION III: YOUR RIGHTS AND OBLIGATIONS
+      </div>
+      <ul className="list-disc">
+        <li>
+          <span className="font-semibold">Any questions or complaints? </span>
+          Call +260 211 252 540, email infor@longhorn-associates.com, or write
+          to P.O. Box 50655, Lusaka to contact us regarding your question or
+          complaint.
+        </li>
+        <li>
+          <span className="font-semibold">
+            Unsatisfied with our response to your question or complaint?
+          </span>{" "}
+          Contact the Bank of Zambia for help at [TELEPHONE] or [EMAIL], write
+          to [ADDRESS], or visit www.boz.zm
+        </li>
+        <li>
+          <span className="font-semibold">
+            Want to pay off your loan early?
+          </span>{" "}
+          You can do so without any penalties or fees. For more information
+          please call +260 211 252 540
+        </li>
+        <li className="font-semibold">
+          You are required to make payments on your loan according to your loan
+          agreement and to notify us of any important changes in your situation.
+        </li>
+      </ul>
+
+      {/* Section 4 Upfront fees */}
+      <table className="w-full border border-gray-300 border-collapse">
+        <tr className="border border-gray-300">
+          <td
+            colSpan={6}
+            className="border border-gray-300 p-2 text-center font-semibold"
+          >
+            SECTION IV: UPFRONT AND RECURRING FEES
+          </td>
+        </tr>
+        <tr className="border border-gray-300 text-center font-semibold">
+          <td colSpan={2} className="border border-gray-300 p-2">
+            UPFRONT FEES
+          </td>
+          <td colSpan={2} className="border border-gray-300 p-2">
+            UPFRONT FEES
+          </td>
+          <td colSpan={2} className="border border-gray-300 p-2">
+            RECURRING FEES
+          </td>
+        </tr>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2">Arrangement fee (ZMW)</td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            {formatNumber(upfrontFees?.arrangementFee)}
+          </td>
+          <td className="border border-gray-300 p-2">
+            Collateral appraisal (ZMW)
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            {upfrontFees.collateralAppraisal
+              ? formatNumber(upfrontFees.collateralAppraisal)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">
+            Credit life insurance (ZMW) per application
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {formatNumber(upfrontFees.creditLifeInsurance)}
+          </td>
+        </tr>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2">
+            Documentation fee (ZMW)
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {upfrontFees?.documentationFee
+              ? formatNumber(upfrontFees?.documentationFee)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">Drawdown fee (ZMW)</td>
+          <td className="border border-gray-300 p-2 text-center">
+            {upfrontFees.drawdownFee
+              ? formatNumber(upfrontFees.drawdownFee)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">Management fee (ZMW)</td>
+          <td className="border border-gray-300 p-2 text-center">
+            {upfrontFees.managementFee
+              ? formatNumber(upfrontFees.managementFee)
+              : "N/A"}
+          </td>
+        </tr>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2 font-semibold">
+            2. Duration of Loan Agreement
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            <div>(MONTHS)</div>
+            <div>{keyFactStatements?.durationOfLoanAgreement}</div>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <div className="font-semibold">5. Other Fees and Charges</div>
+            <div className="italic text-sm">See details in Section IV</div>
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            <div>(ZMW)</div>
+            <div>{formatNumber(keyFactStatements?.otherFeesAndCharges)}</div>
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold">
+            10. Payment Frequency
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold text-center">
+            {keyFactStatements?.paymentFrequency}
           </td>
         </tr>
       </table>

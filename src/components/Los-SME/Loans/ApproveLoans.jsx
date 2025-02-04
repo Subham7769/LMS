@@ -29,6 +29,7 @@ import {
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
 import ViewDocumentsModal from "./ViewDocumentsModal";
+import convertToReadableString from "../../../utils/convertToReadableString";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -258,7 +259,7 @@ const ApproveLoans = () => {
           </div>
         </CardInfo>
       </div>
-      <div className="bg-white p-3 shadow rounded-md my-5">
+      <div className="bg-white p-3 shadow  rounded-md my-5">
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
@@ -277,6 +278,27 @@ const ApproveLoans = () => {
             ))}
         </div>
       </div>
+      {rowData?.loanActionDetailsList && (
+        <div className="bg-white p-3 shadow rounded-md my-5 border-gray-300 border">
+          <div className="font-semibold text-xl mb-3">Loan Action History</div>
+          {rowData?.loanActionDetailsList.map((action, index) => (
+            <div key={index} className="flex flex-col gap-2 border-b pb-2 mb-2">
+              {Object.entries(action).map(([key, value]) => (
+                <div key={key} className="flex items-center gap-2">
+                  <span className="font-semibold">
+                    {convertToReadableString(key)}:
+                  </span>
+                  <span>
+                    {key.includes("Date")
+                      ? convertDate(new Date(value).toLocaleString())
+                      : convertToTitleCase(value)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
       <div className="w-full flex justify-end gap-2 px-5">
         <button
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}

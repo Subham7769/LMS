@@ -89,7 +89,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Borrower",
       inputName: "borrowerId",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
