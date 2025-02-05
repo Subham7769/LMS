@@ -13,7 +13,7 @@ import {
   uploadDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { tenureTypeOptions } from "../../../data/OptionsData";
+import { tenureTypeOptions, sectorOptions } from "../../../data/OptionsData";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 
