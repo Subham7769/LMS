@@ -368,8 +368,9 @@ const DynamicRAC = () => {
               onClose={() => setRuleModal(false)}
               sectionId={selectedSectionId}
             />
+
             {(roleName == "ROLE_MAKER_ADMIN" ||
-              roleName == "ROLE_SUPERADMIN") && (
+              roleName == "ROLE_ADMIN") && (
               <div>
                 {!sections.length < 1 && (
                   <Button
@@ -381,13 +382,14 @@ const DynamicRAC = () => {
                 )}
               </div>
             )}
+
           </div>
           <div className="flex justify-between items-center">
             {roleName !== "ROLE_VIEWER" && (
-              <div className="flex justify-between gap-5 w-full  border-b-2 pb-5">
+              <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
                 <div className="flex gap-2"></div>
                 {(roleName == "ROLE_MAKER_ADMIN" ||
-                  roleName == "ROLE_SUPERADMIN") && (
+                  roleName == "ROLE_ADMIN") && (
                   <div className="flex gap-2 items-end">
                     <HoverButton
                       icon={ArrowDownOnSquareIcon}

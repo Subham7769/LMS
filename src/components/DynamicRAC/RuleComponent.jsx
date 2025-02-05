@@ -162,7 +162,7 @@ const RuleComponent = ({
       {/* Maker UI */}
       {(roleName == "ROLE_MAKER_ADMIN" ||
         roleName == "ROLE_CHECKER_ADMIN" ||
-        roleName == "ROLE_SUPERADMIN") && (
+        roleName == "ROLE_ADMIN") && (
         <div className="flex flex-col justify-between items-center p-2 rounded-lg border ">
           {!isEdit && (
             <div className="flex justify-between items-center p-2 w-[100%]">
@@ -196,7 +196,7 @@ const RuleComponent = ({
 
               {/* Actions */}
               {(roleName == "ROLE_MAKER_ADMIN" ||
-                roleName == "ROLE_SUPERADMIN") && (
+                roleName == "ROLE_ADMIN") && (
                 <div className="flex gap-5 flex-col">
                   <PencilIcon
                     onClick={handleEdit}
@@ -327,7 +327,7 @@ const RuleComponent = ({
 
           {/* Reject/Accept Actions */}
           {(roleName == "ROLE_CHECKER_ADMIN" ||
-            roleName == "ROLE_SUPERADMIN") &&
+            roleName == "ROLE_ADMIN") &&
             !isEdit &&
             rule?.status === "CREATED" && (
               <>
