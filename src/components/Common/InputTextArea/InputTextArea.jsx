@@ -10,11 +10,11 @@ import { useSelector } from "react-redux";
 const InputTextArea = ({
   labelName,
   inputName,
-  rowCount,
   inputValue,
   inputId,
   onChange,
   placeHolder,
+  rowCount,
   disabled = false,
   isValidation = false,
   isIndex,

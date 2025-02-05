@@ -38,6 +38,7 @@ const initialUserData = JSON.parse(localStorage.getItem("userData")) || {};
 const initialState = {
   isSignup: "Login",
   username: "",
+  roleName:localStorage.getItem("roleName") || null,
   password: "",
   email: "",
   newPassword: "",
@@ -82,6 +83,10 @@ const authSlice = createSlice({
       localStorage.removeItem("roleName");
       localStorage.removeItem("username");
     },
+    setRole: (state, action) => {
+      state.roleName = action.payload;
+      localStorage.setItem("roleName", action.payload); // Persist role in localStorage
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -119,5 +124,6 @@ export const {
   setError,
   resetError,
   logout,
+  setRole,
 } = authSlice.actions;
 export default authSlice.reducer;

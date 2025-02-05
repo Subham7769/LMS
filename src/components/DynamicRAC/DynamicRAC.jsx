@@ -49,7 +49,6 @@ const DynamicRAC = () => {
   const { racId } = useParams();
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
-  const [isEditorMode, setIsEditorMode] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
   const [showRuleModal, setRuleModal] = useState(false);
@@ -60,8 +59,7 @@ const DynamicRAC = () => {
   );
   const { name } = racConfig.racDetails;
   const sections = racConfig.sections;
-  const { userData } = useSelector((state) => state.auth);
-  const roleName = userData?.roles[0]?.name;
+  const { roleName } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   // console.log(fetchOptionList);
@@ -114,9 +112,9 @@ const DynamicRAC = () => {
 
     const { source, destination } = result;
 
-    console.log("Source: ", source);
-    console.log("Destination: ", destination);
-    console.log("Sections before update: ", sections);
+    // console.log("Source: ", source);
+    // console.log("Destination: ", destination);
+    // console.log("Sections before update: ", sections);
 
     const newSections = [...sections]; // Clone sections array
 
@@ -161,9 +159,13 @@ const DynamicRAC = () => {
 
       // Remove field from source
       const [movedField] = sourceRules.splice(source.index, 1);
+      console.log(movedField);
 
       // Insert field into destination
-      destRules.splice(destination.index, 0, movedField);
+      destRules.splice(destination.index, 0, {
+        ...movedField,
+        isModified: false,
+      });
 
       newSections[sourceSectionIndex] = {
         ...newSections[sourceSectionIndex],
@@ -313,36 +315,32 @@ const DynamicRAC = () => {
   return (
     <div className="relative">
       {loading ? (
-        <div className="flex gap-5 animate-pulse py-5">
-          {/* Column 1 (20% width) */}
-          <div className="w-1/5 flex flex-col gap-3 h-screen rounded-lg border-2 p-5">
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mb-20"></div>
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mb-20"></div>
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mb-20"></div>
+        <>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="w-full flex flex-col gap-3 rounded-lg border-2 p-5">
+              <div className="h-4 bg-gray-300 rounded w-full"></div>
+              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+            </div>
+            <div className="w-full flex flex-col items-end gap-3 rounded-lg border-2 p-5">
+              <div className="h-4 bg-gray-300 rounded w-full"></div>
+              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+            </div>
           </div>
-
-          {/* Column 2 (80% width) */}
-          <div className="w-4/5 flex flex-col gap-3 h-screen rounded-lg border-2 p-5">
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/3 mt-20"></div>
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/3 mt-20"></div>
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/3 mt-20"></div>
+          <div className="flex flex-col gap-5 animate-pulse py-5">
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div
+                key={item}
+                className="w-full flex flex-col gap-3 rounded-lg border-2 p-5"
+              >
+                <div className="h-4 bg-gray-300 rounded w-full"></div>
+                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+              </div>
+            ))}
           </div>
-        </div>
+        </>
       ) : error ? (
         <div className="text-red-500 text-center py-4">
           <p>Oops! Something went wrong. Please try again later.</p>
@@ -357,97 +355,96 @@ const DynamicRAC = () => {
                 editable={roleName !== "ROLE_VIEWER"}
               />
             </div>
+
+            {/* Modals */}
             <CloneModal
               isOpen={isModalOpen}
               onClose={closeModal}
               onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
               initialName={name}
             />
-            <div>
-              {!sections.length < 1 && (
-                <Button
-                  buttonIcon={PlusIcon}
-                  buttonName="Add Section"
-                  rectangle={true}
-                  onClick={() => handleAddSection()}
-                />
-              )}
-            </div>
-            <div className="flex justify-center items-center">
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isEditorMode}
-                  onChange={(e) => setIsEditorMode(e.target.checked)}
-                  className="hidden" // Hide the checkbox visually
-                />
-                <div className="flex justify-between items-center gap-1 hover:cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 rounded-lg border-2 px-2 py-1">
-                  {isEditorMode ? (
-                    <ViewfinderCircleIcon className="h-4 w-4" />
-                  ) : (
-                    <PencilSquareIcon className="h-4 w-4" />
-                  )}
-                  <span className="text-sm mt-1font-bold">
-                    {isEditorMode ? "View Mode" : "Editor Mode"}
-                  </span>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            {isEditorMode && roleName !== "ROLE_VIEWER" && (
-              <div className="flex justify-between gap-5 w-full  border-b-2 pb-5">
-                <div className="flex gap-2"></div>
-                <div className="flex gap-2 items-end">
-                  <HoverButton
-                    icon={ArrowDownOnSquareIcon}
-                    text="Download Config"
-                    color="yellow" // Automatically sets hover and background colors
-                    onClick={() => dispatch(downloadConfig())}
+            <ViewRuleModal
+              isOpen={showRuleModal}
+              onClose={() => setRuleModal(false)}
+              sectionId={selectedSectionId}
+            />
+            {(roleName == "ROLE_MAKER_ADMIN" ||
+              roleName == "ROLE_SUPERADMIN") && (
+              <div>
+                {!sections.length < 1 && (
+                  <Button
+                    buttonIcon={PlusIcon}
+                    buttonName="Add Section"
+                    rectangle={true}
+                    onClick={() => handleAddSection()}
                   />
-                  <HoverButton
-                    icon={ArrowUpOnSquareIcon}
-                    text="Upload Config"
-                    color="green" // Automatically sets hover and background colors
-                    onClick={() => fileInputRef.current.click()}
-                  />
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".json"
-                    style={{ display: "none" }}
-                    onChange={handleUploadConfig}
-                  />
-                  {roleName !== "ROLE_VIEWER" ? (
-                    <div className="flex gap-4">
-                      <HoverButton
-                        text={"Clone"}
-                        icon={DocumentDuplicateIcon}
-                        onClick={handleClone}
-                      />
-                      <div className="rounded-full border text-red-500 border-red-500 p-2 hover:bg-red-500 hover:text-white hover:cursor-pointer">
-                        <TrashIcon className="h-5 w-5" onClick={() => handleDelete(racId)}/>
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
+                )}
               </div>
             )}
           </div>
-          <div
-            className={`flex items-start "max-h-screen"`}
-          >
-            {/* {isEditorMode && roleName !== "ROLE_VIEWER" && <Toolbox />} */}
+          <div className="flex justify-between items-center">
+            {roleName !== "ROLE_VIEWER" && (
+              <div className="flex justify-between gap-5 w-full  border-b-2 pb-5">
+                <div className="flex gap-2"></div>
+                {(roleName == "ROLE_MAKER_ADMIN" ||
+                  roleName == "ROLE_SUPERADMIN") && (
+                  <div className="flex gap-2 items-end">
+                    <HoverButton
+                      icon={ArrowDownOnSquareIcon}
+                      text="Download Config"
+                      color="yellow" // Automatically sets hover and background colors
+                      onClick={() => dispatch(downloadConfig())}
+                    />
+                    <HoverButton
+                      icon={ArrowUpOnSquareIcon}
+                      text="Upload Config"
+                      color="green" // Automatically sets hover and background colors
+                      onClick={() => fileInputRef.current.click()}
+                    />
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".json"
+                      style={{ display: "none" }}
+                      onChange={handleUploadConfig}
+                    />
+                    {roleName !== "ROLE_VIEWER" ? (
+                      <div className="flex gap-4">
+                        <HoverButton
+                          text={"Clone"}
+                          icon={DocumentDuplicateIcon}
+                          onClick={handleClone}
+                        />
+                        {sections.length > 0 && (
+                          <HoverButton
+                            className="mt-4"
+                            icon={CheckCircleIcon}
+                            text="Save"
+                            onClick={handleSaveDynamicRAC}
+                          />
+                        )}
+                        <div className="rounded-full border text-red-500 border-red-500 p-2 hover:bg-red-500 hover:text-white hover:cursor-pointer">
+                          <TrashIcon
+                            className="h-5 w-5"
+                            onClick={() => handleDelete(racId)}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <div className={`flex items-start "max-h-screen"`}>
             <div
-              className={`basis-4/5 px-2 flex-grow overflow-y-scroll ${
-                isEditorMode ? " max-h-[550px]" : "max-h-screen"
-              } overflow-hidden pb-20`}
+              className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-screen overflow-hidden pb-20`}
             >
               <DragDropContext onDragEnd={onDragEnd}>
                 <div className="flex flex-col justify-center gap-3">
-                  {/* Add first Section */}
+                  {/* Add first Section Box */}
                   {sections.length < 1 && (
                     <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
                       <div className="bg-blue-50 rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
@@ -481,11 +478,7 @@ const DynamicRAC = () => {
                       </div>
                     </div>
                   )}
-                  <ViewRuleModal
-                    isOpen={showRuleModal}
-                    onClose={() => setRuleModal(false)}
-                    sectionId={selectedSectionId}
-                  />
+
                   {sections?.map((section) => (
                     <Droppable
                       key={section.sectionId}
@@ -520,7 +513,7 @@ const DynamicRAC = () => {
                                 }
                               />
                             </div>
-                            {isEditorMode && roleName !== "ROLE_VIEWER" && (
+                            {roleName !== "ROLE_VIEWER" && (
                               <div className="flex justify-between items-center gap-5">
                                 <div
                                   className={"flex text-blue-500"}
@@ -550,6 +543,7 @@ const DynamicRAC = () => {
                             )}
                           </div>
 
+                          {/* Add Criteria Box */}
                           {section?.rules.length < 1 && (
                             <div className="bg-gray-100 flex justify-center flex-col items-center p-5 gap-3">
                               <div className="rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
@@ -580,21 +574,20 @@ const DynamicRAC = () => {
                               key={rule.dynamicRacRuleId}
                               draggableId={rule.dynamicRacRuleId}
                               index={index}
-                              isDragDisabled={!isEditorMode}
                             >
                               {(provided) => (
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="mb-4 px-5"
+                                  className="mb-2 px-3"
                                 >
                                   <RuleComponent
                                     rule={rule}
                                     racId={racId}
                                     dynamicRacRuleId={rule.dynamicRacRuleId}
-                                    isEditorMode={isEditorMode}
                                     sectionId={section.sectionId}
+                                    handleSaveDynamicRAC={handleSaveDynamicRAC}
                                   />
                                 </div>
                               )}
@@ -607,19 +600,6 @@ const DynamicRAC = () => {
                   ))}
                 </div>
               </DragDropContext>
-              {sections.length > 0 && roleName !== "ROLE_VIEWER" ? (
-                <div className="flex justify-end items-center gap-5">
-                  <Button
-                    className="mt-4"
-                    buttonIcon={CheckCircleIcon}
-                    buttonName="Save"
-                    onClick={handleSaveDynamicRAC}
-                    rectangle={true}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
             </div>
           </div>
         </div>

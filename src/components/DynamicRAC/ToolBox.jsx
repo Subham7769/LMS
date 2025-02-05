@@ -33,6 +33,7 @@ const Toolbox = ({ sectionId, onClose }) => {
     sectionId: "",
     sectionName: "",
     status: "CREATED",
+    isModified: true,
     displayName: "",
     usageList: [
       {
@@ -52,11 +53,13 @@ const Toolbox = ({ sectionId, onClose }) => {
     criteriaValues: [],
     firstOperator: "",
     secondOperator: "",
-    numberCriteriaRangeList: [{
-      minimum:"",
-      maximum:"",
-      isResidence:false,
-    }],
+    numberCriteriaRangeList: [
+      {
+        minimum: "",
+        maximum: "",
+        isResidence: false,
+      },
+    ],
   };
   const initialMinValue = -Number(import.meta.env.VITE_MIN_MAX_LIMIT);
   const initialMaxValue = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
@@ -67,8 +70,8 @@ const Toolbox = ({ sectionId, onClose }) => {
   const [condition, setCondition] = useState("");
   const [ruleConfig, setRuleConfig] = useState(initialState);
 
-  console.log(minValue)
-  console.log(maxValue)
+  // console.log(minValue)
+  // console.log(maxValue)
 
   useEffect(() => {
     if (condition === "Less than" || condition === "Less than or equal to") {
@@ -85,7 +88,7 @@ const Toolbox = ({ sectionId, onClose }) => {
 
   const handleChange = (e) => {
     const { name, checked, type, value } = e.target;
-    console.log(name, checked);
+    // console.log(name, checked);
     if (type === "checkbox") {
       if (name === "blocked") {
         setRuleConfig((prevConfig) => ({
@@ -375,11 +378,7 @@ const Toolbox = ({ sectionId, onClose }) => {
               <>
                 {/* Ranges */}
                 {ruleConfig.numberCriteriaRangeList.map((range, index) => (
-                  <div
-                    className={
-                      "flex justify-between items-center rounded"
-                    }
-                  >
+                  <div className={"flex justify-between items-center rounded"}>
                     <div key={index} className="grid gap-2 grid-cols-3">
                       <InputNumber
                         labelName="Min"

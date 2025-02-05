@@ -8,13 +8,22 @@ import {
   updateRuleNumberCriteria,
   handleChangeStringRule,
   handleChangeBlocked,
+  handleChangeModified,
+  setCurrentRule,
+  restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
 import { operatorOptions } from "../../data/OptionsData";
 import {
+  EyeIcon,
+  XMarkIcon,
+  CheckIcon,
+  ExclamationCircleIcon,
+  PencilIcon,
   TrashIcon,
   XCircleIcon,
   PlusCircleIcon,
@@ -25,27 +34,33 @@ import {
 import convertToReadableString from "../../utils/convertToReadableString";
 import generateNumberSentence from "./generateNumberSentence";
 import generateStringSentence from "./generateStringSentence";
+import Accordion from "../Common/Accordion/Accordion";
+import Button from "../Common/Button/Button";
+import StatusPill from "../Common/StatusPill/StatusPill";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const RuleComponent = ({
   rule,
   racId,
   dynamicRacRuleId,
-  isEditorMode,
   sectionId,
+  handleSaveDynamicRAC,
 }) => {
-  console.log(rule);
   const dispatch = useDispatch();
-  const roleName = localStorage.getItem("roleName");
+  const { roleName } = useSelector((state) => state.auth);
+  const [isEdit, setIsEdit] = useState(false);
 
-  const handleInputChange = (inputName, value, index) => {
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
     const updates = {};
 
-    if (inputName === "firstOperator" || inputName === "secondOperator") {
-      updates[inputName] = value;
-    } else if (inputName === "minimum" || inputName === "maximum") {
+    if (name === "firstOperator" || name === "secondOperator") {
+      updates[name] = value;
+    } else if (name === "minimum" || name === "maximum") {
       updates.numberCriteriaRangeList = [
         {
-          [inputName]: value,
+          [name]: value,
         },
       ];
     }
@@ -104,351 +119,426 @@ const RuleComponent = ({
     console.log("fetchDynamicRacDetails");
   };
 
-  switch (rule?.fieldType) {
-    case "NUMBER":
-      return (
-        <div className="flex justify-between items-center gap-2 p-3 rounded-lg border ">
-          {isEditorMode && (
-            <ChevronUpDownIcon className="h-5 w-5 mt-4 hover:text-indigo-500 hover:cursor-pointer hover:bg-slate-200" />
-          )}
-          <div className="flex-1 p-5 flex flex-col gap-4">
-            {/* Rule Status Pill */}
-            <div
-              className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${
-                rule.status === "CREATED"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : rule.status === "REJECTED"
-                  ? "bg-red-100 text-red-700"
-                  : rule.status === "APPROVED"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-700" // Default case
-              }`}
-            >
-              {rule.status === "CREATED" ? (
-                <div className={"flex justify-start align-middle gap-1"}>
-                  <ClockIcon className={`h-5 w-5`} />
-                  Pending Approval
-                </div>
-              ) : rule.status === "REJECTED" ? (
-                <div className={"flex justify-start align-middle gap-1"}>
-                  <XCircleIcon className={`h-5 w-5`} />
-                  Rejected
-                </div>
-              ) : rule.status === "APPROVED" ? (
-                <div className={"flex justify-start align-middle gap-1"}>
-                  <CheckCircleIcon className={`h-5 w-5`} />
-                  Approved
-                </div>
-              ) : (
-                rule.status
-              )}{" "}
-            </div>
+  const handleEdit = () => {
+    dispatch(setCurrentRule({ sectionId, dynamicRacRuleId }));
+    dispatch(
+      handleChangeModified({ sectionId, dynamicRacRuleId, value: true })
+    );
+    setIsEdit(!isEdit);
+  };
 
-            {/* Rule Main Literature Text */}
-            <h2>{generateNumberSentence(rule)}</h2>
+  const cancelEdit = () => {
+    dispatch(restoreRule({ sectionId, dynamicRacRuleId }));
+    setIsEdit(!isEdit);
+  };
 
-            {/* Rule sub-main Literature Text with status */}
-            <p className={"text-sm text-gray-500"}>
-              {rule.status === "CREATED"
-                ? "Modified"
-                : rule.status === "REJECTED"
-                ? "Rejected"
-                : rule.status === "APPROVED"
-                ? "Approved"
-                : rule.status}{" "}
-              By subham . 23 Dec 2025{" "}
-            </p>
-          </div>
+  const saveEdit = () => {
+    setIsEdit(!isEdit);
+    handleSaveDynamicRAC();
+  };
 
-          {isEditorMode && roleName !== "ROLE_VIEWER" && (
-            <TrashIcon
-              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId)}
-              className="h-5 w-5 mt-4 hover:text-red-500 hover:cursor-pointer"
-            />
-          )}
+  const StatusButton = ({
+    buttonIcon: ButtonIcon,
+    buttonName,
+    onClick,
+    color,
+  }) => {
+    return (
+      <div
+        onClick={onClick}
+        className={`p-3 flex flex-col justify-center items-center text-sm font-semibold rounded-lg hover:cursor-pointer 
+        text-${color}-500 bg-${color}-50 hover:text-white hover:bg-${color}-500 transition-all duration-300 ease-in-out hover:scale-105`}
+      >
+        <div className="flex">
+          <ButtonIcon className="h-5 w-5 mr-2" />
+          {buttonName}
+        </div>
+      </div>
+    );
+  };
 
-          {/* <div className="py-2 w-full">
-            <div
-              className={`border-2 rounded-lg py-2 ${
-                isEditorMode && "bg-gray-100"
-              }`}
-            >
-              {rule.numberCriteriaRangeList.map((range, index) => (
-                <div key={index} className="flex-1 grid grid-cols-4 gap-2">
-                  <InputSelect
-                    labelName="First Operator"
-                    inputOptions={operatorOptions}
-                    inputName="firstOperator"
-                    inputValue={rule.firstOperator} // Use range.firstOperator instead of rule.firstOperator
-                    onChange={(e) =>
-                      handleInputChange("firstOperator", e.target.value, index)
-                    }
-                    disabled={isEditorMode || rule?.status === "REJECTED"}
-                    isValidation={true}
-                    isSectionId={sectionId}
-                    isRuleId={dynamicRacRuleId}
-                  />
-                  <InputNumber
-                    labelName="Min"
-                    inputName="minimum"
-                    inputValue={
-                      range.minimum !== null && range.minimum !== undefined
-                        ? parseInt(range.minimum)
-                        : ""
-                    } // Use range.minimum instead of rule.numberCriteriaRangeList[index].minimum
-                    onChange={(e) =>
-                      handleInputChange("minimum", e.target.value, index)
-                    }
-                    placeholder="0"
-                    disabled={isEditorMode || rule?.status === "REJECTED"}
-                    isValidation={true}
-                    isSectionId={sectionId}
-                    isRuleId={dynamicRacRuleId}
-                    isRangeIndex={index}
-                  />
-                  <InputSelect
-                    labelName="Second Operator"
-                    inputOptions={operatorOptions}
-                    inputName="secondOperator"
-                    inputValue={rule.secondOperator} // Use range.secondOperator instead of rule.secondOperator
-                    onChange={(e) =>
-                      handleInputChange("secondOperator", e.target.value, index)
-                    }
-                    disabled={isEditorMode || rule?.status === "REJECTED"}
-                    isValidation={true}
-                    isSectionId={sectionId}
-                    isRuleId={dynamicRacRuleId}
-                  />
-                  <InputNumber
-                    labelName="Max"
-                    inputName="maximum"
-                    inputValue={
-                      range.maximum !== null && range.maximum !== undefined
-                        ? parseInt(range.maximum)
-                        : ""
-                    } // Use range.maximum instead of rule.numberCriteriaRangeList[index].maximum
-                    onChange={(e) =>
-                      handleInputChange("maximum", e.target.value, index)
-                    }
-                    placeholder="0"
-                    disabled={isEditorMode || rule?.status === "REJECTED"}
-                    isValidation={true}
-                    isSectionId={sectionId}
-                    isRuleId={dynamicRacRuleId}
-                    isRangeIndex={index}
-                  />
-                </div>
-              ))}
-            </div>
-          </div> */}
+  return (
+    <>
+      {/* Maker UI */}
+      {(roleName == "ROLE_MAKER_ADMIN" ||
+        roleName == "ROLE_CHECKER_ADMIN" ||
+        roleName == "ROLE_SUPERADMIN") && (
+        <div className="flex flex-col justify-between items-center p-2 rounded-lg border ">
+          {!isEdit && (
+            <div className="flex justify-between items-center p-2 w-[100%]">
+              <ChevronUpDownIcon className="h-5 w-5 hover:text-indigo-500 hover:cursor-pointer hover:bg-slate-200" />
+              <div className="flex-1 p-3 flex flex-col gap-3">
+                {/* Rule Status Pill */}
+                <StatusPill status={rule.status} showIcon={true} />
 
-          {/* {roleName !== "ROLE_MAKER_ADMIN" &&
-            roleName !== "ROLE_VIEWER" &&
-            isEditorMode &&
-            rule?.status === "REJECTED" &&
-            roleName !== "ROLE_CHECKER_ADMIN" && (
-              <div className="relative group">
-                <PlusCircleIcon
-                  onClick={() =>
-                    handleStatusChange({ dynamicRacRuleId, status: "CREATED" })
-                  }
-                  className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
-                />
+                {/* Rule Main Literature Text for Number */}
+                {rule?.fieldType === "NUMBER" && (
+                  <h2>{generateNumberSentence(rule)}</h2>
+                )}
 
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                  CREATE
-                </div>
+                {/* Rule Main Literature Text for String */}
+                {rule?.fieldType === "STRING" && (
+                  <h2>{generateStringSentence(rule)}</h2>
+                )}
+
+                {/* Rule sub-main Literature Text with status */}
+                <p className={"text-sm text-gray-500"}>
+                  {rule.status === "CREATED"
+                    ? "Modified"
+                    : rule.status === "REJECTED"
+                    ? "Rejected"
+                    : rule.status === "APPROVED"
+                    ? "Approved"
+                    : rule.status}{" "}
+                  By subham . 23 Dec 2025{" "}
+                </p>
               </div>
-            )} */}
 
-          {/* Blocked Checkbox */}
-          {/* <div className="relative group">
-            <InputCheckbox
-              labelName="Block"
-              inputChecked={rule.blocked}
-              onChange={handleBlockedInputChange}
-              inputName="blocked"
-              className={"text-[10px]"}
-              upperLabel={true}
-            />
-          </div> */}
-          
-          {/* {roleName !== "ROLE_MAKER_ADMIN" &&
-            roleName !== "ROLE_VIEWER" &&
-            isEditorMode &&
+              {/* Actions */}
+              {(roleName == "ROLE_MAKER_ADMIN" ||
+                roleName == "ROLE_SUPERADMIN") && (
+                <div className="flex gap-5 flex-col">
+                  <PencilIcon
+                    onClick={handleEdit}
+                    className="h-5 w-5  hover:text-indigo-500 hover:cursor-pointer"
+                  />
+                  {roleName !== "ROLE_VIEWER" && (
+                    <TrashIcon
+                      onClick={() =>
+                        handleRemoveRule(sectionId, rule.dynamicRacRuleId)
+                      }
+                      className="h-5 w-5  hover:text-red-500 hover:cursor-pointer"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Editable Fields Number */}
+          {isEdit && rule?.fieldType === "NUMBER" && (
+            <div className="relative flex justify-between items-center p-2 w-[100%]">
+              <div className="flex-1 p-3 flex flex-col gap-3">
+                {rule.numberCriteriaRangeList.map((range, index) => (
+                  <div key={index} className="flex-1 grid grid-cols-4 gap-2">
+                    <InputSelect
+                      labelName="First Operator"
+                      inputOptions={operatorOptions}
+                      inputName="firstOperator"
+                      inputValue={rule.firstOperator} // Use range.firstOperator instead of rule.firstOperator
+                      onChange={(e) => handleInputChange(e, index)}
+                      disabled={rule?.status === "REJECTED"}
+                      isValidation={true}
+                      isSectionId={sectionId}
+                      isRuleId={dynamicRacRuleId}
+                    />
+                    <InputNumber
+                      labelName="Min"
+                      inputName="minimum"
+                      inputValue={
+                        range.minimum !== null && range.minimum !== undefined
+                          ? parseInt(range.minimum)
+                          : ""
+                      } // Use range.minimum instead of rule.numberCriteriaRangeList[index].minimum
+                      onChange={(e) => handleInputChange(e, index)}
+                      placeholder="0"
+                      disabled={rule?.status === "REJECTED"}
+                      isValidation={true}
+                      isSectionId={sectionId}
+                      isRuleId={dynamicRacRuleId}
+                      isRangeIndex={index}
+                    />
+                    <InputSelect
+                      labelName="Second Operator"
+                      inputOptions={operatorOptions}
+                      inputName="secondOperator"
+                      inputValue={rule.secondOperator} // Use range.secondOperator instead of rule.secondOperator
+                      onChange={(e) => handleInputChange(e, index)}
+                      disabled={rule?.status === "REJECTED"}
+                      isValidation={true}
+                      isSectionId={sectionId}
+                      isRuleId={dynamicRacRuleId}
+                    />
+                    <InputNumber
+                      labelName="Max"
+                      inputName="maximum"
+                      inputValue={
+                        range.maximum !== null && range.maximum !== undefined
+                          ? parseInt(range.maximum)
+                          : ""
+                      } // Use range.maximum instead of rule.numberCriteriaRangeList[index].maximum
+                      onChange={(e) => handleInputChange(e, index)}
+                      placeholder="0"
+                      disabled={rule?.status === "REJECTED"}
+                      isValidation={true}
+                      isSectionId={sectionId}
+                      isRuleId={dynamicRacRuleId}
+                      isRangeIndex={index}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Actions */}
+              <XMarkIcon
+                title="cancel"
+                onClick={cancelEdit}
+                className="absolute top-0 right-0  h-6 w-6  hover:text-red-500 hover:cursor-pointer"
+              />
+
+              <Button
+                buttonIcon={CheckCircleIcon}
+                buttonName="Save"
+                rectangle={true}
+                onClick={saveEdit}
+                className={"mt-4"}
+              />
+            </div>
+          )}
+
+          {/* Editable Fields String */}
+          {isEdit && rule?.fieldType === "STRING" && (
+            <div className="relative flex justify-between items-center gap-5 p-2 w-[100%]">
+              <InputTextMulti
+                label={convertToReadableString(rule.name)}
+                inputName={rule.name}
+                tag={rule?.criteriaValues}
+                setTag={(newValues) => handleStringInputChange(newValues)}
+                sectionId={sectionId}
+                dynamicRacRuleId={dynamicRacRuleId}
+                isValidation={true}
+              />
+              {/* Actions */}
+              <XMarkIcon
+                title="cancel"
+                onClick={cancelEdit}
+                className="absolute top-0 right-0  h-6 w-6  hover:text-red-500 hover:cursor-pointer"
+              />
+
+              <Button
+                buttonIcon={CheckCircleIcon}
+                buttonName="Save"
+                rectangle={true}
+                onClick={saveEdit}
+                className={"-mt-4"}
+              />
+            </div>
+          )}
+
+          {/* Reject/Accept Actions */}
+          {(roleName == "ROLE_CHECKER_ADMIN" ||
+            roleName == "ROLE_SUPERADMIN") &&
+            !isEdit &&
             rule?.status === "CREATED" && (
               <>
-                <div className="relative group">
-                  <CheckCircleIcon
-                    onClick={() =>
-                      handleStatusChange({
-                        dynamicRacRuleId,
-                        status: "APPROVED",
-                      })
-                    }
-                    className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
-                  />
-
-                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                    Approve
-                  </div>
-                </div>
-
-                <div className="relative group">
-                  <XCircleIcon
+                <div className="grid grid-cols-2 gap-5 px-5 w-[100%]">
+                  <StatusButton
+                    buttonIcon={XMarkIcon} // Pass the Reject icon
+                    buttonName="Reject" // Button text
                     onClick={() =>
                       handleStatusChange({
                         dynamicRacRuleId,
                         status: "REJECTED",
                       })
                     }
-                    className="h-5 w-5 mt-4 text-red-600 hover:text-red-800 hover:cursor-pointer"
+                    color="red"
                   />
-
-                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-red-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                    Reject
-                  </div>
-                </div>
-              </>
-            )} */}
-        </div>
-      );
-
-    case "STRING":
-      return (
-        <div className="flex justify-between items-center gap-2 p-3 rounded-lg border ">
-          <ChevronUpDownIcon className="h-5 w-5 hover:text-indigo-500 hover:cursor-pointer hover:bg-slate-200" />
-          <div className="flex-1 p-5 flex flex-col gap-4">
-            {/* Rule Status Pill */}
-            <div
-              className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${
-                rule.status === "CREATED"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : rule.status === "REJECTED"
-                  ? "bg-red-100 text-red-700"
-                  : rule.status === "APPROVED"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-700" // Default case
-              }`}
-            >
-              {rule.status === "CREATED" ? (
-                <div className={"flex justify-start align-middle gap-1"}>
-                  <ClockIcon className={`h-5 w-5`} />
-                  Pending Approval
-                </div>
-              ) : rule.status === "REJECTED" ? (
-                <div className={"flex justify-start align-middle gap-1"}>
-                  <XCircleIcon className={`h-5 w-5`} />
-                  Rejected
-                </div>
-              ) : rule.status === "APPROVED" ? (
-                <div className={"flex justify-start align-middle gap-1"}>
-                  <CheckCircleIcon className={`h-5 w-5`} />
-                  Approved
-                </div>
-              ) : (
-                rule.status
-              )}{" "}
-            </div>
-
-            {/* Rule Main Literature Text */}
-            <h2>{generateStringSentence(rule)}</h2>
-
-            {/* Rule sub-main Literature Text with status */}
-            <p className={"text-sm text-gray-500"}>
-              {rule.status === "CREATED"
-                ? "Modified"
-                : rule.status === "REJECTED"
-                ? "Rejected"
-                : rule.status === "APPROVED"
-                ? "Approved"
-                : rule.status}{" "}
-              By subham . 23 Dec 2025{" "}
-            </p>
-          </div>
-
-          {/* Rule Delete */}
-          {isEditorMode && roleName !== "ROLE_VIEWER" && (
-            <TrashIcon
-              onClick={() => handleRemoveRule(sectionId, rule.dynamicRacRuleId)}
-              className="h-5 w-5 hover:text-red-500 hover:cursor-pointer"
-            />
-          )}
-
-          {/* <InputTextMulti
-            label={rule.name}
-            inputName={rule.name}
-            tag={rule?.criteriaValues}
-            setTag={(newValues) => handleStringInputChange(newValues)}
-            sectionId={sectionId}
-            dynamicRacRuleId={dynamicRacRuleId}
-            disabled={isEditorMode || rule?.status === "REJECTED"}
-            isValidation={true}
-          /> */}
-
-          {/* {roleName !== "ROLE_MAKER_ADMIN" &&
-            roleName !== "ROLE_VIEWER" &&
-            isEditorMode &&
-            rule?.status === "REJECTED" &&
-            roleName !== "ROLE_CHECKER_ADMIN" && (
-              <div className="relative group">
-                <PlusCircleIcon
-                  onClick={() =>
-                    handleStatusChange({ dynamicRacRuleId, status: "CREATED" })
-                  }
-                  className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
-                />
-
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                  CREATE
-                </div>
-              </div>
-            )} */}
-
-          {/* {roleName !== "ROLE_MAKER_ADMIN" &&
-            roleName !== "ROLE_VIEWER" &&
-            isEditorMode &&
-            rule?.status === "CREATED" && (
-              <>
-                <div className="relative group">
-                  <CheckCircleIcon
+                  <StatusButton
+                    buttonIcon={CheckIcon} // Pass the Reject icon
+                    buttonName="Approve" // Button text
                     onClick={() =>
                       handleStatusChange({
                         dynamicRacRuleId,
                         status: "APPROVED",
                       })
                     }
-                    className="h-5 w-5 mt-4 text-green-600 hover:text-green-800 hover:cursor-pointer"
+                    color="green"
                   />
-
-                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                    Approve
-                  </div>
                 </div>
+              </>
+            )}
 
-                <div className="relative group">
-                  <XCircleIcon
-                    onClick={() =>
-                      handleStatusChange({
-                        dynamicRacRuleId,
-                        status: "REJECTED",
-                      })
-                    }
-                    className="h-5 w-5 mt-4 text-red-600 hover:text-red-800 hover:cursor-pointer"
-                  />
+          {/* Create Button */}
+          {false &&
+            roleName == "ROLE_MAKER_ADMIN" &&
+            rule?.status === "REJECTED" && (
+              <div className="grid grid-cols-1 gap-5 px-5 w-[50%]">
+                <StatusButton
+                  buttonIcon={PlusCircleIcon} // Pass the Reject icon
+                  buttonName="Create" // Button text
+                  onClick={() =>
+                    handleStatusChange({
+                      dynamicRacRuleId,
+                      status: "CREATED",
+                    })
+                  }
+                  color="indigo"
+                />
+              </div>
+            )}
+        </div>
+      )}
 
-                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full hidden group-hover:block bg-red-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-                    Reject
+      {/* Checker UI with new API*/}
+      {/* {roleName == "ROLE_CHECKER_ADMIN" && (
+        <>
+          <Accordion
+            headerComponent={
+              <div className="flex gap-2">
+                <div
+                  className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${
+                    rule.status === "CREATED"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : rule.status === "REJECTED"
+                      ? "bg-red-100 text-red-700"
+                      : rule.status === "APPROVED"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-100 text-gray-700" 
+                  }`}
+                >
+                  {rule.status === "CREATED" ? (
+                    <div
+                      className={"flex justify-start align-middle gap-1"}
+                    >
+                      Modified
+                    </div>
+                  ) : rule.status === "REJECTED" ? (
+                    <div
+                      className={"flex justify-start align-middle gap-1"}
+                    >
+                      Deleted
+                    </div>
+                  ) : rule.status === "APPROVED" ? (
+                    <div
+                      className={"flex justify-start align-middle gap-1"}
+                    >
+                      Newly Added
+                    </div>
+                  ) : (
+                    rule.status
+                  )}{" "}
+                </div>
+                <p>{convertToReadableString(rule.name)}</p>
+                <div
+                  className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${
+                    rule.status === "CREATED"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : rule.status === "REJECTED"
+                      ? "bg-red-100 text-red-700"
+                      : rule.status === "APPROVED"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-100 text-gray-700" 
+                  }`}
+                >
+                  {rule.status === "CREATED" ? (
+                    <div
+                      className={"flex justify-start align-middle gap-1"}
+                    >
+                      <ClockIcon className={`h-5 w-5`} />
+                      Pending Review
+                    </div>
+                  ) : rule.status === "REJECTED" ? (
+                    <div
+                      className={"flex justify-start align-middle gap-1"}
+                    >
+                      <XCircleIcon className={`h-5 w-5`} />
+                      Previously Rejected
+                    </div>
+                  ) : rule.status === "APPROVED" ? (
+                    <div
+                      className={"flex justify-start align-middle gap-1"}
+                    >
+                      <CheckCircleIcon className={`h-5 w-5`} />
+                      Previously Approved
+                    </div>
+                  ) : (
+                    rule.status
+                  )}{" "}
+                </div>
+              </div>
+            }
+          >
+            <div className="p-3 flex flex-col gap-3">
+              <div className="grid grid-cols-2 gap-5">
+                <div className="p-3 flex flex-col gap-3 text-sm text-gray-500 font-semibold bg-gray-50 rounded-lg">
+                  <span className="flex justify-start align-middle">
+                    <EyeIcon className="h-5 w-5 mr-2 " />
+                    Previous Version
+                  </span>
+                  <p className="text-gray-700">
+                    {convertToReadableString(rule.name)} Criteria : 18-25
+                    years{" "}
+                  </p>
+                </div>
+                <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
+                  <span className="flex justify-start align-middle">
+                    <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
+                    Previous Version
+                  </span>
+                  <p className="text-gray-700">
+                    {convertToReadableString(rule.name)} Criteria : 20-25
+                    years{" "}
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 rounded-lg">
+                <span className="flex justify-start align-middle">
+                  <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
+                  Previous Version
+                </span>
+                <p className="text-gray-700">
+                  kjdf sdjfhskf sfsdjkk sjdflksjf sjdflkjsdl
+                </p>
+              </div>
+
+              <div>
+                <InputTextArea
+                  labelName={"Review Comments"}
+                  inputName={"reviewComments"}
+                  inputValue={""}
+                  onChange={() => {}}
+                  placeHolder={`Enter your review comments...`}
+                />
+              </div>
+              <>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="p-3 flex flex-col justify-center items-center  text-sm text-red-500 font-semibold bg-red-50 rounded-lg hover:cursor-pointer">
+                    <div className="flex">
+                      <XMarkIcon
+                        className="h-5 w-5 mr-2 "
+                        onClick={() =>
+                          handleStatusChange({
+                            dynamicRacRuleId,
+                            status: "REJECTED",
+                          })
+                        }
+                      />
+                      Reject
+                    </div>
+                  </div>
+                  <div className="p-3 flex flex-col justify-center items-center  text-sm text-green-500 font-semibold bg-green-50 rounded-lg hover:cursor-pointer">
+                    <div className="flex">
+                      <CheckIcon
+                        className="h-5 w-5 mr-2 "
+                        onClick={() =>
+                          handleStatusChange({
+                            dynamicRacRuleId,
+                            status: "APPROVED",
+                          })
+                        }
+                      />
+                      Approve
+                    </div>
                   </div>
                 </div>
               </>
-            )} */}
-        </div>
-      );
-
-    default:
-      return null;
-  }
+            </div>
+          </Accordion>
+        </>
+      )} */}
+    </>
+  );
 };
 
 export default RuleComponent;
