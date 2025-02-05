@@ -50,7 +50,8 @@ const InputEmail = ({
           } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
-          {validationError[validationKey] ? "Invalid email format" : labelName}
+          {validationError[validationKey] ? "Invalid email format" : labelName}{" "}
+          {isValidation && <span className="text-red-600">*</span>}
         </label>
       )}
       <input

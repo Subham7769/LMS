@@ -91,7 +91,8 @@ const InputNumber = ({
           } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
-          {validationError[validationKey] ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}{" "}
+          {isValidation && <span className="text-red-600">*</span>}
         </label>
       )}
       <div className="flex justify-center items-center relative">

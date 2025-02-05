@@ -13,7 +13,7 @@ import {
   uploadDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { tenureTypeOptions } from "../../../data/OptionsData";
+import { tenureTypeOptions, sectorOptions } from "../../../data/OptionsData";
 import { CreditCardIcon } from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 
@@ -89,7 +89,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Borrower",
       inputName: "borrowerId",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -162,6 +162,13 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "numberOfTenure",
       type: "number",
       validation: true,
+    },
+    {
+      labelName: "Sector",
+      inputName: "sector",
+      type: "select",
+      options: sectorOptions,
+      validation: false,
     },
     {
       labelName: "Refinanced Loan ID",

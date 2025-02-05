@@ -131,7 +131,8 @@ const InputFile = ({
           validationError[validationKey] ? "text-red-600" : "text-gray-500"
         }`}
       >
-        {validationError[validationKey] ? "Field required" : labelName}
+        {validationError[validationKey] ? "Field required" : labelName}{" "}
+        {isValidation && <span className="text-red-600">*</span>}
       </label>
 
       {!fileNames.length && !isDragging && (
