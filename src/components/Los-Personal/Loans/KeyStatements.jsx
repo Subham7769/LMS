@@ -1,7 +1,13 @@
 import React from "react";
 import formatNumber from "../../../utils/formatNumber";
+import { convertDate } from "../../../utils/convertDate";
 
-const KeyStatements = ({ keyFactStatements, upfrontFees }) => {
+const KeyStatements = ({
+  keyFactStatements,
+  upfrontFees,
+  termsAndConditions,
+  repayment,
+}) => {
   return (
     <div className="flex flex-col justify-center align-middle gap-5 m-10">
       <div className="text-xl font-semibold text-center">
@@ -226,7 +232,7 @@ const KeyStatements = ({ keyFactStatements, upfrontFees }) => {
       </ul>
 
       {/* Section 4 Upfront fees */}
-      <table className="w-full border border-gray-300 border-collapse">
+      <table className="mt-5 w-full border border-gray-300 border-collapse">
         <tr className="border border-gray-300">
           <td
             colSpan={6}
@@ -289,29 +295,191 @@ const KeyStatements = ({ keyFactStatements, upfrontFees }) => {
           </td>
         </tr>
         <tr className="border border-gray-300">
-          <td className="border border-gray-300 p-2 font-semibold">
-            2. Duration of Loan Agreement
-          </td>
-          <td className="border border-gray-300 p-2 text-center">
-            <div>(MONTHS)</div>
-            <div>{keyFactStatements?.durationOfLoanAgreement}</div>
-          </td>
           <td className="border border-gray-300 p-2">
-            <div className="font-semibold">5. Other Fees and Charges</div>
-            <div className="italic text-sm">See details in Section IV</div>
+            <div>Other (list all):</div>
+            <div>Processing Fee (ZMW)</div>
+            <div>Administration Fee (ZMW) per month</div>
           </td>
-          <td className="border border-gray-300 p-2 font-semibold text-center">
+          <td className="border border-gray-300 p-2 text-center font-semibold">
+            <div>{upfrontFees?.processingFee}</div>
+            <div>{upfrontFees?.administrationFeePerMonth}</div>
+          </td>
+          <td></td>
+          <td
+            colSpan={2}
+            className="border border-gray-300 p-2 font-semibold text-center"
+          >
+            TOTAL UPFRONT AND RECURRING FEES AND CHARGES (EXCLUDING INTEREST)
+          </td>
+          <td className="border border-gray-300 p-2 font-semibold">
             <div>(ZMW)</div>
             <div>{formatNumber(keyFactStatements?.otherFeesAndCharges)}</div>
           </td>
-          <td className="border border-gray-300 p-2 font-semibold">
-            10. Payment Frequency
+        </tr>
+      </table>
+
+      {/* Section 5 Terms & Conditions */}
+      <table className="mt-5 w-full border border-gray-300 border-collapse">
+        <tr className="border border-gray-300">
+          <td
+            colSpan={6}
+            className="border border-gray-300 p-2 text-center font-semibold"
+          >
+            SECTION V: IMPORTANT TERMS AND CONDITIONS TO CONSIDER
           </td>
-          <td className="border border-gray-300 p-2 font-semibold text-center">
-            {keyFactStatements?.paymentFrequency}
+        </tr>
+        <tr className="border border-gray-300 text-center font-semibold">
+          <td colSpan={2} className="border border-gray-300 p-2">
+            LATE PAYMENT PENALTIES
+          </td>
+          <td colSpan={2} className="border border-gray-300 p-2">
+            TERMS AND CONDITIONS
+          </td>
+          <td colSpan={2} className="border border-gray-300 p-2">
+            TERMS AND CONDITIONS
+          </td>
+        </tr>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2">
+            {" "}
+            Late fees if payment is more than [ ] days late:{" "}
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {termsAndConditions?.lateFees
+              ? formatNumber(termsAndConditions?.lateFees)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">
+            Cash deposit / mandatory savings:
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {termsAndConditions?.mandatorySavings
+              ? formatNumber(termsAndConditions?.mandatorySavings)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">
+            Variable interest rate applies
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {termsAndConditions?.variableInterestRate}
+          </td>
+        </tr>
+        <tr className="border border-gray-300">
+          <td className="border border-gray-300 p-2">
+            Default interest if payment is more than [ ] days late
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {termsAndConditions?.defaultInterest
+              ? formatNumber(termsAndConditions?.defaultInterest)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">
+            COLLATERAL:{" "}
+            <span className="italic">
+              You are committing the following as collateral:
+            </span>
+          </td>
+          <td className="border border-gray-300 p-2 text-center">
+            {termsAndConditions.collateral
+              ? formatNumber(termsAndConditions.collateral)
+              : "N/A"}
+          </td>
+          <td className="border border-gray-300 p-2">Other:______</td>
+          <td className="border border-gray-300 p-2 text-center">
+            {termsAndConditions.other
+              ? formatNumber(termsAndConditions.other)
+              : "N/A"}
           </td>
         </tr>
       </table>
+
+      {/* Section 6 Repayment Schedule */}
+      <table className="mt-5 w-full border border-gray-300 border-collapse">
+        <tr className="border border-gray-300">
+          <td
+            colSpan={6}
+            className="border border-gray-300 p-2 text-center font-semibold"
+          >
+            SECTION VI: REPAYMENT SCHEDULE
+          </td>
+        </tr>
+        <tr className="border border-gray-300 text-center font-semibold">
+          <td className="border border-gray-300 p-2">Payment Number</td>
+          <td className="border border-gray-300 p-2">Payment Due Date</td>
+          <td className="border border-gray-300 p-2">Payment Amount</td>
+          <td className="border border-gray-300 p-2">Principal</td>
+          <td className="border border-gray-300 p-2">
+            Interest and Other Fees and Charges
+          </td>
+          <td className="border border-gray-300 p-2">Ending Balance</td>
+        </tr>
+        <tr></tr>
+        {repayment?.repaymentSchedule.map((repayment, index) => (
+          <tr key={index + 1} className="border border-gray-300 text-center">
+            <td className="border border-gray-300 p-2">{index + 1}</td>
+            <td className="border border-gray-300 p-2">
+              {convertDate(repayment?.paymentDueDate)}
+            </td>
+            <td className="border border-gray-300 p-2">
+              {formatNumber(repayment?.paymentAmount)}
+            </td>
+            <td className="border border-gray-300 p-2">
+              {formatNumber(repayment?.principal)}
+            </td>
+            <td className="border border-gray-300 p-2">
+              {formatNumber(repayment?.interestAndOtherFees)}
+            </td>
+            <td className="border border-gray-300 p-2">
+              {formatNumber(repayment?.endingBalance)}
+            </td>
+          </tr>
+        ))}
+        <tr className="border border-gray-300 text-center ">
+          <td className="border border-gray-300 p-2 font-semibold">TOTAL</td>
+          <td className="border border-gray-300 p-2"></td>
+          <td className="border border-gray-300 p-2">
+            {formatNumber(repayment?.totalPaymentAmount)}
+          </td>
+          <td className="border border-gray-300 p-2"></td>
+          <td className="border border-gray-300 p-2">
+            {formatNumber(repayment?.totalInterestAndOtherFees)}
+          </td>
+          <td className="border border-gray-300 p-2"></td>
+        </tr>
+      </table>
+
+      <div className="italic text-red-500 font-semibold">
+        <div>
+          * This information is not final until signed by all parties, and does
+          not replace the loan agreement.*
+        </div>
+        <div>
+          * This information is valid for full duration of the loan (until it is
+          fully paid). *
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-10">
+        <div>CERTIFIED CORRECT:</div>
+        <div>
+          I ACKNOWLEDGE RECEIPT OF THIS STATEMENT PRIOR TO SIGNING THE LOAN
+          AGREEMENT:
+        </div>
+        <div>
+          I ACKNOWLEDGE RECEIPT OF THIS STATEMENT PRIOR TO SIGNING THE
+          GUARANTEE:
+        </div>
+        <div className="border-t border-gray-500">
+          Credit provider representative
+        </div>
+        <div className="border-t border-gray-500">Borrower</div>
+        <div className="border-t border-gray-500">
+          Guarantor (if applicable)
+        </div>
+        <div className="border border-gray-500 p-2 font-semibold">Name of Borrower:</div>
+        <div className="border border-gray-500 p-2 font-semibold">Application No: </div>
+        <div className="border border-gray-500 p-2 font-semibold">Date prepared:</div>
+      </div>
     </div>
   );
 };

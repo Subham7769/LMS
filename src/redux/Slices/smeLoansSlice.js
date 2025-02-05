@@ -666,6 +666,7 @@ const initialState = {
       perLoanInterest: "",
       principalAmount: 0,
       repaymentCycle: "",
+      sector: "",
       reasonForBorrowing: "",
       refinancedLoanId: "",
       branch: "",

@@ -181,6 +181,13 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
+      labelName: "Sector",
+      inputName: "sector",
+      type: "select",
+      options: sectorOptions,
+      validation: false,
+    },
+    {
       labelName: "Refinanced Loan ID",
       inputName: "refinancedLoanId",
       type: "text",

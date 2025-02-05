@@ -221,22 +221,37 @@ const LoanHistory = () => {
       {rowData?.loanActionDetailsList && (
         <div className="bg-white p-3 shadow rounded-md my-5 border-gray-300 border">
           <div className="font-semibold text-xl mb-3">Loan Action History</div>
-          {rowData?.loanActionDetailsList.map((action, index) => (
-            <div key={index} className="flex flex-col gap-2 border-b pb-2 mb-2">
-              {Object.entries(action).map(([key, value]) => (
-                <div key={key} className="flex items-center gap-2">
-                  <span className="font-semibold">
-                    {convertToReadableString(key)}:
-                  </span>
-                  <span>
-                    {key.includes("Date")
-                      ? convertDate(new Date(value).toLocaleString())
-                      : convertToTitleCase(value)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ))}
+          {rowData?.loanActionDetailsList.map((action, index) => {
+            const actionKeys = Object.keys(action);
+            let sentence = "";
+
+            actionKeys.forEach((key) => {
+              if (key.includes("By")) {
+                const role = convertToTitleCase(action[key]);
+
+                // Finding the corresponding date key dynamically
+                const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
+                const dateKey = actionKeys.find(
+                  (k) =>
+                    k.toLowerCase().includes(baseKey) &&
+                    k.toLowerCase().includes("date")
+                );
+
+                const formattedDate = dateKey
+                  ? `on ${convertDate(new Date(action[dateKey]))}`
+                  : "";
+                sentence = `Loan has been ${convertToReadableString(
+                  key.replace("By", "")
+                )} By ${role} ${formattedDate}`;
+              }
+            });
+
+            return (
+              <div key={index} className="border-b pb-2 mb-2">
+                <p>{sentence}</p>
+              </div>
+            );
+          })}
         </div>
       )}
       <div className="w-full flex justify-end gap-2 px-5">
