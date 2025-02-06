@@ -126,7 +126,7 @@ const SideBar = () => {
     const roleName = localStorage.getItem("roleName");
     switch (roleName) {
       case "ROLE_SUPERADMIN":
-        dispatch(fetchRACData());
+        // dispatch(fetchRACData());
         dispatch(fetchDBRData());
         // dispatch(fetchBEData());
         dispatch(fetchProjectData());
@@ -143,7 +143,7 @@ const SideBar = () => {
         break;
 
       case "ROLE_VIEWER":
-        dispatch(fetchRACData());
+        // dispatch(fetchRACData());
         dispatch(fetchDBRData());
         // dispatch(fetchBEData());
         dispatch(fetchProjectData());
@@ -163,7 +163,7 @@ const SideBar = () => {
         break;
 
       case "ROLE_CREDITOR_ADMIN":
-        dispatch(fetchRACData());
+        // dispatch(fetchRACData());
         dispatch(fetchDBRData());
         // dispatch(fetchBEData());
         dispatch(fetchProjectData());
@@ -192,7 +192,7 @@ const SideBar = () => {
         break;
 
       case "ROLE_MAKER_ADMIN":
-        dispatch(fetchRACData());
+        // dispatch(fetchRACData());
         dispatch(fetchDBRData());
         // dispatch(fetchBEData());
         dispatch(fetchProjectData());
@@ -207,7 +207,7 @@ const SideBar = () => {
         break;
 
       case "ROLE_CHECKER_ADMIN":
-        dispatch(fetchRACData());
+        // dispatch(fetchRACData());
         dispatch(fetchDBRData());
         // dispatch(fetchBEData());
         dispatch(fetchProjectData());

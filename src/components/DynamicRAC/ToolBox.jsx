@@ -19,7 +19,7 @@ import {
 import { toast } from "react-toastify";
 import getOperatorsForCondition from "./getOperatorsForCondition";
 
-const Toolbox = ({ sectionId, onClose }) => {
+const Toolbox = ({ sectionId, onClose, handleSaveDynamicRAC }) => {
   const { racId } = useParams();
   const dispatch = useDispatch();
   const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
@@ -186,6 +186,7 @@ const Toolbox = ({ sectionId, onClose }) => {
       );
       setRuleConfig(initialState);
       onClose();
+      handleSaveDynamicRAC();
     } else {
       if (condition === "Equal to") {
         dispatch(
@@ -208,6 +209,9 @@ const Toolbox = ({ sectionId, onClose }) => {
             },
           })
         );
+        setRuleConfig(initialState);
+        onClose();
+        handleSaveDynamicRAC();
       } else {
         dispatch(
           addRule({
@@ -229,9 +233,10 @@ const Toolbox = ({ sectionId, onClose }) => {
             },
           })
         );
+        setRuleConfig(initialState);
+        onClose();
+        handleSaveDynamicRAC();
       }
-      setRuleConfig(initialState);
-      onClose();
     }
   };
 

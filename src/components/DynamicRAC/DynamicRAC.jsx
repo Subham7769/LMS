@@ -44,6 +44,7 @@ import {
   validateRAC,
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
+import store from "../../redux/store";
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -107,6 +108,51 @@ const DynamicRAC = () => {
     }
   };
 
+  const handleSaveDynamicRAC = async () => {
+    // Extract the section names
+    const sectionNames = sections.map((section) => section.sectionName);
+
+    // Create a Set to check for uniqueness
+    const uniqueSectionNames = new Set();
+    let duplicateSectionName = null;
+
+    // Check for duplicates
+    for (let name of sectionNames) {
+      if (uniqueSectionNames.has(name)) {
+        duplicateSectionName = name;
+        break; // Stop the loop if a duplicate is found
+      }
+      uniqueSectionNames.add(name);
+    }
+
+    if (duplicateSectionName) {
+      // Show an alert message if a duplicate section name exists
+      toast(
+        `${duplicateSectionName} already exists. Please use unique section names.`
+      );
+      return; // Exit early, preventing further execution
+    }
+
+    // Proceed with validation and API call if no duplicates
+    const isValid = validateRAC(sections, dispatch);
+    if (isValid) {
+      console.log("API call made");
+      const state = store.getState();
+      const racConfig = state.dynamicRac.racConfig;
+      try {
+        const saveAction = await dispatch(saveDynamicRac(racConfig));
+
+        if (saveAction.type.endsWith("fulfilled")) {
+          await dispatch(fetchOptionList(racId));
+
+          await dispatch(fetchDynamicRacDetails(racId));
+        }
+      } catch (error) {
+        console.error("Error during handleSave:", error);
+      }
+    }
+  };
+
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -137,6 +183,11 @@ const DynamicRAC = () => {
 
       console.log("Sections after reorder: ", newSections);
       dispatch(setSection({ newSections }));
+
+      // save Changes
+      setTimeout(() => {
+        handleSaveDynamicRAC();
+      }, 1000);
     } else {
       // Moving field between different sections
       const sourceSectionIndex = newSections.findIndex(
@@ -178,6 +229,11 @@ const DynamicRAC = () => {
 
       console.log("Sections after move: ", newSections);
       dispatch(setSection({ newSections }));
+
+      // save Changes
+      setTimeout(() => {
+        handleSaveDynamicRAC();
+      }, 1000);
     }
   };
 
@@ -188,49 +244,6 @@ const DynamicRAC = () => {
         dispatch(fetchDynamicRacData());
       }
     });
-  };
-
-  const handleSaveDynamicRAC = async () => {
-    // Extract the section names
-    const sectionNames = sections.map((section) => section.sectionName);
-
-    // Create a Set to check for uniqueness
-    const uniqueSectionNames = new Set();
-    let duplicateSectionName = null;
-
-    // Check for duplicates
-    for (let name of sectionNames) {
-      if (uniqueSectionNames.has(name)) {
-        duplicateSectionName = name;
-        break; // Stop the loop if a duplicate is found
-      }
-      uniqueSectionNames.add(name);
-    }
-
-    if (duplicateSectionName) {
-      // Show an alert message if a duplicate section name exists
-      toast(
-        `${duplicateSectionName} already exists. Please use unique section names.`
-      );
-      return; // Exit early, preventing further execution
-    }
-
-    // Proceed with validation and API call if no duplicates
-    const isValid = validateRAC(sections, dispatch);
-    if (isValid) {
-      console.log("API call made");
-      try {
-        const saveAction = await dispatch(saveDynamicRac(racConfig));
-
-        if (saveAction.type.endsWith("fulfilled")) {
-          await dispatch(fetchOptionList(racId));
-
-          await dispatch(fetchDynamicRacDetails(racId));
-        }
-      } catch (error) {
-        console.error("Error during handleSave:", error);
-      }
-    }
   };
 
   // Updated handleDelete function
@@ -305,6 +318,7 @@ const DynamicRAC = () => {
             <Toolbox
               sectionId={sectionId}
               onClose={() => setRuleModal(false)}
+              handleSaveDynamicRAC={handleSaveDynamicRAC}
             />
           </div>
         </div>
@@ -370,7 +384,8 @@ const DynamicRAC = () => {
             />
 
             {(roleName == "ROLE_MAKER_ADMIN" ||
-              roleName == "ROLE_ADMIN") && (
+              roleName == "ROLE_ADMIN" ||
+              roleName === "ROLE_SUPERADMIN") && (
               <div>
                 {!sections.length < 1 && (
                   <Button
@@ -382,14 +397,14 @@ const DynamicRAC = () => {
                 )}
               </div>
             )}
-
           </div>
           <div className="flex justify-between items-center">
             {roleName !== "ROLE_VIEWER" && (
               <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
                 <div className="flex gap-2"></div>
                 {(roleName == "ROLE_MAKER_ADMIN" ||
-                  roleName == "ROLE_ADMIN") && (
+                  roleName == "ROLE_ADMIN" ||
+                  roleName === "ROLE_SUPERADMIN") && (
                   <div className="flex gap-2 items-end">
                     <HoverButton
                       icon={ArrowDownOnSquareIcon}
