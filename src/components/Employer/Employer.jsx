@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   PlusIcon,
   TrashIcon,
@@ -7,7 +7,6 @@ import {
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setEmployerData,
@@ -24,6 +23,9 @@ import {
 import store from "../../redux/store";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 import { fetchAffordibilityData } from "../../redux/Slices/sidebarSlice";
+import { convertDate } from "../../utils/convertDate";
+import AddEmployerModal from "./AddEmployerModal";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 const Employer = () => {
   const dispatch = useDispatch();
@@ -34,6 +36,8 @@ const Employer = () => {
   const { menus } = useSelector((state) => state.sidebar);
   const roleName = userData?.roles[0]?.name;
   const [affordabilityOptions, setAffordabilityOptions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showEmployerModal, setShowEmployerModal] = useState(false);
 
   useEffect(() => {
     dispatch(fetchEmployerData());
@@ -67,6 +71,7 @@ const Employer = () => {
     if (isValid) {
       dispatch(addEmployerData(employerData)).unwrap();
     }
+    setShowEmployerModal(false);
   };
 
   const handleChange = (e, id) => {
@@ -88,61 +93,77 @@ const Employer = () => {
     dispatch(deleteEmployerData(id));
   };
 
+  const handleAddEmployer = () => {
+    setShowEmployerModal(true);
+  };
+
+  const closeEmployerModal = () => {
+    setShowEmployerModal(false);
+  };
+
+  // **Filter employers based on search term**
+  const filteredEmployers = allEmployerData?.filter((emp) =>
+    emp?.employerName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return <ContainerTile loading={loading} />;
+  }
+
   return (
     <>
       <h2 className="mb-6">
-        <b
-          title="Employer"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
-        >
-          Employer
-        </b>
+        <b className="text-xl font-semibold">Employer</b>
+        <div className="text-gray-600 text-sm">
+          Manage employers and their affordability criteria
+        </div>
       </h2>
       <div className="flex flex-col gap-5">
-        {!hasViewOnlyAccessGroup2(roleName) ? (
-          <ContainerTile
-            loading={loading}
-            // error={error}
-          >
-            <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
-              <InputText
-                labelName="Employer Name"
-                inputName="employerName"
-                inputValue={employerData?.employerName}
-                onChange={handleInputChange}
-                placeHolder="Infosys"
-                isValidation={true}
-              />
-              <InputSelect
-                labelName="Affordability Criteria"
-                inputOptions={affordabilityOptions}
-                inputName="affordabilityCriteriaTempId"
-                inputValue={employerData?.affordabilityCriteriaTempId}
-                onChange={handleInputChange}
-                isValidation={true}
-              />
+        {/* Search Bar */}
+        <div className="flex items-end justify-between">
+          <div className="w-1/3">
+            <InputText
+              labelName="Search Employer"
+              inputName="searchEmployer"
+              inputValue={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeHolder="Search by employer name"
+            />
+          </div>
+          {!hasViewOnlyAccessGroup2(roleName) ? (
+            <div>
               <Button
                 buttonIcon={PlusIcon}
-                onClick={handleAddFields}
-                circle={true}
+                buttonName={"Add Employer"}
+                onClick={handleAddEmployer}
+                rectangle={true}
               />
             </div>
-          </ContainerTile>
-        ) : (
-          ""
-        )}
-        {allEmployerData?.map((empData, index) => (
-          <ContainerTile
-            loading={loading}
-            error={error}
-            key={"Employer" + index}
-          >
+          ) : null}
+        </div>
+
+        {/* Employer Data Table */}
+        <div className="shadow-md border border-gray-300 rounded-md text-center">
+          <div className="grid grid-cols-4 items-end mb-4 bg-gray-100 px-5">
+            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Employer Name
+            </div>
+            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Affordability Criteria
+            </div>
+            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Creation Date
+            </div>
+            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Actions
+            </div>
+          </div>
+          {filteredEmployers?.map((empData, index) => (
             <div
               key={empData.employerId}
-              className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end "
+              className="grid grid-cols-4 gap-4 items-center pb-3 bg-white px-5 border-b border-gray-300 mb-3"
             >
               <InputText
-                labelName="Employer Name"
                 inputName="employerName"
                 id={`employer_${empData?.employerId}`}
                 inputValue={empData?.employerName}
@@ -152,15 +173,17 @@ const Employer = () => {
                 isIndex={empData.dataIndex}
               />
               <InputSelect
-                labelName="Affordability Criteria"
                 inputOptions={affordabilityOptions}
                 id={`affordability_${empData?.employerId}`}
                 inputName="affordabilityCriteriaTempId"
                 inputValue={empData?.affordabilityCriteriaTempId}
                 onChange={(e) => handleChange(e, empData?.employerId)}
               />
+              <div className="text-gray-600">
+                {convertDate(empData?.creationDate)}
+              </div>
               {!hasViewOnlyAccessGroup2(roleName) ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center gap-4">
                   <Button
                     buttonIcon={CheckCircleIcon}
                     onClick={() => handleSave(empData?.employerId, index)}
@@ -168,16 +191,23 @@ const Employer = () => {
                   />
                   <Button
                     buttonIcon={TrashIcon}
-                    onClick={() => handleDelete(empData?.employerId, index)}
+                    onClick={() => handleDelete(empData?.employerId)}
                     circle={true}
                   />
                 </div>
-              ) : (
-                ""
-              )}
+              ) : "-"}
             </div>
-          </ContainerTile>
-        ))}
+          ))}
+        </div>
+
+        <AddEmployerModal
+          isOpen={showEmployerModal}
+          onClose={closeEmployerModal}
+          employerData={employerData}
+          handleInputChange={handleInputChange}
+          handleAddFields={handleAddFields}
+          affordabilityOptions={affordabilityOptions}
+        />
       </div>
     </>
   );

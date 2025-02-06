@@ -1,4 +1,4 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BoltIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
@@ -7,54 +7,80 @@ import useOnline from "../../../utils/useOnline";
 import NotificationWindow from "../../Notifications/NotificationWindow";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../../../redux/Slices/authSlice";
+import { logout, setRole } from "../../../redux/Slices/authSlice";
+import { fetchRoles } from "../../../redux/Slices/userManagementSlice";
+import InputSelect from "../InputSelect/InputSelect";
+import { useSelector } from "react-redux";
 
-const UserMenu = ({ userNavigation, isOnline }) => (
-  <Menu as="div" className="relative">
-    <div className="flex items-center gap-2">
-      <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-gray-100 transition-colors duration-200 ">
-        <span className="absolute -inset-1.5" />
-        <span className="sr-only">Open user menu</span>
-        <UserCircleIcon className="h-8 w-8 text-gray-500" />
-        <span
-          title={isOnline ? "Internet Access" : "No Internet Access"}
-          className={`absolute bottom-1 right-1 h-3 w-3 ${
-            isOnline ? "bg-green-500" : "bg-red-500"
-          }  rounded-full text-xs text-white flex items-center justify-center`}
-        ></span>
-      </Menu.Button>
-      <div className="text-gray-500">
-        Hello, {localStorage.getItem("username")}
+const UserMenu = ({ userNavigation, isOnline }) => {
+  const dispatch = useDispatch();
+
+  const { roleData } = useSelector((state) => state.userManagement);
+  const { roleName } = useSelector((state) => state.auth);
+
+  const handleRoleChange = (e) => {
+    const selectedRole = e.target.value;
+    dispatch(setRole(selectedRole));
+  };
+
+  return (
+    <Menu as="div" className="relative">
+      <div className="flex items-center gap-2">
+        <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-gray-100 transition-colors duration-200 ">
+          <span className="absolute -inset-1.5" />
+          <span className="sr-only">Open user menu</span>
+          <UserCircleIcon className="h-8 w-8 text-gray-500" />
+          <span
+            title={isOnline ? "Internet Access" : "No Internet Access"}
+            className={`absolute bottom-1 right-1 h-3 w-3 ${
+              isOnline ? "bg-green-500" : "bg-red-500"
+            }  rounded-full text-xs text-white flex items-center justify-center`}
+          ></span>
+        </Menu.Button>
+        <div className="text-gray-500">
+          Hello, {localStorage.getItem("username")}
+        </div>
+        {localStorage.getItem("username") === "superadmin" &&<div>
+          {/* Role Dropdown */}
+          <InputSelect
+            inputOptions={roleData.map((role) => ({
+              label: role.label,
+              value: role.label,
+            }))}
+            inputValue={roleName}
+            onChange={handleRoleChange}
+          />
+        </div>}
       </div>
-    </div>
-    <Transition
-      enter="transition ease-out duration-100"
-      enterFrom="transform opacity-0 scale-95"
-      enterTo="transform opacity-100 scale-100"
-      leave="transition ease-in duration-75"
-      leaveFrom="transform opacity-100 scale-100"
-      leaveTo="transform opacity-0 scale-95"
-    >
-      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        {userNavigation.map((item) => (
-          <Menu.Item key={item.name}>
-            {({ active }) => (
-              <Link
-                to={item.href}
-                className={`block px-4 py-2 text-sm ${
-                  active ? "bg-gray-100 text-gray-700" : "text-gray-700"
-                }`}
-                onClick={item.action}
-              >
-                {item.name}
-              </Link>
-            )}
-          </Menu.Item>
-        ))}
-      </Menu.Items>
-    </Transition>
-  </Menu>
-);
+      <Transition
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {userNavigation.map((item) => (
+            <Menu.Item key={item.name}>
+              {({ active }) => (
+                <Link
+                  to={item.href}
+                  className={`block px-4 py-2 text-sm ${
+                    active ? "bg-gray-100 text-gray-700" : "text-gray-700"
+                  }`}
+                  onClick={item.action}
+                >
+                  {item.name}
+                </Link>
+              )}
+            </Menu.Item>
+          ))}
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  );
+};
 
 const Header = () => {
   const navigate = useNavigate();
@@ -89,6 +115,10 @@ const Header = () => {
       setActiveTab(active.id);
     }
   }, [location, tabs]);
+
+  useEffect(() => {
+    dispatch(fetchRoles());
+  }, [dispatch]);
 
   return (
     <header

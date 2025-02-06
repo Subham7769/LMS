@@ -23,6 +23,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import convertToReadableString from "../../utils/convertToReadableString";
+import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const Affordability = () => {
   const { affordabilityCriteriaTempId } = useParams();
@@ -146,6 +147,7 @@ const Affordability = () => {
                 inputValue={affordabilityData[key]}
                 onChange={handleChange}
                 placeHolder="10%"
+                // isValidation={true}
               />
             </div>
           ))}
@@ -162,12 +164,13 @@ const Affordability = () => {
                 inputValue={affordabilityData[key]}
                 onChange={handleChange}
                 placeHolder="10%"
+                // isValidation={true}
               />
             </div>
           ))}
         </div>
       </ContainerTile>
-      {roleName !== "ROLE_VIEWER" ? (
+      {!hasViewOnlyAccessGroup2(roleName) ? (
         <div className="text-right mt-5">
           <Button
             buttonIcon={CheckCircleIcon}

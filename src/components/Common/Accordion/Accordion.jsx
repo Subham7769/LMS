@@ -9,6 +9,8 @@ const Accordion = ({
   renderExpandedContent,
   error = false,
   isOpen = false,
+  headerComponent,
+  children,
 }) => {
   const [isExpanded, setIsExpanded] = useState(isOpen);
 
@@ -28,16 +30,23 @@ const Accordion = ({
         }`}
         onClick={toggleExpand}
       >
-        <div className="flex gap-2 justify-start items-center ">
-          {Icon && <Icon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
-          <span className="font-medium text-gray-800">{heading}</span>
-          <span className="text-xs text-gray-600">{subHeading}</span>
-          {error && (
-            <span className="text-xs text-red-500 px-2 py-1 bg-red-50 rounded-lg">
-              Contains Error
-            </span>
-          )}
-        </div>
+        {/* Heading Text */}
+        {!headerComponent && (
+          <div className="flex gap-2 justify-start items-center ">
+            {Icon && <Icon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
+            <span className="font-medium text-gray-800">{heading}</span>
+            <span className="text-xs text-gray-600">{subHeading}</span>
+            {error && (
+              <span className="text-xs text-red-500 px-2 py-1 bg-red-50 rounded-lg">
+                Contains Error
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Header Component */}
+        {headerComponent && headerComponent}
+        
         <button
           className="text-gray-600 hover:text-gray-800"
           aria-label={isExpanded ? "Collapse section" : "Expand section"}
@@ -46,7 +55,9 @@ const Accordion = ({
         </button>
       </div>
       {isExpanded && (
-        <div className="px-4 py-4 bg-gray-50">{renderExpandedContent()}</div>
+        <div className="px-4 py-4 bg-white">
+          {renderExpandedContent ? renderExpandedContent() : children}
+        </div>
       )}
     </div>
   );

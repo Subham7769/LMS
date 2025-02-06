@@ -205,3 +205,18 @@ export const conditionsOptions = [
   { label: "Greater than", value: "Greater than" },
   { label: "Greater than or equal to", value: "Greater than or equal to" },
 ];
+
+export const sectorOptions = [
+  { label: "Construction", value: "Construction" },
+  { label: "Education", value: "Education" },
+  { label: "Energy", value: "Energy" },
+  { label: "Health", value: "Health" },
+  { label: "ICT", value: "ICT" },
+  { label: "Insurance and Finance", value: "Insurance and Finance" },
+  { label: "Livestock and Agriculture", value: "Livestock and Agriculture" },
+  { label: "Manufacturing", value: "Manufacturing" },
+  { label: "Mining", value: "Mining" },
+  { label: "Tourism", value: "Tourism" },
+  { label: "Trading", value: "Trading" },
+  { label: "Transport", value: "Transport" },
+];

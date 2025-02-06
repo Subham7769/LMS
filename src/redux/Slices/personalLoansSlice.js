@@ -666,6 +666,7 @@ const initialState = {
       principalAmount: 0,
       repaymentCycle: "",
       refinancedLoanId: "",
+      sector: "",
       branch: "",
       agentName: "",
       lhacoName: "",

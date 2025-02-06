@@ -128,7 +128,7 @@ const SideBar = () => {
       case "ROLE_SUPERADMIN":
         dispatch(fetchRACData());
         dispatch(fetchDBRData());
-        dispatch(fetchBEData());
+        // dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
         dispatch(fetchCreditScoreEqData());
@@ -145,7 +145,7 @@ const SideBar = () => {
       case "ROLE_VIEWER":
         dispatch(fetchRACData());
         dispatch(fetchDBRData());
-        dispatch(fetchBEData());
+        // dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
         dispatch(fetchCreditScoreEqData());
@@ -165,7 +165,7 @@ const SideBar = () => {
       case "ROLE_CREDITOR_ADMIN":
         dispatch(fetchRACData());
         dispatch(fetchDBRData());
-        dispatch(fetchBEData());
+        // dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
         dispatch(fetchCreditScoreEqData());
@@ -194,7 +194,7 @@ const SideBar = () => {
       case "ROLE_MAKER_ADMIN":
         dispatch(fetchRACData());
         dispatch(fetchDBRData());
-        dispatch(fetchBEData());
+        // dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
         dispatch(fetchCreditScoreEqData());
@@ -209,7 +209,7 @@ const SideBar = () => {
       case "ROLE_CHECKER_ADMIN":
         dispatch(fetchRACData());
         dispatch(fetchDBRData());
-        dispatch(fetchBEData());
+        // dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
         dispatch(fetchCreditScoreEqData());
@@ -228,7 +228,7 @@ const SideBar = () => {
       case "ROLE_MANAGEMENT_CREDIT_COMMITTEE":
       case "ROLE_BOARD":
         dispatch(fetchDBRData());
-        dispatch(fetchBEData());
+        // dispatch(fetchBEData());
         dispatch(fetchProjectData());
         dispatch(fetchProductData());
         dispatch(fetchCreditScoreEqData());

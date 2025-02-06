@@ -113,7 +113,8 @@ const InputSelect = ({
           } px-1`}
           htmlFor={inputName}
         >
-          {validationError[validationKey] ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}{" "}
+          {isValidation && <span className="text-red-600">*</span>}
         </label>
       )}
       <Select

@@ -18,6 +18,68 @@ const ShimmerTable = () => {
   );
 };
 
+const keyFactStatements = {
+  amountOfLoan: 80000,
+  durationOfLoanAgreement: 10,
+  amountReceived: 69069,
+  interest: 13385.99,
+  otherFeesAndCharges: 14931,
+  annualPercentageRate: "35%",
+  totalCostOfCredit: 28281.99,
+  dateFirstPaymentDue: "28 Jan 2025",
+  numberOfPayment: 10,
+  paymentFrequency: "Once per month",
+  amountPerPayment: 9938.6,
+};
+
+const upfrontFees = {
+  arrangementFee: 3600,
+  collateralAppraisal: null,
+  creditLifeInsurance: 3200,
+  documentationFee: null,
+  drawdownFee: null,
+  managementFee: null,
+  processingFee: 2000,
+  administrationFeePerMonth: 600,
+};
+
+const termsAndConditions = {
+  lateFees: null,
+  defaultInterest: null,
+  mandatorySavings: null,
+  collateral: null,
+  variableInterestRate: "",
+  other: "",
+};
+
+const repayment = {
+  repaymentSchedule: [
+    {
+      paymentDueDate: "2025-02-28T09:34:51.778Z",
+      paymentAmount: 9938.6,
+      principal: 7005.27,
+      interestAndOtherFees: 2933.33,
+      endingBalance: 72994.73,
+    },
+    {
+      paymentDueDate: "2025-03-28T09:34:51.778Z",
+      paymentAmount: 9938.6,
+      principal: 7005.27,
+      interestAndOtherFees: 2933.33,
+      endingBalance: 72994.73,
+    },
+    {
+      paymentDueDate: "2025-04-28T09:34:51.778Z",
+      paymentAmount: 9938.6,
+      principal: 7005.27,
+      interestAndOtherFees: 2933.33,
+      endingBalance: 72994.73,
+    },
+  ],
+  totalPaymentAmount: 99385.99,
+  totalInterestAndOtherFees: 19650.65
+};
+
 const LoanAgreementPrint = () => {
   const dispatch = useDispatch();
   const { loanApplicationId, userId } = useParams();
@@ -241,8 +303,13 @@ const LoanAgreementPrint = () => {
           </div>
         </div>
       </div>
-      <TermsNConditions />
-      {/* <KeyStatements loanDetails={loanDetails} /> */}
+      {/* <TermsNConditions /> */}
+      <KeyStatements
+        keyFactStatements={keyFactStatements}
+        upfrontFees={upfrontFees}
+        termsAndConditions={termsAndConditions}
+        repayment={repayment}
+      />
     </>
   );
 };

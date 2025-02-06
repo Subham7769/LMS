@@ -10,11 +10,11 @@ import { useSelector } from "react-redux";
 const InputTextArea = ({
   labelName,
   inputName,
-  rowCount,
   inputValue,
   inputId,
   onChange,
   placeHolder,
+  rowCount,
   disabled = false,
   isValidation = false,
   isIndex,
@@ -61,7 +61,8 @@ const InputTextArea = ({
           } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
-          {validationError[validationKey] ? "Field required" : labelName}
+          {validationError[validationKey] ? "Field required" : labelName}{" "}
+          {isValidation && <span className="text-red-600">*</span>}
         </label>
       )}
       <textarea
