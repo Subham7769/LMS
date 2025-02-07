@@ -126,7 +126,9 @@ const ApproveLoans = () => {
         getPayload: { roleNames: roleNames },
       })
     ).unwrap();
-    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    if (rowData?.rolePermissions?.finalApprove) {
+      navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    }
   };
 
   const handleReject = async (rowData) => {

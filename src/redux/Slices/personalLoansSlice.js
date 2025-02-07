@@ -492,6 +492,7 @@ export const approveLoan = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to transfer");
       }
+      return approveLoanPayload.applicationStatus;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -1001,7 +1002,7 @@ const personalLoansSlice = createSlice({
       })
       .addCase(approveLoan.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan approved successfully");
+        toast.success(`Loan ${action.payload} successfully`);
       })
       .addCase(approveLoan.rejected, (state, action) => {
         state.loading = false;
