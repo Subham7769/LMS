@@ -331,7 +331,7 @@ const LoanApproval = () => {
             </ContainerTile>
           )
         )}
-        {loanapprovalData[0]?.loanCriteriaRangeRolesList.length > 0 && (
+        {!hasViewOnlyAccessGroup2(roleName) && loanapprovalData[0]?.loanCriteriaRangeRolesList.length > 0 && (
           <div className="text-right">
             <Button
               buttonIcon={CheckCircleIcon}

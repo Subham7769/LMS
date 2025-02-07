@@ -415,6 +415,7 @@ const ROLE_LOAN_OFFICER = [
   "Recovery",
   "Affordability",
   "Employer",
+  "Approval Config",
   "TCL",
   "Project",
   "Loan Product",

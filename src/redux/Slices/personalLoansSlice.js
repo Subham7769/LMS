@@ -1002,7 +1002,7 @@ const personalLoansSlice = createSlice({
       })
       .addCase(approveLoan.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success(`Loan ${action.payload} successfully`);
+        toast.success(`Loan ${action.payload.toLowerCase()} successfully`);
       })
       .addCase(approveLoan.rejected, (state, action) => {
         state.loading = false;

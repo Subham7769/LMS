@@ -34,12 +34,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
       state?.sidebar?.menus?.filter((item) => item.title === "DBR Config")[0]
         ?.submenuItems
   );
-  const BEDataInfo = useSelector(
-    (state) =>
-      state?.sidebar?.menus?.filter(
-        (item) => item.title === "Blocked Employer"
-      )[0]?.submenuItems
-  );
   const RPDataInfo = useSelector(
     (state) =>
       state?.sidebar?.menus?.filter((item) => item.title === "Rule Policy")[0]
@@ -144,7 +138,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
   useEffect(() => {}, [
     DBRConfigInfo,
     ProjectDataInfo,
-    BEDataInfo,
     RPDataInfo,
     TCLDataInfo,
     RecoveryDataInfo,
@@ -219,18 +212,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.dbcTempId}
             onChange={handleChange}
             isValidation={true}
-          />
-          <InputSelect
-            labelName="Blocked Employer"
-            inputOptions={formateDataDropDown(
-              "/loan/blocked-employer/",
-              BEDataInfo
-            )}
-            inputName="blockEmployersTempId"
-            inputValue={productData?.blockEmployersTempId}
-            onChange={handleChange}
-            // isValidation={true}
-            // isClearable={true}
           />
           <InputSelect
             labelName="Rule Policy"
