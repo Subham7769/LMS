@@ -66,6 +66,12 @@ const Affordability = lazy(() =>
 // Employer Imports
 const Employer = lazy(() => import("./components/Employer/Employer"));
 
+// Employer Imports
+const LoanApprovalPage = lazy(() => import("./pages/LoanApprovalPage"));
+const LoanApproval = lazy(() =>
+  import("./components/LoanApproval/LoanApproval")
+);
+
 // TCL Imports
 const TclPage = lazy(() => import("./pages/TclPage"));
 const TCLViewList = lazy(() => import("./components/TCLViewList/TCLViewList"));
@@ -471,6 +477,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "loan-approval",
+        element: <LoanApprovalPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "tcl",
         element: <TclPage />,
         errorElement: <RouteErrorBoundary />,
@@ -622,6 +633,11 @@ const routes = [
       {
         path: "employer",
         element: <Employer />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-approval/:approvalsConfigurationsTempId",
+        element: <LoanApproval />,
         errorElement: <RouteErrorBoundary />,
       },
       {

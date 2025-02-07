@@ -156,7 +156,9 @@ const KeyStatements = ({
           <div className="font-semibold">1. Amount of Loan</div>
           <div className="italic text-sm">Amount you are borrowing</div>
           <div className="font-semibold">(ZMW)</div>
-          <div className="font-semibold">{keyFactStatements?.amountOfLoan}</div>
+          <div className="font-semibold">
+            {formatNumber(keyFactStatements?.amountOfLoan)}
+          </div>
         </div>
         <div className="grid justify-center items-center text-5xl">+</div>
         <div className="col-span-2 border border-gray-300 p-2 grid gap-y-2">
@@ -166,7 +168,7 @@ const KeyStatements = ({
           </div>
           <div className="font-semibold">(ZMW)</div>
           <div className="font-semibold">
-            {keyFactStatements?.totalCostOfCredit}
+            {formatNumber(keyFactStatements?.totalCostOfCredit)}
           </div>
         </div>
         <div className="grid justify-center items-center text-5xl">=</div>
@@ -177,8 +179,10 @@ const KeyStatements = ({
           </div>
           <div className="font-semibold">(ZMW)</div>
           <div className="font-semibold">
-            {keyFactStatements?.amountOfLoan +
-              keyFactStatements?.totalCostOfCredit}
+            {formatNumber(
+              keyFactStatements?.amountOfLoan +
+                keyFactStatements?.totalCostOfCredit
+            )}
           </div>
         </div>
       </div>
@@ -254,13 +258,15 @@ const KeyStatements = ({
         </tr>
         <tr className="border border-gray-300">
           <td className="border border-gray-300 p-2">Arrangement fee (ZMW)</td>
-          <td className="border border-gray-300 p-2 font-semibold text-center">
-            {formatNumber(upfrontFees?.arrangementFee)}
+          <td className="border border-gray-300 p-2 text-center">
+            {upfrontFees.arrangementFee
+              ? formatNumber(upfrontFees.arrangementFee)
+              : "N/A"}
           </td>
           <td className="border border-gray-300 p-2">
             Collateral appraisal (ZMW)
           </td>
-          <td className="border border-gray-300 p-2 font-semibold text-center">
+          <td className="border border-gray-300 p-2 text-center">
             {upfrontFees.collateralAppraisal
               ? formatNumber(upfrontFees.collateralAppraisal)
               : "N/A"}
@@ -298,11 +304,11 @@ const KeyStatements = ({
           <td className="border border-gray-300 p-2">
             <div>Other (list all):</div>
             <div>Processing Fee (ZMW)</div>
-            <div>Administration Fee (ZMW) per month</div>
+            <div>CRB Fee (ZMW)</div>
           </td>
           <td className="border border-gray-300 p-2 text-center font-semibold">
-            <div>{upfrontFees?.processingFee}</div>
-            <div>{upfrontFees?.administrationFeePerMonth}</div>
+            <div>{formatNumber(upfrontFees?.processingFee)}</div>
+            <div>{upfrontFees?.crbfee}</div>
           </td>
           <td></td>
           <td
@@ -313,7 +319,7 @@ const KeyStatements = ({
           </td>
           <td className="border border-gray-300 p-2 font-semibold">
             <div>(ZMW)</div>
-            <div>{formatNumber(keyFactStatements?.otherFeesAndCharges)}</div>
+            <div>{formatNumber(keyFactStatements?.totalUpfrontFees)}</div>
           </td>
         </tr>
       </table>
@@ -476,9 +482,15 @@ const KeyStatements = ({
         <div className="border-t border-gray-500">
           Guarantor (if applicable)
         </div>
-        <div className="border border-gray-500 p-2 font-semibold">Name of Borrower:</div>
-        <div className="border border-gray-500 p-2 font-semibold">Application No: </div>
-        <div className="border border-gray-500 p-2 font-semibold">Date prepared:</div>
+        <div className="border border-gray-500 p-2 font-semibold">
+          Name of Borrower:
+        </div>
+        <div className="border border-gray-500 p-2 font-semibold">
+          Application No:{" "}
+        </div>
+        <div className="border border-gray-500 p-2 font-semibold">
+          Date prepared:
+        </div>
       </div>
     </div>
   );

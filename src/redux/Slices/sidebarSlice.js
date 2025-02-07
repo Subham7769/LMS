@@ -101,6 +101,24 @@ export const fetchAffordibilityData = createAsyncThunk(
   }
 );
 
+export const fetchLoanApprovalData = createAsyncThunk(
+  "fetchLoanApprovalData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_LOAN_APPROVAL_READ_ALL_CONFIGURATION}`;
+    const transformData = (data) => {
+      return data.map(({ name, approvalsConfigurationsTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/loan/loan-approval/" + approvalsConfigurationsTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchTCLData = createAsyncThunk(
   "fetchTCLData",
   async (_, { rejectWithValue }) => {
@@ -397,6 +415,7 @@ const ROLE_LOAN_OFFICER = [
   "Recovery",
   "Affordability",
   "Employer",
+  "Approval Config",
   "TCL",
   "Project",
   "Loan Product",
@@ -760,6 +779,27 @@ const sidebarSlice = createSlice({
         state.menus = updatedMenus;
       })
       .addCase(fetchAffordibilityData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
+      })
+
+      .addCase(fetchLoanApprovalData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchLoanApprovalData.fulfilled, (state, action) => {
+        state.loading = false;
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "Approval Config") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+      })
+      .addCase(fetchLoanApprovalData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         toast.error(`API Error : ${action.error.message}`);

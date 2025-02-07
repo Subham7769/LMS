@@ -34,12 +34,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
       state?.sidebar?.menus?.filter((item) => item.title === "DBR Config")[0]
         ?.submenuItems
   );
-  const BEDataInfo = useSelector(
-    (state) =>
-      state?.sidebar?.menus?.filter(
-        (item) => item.title === "Blocked Employer"
-      )[0]?.submenuItems
-  );
   const RPDataInfo = useSelector(
     (state) =>
       state?.sidebar?.menus?.filter((item) => item.title === "Rule Policy")[0]
@@ -54,6 +48,12 @@ const ProductInputFields = ({ productData, handleChange }) => {
     (state) =>
       state?.sidebar?.menus?.filter(
         (item) => item.title === "Eligible Tenure"
+      )[0]?.submenuItems
+  );
+  const loanApprovalDataInfo = useSelector(
+    (state) =>
+      state?.sidebar?.menus?.filter(
+        (item) => item.title === "Approval Config"
       )[0]?.submenuItems
   );
   const ProjectDataInfo = useSelector(
@@ -138,7 +138,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
   useEffect(() => {}, [
     DBRConfigInfo,
     ProjectDataInfo,
-    BEDataInfo,
     RPDataInfo,
     TCLDataInfo,
     RecoveryDataInfo,
@@ -202,8 +201,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             // isValidation={true}
             // isClearable={true}
           />
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end mb-4">
+
           <InputSelect
             labelName="DBR Config"
             inputOptions={formateDataDropDown(
@@ -214,18 +212,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
             inputValue={productData?.dbcTempId}
             onChange={handleChange}
             isValidation={true}
-          />
-          <InputSelect
-            labelName="Blocked Employer"
-            inputOptions={formateDataDropDown(
-              "/loan/blocked-employer/",
-              BEDataInfo
-            )}
-            inputName="blockEmployersTempId"
-            inputValue={productData?.blockEmployersTempId}
-            onChange={handleChange}
-            // isValidation={true}
-            // isClearable={true}
           />
           <InputSelect
             labelName="Rule Policy"
@@ -258,8 +244,18 @@ const ProductInputFields = ({ productData, handleChange }) => {
             onChange={handleChange}
             isValidation={true}
           />
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end">
+          <InputSelect
+            labelName="Approval Config"
+            inputOptions={formateDataDropDown(
+              "/loan/loan-approval/",
+              loanApprovalDataInfo
+            )}
+            inputName="approvalsConfigurationsTempId"
+            inputValue={productData?.approvalsConfigurationsTempId}
+            onChange={handleChange}
+            isValidation={true}
+          />
+
           <InputText
             labelName="Processing Fee"
             inputName="fee"

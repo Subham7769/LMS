@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import {
   deleteRuleById,
+  addRule,
   removeRule,
   updateStatus,
   fetchDynamicRacDetails,
@@ -17,8 +18,9 @@ import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
-import { operatorOptions } from "../../data/OptionsData";
+import { operatorOptions, conditionsOptions } from "../../data/OptionsData";
 import {
+  PlusIcon,
   EyeIcon,
   XMarkIcon,
   CheckIcon,
@@ -38,7 +40,14 @@ import Accordion from "../Common/Accordion/Accordion";
 import Button from "../Common/Button/Button";
 import StatusPill from "../Common/StatusPill/StatusPill";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import getOperatorsForCondition from "./getOperatorsForCondition";
+import getConditionForOperators from "./getConditionForOperators";
+import {
+  validateForm,
+  validateUserRole,
+} from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
 
 const RuleComponent = ({
   rule,
@@ -50,30 +59,6 @@ const RuleComponent = ({
   const dispatch = useDispatch();
   const { roleName } = useSelector((state) => state.auth);
   const [isEdit, setIsEdit] = useState(false);
-
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const updates = {};
-
-    if (name === "firstOperator" || name === "secondOperator") {
-      updates[name] = value;
-    } else if (name === "minimum" || name === "maximum") {
-      updates.numberCriteriaRangeList = [
-        {
-          [name]: value,
-        },
-      ];
-    }
-
-    dispatch(
-      updateRuleNumberCriteria({
-        sectionId,
-        dynamicRacRuleId: rule.dynamicRacRuleId,
-        updates,
-        numberCriteriaIndex: index,
-      })
-    );
-  };
 
   const handleRemoveRule = async (sectionId, dynamicRacRuleId) => {
     try {
@@ -157,12 +142,204 @@ const RuleComponent = ({
     );
   };
 
+  // Edit Number Config
+  const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
+  const { sections } = racConfig;
+  const [ruleConfig, setRuleConfig] = useState(rule);
+  const { firstOperator, secondOperator, numberCriteriaRangeList } = rule;
+
+  // const currentRacRule = racConfig.sections
+  //   .filter((section) => section.sectionId === sectionId)
+  //   .flatMap((section) => section.rules) // Get all rules from matched sections
+  //   .find((rule) => rule.dynamicRacRuleId === dynamicRacRuleId); // Find the specific rule
+ 
+
+  const minimum = numberCriteriaRangeList
+    ? numberCriteriaRangeList[0]?.minimum
+    : null;
+
+  const maximum = numberCriteriaRangeList
+    ? numberCriteriaRangeList[0]?.maximum
+    : null;
+
+  const [equalValue, setEqualValue] = useState(0);
+  const [minValue, setMinValue] = useState(minimum);
+  const [maxValue, setMaxValue] = useState(maximum);
+  const [condition, setCondition] = useState(
+    getConditionForOperators(firstOperator, secondOperator, minimum, maximum)
+  );
+  const initialMinValue = -Number(import.meta.env.VITE_MIN_MAX_LIMIT);
+  const initialMaxValue = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
+
+  useEffect(() => {
+    // Update condition whenever any of the values change
+    const newCondition = getConditionForOperators(
+      firstOperator,
+      secondOperator,
+      minimum,
+      maximum
+    );
+    setCondition(newCondition);
+  }, [firstOperator, secondOperator, minimum, maximum]); // Re-run effect when any of these dependencies change
+
+  useEffect(() => {
+    if (condition === "Less than" || condition === "Less than or equal to") {
+      setMaxValue(0); // Reset maxValue when condition is set
+      setMinValue(initialMinValue);
+    } else if (
+      condition === "Greater than" ||
+      condition === "Greater than or equal to"
+    ) {
+      setMinValue(0); // Reset minValue when condition is set
+      setMaxValue(initialMaxValue);
+    }
+  }, [condition]);
+
+  const handleConditionChange = (e) => {
+    setCondition(e.target.value);
+    const { firstOperator, secondOperator } = getOperatorsForCondition(
+      e.target.value
+    );
+    setRuleConfig((prevConfig) => ({
+      ...prevConfig,
+      firstOperator: firstOperator,
+      secondOperator: secondOperator,
+    }));
+  };
+
+  const handleRangeChange = (e, index) => {
+    const { name, checked, type, value } = e.target;
+
+    setRuleConfig((prevConfig) => ({
+      ...prevConfig,
+      numberCriteriaRangeList: prevConfig.numberCriteriaRangeList.map(
+        (item, idx) => {
+          if (index === idx) {
+            return {
+              ...item,
+              [name]: type === "checkbox" ? checked : value,
+            };
+          }
+          return item;
+        }
+      ),
+    }));
+  };
+
+  const addRangeEntry = () => {
+    setRuleConfig((prevConfig) => ({
+      ...prevConfig,
+      numberCriteriaRangeList: [
+        ...prevConfig.numberCriteriaRangeList,
+        {
+          minimum: 0,
+          maximum: 0,
+          resident: false,
+        },
+      ],
+    }));
+  };
+
+  const deleteRangeEntry = (index) => {
+    setRuleConfig((prevConfig) => ({
+      ...prevConfig,
+      numberCriteriaRangeList: prevConfig.numberCriteriaRangeList.filter(
+        (_, idx) => idx !== index
+      ),
+    }));
+  };
+
+  const handleAddRule = async (sectionId, ruleConfig) => {
+    const dataToValidate = {
+      sectionId: sectionId,
+      fieldType: ruleConfig.fieldType,
+      criteriaType: ruleConfig.criteriaType,
+      name: ruleConfig.name,
+    };
+    let isValid2 = true;
+    if (ruleConfig.fieldType == "NUMBER" && condition === "Between") {
+      isValid2 = validateUserRole(ruleConfig.numberCriteriaRangeList, dispatch);
+    }
+    await dispatch(validateForm(dataToValidate));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (!isValid2) {
+      toast.error("Add At least 1 range");
+    }
+    if (isValid && isValid2 && condition === "Between") {
+      dispatch(
+        addRule({
+          sectionId,
+          ruleConfig: {
+            ...ruleConfig,
+            sectionId: sectionId,
+            sectionName:
+              sections.find((item) => item.sectionId === sectionId)
+                ?.sectionName || "",
+            displayName: ruleConfig.name,
+          },
+        })
+      );
+      setTimeout(() => {
+        saveEdit();
+      }, 1000);
+    } else {
+      if (condition === "Equal to") {
+        dispatch(
+          addRule({
+            sectionId,
+            ruleConfig: {
+              ...ruleConfig,
+              sectionId: sectionId,
+              sectionName:
+                sections.find((item) => item.sectionId === sectionId)
+                  ?.sectionName || "",
+              displayName: ruleConfig.name,
+              numberCriteriaRangeList: [
+                {
+                  minimum: equalValue,
+                  maximum: equalValue,
+                  resident: false,
+                },
+              ],
+            },
+          })
+        );
+      } else {
+        dispatch(
+          addRule({
+            sectionId,
+            ruleConfig: {
+              ...ruleConfig,
+              sectionId: sectionId,
+              sectionName:
+                sections.find((item) => item.sectionId === sectionId)
+                  ?.sectionName || "",
+              displayName: ruleConfig.name,
+              numberCriteriaRangeList: [
+                {
+                  minimum: minValue,
+                  maximum: maxValue,
+                  resident: false,
+                },
+              ],
+            },
+          })
+        );
+      }
+      setTimeout(() => {
+        saveEdit();
+      }, 1000);
+    }
+  };
+
   return (
     <>
       {/* Maker UI */}
       {(roleName == "ROLE_MAKER_ADMIN" ||
         roleName == "ROLE_CHECKER_ADMIN" ||
-        roleName == "ROLE_ADMIN") && (
+        roleName == "ROLE_ADMIN" ||
+        roleName === "ROLE_SUPERADMIN") && (
         <div className="flex flex-col justify-between items-center p-2 rounded-lg border ">
           {!isEdit && (
             <div className="flex justify-between items-center p-2 w-[100%]">
@@ -196,7 +373,8 @@ const RuleComponent = ({
 
               {/* Actions */}
               {(roleName == "ROLE_MAKER_ADMIN" ||
-                roleName == "ROLE_ADMIN") && (
+                roleName == "ROLE_ADMIN" ||
+                roleName === "ROLE_SUPERADMIN") && (
                 <div className="flex gap-5 flex-col">
                   <PencilIcon
                     onClick={handleEdit}
@@ -219,64 +397,105 @@ const RuleComponent = ({
           {isEdit && rule?.fieldType === "NUMBER" && (
             <div className="relative flex justify-between items-center p-2 w-[100%]">
               <div className="flex-1 p-3 flex flex-col gap-3">
-                {rule.numberCriteriaRangeList.map((range, index) => (
-                  <div key={index} className="flex-1 grid grid-cols-4 gap-2">
-                    <InputSelect
-                      labelName="First Operator"
-                      inputOptions={operatorOptions}
-                      inputName="firstOperator"
-                      inputValue={rule.firstOperator} // Use range.firstOperator instead of rule.firstOperator
-                      onChange={(e) => handleInputChange(e, index)}
-                      disabled={rule?.status === "REJECTED"}
-                      isValidation={true}
-                      isSectionId={sectionId}
-                      isRuleId={dynamicRacRuleId}
-                    />
+                {/* Condition */}
+                <InputSelect
+                  labelName="Condition"
+                  inputOptions={conditionsOptions}
+                  inputName="condition"
+                  inputValue={condition}
+                  onChange={handleConditionChange}
+                  isValidation={true}
+                  searchable={true}
+                />
+
+                {(condition === "Less than" ||
+                  condition === "Less than or equal to") && (
+                  <InputNumber
+                    labelName="Value"
+                    inputName="maxValue"
+                    inputValue={maxValue}
+                    onChange={(e) => setMaxValue(e.target.value)}
+                    placeHolder="0"
+                  />
+                )}
+
+                {(condition === "Greater than" ||
+                  condition === "Greater than or equal to") && (
+                  <>
                     <InputNumber
-                      labelName="Min"
-                      inputName="minimum"
-                      inputValue={
-                        range.minimum !== null && range.minimum !== undefined
-                          ? parseInt(range.minimum)
-                          : ""
-                      } // Use range.minimum instead of rule.numberCriteriaRangeList[index].minimum
-                      onChange={(e) => handleInputChange(e, index)}
-                      placeholder="0"
-                      disabled={rule?.status === "REJECTED"}
-                      isValidation={true}
-                      isSectionId={sectionId}
-                      isRuleId={dynamicRacRuleId}
-                      isRangeIndex={index}
+                      labelName="Value"
+                      inputName="minValue"
+                      inputValue={minValue}
+                      onChange={(e) => setMinValue(e.target.value)}
+                      placeHolder="0"
                     />
-                    <InputSelect
-                      labelName="Second Operator"
-                      inputOptions={operatorOptions}
-                      inputName="secondOperator"
-                      inputValue={rule.secondOperator} // Use range.secondOperator instead of rule.secondOperator
-                      onChange={(e) => handleInputChange(e, index)}
-                      disabled={rule?.status === "REJECTED"}
-                      isValidation={true}
-                      isSectionId={sectionId}
-                      isRuleId={dynamicRacRuleId}
-                    />
+                  </>
+                )}
+
+                {condition === "Equal to" && (
+                  <>
                     <InputNumber
-                      labelName="Max"
-                      inputName="maximum"
-                      inputValue={
-                        range.maximum !== null && range.maximum !== undefined
-                          ? parseInt(range.maximum)
-                          : ""
-                      } // Use range.maximum instead of rule.numberCriteriaRangeList[index].maximum
-                      onChange={(e) => handleInputChange(e, index)}
-                      placeholder="0"
-                      disabled={rule?.status === "REJECTED"}
-                      isValidation={true}
-                      isSectionId={sectionId}
-                      isRuleId={dynamicRacRuleId}
-                      isRangeIndex={index}
+                      labelName="equalValue"
+                      inputName="equalValue"
+                      inputValue={equalValue}
+                      onChange={(e) => setEqualValue(e.target.value)}
+                      placeHolder="0"
                     />
-                  </div>
-                ))}
+                  </>
+                )}
+
+                {condition === "Between" && (
+                  <>
+                    {/* Ranges */}
+                    {ruleConfig.numberCriteriaRangeList.map((range, index) => (
+                      <div
+                        key={index + 1}
+                        className={"flex justify-between items-center rounded"}
+                      >
+                        <div key={index} className="grid gap-2 grid-cols-3">
+                          <InputNumber
+                            labelName="Min"
+                            inputName="minimum"
+                            inputValue={range.minimum}
+                            onChange={(e) => handleRangeChange(e, index)}
+                            placeHolder="0"
+                          />
+                          <InputNumber
+                            labelName="Max"
+                            inputName="maximum"
+                            inputValue={range.maximum}
+                            onChange={(e) => handleRangeChange(e, index)}
+                            placeHolder="0"
+                          />
+                          <InputCheckbox
+                            labelName="Resident"
+                            inputChecked={range.resident}
+                            onChange={(e) => handleRangeChange(e, index)}
+                            inputName="resident"
+                          />
+                        </div>
+
+                        <XMarkIcon
+                          onClick={() => deleteRangeEntry(index)}
+                          className="h-6 w-6 hover:text-red-500 hover:cursor-pointer"
+                        />
+                      </div>
+                    ))}
+
+                    <div
+                      className={"flex text-blue-500 mt-2"}
+                      onClick={addRangeEntry}
+                    >
+                      <PlusIcon className="h-5 w-5" />
+                      <p>
+                        Add{" "}
+                        {ruleConfig.numberCriteriaRangeList.length < 1
+                          ? "Range"
+                          : "Another Range"}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Actions */}
@@ -290,7 +509,7 @@ const RuleComponent = ({
                 buttonIcon={CheckCircleIcon}
                 buttonName="Save"
                 rectangle={true}
-                onClick={saveEdit}
+                onClick={() => handleAddRule(sectionId, ruleConfig)}
                 className={"mt-4"}
               />
             </div>
@@ -327,7 +546,8 @@ const RuleComponent = ({
 
           {/* Reject/Accept Actions */}
           {(roleName == "ROLE_CHECKER_ADMIN" ||
-            roleName == "ROLE_ADMIN") &&
+            roleName == "ROLE_ADMIN" ||
+            roleName === "ROLE_SUPERADMIN") &&
             !isEdit &&
             rule?.status === "CREATED" && (
               <>

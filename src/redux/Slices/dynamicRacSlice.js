@@ -79,10 +79,11 @@ export const saveDynamicRac = createAsyncThunk(
   "rac/saveDynamicRac", // Action type
   async (racConfig, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
+    console.log(racConfig)
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_DYNAMIC_RAC_CREATE}`,
-        racConfig, // Pass the data to update here
+        racConfig, 
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the headers
@@ -276,7 +277,11 @@ const initialState = {
   },
   optionsList: [],
   isEditorMode: true,
-  currentRule: {},
+  currentRule: {
+    firstOperator: null,
+    secondOperator: null,
+    numberCriteriaRangeList: null,
+  },
   loading: false,
   error: null,
 };
@@ -363,6 +368,7 @@ const dynamicRacSlice = createSlice({
     },
     addRule(state, action) {
       const { sectionId, ruleConfig } = action.payload;
+      console.log(sectionId, ruleConfig);
 
       if (sectionId) {
         let newRule = {};
@@ -371,29 +377,42 @@ const dynamicRacSlice = createSlice({
             numberCriteriaRangeList,
             firstOperator,
             secondOperator,
+            dynamicRacRuleId,
             ...restRuleConfig
           } = ruleConfig;
           newRule = {
-            dynamicRacRuleId: `Rule-${Date.now()}`,
             ...restRuleConfig,
+            dynamicRacRuleId: dynamicRacRuleId || `Rule-${Date.now()}`,
+            isModified: true,
           };
         } else {
           // const { criteriaValues, ...restRuleConfig } = ruleConfig;
           newRule = {
-            dynamicRacRuleId: `Rule-${Date.now()}`,
             ...ruleConfig,
+            dynamicRacRuleId:
+              ruleConfig.dynamicRacRuleId || `Rule-${Date.now()}`,
+            isModified: true,
           };
         }
-
+        console.log(newRule)
         state.racConfig.sections = state.racConfig.sections.map((section) => {
           if (section.sectionId === sectionId) {
             return {
               ...section,
-              rules: [...section.rules, newRule],
+              rules: section.rules.some(
+                (rule) => rule.dynamicRacRuleId === ruleConfig.dynamicRacRuleId
+              )
+                ? section.rules.map((rule) =>
+                    rule.dynamicRacRuleId === ruleConfig.dynamicRacRuleId
+                      ? { ...rule, ...newRule } // Modify existing rule
+                      : rule
+                  )
+                : [...section.rules, { ...newRule }], // Append new rule
             };
           }
           return section;
         });
+        console.log(state.racConfig.sections);
       }
     },
     removeRule(state, action) {
@@ -411,34 +430,15 @@ const dynamicRacSlice = createSlice({
       });
     },
     updateRuleNumberCriteria: (state, action) => {
-      const { sectionId, dynamicRacRuleId, updates, numberCriteriaIndex } = action.payload;
-    
-      // Destructure specific updates
-      const { numberCriteriaRangeList, ...otherUpdates } = updates;
-    
+      const { sectionId, dynamicRacRuleId, updatedRule } = action.payload;
+
       state.racConfig.sections = state.racConfig.sections.map((section) => {
         if (section.sectionId === sectionId) {
           return {
             ...section,
             rules: section.rules.map((rule) => {
               if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                // Apply other updates first
-                const updatedRule = {
-                  ...rule,
-                  ...otherUpdates,
-                };
-    
-                // Handle numberCriteriaRangeList updates separately
-                if (numberCriteriaRangeList) {
-                  updatedRule.numberCriteriaRangeList = rule.numberCriteriaRangeList.map(
-                    (range, index) =>
-                      index === numberCriteriaIndex
-                        ? { ...range, ...numberCriteriaRangeList[0] }
-                        : range
-                  );
-                }
-    
-                return updatedRule;
+                return { ...updatedRule };
               }
               return rule;
             }),
@@ -446,7 +446,7 @@ const dynamicRacSlice = createSlice({
         }
         return section;
       });
-    },    
+    },
     handleChangeNumberRule(state, action) {
       const { sectionId, dynamicRacRuleId, name, value } = action.payload;
       const stringValue = value.toString();
@@ -551,7 +551,7 @@ const dynamicRacSlice = createSlice({
             ...section,
             rules: section.rules.map((rule) => {
               if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                state.currentRule = rule;
+                state.currentRule = { ...state.currentRule, ...rule };
               }
               return rule;
             }),
@@ -561,16 +561,18 @@ const dynamicRacSlice = createSlice({
       });
     },
     restoreRule(state, action) {
-      const { sectionId, dynamicRacRuleId, value } = action.payload;
+      const { sectionId, dynamicRacRuleId } = action.payload;
       state.racConfig.sections = state.racConfig.sections.map((section) => {
         if (section.sectionId === sectionId) {
           return {
             ...section,
             rules: section.rules.map((rule) => {
               if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                return {
-                  ...state.currentRule,
-                };
+                if (state.currentRule.firstOperator !== null) {
+                  return {
+                    ...state.currentRule,
+                  };
+                }
               }
               return rule;
             }),
@@ -578,7 +580,11 @@ const dynamicRacSlice = createSlice({
         }
         return section;
       });
-      state.currentRule = {};
+      state.currentRule = {
+        firstOperator: null,
+        secondOperator: null,
+        numberCriteriaRangeList: null,
+      };
     },
   },
   extraReducers: (builder) => {

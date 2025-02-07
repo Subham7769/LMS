@@ -142,7 +142,7 @@ const LoanOffers = () => {
           <div className="grid grid-cols-2 gap-5">
             <CardInfo
               cardTitle="Meet Our Borrower"
-              className={"rounded-xl"}
+              className={"border border-gray-300"}
               cardIcon={UserIcon}
               color={"blue"}
               cardNumber="1"
@@ -168,7 +168,7 @@ const LoanOffers = () => {
             </CardInfo>
             <CardInfo
               cardTitle="Avialable Loan Range"
-              className={"rounded-xl"}
+              className={"border border-gray-300"}
               cardIcon={CogIcon}
               color={"green"}
               cardNumber="2"
@@ -208,7 +208,7 @@ const LoanOffers = () => {
               <div className="grid grid-cols-2 gap-5">
                 <CardInfo
                   cardTitle="Interest Rates"
-                  className={"rounded-xl"}
+                  className={"border border-gray-300"}
                   cardIcon={CalculatorIcon}
                   color={"violet"}
                   cardNumber="3"
@@ -243,9 +243,9 @@ const LoanOffers = () => {
                 </CardInfo>
                 <CardInfo
                   cardTitle="Financial Breakdown"
-                  className={"rounded-xl"}
+                  className={"border border-gray-300"}
                   cardIcon={CalculatorIcon}
-                  color={"orange"}
+                  color={"red"}
                   cardNumber="4"
                   loading={loading}
                 >
