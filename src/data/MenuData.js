@@ -267,6 +267,24 @@ export const MenusInitial = [
     icon: "BookOpenIcon",
     current: false,
   },
+  {
+    title: "Loan Approval",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/loan-approval",
+    icon: "HandThumbUpIcon",
+    current: false,
+    submenu: true,
+    createButton: true, //if create recovery from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewLoanApproval",
+    buttonName: "Create Loan Approval", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/loan-approval/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+    uniqueKey: "approvalsConfigurationsTempId",
+  },
 
   // FINANCE
   {

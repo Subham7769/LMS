@@ -329,7 +329,7 @@ const ApproveLoans = () => {
           <FiInfo className="-ml-0.5 h-5 w-5" />
           View Documents
         </button>
-        {roleName !== "ROLE_LOAN_OFFICER" && (
+        {rowData?.rolePermissions?.reject && (
           <>
             <button
               onClick={() => handleReject(rowData)}

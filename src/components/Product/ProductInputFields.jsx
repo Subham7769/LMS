@@ -56,6 +56,12 @@ const ProductInputFields = ({ productData, handleChange }) => {
         (item) => item.title === "Eligible Tenure"
       )[0]?.submenuItems
   );
+  const loanApprovalDataInfo = useSelector(
+    (state) =>
+      state?.sidebar?.menus?.filter(
+        (item) => item.title === "Loan Approval"
+      )[0]?.submenuItems
+  );
   const ProjectDataInfo = useSelector(
     (state) =>
       state?.sidebar?.menus?.filter((item) => item.title === "Project")[0]
@@ -202,8 +208,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             // isValidation={true}
             // isClearable={true}
           />
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end mb-4">
+
           <InputSelect
             labelName="DBR Config"
             inputOptions={formateDataDropDown(
@@ -258,8 +263,18 @@ const ProductInputFields = ({ productData, handleChange }) => {
             onChange={handleChange}
             isValidation={true}
           />
-        </div>
-        <div className="grid grid-cols-5 gap-5 items-end">
+          <InputSelect
+            labelName="Loan Approval"
+            inputOptions={formateDataDropDown(
+              "/loan/loan-approval/",
+              loanApprovalDataInfo
+            )}
+            inputName="approvalsConfigurationsTempId"
+            inputValue={productData?.approvalsConfigurationsTempId}
+            onChange={handleChange}
+            isValidation={true}
+          />
+
           <InputText
             labelName="Processing Fee"
             inputName="fee"
