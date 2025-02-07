@@ -49,7 +49,7 @@ export const fetchRACData = createAsyncThunk(
   "fetchRACData",
   async (_, { rejectWithValue }) => {
     const url =
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/";
+      "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/";
     const transformData = (data) => {
       return data.map(({ name, racId }) => ({
         name,

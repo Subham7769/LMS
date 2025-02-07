@@ -604,7 +604,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/nationality-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/nationality-rule",
         {
           method: updateFlag ? "PUT" : "POST",
           headers: {
@@ -650,7 +650,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/gender-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/gender-rule",
         {
           method: GEupdateFlag ? "PUT" : "POST",
           headers: {
@@ -696,7 +696,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/marital-status-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/marital-status-rule",
         {
           method: MSupdateFlag ? "PUT" : "POST",
           headers: {
@@ -742,7 +742,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/residential-Status-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/residential-Status-rule",
         {
           method: RSupdateFlag ? "PUT" : "POST",
           headers: {
@@ -787,7 +787,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/occupation-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/occupation-rule",
         {
           method: OccupationFlag ? "PUT" : "POST",
           headers: {
@@ -832,7 +832,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/region-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/region-rule",
         {
           method: RegionFlag ? "PUT" : "POST",
           headers: {
@@ -877,7 +877,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/sector-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/sector-rule",
         {
           method: SectorFlag ? "PUT" : "POST",
           headers: {
@@ -936,7 +936,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/basic-to-gross-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/basic-to-gross-rule",
         {
           method: baseSalaryFlag ? "PUT" : "POST",
           headers: {
@@ -998,7 +998,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/write-off-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/write-off-rule",
         {
           method: writeOffFlag ? "PUT" : "POST",
           headers: {
@@ -1060,7 +1060,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/age-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/age-rule",
         {
           method: ageFlag ? "PUT" : "POST",
           headers: {
@@ -1119,7 +1119,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/gross-salary-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/gross-salary-rule",
         {
           method: grossFlag ? "PUT" : "POST",
           headers: {
@@ -1178,7 +1178,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/simah-score-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/simah-score-rule",
         {
           method: simahFlag ? "PUT" : "POST",
           headers: {
@@ -1229,7 +1229,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/active-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/active-rule",
         {
           method: activeFlag ? "PUT" : "POST",
           headers: {
@@ -1288,7 +1288,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/los-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/los-rule",
         {
           method: losFlag ? "PUT" : "POST",
           headers: {
@@ -1347,7 +1347,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/disposable-income-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/disposable-income-rule",
         {
           method: dispFlag ? "PUT" : "POST",
           headers: {
@@ -1396,7 +1396,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/dependents-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/dependents-rule",
         {
           method: depFlag ? "PUT" : "POST",
           headers: {
@@ -1445,7 +1445,7 @@ const RacMatrixConfig = () => {
     try {
       // POST request to add new fields
       const postResponse = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/credit-score-rule",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/credit-score-rule",
         {
           method: csFlag ? "PUT" : "POST",
           headers: {

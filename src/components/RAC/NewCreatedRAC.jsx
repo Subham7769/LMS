@@ -20,7 +20,7 @@ const NewCreatedRAC = () => {
     try {
       const token = localStorage.getItem("authToken");
       const deleteResponse = await fetch(
-        `https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${deleteURL}`,
+        `https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/${deleteURL}`,
         {
           method: "DELETE",
           headers: {
@@ -52,7 +52,7 @@ const NewCreatedRAC = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
           racID +
           "/clone/" +
           cloneRACName,
@@ -81,7 +81,7 @@ const NewCreatedRAC = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/id/" +
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/id/" +
           racID,
         {
           method: "GET",
@@ -114,7 +114,7 @@ const NewCreatedRAC = () => {
       try {
         const token = localStorage.getItem("authToken");
         const data = await fetch(
-          "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
+          "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
             racID +
             "/name/" +
             updateRACName,

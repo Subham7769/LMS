@@ -135,7 +135,7 @@ const Login = () => {
     //   body: JSON.stringify({ username, password, fullName }),
     // };
 
-    // fetch("https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/signup", requestOptions)
+    // fetch("https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/signup", requestOptions)
     //   .then((response) => {
     //     if (!response.ok) {
     //       return response.json().then((errorData) => {
@@ -170,7 +170,7 @@ const Login = () => {
     //   body: JSON.stringify({ email, newPassword }),
     // };
 
-    // fetch("https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/forgot-password", requestOptions)
+    // fetch("https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/users/forgot-password", requestOptions)
     //   .then((response) => {
     //     if (!response.ok) {
     //       return response.json().then((errorData) => {

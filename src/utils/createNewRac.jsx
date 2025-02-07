@@ -2,7 +2,7 @@ export async function createNewRac(Name, navigate, navigateSuccess, navigateFail
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac",
+      "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac",
       {
         method: "POST",
         headers: {

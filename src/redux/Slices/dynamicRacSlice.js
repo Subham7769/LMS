@@ -127,7 +127,7 @@ export const fetchOptionList = createAsyncThunk(
 
     try {
       const response = await axios.get(
-        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/3669df8e-db60-4a93-beb4-88daede5b34f/available-names",
+        "https://api-decimal.lmscarbon.com/carbon-product-service/lmscarbon/dynamic/rac/3669df8e-db60-4a93-beb4-88daede5b34f/available-names",
         {
           headers: {
             Authorization: `Bearer ${token}`, // Correct placement of headers
