@@ -791,7 +791,7 @@ const sidebarSlice = createSlice({
         state.loading = false;
         const submenuItems = action.payload;
         const updatedMenus = state.menus.map((menu) => {
-          if (menu.title === "Loan Approval") {
+          if (menu.title === "Approval Config") {
             return { ...menu, submenuItems };
           }
           return menu;

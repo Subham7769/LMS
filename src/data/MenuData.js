@@ -268,16 +268,16 @@ export const MenusInitial = [
     current: false,
   },
   {
-    title: "Loan Approval",
+    title: "Approval Config",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/loan-approval",
-    icon: "HandThumbUpIcon",
+    icon: "DocumentCheckIcon",
     current: false,
     submenu: true,
     createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewLoanApproval",
-    buttonName: "Create Loan Approval", //Create button text
+    buttonName: "Create Approval Config", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/loan/loan-approval/", // navigation
     navigateFail: "/login", // navigation

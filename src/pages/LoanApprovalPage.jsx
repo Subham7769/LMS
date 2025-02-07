@@ -19,9 +19,9 @@ const LoanApprovalPage = () => {
   return (
     <>
       {/* <StatContainer stats={LoanApprovalStats} />{" "} */}
-      {/* Assuming there's a similar stats component for Loan Approval */}
+      {/* Assuming there's a similar stats component for Approval Config */}
       <ListTable
-        ListName="Loan Approval List"
+        ListName="Approval Config List"
         ListHeader={LoanApprovalHeaderList}
         ListItem={LoanApprovalList}
         Searchable={true}

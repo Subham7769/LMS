@@ -27,7 +27,7 @@ export async function createNewLoanApproval(
     navigate(
       navigateSuccess + loanApprovalDetails.approvalsConfigurationsTempId
     );
-    toast.success("Loan Approval created !");
+    toast.success("Approval Config created !");
   } catch (error) {
     console.error(error);
   }

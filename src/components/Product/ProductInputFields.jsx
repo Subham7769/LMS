@@ -59,7 +59,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   const loanApprovalDataInfo = useSelector(
     (state) =>
       state?.sidebar?.menus?.filter(
-        (item) => item.title === "Loan Approval"
+        (item) => item.title === "Approval Config"
       )[0]?.submenuItems
   );
   const ProjectDataInfo = useSelector(
@@ -264,7 +264,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             isValidation={true}
           />
           <InputSelect
-            labelName="Loan Approval"
+            labelName="Approval Config"
             inputOptions={formateDataDropDown(
               "/loan/loan-approval/",
               loanApprovalDataInfo

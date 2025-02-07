@@ -215,7 +215,7 @@ export const fetchList = createAsyncThunk(
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
     const Menu = sideBarState?.menus.find(
-      (menu) => menu.title === "Loan Approval"
+      (menu) => menu.title === "Approval Config"
     );
     const submenuItems = Menu ? Menu.submenuItems : [];
     return submenuItems;
@@ -362,7 +362,7 @@ export const loanApprovalSlice = createSlice({
       })
       .addCase(deleteLoanApproval.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan Approval criteria deleted!");
+        toast.success("Approval Config criteria deleted!");
       })
       .addCase(deleteLoanApproval.rejected, (state, action) => {
         state.loading = false;

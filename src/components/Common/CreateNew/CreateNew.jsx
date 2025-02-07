@@ -61,7 +61,7 @@ const CreateNew = ({
         return fetchRecoveryData;
       case "Affordability":
         return fetchAffordibilityData;
-      case "Loan Approval":
+      case "Approval Config":
         return fetchLoanApprovalData;
       case "Eligible Tenure":
         return fetchCreditScoreEligibleTenureData;
