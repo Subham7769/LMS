@@ -149,6 +149,7 @@ const LoanOffers = () => {
               color={"blue"}
               cardNumber="1"
               loading={loading}
+              className={"border border-gray-300"}
             >
               <div className="font-semibold text-[15px] mb-2">
                 {borrowerData?.personalDetails?.title}{" "}
@@ -176,6 +177,7 @@ const LoanOffers = () => {
               color={"green"}
               cardNumber="2"
               loading={loading}
+              className={"border border-gray-300"}
             >
               <div className="text-[14px]">
                 <div className="text-gray-500">Loan Range:</div>
@@ -215,6 +217,7 @@ const LoanOffers = () => {
                   color={"violet"}
                   cardNumber="3"
                   loading={loading}
+                  className={"border border-gray-300"}
                 >
                   <div className="text-[14px]">
                     <InfoRow2
@@ -249,6 +252,7 @@ const LoanOffers = () => {
                   color={"red"}
                   cardNumber="4"
                   loading={loading}
+                  className={"border border-gray-300"}
                 >
                   <div className="text-[14px]">
                     <div className="text-gray-500">Principal Amount:</div>

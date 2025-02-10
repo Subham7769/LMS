@@ -16,6 +16,7 @@ import {
   fetchProdGroupData,
   fetchRecoveryData,
   fetchAffordibilityData,
+  fetchLoanApprovalData,
   fetchCreditScoreEligibleTenureData,
   fetchDynamicRacData,
   fetchReportingConfigData,
@@ -25,6 +26,7 @@ import {
   RectangleGroupIcon,
   ArrowPathRoundedSquareIcon,
   HandThumbUpIcon,
+  DocumentCheckIcon,
   ChartPieIcon,
   CubeIcon,
   CurrencyRupeeIcon,
@@ -55,6 +57,7 @@ import { createNewProduct } from "../../../utils/createNewProduct";
 import { createNewProject } from "../../../utils/createNewProject";
 import { createNewRecovery } from "../../../utils/createNewRecovery";
 import { createNewAffordability } from "../../../utils/createNewAffordability";
+import { createNewLoanApproval } from "../../../utils/createNewLoanApproval";
 import { createNewProductGroup } from "../../../utils/createNewProductGroup";
 import { createNewDBC } from "../../../utils/createNewDBC";
 import { createNewBE } from "../../../utils/createNewBE";
@@ -77,6 +80,7 @@ const SideBar = () => {
     ClipboardDocumentCheckIcon,
     ArrowPathRoundedSquareIcon,
     HandThumbUpIcon,
+    DocumentCheckIcon,
     CurrencyRupeeIcon,
     ChartPieIcon,
     CubeIcon,
@@ -107,6 +111,7 @@ const SideBar = () => {
     createNewProject,
     createNewRecovery,
     createNewAffordability,
+    createNewLoanApproval,
     createNewProductGroup,
     createNewDBC,
     createNewBE,
@@ -137,6 +142,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        dispatch(fetchLoanApprovalData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -154,6 +160,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        dispatch(fetchLoanApprovalData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -174,6 +181,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        dispatch(fetchLoanApprovalData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -202,6 +210,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        dispatch(fetchLoanApprovalData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         break;
@@ -217,6 +226,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        dispatch(fetchLoanApprovalData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         break;
@@ -237,6 +247,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        dispatch(fetchLoanApprovalData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());

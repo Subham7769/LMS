@@ -126,7 +126,9 @@ const ApproveLoans = () => {
         getPayload: { roleNames: roleNames },
       })
     ).unwrap();
-    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    if (rowData?.rolePermissions?.finalApprove) {
+      navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    }
   };
 
   const handleReject = async (rowData) => {
@@ -329,7 +331,7 @@ const ApproveLoans = () => {
           <FiInfo className="-ml-0.5 h-5 w-5" />
           View Documents
         </button>
-        {roleName !== "ROLE_LOAN_OFFICER" && (
+        {rowData?.rolePermissions?.reject && (
           <>
             <button
               onClick={() => handleReject(rowData)}
