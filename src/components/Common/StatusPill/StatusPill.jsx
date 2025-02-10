@@ -1,5 +1,10 @@
-import React from "react";
-import { ClockIcon, XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import React, { useState } from "react";
+import {
+  ClockIcon,
+  XCircleIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 const statusConfig = {
   CREATED: {
@@ -28,15 +33,46 @@ const statusConfig = {
   },
 };
 
-const StatusPill = ({ status, showIcon = true, customLabel }) => {
-  const { bg, text, label, Icon } = statusConfig[status] || statusConfig.DEFAULT;
+const StatusPill = ({
+  status,
+  showIcon = true,
+  customLabel,
+  reviewComment,
+}) => {
+  const { bg, text, label, Icon } =
+    statusConfig[status] || statusConfig.DEFAULT;
+
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${bg} ${text}`}>
-      <div className="flex items-center gap-1">
+    <div className="w-fit flex items-center gap-2">
+      {/* Status Label */}
+      <div
+        className={`px-2 py-1 rounded-full text-sm font-semibold ${bg} ${text} flex items-center gap-1`}
+      >
         {showIcon && Icon && <Icon className="h-5 w-5" />}
-        {customLabel || label} {/* Prioritize custom label if provided */}
+        {customLabel || label}
       </div>
+
+      {/* Exclamation Icon and Review Comment Wrapper */}
+      {reviewComment && (
+        <div
+          className="relative flex items-center"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <ExclamationCircleIcon className={`h-5 w-5 ${text}`} />
+
+          {/* Hover effect: Show the comment inside a styled box */}
+          {isHovered && (
+            <div
+              className={`absolute left-7 px-3 py-1.5 font-semibold rounded-md shadow-lg text-xs ${bg} ${text} whitespace-nowrap`}
+            >
+              {reviewComment}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

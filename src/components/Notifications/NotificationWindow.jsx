@@ -199,7 +199,6 @@ const NotificationWindow = () => {
     <div className="relative" ref={notificationRef}>
       <button
         className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 relative"
-        onMouseEnter={() => setIsOpen(!isOpen)}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle notifications"
         aria-expanded={isOpen}

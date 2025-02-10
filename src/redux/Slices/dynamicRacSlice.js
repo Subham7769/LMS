@@ -37,21 +37,6 @@ export const fetchDynamicRacDetails = createAsyncThunk(
   }
 );
 
-// Define the asyncThunk for updating Dynamic RAC
-export const updateDynamicRac = createAsyncThunk(
-  "rac/updateDynamicRac",
-  async ({ racId, updateData }, { rejectWithValue }) => {
-    const url = `${import.meta.env.VITE_DYNAMIC_RAC_UPDATE}${racId}`;
-
-    try {
-      const response = await axios.put(url, updateData);
-      return response.data; // Assuming the API returns the updated data
-    } catch (error) {
-      return rejectWithValue(error.response.data); // Return the error response if the request fails
-    }
-  }
-);
-
 // Define the asyncThunk for deleting a Dynamic RAC
 export const deleteDynamicRac = createAsyncThunk(
   "rac/deleteDynamicRac",
@@ -79,11 +64,11 @@ export const saveDynamicRac = createAsyncThunk(
   "rac/saveDynamicRac", // Action type
   async (racConfig, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    console.log(racConfig)
+    console.log(racConfig);
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_DYNAMIC_RAC_CREATE}`,
-        racConfig, 
+      const response = await axios.put(
+        `${import.meta.env.VITE_DYNAMIC_RAC_UPDATE_ALL_RULE}`,
+        racConfig,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the headers
@@ -170,17 +155,15 @@ export const deleteRuleById = createAsyncThunk(
 // Define the asyncThunk for updating status
 export const updateStatus = createAsyncThunk(
   "rac/updateStatus", // action type
-  async ({ dynamicRacRuleId, status }, { rejectWithValue }) => {
+  async ({ dynamicRacRuleId,reviewComment, status }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
     console.log(dynamicRacRuleId, status);
 
     try {
       // API call with dynamicRacRuleId and status
       const response = await axios.put(
-        `${
-          import.meta.env.VITE_DYNAMIC_RAC_STATUS_UPDATE
-        }${dynamicRacRuleId}/status/${status}`,
-        {}, // No request body, so pass an empty object
+        `${import.meta.env.VITE_DYNAMIC_RAC_STATUS_UPDATE}`,
+        { dynamicRacRuleId, reviewComment, status },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -394,7 +377,7 @@ const dynamicRacSlice = createSlice({
             isModified: true,
           };
         }
-        console.log(newRule)
+        console.log(newRule);
         state.racConfig.sections = state.racConfig.sections.map((section) => {
           if (section.sectionId === sectionId) {
             return {

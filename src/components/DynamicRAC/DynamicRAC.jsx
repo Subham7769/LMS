@@ -53,6 +53,7 @@ const DynamicRAC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
   const [showRuleModal, setRuleModal] = useState(false);
+  const [templateModal, setTemplateModal] = useState(false);
   const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const { racConfig, loading, error } = useSelector(
@@ -292,9 +293,14 @@ const DynamicRAC = () => {
     dispatch(addSection());
     toast("Section Added successfully");
   };
+
   const handleAddRule = (sectionId) => {
     setSelectedSectionId(sectionId); // Update sectionId first
     setTimeout(() => setRuleModal(true), 0); // Open modal after state updates
+  };
+  const handleUseTemplate = (sectionId) => {
+    setSelectedSectionId(sectionId); // Update sectionId first
+    setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
   const ViewRuleModal = ({ isOpen, onClose, sectionId }) => {
@@ -320,6 +326,34 @@ const DynamicRAC = () => {
               onClose={() => setRuleModal(false)}
               handleSaveDynamicRAC={handleSaveDynamicRAC}
             />
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const ViewTemplateModal = ({ isOpen, onClose, sectionId }) => {
+    if (!isOpen) return null;
+
+    return (
+      <>
+        <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
+          <div className="relative w-[50%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
+            <div
+              className={
+                "sticky bg-white z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
+              }
+            >
+              <p className={"font-semibold text-2xl"}>Use Template</p>
+              <XMarkIcon
+                onClick={onClose}
+                className=" h-8 w-8 text-gray-500 rounded-full cursor-pointer"
+              />
+            </div>
+              <div className="p-5 flex">
+
+              </div>
+            
           </div>
         </div>
       </>
@@ -380,6 +414,11 @@ const DynamicRAC = () => {
             <ViewRuleModal
               isOpen={showRuleModal}
               onClose={() => setRuleModal(false)}
+              sectionId={selectedSectionId}
+            />
+            <ViewTemplateModal
+              isOpen={templateModal}
+              onClose={() => setTemplateModal(false)}
               sectionId={selectedSectionId}
             />
 
@@ -472,8 +511,7 @@ const DynamicRAC = () => {
                       <h2 className="font-semibold">Create New Rac</h2>
                       <p className="flex flex-col items-center text-gray-500">
                         <span>
-                          Start by adding sections to your Risk Assessment
-                          Criteria. You{" "}
+                          Start by adding sections to your Risk Assessment Criteria. You{" "}
                         </span>
                         <span>
                           can also use an existing template as a starting point
@@ -489,8 +527,7 @@ const DynamicRAC = () => {
                         <HoverButton
                           icon={ArrowUpOnSquareIcon}
                           text="Use Template"
-                          onClick={() => {}}
-                          // onClick={() => fileInputRef.current.click()}
+                          onClick={() => handleUseTemplate()}
                         />
                       </div>
                     </div>
@@ -580,7 +617,6 @@ const DynamicRAC = () => {
                                   onClick={() =>
                                     handleAddRule(section.sectionId)
                                   }
-                                  // onClick={() => fileInputRef.current.click()}
                                 />
                               </div>
                             </div>
