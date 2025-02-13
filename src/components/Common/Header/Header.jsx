@@ -26,7 +26,7 @@ const UserMenu = ({ userNavigation, isOnline }) => {
   return (
     <Menu as="div" className="relative">
       <div className="flex items-center gap-2">
-        <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-gray-100 transition-colors duration-200 ">
+        <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-background-light-secondary transition-colors duration-200 ">
           <span className="absolute -inset-1.5" />
           <span className="sr-only">Open user menu</span>
           <UserCircleIcon className="h-8 w-8 text-gray-500" />
@@ -40,17 +40,19 @@ const UserMenu = ({ userNavigation, isOnline }) => {
         <div className="text-gray-500">
           Hello, {localStorage.getItem("username")}
         </div>
-        {localStorage.getItem("username") === "superadmin" &&<div>
-          {/* Role Dropdown */}
-          <InputSelect
-            inputOptions={roleData.map((role) => ({
-              label: role.label,
-              value: role.label,
-            }))}
-            inputValue={roleName}
-            onChange={handleRoleChange}
-          />
-        </div>}
+        {localStorage.getItem("username") === "superadmin" && (
+          <div>
+            {/* Role Dropdown */}
+            <InputSelect
+              inputOptions={roleData.map((role) => ({
+                label: role.label,
+                value: role.label,
+              }))}
+              inputValue={roleName}
+              onChange={handleRoleChange}
+            />
+          </div>
+        )}
       </div>
       <Transition
         enter="transition ease-out duration-100"
@@ -67,7 +69,9 @@ const UserMenu = ({ userNavigation, isOnline }) => {
                 <Link
                   to={item.href}
                   className={`block px-4 py-2 text-sm ${
-                    active ? "bg-gray-100 text-gray-700" : "text-gray-700"
+                    active
+                      ? "bg-background-light-secondary text-gray-700"
+                      : "text-gray-700"
                   }`}
                   onClick={item.action}
                 >

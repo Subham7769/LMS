@@ -43,7 +43,7 @@ const InputTextMulti = ({
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
-    setIncluded(false)
+    setIncluded(false);
   };
 
   if (isValidation) {
@@ -76,7 +76,7 @@ const InputTextMulti = ({
         </span>
       </label>
 
-      <div className=" gap-2 border-gray-300 rounded-md flex flex-col flex-wrap items-between">
+      <div className=" gap-2 border-border-gray-primary rounded-md flex flex-col flex-wrap items-between">
         <input
           type="text"
           value={inputValue}

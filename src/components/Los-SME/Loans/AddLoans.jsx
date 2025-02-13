@@ -20,10 +20,10 @@ import store from "../../../redux/store";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
     </div>
   );
 };
@@ -130,7 +130,7 @@ const AddLoans = () => {
         <button
           type="button"
           onClick={handleDraft}
-          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-300 shadow-sm hover:bg-gray-400 focus-visible:outline-gray-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
+          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-background-light-primary shadow-sm hover:bg-gray-400 focus-visible:outline-gray-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
         >
           <span className="text-center w-full">Save Draft</span>
         </button>

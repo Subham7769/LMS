@@ -146,9 +146,8 @@ const NotificationText = () => {
                 <div>
                   <Button
                     buttonIcon={CheckCircleIcon}
-                    buttonName={""}
                     onClick={() => handleSave(notificationData?.id, index)}
-                    rectangle={true}
+                    circle={true}
                   />
                 </div>
               ) : (

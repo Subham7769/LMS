@@ -260,11 +260,7 @@ const CreditScoreET = () => {
         <div className="flex flex-col gap-5 mt-5">
           {creditScoreET?.rules?.map((rule, index) => {
             return (
-              <ContainerTile 
-              key={index}
-              loading={loading}
-              error={error}
-              >
+              <ContainerTile key={index} loading={loading} error={error}>
                 <div className="grid grid-cols-4 gap-2 mb-5 items-end">
                   <InputSelect
                     labelName={"Minimum Credit Score"}
@@ -317,11 +313,12 @@ const CreditScoreET = () => {
                   tagsPerRow={5}
                 />
                 {!hasViewOnlyAccess(roleName) ? (
-                  <div className="flex gap-4 justify-end items-center mt-1">
+                  <div className="flex gap-4 justify-end items-center mt-2">
                     <Button
                       buttonName={"Save"}
                       onClick={() => handleSaveET(creditScoreETId, index)}
                       rectangle={true}
+                      buttonType="secondary"
                     />
                     <Button
                       buttonIcon={TrashIcon}
@@ -332,6 +329,7 @@ const CreditScoreET = () => {
                         })
                       }
                       circle={true}
+                      buttonType="destructive"
                     />
                   </div>
                 ) : (

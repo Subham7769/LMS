@@ -59,7 +59,7 @@ const PaymentHistory = () => {
   return (
     <>
       {repaymentsArr.length === 0 ? (
-        <div className="text-center shadow-md bg-gray-100 border-gray-300 border py-5 rounded-xl mt-4 px-5">
+        <div className="text-center shadow-md bg-background-light-secondary border-border-gray-primary border py-5 rounded-xl mt-4 px-5">
           No Loan Data
         </div>
       ) : (

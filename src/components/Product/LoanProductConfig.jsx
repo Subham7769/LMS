@@ -37,7 +37,6 @@ import {
   clearUpdateMap,
   setUpdateMap,
 } from "../../redux/Slices/notificationSlice";
-import ApprovalCard from "./ApprovalCard";
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
@@ -254,9 +253,9 @@ const LoanProductConfig = () => {
           productData={productData}
           handleChange={handleChange}
         />
-        <div>
-          <table className="w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="">
+          <table className="w-full divide-y divide-gray-200 border border-border-gray-primary">
+            <thead className="bg-background-light-secondary">
               <tr>
                 {columns.map((column) => (
                   <th
@@ -267,7 +266,7 @@ const LoanProductConfig = () => {
                     }
                     className={column.sortable ? "cursor-pointer" : ""}
                   >
-                    <div className="px-6 py-3 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider flex">
+                    <div className="px-6 py-3 text-left text-[10px] font-medium text-text-light-primary uppercase tracking-wider flex">
                       {column.label}{" "}
                       {column.sortable && getSortIcon(column.key)}
                     </div>
@@ -446,7 +445,7 @@ const LoanProductConfig = () => {
                           {editingIndex === index ? (
                             <div
                               // onClick={informUser}
-                              className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                              className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
                             >
                               <CheckCircleIcon
                                 className="h-5 w-5"
@@ -454,7 +453,7 @@ const LoanProductConfig = () => {
                               />
                             </div>
                           ) : (
-                            <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <div className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">
                               <PencilIcon
                                 className="h-5 w-5"
                                 aria-hidden="true"
@@ -466,6 +465,7 @@ const LoanProductConfig = () => {
                           buttonIcon={TrashIcon}
                           onClick={() => handleDelete(index)}
                           circle={true}
+                          buttonType="destructive"
                         />
                       </td>
                     ) : (
@@ -486,7 +486,11 @@ const LoanProductConfig = () => {
               }
               rectangle={true}
               className={`
-          ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : ""}
+          ${
+            currentPage === 1
+              ? "bg-background-light-primary cursor-not-allowed"
+              : ""
+          }
         `}
               disabled={currentPage === 1}
             />
@@ -506,17 +510,13 @@ const LoanProductConfig = () => {
               className={`
           ${
             currentPage === totalPages || currentItems.length < 1
-              ? "bg-gray-300 cursor-not-allowed"
+              ? "bg-background-light-primary cursor-not-allowed"
               : ""
           }
         `}
               disabled={currentPage === totalPages || currentItems.length < 1}
             />
           </div>
-          {/* <ApprovalCard
-            approvalData={productData?.approvalData}
-            role={roleData}
-          /> */}
 
           {!hasViewOnlyAccess(roleName) ? (
             <div className="text-right mt-5">
@@ -525,6 +525,7 @@ const LoanProductConfig = () => {
                 buttonName="Save"
                 onClick={handleSave}
                 rectangle={true}
+                buttonType={"primary"}
               />
             </div>
           ) : (

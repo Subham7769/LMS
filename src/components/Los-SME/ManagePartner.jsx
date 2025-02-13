@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { FiUpload, FiEdit2, FiTrash2, FiCheck, FiX, FiChevronUp, FiChevronDown, FiCheckCircle, FiXCircle, FiDownload } from "react-icons/fi";
+import {
+  FiUpload,
+  FiEdit2,
+  FiTrash2,
+  FiCheck,
+  FiX,
+  FiChevronUp,
+  FiChevronDown,
+  FiCheckCircle,
+  FiXCircle,
+  FiDownload,
+} from "react-icons/fi";
 import convertToReadableString from "../../utils/convertToReadableString";
 
 const CashPayable = () => {
@@ -117,8 +128,13 @@ const CashPayable = () => {
   };
 
   const handleDelete = (applicationId) => {
-    setApplications(applications.filter(application => application.applicationId !== applicationId));
-    if (selectedApplication?.applicationId === applicationId) setSelectedApplication(null);
+    setApplications(
+      applications.filter(
+        (application) => application.applicationId !== applicationId
+      )
+    );
+    if (selectedApplication?.applicationId === applicationId)
+      setSelectedApplication(null);
   };
 
   const handleEdit = (application) => {
@@ -127,14 +143,18 @@ const CashPayable = () => {
       date: application.date,
       amount: application.amount,
       applicationStatus: application.applicationStatus,
-      file: null
+      file: null,
     });
   };
 
   const handleStatusChange = (applicationId, newStatus) => {
-    setApplications(applications.map(application =>
-      application.applicationId === applicationId ? { ...application, applicationStatus: newStatus } : application
-    ));
+    setApplications(
+      applications.map((application) =>
+        application.applicationId === applicationId
+          ? { ...application, applicationStatus: newStatus }
+          : application
+      )
+    );
   };
 
   return (
@@ -142,7 +162,9 @@ const CashPayable = () => {
       <div className="mx-auto space-y-8">
         {/* Form Section */}
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-3xl font-semibold text-gray-800 mb-6">Add Partner</h2>
+          <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+            Add Partner
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {Object.keys(formData).map(
@@ -150,15 +172,18 @@ const CashPayable = () => {
                   field !== "file" && (
                     <div key={field}>
                       <label className="block text-sm font-medium text-gray-700">
-                        {convertToReadableString(field.replace(/([A-Z])/g, " $1"))}
+                        {convertToReadableString(
+                          field.replace(/([A-Z])/g, " $1")
+                        )}
                       </label>
                       <input
                         type={field.includes("Date") ? "date" : "text"}
                         name={field}
                         value={formData[field]}
                         onChange={handleInputChange}
-                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errors[field] ? "border-red-500" : ""
-                          }`}
+                        className={`mt-1 block w-full rounded-md border-border-gray-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                          errors[field] ? "border-red-500" : ""
+                        }`}
                         aria-label={field}
                       />
                       {errors[field] && (
@@ -171,10 +196,14 @@ const CashPayable = () => {
               )}
               {/* File Upload */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Upload Invoice</label>
-                <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-100 hover:border-indigo-500 hover:bg-indigo-50 transition-all">
+                <label className="block text-sm font-medium text-gray-700">
+                  Upload Invoice
+                </label>
+                <div className="relative border-2 border-dashed border-border-gray-primary rounded-lg p-4 text-center bg-background-light-secondary hover:border-indigo-500 hover:bg-indigo-50 transition-all">
                   <FiUpload className="mx-auto text-gray-400 mb-2" size={24} />
-                  <span className="text-sm text-gray-500">Click or drag to upload</span>
+                  <span className="text-sm text-gray-500">
+                    Click or drag to upload
+                  </span>
                   <input
                     type="file"
                     accept=".pdf"
@@ -186,7 +215,6 @@ const CashPayable = () => {
                   <p className="text-red-500 text-sm mt-1">{errors.file}</p>
                 )}
               </div>
-
             </div>
             <div className="flex justify-center col-span-4">
               <button
@@ -201,12 +229,13 @@ const CashPayable = () => {
 
         {/* Applications Table */}
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Already Existing Partners</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Already Existing Partners
+          </h2>
           <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
             <table className="min-w-full table-auto" role="table">
-
               <thead>
-                <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
+                <tr className="bg-background-light-secondary text-sm font-semibold text-gray-600">
                   <th className="px-6 py-4"></th>
                   <th className="px-6 py-4">Invoice Id</th>
                   <th className="px-6 py-4">Date</th>
@@ -226,46 +255,68 @@ const CashPayable = () => {
                     >
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleExpand(application.applicationId)}
+                          onClick={() =>
+                            handleExpand(application.applicationId)
+                          }
                           className="text-blue-600 hover:text-blue-800 mr-2"
-                          aria-label={expandedRow === application.applicationId ? "Collapse row" : "Expand row"}
+                          aria-label={
+                            expandedRow === application.applicationId
+                              ? "Collapse row"
+                              : "Expand row"
+                          }
                         >
-                          {expandedRow === application.applicationId ? <FiChevronUp /> : <FiChevronDown />}
+                          {expandedRow === application.applicationId ? (
+                            <FiChevronUp />
+                          ) : (
+                            <FiChevronDown />
+                          )}
                         </button>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-800">{application.applicationId}</td>
-                      <td className="px-6 py-4 text-sm text-gray-800">{application.applicationUploadDate}</td>
-                      <td className="px-6 py-4 text-sm text-gray-800">${application.invoiceAmount}</td>
+                      <td className="px-6 py-4 text-sm text-gray-800">
+                        {application.applicationId}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800">
+                        {application.applicationUploadDate}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800">
+                        ${application.invoiceAmount}
+                      </td>
                       <td className="px-6 py-4 text-sm text-gray-800">
                         <span
-                          className={`px-2 inline-flex  leading-5 font-semibold rounded-full ${application.applicationStatus === "approved"
-                            ? "bg-green-100 text-green-800"
-                            : application.applicationStatus === "rejected"
+                          className={`px-2 inline-flex  leading-5 font-semibold rounded-full ${
+                            application.applicationStatus === "approved"
+                              ? "bg-green-100 text-green-800"
+                              : application.applicationStatus === "rejected"
                               ? "bg-red-100 text-red-800"
                               : "bg-yellow-100 text-yellow-800"
-                            }`}
+                          }`}
                         >
                           {application.applicationStatus}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-800">
                         <button
-                          onClick={() => handleExpand(application.applicationId)}
-                          className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 px-3 py-1 rounded-md text-sm disabled:bg-gray-100 disabled:text-gray-900"
-                          disabled={application.applicationStatus !== "approved"}
+                          onClick={() =>
+                            handleExpand(application.applicationId)
+                          }
+                          className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 px-3 py-1 rounded-md text-sm disabled:bg-background-light-secondary disabled:text-gray-900"
+                          disabled={
+                            application.applicationStatus !== "approved"
+                          }
                         >
                           Invoice Discounting
                         </button>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-800">
-
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleEdit(application);
                           }}
                           className="text-indigo-600 hover:text-indigo-900 mr-3 disabled:text-gray-600"
-                          disabled={application.applicationStatus === "approved"}
+                          disabled={
+                            application.applicationStatus === "approved"
+                          }
                         >
                           <FiEdit2 className="h-5 w-5" />
                         </button>
@@ -275,11 +326,12 @@ const CashPayable = () => {
                             handleDelete(application.applicationId);
                           }}
                           className="text-red-600 hover:text-red-900 disabled:text-gray-600"
-                          disabled={application.applicationStatus === "approved"}
+                          disabled={
+                            application.applicationStatus === "approved"
+                          }
                         >
                           <FiTrash2 className="h-5 w-5" />
                         </button>
-
                       </td>
                     </tr>
                     {expandedRow === application.applicationId && (
@@ -287,45 +339,51 @@ const CashPayable = () => {
                         <td colSpan="7" className="px-6 py-4">
                           {/* <div className="grid grid-cols-3 md:grid-cols-[80%_20%] gap-4"> */}
 
-                            <div className="space-y-2 text-sm text-gray-600">
-                              <h3 className="font-semibold text-gray-800">Invoice Details</h3>
-                              <div className="grid grid-cols-2 gap-4">
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Company ID:</p>
-                                  <p>{application.companyId}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Due Date:</p>
-                                  <p>{application.applicationDueDate}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Days Left:</p>
-                                  <p>{application.daysLeftFromDueDate}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Approval Status:</p>
-                                  <p>{application.applicationStatus}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Payment Status:</p>
-                                  <p>{application.paymentStatus}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Financed Amount:</p>
-                                  <p>{application.financedAmount}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Net Outstanding:</p>
-                                  <p>{application.netOutstanding}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                  <p className="font-semibold">Interest Due:</p>
-                                  <p>{application.interestDue}</p>
-                                </div>
+                          <div className="space-y-2 text-sm text-gray-600">
+                            <h3 className="font-semibold text-gray-800">
+                              Invoice Details
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="flex justify-between">
+                                <p className="font-semibold">Company ID:</p>
+                                <p>{application.companyId}</p>
                               </div>
-
+                              <div className="flex justify-between">
+                                <p className="font-semibold">Due Date:</p>
+                                <p>{application.applicationDueDate}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold">Days Left:</p>
+                                <p>{application.daysLeftFromDueDate}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold">
+                                  Approval Status:
+                                </p>
+                                <p>{application.applicationStatus}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold">Payment Status:</p>
+                                <p>{application.paymentStatus}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold">
+                                  Financed Amount:
+                                </p>
+                                <p>{application.financedAmount}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold">
+                                  Net Outstanding:
+                                </p>
+                                <p>{application.netOutstanding}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold">Interest Due:</p>
+                                <p>{application.interestDue}</p>
+                              </div>
                             </div>
-
+                          </div>
                         </td>
                       </tr>
                     )}
@@ -335,7 +393,6 @@ const CashPayable = () => {
             </table>
           </div>
         </div>
-
       </div>
     </div>
   );

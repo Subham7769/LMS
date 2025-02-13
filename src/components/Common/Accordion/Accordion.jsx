@@ -20,8 +20,8 @@ const Accordion = ({
 
   return (
     <div
-      className={`border rounded-lg shadow-sm bg-gray-50 mb-3 hover:bg-indigo-50 ${
-        isExpanded ? "bg-indigo-50" : ""
+      className={`border rounded-lg shadow-sm  mb-3 hover:bg-indigo-50 ${
+        isExpanded ? "bg-indigo-50" : "bg-white"
       }`}
     >
       <div
@@ -46,7 +46,7 @@ const Accordion = ({
 
         {/* Header Component */}
         {headerComponent && headerComponent}
-        
+
         <button
           className="text-gray-600 hover:text-gray-800"
           aria-label={isExpanded ? "Collapse section" : "Expand section"}

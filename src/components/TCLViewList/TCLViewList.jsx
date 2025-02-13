@@ -131,6 +131,7 @@ const TCLViewList = () => {
           icon: TrashIcon,
           circle: true,
           action: handleDelete,
+          type: "destructive"
         },
       ]
     : [];
@@ -196,13 +197,14 @@ const TCLViewList = () => {
               style={{ display: "none" }} // Hide the default input
             />
             <FolderPlusIcon
-              className="h-12 w-12 text-indigo-600"
+              className="h-12 w-12 text-gray-500"
               onClick={handleFileClick}
             />
             <Button
               buttonName={"Upload"}
               onClick={handleFileUpload}
               rectangle={true}
+              buttonType="tertiary"
             />
           </div>
         ) : (

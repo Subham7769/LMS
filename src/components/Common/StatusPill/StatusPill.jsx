@@ -26,7 +26,7 @@ const statusConfig = {
     Icon: CheckCircleIcon,
   },
   DEFAULT: {
-    bg: "bg-gray-100",
+    bg: "bg-background-light-secondary",
     text: "text-gray-700",
     label: "Unknown",
     Icon: null,

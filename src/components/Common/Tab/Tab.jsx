@@ -8,7 +8,7 @@ const Tab = ({ id, label, activeTab, setActiveTab, to }) => (
       className={`inline-block p-4 border-b-4 rounded-t-lg ${
         activeTab === id
           ? "text-indigo-500 border-indigo-500 bg-indigo-50"
-          : "border-transparent text-gray-950 hover:text-gray-600 hover:border-gray-300 "
+          : "border-transparent text-gray-950 hover:text-gray-600 hover:border-border-gray-primary "
       }`}
       onClick={() => setActiveTab(id)}
     >

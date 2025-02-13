@@ -10,10 +10,10 @@ import KeyStatements from "./KeyStatements";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
     </div>
   );
 };
@@ -75,13 +75,16 @@ const LoanAgreementPrint = () => {
         </div>
         <div className="grid grid-cols-2 border-2 border-gray-500 text-sm">
           <div className="border-r border-gray-500">
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               PERSONAL DETAILS
             </div>
             <div className="grid grid-cols-2 mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(personalDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -90,20 +93,23 @@ const LoanAgreementPrint = () => {
                 {Object.keys(personalDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;{personalDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               LOAN DETAILS
             </div>
             <div className="grid grid-cols-2 mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(loanDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -112,7 +118,7 @@ const LoanAgreementPrint = () => {
                 {Object.keys(loanDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;
                     {typeof loanDetails[key] === "number"
@@ -122,13 +128,16 @@ const LoanAgreementPrint = () => {
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               LOAN OFFICER DETAILS
             </div>
             <div className="grid grid-cols-2 mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(loanOfficerDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -137,20 +146,23 @@ const LoanAgreementPrint = () => {
                 {Object.keys(loanOfficerDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;{loanOfficerDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               CUSTOMER
             </div>
             <div className="grid grid-cols-2 mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(customerDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -159,7 +171,7 @@ const LoanAgreementPrint = () => {
                 {Object.keys(customerDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;{customerDetails[key]}
                   </div>
@@ -168,13 +180,16 @@ const LoanAgreementPrint = () => {
             </div>
           </div>
           <div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               CONTACT DETAILS
             </div>
             <div className="grid grid-cols-[45%,55%] mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(contactDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -183,20 +198,23 @@ const LoanAgreementPrint = () => {
                 {Object.keys(contactDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;{contactDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               EMPLOYMENT DETAILS
             </div>
             <div className="grid grid-cols-[45%,55%] mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(employmentDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -205,20 +223,23 @@ const LoanAgreementPrint = () => {
                 {Object.keys(employmentDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;{employmentDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               NEXT OF KIN DETAILS
             </div>
             <div className="grid grid-cols-[45%,55%] mb-5">
-              <div className="border-r border-gray-300">
+              <div className="border-r border-border-gray-primary">
                 {Object.keys(nextOfKinDetails).map((key) => (
-                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
+                  <div
+                    key={key}
+                    className="border-b border-border-gray-primary pl-1 pt-1"
+                  >
                     {convertToReadableString(key)}
                   </div>
                 ))}
@@ -227,7 +248,7 @@ const LoanAgreementPrint = () => {
                 {Object.keys(nextOfKinDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-gray-300 pr-1 pt-1 text-right"
+                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                   >
                     &nbsp;{nextOfKinDetails[key]}
                   </div>
@@ -239,13 +260,13 @@ const LoanAgreementPrint = () => {
             </div>
           </div>
           <div className="col-span-2">
-            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-500 mb-24">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500 mb-24">
               CUSTOMER SIGNATURE
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* <TermsNConditions /> */}
       <KeyStatements
         keyFactStatements={keyFactStatements}

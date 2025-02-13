@@ -61,12 +61,14 @@ const ViewBorrowers = () => {
             onClick={() => {}}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={() => {}}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="tertiary"
           />
         </div>
       </ContainerTile>

@@ -255,7 +255,7 @@ const LoanConfig = () => {
                         label="Daily Rate"
                         value={ci?.dailyInterestRatePercentWithoutFee}
                       />
-                      <div className="border-t border-gray-300 pt-2">
+                      <div className="border-t border-border-gray-primary pt-2">
                         <div className="text-gray-500">Monthly Flat Rate</div>
                         <div className="flex gap-x-2 items-baseline">
                           <div className="font-semibold text-lg">
@@ -318,7 +318,7 @@ const LoanConfig = () => {
                           (Levy: {ci?.insuranceLevy.toFixed(2)})
                         </div>
                       </div>
-                      <div className="border-t border-gray-300 pt-2 text-blue-600">
+                      <div className="border-t border-border-gray-primary pt-2 text-blue-600">
                         <div className="font-semibold">Total Loan Amount:</div>
                         <div className="font-bold text-lg">
                           {formatNumber(ci?.totalLoanAmount.toFixed(2))}
@@ -395,7 +395,7 @@ const LoanConfig = () => {
                   </div>
                 </CardInfo>
                 <div>
-                  <div className="text-center text-gray-500 border-b border-gray-300 mb-5 pb-5">
+                  <div className="text-center text-gray-500 border-b border-border-gray-primary mb-5 pb-5">
                     Loan Summary Id : {ci?.transactionId}
                   </div>
                   {/* <div className="text-center text-gray-500">

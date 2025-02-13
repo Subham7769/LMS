@@ -318,7 +318,8 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Company Overview"
                   cardIcon={BuildingOffice2Icon}
-                  color={"blue"}
+                  colorText={"text-blue-primary"}
+                  colorBG={"bg-blue-tertiary"}
                   coloredBG={true}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
@@ -355,8 +356,8 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Contact Information"
                   cardIcon={PhoneIcon}
-                  color={"green"}
-                  coloredBG={true}
+                  colorText={"text-green-primary"}
+                  colorBG={"bg-green-tertiary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <div className="grid grid-cols-2 gap-4">
@@ -398,8 +399,8 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Financial Profile"
                   cardIcon={BuildingOffice2Icon}
-                  color={"red"}
-                  coloredBG={true}
+                  colorText={"text-violet-primary"}
+                  colorBG={"bg-violet-tertiary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <div className="grid grid-cols-2 gap-4">
@@ -441,8 +442,8 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Other Details"
                   cardIcon={BriefcaseIcon}
-                  color={"violet"}
-                  coloredBG={true}
+                  colorText={"text-orange-primary"}
+                  colorBG={"bg-orange-tertiary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <div className="grid grid-cols-1 gap-4">
@@ -478,7 +479,7 @@ const ViewCompany = () => {
               {/* Actions */}
               <div className="absolute top-0 right-0">
                 <button
-                  className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                  className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
                   onClick={() => setEditModal(true)}
                 >
                   <PencilIcon className="h-5 w-5 text-gray-500" />
@@ -510,8 +511,8 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Personal Details"
                             cardIcon={UserIcon}
-                            color={"blue"}
-                            coloredBG={true}
+                            colorText={"text-blue-primary"}
+                            colorBG={"bg-blue-tertiary"}
                           >
                             <div className="space-y-2 flex flex-col gap-5 p-3">
                               <p>
@@ -553,8 +554,8 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Contact Details"
                             cardIcon={PhoneIcon}
-                            color={"green"}
-                            coloredBG={true}
+                            colorText={"text-green-primary"}
+                            colorBG={"bg-green-tertiary"}
                           >
                             <div className="space-y-2 flex flex-col gap-5 p-3">
                               <p>
@@ -595,8 +596,8 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Employment Details"
                             cardIcon={BriefcaseIcon}
-                            color={"violet"}
-                            coloredBG={true}
+                            colorText={"text-violet-primary"}
+                            colorBG={"bg-violet-tertiary"}
                           >
                             <div className="space-y-2 flex flex-col gap-5 p-3">
                               <p>
@@ -631,8 +632,8 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Banking Details"
                             cardIcon={BuildingOffice2Icon}
-                            color={"red"}
-                            coloredBG={true}
+                            colorText={"text-orange-primary"}
+                            colorBG={"bg-orange-tertiary"}
                           >
                             <div className="space-y-2 flex flex-col gap-5 p-3">
                               <p>
@@ -673,7 +674,7 @@ const ViewCompany = () => {
                         {/*Director Actions */}
                         <div className="absolute top-0 right-0">
                           <button
-                            className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                            className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
                             onClick={() =>
                               handleEditDirector(
                                 rowData.uid,
@@ -713,8 +714,8 @@ const ViewCompany = () => {
                             <CardInfo
                               cardTitle="Shareholder Personal Details"
                               cardIcon={UserIcon}
-                              color={"blue"}
-                              coloredBG={true}
+                              colorText={"text-blue-primary"}
+                              colorBG={"bg-blue-tertiary"}
                             >
                               <div className="space-y-2 flex flex-col gap-5 p-3">
                                 <p>
@@ -759,8 +760,8 @@ const ViewCompany = () => {
                             <CardInfo
                               cardTitle="Shareholder Contact Details"
                               cardIcon={PhoneIcon}
-                              color={"green"}
-                              coloredBG={true}
+                              colorText={"text-green-primary"}
+                              colorBG={"bg-green-tertiary"}
                             >
                               <div className="space-y-2 flex flex-col gap-5 p-3">
                                 <div className="grid grid-cols-2 gap-4">
@@ -801,7 +802,7 @@ const ViewCompany = () => {
                           {/*Shareholder Actions */}
                           <div className="absolute top-0 right-0">
                             <button
-                              className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                              className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
                               onClick={() =>
                                 handleEditShareholder(
                                   rowData.uid,
@@ -853,12 +854,14 @@ const ViewCompany = () => {
             onClick={SearchBorrowerByFieldSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="tertiary"
           />
         </div>
       </ContainerTile>

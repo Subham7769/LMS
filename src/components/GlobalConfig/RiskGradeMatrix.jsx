@@ -77,8 +77,8 @@ const RiskGradeMatrix = () => {
       <div className="flex flex-col gap-5">
         {!hasViewOnlyAccessGroup2(roleName) ? (
           <ContainerTile
-          loading={loading}
-          // error={error}
+            loading={loading}
+            // error={error}
           >
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
               <InputNumber
@@ -147,9 +147,9 @@ const RiskGradeMatrix = () => {
 
         {allRiskGradeData.map((riskGradingData, index) => (
           <ContainerTile
-          loading={loading}
-          error={error}
-          key={"RiskGrade"+index}
+            loading={loading}
+            error={error}
+            key={"RiskGrade" + index}
           >
             <div
               key={riskGradingData.id}
@@ -209,11 +209,13 @@ const RiskGradeMatrix = () => {
                     onClick={() => handleSave(riskGradingData.id, index)}
                     buttonIcon={CheckCircleIcon}
                     circle={true}
+                    buttonType="secondary"
                   />
                   <Button
                     onClick={() => handleDelete(riskGradingData.id)}
                     buttonIcon={TrashIcon}
                     circle={true}
+                    buttonType="destructive"
                   />
                 </div>
               ) : (

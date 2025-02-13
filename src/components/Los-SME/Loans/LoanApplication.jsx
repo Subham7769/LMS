@@ -109,7 +109,8 @@ const LoanApplication = () => {
   };
 
   const renderActionList = (rowData) => {
-    if (rowData.status === "Completed" || rowData.status === "Cancel") {
+    if (rowData.status === "Completed" || rowData.status === "Cancel" ||
+          hasViewOnlyAccessGroup3(roleName)) {
       return <div className="py-6">-</div>;
     }
     return (
@@ -172,12 +173,14 @@ const LoanApplication = () => {
             onClick={handleSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleReset}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="tertiary"
           />
         </div>
       </ContainerTile>

@@ -30,41 +30,41 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
   const renderExpandedRow = (rowData) => (
     <div className="space-y-2 text-sm text-gray-500 border-y-2 p-5">
       <div className="grid grid-cols-4">
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Management Fee</p>
           <p className="text-lg font-semibold text-black">
             {rowData.managementFee}
           </p>
         </div>
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Vat Fee</p>
           <p className="text-lg font-semibold text-black">{rowData.vatFee}</p>
         </div>
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Third Party Cost</p>
           <p className="text-lg font-semibold text-black">
             {rowData.thirdPartyCost}
           </p>
         </div>
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Term Cost</p>
           <p className="text-lg font-semibold text-black">
             {formatNumber(rowData.termCost)}
           </p>
         </div>
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Early Settlement Fee</p>
           <p className="text-lg font-semibold text-black">
             {formatNumber(rowData.earlySettlementFee)}
           </p>
         </div>
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Saved Fee</p>
           <p className="text-lg font-semibold text-black">
             {formatNumber(rowData.savedFee)}
           </p>
         </div>
-        <div className="border-r border-gray-300 py-2 px-4">
+        <div className="border-r border-border-gray-primary py-2 px-4">
           <p>Closing Amount</p>
           <p className="text-lg font-semibold text-black">
             {formatNumber(rowData.closingAmount)}
@@ -87,7 +87,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
             <CalendarIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
             EMI Schedule Details
           </div>
-          <div className="grid grid-cols-2 my-3 shadow bg-gray-100 rounded-lg py-3 px-5">
+          <div className="grid grid-cols-2 my-3 shadow bg-background-light-secondary rounded-lg py-3 px-5">
             <div className="text-sm">
               <div className="text-gray-500">Monthly EMI Amount</div>
               <div className="font-semibold text-lg">
@@ -109,11 +109,11 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
             />
           </div>
           <table
-            className="min-w-full table-auto border-t border-gray-300"
+            className="min-w-full table-auto border-t border-border-gray-primary"
             role="table"
           >
             <thead className="sticky top-0 z-10 invisible">
-              <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
+              <tr className="bg-background-light-secondary text-sm font-semibold text-gray-600">
                 <th className="px-4">EMI No.</th>
                 <th className="px-4">Date</th>
                 <th className="px-4">Principal</th>

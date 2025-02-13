@@ -103,13 +103,13 @@ const PersonalInfo = () => {
       <div className="space-y-2 text-sm text-gray-600 p-5 relative">
         {rowData ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 break-words">
               {/* Personal Details */}
               <CardInfo
                 cardTitle="Personal Details"
                 cardIcon={CurrencyDollarIcon}
-                color={"blue"}
-                coloredBG={true}
+                colorBG={"bg-blue-tertiary"}
+                colorText={"text-blue-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -149,8 +149,8 @@ const PersonalInfo = () => {
               <CardInfo
                 cardTitle="Contact Details"
                 cardIcon={HomeIcon}
-                color={"green"}
-                coloredBG={true}
+                colorBG={"bg-green-tertiary"}
+                colorText={"text-green-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -191,8 +191,8 @@ const PersonalInfo = () => {
               <CardInfo
                 cardTitle="Professional Journey"
                 cardIcon={BriefcaseIcon}
-                color={"violet"}
-                coloredBG={true}
+                colorBG={"bg-violet-tertiary"}
+                colorText={"text-violet-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -220,8 +220,8 @@ const PersonalInfo = () => {
               <CardInfo
                 cardTitle="Financial Profile"
                 cardIcon={BuildingOffice2Icon}
-                color={"red"}
-                coloredBG={true}
+                colorBG={"bg-orange-tertiary"}
+                colorText={"text-orange-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -285,8 +285,8 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Company Overview"
                   cardIcon={BuildingOffice2Icon}
-                  color={"blue"}
-                  coloredBG={true}
+                  colorBG={"bg-blue-tertiary"}
+                  colorText={"text-blue-primary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <p>
@@ -322,8 +322,8 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Contact Information"
                   cardIcon={PhoneIcon}
-                  color={"green"}
-                  coloredBG={true}
+                  colorBG={"bg-green-tertiary"}
+                  colorText={"text-green-primary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <div className="grid grid-cols-2 gap-4">
@@ -365,8 +365,8 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Financial Profile"
                   cardIcon={BuildingOffice2Icon}
-                  color={"red"}
-                  coloredBG={true}
+                  colorBG={"bg-violet-tertiary"}
+                  colorText={"text-violet-primary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <div className="grid grid-cols-2 gap-4">
@@ -408,8 +408,8 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Other Details"
                   cardIcon={BriefcaseIcon}
-                  color={"violet"}
-                  coloredBG={true}
+                  colorBG={"bg-orange-tertiary"}
+                  colorText={"text-orange-primary"}
                 >
                   <div className="space-y-2 flex flex-col gap-5 p-3">
                     <div className="grid grid-cols-1 gap-4">

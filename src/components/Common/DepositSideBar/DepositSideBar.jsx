@@ -209,7 +209,7 @@ const DepositSideBar = () => {
                     // if create from Side bar Using input box
                     menu.createButton ? (
                       <div>
-                        <li className="py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                        <li className="py-1 cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-indigo-600">
                           <CreateNew
                             placeholder={menu.placeholder}
                             buttonName={menu.buttonName}
@@ -226,7 +226,7 @@ const DepositSideBar = () => {
                   {menu.submenuItems.map((submenuItem) => (
                     <div key={submenuItem.name}>
                       <NavLink to={submenuItem.href} className="text-gray-500">
-                        <li className="text-xs flex items-center  gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                        <li className="text-xs flex items-center  gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-background-light-secondary hover:text-indigo-600">
                           {submenuItem.name}
                         </li>
                       </NavLink>

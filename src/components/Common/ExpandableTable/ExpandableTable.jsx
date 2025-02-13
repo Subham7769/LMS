@@ -18,10 +18,10 @@ const ExpandableTable = ({
   const ShimmerTable = () => {
     return (
       <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
       </div>
     );
   };
@@ -30,7 +30,7 @@ const ExpandableTable = ({
     <div className="overflow-x-auto min-h-[5rem] max-h-full bg-white rounded-lg shadow-lg">
       <table className="min-w-full table-auto" role="table">
         <thead className={"sticky top-0 z-10"}>
-          <tr className="bg-gray-100 text-sm font-semibold text-gray-600">
+          <tr className="bg-background-light-secondary text-sm font-semibold text-gray-600">
             {columns.map((col, index) => (
               <th key={index} className="px-4 py-4">
                 {col.label}
@@ -70,7 +70,7 @@ const ExpandableTable = ({
                         late: "bg-yellow-100 text-yellow-800",
                         submitted: "bg-violet-100 text-violet-800",
                         "roll overed": "bg-violet-100 text-violet-800",
-                        closed: "bg-gray-100 text-gray-800",
+                        closed: "bg-background-light-secondary text-gray-800",
                         frozen: "bg-blue-100 text-blue-800",
                         cancel: "bg-red-100 text-red-800",
                         unpaid: "bg-yellow-100 text-yellow-800",

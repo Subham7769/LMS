@@ -49,7 +49,6 @@ const CreditInstrument = () => {
     (state) => state.customerCare
   );
 
-
   const settings = {
     dots: false,
     infinite: false,
@@ -86,11 +85,8 @@ const CreditInstrument = () => {
       ?.cidetails?.cidetail;
 
   return (
-    <ContainerTile
-      loading={loading}
-      className={"mt-4"}
-    >
-      <div className="flex items-start shadow-md bg-gray-100 mt-4">
+    <ContainerTile loading={loading} className={"mt-4"}>
+      <div className="flex items-start shadow-md bg-background-light-secondary mt-4">
         <table className="divide-y divide-gray-300 border-r border-gray-200 w-full text-[14px]">
           <TableHeader />
           <tbody className="divide-y divide-gray-200 bg-white">

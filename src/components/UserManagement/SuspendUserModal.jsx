@@ -58,14 +58,14 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
               onClick={() => {
                 onClose();
               }}
-              className={" bg-gray-600 text-white hover:bg-gray-500 self-end"}
+              buttonType="tertiary"
               rectangle={true}
             />
             <Button
               buttonName={"Suspend"}
               onClick={handleSuspendUser}
               rectangle={true}
-              className={"self-end"}
+              buttonType="secondary"
             />
           </div>
         </div>

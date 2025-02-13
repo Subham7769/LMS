@@ -251,8 +251,8 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Personal Details"
                 cardIcon={CurrencyDollarIcon}
-                color={"blue"}
-                coloredBG={true}
+                colorBG={"bg-blue-tertiary"}
+                colorText={"text-blue-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -292,8 +292,8 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Contact Details"
                 cardIcon={HomeIcon}
-                color={"green"}
-                coloredBG={true}
+                colorBG={"bg-green-tertiary"}
+                colorText={"text-green-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -334,8 +334,8 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Professional Journey"
                 cardIcon={BriefcaseIcon}
-                color={"violet"}
-                coloredBG={true}
+                colorBG={"bg-violet-tertiary"}
+                colorText={"text-violet-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -363,8 +363,8 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Financial Profile"
                 cardIcon={BuildingOffice2Icon}
-                color={"red"}
-                coloredBG={true}
+                colorBG={"bg-orange-tertiary"}
+                colorText={"text-orange-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -401,7 +401,7 @@ const ViewBorrowers = () => {
             {/* Actions */}
             <div className="absolute top-0 right-0">
               <button
-                className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-gray-100 transition-colors duration-200"
+                className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
                 onClick={() => setEditModal(true)}
               >
                 <PencilIcon className="h-5 w-5 text-gray-500" />
@@ -447,12 +447,14 @@ const ViewBorrowers = () => {
             onClick={SearchBorrowerByFieldSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="tertiary"
           />
         </div>
       </ContainerTile>

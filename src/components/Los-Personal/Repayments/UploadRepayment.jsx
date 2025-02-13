@@ -174,12 +174,12 @@ const UploadRepayment = () => {
                     <img
                       src={save_as_csv}
                       alt=""
-                      className="w-[35%] h-full shadow-md bg-gray-100 border border-gray-300 rounded-sm"
+                      className="w-[35%] h-full shadow-md bg-background-light-secondary border border-border-gray-primary rounded-sm"
                     />
                     <img
                       src={save_as_csv2}
                       alt=""
-                      className="w-[65%] h-full shadow-md bg-gray-100 border border-gray-300 rounded-sm"
+                      className="w-[65%] h-full shadow-md bg-background-light-secondary border border-border-gray-primary rounded-sm"
                     />
                   </div>
                 </div>
@@ -192,7 +192,7 @@ const UploadRepayment = () => {
               </h2>
               <div className="flex flex-col gap-3 text-sm rounded-lg">
                 {/* Table 1 */}
-                <div className="flex flex-col gap-4 border border-gray-300 bg-white rounded-lg overflow-hidden">
+                <div className="flex flex-col gap-4 border border-border-gray-primary bg-white rounded-lg overflow-hidden">
                   {/* Table Header */}
                   <div className="flex font-bold text-sm bg-gray-50">
                     <div className="w-[40%] p-2 py-3 border-b border-gray-600">
@@ -272,7 +272,7 @@ const UploadRepayment = () => {
                 Option 1: Recalculate Schedule
               </h2>
               {/* Table 2 */}
-              <div className="flex flex-col gap-4 border border-gray-300 bg-white rounded-lg overflow-hidden text-sm">
+              <div className="flex flex-col gap-4 border border-border-gray-primary bg-white rounded-lg overflow-hidden text-sm">
                 {/* Table Header */}
                 <div className="flex font-bold text-sm bg-gray-50">
                   <div className="w-[40%] p-2 py-3 border-b border-gray-600">
@@ -303,7 +303,7 @@ const UploadRepayment = () => {
                 Option 2: Manual Composition
               </h2>
               {/* Table 3 */}
-              <div className="flex flex-col gap-4 border border-gray-300 bg-white rounded-lg overflow-hidden text-sm">
+              <div className="flex flex-col gap-4 border border-border-gray-primary bg-white rounded-lg overflow-hidden text-sm">
                 {/* Table Header */}
                 <div className="flex font-bold text-sm bg-gray-50">
                   <div className="w-[40%] p-2 py-3 border-b border-gray-600">
@@ -654,7 +654,7 @@ const UploadRepayment = () => {
           </ContainerTile>
           <div
             className={
-              "shadow-md bg-gray-100 border-gray-300 border p-5 rounded-xl mt-4 "
+              "shadow-md bg-background-light-secondary border-border-gray-primary border p-5 rounded-xl mt-4 "
             }
           >
             <div className="flow-root overflow-hidden">
