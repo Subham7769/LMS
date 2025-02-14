@@ -34,8 +34,6 @@ const NotificationWindow = () => {
       roleName !== "ROLE_MANAGEMENT_CREDIT_COMMITTEE" &&
       roleName !== "ROLE_BOARD"
     ) {
-      console.log("Fetching notifications...");
-      console.log(roleName);
       dispatch(fetchNotifications());
     }
   }, [dispatch]);
@@ -198,8 +196,7 @@ const NotificationWindow = () => {
   return (
     <div className="relative" ref={notificationRef}>
       <button
-        className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 relative"
-        onMouseEnter={() => setIsOpen(!isOpen)}
+        className="p-2 rounded-full hover:bg-background-light-secondary transition-colors duration-200 relative"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle notifications"
         aria-expanded={isOpen}
@@ -223,9 +220,9 @@ const NotificationWindow = () => {
           <div className="max-h-[60vh] overflow-y-auto">
             {loading ? (
               <div className="flex flex-col gap-3 animate-pulse px-5 py-3">
-                <div className="h-4 bg-gray-300 rounded w-full"></div>
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                <div className="h-4 bg-background-light-primary rounded w-full"></div>
+                <div className="h-4 bg-background-light-primary rounded w-3/4"></div>
+                <div className="h-4 bg-background-light-primary rounded w-1/3"></div>
               </div>
             ) : error ? (
               <div className="text-red-500 text-center py-4">

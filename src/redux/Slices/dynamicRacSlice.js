@@ -37,17 +37,55 @@ export const fetchDynamicRacDetails = createAsyncThunk(
   }
 );
 
-// Define the asyncThunk for updating Dynamic RAC
-export const updateDynamicRac = createAsyncThunk(
-  "rac/updateDynamicRac",
-  async ({ racId, updateData }, { rejectWithValue }) => {
-    const url = `${import.meta.env.VITE_DYNAMIC_RAC_UPDATE}${racId}`;
+// Async thunk for adding a new RAC rule
+export const addNewRule = createAsyncThunk(
+  "rac/addNewRule",
+  async ({ ruleConfig }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    console.log(ruleConfig);
 
     try {
-      const response = await axios.put(url, updateData);
-      return response.data; // Assuming the API returns the updated data
+      const response = await axios.post(
+        `${import.meta.env.VITE_DYNAMIC_RAC_CREATE_NEW_RAC_RULE}`,
+        { ...ruleConfig, displayName: ruleConfig.name},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data; // Return newly added rule data
     } catch (error) {
-      return rejectWithValue(error.response.data); // Return the error response if the request fails
+      return rejectWithValue(error.response?.data || "Failed to add rule.");
+    }
+  }
+);
+
+// Async thunk for updating a Dynamic RAC rule by ID
+export const updateRuleById = createAsyncThunk(
+  "rac/updateRuleById",
+  async ({ dynamicRacRuleId, ruleConfig }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await axios.put(
+        `${
+          import.meta.env.VITE_DYNAMIC_RAC_UPDATE_RULE_BY_ID
+        }${dynamicRacRuleId}`,
+        { ...ruleConfig, isModified: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data; // Return the updated rule data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Something went wrong");
     }
   }
 );
@@ -74,16 +112,16 @@ export const deleteDynamicRac = createAsyncThunk(
   }
 );
 
-// Async thunk for updating a Dynamic RAC rule
+// Async thunk for updating a Dynamic RAC All rules
 export const saveDynamicRac = createAsyncThunk(
   "rac/saveDynamicRac", // Action type
   async (racConfig, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    console.log(racConfig)
+    console.log(racConfig);
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_DYNAMIC_RAC_CREATE}`,
-        racConfig, 
+      const response = await axios.put(
+        `${import.meta.env.VITE_DYNAMIC_RAC_UPDATE_ALL_RULE}`,
+        racConfig,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the headers
@@ -170,17 +208,15 @@ export const deleteRuleById = createAsyncThunk(
 // Define the asyncThunk for updating status
 export const updateStatus = createAsyncThunk(
   "rac/updateStatus", // action type
-  async ({ dynamicRacRuleId, status }, { rejectWithValue }) => {
+  async ({ dynamicRacRuleId, reviewComment, status }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken"); // Assuming the token is stored in localStorage
     console.log(dynamicRacRuleId, status);
 
     try {
       // API call with dynamicRacRuleId and status
       const response = await axios.put(
-        `${
-          import.meta.env.VITE_DYNAMIC_RAC_STATUS_UPDATE
-        }${dynamicRacRuleId}/status/${status}`,
-        {}, // No request body, so pass an empty object
+        `${import.meta.env.VITE_DYNAMIC_RAC_STATUS_UPDATE}`,
+        { dynamicRacRuleId, reviewComment, status },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -391,10 +427,9 @@ const dynamicRacSlice = createSlice({
             ...ruleConfig,
             dynamicRacRuleId:
               ruleConfig.dynamicRacRuleId || `Rule-${Date.now()}`,
-            isModified: true,
+              isModified: true,
           };
         }
-        console.log(newRule)
         state.racConfig.sections = state.racConfig.sections.map((section) => {
           if (section.sectionId === sectionId) {
             return {
@@ -412,7 +447,6 @@ const dynamicRacSlice = createSlice({
           }
           return section;
         });
-        console.log(state.racConfig.sections);
       }
     },
     removeRule(state, action) {
@@ -523,26 +557,6 @@ const dynamicRacSlice = createSlice({
         );
       }
     },
-    handleChangeModified(state, action) {
-      const { sectionId, dynamicRacRuleId, value } = action.payload;
-      state.racConfig.sections = state.racConfig.sections.map((section) => {
-        if (section.sectionId === sectionId) {
-          return {
-            ...section,
-            rules: section.rules.map((rule) => {
-              if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                return {
-                  ...rule,
-                  isModified: value,
-                };
-              }
-              return rule;
-            }),
-          };
-        }
-        return section;
-      });
-    },
     setCurrentRule(state, action) {
       const { sectionId, dynamicRacRuleId } = action.payload;
       state.racConfig.sections = state.racConfig.sections.map((section) => {
@@ -597,16 +611,38 @@ const dynamicRacSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
-          // createdOn: RACList[index]?.createdOn || "14/09/2022",
-          // approved: RACList[index]?.approved || "40%",
-          // totalProcessed: RACList[index]?.totalProcessed || "2367",
-          // status: RACList[index]?.status || "Active",
         }));
         state.racStatsData.RACList = updatedList;
       })
       .addCase(fetchList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(addNewRule.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addNewRule.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success("Dynamic RAC Cloned.");
+      })
+      .addCase(addNewRule.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add rule.";
+      })
+      .addCase(updateRuleById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateRuleById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success("Dynamic RAC Rule Updated.");
+      })
+      .addCase(updateRuleById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update rule.";
       })
       .addCase(deleteDynamicRac.pending, (state) => {
         state.loading = true;
@@ -753,7 +789,6 @@ export const {
   handleChangeStringRule,
   handleChangeBlocked,
   removeTag,
-  handleChangeModified,
   setCurrentRule,
   restoreRule,
 } = dynamicRacSlice.actions;

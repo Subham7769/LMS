@@ -89,7 +89,7 @@ export default function DynamicRAC() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-background-light-secondary">
       <TabSidebar
         tabs={tabs}
         activeTabId={activeTabId}

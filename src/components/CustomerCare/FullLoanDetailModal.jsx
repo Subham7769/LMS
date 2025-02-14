@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { convertDate } from "../../utils/convertDate";
 
 const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
-  <div className="flex border-b border-gray-300 pb-5">
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 pr-4">
+  <div className="flex border-b border-border-gray-primary pb-5">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-border-gray-primary pr-4">
       <div>Loan Id</div>
       <div className="font-bold text-black flex w-[120px] items-center">
         : <span className="mr-2">{""}</span>
@@ -34,7 +34,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.totalAmount}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 px-4">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-border-gray-primary px-4">
       <div>Remaining Principal</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -46,7 +46,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
         {loanDetails.remainingInterest}
       </div>
     </div>
-    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-gray-300 px-4">
+    <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-border-gray-primary px-4">
       <div>Loan Status</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
@@ -116,10 +116,10 @@ const InstallmentScheduleTable = ({ loansarrModal }) => (
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
     </div>
   );
 };

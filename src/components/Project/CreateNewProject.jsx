@@ -9,7 +9,9 @@ import {
   handleChangeInProjectData,
   createProject,
 } from "../../redux/Slices/projectSlice";
-
+import {
+  CheckCircleIcon,
+} from "@heroicons/react/20/solid";
 import {
   clearValidationError,
   validateForm,
@@ -17,6 +19,7 @@ import {
 import store from "../../redux/store";
 import { toast } from "react-toastify";
 import ProjectInputFields from "./ProjectInputFields";
+import Button from "../Common/Button/Button";
 
 const CreateNewProject = () => {
   const navigate = useNavigate();
@@ -80,14 +83,13 @@ const CreateNewProject = () => {
         />
         <div className="flex mt-4  justify-end ">
           {/* Submit Button */}
-          <button
-            type="submit"
+          <Button
+            buttonIcon={CheckCircleIcon}
+            buttonName="Create"
             onClick={createNewProject}
-            className="flex items-center justify-center mt-3 w-44 bg-indigo-600  hover:bg-white hover:text-black hover:border hover:drop-shadow-lg text-white p-2 rounded-md"
-          >
-            <FaCheckCircle className="mr-2" />
-            Create
-          </button>
+            rectangle={true}
+            buttonType={"primary"}
+          />
         </div>
       </form>
     </>

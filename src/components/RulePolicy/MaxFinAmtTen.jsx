@@ -98,11 +98,13 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
           icon: PencilIcon,
           circle: true,
           action: handleUpdate,
+          type: "secondary",
         },
         {
           icon: TrashIcon,
           circle: true,
           action: handleDelete,
+          type: "destructive",
         },
       ]
     : [];
@@ -139,21 +141,32 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
               isValidation={true}
               isIndex={maxFinAmtRules.dataIndex}
             />
-            <Button buttonIcon={PlusIcon} onClick={CreateEntry} circle={true} />
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={CreateEntry}
+              circle={true}
+              buttonType="secondary"
+            />
           </div>
         ) : (
           ""
         )}
 
         <div className="mt-6">
-          <ListTable
-            ListHeader={MaxFinAmtHeaderList}
-            ListItem={tableDataWithoutId}
-            ListAction={ActionList}
-            handleEditableFields={handleChange}
-            Sortable={true}
-            PageSize={5}
-          />
+          {tableDataWithoutId.length > 0 ? (
+            <ListTable
+              ListHeader={MaxFinAmtHeaderList}
+              ListItem={tableDataWithoutId}
+              ListAction={ActionList}
+              handleEditableFields={handleChange}
+              Sortable={true}
+              PageSize={5}
+            />
+          ) : (
+            <div className="px-6 py-4 text-center text-gray-500">
+              No data to show yet
+            </div>
+          )}
         </div>
       </ContainerTile>
     </>

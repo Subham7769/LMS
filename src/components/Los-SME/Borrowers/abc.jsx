@@ -1,7 +1,7 @@
 const personalDocuments = (personalDocuments) => {
     return (
       <>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Directors’ Identification Documents (NRC / Passport)</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -22,7 +22,7 @@ const personalDocuments = (personalDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Directors’ Passport size photos </div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -40,7 +40,7 @@ const personalDocuments = (personalDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Proof of residence</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -83,7 +83,7 @@ const personalDocuments = (personalDocuments) => {
 const businessDocuments = (businessDocuments) => {
     return (
       <>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Partnership Agreement</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -101,7 +101,7 @@ const businessDocuments = (businessDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Shareholder Agreement</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -119,7 +119,7 @@ const businessDocuments = (businessDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Certificate of Incorporation&nbsp;</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -139,7 +139,7 @@ const businessDocuments = (businessDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Articles of Association</div>
           <div className="flex gap-x-5 items-baseline">
             <InputFile
@@ -182,7 +182,7 @@ const businessDocuments = (businessDocuments) => {
 const taxDocuments = (taxDocuments) => {
     return (
       <>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Tax clearance Certificate</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -200,7 +200,7 @@ const taxDocuments = (taxDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Tax Registration Certificate</div>
           <div className="flex gap-x-5 items-center">
             <InputFile
@@ -218,7 +218,7 @@ const taxDocuments = (taxDocuments) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+        <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
           <div>Credit Reference Bureau report</div>
           <div className="flex gap-x-5 items-center">
             <InputFile

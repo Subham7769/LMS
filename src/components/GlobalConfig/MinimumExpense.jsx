@@ -212,11 +212,13 @@ const MinimumExpense = () => {
                     buttonIcon={CheckCircleIcon}
                     onClick={() => handleSave(expenseData?.id, index)}
                     circle={true}
+                    buttonType="secondary"
                   />
                   <Button
                     buttonIcon={TrashIcon}
                     onClick={() => handleDelete(expenseData?.id, index)}
                     circle={true}
+                    buttonType="destructive"
                   />
                 </div>
               ) : (

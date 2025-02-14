@@ -77,8 +77,8 @@ const CustomerCare = () => {
               to={tabs[3].path}
               className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${
                 currentPath === tabs[3].path
-                  ? "text-white bg-indigo-500 rounded"
-                  : "text-white hover:border-b hover:bg-indigo-600 hover:font-medium"
+                  ? "text-white bg-blue-tertiary rounded"
+                  : "text-white hover:border-b hover:bg-violet-primary hover:font-medium"
               }`}
             >
               {tabs[3].label}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { setMenus } from "../../redux/Slices/sidebarSlice";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import BG from "../../assets/image/1.webp";
 import BG1 from "../../assets/image/2.webp";
@@ -19,7 +19,6 @@ import {
   setError,
   resetError,
 } from "../../redux/Slices/authSlice";
-
 
 const Login = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -163,7 +162,7 @@ const Login = () => {
     dispatch(updateDataField({ name, value }));
   };
   const InputStyle =
-    "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
+    "mt-1 block w-full rounded-md border-border-gray-primary shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-200">

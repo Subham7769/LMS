@@ -40,30 +40,46 @@ const RegistrationPage = () => {
       <div className="mx-auto bg-white rounded-xl shadow-lg p-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-semibold text-gray-800">Registration Page</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">
+            Registration Page
+          </h1>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-5">
           {/* Input Fields */}
           {[
-            { label: "Contact Person Name", name: "contactPersonName", type: "text" },
+            {
+              label: "Contact Person Name",
+              name: "contactPersonName",
+              type: "text",
+            },
             { label: "Company Name", name: "companyName", type: "text" },
-            { label: "Company Contact No.", name: "companyContactNo", type: "tel" },
+            {
+              label: "Company Contact No.",
+              name: "companyContactNo",
+              type: "tel",
+            },
             { label: "Company Email", name: "companyEmail", type: "email" },
             { label: "Bank Account", name: "bankAccount", type: "text" },
             { label: "Bank Name", name: "bankName", type: "text" },
-            { label: "No. of Employees", name: "noOfEmployees", type: "number" },
+            {
+              label: "No. of Employees",
+              name: "noOfEmployees",
+              type: "number",
+            },
             { label: "Google Location", name: "googleLocation", type: "url" },
           ].map((field) => (
             <div key={field.name}>
-              <label className="block text-sm font-semibold text-gray-700">{field.label}</label>
+              <label className="block text-sm font-semibold text-gray-700">
+                {field.label}
+              </label>
               <input
                 type={field.type}
                 name={field.name}
                 value={formData[field.name]}
                 onChange={handleInputChange}
-                className="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all px-4 py-2"
+                className="mt-2 block w-full rounded-lg border-border-gray-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all px-4 py-2"
               />
             </div>
           ))}
@@ -77,10 +93,14 @@ const RegistrationPage = () => {
             { label: "Photo (Drag & Drop)", name: "photo" },
           ].map((field) => (
             <div key={field.name} className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">{field.label}</label>
-              <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-100 hover:border-indigo-500 hover:bg-indigo-50 transition-all">
+              <label className="block text-sm font-semibold text-gray-700">
+                {field.label}
+              </label>
+              <div className="relative border-2 border-dashed border-border-gray-primary rounded-lg p-4 text-center bg-background-light-secondary hover:border-indigo-500 hover:bg-indigo-50 transition-all">
                 <FiUpload className="mx-auto text-gray-400 mb-2" size={24} />
-                <span className="text-sm text-gray-500">Click or drag to upload</span>
+                <span className="text-sm text-gray-500">
+                  Click or drag to upload
+                </span>
                 <input
                   type="file"
                   name={field.name}
@@ -94,12 +114,14 @@ const RegistrationPage = () => {
 
           {/* Text Area */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700">Address</label>
+            <label className="block text-sm font-semibold text-gray-700">
+              Address
+            </label>
             <textarea
               name="address"
               value={formData.address}
               onChange={handleInputChange}
-              className="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all px-4 py-2"
+              className="mt-2 block w-full rounded-lg border-border-gray-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all px-4 py-2"
               rows={3}
             />
           </div>

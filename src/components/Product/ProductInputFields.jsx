@@ -58,7 +58,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
   const ProjectDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "Project")[0]
+      state?.sidebar?.menus?.filter((item) => item.title === "Loan Schema")[0]
         ?.submenuItems
   );
   const TCLDataInfo = useSelector(
@@ -144,7 +144,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   ]);
   return (
     <>
-      <div className="border-b border-gray-300 pb-5">
+      <div className="border-b border-border-gray-primary pb-5">
         <div className="grid grid-cols-5 gap-5 items-end pb-2">
           <InputSelect
             labelName="Eligible Customer Type"
@@ -170,7 +170,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             isValidation={true}
           />
           <InputSelect
-            labelName="Project"
+            labelName="Loan Schema"
             inputOptions={formateDataDropDown(
               "/loan/project/",
               ProjectDataInfo
@@ -434,6 +434,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
               buttonIcon={PlusIcon}
               onClick={handleAddFields}
               circle={true}
+              buttonType="secondary"
             />
           </div>
         </div>

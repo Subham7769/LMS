@@ -13,25 +13,28 @@ const NotificationWindow = () => {
       type: "info",
       title: "System Update",
       time: "2 hours ago",
-      message: "A new system update is available. Please review the changes and update your system.",
-      icon: <MdInfo className="text-blue-500" />
+      message:
+        "A new system update is available. Please review the changes and update your system.",
+      icon: <MdInfo className="text-blue-500" />,
     },
     {
       id: 2,
       type: "warning",
       title: "Storage Alert",
       time: "5 hours ago",
-      message: "Your storage is almost full. Consider clearing some space to ensure optimal performance.",
-      icon: <MdWarning className="text-yellow-500" />
+      message:
+        "Your storage is almost full. Consider clearing some space to ensure optimal performance.",
+      icon: <MdWarning className="text-yellow-500" />,
     },
     {
       id: 3,
       type: "error",
       title: "Connection Error",
       time: "1 day ago",
-      message: "Failed to connect to the server. Please check your internet connection and try again.",
-      icon: <MdError className="text-red-500" />
-    }
+      message:
+        "Failed to connect to the server. Please check your internet connection and try again.",
+      icon: <MdError className="text-red-500" />,
+    },
   ];
 
   const toggleNotifications = () => {
@@ -58,7 +61,7 @@ const NotificationWindow = () => {
   return (
     <div className="relative inline-block">
       <button
-        className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        className="p-2 rounded-full hover:bg-background-light-secondary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         onClick={toggleNotifications}
         aria-label="Toggle notifications"
         aria-expanded={showNotifications}
@@ -80,14 +83,18 @@ const NotificationWindow = () => {
           aria-label="Notifications panel"
         >
           <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-700">Notifications</h2>
+            <h2 className="text-lg font-semibold text-gray-700">
+              Notifications
+            </h2>
           </div>
 
           <div className="divide-y divide-gray-200">
             {notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`${getNotificationClass(notification.type)} border-l-4 transition-colors duration-200`}
+                className={`${getNotificationClass(
+                  notification.type
+                )} border-l-4 transition-colors duration-200`}
               >
                 <button
                   className="w-full px-4 py-3 flex items-center justify-between focus:outline-none focus:bg-gray-50"
@@ -101,7 +108,9 @@ const NotificationWindow = () => {
                       <span className="text-sm font-medium text-gray-900">
                         {notification.title}
                       </span>
-                      <span className="text-xs text-gray-500">{notification.time}</span>
+                      <span className="text-xs text-gray-500">
+                        {notification.time}
+                      </span>
                     </div>
                   </div>
                   {expandedId === notification.id ? (

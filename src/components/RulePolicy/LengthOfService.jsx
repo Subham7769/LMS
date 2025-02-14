@@ -172,13 +172,10 @@ const LengthofService = ({ loading, error }) => {
 
   return (
     <>
-      <ContainerTile
-        loading={loading}
-        error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <div className="text-lg mb-4">Length of Service</div>
         {!hasViewOnlyAccess(roleName) ? (
-          <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-gray-300 pb-6 mb-6">
+          <div className="grid grid-cols-5 gap-8 mt-2 items-end border-b border-border-gray-primary pb-6 mb-6">
             <SelectAndNumber
               labelName={"Minimum Length Of Service"}
               inputSelectName={"firstLengthOfServiceOperator"}
@@ -226,6 +223,7 @@ const LengthofService = ({ loading, error }) => {
                 buttonIcon={PlusIcon}
                 onClick={handleAddFields}
                 circle={true}
+                buttonType="secondary"
               />
             </div>
           </div>
@@ -367,7 +365,7 @@ const LengthofService = ({ loading, error }) => {
                         {editingIndex === index ? (
                           <div
                             // onClick={handleSave}
-                            className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
                           >
                             <CheckCircleIcon
                               className="h-5 w-5"
@@ -375,7 +373,7 @@ const LengthofService = ({ loading, error }) => {
                             />
                           </div>
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                          <div className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">
                             <PencilIcon
                               className="h-5 w-5"
                               aria-hidden="true"
@@ -387,6 +385,7 @@ const LengthofService = ({ loading, error }) => {
                         buttonIcon={TrashIcon}
                         onClick={() => handleDelete(item.ruleName)}
                         circle={true}
+                        buttonType="destructive"
                       />
                     </td>
                   ) : (
@@ -397,31 +396,35 @@ const LengthofService = ({ loading, error }) => {
             )}
           </tbody>
         </table>
-        <div className="mt-4 w-full flex justify-center gap-5 items-center">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-indigo-600 text-white hover:bg-indigo-500"
+        {currentItems.length > 0 && (
+          <div className="mt-4 w-full flex justify-center gap-5 items-center">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                currentPage === 1
+                  ? "bg-background-light-primary cursor-not-allowed"
+                  : "bg-indigo-600 text-white hover:bg-indigo-500"
               }`}
-          >
-            <ChevronLeftIcon className="w-5 h-5" />
-          </button>
-          <span className="text-sm text-gray-700">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages || currentItems.length < 1}
-            className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-indigo-600 text-white hover:bg-indigo-500"
+            >
+              <ChevronLeftIcon className="w-5 h-5" />
+            </button>
+            <span className="text-sm text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages || currentItems.length < 1}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                currentPage === totalPages
+                  ? "bg-background-light-primary cursor-not-allowed"
+                  : "bg-indigo-600 text-white hover:bg-indigo-500"
               }`}
-          >
-            <ChevronRightIcon className="w-5 h-5" />
-          </button>
-        </div>
+            >
+              <ChevronRightIcon className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </ContainerTile>
     </>
   );

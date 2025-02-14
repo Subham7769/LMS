@@ -47,10 +47,14 @@ const ProjectInputFields = ({
 
   return (
     <>
-      <ContainerTile className={"grid grid-cols-1 gap-5 md:grid-cols-2"} loading={loading}>
+      <ContainerTile
+        className={"grid grid-cols-1 gap-5 md:grid-cols-2"}
+        loading={loading}
+        defaultClass={false}
+      >
         <CardInfo
           cardTitle="Basic Details & Amount"
-          className={"bg-white"}
+          className={"border"}
           cardIcon={DocumentTextIcon}
           color={"blue"}
         >
@@ -207,7 +211,7 @@ const ProjectInputFields = ({
         </CardInfo>
         <CardInfo
           cardTitle="Interest & Periods"
-          className={"bg-white"}
+          className={"border"}
           cardIcon={CurrencyDollarIcon}
           color={"green"}
         >
@@ -330,7 +334,7 @@ const ProjectInputFields = ({
         </CardInfo>
         <CardInfo
           cardTitle="Fees & Grace Periods"
-          className={"bg-white"}
+          className={"border"}
           cardIcon={ClockIcon}
           color={"orange"}
         >
@@ -396,7 +400,7 @@ const ProjectInputFields = ({
         </CardInfo>
         <CardInfo
           cardTitle="Capping & Additional Settings"
-          className={"bg-white"}
+          className={"border"}
           cardIcon={CogIcon}
           color={"violet"}
         >
@@ -421,7 +425,7 @@ const ProjectInputFields = ({
               />
               <InputNumber
                 labelName={"Loan Scheme TCL"}
-                inputName={"openLoanAmount"}
+                inputName={"tclAmount"}
                 inputValue={projectData?.tclAmount}
                 onChange={handleChange}
                 placeHolder={"2"}
@@ -433,7 +437,7 @@ const ProjectInputFields = ({
                 inputName={"clientIds"}
                 inputValue={clientIdsString}
                 onChange={(e) => setClientIdsString(e.target.value)}
-                placeHolder={"0"}
+                placeHolder={"DEV-lmsClient"}
                 isValidation={true}
               />
             </div>

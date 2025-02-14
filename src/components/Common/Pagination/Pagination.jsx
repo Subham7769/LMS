@@ -33,6 +33,7 @@ const Pagination = ({ dispatcherFunction, totalElements, pageSize }) => {
         disabled={currentPage === 0}
         rectangle={true}
         className={"w-[6rem]"}
+        buttonType="secondary"
       />
       <span>
         Page {currentPage + 1} of {totalPages}
@@ -43,6 +44,7 @@ const Pagination = ({ dispatcherFunction, totalElements, pageSize }) => {
         disabled={currentPage === totalPages - 1}
         rectangle={true}
         className={"w-[6rem]"}
+        buttonType="secondary"
       />
     </div>
   );

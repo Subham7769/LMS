@@ -18,8 +18,13 @@ import LoadingState from "../../LoadingState/LoadingState";
 const UpdateProfile = () => {
   const dispatch = useDispatch();
   const { userID } = useParams();
-  const { accountDetails,filteredAccountNumber,filteredAccountDetails, loading, error } =
-    useSelector((state) => state.accounts);
+  const {
+    accountDetails,
+    filteredAccountNumber,
+    filteredAccountDetails,
+    loading,
+    error,
+  } = useSelector((state) => state.accounts);
 
   useEffect(() => {
     if (accountDetails.length == 0) {
@@ -52,7 +57,7 @@ const UpdateProfile = () => {
 
   return (
     <>
-      <div className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer flex justify-between items-center w-full">
+      <div className="mb-5 px-3 py-2 hover:bg-background-light-secondary rounded-md cursor-pointer flex justify-between items-center w-full">
         <div className="w-1/4 font-bold">Update Account Details</div>
         <div className="w-1/4">
           <InputSelect

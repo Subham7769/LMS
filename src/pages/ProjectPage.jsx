@@ -20,7 +20,7 @@ const ProjectPage = () => {
     <>
       {/* <StatContainer stats={ProjectStats} /> */}
       <ListTable
-        ListName={"Project List"}
+        ListName={"Loan Schema List"}
         ListHeader={HeaderList}
         ListItem={ProjectList}
         Searchable={true}

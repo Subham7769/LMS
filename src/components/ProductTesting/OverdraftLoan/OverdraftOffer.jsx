@@ -199,7 +199,7 @@ const OverdraftOffer = () => {
                 overdraftOfferData.length > 1 ? "w-[330px]" : "w-full"
               }`}
             >
-              <table className="divide-y divide-gray-300 w-full border-r border-gray-300">
+              <table className="divide-y divide-gray-300 w-full border-r border-border-gray-primary">
                 <thead className="bg-gray-50">
                   <tr className={tableDividerStyle}>
                     <th className="py-3.5 text-center">
@@ -235,7 +235,7 @@ const OverdraftOffer = () => {
               <>
                 <div className={sliderContainWidth}>
                   <Slider {...settings}>
-                    <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
+                    <table className="divide-y divide-gray-300 border-r border-border-gray-primary w-full">
                       <thead className="bg-gray-50">
                         <tr className="divide-x divide-gray-200 h-[58px]">
                           <th className="py-3.5 text-center">1</th>
@@ -276,7 +276,7 @@ const OverdraftOffer = () => {
             ) : (
               <>
                 <div className={"w-full"}>
-                  <table className="divide-y divide-gray-300 border-r border-gray-300 w-full">
+                  <table className="divide-y divide-gray-300 border-r border-border-gray-primary w-full">
                     <thead className="bg-gray-50">
                       <tr className="divide-x divide-gray-200 h-[58px]">
                         <th className="py-3.5 text-center">1</th>

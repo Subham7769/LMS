@@ -72,7 +72,7 @@ const ProductNotifications = () => {
         <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
           <table className="min-w-full table-auto" role="table">
             <thead>
-              <tr className="bg-gray-100 text-sm text-gray-600 font-semibold">
+              <tr className="bg-background-light-secondary text-sm text-gray-600 font-semibold">
                 <th className="px-6 py-4"></th>
                 <th className="py-6 text-left">Product Name</th>
                 <th className="px-6 py-4">Field Name</th>

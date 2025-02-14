@@ -339,7 +339,7 @@ const ROLE_CREDITOR_ADMIN = [
   "Recovery",
   "Affordability",
   "TCL",
-  "Project",
+  "Loan Schema",
   "Loan Product",
   "Eligible Tenure",
   "DBR Config",
@@ -358,7 +358,7 @@ const ROLE_MAKER_ADMIN = [
   "Recovery",
   "Affordability",
   "TCL",
-  "Project",
+  "Loan Schema",
   "Loan Product",
   "Eligible Tenure",
   "DBR Config",
@@ -375,7 +375,7 @@ const ROLE_CHECKER_ADMIN = [
   "Recovery",
   "Affordability",
   "TCL",
-  "Project",
+  "Loan Schema",
   "Loan Product",
   "Eligible Tenure",
   "DBR Config",
@@ -392,8 +392,9 @@ const ROLE_VIEWER = [
   "Recovery",
   "Affordability",
   "Employer",
+  "Approval Config",
   "TCL",
-  "Project",
+  "Loan Schema",
   "Loan Product",
   "Eligible Tenure",
   "DBR Config",
@@ -417,7 +418,7 @@ const ROLE_LOAN_OFFICER = [
   "Employer",
   "Approval Config",
   "TCL",
-  "Project",
+  "Loan Schema",
   "Loan Product",
   "Eligible Tenure",
   "DBR Config",
@@ -624,7 +625,7 @@ const sidebarSlice = createSlice({
         state.loading = false;
         const submenuItems = action.payload;
         const updatedMenus = state.menus.map((menu) => {
-          if (menu.title === "Project") {
+          if (menu.title === "Loan Schema") {
             return { ...menu, submenuItems };
           }
           return menu;

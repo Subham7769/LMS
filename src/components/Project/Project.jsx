@@ -50,7 +50,7 @@ const Project = () => {
 
   const updateName = (name) => {
     dispatch(setProjectData({ name: "name", value: name }));
-    dispatch(fetchProjectData());
+    // dispatch(fetchProjectData());
   };
 
   const handleUpdate = async () => {
@@ -58,7 +58,8 @@ const Project = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(updateProject({ projectData, projectId, clientIdsString }));
+      await dispatch(updateProject({ projectData, projectId, clientIdsString })).unwrap();
+      dispatch(fetchProjectData());
     }
   };
 

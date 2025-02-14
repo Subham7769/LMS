@@ -1,6 +1,6 @@
 import React from "react";
-import InputFile from "../InputFile/InputFile"
-import InputCheckbox from "../InputCheckbox/InputCheckbox"
+import InputFile from "../InputFile/InputFile";
+import InputCheckbox from "../InputCheckbox/InputCheckbox";
 
 const DocumentUploaderVerifier = ({
   label,
@@ -13,7 +13,7 @@ const DocumentUploaderVerifier = ({
   onCheckboxChange,
 }) => {
   return (
-    <div className="flex justify-between items-center border-b border-gray-300 mb-3 pb-3">
+    <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
       <div>{label}</div>
       <div className="flex gap-x-5 items-center">
         <InputFile

@@ -28,7 +28,7 @@ const Transaction = () => {
     } else if (!filteredAccountNumber) {
       dispatch(setFilteredAccountNumber(accountDetails[0]?.accountNumber));
     }
-  }, [accountDetails, userID,filteredAccountNumber, dispatch]);
+  }, [accountDetails, userID, filteredAccountNumber, dispatch]);
 
   useEffect(() => {
     if (filteredAccountNumber) {
@@ -45,16 +45,16 @@ const Transaction = () => {
           closingBalance: acc.newBalance,
         }))
       : [];
-  
+
   const accountNumberOptions = accountDetails.map((acc) => ({
     label: acc.accountNumber,
     value: acc.accountNumber,
   }));
-  
+
   return (
     <>
       <ContainerTile loading={loading}>
-        <div className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer flex justify-between items-center w-full">
+        <div className="mb-5 px-3 py-2 hover:bg-background-light-secondary rounded-md cursor-pointer flex justify-between items-center w-full">
           <div className="w-1/4 text-lg">Transactions List</div>
           <div className="w-1/3">
             <InputSelect

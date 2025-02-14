@@ -61,7 +61,7 @@ export const MenusInitial = [
     current: false,
   },
   {
-    title: "Project",
+    title: "Loan Schema",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/project", //previous -> "/project/loan-form"
     icon: "ChartPieIcon",
@@ -70,7 +70,7 @@ export const MenusInitial = [
     createButton: true, //if create project from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewProject",
-    buttonName: "Create Project", //Create button text
+    buttonName: "Create Loan Schema", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/loan/project/newProject/", // navigation
     navigateFail: "/login", // navigation

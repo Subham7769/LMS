@@ -3,7 +3,7 @@ export async function createNewRac(Name, navigate, navigateSuccess, navigateFail
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `${import.meta.env.VITE_DYNAMIC_RAC_CREATE_NEWRAC}`,
+      `${import.meta.env.VITE_DYNAMIC_RAC_CREATE_NEW_RAC}`,
       {
         method: "POST",
         headers: {

@@ -8,7 +8,13 @@ import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
 
-const LedgerListTable = ({ ListName, ListHeader, ListItem,loading, error }) => {
+const LedgerListTable = ({
+  ListName,
+  ListHeader,
+  ListItem,
+  loading,
+  error,
+}) => {
   const tableRef = useRef(null);
   const paginationRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -148,129 +154,128 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem,loading, error }) => {
   const ShimmerTable = () => {
     return (
       <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <>
-    {loading ? (
-      <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5">
-      <ShimmerTable />
-      <ShimmerTable />
-      <ShimmerTable />
-      </div>
-    ) : error ? (
-      <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
-        <p>Oops! Something went wrong. Please try again later.</p>
-      </div>
-    ) :
-      (
-    <div className="bg-gray-100 py-10 rounded-xl flex flex-col items-center w-full">
-      <div className="px-4 sm:px-6 lg:px-8 w-full">
-        {/* Search */}
-        <div className="flex gap-4 mb-5 w-1/2">
-          <div className="">
-            <label htmlFor="search" className="sr-only">
-              Search by Borrower ID
-            </label>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
+      {loading ? (
+        <div className="flex flex-col gap-4 shadow-md bg-background-light-secondary border border-border-gray-primary rounded-xl pb-8 pt-6 px-5">
+          <ShimmerTable />
+          <ShimmerTable />
+          <ShimmerTable />
+        </div>
+      ) : error ? (
+        <div className="flex flex-col gap-4 shadow-md bg-background-light-secondary border border-border-gray-primary rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
+          <p>Oops! Something went wrong. Please try again later.</p>
+        </div>
+      ) : (
+        <div className="bg-white border shadow-md py-10 rounded-xl flex flex-col items-center w-full">
+          <div className="px-4 sm:px-6 lg:px-8 w-full">
+            {/* Search */}
+            <div className="flex gap-4 mb-5 w-1/2">
+              <div className="">
+                <label htmlFor="search" className="sr-only">
+                  Search by Borrower ID
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <MagnifyingGlassIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <input
+                    id="search"
+                    type="search"
+                    name="search"
+                    className="block w-full h-[50px] rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                    placeholder="Enter Borrower ID"
+                    value={borrowerIdQuery}
+                    onChange={(e) => setBorrowerIdQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="w-40">
+                <label htmlFor="entriesSelect" className="sr-only">
+                  Entries Per Page
+                </label>
+                <Select
+                  id="entriesSelect"
+                  options={selectOptions}
+                  defaultValue={{ value: 10, label: "10 entries" }}
+                  onChange={handlePageSizeChange}
+                  className="block w-full"
+                  styles={customSelectStyles}
+                  isSearchable={false}
+                  isMulti={false}
                 />
               </div>
-              <input
-                id="search"
-                type="search"
-                name="search"
-                className="block w-full h-[50px] rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                placeholder="Enter Borrower ID"
-                value={borrowerIdQuery}
-                onChange={(e) => setBorrowerIdQuery(e.target.value)}
-              />
             </div>
-          </div>
-          <div className="w-40">
-            <label htmlFor="entriesSelect" className="sr-only">
-              Entries Per Page
-            </label>
-            <Select
-              id="entriesSelect"
-              options={selectOptions}
-              defaultValue={{ value: 10, label: "10 entries" }}
-              onChange={handlePageSizeChange}
-              className="block w-full"
-              styles={customSelectStyles}
-              isSearchable={false}
-              isMulti={false}
-            />
-          </div>
-        </div>
 
-        {/* Table Name */}
-        <div className="sm:flex sm:items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">
-              {ListName}
-            </h1>
-          </div>
-        </div>
+            {/* Table Name */}
+            <div className="sm:flex sm:items-center">
+              <div className="sm:flex-auto">
+                <h1 className="text-base font-semibold leading-6 text-gray-900">
+                  {ListName}
+                </h1>
+              </div>
+            </div>
 
-        {/* Table */}
-        <div className="mt-4 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                <SectionErrorBoundary>
-                  <Content />
-                </SectionErrorBoundary>
+            {/* Table */}
+            <div className="mt-4 flow-root">
+              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                    <SectionErrorBoundary>
+                      <Content />
+                    </SectionErrorBoundary>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Pagination */}
-      {currentData.length !== 0 ? (
-        <div
-          ref={paginationRef}
-          className="mt-6 flex justify-center gap-5 items-center"
-        >
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`flex items-center px-2 py-2 rounded-md ${
-              currentPage === 1
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-indigo-500 text-white cursor-pointer"
-            }`}
-          >
-            <ChevronLeftIcon className="w-5 h-5" />
-          </button>
-          <span className="text-sm text-gray-700">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`flex items-center px-2 py-2 rounded-md ${
-              currentPage === totalPages
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-indigo-500 text-white cursor-pointer"
-            }`}
-          >
-            <ChevronRightIcon className="w-5 h-5" />
-          </button>
+          {/* Pagination */}
+          {currentData.length !== 0 ? (
+            <div
+              ref={paginationRef}
+              className="mt-6 flex justify-center gap-5 items-center"
+            >
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`flex items-center px-2 py-2 rounded-md ${
+                  currentPage === 1
+                    ? "bg-background-light-primary cursor-not-allowed"
+                    : "bg-indigo-500 text-white cursor-pointer"
+                }`}
+              >
+                <ChevronLeftIcon className="w-5 h-5" />
+              </button>
+              <span className="text-sm text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`flex items-center px-2 py-2 rounded-md ${
+                  currentPage === totalPages
+                    ? "bg-background-light-primary cursor-not-allowed"
+                    : "bg-indigo-500 text-white cursor-pointer"
+                }`}
+              >
+                <ChevronRightIcon className="w-5 h-5" />
+              </button>
+            </div>
+          ) : null}
         </div>
-      ) : null}
-    </div>)
-    }
+      )}
     </>
   );
 };

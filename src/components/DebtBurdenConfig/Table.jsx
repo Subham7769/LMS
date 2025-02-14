@@ -39,7 +39,7 @@ export default function Table({
     tableColumns.push({ name: "Actions", sortKey: null });
   }
   return (
-    <table className="w-full table-auto">
+    <table className="w-full table-auto border">
       <thead className="bg-gray-50">
         <tr>
           {tableColumns.map((column, idx) => (
@@ -174,12 +174,14 @@ export default function Table({
                       }
                       // onClick={editingIndex === index ? informUser : informUser1}
                       circle={true}
+                      buttonType="secondary"
                     />
                   </div>
                   <Button
                     buttonIcon={TrashIcon}
                     onClick={() => handleDelete(index)}
                     circle={true}
+                    buttonType="destructive"
                   />
                 </td>
               ) : (

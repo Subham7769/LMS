@@ -1,6 +1,7 @@
 import convertToReadableString from "../../utils/convertToReadableString";
 
 const generateStringSentence = (rule) => {
+  // console.log(rule)
   const readableName = convertToReadableString(rule.name);
   const condition = rule.blocked ? "NOT be" : "be";
   const criteriaPrefix = rule.criteriaValues.length > 1 

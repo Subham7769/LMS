@@ -176,10 +176,10 @@ const ApproveLoans = () => {
         <CardInfo
           cardIcon={UserIcon}
           cardTitle="Borrower Information"
-          className={"bg-white border-gray-300 border"}
-          color="blue"
+          className={"bg-white border-border-gray-primary border"}
+          colorText={"text-blue-primary"}
         >
-          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Employment</div>
               <div className="font-semibold">
@@ -220,10 +220,10 @@ const ApproveLoans = () => {
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
-          className={"bg-white border-gray-300 border"}
-          color="blue"
+          className={"bg-white border-border-gray-primary border"}
+          colorText={"text-blue-primary"}
         >
-          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Disbursed Amount</div>
               <div className="font-semibold">{rowData?.disbursedAmount}</div>
@@ -236,7 +236,7 @@ const ApproveLoans = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 border-b border-gray-300 pb-3 mb-3">
+          <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Tenure</div>
               <div className="font-semibold">
@@ -262,7 +262,7 @@ const ApproveLoans = () => {
           </div>
         </CardInfo>
       </div>
-      <div className="bg-white p-3 shadow rounded-md my-5 border-gray-300 border">
+      <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
@@ -281,7 +281,7 @@ const ApproveLoans = () => {
         </div>
       </div>
       {rowData?.loanActionDetailsList && (
-        <div className="bg-white p-3 shadow rounded-md my-5 border-gray-300 border">
+        <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
           <div className="font-semibold text-xl mb-3">Loan Action History</div>
           {rowData?.loanActionDetailsList.map((action, index) => {
             const actionKeys = Object.keys(action);
@@ -317,36 +317,37 @@ const ApproveLoans = () => {
         </div>
       )}
       <div className="w-full flex justify-end gap-2 px-5">
-        <button
+        <Button
+          buttonName={"View Loan Agreement"}
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
-        >
-          <NewspaperIcon className="-ml-0.5 h-5 w-5" />
-          View Loan Agreement
-        </button>
-        <button
+          rectangle={true}
+          buttonIcon={NewspaperIcon}
+          buttonType="tertiary"
+        />
+        <Button
+          buttonName={"View Documents"}
           onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
-        >
-          <FiInfo className="-ml-0.5 h-5 w-5" />
-          View Documents
-        </button>
+          rectangle={true}
+          buttonIcon={FiInfo}
+          buttonType="tertiary"
+        />
         {rowData?.rolePermissions?.reject && (
           <>
-            <button
+            <Button
+              buttonName={"Reject"}
               onClick={() => handleReject(rowData)}
-              className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-            >
-              <FiXCircle className="-ml-0.5 h-5 w-5" />
-              Reject
-            </button>
-            <button
+              rectangle={true}
+              buttonIcon={FiXCircle}
+              buttonType="destructive"
+            />
+            <Button
+              buttonName={
+                rowData?.rolePermissions?.finalApprove ? "Approve" : "Recommend"
+              }
               onClick={() => handleApprove(rowData)}
-              className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-            >
-              <FiCheckCircle className="-ml-0.5 h-5 w-5" />
-              {rowData?.rolePermissions?.finalApprove ? "Approve" : "Recommend"}
-            </button>
+              rectangle={true}
+              buttonIcon={FiCheckCircle}
+            />
           </>
         )}
       </div>
@@ -381,12 +382,14 @@ const ApproveLoans = () => {
             onClick={handleSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleReset}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="tertiary"
           />
         </div>
       </ContainerTile>
