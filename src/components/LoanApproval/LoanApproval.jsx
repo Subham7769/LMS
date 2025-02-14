@@ -37,6 +37,7 @@ import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { fetchLoanApprovalData } from "../../redux/Slices/sidebarSlice";
+import { toast } from "react-toastify";
 
 const LoanApproval = () => {
   const { approvalsConfigurationsTempId } = useParams();
@@ -164,6 +165,7 @@ const LoanApproval = () => {
 
   const deleteApprover = (index) => {
     dispatch(handleDeleteApprover(index));
+    toast.warn("Please click on update to confirm removal of entry")
   };
 
   return (
@@ -208,6 +210,7 @@ const LoanApproval = () => {
                 buttonIcon={PlusIcon}
                 onClick={handleAddRoles}
                 circle={true}
+                buttonType="secondary"
               />
             </div>
             {addLoanapprovalData.approvalRoles.map((addRole, index) => (
@@ -241,6 +244,7 @@ const LoanApproval = () => {
                   buttonIcon={TrashIcon}
                   onClick={() => handleDeleteRoles(index)}
                   circle={true}
+                  buttonType="destructive"
                 />
               </div>
             ))}
@@ -269,6 +273,7 @@ const LoanApproval = () => {
                   buttonIcon={TrashIcon}
                   onClick={() => deleteApprover(index)}
                   circle={true}
+                  buttonType="destructive"
                 />
               </div>
               <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-4">
@@ -292,11 +297,12 @@ const LoanApproval = () => {
                   buttonIcon={PlusIcon}
                   onClick={() => handleAddRolesExisting(index)}
                   circle={true}
+                  buttonType="secondary"
                 />
               </div>
               {loanData.approvalRoles.map((addRole, idx) => (
                 <div
-                  key={index}
+                  key={idx}
                   className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-2"
                 >
                   <InputSelect
@@ -325,22 +331,24 @@ const LoanApproval = () => {
                     buttonIcon={TrashIcon}
                     onClick={() => handleDeleteRolesExisting(index, idx)}
                     circle={true}
+                    buttonType="destructive"
                   />
                 </div>
               ))}
             </ContainerTile>
           )
         )}
-        {!hasViewOnlyAccessGroup2(roleName) && loanapprovalData[0]?.loanCriteriaRangeRolesList.length > 0 && (
-          <div className="text-right">
-            <Button
-              buttonIcon={CheckCircleIcon}
-              buttonName="Update"
-              onClick={handleUpdate}
-              rectangle={true}
-            />
-          </div>
-        )}
+        {!hasViewOnlyAccessGroup2(roleName) &&
+          loanapprovalData[0]?.loanCriteriaRangeRolesList.length > 0 && (
+            <div className="text-right">
+              <Button
+                buttonIcon={CheckCircleIcon}
+                buttonName="Update"
+                onClick={handleUpdate}
+                rectangle={true}
+              />
+            </div>
+          )}
       </div>
     </>
   );

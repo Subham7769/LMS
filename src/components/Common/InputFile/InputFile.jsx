@@ -112,7 +112,7 @@ const InputFile = ({
           ? "bg-indigo-50 border-indigo-500"
           : fileNames.length
           ? "bg-indigo-50 border-indigo-500"
-          : "bg-gray-100 hover:border-indigo-500 hover:bg-indigo-50"
+          : "bg-background-light-secondary hover:border-indigo-500 hover:bg-indigo-50"
       }
     ${validationError[validationKey] ? "border-red-600" : "border-gray-500"}`}
       onDragOver={(e) => {

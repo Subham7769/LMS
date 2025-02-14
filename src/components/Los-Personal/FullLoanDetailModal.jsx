@@ -7,10 +7,10 @@ import { loanStatusOptions } from "../../data/OptionsData";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
-      <div className="h-4 bg-gray-300 rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
     </div>
   );
 };
@@ -75,8 +75,8 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
             <CalendarIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
             EMI Schedule Details
           </div>
-          <div className="grid grid-cols-3 gap-5 my-3 shadow bg-gray-100 rounded-lg py-3 px-5 text-sm">
-            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-gray-300">
+          <div className="grid grid-cols-3 gap-5 my-3 shadow bg-background-light-secondary rounded-lg py-3 px-5 text-sm">
+            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-border-gray-primary">
               <div>Loan Id</div>
               <div className="font-bold text-black flex w-[120px] items-center">
                 : <span className="mr-2">{""}</span>
@@ -111,7 +111,7 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                 {loanDetails.carbonLoanStatus}
               </div>
             </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-gray-300">
+            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-border-gray-primary">
               <div>Remaining Principal</div>
               <div className="font-bold text-black">
                 : <span className="mr-2">{""}</span>

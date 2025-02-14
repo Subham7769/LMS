@@ -26,7 +26,7 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
   }, [userDataProp]);
 
   const handleDelete = async (userName) => {
-    await dispatch(deleteUser(userName))
+    await dispatch(deleteUser(userName));
     dispatch(clearFormData());
   };
 
@@ -49,7 +49,7 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
   };
 
   const handleGeneratePassword = async () => {
-    await dispatch(generatePassword(userDataProp.username))
+    await dispatch(generatePassword(userDataProp.username));
     dispatch(clearFormData());
   };
 
@@ -105,7 +105,9 @@ const ActionOption = ({ userDataProp, getUser, role }) => {
                   <Link
                     to={item.href}
                     className={`block px-4 py-2 text-sm ${
-                      active ? "bg-gray-100 text-gray-700" : "text-gray-700"
+                      active
+                        ? "bg-background-light-secondary text-gray-700"
+                        : "text-gray-700"
                     }`}
                     onClick={item?.action}
                   >

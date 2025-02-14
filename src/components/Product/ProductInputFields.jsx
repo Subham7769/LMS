@@ -144,7 +144,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   ]);
   return (
     <>
-      <div className="border-b border-gray-300 pb-5">
+      <div className="border-b border-border-gray-primary pb-5">
         <div className="grid grid-cols-5 gap-5 items-end pb-2">
           <InputSelect
             labelName="Eligible Customer Type"
@@ -434,6 +434,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
               buttonIcon={PlusIcon}
               onClick={handleAddFields}
               circle={true}
+              buttonType="secondary"
             />
           </div>
         </div>

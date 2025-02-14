@@ -81,7 +81,7 @@ const AddBorrowers = () => {
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}
           rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          buttonType="tertiary"
         />
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>

@@ -106,109 +106,116 @@ const Employer = () => {
     emp?.employerName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return <ContainerTile loading={loading} />;
-  }
-
   return (
     <>
-      <h2 className="mb-6">
-        <b className="text-xl font-semibold">Employer</b>
-        <div className="text-gray-600 text-sm">
-          Manage employers and their affordability criteria
-        </div>
-      </h2>
-      <div className="flex flex-col gap-5">
-        {/* Search Bar */}
-        <div className="flex items-end justify-between">
-          <div className="w-1/3">
-            <InputText
-              labelName="Search Employer"
-              inputName="searchEmployer"
-              inputValue={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeHolder="Search by employer name"
-            />
+      <ContainerTile loading={loading}>
+        <h2 className="mb-6">
+          <b className="text-xl font-semibold">Employer</b>
+          <div className="text-gray-600 text-sm">
+            Manage employers and their affordability criteria
           </div>
-          {!hasViewOnlyAccessGroup2(roleName) ? (
-            <div>
-              <Button
-                buttonIcon={PlusIcon}
-                buttonName={"Add Employer"}
-                onClick={handleAddEmployer}
-                rectangle={true}
-              />
-            </div>
-          ) : null}
-        </div>
-
-        {/* Employer Data Table */}
-        <div className="shadow-md border border-gray-300 rounded-md text-center">
-          <div className="grid grid-cols-4 items-end mb-4 bg-gray-100 px-5">
-            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Employer Name
-            </div>
-            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Affordability Criteria
-            </div>
-            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Creation Date
-            </div>
-            <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </div>
-          </div>
-          {filteredEmployers?.map((empData, index) => (
-            <div
-              key={empData.employerId}
-              className="grid grid-cols-4 gap-4 items-center pb-3 bg-white px-5 border-b border-gray-300 mb-3"
-            >
+        </h2>
+        <div className="flex flex-col gap-5">
+          {/* Search Bar */}
+          <div className="flex items-end justify-between">
+            <div className="w-1/3">
               <InputText
-                inputName="employerName"
-                id={`employer_${empData?.employerId}`}
-                inputValue={empData?.employerName}
-                onChange={(e) => handleChange(e, empData?.employerId)}
-                placeHolder="Infosys"
-                isValidation={true}
-                isIndex={empData.dataIndex}
+                labelName="Search Employer"
+                inputName="searchEmployer"
+                inputValue={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeHolder="Search by employer name"
               />
-              <InputSelect
-                inputOptions={affordabilityOptions}
-                id={`affordability_${empData?.employerId}`}
-                inputName="affordabilityCriteriaTempId"
-                inputValue={empData?.affordabilityCriteriaTempId}
-                onChange={(e) => handleChange(e, empData?.employerId)}
-              />
-              <div className="text-gray-600">
-                {convertDate(empData?.creationDate)}
-              </div>
-              {!hasViewOnlyAccessGroup2(roleName) ? (
-                <div className="flex items-center justify-center gap-4">
-                  <Button
-                    buttonIcon={CheckCircleIcon}
-                    onClick={() => handleSave(empData?.employerId, index)}
-                    circle={true}
-                  />
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => handleDelete(empData?.employerId)}
-                    circle={true}
-                  />
-                </div>
-              ) : "-"}
             </div>
-          ))}
-        </div>
+            {!hasViewOnlyAccessGroup2(roleName) ? (
+              <div>
+                <Button
+                  buttonIcon={PlusIcon}
+                  buttonName={"Add Employer"}
+                  onClick={handleAddEmployer}
+                  rectangle={true}
+                />
+              </div>
+            ) : null}
+          </div>
 
-        <AddEmployerModal
-          isOpen={showEmployerModal}
-          onClose={closeEmployerModal}
-          employerData={employerData}
-          handleInputChange={handleInputChange}
-          handleAddFields={handleAddFields}
-          affordabilityOptions={affordabilityOptions}
-        />
-      </div>
+          {/* Employer Data Table */}
+          <div className="shadow-md border border-border-gray-primary rounded-md text-center bg-white">
+            <div className="grid grid-cols-4 items-end mb-4 bg-background-light-secondary px-5">
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Employer Name
+              </div>
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Affordability Criteria
+              </div>
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Creation Date
+              </div>
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </div>
+            </div>
+            {filteredEmployers?.map((empData, index) => (
+              <div
+                key={empData.employerId}
+                className={`grid grid-cols-4 gap-4 items-center pb-3 px-5 mb-3 
+                ${
+                  index !== filteredEmployers.length - 1
+                    ? "border-b border-border-gray-primary"
+                    : ""
+                }`}
+              >
+                <InputText
+                  inputName="employerName"
+                  id={`employer_${empData?.employerId}`}
+                  inputValue={empData?.employerName}
+                  onChange={(e) => handleChange(e, empData?.employerId)}
+                  placeHolder="Infosys"
+                  isValidation={true}
+                  isIndex={empData.dataIndex}
+                />
+                <InputSelect
+                  inputOptions={affordabilityOptions}
+                  id={`affordability_${empData?.employerId}`}
+                  inputName="affordabilityCriteriaTempId"
+                  inputValue={empData?.affordabilityCriteriaTempId}
+                  onChange={(e) => handleChange(e, empData?.employerId)}
+                />
+                <div className="text-gray-600">
+                  {convertDate(empData?.creationDate)}
+                </div>
+                {!hasViewOnlyAccessGroup2(roleName) ? (
+                  <div className="flex items-center justify-center gap-4">
+                    <Button
+                      buttonIcon={CheckCircleIcon}
+                      onClick={() => handleSave(empData?.employerId, index)}
+                      circle={true}
+                      buttonType="secondary"
+                    />
+                    <Button
+                      buttonIcon={TrashIcon}
+                      onClick={() => handleDelete(empData?.employerId)}
+                      circle={true}
+                      buttonType="destructive"
+                    />
+                  </div>
+                ) : (
+                  "-"
+                )}
+              </div>
+            ))}
+          </div>
+
+          <AddEmployerModal
+            isOpen={showEmployerModal}
+            onClose={closeEmployerModal}
+            employerData={employerData}
+            handleInputChange={handleInputChange}
+            handleAddFields={handleAddFields}
+            affordabilityOptions={affordabilityOptions}
+          />
+        </div>
+      </ContainerTile>
     </>
   );
 };

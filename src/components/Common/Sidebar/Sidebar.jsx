@@ -273,7 +273,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-white flex pl-1 transform duration-1000 ease-in-out ${
+      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-background-light-tertiary flex pl-1 transform duration-1000 ease-in-out ${
         open ? "w-56" : "w-14"
       }`}
     >
@@ -302,7 +302,7 @@ const SideBar = () => {
       <ul
         className={`pt-2 pr-1 border-r h-auto ${
           open ? "w-52" : "w-10"
-        } overflow-y-auto scrollbar-none border-gray-200`}
+        } overflow-y-auto scrollbar-none border-gray-200 bg-white`}
       >
         {allSectionName.map((sectionName, sectionIndex) => (
           <div key={sectionName} className={`${!open && "mb-2 "} `}>
@@ -360,7 +360,7 @@ const SideBar = () => {
                         {/* If create from Sidebar Using input box */}
                         {menu.createButton && (
                           <div>
-                            <li className="py-1 cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                            <li className="py-1 cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-indigo-600">
                               <CreateNew
                                 placeholder={menu.placeholder}
                                 buttonName={menu.buttonName}
@@ -379,7 +379,7 @@ const SideBar = () => {
                               to={submenuItem.href}
                               className="text-gray-500"
                             >
-                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-gray-100 hover:text-indigo-600">
+                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-background-light-secondary hover:text-indigo-600">
                                 {submenuItem.name}
                               </li>
                             </NavLink>

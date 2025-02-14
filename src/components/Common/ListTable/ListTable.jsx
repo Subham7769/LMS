@@ -168,10 +168,10 @@ const ListTable = ({
   const ShimmerTable = () => {
     return (
       <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
-        <div className="h-4 bg-gray-300 rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
       </div>
     );
   };
@@ -179,19 +179,19 @@ const ListTable = ({
   return (
     <>
       {loading ? (
-        <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5 mt-3">
+        <div className="flex flex-col gap-4 shadow-md bg-background-light-secondary border border-border-gray-primary rounded-xl pb-8 pt-6 px-5 mt-3">
           <ShimmerTable />
           <ShimmerTable />
           <ShimmerTable />
         </div>
       ) : error ? (
-        <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
+        <div className="flex flex-col gap-4 shadow-md bg-background-light-secondary border border-border-gray-primary rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
           <p>Oops! Something went wrong. Please try again later.</p>
         </div>
       ) : (
         <div
           className={
-            "shadow-md bg-gray-100 border-gray-300 border p-5 rounded-xl mt-4"
+            "shadow-md bg-background-light-white border-border-gray-primary border p-5 rounded-xl mt-4"
           }
         >
           {Searchable && (
@@ -227,9 +227,9 @@ const ListTable = ({
             </div>
           </div>
 
-          <div className="flow-root overflow-hidden ">
+          <div className="flow-root overflow-hidden rounded-md border border-border-gray-primary">
             <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
+              <thead className="bg-background-light-secondary">
                 <tr className={Divider ? "divide-x divide-gray-200" : ""}>
                   {ListHeader.map((header, index) => (
                     <th
@@ -247,10 +247,12 @@ const ListTable = ({
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-200">
                 {currentData.map((product, rowIndex) => (
                   <tr
-                    className={Divider ? "divide-x divide-gray-200" : ""}
+                    className={`${
+                      rowIndex % 2 !== 0 ? "bg-background-light-tertiary" : ""
+                    } ${Divider ? "divide-x divide-gray-200" : ""}`}
                     key={indexOfFirstItem + rowIndex}
                   >
                     {Object.keys(product).map((key, idx) =>
@@ -315,6 +317,7 @@ const ListTable = ({
                             }
                             circle={item.circle}
                             key={buttonIndex} // Use key to uniquely identify each button
+                            buttonType={item.type}
                           />
                         ))}
                       </td>
@@ -332,7 +335,7 @@ const ListTable = ({
                 disabled={currentPage === 1}
                 className={`flex items-center px-2 py-2 rounded-md ${
                   currentPage === 1
-                    ? "bg-gray-300 cursor-not-allowed"
+                    ? "bg-background-light-primary cursor-not-allowed"
                     : "bg-indigo-500 text-white cursor-pointer"
                 }`}
               >
@@ -346,7 +349,7 @@ const ListTable = ({
                 disabled={currentPage === totalPages}
                 className={`flex items-center px-2 py-2 rounded-md ${
                   currentPage === totalPages
-                    ? "bg-gray-300 cursor-not-allowed"
+                    ? "bg-background-light-primary cursor-not-allowed"
                     : "bg-indigo-500 text-white cursor-pointer"
                 }`}
               >

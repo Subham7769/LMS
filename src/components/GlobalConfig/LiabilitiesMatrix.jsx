@@ -192,99 +192,105 @@ const LiabilitiesMatrix = () => {
                 isIndex={newLiabilityForm.dataIndex}
               />
 
-              <Button buttonIcon={PlusIcon} onClick={handleAdd} circle={true} />
+              <Button
+                buttonIcon={PlusIcon}
+                onClick={handleAdd}
+                circle={true}
+              />
             </div>
           </ContainerTile>
         ) : (
           ""
         )}
 
-        {allLiabilityData.length > 0 ? (
-          allLiabilityData?.map((item, index) => (
-            <ContainerTile
-              loading={loading}
-              error={error}
-              key={"Liability"+index}
-            >
-              <div key={index} className="flex flex-col gap-y-6 ">
-                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
-                  <InputSelect
-                    labelName="Product"
-                    inputOptions={productOptions}
-                    inputName="product"
-                    inputValue={item?.product}
-                    onChange={(e) => handleInputChange(e, index)}
-                    disabled={true}
-                  />
-                  <InputText
-                    labelName="CB Description (CODE)"
-                    inputName="simahDescriptionCode"
-                    inputValue={item?.simahDescriptionCode}
-                    placeHolder="TMTG"
-                    onChange={(e) => handleInputChange(e, index)}
-                    disabled={true}
-                  />
-                  <InputSelect
-                    labelName="Issuer"
-                    inputOptions={issuerOptions}
-                    inputName="issuer"
-                    inputValue={item?.issuer}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                  <div className="mb-2">
-                    <InputCheckbox
-                      labelName="Active Rule"
-                      inputName="activeRule"
-                      inputChecked={item?.activeRule === "YES" ? true : false}
+        {allLiabilityData.length > 0
+          ? allLiabilityData?.map((item, index) => (
+              <ContainerTile
+                loading={loading}
+                error={error}
+                key={"Liability" + index}
+              >
+                <div key={index} className="flex flex-col gap-y-6 ">
+                  <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] max-sm:grid-cols-1 gap-8 items-end">
+                    <InputSelect
+                      labelName="Product"
+                      inputOptions={productOptions}
+                      inputName="product"
+                      inputValue={item?.product}
+                      onChange={(e) => handleInputChange(e, index)}
+                      disabled={true}
+                    />
+                    <InputText
+                      labelName="CB Description (CODE)"
+                      inputName="simahDescriptionCode"
+                      inputValue={item?.simahDescriptionCode}
+                      placeHolder="TMTG"
+                      onChange={(e) => handleInputChange(e, index)}
+                      disabled={true}
+                    />
+                    <InputSelect
+                      labelName="Issuer"
+                      inputOptions={issuerOptions}
+                      inputName="issuer"
+                      inputValue={item?.issuer}
                       onChange={(e) => handleInputChange(e, index)}
                     />
-                  </div>
-                </div>
-                <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
-                  <InputSelect
-                    labelName="GDBR (Without Mortgage)"
-                    inputOptions={gdbrWoMortageOptions}
-                    inputName="applicabilityGDBR"
-                    inputValue={item?.applicabilityGDBR}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                  <InputSelect
-                    labelName="GDBR (including Mortgage)"
-                    inputOptions={gdbrWMortageOptions}
-                    inputName="totalExposure"
-                    inputValue={item?.totalExposure}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                  <InputSelect
-                    labelName="Default considered in CB score"
-                    inputOptions={defaultScoreOptions}
-                    inputName="defaultConsideredInSIMAHscore"
-                    inputValue={item?.defaultConsideredInSIMAHscore}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                  {!hasViewOnlyAccessGroup2(roleName) ? (
-                    <div className="flex items-center gap-4">
-                      <Button
-                        buttonIcon={CheckCircleIcon}
-                        onClick={() => handleSave(index)}
-                        circle={true}
-                      />
-                      <Button
-                        buttonIcon={TrashIcon}
-                        onClick={() =>
-                          handleDeleteRow(item?.simahDescriptionCode)
-                        }
-                        circle={true}
+                    <div className="mb-2">
+                      <InputCheckbox
+                        labelName="Active Rule"
+                        inputName="activeRule"
+                        inputChecked={item?.activeRule === "YES" ? true : false}
+                        onChange={(e) => handleInputChange(e, index)}
                       />
                     </div>
-                  ) : (
-                    ""
-                  )}
+                  </div>
+                  <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_150px] gap-8 items-end">
+                    <InputSelect
+                      labelName="GDBR (Without Mortgage)"
+                      inputOptions={gdbrWoMortageOptions}
+                      inputName="applicabilityGDBR"
+                      inputValue={item?.applicabilityGDBR}
+                      onChange={(e) => handleInputChange(e, index)}
+                    />
+                    <InputSelect
+                      labelName="GDBR (including Mortgage)"
+                      inputOptions={gdbrWMortageOptions}
+                      inputName="totalExposure"
+                      inputValue={item?.totalExposure}
+                      onChange={(e) => handleInputChange(e, index)}
+                    />
+                    <InputSelect
+                      labelName="Default considered in CB score"
+                      inputOptions={defaultScoreOptions}
+                      inputName="defaultConsideredInSIMAHscore"
+                      inputValue={item?.defaultConsideredInSIMAHscore}
+                      onChange={(e) => handleInputChange(e, index)}
+                    />
+                    {!hasViewOnlyAccessGroup2(roleName) ? (
+                      <div className="flex items-center gap-4">
+                        <Button
+                          buttonIcon={CheckCircleIcon}
+                          onClick={() => handleSave(index)}
+                          circle={true}
+                          buttonType="secondary"
+                        />
+                        <Button
+                          buttonIcon={TrashIcon}
+                          onClick={() =>
+                            handleDeleteRow(item?.simahDescriptionCode)
+                          }
+                          circle={true}
+                          buttonType="destructive"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
-              </div>
-            </ContainerTile>
-          ))
-        ) : ""}
+              </ContainerTile>
+            ))
+          : ""}
         <div className="absolute bottom-1 left-2 text-xs  text-gray-500">
           *CB - Credit Bureau
         </div>

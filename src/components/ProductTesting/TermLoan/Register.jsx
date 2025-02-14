@@ -30,7 +30,10 @@ const CommentsModal = ({ closeModal, message }) => {
         <div className="overflow-y-auto h-[300px] px-4 space-y-4">
           {Array.isArray(message) && message.length > 0 ? (
             message.map((comment, index) => (
-              <div key={index} className="p-3 bg-gray-100 rounded-md shadow-sm">
+              <div
+                key={index}
+                className="p-3 bg-background-light-secondary rounded-md shadow-sm"
+              >
                 <div className="text-red-500 font-medium">{comment}</div>
               </div>
             ))
@@ -62,7 +65,7 @@ const EligibilityResults = ({ eligibilityResults, loading, error }) => {
               {project.projectName}
             </h2>
             <table className="table-auto w-full border-collapse">
-              <thead className="bg-gray-100">
+              <thead className="bg-background-light-secondary">
                 <tr>
                   <th className="px-2 md-px-4  py-2 text-[14px] font-semibold border-b border-gray-400">
                     Product

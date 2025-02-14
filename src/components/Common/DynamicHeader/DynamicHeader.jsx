@@ -20,10 +20,10 @@ const DynamicHeader = ({
     return (
       <div className="flex items-center justify-between mb-5 animate-pulse">
         {/* <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-gray-500 rounded-full"></div> //loader */}
-        <div className="h-6 bg-gray-300 rounded w-1/4"></div>
+        <div className="h-6 bg-background-light-primary rounded w-1/4"></div>
         <div className="h-9  rounded w-1/4 flex items-end justify-end gap-5">
-          <div className="h-9 bg-gray-300 rounded-lg w-1/3"></div>
-          <div className="h-9 bg-gray-300 rounded-full w-9"></div>
+          <div className="h-9 bg-background-light-primary rounded-lg w-1/3"></div>
+          <div className="h-9 bg-background-light-primary rounded-full w-9"></div>
         </div>
       </div>
     );
@@ -51,6 +51,7 @@ const DynamicHeader = ({
               buttonName={"Clone"}
               onClick={handleClone}
               rectangle={true}
+              buttonType="tertiary"
             />
           )}
           {handleDelete && (
@@ -58,6 +59,7 @@ const DynamicHeader = ({
               buttonIcon={TrashIcon}
               onClick={handleDelete}
               circle={true}
+              buttonType="destructive"
             />
           )}
         </div>

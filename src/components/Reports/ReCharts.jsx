@@ -196,6 +196,7 @@ const ReCharts = ({ response, index }) => {
                 buttonIcon={TrashIcon}
                 onClick={() => onDeleteReportingConfig(configData[index].name)}
                 circle={true}
+                buttonType="destructive"
               />
             </div>
           </div>

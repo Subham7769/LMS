@@ -2,22 +2,22 @@
 
 This document outlines the folder structure of the project to maintain consistency and improve code organization.
 
-
 ## `Root` Directory
+
 Contains all the project's Root files/folders.
+
 - **node_modules/** : Contains all the project's npm dependencies.
 
-
-
 ### `src/` Directory
+
 - **Assets/** : Contains image files, fonts, and other static resources used throughout the application.
-    - **Image** : It will contain the image files
-    - **Fonts** : It will contain the font files
+  - **Image** : It will contain the image files
+  - **Fonts** : It will contain the font files
 - **Components/** : Includes reusable UI components that can be used across different parts of the application.
-    - **Common/** : It will include all the common components e.g.(Button, Header, Footer, Sidebar, etc...)
-    - **ComponentName/** : Folder
-        - **ComponentName** : ComponentName.jsx File
-    - **README.md**: Component documentation and guidelines.
+  - **Common/** : It will include all the common components e.g.(Button, Header, Footer, Sidebar, etc...)
+  - **ComponentName/** : Folder
+    - **ComponentName** : ComponentName.jsx File
+  - **README.md**: Component documentation and guidelines.
 - **Data** : It contains data files for development purposes only.
 - **Pages/** : Contains page components, each representing a distinct route/view in the application.
   - **PageName/** : Folder
@@ -30,6 +30,7 @@ Contains all the project's Root files/folders.
 ![Folder Structure](./src/assets/image/FolderStructure.png)
 
 ### `Root` Files
+
 - **App.jsx** : The root component that sets up the main structure and routing of the application.
 - **App.test.js** : Contains tests for the `App.jsx` component.
 - **config.jsx** : Configuration settings for the application.
@@ -44,26 +45,33 @@ Contains all the project's Root files/folders.
 - **vite.config.mjs** : Configuration file for Vite.
 
 ### Summary
+
 This folder structure promotes a clear separation of concerns, making the project easier to navigate, maintain, and scale. Each directory and file serves a specific purpose, ensuring the codebase remains organized and manageable as the project grows.
 
 ---
+
 &emsp;
 
 # 2 - Component Documentation Template
+
 # [ComponentName]
 
 ### Description
+
 [ComponentName] is a React component designed to [brief description of what the component does]. This component is responsible for [specific functionalities or features].
 
 ### Purpose
+
 The primary purpose of [ComponentName] is to [explanation of why this component was created]. It aims to [specific goals or improvements, such as enhancing user experience, providing new functionality, or optimizing performance].
 
 ### Features
+
 - [Feature 1: Detailed description of the feature]
 - [Feature 2: Detailed description of the feature]
 - [Feature 3: Detailed description of the feature]
 
 ### Usage
+
 To use the [ComponentName] component, follow the example below:
 
 ```jsx
@@ -82,15 +90,17 @@ function ParentComponent() {
 ```
 
 ### Props
+
 The [ComponentName] component accepts the following props:
 
-| Prop Name     | Type     | Description                                               | Default Value |
-|---------------|----------|-----------------------------------------------------------|---------------|
-| `propName1`   | `type1`  | Description of what propName1 does                        | `default1`    |
-| `propName2`   | `type2`  | Description of what propName2 does                        | `default2`    |
-| `propName3`   | `type3`  | Description of what propName3 does                        | `default3`    |
+| Prop Name   | Type    | Description                        | Default Value |
+| ----------- | ------- | ---------------------------------- | ------------- |
+| `propName1` | `type1` | Description of what propName1 does | `default1`    |
+| `propName2` | `type2` | Description of what propName2 does | `default2`    |
+| `propName3` | `type3` | Description of what propName3 does | `default3`    |
 
 ### Example
+
 Here is a more detailed example of how to implement [ComponentName]:
 
 ```jsx
@@ -113,19 +123,20 @@ export default ExampleComponent;
 ```
 
 ### Additional Notes
+
 - Ensure that [any important considerations or prerequisites].
 - [Additional notes or caveats about using the component].
 
 ---
 
-
 &emsp;
 
 # 3 - Creating Component Documentation Using Component Documentation Template With ChatGPT
 
-You are supposed to give all the details in one prompt. 
+You are supposed to give all the details in one prompt.
 
 ## Commands:
+
 1. Use the provided template in readme format.
 2. Paste the template directly.
 3. Generate a readme using the template for your specific code.
@@ -135,7 +146,7 @@ You are supposed to give all the details in one prompt.
 
 &emsp;
 
-# 4 - Code Migrations 
+# 4 - Code Migrations
 
 To manage code migration and merging across different branches and environments, it's important to establish a clear workflow that aligns with your development, testing, and deployment processes. Here’s a structured approach to handle code migration from your `features` branch to the `development` branch and finally to the `main` branch, each corresponding to `Local`, `Test`, and `Demo` environments respectively:
 
@@ -144,90 +155,93 @@ To manage code migration and merging across different branches and environments,
 ### Workflow Overview
 
 1. **Feature Development (Local Environment)**
-    - **Branch:** `features`
-    - **Environment:** Local
-    - **API Endpoints:** Local endpoints for development
+
+   - **Branch:** `features`
+   - **Environment:** Local
+   - **API Endpoints:** Local endpoints for development
 
 2. **Testing (Test Environment)**
-    - **Branch:** `Development`
-    - **Environment:** Test
-    - **API Endpoints:** Test endpoints
+
+   - **Branch:** `Development`
+   - **Environment:** Test
+   - **API Endpoints:** Test endpoints
 
 3. **Deployment (Demo Environment)**
-    - **Branch:** `Main`
-    - **Environment:** Demo
-    - **API Endpoints:** Demo endpoints
+   - **Branch:** `Main`
+   - **Environment:** Demo
+   - **API Endpoints:** Demo endpoints
 
 ### Detailed Workflow
 
 #### 1. Feature Development
 
 - **Develop Features:**
-    - Developers work on the `features` branch locally.
-    - Use local API endpoints suitable for development.
-    
+  - Developers work on the `features` branch locally.
+  - Use local API endpoints suitable for development.
 - **Commit and Push:**
-    - Commit changes to the `features` branch.
-    - Push the `features` branch to the remote repository.
+  - Commit changes to the `features` branch.
+  - Push the `features` branch to the remote repository.
 
 #### 2. Code Review and Merge to Development
 
 - **Create Pull Request:**
-    - Once features are developed and tested locally, create a pull request (PR) from `features` to `Development`.
-    
+  - Once features are developed and tested locally, create a pull request (PR) from `features` to `Development`.
 - **Code Review:**
-    - Conduct a code review. Address any feedback and make necessary changes.
-    
+  - Conduct a code review. Address any feedback and make necessary changes.
 - **Merge to Development:**
-    - Once the PR is approved, merge `features` into `Development`.
-    - Resolve any merge conflicts if they arise.
+
+  - Once the PR is approved, merge `features` into `Development`.
+  - Resolve any merge conflicts if they arise.
 
 - **Test Environment Deployment:**
-    - Deploy the `Development` branch to the test environment.
-    - Update API endpoints in the configuration to use the test environment endpoints.
+
+  - Deploy the `Development` branch to the test environment.
+  - Update API endpoints in the configuration to use the test environment endpoints.
 
 - **Testing:**
-    - Perform thorough testing in the test environment.
-    - Fix any bugs and push fixes to the `Development` branch.
+  - Perform thorough testing in the test environment.
+  - Fix any bugs and push fixes to the `Development` branch.
 
 #### 3. Merge to Main for Demo
 
 - **Create Pull Request:**
-    - Once testing is successful, create a pull request from `Development` to `Main`.
-    
+  - Once testing is successful, create a pull request from `Development` to `Main`.
 - **Code Review:**
-    - Conduct a final review. Address any feedback and make necessary changes.
-    
+  - Conduct a final review. Address any feedback and make necessary changes.
 - **Merge to Main:**
-    - Once the PR is approved, merge `Development` into `Main`.
-    - Resolve any merge conflicts if they arise.
+
+  - Once the PR is approved, merge `Development` into `Main`.
+  - Resolve any merge conflicts if they arise.
 
 - **Demo Environment Deployment:**
-    - Deploy the `Main` branch to the demo environment.
-    - Update API endpoints in the configuration to use the demo environment endpoints.
+
+  - Deploy the `Main` branch to the demo environment.
+  - Update API endpoints in the configuration to use the demo environment endpoints.
 
 - **Demo Testing:**
-    - Perform final testing in the demo environment.
-    - Ensure everything works as expected.
+  - Perform final testing in the demo environment.
+  - Ensure everything works as expected.
 
 ### Handling API Endpoint Changes
 
 To handle different API endpoints across environments, you can use environment-specific configuration files or environment variables. Here's a basic example using environment variables:
 
 1. **Local Environment Configuration:**
-    ```bash
-    export API_ENDPOINT="http://localhost:3000/api"
-    ```
+
+   ```bash
+   export API_ENDPOINT="http://localhost:3000/api"
+   ```
 
 2. **Test Environment Configuration:**
-    ```bash
-    export API_ENDPOINT="http://test.api.example.com/api"
-    ```
+
+   ```bash
+   export API_ENDPOINT="http://test.api.example.com/api"
+   ```
 
 3. **Demo Environment Configuration:**
-    ```bash
-    export API_ENDPOINT="http://demo.api.example.com/api"
-    ```
+   ```bash
+   export API_ENDPOINT="http://demo.api.example.com/api"
+   ```
 
 In your code, you can access these environment variables:
 
@@ -243,13 +257,10 @@ const apiEndpoint = process.env.API_ENDPOINT;
 
 This workflow ensures that code is progressively tested and integrated, reducing the likelihood of bugs in the production environment. Adjust the specifics to fit your team's processes and tools.
 
-
-
-
 &emsp;
 
-
 # 5 - Component Optimizations
+
 # App.jsx optimizations
 
 ##### (19/06/2024)
@@ -314,10 +325,13 @@ useEffect(() => {
 &emsp;
 
 # LeftPanel.jsx -> SideBar.jsx Optimizations
+
 ##### (19/06/2024)
+
 This document outlines the optimizations made to the `LeftPanel` component to improve readability, reduce redundancy, and enhance performance.
 
 ## Optimizations
+
 ### Optimized `SVG` element creation
 
 This update consolidates two similar SVG elements within a conditional render block for a cleaner and more maintainable codebase.
@@ -386,12 +400,12 @@ This update consolidates two similar SVG elements within a conditional render bl
 </div>
 ```
 
-
-
 ### Combined Similar `useEffect` Hooks
+
 Consolidated multiple `useEffect` hooks into one to streamline menu updates.
 
 **Before:**
+
 ```jsx
 useEffect(() => {
   setMenus((prevMenus) =>
@@ -428,6 +442,7 @@ useEffect(() => {
 ```
 
 **After:**
+
 ```jsx
 useEffect(() => {
   setMenus((prevMenus) =>
@@ -448,9 +463,11 @@ useEffect(() => {
 ```
 
 ### Optimized State Updates
+
 Simplified state update logic for submenu states.
 
 **Before:**
+
 ```jsx
 const toggleSubmenu = (index) => {
   setSubmenuStates(
@@ -464,6 +481,7 @@ const toggleSubmenu = (index) => {
 ```
 
 **After:**
+
 ```jsx
 const toggleSubmenu = (index) => {
   setSubmenuStates(
@@ -473,7 +491,9 @@ const toggleSubmenu = (index) => {
   );
 };
 ```
+
 ## Future Optimizations:
+
 Refactor Nested Mapping:
 
 Currently, you're mapping over Menus and its submenuItems within the JSX. Consider refactoring this logic into separate components or functions for better separation of concerns and improved code readability.
@@ -485,7 +505,7 @@ Error Handling in Hooks:
 Implement error handling mechanisms within custom hooks (useRACInfo, useAllProjectInfo, useProductInfo) to gracefully manage and display errors when data fetching fails.
 Accessibility and Keyboard Navigation:
 
-Ensure accessibility standards are met by improving keyboard navigation and focus management within the sidebar and submenu items. Use role, aria-* attributes where necessary.
+Ensure accessibility standards are met by improving keyboard navigation and focus management within the sidebar and submenu items. Use role, aria-\* attributes where necessary.
 Testing and Optimization of Rendering Performance:
 
 Conduct performance profiling to identify potential bottlenecks and optimize rendering performance, especially when dealing with large datasets or complex UI interactions.
@@ -494,14 +514,13 @@ Code Splitting and Lazy Loading:
 Consider implementing code splitting and lazy loading techniques, especially if the application grows in size. This can significantly improve initial load times by deferring the loading of less critical parts of the application until they are needed.
 Type Safety and PropTypes:
 
-
 ## Summary
+
 These optimizations improve the `LeftPanel` component by reducing redundancy, enhancing readability, and boosting performance.
 
 ---
 
 &emsp;
-
 
 # Header.jsx Component Optimization
 
@@ -518,6 +537,7 @@ This document outlines the optimizations made to the `Header` component in your 
 The `userNavigation` array was being recreated on every render. By using the `useMemo` hook, we can ensure that the array is only recreated when its dependencies change. This helps in optimizing performance by preventing unnecessary re-renders.
 
 **Before:**
+
 ```javascript
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -527,15 +547,19 @@ const userNavigation = [
 ```
 
 **After:**
+
 ```javascript
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 
 const Header = () => {
-  const userNavigation = useMemo(() => [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '/login', action: () => localStorage.clear() },
-  ], []);
+  const userNavigation = useMemo(
+    () => [
+      { name: "Your Profile", href: "#" },
+      { name: "Settings", href: "#" },
+      { name: "Sign out", href: "/login", action: () => localStorage.clear() },
+    ],
+    []
+  );
   // Rest of the component
 };
 ```
@@ -545,11 +569,13 @@ const Header = () => {
 To enhance readability and maintainability, we extracted complex JSX elements into smaller, reusable subcomponents. This modular approach makes the `Header` component cleaner and easier to understand.
 
 **Before:**
+
 ```javascript
 // Complex JSX directly in the Header component
 ```
 
 **After:**
+
 ```javascript
 const NotificationButton = () => (
   <Link to="/notification">
@@ -572,7 +598,9 @@ const UserMenu = ({ userNavigation }) => (
         <span className="sr-only">Open user menu</span>
         <img className="h-8 w-8 rounded-full" src={UserImg} alt="User" />
       </Menu.Button>
-      <div className="text-gray-500">Hello, {localStorage.getItem('username')}</div>
+      <div className="text-gray-500">
+        Hello, {localStorage.getItem("username")}
+      </div>
     </div>
     <Transition
       enter="transition ease-out duration-100"
@@ -583,12 +611,16 @@ const UserMenu = ({ userNavigation }) => (
       leaveTo="transform opacity-0 scale-95"
     >
       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        {userNavigation.map(item => (
+        {userNavigation.map((item) => (
           <Menu.Item key={item.name}>
             {({ active }) => (
               <Link
                 to={item.href}
-                className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-700' : 'text-gray-700'}`}
+                className={`block px-4 py-2 text-sm ${
+                  active
+                    ? "bg-background-light-secondary text-gray-700"
+                    : "text-gray-700"
+                }`}
                 onClick={item.action}
               >
                 {item.name}
@@ -617,17 +649,21 @@ const CreateMenu = () => (
       <Menu.Items className="absolute right-2 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
         <div className="py-1">
           {[
-            { to: '/create-rac', text: 'RAC' },
-            { to: '/project/newProject', text: 'Project' },
-            { to: '/create-product', text: 'Product' },
-            { to: '/group/1', text: 'Group' },
-            { to: '/business-rule/1', text: 'Business Rule' },
-          ].map(item => (
+            { to: "/create-rac", text: "RAC" },
+            { to: "/project/newProject", text: "Project" },
+            { to: "/create-product", text: "Product" },
+            { to: "/group/1", text: "Group" },
+            { to: "/business-rule/1", text: "Business Rule" },
+          ].map((item) => (
             <Menu.Item key={item.to}>
               {({ active }) => (
                 <Link
                   to={item.to}
-                  className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                  className={`block px-4 py-2 text-sm ${
+                    active
+                      ? "bg-background-light-secondary text-gray-900"
+                      : "text-gray-700"
+                  }`}
                 >
                   {item.text}
                 </Link>
@@ -642,18 +678,26 @@ const CreateMenu = () => (
 
 // Header component using subcomponents
 const Header = () => {
-  const userNavigation = useMemo(() => [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '/login', action: () => localStorage.clear() },
-  ], []);
+  const userNavigation = useMemo(
+    () => [
+      { name: "Your Profile", href: "#" },
+      { name: "Settings", href: "#" },
+      { name: "Sign out", href: "/login", action: () => localStorage.clear() },
+    ],
+    []
+  );
 
   return (
-    <header className="shadow-md bg-white z-50 w-full fixed top-0 left-0 flex items-center justify-between" id="navBarId">
+    <header
+      className="shadow-md bg-white z-50 w-full fixed top-0 left-0 flex items-center justify-between"
+      id="navBarId"
+    >
       <div className="w-1/3">&nbsp;</div>
       <div className="flex justify-center w-1/3">
         <div>
-          <label htmlFor="search" className="sr-only">Search</label>
+          <label htmlFor="search" className="sr-only">
+            Search
+          </label>
           {/* Uncomment and customize the search input if needed */}
           {/* <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -686,15 +730,17 @@ export default Header;
 The conditional application of CSS classes has been simplified for better readability. This involves using template literals to conditionally apply classes in a more concise and readable manner.
 
 **Before:**
+
 ```javascript
 className={
-  active ? "bg-gray-100 block px-4 py-2 text-sm text-gray-700" : "block px-4 py-2 text-sm text-gray-700"
+  active ? "bg-background-light-secondary block px-4 py-2 text-sm text-gray-700" : "block px-4 py-2 text-sm text-gray-700"
 }
 ```
 
 **After:**
+
 ```javascript
-className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-700' : 'text-gray-700'}`}
+className={`block px-4 py-2 text-sm ${active ? 'bg-background-light-secondary text-gray-700' : 'text-gray-700'}`}
 ```
 
 ## Summary
@@ -703,14 +749,12 @@ These optimizations enhance the performance, readability, and maintainability of
 
 ---
 
-
-
 &emsp;
 
-
-# Footer.jsx Component Optimization 
+# Footer.jsx Component Optimization
 
 **Before:**
+
 ```javascript
 const Footer = ({ mgLeft }) => {
   const year = new Date().getFullYear();
@@ -732,13 +776,17 @@ const Footer = ({ mgLeft }) => {
 ```
 
 **After:**
+
 ```javascript
-import React from 'react';
+import React from "react";
 
 const Footer = ({ mgLeft }) => {
   const year = new Date().getFullYear();
   return (
-    <footer style={{ marginLeft: mgLeft }} className="mt-auto text-grey-700 py-3 mt-20 text-sm container flex justify-between">
+    <footer
+      style={{ marginLeft: mgLeft }}
+      className="mt-auto text-grey-700 py-3 text-sm container flex justify-between"
+    >
       <div>© {year} All Rights Reserved</div>
       <div>Powered by PhotonMatters</div>
     </footer>
@@ -749,6 +797,7 @@ export default Footer;
 ```
 
 ## Summary
+
 - Simplified inline style handling for `marginLeft`.
 - Consolidated and simplified class names for cleaner styling.
 - Improved structure by eliminating unnecessary nesting and fragments.
@@ -762,18 +811,21 @@ export default Footer;
 The new code has been optimized in several key ways, making it more modular, maintainable, and reusable. Here's a breakdown of the optimizations:
 
 1. **Modular Structure:**
+
    - **Old Code:**
      - The `Body` component contained all the logic for rendering the stats and the product table in a single component, making it monolithic and harder to manage.
    - **New Code:**
      - The logic is split into separate, smaller components (`Body`, `StatContainer`, `StatCard`), each with a single responsibility. This improves readability and maintainability.
 
 2. **Data Separation:**
+
    - **Old Code:**
      - The stats data was hard-coded within the same file as the component.
    - **New Code:**
      - The stats data (`HomeStats`) is separated into a different file (`../data/HomeStats`). This makes it easier to manage and update the data independently from the component logic.
 
 3. **Reuse of Components:**
+
    - **Old Code:**
      - The `Body` component directly contained the HTML and JSX for rendering each stat card.
    - **New Code:**
@@ -781,12 +833,14 @@ The new code has been optimized in several key ways, making it more modular, mai
      - The `StatContainer` component wraps the collection of `StatCard` components.
 
 4. **Dynamic Class Assignment:**
+
    - **Old Code:**
      - Used a utility function `classNames` to conditionally apply classes.
    - **New Code:**
      - Simplified the conditional class application directly within the JSX using template literals.
 
 5. **Functional Decomposition:**
+
    - **Old Code:**
      - Mixed different concerns in a single component.
    - **New Code:**
@@ -799,61 +853,63 @@ The new code has been optimized in several key ways, making it more modular, mai
      - Improved readability by creating smaller, focused components.
 7. **Props and Data Management:**
 
-    - Introduced ListName, ListHeader, and ListItem as props to customize the table's title, headers, and data dynamically. This makes the component more flexible and reusable across different parts of the application.
+   - Introduced ListName, ListHeader, and ListItem as props to customize the table's title, headers, and data dynamically. This makes the component more flexible and reusable across different parts of the application.
 
 8. **Conditional Rendering for Links:**
 
-    - Implemented conditional rendering in Object.keys(product).map() to selectively render table cells (<td>) as links (<Link>) based on the presence of the href property in the product object. This ensures that only clickable items are linked appropriately.
+   - Implemented conditional rendering in Object.keys(product).map() to selectively render table cells (<td>) as links (<Link>) based on the presence of the href property in the product object. This ensures that only clickable items are linked appropriately.
 
 9. **CSS and Styling Improvements:**
 
-    - Enhanced CSS classes and styling (className) to maintain consistent design principles across the application, ensuring readability and maintainability.
+   - Enhanced CSS classes and styling (className) to maintain consistent design principles across the application, ensuring readability and maintainability.
 
 ## Summary
 
 #### New `HomePage` Component
 
 ```javascript
-import React from 'react'
-import Body from '../components/Common/Body/Body'
+import React from "react";
+import Body from "../components/Common/Body/Body";
 import ListTable from "../components/Common/ListTable/ListTable";
-import { HomeStats, HeaderList, ProductList } from '../data/HomeData';
-import StatContainer from '../components/Common/StatContainer/StatContainer';
-
+import { HomeStats, HeaderList, ProductList } from "../data/HomeData";
+import StatContainer from "../components/Common/StatContainer/StatContainer";
 
 const HomePage = () => {
-    return (
-        <Body>
-            <StatContainer stats={HomeStats} />
-            <ListTable ListName={"Product List"} ListHeader={HeaderList} ListItem={ProductList}/>
-        </Body>
-    )
-}
+  return (
+    <Body>
+      <StatContainer stats={HomeStats} />
+      <ListTable
+        ListName={"Product List"}
+        ListHeader={HeaderList}
+        ListItem={ProductList}
+      />
+    </Body>
+  );
+};
 
-export default HomePage
+export default HomePage;
 ```
 
 ### HomeStats:
+
 Contains statistics data (id, name, stat, icon, change, changeType) for displaying various metrics.
 Icons imported (UsersIcon, CurrencyRupeeIcon, ClipboardDocumentListIcon) from Heroicons to visually represent each statistic.
 
 ### HeaderList:
+
 Array of strings representing headers for the ListTable component (Name, Created On, Open Loans, Total Disbursed Principal, Status).
 
 ### ProductList:
+
 Array of objects representing data for products (name, created, openLoans, disbursedPrincipal, status, href for linking to product details).
 
 #### New `Body` Component
 
 ```javascript
-import React from 'react';
+import React from "react";
 
 const Body = ({ children }) => {
-  return (
-    <div className="mx-auto max-w-none">
-      {children}
-    </div>
-  );
+  return <div className="mx-auto max-w-none">{children}</div>;
 };
 
 export default Body;
@@ -862,12 +918,14 @@ export default Body;
 #### New `StatContainer` Component
 
 ```javascript
-import React from 'react';
-import StatCard from '../StatCard/StatCard';
+import React from "react";
+import StatCard from "../StatCard/StatCard";
 
 const StatContainer = ({ stats }) => (
-  <div className="bg-gray-100 rounded-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-    <h3 className="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>
+  <div className="bg-background-light-secondary rounded-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <h3 className="text-base font-semibold leading-6 text-gray-900">
+      Last 30 days
+    </h3>
     <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {stats.map((stat) => (
         <StatCard key={stat.id} stat={stat} />
@@ -882,7 +940,7 @@ export default StatContainer;
 #### New `StatCard` Component
 
 ```javascript
-import React from 'react';
+import React from "react";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
 
 const StatCard = ({ stat }) => {
@@ -897,12 +955,19 @@ const StatCard = ({ stat }) => {
         <div className="absolute rounded-md bg-indigo-500 p-3">
           <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
         </div>
-        <p className="ml-16 truncate text-sm font-medium text-gray-500">{stat.name}</p>
+        <p className="ml-16 truncate text-sm font-medium text-gray-500">
+          {stat.name}
+        </p>
       </dt>
       <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
         <p className="text-2xl font-semibold text-gray-900">{stat.stat}</p>
-        <p className={`${textColorClass} ml-2 flex items-baseline text-sm font-semibold`}>
-          <IconComponent className={`h-5 w-5 flex-shrink-0 self-center ${iconColorClass}`} aria-hidden="true" />
+        <p
+          className={`${textColorClass} ml-2 flex items-baseline text-sm font-semibold`}
+        >
+          <IconComponent
+            className={`h-5 w-5 flex-shrink-0 self-center ${iconColorClass}`}
+            aria-hidden="true"
+          />
           <span className="sr-only">
             {isIncrease ? "Increased" : "Decreased"} by{" "}
           </span>
@@ -910,7 +975,10 @@ const StatCard = ({ stat }) => {
         </p>
         <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
           <div className="text-sm">
-            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <a
+              href="#"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
               View all<span className="sr-only"> {stat.name} stats</span>
             </a>
           </div>
@@ -991,20 +1059,25 @@ export const ProductList = [
     status: "Inactive",
   },
 ];
-
 ```
 
 #### New `ListTable` Component
 
 ```javascript
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 
-const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable }) => {
+const ListTable = ({
+  ListName,
+  ListHeader,
+  ListItem,
+  HandleAction,
+  Searchable,
+}) => {
   const HeaderCellWidth = ListHeader.length + 1; // Calculate cell width based on header length
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(ListItem);
 
   // Function to handle search input change
@@ -1012,7 +1085,7 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
     const value = event.target.value;
     setSearchTerm(value);
 
-    const filtered = ListItem.filter(item =>
+    const filtered = ListItem.filter((item) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered);
@@ -1022,15 +1095,20 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
   const dataToRender = searchTerm ? filteredData : ListItem;
 
   return (
-    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+    <div className="bg-background-light-secondary py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
         {/* Search bar if Searchable prop is true */}
         {Searchable && (
           <div className="mb-5 w-full">
-            <label htmlFor="search" className="sr-only">Search</label>
+            <label htmlFor="search" className="sr-only">
+              Search
+            </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 id="search"
@@ -1048,7 +1126,9 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
         {/* Table title */}
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              {ListName}
+            </h1>
           </div>
         </div>
 
@@ -1074,13 +1154,19 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {dataToRender.map((product, index) => (
                       <tr key={index}>
-                        {Object.keys(product).map((key, idx) => (
+                        {Object.keys(product).map((key, idx) =>
                           // Do not create cell for href key in the object of array
                           key !== "href" ? (
-                            <td key={idx} className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}>
+                            <td
+                              key={idx}
+                              className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
+                            >
                               {product.href ? (
-                                // If product has a href attribute then create a clickable Link 
-                                <Link className="w-full block" to={product.href}>
+                                // If product has a href attribute then create a clickable Link
+                                <Link
+                                  className="w-full block"
+                                  to={product.href}
+                                >
                                   {product[key]}
                                 </Link>
                               ) : (
@@ -1089,16 +1175,21 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
                               )}
                             </td>
                           ) : null
-                        ))}
+                        )}
                         {/* Add Actions column if present */}
-                        {ListHeader.includes('Actions') && (
-                          <td className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}>
+                        {ListHeader.includes("Actions") && (
+                          <td
+                            className={`w-1/${HeaderCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
+                          >
                             <button
                               onClick={() => HandleAction(index)}
                               type="button"
                               className="w-8 h-8 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                             >
-                              <TrashIcon className="h-4 w-4" aria-hidden="true" />
+                              <TrashIcon
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                              />
                             </button>
                           </td>
                         )}
@@ -1116,12 +1207,10 @@ const ListTable = ({ ListName, ListHeader, ListItem, HandleAction, Searchable })
 };
 
 export default ListTable;
-
-
 ```
 
-
 ## Summary
+
 1. Split `Body` component into smaller, focused components.
 2. Moved stats data to a separate file (`HomeStats`).
 3. Created reusable `StatCard` component.
@@ -1140,9 +1229,10 @@ These optimizations create a clear separation of concerns, improve code readabil
 Here's an optimized version of your `LoadingState` component. This version includes the use of React memoization to prevent unnecessary re-renders and improved accessibility by adding an `aria-label` to the loading image.
 
 ### `LoadingState.js`
+
 ```jsx
-import React from 'react';
-import Loader from '../../src/assets/image/loader1.gif';
+import React from "react";
+import Loader from "../../src/assets/image/loader1.gif";
 
 const LoadingState = React.memo(() => {
   return (
@@ -1162,6 +1252,7 @@ export default LoadingState;
 ```
 
 ## Summary
+
 1. **Memoization with `React.memo`:** This optimization prevents the component from re-rendering unless its props change. Since the `LoadingState` component doesn't take any props, it will only render once, improving performance.
 2. **Accessibility Improvement:** Added `aria-label="Loading"` to the image to provide better context for screen readers.
 
@@ -1171,13 +1262,14 @@ These optimizations ensure better performance and accessibility for your compone
 
 &emsp;
 
+# Tcl.js - > TclPage Optimizations BreakDown
 
-# Tcl.js - > TclPage Optimizations BreakDown 
-Here's a breakdown of the  you made in transitioning from the old code (``) to the new code (`TclPage.js`), focusing on improving modularity, maintainability, and readability:
+Here's a breakdown of the you made in transitioning from the old code (``) to the new code (`TclPage.js`), focusing on improving modularity, maintainability, and readability:
 
 ### Optimizations Made:
 
 1. **Modular Structure:**
+
    - **Old Code (Tcl.js):**
      - All logic and JSX were combined within a single component (`Tcl`), making it monolithic and harder to maintain.
    - **New Code (TclPage.js):**
@@ -1186,6 +1278,7 @@ Here's a breakdown of the  you made in transitioning from the old code (``) to t
      - `ListTable` component is responsible for rendering a table (`ProductList`) with dynamic headers (`HeaderList`).
 
 2. **Data Separation:**
+
    - **Old Code:**
      - Stats (`stats`) were hardcoded within the component file (`Tcl.js`).
    - **New Code:**
@@ -1193,11 +1286,13 @@ Here's a breakdown of the  you made in transitioning from the old code (``) to t
      - This separation enhances maintainability as data can be updated independently from component logic.
 
 3. **Component Reusability:**
+
    - **New Code:**
      - Utilized `StatContainer` for displaying statistics (`TclStats`). This promotes reuse across different parts of the application.
      - Employed `ListTable` to display a list of TCL products (`ProductList`) with customizable headers (`HeaderList`).
 
 4. **Improved Readability and Maintainability:**
+
    - **New Code:**
      - Enhanced readability by organizing JSX structure within components (`Body`, `StatContainer`, `ListTable`).
      - Reduced complexity in `TclPage.js` by delegating responsibilities to specialized components (`StatContainer` and `ListTable`).
@@ -1206,7 +1301,6 @@ Here's a breakdown of the  you made in transitioning from the old code (``) to t
    - **New Code:**
      - Removed unnecessary CSS classes and streamlined JSX rendering in `TclPage.js`.
      - Each component (`StatContainer`, `ListTable`) focuses on a specific responsibility, adhering to the single responsibility principle.
-
 
 #### New `TclData` Component
 
@@ -1280,11 +1374,9 @@ export const ProductList = [
 ];
 ```
 
-
 ## Summary
 
 - **Modularity:** Splitting logic into smaller, focused components (`StatContainer`, `ListTable`) improves code organization and reusability.
-  
 - **Data Separation:** Centralizing data (`TclStats`, `HeaderList`, `ProductList`) in `TclData.js` enhances maintainability and facilitates easier updates.
 
 - **Component Reuse:** Leveraging `StatContainer` and `ListTable` promotes reuse across different pages or components within the application.
@@ -1304,6 +1396,7 @@ Here's a summary of the optimizations made in transitioning from the old code (`
 ### Optimizations Made:
 
 1. **Modular Structure:**
+
    - **Old Code (RAC.js and RacTable.js):**
      - The logic and JSX were combined within a single component (`RAC` and `RacTable`).
    - **New Code (RacPage.js, StatContainer.js, StatCard.js, and ListTable.js):**
@@ -1312,6 +1405,7 @@ Here's a summary of the optimizations made in transitioning from the old code (`
      - `ListTable` component is responsible for rendering a table (`ProductList`) with dynamic headers (`HeaderList`).
 
 2. **Data Separation:**
+
    - **Old Code:**
      - Stats (`stats`) and table data were hardcoded within the component file (`RAC.js` and `RacTable.js`).
    - **New Code:**
@@ -1319,11 +1413,13 @@ Here's a summary of the optimizations made in transitioning from the old code (`
      - This separation enhances maintainability as data can be updated independently from component logic.
 
 3. **Component Reusability:**
+
    - **New Code:**
      - Utilized `StatContainer` for displaying statistics (`RacStats`). This promotes reuse across different parts of the application.
      - Employed `ListTable` to display a list of RAC products (`ProductList`) with customizable headers (`HeaderList`).
 
 4. **Improved Readability and Maintainability:**
+
    - **New Code:**
      - Enhanced readability by organizing JSX structure within components (`Body`, `StatContainer`, `StatCard`, `ListTable`).
      - Reduced complexity in `RacPage.js` by delegating responsibilities to specialized components (`StatContainer`, `ListTable`, `StatCard`).
@@ -1333,86 +1429,81 @@ Here's a summary of the optimizations made in transitioning from the old code (`
      - Removed unnecessary CSS classes and streamlined JSX rendering in `StatContainer.js`, `StatCard.js`, and `ListTable.js`.
      - Each component (`StatContainer`, `ListTable`, `StatCard`) focuses on a specific responsibility, adhering to the single responsibility principle.
 
-
 #### New `RacData` Component
 
 ```javascript
 import {
-    ClipboardDocumentListIcon,
-    CurrencyRupeeIcon,
-    UsersIcon,
-  } from "@heroicons/react/24/outline";
-  
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
 export const RacStats = [
-    {
-        id: 1,
-        name: "Avg. Approval Daily",
-        stat: "723",
-        icon: UsersIcon,
-        change: "122",
-        changeType: "increase",
-      },
-      {
-        id: 2,
-        name: "Active RAC",
-        stat: "2 / 3",
-        icon: CurrencyRupeeIcon,
-        change: "5.4%",
-        changeType: "increase",
-      },
-      {
-        id: 3,
-        name: "Avg. Rejection / Day",
-        stat: "24.57",
-        icon: ClipboardDocumentListIcon,
-        change: "3.2%",
-        changeType: "decrease",
-      },
-  ];
-  
-  export const HeaderList = [
-    "Name",
-    "Created On",
-    "% Approved",
-    "Total Processed",
-    "Status",
-  ];
-  
-  export const ProductList = [
-    {
-        name: "Cash Product RAC",
-        created: "07/06/2021",
-        approved: "40%",
-        processed: "2367",
-        status: "Active",
-        href: "/rac/cash-loan/rmc",
-      },
-      {
-        name: "BNPL Product RAC",
-        created: "14/09/2022",
-        approved: "20%",
-        processed: "750",
-        status: "Active",
-        href: "/rac/cash-loan/rmc",
-      },
-      {
-        name: "Overdraft Product RAC",
-        created: "19/09/2022",
-        approved: "85%",
-        processed: "901",
-        status: "Inactive",
-        href: "/rac/cash-loan/rmc",
-      },
-  ];
+  {
+    id: 1,
+    name: "Avg. Approval Daily",
+    stat: "723",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Active RAC",
+    stat: "2 / 3",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Avg. Rejection / Day",
+    stat: "24.57",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
+];
+
+export const HeaderList = [
+  "Name",
+  "Created On",
+  "% Approved",
+  "Total Processed",
+  "Status",
+];
+
+export const ProductList = [
+  {
+    name: "Cash Product RAC",
+    created: "07/06/2021",
+    approved: "40%",
+    processed: "2367",
+    status: "Active",
+    href: "/rac/cash-loan/rmc",
+  },
+  {
+    name: "BNPL Product RAC",
+    created: "14/09/2022",
+    approved: "20%",
+    processed: "750",
+    status: "Active",
+    href: "/rac/cash-loan/rmc",
+  },
+  {
+    name: "Overdraft Product RAC",
+    created: "19/09/2022",
+    approved: "85%",
+    processed: "901",
+    status: "Inactive",
+    href: "/rac/cash-loan/rmc",
+  },
+];
 ```
-
-
-
 
 ## Summary
 
 - **Modularity:** Splitting logic into smaller, focused components (`StatContainer`, `StatCard`, `ListTable`) improves code organization and reusability.
-  
 - **Data Separation:** Centralizing data (`RacStats`, `HeaderList`, `ProductList`) in `RacData.js` enhances maintainability and facilitates easier updates.
 
 - **Component Reuse:** Leveraging `StatContainer`, `StatCard`, and `ListTable` promotes reuse across different pages or components within the application.
@@ -1423,27 +1514,29 @@ These optimizations collectively enhance the scalability and maintainability of 
 
 ---
 
-
 &emsp;
-
 
 # ProjectPage.jsx optimization Breakpoints
 
 In the optimization process from the old code to the new code, several improvements and restructuring have been implemented:
 
 1. **Modularization and Componentization**:
+
    - **Body Component**: Introduced a `Body` component to encapsulate common layout elements, improving code organization and maintainability.
    - **StatContainer Component**: Abstracted out the statistics rendering into a reusable `StatContainer` component, which accepts `stats` as props and iterates over them to display statistical information. This enhances reusability and separates concerns.
    - **ListTable Component**: Created a `ListTable` component to handle the rendering of tabular data. This component abstracts away the table structure and rendering logic from the main page component (`ProjectPage`), making the code more modular and easier to maintain.
 
 2. **Data Separation**:
+
    - Moved static data (`RacStats`, `HeaderList`, `ProductList`) into separate data files (`RacData.js` and `ProjectData.js`). This separation of concerns ensures that data is cleanly separated from presentation logic, promoting easier updates and maintenance.
 
 3. **Improvements in Layout and Styling**:
+
    - **CSS Improvements**: Enhanced CSS classes and layouts to achieve a more consistent and visually appealing design. This includes better use of spacing (`mt-5`, `mb-5`) and grid layouts (`grid-cols-1`, `grid-cols-2`, `grid-cols-3`).
    - **Responsive Design**: Ensured that the layout adapts gracefully across different screen sizes (`sm:grid-cols-2`, `lg:grid-cols-3`), improving usability across devices.
 
 4. **Code Simplification and Readability**:
+
    - **Reduction of Redundancy**: Eliminated redundant or unnecessary code blocks, such as inline styles or hardcoded values.
    - **Consolidation of Components**: Consolidated similar components (`StatCard` for statistics and `ListTable` for tabular data) into reusable and focused components, reducing duplication and improving code clarity.
 
@@ -1455,36 +1548,36 @@ In the optimization process from the old code to the new code, several improveme
 
 ```javascript
 import {
-    ClipboardDocumentListIcon,
-    CurrencyRupeeIcon,
-    UsersIcon,
-  } from "@heroicons/react/24/outline";
-  
+  ClipboardDocumentListIcon,
+  CurrencyRupeeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
 export const ProjectStats = [
-    {
-        id: 1,
-        name: "Total Borrowers",
-        stat: "71,897",
-        icon: UsersIcon,
-        change: "122",
-        changeType: "increase",
-      },
-      {
-        id: 2,
-        name: "Avg. Lending / Day",
-        stat: "$58.16M",
-        icon: CurrencyRupeeIcon,
-        change: "5.4%",
-        changeType: "increase",
-      },
-      {
-        id: 3,
-        name: "Avg. Loans Closed / Day",
-        stat: "24.57",
-        icon: ClipboardDocumentListIcon,
-        change: "3.2%",
-        changeType: "decrease",
-      },
+  {
+    id: 1,
+    name: "Total Borrowers",
+    stat: "71,897",
+    icon: UsersIcon,
+    change: "122",
+    changeType: "increase",
+  },
+  {
+    id: 2,
+    name: "Avg. Lending / Day",
+    stat: "$58.16M",
+    icon: CurrencyRupeeIcon,
+    change: "5.4%",
+    changeType: "increase",
+  },
+  {
+    id: 3,
+    name: "Avg. Loans Closed / Day",
+    stat: "24.57",
+    icon: ClipboardDocumentListIcon,
+    change: "3.2%",
+    changeType: "decrease",
+  },
 ];
 
 export const HeaderList = [
@@ -1496,33 +1589,33 @@ export const HeaderList = [
 ];
 
 export const ProductList = [
-    {
-        name: "Cash Loan",
-        created: "07/06/2021",
-        openLoans: "2367",
-        disbursedPrincipal: "$234M",
-        status: "Active",
-        href: "/product/cash-loan/loan-product-config",
-      },
-      {
-        name: "BNPL",
-        created: "14/09/2022",
-        openLoans: "1490",
-        disbursedPrincipal: "$750M",
-        status: "Active",
-      },
-      {
-        name: "Overdraft",
-        created: "19/09/2022",
-        openLoans: "185",
-        disbursedPrincipal: "$90M",
-        status: "Inactive",
-      },
+  {
+    name: "Cash Loan",
+    created: "07/06/2021",
+    openLoans: "2367",
+    disbursedPrincipal: "$234M",
+    status: "Active",
+    href: "/product/cash-loan/loan-product-config",
+  },
+  {
+    name: "BNPL",
+    created: "14/09/2022",
+    openLoans: "1490",
+    disbursedPrincipal: "$750M",
+    status: "Active",
+  },
+  {
+    name: "Overdraft",
+    created: "19/09/2022",
+    openLoans: "185",
+    disbursedPrincipal: "$90M",
+    status: "Inactive",
+  },
 ];
-
 ```
 
 ## Summary
+
 Overall, these optimizations aim to enhance code maintainability, readability, and performance while adhering to best practices in React development. The modular and component-based structure allows for easier scaling and adaptation as the application grows or requirements change.
 
 ---
@@ -1534,6 +1627,7 @@ Overall, these optimizations aim to enhance code maintainability, readability, a
 In the optimization process from the old code to the new code, several improvements and restructuring have been implemented:
 
 ### 1. Code Modularity and Reusability
+
 - **Component Extraction**: The original code has been refactored to extract repeated and logically distinct pieces into their own components, making the code more modular and reusable.
   - **`Body`**: A wrapper component to handle layout structure.
   - **`StatContainer`**: A component to handle the statistics section.
@@ -1541,28 +1635,28 @@ In the optimization process from the old code to the new code, several improveme
   - **`ListTable`**: A component to handle the product list table.
 
 ### 2. Data Separation
+
 - **Data Centralization**: All the static data (stats, header list, product list) have been moved to a separate data file (`ProductData.js`). This makes the main component (`ProductPage`) cleaner and the data easier to manage and update.
   ```javascript
-  import { ProductStats, HeaderList, ProductList } from '../data/ProductData';
+  import { ProductStats, HeaderList, ProductList } from "../data/ProductData";
   ```
 
 ### 3. Simplification and Readability
+
 - **Cleaner JSX Structure**: The new components have a much cleaner and more readable JSX structure. The use of props to pass data and children elements improves readability and maintainability.
   - **`Body` Component**:
     ```javascript
     const Body = ({ children }) => {
-      return (
-        <div className="mx-auto max-w-none">
-          {children}
-        </div>
-      );
+      return <div className="mx-auto max-w-none">{children}</div>;
     };
     ```
   - **`StatContainer` and `StatCard` Components**:
     ```javascript
     const StatContainer = ({ stats }) => (
-      <div className="bg-gray-100 rounded-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <h3 className="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>
+      <div className="bg-background-light-secondary rounded-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <h3 className="text-base font-semibold leading-6 text-gray-900">
+          Last 30 days
+        </h3>
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {stats.map((stat) => (
             <StatCard key={stat.id} stat={stat} />
@@ -1573,42 +1667,51 @@ In the optimization process from the old code to the new code, several improveme
     ```
 
 ### 4. Consistent Data Rendering
+
 - **Dynamic Rendering**: Using `.map()` for rendering lists of items (stats and products) ensures that the code is less prone to errors and easier to extend.
   - **Stats Rendering**:
     ```javascript
-    {stats.map((stat) => (
-      <StatCard key={stat.id} stat={stat} />
-    ))}
+    {
+      stats.map((stat) => <StatCard key={stat.id} stat={stat} />);
+    }
     ```
   - **Product List Rendering**:
     ```javascript
-    {ListItem.map((product) => (
-      <tr key={product.name}>
-        {Object.keys(product).map((key, idx) => (
-          key !== "href" ? (
-            <td key={idx} className="w-1/5 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-              {product.href ? (
-                <Link className="w-full block" to={product.href}>
-                  {product[key]}
-                </Link>
-              ) : (
-                product[key]
-              )}
-            </td>
-          ) : null
-        ))}
-      </tr>
-    ))}
+    {
+      ListItem.map((product) => (
+        <tr key={product.name}>
+          {Object.keys(product).map((key, idx) =>
+            key !== "href" ? (
+              <td
+                key={idx}
+                className="w-1/5 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500"
+              >
+                {product.href ? (
+                  <Link className="w-full block" to={product.href}>
+                    {product[key]}
+                  </Link>
+                ) : (
+                  product[key]
+                )}
+              </td>
+            ) : null
+          )}
+        </tr>
+      ));
+    }
     ```
 
 ### 5. Improved Maintainability
+
 - **Single Responsibility Principle**: Each component now has a single responsibility. This makes the components easier to test and maintain.
 - **Readability and Scalability**: The new structure allows for easier scaling. Adding new stats or products only requires updating the data file, without changing the main components.
 
 ### 6. Styling Improvements
+
 - **Consistent Styling**: The new code maintains consistent styling across components by keeping the style definitions close to their usage. This is evident in the `StatCard` and `ListTable` components.
 
 ## Summary
+
 Overall, the optimizations include improved code modularity, separation of concerns, enhanced readability, maintainability, and consistent data handling. This new structure is easier to understand, extend, and maintain.
 
 ---
@@ -1620,34 +1723,42 @@ Overall, the optimizations include improved code modularity, separation of conce
 In the optimization process from the old code to the new code, several improvements and restructuring have been implemented:
 
 ### 1. **Component and File Structure Optimization:**
-   - **Old Code:** The old code was organized in a single file for `Group` and `GroupTable` components.
-   - **New Code:** The new code organizes components into more modular structures. `Body`, `StatContainer`, and `ListTable` components are imported from their respective paths, indicating a more modular and scalable file structure.
+
+- **Old Code:** The old code was organized in a single file for `Group` and `GroupTable` components.
+- **New Code:** The new code organizes components into more modular structures. `Body`, `StatContainer`, and `ListTable` components are imported from their respective paths, indicating a more modular and scalable file structure.
 
 ### 2. **Data Separation:**
-   - **Old Code:** The data for stats and products was hardcoded within the components.
-   - **New Code:** The new code imports `GroupStats`, `HeaderList`, and `ProductList` from a separate data file (`GroupData`). This separates data from the component logic, making it easier to manage and update.
+
+- **Old Code:** The data for stats and products was hardcoded within the components.
+- **New Code:** The new code imports `GroupStats`, `HeaderList`, and `ProductList` from a separate data file (`GroupData`). This separates data from the component logic, making it easier to manage and update.
 
 ### 3. **Component Reusability:**
-   - **Old Code:** The old code had a specific implementation for the `Group` and `GroupTable` components.
-   - **New Code:** The new code uses more generic and reusable components like `StatContainer` and `ListTable`. These components can be reused across different parts of the application with different data sets.
+
+- **Old Code:** The old code had a specific implementation for the `Group` and `GroupTable` components.
+- **New Code:** The new code uses more generic and reusable components like `StatContainer` and `ListTable`. These components can be reused across different parts of the application with different data sets.
 
 ### 4. **Simplified JSX Structure:**
-   - **Old Code:** The old code had a lot of inline JSX for rendering stats and the table.
-   - **New Code:** The new code simplifies the JSX structure by utilizing more abstract components like `StatContainer` and `ListTable`, making the `GroupPage` component cleaner and easier to read.
+
+- **Old Code:** The old code had a lot of inline JSX for rendering stats and the table.
+- **New Code:** The new code simplifies the JSX structure by utilizing more abstract components like `StatContainer` and `ListTable`, making the `GroupPage` component cleaner and easier to read.
 
 ### 5. **Styling and Layout:**
-   - **Old Code:** Inline styling and layout-related code within components.
-   - **New Code:** By using components like `Body` and others from a common directory, styling and layout are more centralized and likely consistent across the application.
+
+- **Old Code:** Inline styling and layout-related code within components.
+- **New Code:** By using components like `Body` and others from a common directory, styling and layout are more centralized and likely consistent across the application.
 
 ### 6. **Function Utilization:**
-   - **Old Code:** A `classNames` function was defined and used within the component to conditionally apply classes.
-   - **New Code:** It's unclear if similar utility functions are used in the new code since the focus is on using higher-level components. However, assuming the new components like `StatContainer` and `ListTable` handle such concerns internally, this keeps the main component logic cleaner.
+
+- **Old Code:** A `classNames` function was defined and used within the component to conditionally apply classes.
+- **New Code:** It's unclear if similar utility functions are used in the new code since the focus is on using higher-level components. However, assuming the new components like `StatContainer` and `ListTable` handle such concerns internally, this keeps the main component logic cleaner.
 
 ### 7. **Maintainability and Scalability:**
-   - **Old Code:** Hardcoding within the component reduces maintainability and scalability.
-   - **New Code:** By abstracting data and reusing components, the new approach enhances maintainability and scalability. Updates can be made to individual components or data sources without affecting the entire structure.
+
+- **Old Code:** Hardcoding within the component reduces maintainability and scalability.
+- **New Code:** By abstracting data and reusing components, the new approach enhances maintainability and scalability. Updates can be made to individual components or data sources without affecting the entire structure.
 
 ## Summary of Optimizations:
+
 - **Component Modularity:** Better separation of components into distinct files and folders.
 - **Data Management:** Separation of data from components, making updates easier.
 - **Reusability:** Use of reusable components to simplify the JSX structure and reduce code duplication.
@@ -1663,45 +1774,55 @@ These optimizations result in a more maintainable, scalable, and readable codeba
 # CustomerCare.jsx -> CustomerCarePage Optimizations BreakDown
 
 ### 1. **Component Separation**
-   - **Old Code:** All functionality is inside a single `CustomerCare` component.
-   - **New Code:** The functionality is split into multiple components (`CustomerCarePage`, `SearchBox`, `StatContainer`, and `Body`).
 
-   **Benefits:**
-   - Improved readability and maintainability.
-   - Easier to manage, test, and debug smaller components.
-   - Encourages reusability of components.
+- **Old Code:** All functionality is inside a single `CustomerCare` component.
+- **New Code:** The functionality is split into multiple components (`CustomerCarePage`, `SearchBox`, `StatContainer`, and `Body`).
+
+**Benefits:**
+
+- Improved readability and maintainability.
+- Easier to manage, test, and debug smaller components.
+- Encourages reusability of components.
 
 ### 2. **Data and Logic Extraction**
-   - **Old Code:** Stats data is directly within the component.
-   - **New Code:** Stats data is moved to a separate data file (`CustomerCareData.js`).
 
-   **Benefits:**
-   - Separation of concerns: UI and data are managed separately.
-   - Easier to update and maintain data without touching the UI components.
+- **Old Code:** Stats data is directly within the component.
+- **New Code:** Stats data is moved to a separate data file (`CustomerCareData.js`).
+
+**Benefits:**
+
+- Separation of concerns: UI and data are managed separately.
+- Easier to update and maintain data without touching the UI components.
 
 ### 3. **Conditional Rendering with React Router**
-   - **Old Code:** Only handles the customer care path.
-   - **New Code:** Uses `useLocation` to determine the current path and conditionally execute different functions (`checkBorrowerInfoCustomer` and `checkBorrowerInfoUser`).
 
-   **Benefits:**
-   - Supports multiple routes (`/customer-care` and `/user`).
-   - Makes the component dynamic and adaptable to different routes.
+- **Old Code:** Only handles the customer care path.
+- **New Code:** Uses `useLocation` to determine the current path and conditionally execute different functions (`checkBorrowerInfoCustomer` and `checkBorrowerInfoUser`).
+
+**Benefits:**
+
+- Supports multiple routes (`/customer-care` and `/user`).
+- Makes the component dynamic and adaptable to different routes.
 
 ### 4. **Async/Await and Error Handling**
-   - **Old Code:** Contains a single function to check borrower info.
-   - **New Code:** Splits the logic into two separate functions (`checkBorrowerInfoCustomer` and `checkBorrowerInfoUser`) for different API endpoints and includes better error handling.
 
-   **Benefits:**
-   - Clear separation of API calls based on the route.
-   - Better error handling and user feedback with conditionally rendered error messages.
+- **Old Code:** Contains a single function to check borrower info.
+- **New Code:** Splits the logic into two separate functions (`checkBorrowerInfoCustomer` and `checkBorrowerInfoUser`) for different API endpoints and includes better error handling.
+
+**Benefits:**
+
+- Clear separation of API calls based on the route.
+- Better error handling and user feedback with conditionally rendered error messages.
 
 ### 5. **Improved JSX and CSS Management**
-   - **Old Code:** JSX and CSS classes are all mixed within a single component.
-   - **New Code:** Uses a cleaner JSX structure with dedicated components handling their specific parts.
 
-   **Benefits:**
-   - Cleaner JSX, easier to read and understand.
-   - Separation of CSS management making it easier to update styles.
+- **Old Code:** JSX and CSS classes are all mixed within a single component.
+- **New Code:** Uses a cleaner JSX structure with dedicated components handling their specific parts.
+
+**Benefits:**
+
+- Cleaner JSX, easier to read and understand.
+- Separation of CSS management making it easier to update styles.
 
 ### Detailed Changes and Benefits:
 
@@ -1790,7 +1911,7 @@ const CustomerCare = () => {
   return (
     <>
       {/* Cards */}
-      <div className="bg-gray-100 rounded-xl">
+      <div className="bg-background-light-secondary rounded-xl">
         <div className="mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div>
             <h3 className="text-base font-semibold leading-6 text-gray-900">
@@ -1841,8 +1962,7 @@ const CustomerCare = () => {
                         {" "}
                         {item.changeType === "increase"
                           ? "Increased"
-                          : "Decreased"}{" "}
-                        by{" "}
+                          : "Decreased"} by{" "}
                       </span>
                       {item.change}
                     </p>
@@ -1898,31 +2018,31 @@ const CustomerCare = () => {
 };
 
 export default CustomerCare;
-
 ```
 
 **New Code:**
 
 ```jsx
-import React from 'react'
-import Body from '../components/Common/Body/Body'
-import { CustomerCareStats } from '../data/CustomerCareData';
-import StatContainer from '../components/Common/StatContainer/StatContainer';
-import SearchBox from '../components/Common/SearchBox/SearchBox';
+import React from "react";
+import Body from "../components/Common/Body/Body";
+import { CustomerCareStats } from "../data/CustomerCareData";
+import StatContainer from "../components/Common/StatContainer/StatContainer";
+import SearchBox from "../components/Common/SearchBox/SearchBox";
 
 const CustomerCarePage = () => {
-    return (
-        <Body>
-            <StatContainer stats={CustomerCareStats} />
-            <SearchBox/>
-        </Body>
-    )
-}
+  return (
+    <Body>
+      <StatContainer stats={CustomerCareStats} />
+      <SearchBox />
+    </Body>
+  );
+};
 
-export default CustomerCarePage
+export default CustomerCarePage;
 ```
 
 **Benefits:**
+
 - Clearly separates the page structure into `Body`, `StatContainer`, and `SearchBox` components.
 
 #### SearchBox Component
@@ -1930,133 +2050,140 @@ export default CustomerCarePage
 **New Code:**
 
 ```jsx
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const SearchBox = () => {
-    const location = useLocation();
-    const [borrowerID, setBorrowerID] = useState("");
-    const [borrowerNotFound, setBorrowerNotFound] = useState(false);
-    const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const location = useLocation();
+  const [borrowerID, setBorrowerID] = useState("");
+  const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
 
-    async function checkBorrowerInfoCustomer(borrowerID) {
-        try {
-            const token = localStorage.getItem("authToken");
-            const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
-                borrowerID,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            if (data.status === 404) {
-                console.log("Borrower Not Found"); // Clear the token
-                setBorrowerNotFound(true);
-                navigate("/customer-care"); // Redirect to customer-care page
-                return; // Stop further execution
-            }
-            // Check for token expiration or invalid token
-            if (data.status === 401 || data.status === 403) {
-                localStorage.removeItem("authToken"); // Clear the token
-                navigate("/login"); // Redirect to login page
-                return; // Stop further execution
-            }
-            navigate("/borrower/" + borrowerID + "/personal-info");
-            setBorrowerNotFound(false);
-        } catch (error) {
-            console.error(error);
+  async function checkBorrowerInfoCustomer(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+          borrowerID,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (data.status === 404) {
+        console.log("Borrower Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/customer-care"); // Redirect to customer-care page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/borrower/" + borrowerID + "/personal-info");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    async function checkBorrowerInfoUser(borrowerID) {
-        try {
-            const token = localStorage.getItem("authToken");
-            const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
-                borrowerID +
-                "/check-availability/14-11-1981",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            if (data.status === 404) {
-                console.log("User Not Found"); // Clear the token
-                setBorrowerNotFound(true);
-                navigate("/user"); // Redirect to login page
-                return; // Stop further execution
-            }
-            // Check for token expiration or invalid token
-            if (data.status === 401 || data.status === 403) {
-                localStorage.removeItem("authToken"); // Clear the token
-                navigate("/login"); // Redirect to login page
-                return; // Stop further execution
-            }
-            navigate("/user/" + borrowerID + "/user-eligibilty");
-            setBorrowerNotFound(false);
-        } catch (error) {
-            console.error(error);
+  async function checkBorrowerInfoUser(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
+          borrowerID +
+          "/check-availability/14-11-1981",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (data.status === 404) {
+        console.log("User Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/user"); // Redirect to login page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/user/" + borrowerID + "/user-eligibilty");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    const handleClick = () => {
-        { location.pathname === '/customer-care' 
-            ? checkBorrowerInfoCustomer(borrowerID) 
-            : checkBorrowerInfoUser(borrowerID) 
-        }
+  const handleClick = () => {
+    {
+      location.pathname === "/customer-care"
+        ? checkBorrowerInfoCustomer(borrowerID)
+        : checkBorrowerInfoUser(borrowerID);
     }
+  };
 
-    return (
-        <>
-            <div className="flex items-center gap-5 justify-center mt-10">
-                <div>{location.pathname === '/customer-care' ? 'Customer ID' : 'Borrower ID'}</div>
-                <div>
-                    <input
-                        type="number"
-                        name="borrowerID"
-                        id="borrowerID"
-                        value={borrowerID}
-                        onChange={(e) => {
-                            setBorrowerID(e.target.value);
-                        }}
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="1234567890"
-                    />
-                </div>
-                <div>
-                    <button
-                        onClick={handleClick}
-                        type="button"
-                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                        Search
-                    </button>
-                </div>
-            </div>
-            {borrowerNotFound && (
-                <div className="text-red-600 mt-4 text-center">Record Not Found</div>
-            )}
-        </>
-    )
-}
+  return (
+    <>
+      <div className="flex items-center gap-5 justify-center mt-10">
+        <div>
+          {location.pathname === "/customer-care"
+            ? "Customer ID"
+            : "Borrower ID"}
+        </div>
+        <div>
+          <input
+            type="number"
+            name="borrowerID"
+            id="borrowerID"
+            value={borrowerID}
+            onChange={(e) => {
+              setBorrowerID(e.target.value);
+            }}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="1234567890"
+          />
+        </div>
+        <div>
+          <button
+            onClick={handleClick}
+            type="button"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      {borrowerNotFound && (
+        <div className="text-red-600 mt-4 text-center">Record Not Found</div>
+      )}
+    </>
+  );
+};
 
-export default SearchBox
+export default SearchBox;
 ```
 
 **Benefits:**
+
 - Uses `useLocation` to determine the current path and execute the appropriate API call.
 - Simplifies the logic in the `handleClick` function to decide which API call to make.
 - Separates the API calls into two functions, making it easier to manage and update.
 
 ## Summary:
+
 - **Modularity:** Code is more modular, making it easier to maintain and extend.
 - **Readability:** Code is more readable and organized.
 - **Reusability:** Components and data are reusable across different parts of the application.
@@ -2065,38 +2192,45 @@ export default SearchBox
 By implementing these optimizations, the code becomes cleaner, more maintainable, and easier to understand, while also supporting multiple routes and improving user experience through better error handling and conditional rendering.
 
 ---
-&emsp;
 
+&emsp;
 
 # UserPage.jsx -> NewUserPage.jsx Optimizations BreakDown
 
 I have made several optimizations to the old code to enhance its structure, maintainability, and modularity. Here are the key improvements:
 
 ### Code Modularity and Reusability
+
 1. **Separation of Concerns**:
-    - **Old Code**: Mixed UI components and business logic within the same component.
-    - **New Code**: Separated the logic into distinct components (`StatContainer`, `SearchBox`, and `Body`). This separation enhances readability and maintainability.
+
+   - **Old Code**: Mixed UI components and business logic within the same component.
+   - **New Code**: Separated the logic into distinct components (`StatContainer`, `SearchBox`, and `Body`). This separation enhances readability and maintainability.
 
 2. **Reusability**:
-    - **Old Code**: Hardcoded data and repeated UI logic within the `UserPage` component.
-    - **New Code**: Moved static data (`NewUserStats`) to a separate data file (`NewUserData`). The `StatContainer` component can now be reused with different stats data, making it more reusable.
+   - **Old Code**: Hardcoded data and repeated UI logic within the `UserPage` component.
+   - **New Code**: Moved static data (`NewUserStats`) to a separate data file (`NewUserData`). The `StatContainer` component can now be reused with different stats data, making it more reusable.
 
 ### Logic Optimization
+
 3. **Consolidation of Search Logic**:
-    - **Old Code**: Had separate `checkBorrowerInfo` functions in different components with slightly different logic.
-    - **New Code**: Consolidated the search logic into a single `SearchBox` component. The `handleClick` function determines the appropriate search logic based on the current path, reducing code duplication.
+   - **Old Code**: Had separate `checkBorrowerInfo` functions in different components with slightly different logic.
+   - **New Code**: Consolidated the search logic into a single `SearchBox` component. The `handleClick` function determines the appropriate search logic based on the current path, reducing code duplication.
 
 ### Readability and Maintainability
+
 4. **Improved Component Structure**:
-    - **Old Code**: Single large component (`UserPage`) with mixed concerns.
-    - **New Code**: Clean component structure with clear separation of UI and logic. The main page component (`NewUserPage`) now composes smaller, focused components.
+
+   - **Old Code**: Single large component (`UserPage`) with mixed concerns.
+   - **New Code**: Clean component structure with clear separation of UI and logic. The main page component (`NewUserPage`) now composes smaller, focused components.
 
 5. **Named Exports and Consistent Naming**:
-    - **Old Code**: Directly embedded data and logic within the main component.
-    - **New Code**: Used named exports for stats data (`NewUserStats`), ensuring a consistent and clear naming convention.
+   - **Old Code**: Directly embedded data and logic within the main component.
+   - **New Code**: Used named exports for stats data (`NewUserStats`), ensuring a consistent and clear naming convention.
 
 ### Example Overview
+
 #### Old Code
+
 ```jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -2179,7 +2313,7 @@ const UserPage = () => {
   return (
     <>
       {/* Cards */}
-      <div className="bg-gray-100 rounded-xl">
+      <div className="bg-background-light-secondary rounded-xl">
         <div className="mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div>
             <h3 className="text-base font-semibold leading-6 text-gray-900">
@@ -2230,8 +2364,7 @@ const UserPage = () => {
                         {" "}
                         {item.changeType === "increase"
                           ? "Increased"
-                          : "Decreased"}{" "}
-                        by{" "}
+                          : "Decreased"} by{" "}
                       </span>
                       {item.change}
                     </p>
@@ -2287,153 +2420,160 @@ const UserPage = () => {
 };
 
 export default UserPage;
-
 ```
 
 #### New Code
+
 ```jsx
-import React from 'react'
-import Body from '../components/Common/Body/Body'
-import { NewUserStats } from '../data/NewUserData';
-import StatContainer from '../components/Common/StatContainer/StatContainer';
-import SearchBox from '../components/Common/SearchBox/SearchBox';
+import React from "react";
+import Body from "../components/Common/Body/Body";
+import { NewUserStats } from "../data/NewUserData";
+import StatContainer from "../components/Common/StatContainer/StatContainer";
+import SearchBox from "../components/Common/SearchBox/SearchBox";
 
 const NewUserPage = () => {
-    return (
-        <Body>
-            <StatContainer stats={NewUserStats} />
-            <SearchBox/>
-        </Body>
-    )
-}
+  return (
+    <Body>
+      <StatContainer stats={NewUserStats} />
+      <SearchBox />
+    </Body>
+  );
+};
 
 export default NewUserPage;
 ```
 
 ### SearchBox Component
+
 ```jsx
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const SearchBox = () => {
-    const location = useLocation();
-    const [borrowerID, setBorrowerID] = useState("");
-    const [borrowerNotFound, setBorrowerNotFound] = useState(false);
-    const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const location = useLocation();
+  const [borrowerID, setBorrowerID] = useState("");
+  const [borrowerNotFound, setBorrowerNotFound] = useState(false);
+  const navigate = useNavigate(); // Adding useNavigate  for navigation
 
-    async function checkBorrowerInfoCustomer(borrowerID) {
-        try {
-            const token = localStorage.getItem("authToken");
-            const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
-                borrowerID,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            if (data.status === 404) {
-                console.log("Borrower Not Found"); // Clear the token
-                setBorrowerNotFound(true);
-                navigate("/customer-care"); // Redirect to customer-care page
-                return; // Stop further execution
-            }
-            // Check for token expiration or invalid token
-            if (data.status === 401 || data.status === 403) {
-                localStorage.removeItem("authToken"); // Clear the token
-                navigate("/login"); // Redirect to login page
-                return; // Stop further execution
-            }
-            navigate("/borrower/" + borrowerID + "/personal-info");
-            setBorrowerNotFound(false);
-        } catch (error) {
-            console.error(error);
+  async function checkBorrowerInfoCustomer(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/api/v1/borrowers/" +
+          borrowerID,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (data.status === 404) {
+        console.log("Borrower Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/customer-care"); // Redirect to customer-care page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/borrower/" + borrowerID + "/personal-info");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    async function checkBorrowerInfoUser(borrowerID) {
-        try {
-            const token = localStorage.getItem("authToken");
-            const data = await fetch(
-                "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
-                borrowerID +
-                "/check-availability/14-11-1981",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            if (data.status === 404) {
-                console.log("User Not Found"); // Clear the token
-                setBorrowerNotFound(true);
-                navigate("/user"); // Redirect to login page
-                return; // Stop further execution
-            }
-            // Check for token expiration or invalid token
-            if (data.status === 401 || data.status === 403) {
-                localStorage.removeItem("authToken"); // Clear the token
-                navigate("/login"); // Redirect to login page
-                return; // Stop further execution
-            }
-            navigate("/user/" + borrowerID + "/user-eligibilty");
-            setBorrowerNotFound(false);
-        } catch (error) {
-            console.error(error);
+  async function checkBorrowerInfoUser(borrowerID) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const data = await fetch(
+        "https://api-test.lmscarbon.com/carbon-registration-service/lmscarbon/api/v1/borrowers/" +
+          borrowerID +
+          "/check-availability/14-11-1981",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (data.status === 404) {
+        console.log("User Not Found"); // Clear the token
+        setBorrowerNotFound(true);
+        navigate("/user"); // Redirect to login page
+        return; // Stop further execution
+      }
+      // Check for token expiration or invalid token
+      if (data.status === 401 || data.status === 403) {
+        localStorage.removeItem("authToken"); // Clear the token
+        navigate("/login"); // Redirect to login page
+        return; // Stop further execution
+      }
+      navigate("/user/" + borrowerID + "/user-eligibilty");
+      setBorrowerNotFound(false);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    const handleClick = () => {
-        { location.pathname === '/customer-care' 
-            ? checkBorrowerInfoCustomer(borrowerID) 
-            : checkBorrowerInfoUser(borrowerID) 
-        }
+  const handleClick = () => {
+    {
+      location.pathname === "/customer-care"
+        ? checkBorrowerInfoCustomer(borrowerID)
+        : checkBorrowerInfoUser(borrowerID);
     }
+  };
 
-    return (
-        <>
-            <div className="flex items-center gap-5 justify-center mt-10">
-                <div>{location.pathname === '/customer-care' ? 'Customer ID' : 'Borrower ID'}</div>
-                <div>
-                    <input
-                        type="number"
-                        name="borrowerID"
-                        id="borrowerID"
-                        value={borrowerID}
-                        onChange={(e) => {
-                            setBorrowerID(e.target.value);
-                        }}
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="1234567890"
-                    />
-                </div>
-                <div>
-                    <button
-                        onClick={handleClick}
-                        type="button"
-                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                        Search
-                    </button>
-                </div>
-            </div>
-            {borrowerNotFound && (
-                <div className="text-red-600 mt-4 text-center">Record Not Found</div>
-            )}
-        </>
-    )
-}
+  return (
+    <>
+      <div className="flex items-center gap-5 justify-center mt-10">
+        <div>
+          {location.pathname === "/customer-care"
+            ? "Customer ID"
+            : "Borrower ID"}
+        </div>
+        <div>
+          <input
+            type="number"
+            name="borrowerID"
+            id="borrowerID"
+            value={borrowerID}
+            onChange={(e) => {
+              setBorrowerID(e.target.value);
+            }}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="1234567890"
+          />
+        </div>
+        <div>
+          <button
+            onClick={handleClick}
+            type="button"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      {borrowerNotFound && (
+        <div className="text-red-600 mt-4 text-center">Record Not Found</div>
+      )}
+    </>
+  );
+};
 
-export default SearchBox
+export default SearchBox;
 ```
 
 ## Summary
+
 By modularizing the code, consolidating logic, and separating concerns, the new code is more maintainable, readable, and reusable. It follows best practices in React development and makes it easier to manage and extend the application in the future.
 
 ---
@@ -2443,28 +2583,35 @@ By modularizing the code, consolidating logic, and separating concerns, the new 
 # Ledger.jsx -> LedgerPage.jsx Optimizations BreakDown
 
 1. **Component Structure**:
+
    - The old code had a single `Ledger` component, while the new code splits functionality into separate components: `CustomerCarePage`, `LedgerListTable`, and `Body`.
    - This improves code organization and reusability.
 
 2. **Data Import**:
+
    - The old code had the `ledgerarr` data defined within the component. The new code imports `ledgerArr` and `HeaderList` from a separate data file (`LedgerData`).
    - This separation of concerns makes the component cleaner and data management easier.
 
 3. **Use of Custom Components**:
+
    - The new code uses a `LedgerListTable` component to handle the ledger table rendering, making the `CustomerCarePage` component more readable.
 
 4. **CSS Classes and Styles**:
+
    - The new code consistently uses Tailwind CSS classes for styling, making the styling more standardized and easier to read.
 
 5. **Data Filtering and Pagination**:
+
    - The new code retains the filtering and pagination logic but organizes it within the `LedgerListTable` component.
    - It simplifies the filtering by removing the unused entry ID filter and keeps only the borrower ID filter.
 
 6. **Event Handlers and Select Options**:
+
    - The new code improves the `handlePageSizeChange` and input change handlers by keeping them within the `LedgerListTable` component.
    - Custom styles for the `Select` component are defined using `customSelectStyles`.
 
 7. **Table Rendering**:
+
    - The new code simplifies the table rendering by mapping through `ListItem` and `account` entries within the `LedgerListTable` component.
    - It uses conditional rendering to handle the case when there is no data available.
 
@@ -2472,6 +2619,7 @@ By modularizing the code, consolidating logic, and separating concerns, the new 
    - The new code uses a `Body` component for wrapping the main content, which could be reused across different pages or sections.
 
 ### Old Code
+
 ```jsx
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -2797,7 +2945,7 @@ const Ledger = () => {
           disabled={currentPage === 1}
           className={`flex items-center px-4 py-2 rounded-md ${
             currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
+              ? "bg-background-light-primary cursor-not-allowed"
               : "bg-indigo-500 text-white cursor-pointer"
           }`}
         >
@@ -2811,7 +2959,7 @@ const Ledger = () => {
           disabled={currentPage === totalPages}
           className={`flex items-center px-4 py-2 rounded-md ${
             currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
+              ? "bg-background-light-primary cursor-not-allowed"
               : "bg-indigo-500 text-white cursor-pointer"
           }`}
         >
@@ -2823,35 +2971,40 @@ const Ledger = () => {
 };
 
 export default Ledger;
-
 ```
 
 ### New Code
 
 ```jsx
-import React from 'react'
-import Body from '../components/Common/Body/Body'
-import { ledgerArr, HeaderList } from '../data/LedgerData';
-import LedgerListTable from '../components/LedgerListTable/LedgerListTable';
-
+import React from "react";
+import Body from "../components/Common/Body/Body";
+import { ledgerArr, HeaderList } from "../data/LedgerData";
+import LedgerListTable from "../components/LedgerListTable/LedgerListTable";
 
 const CustomerCarePage = () => {
-    return (
-        <Body>
-            <LedgerListTable ListName={"Ledger List"} ListHeader={HeaderList} ListItem={ledgerArr}/>
-        </Body>
-    )
-}
+  return (
+    <Body>
+      <LedgerListTable
+        ListName={"Ledger List"}
+        ListHeader={HeaderList}
+        ListItem={ledgerArr}
+      />
+    </Body>
+  );
+};
 
-export default CustomerCarePage
-
+export default CustomerCarePage;
 ```
 
 ### LedgerListTable Component
 
 ```jsx
 import React, { useState, useEffect, useRef } from "react";
-import { MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import {
+  MagnifyingGlassIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/20/solid";
 import Select from "react-select";
 
 const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
@@ -2863,7 +3016,10 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   const [borrowerIdQuery, setBorrowerIdQuery] = useState("");
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
-  const currentData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const currentData = filteredData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const selectOptions = [
     { value: 5, label: "5 entries" },
@@ -2887,7 +3043,9 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
 
   useEffect(() => {
     setFilteredData(
-      ListItem.filter((entry) => entry.userId.toString().includes(borrowerIdQuery))
+      ListItem.filter((entry) =>
+        entry.userId.toString().includes(borrowerIdQuery)
+      )
     );
     setCurrentPage(1);
   }, [borrowerIdQuery]);
@@ -2901,33 +3059,32 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
   const customSelectStyles = {
     control: (provided) => ({
       ...provided,
-      minHeight: '48px',
-      borderRadius: '0.375rem',
-      borderColor: '#D1D5DB',
-      boxShadow: 'none',
+      minHeight: "48px",
+      borderRadius: "0.375rem",
+      borderColor: "#D1D5DB",
+      boxShadow: "none",
     }),
     valueContainer: (provided) => ({
       ...provided,
-      padding: '0 0.75rem',
+      padding: "0 0.75rem",
     }),
     indicatorsContainer: (provided) => ({
       ...provided,
-      height: '48px',
+      height: "48px",
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      padding: '0 8px',
+      padding: "0 8px",
     }),
     clearIndicator: (provided) => ({
       ...provided,
-      padding: '0 8px',
+      padding: "0 8px",
     }),
   };
 
   return (
-    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+    <div className="bg-background-light-secondary py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
-
         {/* Search */}
         <div className="flex gap-4 mb-5">
           <div className="w-2/4">
@@ -2936,7 +3093,10 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 id="search"
@@ -2969,7 +3129,9 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
         {/* Table Name */}
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">{ListName}</h1>
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              {ListName}
+            </h1>
           </div>
         </div>
 
@@ -2978,7 +3140,10 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300" ref={tableRef}>
+                <table
+                  className="min-w-full divide-y divide-gray-300"
+                  ref={tableRef}
+                >
                   <thead className="bg-gray-50">
                     <tr>
                       {ListHeader.map((header, index) => (
@@ -3011,10 +3176,14 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
                                 {item.userId}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem.debitValue === 0 ? '-' : accountItem.debitValue}
+                                {accountItem.debitValue === 0
+                                  ? "-"
+                                  : accountItem.debitValue}
                               </td>
                               <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
-                                {accountItem.creditValue === 0 ? '-' : accountItem.creditValue}
+                                {accountItem.creditValue === 0
+                                  ? "-"
+                                  : accountItem.creditValue}
                               </td>
                             </tr>
                           ))}
@@ -3039,42 +3208,43 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
       </div>
 
       {/* Pagination */}
-      {
-        currentData.length !== 0
-          ? (
-            <div ref={paginationRef} className="mt-4 flex justify-center gap-5 items-center">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`flex items-center px-4 py-2 rounded-md ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
-                  }`}
-              >
-                <ChevronLeftIcon className="w-5 h-5" />
-              </button>
-              <span className="text-sm text-gray-700">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`flex items-center px-4 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-500 text-white cursor-pointer"
-                  }`}
-              >
-                <ChevronRightIcon className="w-5 h-5" />
-              </button>
-            </div>
-          )
-          : null
-      }
-
-
+      {currentData.length !== 0 ? (
+        <div
+          ref={paginationRef}
+          className="mt-4 flex justify-center gap-5 items-center"
+        >
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`flex items-center px-4 py-2 rounded-md ${
+              currentPage === 1
+                ? "bg-background-light-primary cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+            }`}
+          >
+            <ChevronLeftIcon className="w-5 h-5" />
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`flex items-center px-4 py-2 rounded-md ${
+              currentPage === totalPages
+                ? "bg-background-light-primary cursor-not-allowed"
+                : "bg-indigo-500 text-white cursor-pointer"
+            }`}
+          >
+            <ChevronRightIcon className="w-5 h-5" />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
 
 export default LedgerListTable;
-
-
 ```
 
 ### LedgerData.js
@@ -3089,8 +3259,8 @@ export const ledgerArr = [
     transactionDate: "14 Jun 2024",
     account: [
       {
-        entryName: "CASH_IN_BANK", 
-        entryId: "1002", 
+        entryName: "CASH_IN_BANK",
+        entryId: "1002",
         debitValue: 4944.5,
         creditValue: 0,
       },
@@ -3151,8 +3321,6 @@ export const HeaderList = [
   "Debit Amount",
   "Credit Amount",
 ];
-
-
 ```
 
 ## Summary
@@ -3163,46 +3331,52 @@ Overall, these changes improve the code by enhancing readability, maintainabilit
 
 &emsp;
 
-
 # SelectAndAdd Component
 
 This component handles the selection of a file and adding it to the list.
 
 ```jsx
-import React from 'react';
-import Select from 'react-select';
-import { PlusIcon } from '@heroicons/react/20/solid';
+import React from "react";
+import Select from "react-select";
+import { PlusIcon } from "@heroicons/react/20/solid";
 
 // Custom Styling
 const customSelectStyles = {
   control: (provided) => ({
     ...provided,
-    minHeight: '48px',
-    borderRadius: '0.375rem',
-    borderColor: '#D1D5DB',
-    boxShadow: 'none',
+    minHeight: "48px",
+    borderRadius: "0.375rem",
+    borderColor: "#D1D5DB",
+    boxShadow: "none",
   }),
   valueContainer: (provided) => ({
     ...provided,
-    padding: '0 0.75rem',
+    padding: "0 0.75rem",
   }),
   indicatorsContainer: (provided) => ({
     ...provided,
-    height: '48px',
+    height: "48px",
   }),
   dropdownIndicator: (provided) => ({
     ...provided,
-    padding: '0 8px',
+    padding: "0 8px",
   }),
   clearIndicator: (provided) => ({
     ...provided,
-    padding: '0 8px',
+    padding: "0 8px",
   }),
 };
 
-const SelectAndAdd = ({ listName, selectOptions, selectedOption, handleChange, buttonName, onClick }) => {
+const SelectAndAdd = ({
+  listName,
+  selectOptions,
+  selectedOption,
+  handleChange,
+  buttonName,
+  onClick,
+}) => {
   return (
-    <div className="flex gap-4 bg-gray-100 p-10 rounded-xl">
+    <div className="flex gap-4 bg-background-light-secondary p-10 rounded-xl">
       <div className="w-2/4">
         <label htmlFor="entriesSelect" className="sr-only">
           {listName}
@@ -3235,35 +3409,35 @@ export default SelectAndAdd;
 ```
 
 # TclComponent.jsx -> TCLViewList Component
+
 This component manages the main functionality of selecting a file and adding it to the list.
 
 ```jsx
-
-import React, { useState } from 'react';
-import { TclViewListData, TclViewListHeaderList } from '../../data/TclData';
-import Body from '../Common/Body/Body';
-import ListTable from '../Common/ListTable/ListTable';
-import SelectAndAdd from '../Common/SelectAndAdd/SelectAndAdd';
+import React, { useState } from "react";
+import { TclViewListData, TclViewListHeaderList } from "../../data/TclData";
+import Body from "../Common/Body/Body";
+import ListTable from "../Common/ListTable/ListTable";
+import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 
 const selectOptions = [
-  { value: 'Cash Loan TCL', label: 'Cash Loan TCL' },
-  { value: 'BNPL TCL', label: 'BNPL TCL' },
-  { value: 'Overdraft TCL', label: 'Overdraft TCL' },
+  { value: "Cash Loan TCL", label: "Cash Loan TCL" },
+  { value: "BNPL TCL", label: "BNPL TCL" },
+  { value: "Overdraft TCL", label: "Overdraft TCL" },
 ];
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleChange = (selectedOption) => {
     setFileSelectedOption(selectedOption);
-    setMessage(''); // Reset message on selection change
+    setMessage(""); // Reset message on selection change
   };
 
   const addData = () => {
     if (!fileSelectedOption) {
-      setMessage('Please select a file first.');
+      setMessage("Please select a file first.");
       return;
     }
 
@@ -3277,10 +3451,10 @@ const TCLViewList = () => {
       );
 
       if (alreadyExists) {
-        setMessage('The selected file is already added to the table.');
+        setMessage("The selected file is already added to the table.");
       } else {
         setTableData((prevData) => [selectedFileData, ...prevData]);
-        setMessage(''); // Clear message if data is successfully added
+        setMessage(""); // Clear message if data is successfully added
       }
     }
   };
@@ -3320,18 +3494,24 @@ export default TCLViewList;
 ```
 
 # ListTable Component
+
 This component handles displaying the table with optional search functionality.
 
 ```jsx
+import React, { useState } from "react";
+import { MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
 
-import React, { useState } from 'react';
-import { MagnifyingGlassIcon, TrashIcon } from '@heroicons/react/20/solid';
-import { Link } from 'react-router-dom';
-
-const ListTable = ({ listName, listHeader, listItem, handleAction, searchable }) => {
+const ListTable = ({
+  listName,
+  listHeader,
+  listItem,
+  handleAction,
+  searchable,
+}) => {
   const headerCellWidth = listHeader.length + 1; // Calculate cell width based on header length
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(listItem);
 
   // Function to handle search input change
@@ -3349,7 +3529,7 @@ const ListTable = ({ listName, listHeader, listItem, handleAction, searchable })
   const dataToRender = searchTerm ? filteredData : listItem;
 
   return (
-    <div className="bg-gray-100 py-10 rounded-xl mt-8">
+    <div className="bg-background-light-secondary py-10 rounded-xl mt-8">
       <div className="px-4 sm:px-6 lg:px-8">
         {/* Search bar if searchable prop is true */}
         {searchable && (
@@ -3359,7 +3539,10 @@ const ListTable = ({ listName, listHeader, listItem, handleAction, searchable })
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 id="search"
@@ -3377,7 +3560,9 @@ const ListTable = ({ listName, listHeader, listItem, handleAction, searchable })
         {/* Table title */}
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">{listName}</h1>
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              {listName}
+            </h1>
           </div>
         </div>
 
@@ -3405,13 +3590,16 @@ const ListTable = ({ listName, listHeader, listItem, handleAction, searchable })
                       <tr key={index}>
                         {Object.keys(product).map(
                           (key, idx) =>
-                            key !== 'href' && (
+                            key !== "href" && (
                               <td
                                 key={idx}
                                 className={`w-1/${headerCellWidth} whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
                               >
                                 {product.href ? (
-                                  <Link className="w-full block" to={product.href}>
+                                  <Link
+                                    className="w-full block"
+                                    to={product.href}
+                                  >
                                     {product[key]}
                                   </Link>
                                 ) : (
@@ -3420,7 +3608,7 @@ const ListTable = ({ listName, listHeader, listItem, handleAction, searchable })
                               </td>
                             )
                         )}
-                        {listHeader.includes('Actions') && (
+                        {listHeader.includes("Actions") && (
                           <td
                             className={`w-1/${headerCellWidth} whitespace-nowrap py-4 text-center text-sm font-medium`}
                           >
@@ -3429,7 +3617,10 @@ const ListTable = ({ listName, listHeader, listItem, handleAction, searchable })
                               onClick={() => handleAction(index)}
                               className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             >
-                              <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                              <TrashIcon
+                                className="-ml-0.5 mr-2 h-4 w-4"
+                                aria-hidden="true"
+                              />
                               Delete
                             </button>
                           </td>
@@ -3451,6 +3642,7 @@ export default ListTable;
 ```
 
 # Data File (TclData.js)
+
 This file contains the data and header information used by the components.
 
 ```javascript
@@ -3562,11 +3754,10 @@ export const TclViewListHeaderList = [
   "Total Rows",
   "Actions",
 ];
-
-
-
 ```
+
 ## Summary
+
     - Component: Provides a UI for selecting a file and adding it to the list.
     -TCLViewList Component: Manages the main functionality and maintains the state of the list and selection.
     -ListTable Component: Displays the list in a table format with optional search functionality.
@@ -3583,6 +3774,7 @@ These changes make the codebase more organized, maintainable, and user-friendly.
 The `CreateNew` component is a React component that allows users to create a new RAC (presumably some kind of resource or item) by entering a name and submitting it. Here’s a breakdown of how it works:
 
 ### Overview
+
 - **State Management**: Uses `useState` to manage the input value (`racName`) and the editing state (`isEditing`).
 - **Routing**: Utilizes `useNavigate` from `react-router-dom` to navigate to a different page upon successful creation.
 - **Conditional Rendering**: Displays an input field when in editing mode and a button when not.
@@ -3591,20 +3783,24 @@ The `CreateNew` component is a React component that allows users to create a new
 ### Component Breakdown
 
 1. **Imports**:
+
    - `useState` for state management.
    - `PlusIcon` from Heroicons for the add icon.
    - `useNavigate` from `react-router-dom` for navigation.
 
 2. **State Variables**:
+
    - `racName`: Stores the name of the RAC being created.
    - `isEditing`: Tracks whether the component is in editing mode or not.
 
 3. **Event Handlers**:
+
    - `handleChange`: Updates `racName` as the user types.
    - `handleKeyDown`: Creates a new RAC if the "Enter" key is pressed.
    - `handleBlur`: Resets the input and toggles editing mode when the input loses focus.
 
 4. **API Call**:
+
    - `createNewRac`: Makes a POST request to create a new RAC and handles possible authentication errors by redirecting to the login page if the user is not authorized.
 
 5. **Conditional Rendering**:
@@ -3614,105 +3810,106 @@ The `CreateNew` component is a React component that allows users to create a new
 ### CreateNew.jsx Component
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const CreateNew = ({ placeholder, buttonName }) => {
-    const [Name, setName] = useState("");
-    const [isEditing, setEditing] = useState(false);
-    const navigate = useNavigate();
+  const [Name, setName] = useState("");
+  const [isEditing, setEditing] = useState(false);
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setName(e.target.value);
-    };
+  const handleChange = (e) => {
+    setName(e.target.value);
+  };
 
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            createNewRac(Name);
-        }
-    };
-
-    const handleBlur = () => {
-        setName('');
-        setEditing(!isEditing);
-    };
-
-    async function createNewRac(Name) {
-        try {
-            const token = localStorage.getItem("authToken");
-            const response = await fetch(
-                "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" + Name,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem("authToken");
-                navigate("/login");
-                return;
-            }
-            const racDetails = await response.json();
-            console.log(racDetails);
-            navigate("/newrac/" + racDetails.racId);
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
-        }
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      createNewRac(Name);
     }
+  };
 
-    return (
-        isEditing ? (
-            <div className='pl-6 w-full flex justify-between '>
-                <input
-                    type="text"
-                    name="Name"
-                    id="Name"
-                    value={Name}
-                    onChange={handleChange}
-                    onKeyDown={handleKeyDown}
-                    onBlur={handleBlur}
-                    className="placeholder:text-xs text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1"
-                    placeholder={placeholder}
-                />
-            </div>
+  const handleBlur = () => {
+    setName("");
+    setEditing(!isEditing);
+  };
 
-        ) : (
-            <div className='text-gray-500 pl-6 w-full text-sm flex items-center justify-between cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600' onClick={() => setEditing(!isEditing)}>
-                <p>{buttonName}</p>
-                <div>
+  async function createNewRac(Name) {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        "https://api-test.lmscarbon.com/carbon-product-service/lmscarbon/rules/rac/" +
+          Name,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        navigate("/login");
+        return;
+      }
+      const racDetails = await response.json();
+      console.log(racDetails);
+      navigate("/newrac/" + racDetails.racId);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-                <PlusIcon className="h-6 w-6 shrink-0" />
-                </div>
-            </div>
-        )
-    );
+  return isEditing ? (
+    <div className="pl-6 w-full flex justify-between ">
+      <input
+        type="text"
+        name="Name"
+        id="Name"
+        value={Name}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+        className="placeholder:text-xs text-sm block w-full rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1"
+        placeholder={placeholder}
+      />
+    </div>
+  ) : (
+    <div
+      className="text-gray-500 pl-6 w-full text-sm flex items-center justify-between cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-indigo-600"
+      onClick={() => setEditing(!isEditing)}
+    >
+      <p>{buttonName}</p>
+      <div>
+        <PlusIcon className="h-6 w-6 shrink-0" />
+      </div>
+    </div>
+  );
 };
 
 export default CreateNew;
-
 ```
 
 ### Usage
+
 To use this component, you would import it and include it in your JSX, providing a `placeholder` prop if desired.
 
 ```jsx
-import CreateNew from './path/to/CreateNew';
+import CreateNew from "./path/to/CreateNew";
 
 const SomeComponent = () => {
   return (
     <div>
-      <CreateNew placeholder="Enter RAC name" buttonName={"Create RAC"}/>
+      <CreateNew placeholder="Enter RAC name" buttonName={"Create RAC"} />
     </div>
   );
 };
 ```
 
 ### Summary
+
 This component provides an interface for creating a new RAC by toggling between a button and an input field, managing the input state, and making an API request to create the RAC, handling any authentication issues that arise.
 
 ---
@@ -3722,22 +3919,26 @@ This component provides an interface for creating a new RAC by toggling between 
 # InputCheckbox
 
 ### Description
+
 InputCheckbox is a React component designed to render a labeled checkbox input. This component allows users to select or deselect an option, which is often used in forms and settings interfaces.
 
 ### Purpose
+
 The primary purpose of InputCheckbox is to provide a customizable checkbox input with a label. It aims to simplify the implementation of checkbox inputs by handling state changes and enabling easy integration into forms.
 
 ### Features
+
 - **Customizable Label:** Allows you to specify a label for the checkbox.
 - **State Management:** Handles the state of the checkbox input, including checked and unchecked states.
 - **Disabled State:** Supports disabling the checkbox to prevent user interaction.
 - **Event Handling:** Provides a callback function to handle changes in the checkbox state.
 
 ### Usage
+
 To use the InputCheckbox component, follow the example below:
 
 ```jsx
-import InputCheckbox from './Components/InputCheckbox';
+import InputCheckbox from "./Components/InputCheckbox";
 
 // Usage within a parent component
 function ParentComponent() {
@@ -3763,22 +3964,24 @@ function ParentComponent() {
 ```
 
 ### Props
+
 The InputCheckbox component accepts the following props:
 
-| Prop Name     | Type      | Description                                                      | Default Value |
-|---------------|-----------|------------------------------------------------------------------|---------------|
-| `labelName`   | `string`  | The text label displayed next to the checkbox.                   | `''`          |
-| `inputName`   | `string`  | The name attribute for the checkbox input.                       | `''`          |
-| `inputChecked`| `boolean` | The checked state of the checkbox.                               | `false`       |
-| `onChange`    | `function`| Callback function to handle changes in the checkbox state.       | `null`        |
-| `disabled`    | `boolean` | Whether the checkbox is disabled and non-interactive.            | `false`       |
+| Prop Name      | Type       | Description                                                | Default Value |
+| -------------- | ---------- | ---------------------------------------------------------- | ------------- |
+| `labelName`    | `string`   | The text label displayed next to the checkbox.             | `''`          |
+| `inputName`    | `string`   | The name attribute for the checkbox input.                 | `''`          |
+| `inputChecked` | `boolean`  | The checked state of the checkbox.                         | `false`       |
+| `onChange`     | `function` | Callback function to handle changes in the checkbox state. | `null`        |
+| `disabled`     | `boolean`  | Whether the checkbox is disabled and non-interactive.      | `false`       |
 
 ### Example
+
 Here is a more detailed example of how to implement InputCheckbox:
 
 ```jsx
-import React, { useState } from 'react';
-import InputCheckbox from './Components/InputCheckbox';
+import React, { useState } from "react";
+import InputCheckbox from "./Components/InputCheckbox";
 
 function ExampleComponent() {
   const [isChecked, setIsChecked] = useState(false);
@@ -3804,6 +4007,7 @@ export default ExampleComponent;
 ```
 
 ### Additional Notes
+
 - Ensure that the `onChange` prop is provided to handle checkbox state changes.
 - The `inputChecked` prop should be controlled by the parent component's state.
 - The component supports Tailwind CSS classes for styling.

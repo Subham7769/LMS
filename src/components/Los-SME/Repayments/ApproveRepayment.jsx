@@ -110,9 +110,9 @@ const ApproveRepayment = () => {
       <div className="grid grid-cols-3 gap-4">
         <CardInfo
           cardTitle="Payment Details"
-          className={"bg-white border-gray-300 border"}
+          className={"bg-white border-border-gray-primary border"}
           cardIcon={CurrencyDollarIcon}
-          color={"blue"}
+          colorText={"text-blue-primary"}
         >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Loan Product</div>
@@ -151,9 +151,9 @@ const ApproveRepayment = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Borrower Profile"
-          className={"bg-white border-gray-300 border"}
+          className={"bg-white border-border-gray-primary border"}
           cardIcon={UserIcon}
-          color={"blue"}
+          colorText={"text-blue-primary"}
         >
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Name</div>
@@ -174,12 +174,12 @@ const ApproveRepayment = () => {
         </CardInfo>
         <CardInfo
           cardTitle="Recent Payments"
-          className={"bg-white border-gray-300 border"}
+          className={"bg-white border-border-gray-primary border"}
           cardIcon={ClockIcon}
-          color={"blue"}
+          colorText={"text-blue-primary"}
         >
           {rowData.paymentsData.slice(-3).map((payment) => (
-            <div className="flex justify-between mb-2 border-b border-gray-300 pb-3">
+            <div className="flex justify-between mb-2 border-b border-border-gray-primary pb-3">
               <div>
                 <div className="text-black font-semibold">
                   {convertDate(payment.paymentDate)}
@@ -199,27 +199,26 @@ const ApproveRepayment = () => {
         </CardInfo>
       </div>
       <div className="w-full flex justify-end gap-2 px-5 mt-5">
-        <button
+        <Button
+          buttonName={"View EMI Schedule"}
           onClick={() => handleFullLoanDetails(rowData.loan, rowData.userId)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors"
-        >
-          <CalendarDaysIcon className="-ml-0.5 h-5 w-5" />
-          View EMI Schedule
-        </button>
-        <button
+          rectangle={true}
+          buttonIcon={CalendarDaysIcon}
+          buttonType="tertiary"
+        />
+        <Button
+          buttonName={"Reject"}
           onClick={() => handleReject(rowData.transactionId)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-        >
-          <FiXCircle className="-ml-0.5 h-5 w-5" />
-          Reject
-        </button>
-        <button
+          rectangle={true}
+          buttonIcon={FiXCircle}
+          buttonType="destructive"
+        />
+        <Button
+          buttonName={"Approve"}
           onClick={() => handleApprove(rowData.transactionId)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
-        >
-          <FiCheckCircle className="-ml-0.5 h-5 w-5" />
-          Approve
-        </button>
+          rectangle={true}
+          buttonIcon={FiCheckCircle}
+        />
       </div>
     </div>
   );
@@ -325,12 +324,14 @@ const ApproveRepayment = () => {
             onClick={SearchRepaymentByFieldSearch}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
             rectangle={true}
             className={`mt-4 h-fit self-center`}
+            buttonType="tertiary"
           />
         </div>
       </ContainerTile>

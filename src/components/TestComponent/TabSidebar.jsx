@@ -45,7 +45,9 @@ export const TabSidebar = ({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className={`flex items-center justify-between p-2 rounded mb-2 ${
-              tab.id === activeTabId ? "bg-blue-100" : "hover:bg-gray-100"
+              tab.id === activeTabId
+                ? "bg-blue-100"
+                : "hover:bg-background-light-secondary"
             }`}
           >
             <span
@@ -82,4 +84,4 @@ export const TabSidebar = ({
       </AnimatePresence>
     </div>
   );
-}
+};

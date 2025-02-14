@@ -210,6 +210,7 @@ const AddBulkRepayment = () => {
           rectangle={true}
           className={"disabled:bg-gray-600"}
           disabled={openLoans.length <= draftRepaymentDTOList.length}
+          buttonType="secondary"
         />
 
         <Button

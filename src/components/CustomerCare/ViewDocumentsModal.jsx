@@ -49,7 +49,7 @@ const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
             .map((doc) => (
               <div
                 key={doc.docId} // Use docId as the key to ensure unique identifiers
-                className="grid grid-cols-2 my-2 border-b border-gray-300 pb-2 items-center"
+                className="grid grid-cols-2 my-2 border-b border-border-gray-primary pb-2 items-center"
               >
                 <div>{convertToTitleCase(doc.documentKey)}</div>
                 <div className="text-center">

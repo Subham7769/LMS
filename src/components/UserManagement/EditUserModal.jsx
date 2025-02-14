@@ -97,14 +97,14 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
                 onClose();
                 // dispatch(clearFormData());
               }}
-              className={" bg-gray-600 text-white hover:bg-gray-500 self-end"}
               rectangle={true}
+              buttonType="tertiary"
             />
             <Button
               buttonName={"Update"}
               onClick={updateData}
               rectangle={true}
-              className={"self-end"}
+              buttonType="secondary"
             />
           </div>
         </div>

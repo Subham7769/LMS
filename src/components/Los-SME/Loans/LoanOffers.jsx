@@ -142,9 +142,11 @@ const LoanOffers = () => {
           <div className="grid grid-cols-2 gap-5">
             <CardInfo
               cardTitle="Meet Our Borrower"
-              className={"border border-gray-300"}
+              className={"border border-border-gray-primary"}
               cardIcon={UserIcon}
-              color={"blue"}
+              colorText={"text-blue-primary"}
+              // colorBG={"bg-blue-tertiary"}
+              numberBG={"bg-blue-secondary"}
               cardNumber="1"
               loading={loading}
             >
@@ -168,9 +170,11 @@ const LoanOffers = () => {
             </CardInfo>
             <CardInfo
               cardTitle="Avialable Loan Range"
-              className={"border border-gray-300"}
+              className={"border border-border-gray-primary"}
               cardIcon={CogIcon}
-              color={"green"}
+              colorText={"text-green-primary"}
+              // colorBG={"bg-green-tertiary"}
+              numberBG={"bg-green-secondary"}
               cardNumber="2"
               loading={loading}
             >
@@ -208,9 +212,11 @@ const LoanOffers = () => {
               <div className="grid grid-cols-2 gap-5">
                 <CardInfo
                   cardTitle="Interest Rates"
-                  className={"border border-gray-300"}
+                  className={"border border-border-gray-primary"}
                   cardIcon={CalculatorIcon}
-                  color={"violet"}
+                  colorText={"text-violet-primary"}
+                  // colorBG={"bg-violet-tertiary"}
+                  numberBG={"bg-violet-secondary"}
                   cardNumber="3"
                   loading={loading}
                 >
@@ -227,7 +233,7 @@ const LoanOffers = () => {
                       label="Daily Rate"
                       value={ci?.dailyInterestRatePercentWithoutFee}
                     />
-                    <div className="border-t border-gray-300 pt-2">
+                    <div className="border-t border-border-gray-primary pt-2">
                       <div className="text-gray-500">Monthly Flat Rate</div>
                       <div className="flex gap-x-2 items-baseline">
                         <div className="font-semibold text-lg">
@@ -243,9 +249,11 @@ const LoanOffers = () => {
                 </CardInfo>
                 <CardInfo
                   cardTitle="Financial Breakdown"
-                  className={"border border-gray-300"}
+                  className={"border border-border-gray-primary"}
                   cardIcon={CalculatorIcon}
-                  color={"red"}
+                  colorText={"text-orange-primary"}
+                  // colorBG={"bg-orange-tertiary"}
+                  numberBG={"bg-orange-secondary"}
                   cardNumber="4"
                   loading={loading}
                 >
@@ -291,7 +299,7 @@ const LoanOffers = () => {
                         (Levy: {ci?.insuranceLevy.toFixed(2)})
                       </div>
                     </div>
-                    <div className="border-t border-gray-300 pt-2 text-blue-600">
+                    <div className="border-t border-border-gray-primary pt-2 text-blue-600">
                       <div className="font-semibold">Total Loan Amount:</div>
                       <div className="font-bold text-lg">
                         {formatNumber(ci?.totalLoanAmount.toFixed(2))}
@@ -306,7 +314,7 @@ const LoanOffers = () => {
                   "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
                 }
                 cardIcon={CurrencyDollarIcon}
-                color={"blue"}
+                colorText={"text-blue-primary"}
                 loading={loading}
               >
                 <div

@@ -106,7 +106,7 @@ const CreateNew = ({
     </div>
   ) : (
     <div
-      className="text-gray-500 pl-5 pr-1 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-gray-100 hover:text-indigo-600"
+      className="text-gray-500 pl-5 pr-1 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-indigo-600"
       onClick={() => {
         editable ? setEditing(!isEditing) : navigate(navigateSuccess);
       }}

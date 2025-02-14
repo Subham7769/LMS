@@ -14,28 +14,33 @@ const NotificationWindow = () => {
       id: 1,
       title: "New Email Received",
       time: "2 minutes ago",
-      description: "You have received a new email from John regarding the project update.",
-      icon: <MdOutlineMarkEmailRead className="text-blue-500" size={24} />
+      description:
+        "You have received a new email from John regarding the project update.",
+      icon: <MdOutlineMarkEmailRead className="text-blue-500" size={24} />,
     },
     {
       id: 2,
       title: "Order Confirmed",
       time: "1 hour ago",
-      description: "Your order #12345 has been confirmed and is being processed.",
-      icon: <AiOutlineShoppingCart className="text-green-500" size={24} />
+      description:
+        "Your order #12345 has been confirmed and is being processed.",
+      icon: <AiOutlineShoppingCart className="text-green-500" size={24} />,
     },
     {
       id: 3,
       title: "System Update",
       time: "3 hours ago",
       description: "System maintenance will be performed tonight at 2 AM EST.",
-      icon: <AiOutlineSetting className="text-orange-500" size={24} />
-    }
+      icon: <AiOutlineSetting className="text-orange-500" size={24} />,
+    },
   ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -60,7 +65,7 @@ const NotificationWindow = () => {
   return (
     <div className="relative" ref={notificationRef}>
       <button
-        className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 relative"
+        className="p-2 rounded-full hover:bg-background-light-secondary transition-colors duration-200 relative"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle notifications"
         aria-expanded={isOpen}
@@ -74,7 +79,9 @@ const NotificationWindow = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 max-w-[90vw] bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right z-50">
           <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">Notifications</h2>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Notifications
+            </h2>
           </div>
 
           <div className="max-h-[60vh] overflow-y-auto">
@@ -98,7 +105,9 @@ const NotificationWindow = () => {
                       </h3>
                       <IoIosArrowDown
                         className={`transform transition-transform duration-200 ${
-                          expandedItems.includes(notification.id) ? "rotate-180" : ""
+                          expandedItems.includes(notification.id)
+                            ? "rotate-180"
+                            : ""
                         }`}
                       />
                     </div>

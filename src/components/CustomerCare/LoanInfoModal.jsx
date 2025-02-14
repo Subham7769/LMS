@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";;
+import { useEffect, useState } from "react";
 import { loanStatusOptions } from "../../data/OptionsData";
 import { toast } from "react-toastify";
 
 const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
-  <div className="flex gap-5 text-left border-b border-gray-300 pb-5">
-    <div className="flex flex-col gap-y-3 border-r border-gray-300 pr-5">
+  <div className="flex gap-5 text-left border-b border-border-gray-primary pb-5">
+    <div className="flex flex-col gap-y-3 border-r border-border-gray-primary pr-5">
       <div className="flex gap-2">
         <div className="w-28">Loan Id </div>
         <div className="font-bold text-black">
@@ -60,13 +60,18 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
 const TableHeader = () => (
   <thead className="bg-white sticky top-0">
     <tr className="divide-x divide-gray-200">
-      {["No.", "Date", "Amount", "Status", "Interest Value", "Principal Value"].map(
-        (item, index) => (
-          <th key={index} className="py-3.5 px-2 text-center text-gray-900">
-            {item}
-          </th>
-        )
-      )}
+      {[
+        "No.",
+        "Date",
+        "Amount",
+        "Status",
+        "Interest Value",
+        "Principal Value",
+      ].map((item, index) => (
+        <th key={index} className="py-3.5 px-2 text-center text-gray-900">
+          {item}
+        </th>
+      ))}
     </tr>
   </thead>
 );

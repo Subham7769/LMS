@@ -106,7 +106,7 @@ const LoanHistory = () => {
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
         <CardInfo cardTitle="Borrower Information" className={"bg-white"}>
-          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Employment</div>
               <div className="font-semibold">
@@ -145,7 +145,7 @@ const LoanHistory = () => {
           </div>
         </CardInfo>
         <CardInfo cardTitle="Loan Information" className={"bg-white"}>
-          <div className="grid grid-cols-2 border-b border-gray-300 pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Principal Amount</div>
               <div className="font-semibold">{rowData.principalAmount}</div>
@@ -158,7 +158,7 @@ const LoanHistory = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 border-b border-gray-300 pb-3 mb-3">
+          <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Tenure</div>
               <div className="font-semibold">
@@ -206,13 +206,13 @@ const LoanHistory = () => {
       <div className="w-full flex justify-end gap-2 px-5">
         <button
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-          className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+          className="px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-border-gray-primary"
         >
           View Loan Agreement
         </button>
         <button
           onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
-          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-gray-300"
+          className="flex gap-x-1.5 items-center px-2.5 py-2 bg-white shadow-md text-blue-600 rounded-md hover:shadow transition-colors border border-border-gray-primary"
         >
           <FiInfo className="-ml-0.5 h-5 w-5" />
           View Documents

@@ -91,10 +91,7 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
 
   return (
     <>
-      <ContainerTile
-        loading={loading}
-        error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <div className=" text-center my-4 text-lg">
           Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
           (*Length of Service*C%) + (*Cities*D%)]
@@ -160,6 +157,7 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
                     buttonName={"Add"}
                     onClick={handleAddRBPE}
                     rectangle={true}
+                    buttonType="secondary"
                   />
                 </td>
               </tr>
@@ -222,11 +220,13 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
                       buttonIcon={CheckCircleIcon}
                       onClick={() => handleUpdateRBPE(index)}
                       circle={true}
+                      buttonType="secondary"
                     />
                     <Button
                       buttonIcon={TrashIcon}
                       onClick={() => handleDeleteRBPE(item.ruleName)}
                       circle={true}
+                      buttonType="destructive"
                     />
                   </td>
                 ) : (

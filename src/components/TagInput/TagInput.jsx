@@ -70,7 +70,12 @@ const TagInput = ({
         )}
         {!hasViewOnlyAccess(roleName) ? (
           <div className="">
-            <Button buttonIcon={PlusIcon} onClick={addTag} circle={true} />
+            <Button
+              buttonIcon={PlusIcon}
+              onClick={addTag}
+              circle={true}
+              buttonType="secondary"
+            />
           </div>
         ) : (
           ""
@@ -80,7 +85,7 @@ const TagInput = ({
         {formData.tags.map((tag, index) => (
           <div
             key={index}
-            className="bg-gray-300 border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
+            className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
           >
             <div className="flex-1 flex justify-between align-middle">
               <>

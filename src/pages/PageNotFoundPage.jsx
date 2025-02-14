@@ -13,7 +13,7 @@ const PageNotFoundPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-background-light-secondary">
       <div className="bg-white w-[80%] h-[80%] p-8 rounded-xl shadow-lg text-center">
         {/* 404 Icon */}
         <ExclamationCircleIcon className="w-24 h-24 mx-auto text-indigo-500" />

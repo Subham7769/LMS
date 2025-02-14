@@ -19,7 +19,7 @@ const FamilyDetails = ({ info }) => {
   ];
 
   return (
-    <div className="mt-4 border-b border-gray-300">
+    <div className="mt-4 border-b border-border-gray-primary">
       <div className="text-xl mb-2 border-b pb-2">Family Details</div>
       <div className="grid md:grid-cols-2 gap-4">
         {details.map((detail, index) => (

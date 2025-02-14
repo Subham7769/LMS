@@ -15,118 +15,122 @@ const TableSlider = () => {
     "Rating",
     "Description",
     "Last Updated",
-    "Status"
+    "Status",
   ];
 
   const data = [
     {
       "Product ID": "PRD001",
       "Product Name": "Wireless Headphones",
-      "Category": "Electronics",
-      "Price": "$199.99",
-      "Stock": "150",
-      "Manufacturer": "SoundTech",
-      "Rating": "4.5/5",
-      "Description": "Premium wireless headphones with noise cancellation",
+      Category: "Electronics",
+      Price: "$199.99",
+      Stock: "150",
+      Manufacturer: "SoundTech",
+      Rating: "4.5/5",
+      Description: "Premium wireless headphones with noise cancellation",
       "Last Updated": "2024-01-15",
-      "Status": "In Stock"
+      Status: "In Stock",
     },
     {
       "Product ID": "PRD002",
       "Product Name": "Smart Watch Pro",
-      "Category": "Wearables",
-      "Price": "$299.99",
-      "Stock": "75",
-      "Manufacturer": "TechWear",
-      "Rating": "4.8/5",
-      "Description": "Advanced smartwatch with health monitoring",
+      Category: "Wearables",
+      Price: "$299.99",
+      Stock: "75",
+      Manufacturer: "TechWear",
+      Rating: "4.8/5",
+      Description: "Advanced smartwatch with health monitoring",
       "Last Updated": "2024-01-14",
-      "Status": "Low Stock"
+      Status: "Low Stock",
     },
     {
       "Product ID": "PRD003",
       "Product Name": "Laptop Elite",
-      "Category": "Computers",
-      "Price": "$1299.99",
-      "Stock": "25",
-      "Manufacturer": "CompTech",
-      "Rating": "4.7/5",
-      "Description": "High-performance laptop for professionals",
+      Category: "Computers",
+      Price: "$1299.99",
+      Stock: "25",
+      Manufacturer: "CompTech",
+      Rating: "4.7/5",
+      Description: "High-performance laptop for professionals",
       "Last Updated": "2024-01-13",
-      "Status": "In Stock"
+      Status: "In Stock",
     },
     {
       "Product ID": "PRD004",
       "Product Name": "Gaming Mouse",
-      "Category": "Accessories",
-      "Price": "$79.99",
-      "Stock": "200",
-      "Manufacturer": "GameGear",
-      "Rating": "4.6/5",
-      "Description": "RGB gaming mouse with precision tracking",
+      Category: "Accessories",
+      Price: "$79.99",
+      Stock: "200",
+      Manufacturer: "GameGear",
+      Rating: "4.6/5",
+      Description: "RGB gaming mouse with precision tracking",
       "Last Updated": "2024-01-12",
-      "Status": "In Stock"
+      Status: "In Stock",
     },
-        {
+    {
       "Product ID": "PRD001",
       "Product Name": "Wireless Headphones",
-      "Category": "Electronics",
-      "Price": "$199.99",
-      "Stock": "150",
-      "Manufacturer": "SoundTech",
-      "Rating": "4.5/5",
-      "Description": "Premium wireless headphones with noise cancellation",
+      Category: "Electronics",
+      Price: "$199.99",
+      Stock: "150",
+      Manufacturer: "SoundTech",
+      Rating: "4.5/5",
+      Description: "Premium wireless headphones with noise cancellation",
       "Last Updated": "2024-01-15",
-      "Status": "In Stock"
+      Status: "In Stock",
     },
     {
       "Product ID": "PRD002",
       "Product Name": "Smart Watch Pro",
-      "Category": "Wearables",
-      "Price": "$299.99",
-      "Stock": "75",
-      "Manufacturer": "TechWear",
-      "Rating": "4.8/5",
-      "Description": "Advanced smartwatch with health monitoring",
+      Category: "Wearables",
+      Price: "$299.99",
+      Stock: "75",
+      Manufacturer: "TechWear",
+      Rating: "4.8/5",
+      Description: "Advanced smartwatch with health monitoring",
       "Last Updated": "2024-01-14",
-      "Status": "Low Stock"
+      Status: "Low Stock",
     },
     {
       "Product ID": "PRD003",
       "Product Name": "Laptop Elite",
-      "Category": "Computers",
-      "Price": "$1299.99",
-      "Stock": "25",
-      "Manufacturer": "CompTech",
-      "Rating": "4.7/5",
-      "Description": "High-performance laptop for professionals",
+      Category: "Computers",
+      Price: "$1299.99",
+      Stock: "25",
+      Manufacturer: "CompTech",
+      Rating: "4.7/5",
+      Description: "High-performance laptop for professionals",
       "Last Updated": "2024-01-13",
-      "Status": "In Stock"
+      Status: "In Stock",
     },
     {
       "Product ID": "PRD004",
       "Product Name": "Gaming Mouse",
-      "Category": "Accessories",
-      "Price": "$79.99",
-      "Stock": "200",
-      "Manufacturer": "GameGear",
-      "Rating": "4.6/5",
-      "Description": "RGB gaming mouse with precision tracking",
+      Category: "Accessories",
+      Price: "$79.99",
+      Stock: "200",
+      Manufacturer: "GameGear",
+      Rating: "4.6/5",
+      Description: "RGB gaming mouse with precision tracking",
       "Last Updated": "2024-01-12",
-      "Status": "In Stock"
-    }
+      Status: "In Stock",
+    },
   ];
 
   const handleScroll = (direction) => {
     const container = tableRef.current;
     const scrollAmount = 200;
-    const newPosition = direction === "left" 
-      ? Math.max(0, scrollPosition - scrollAmount)
-      : Math.min(container.scrollWidth - container.clientWidth, scrollPosition + scrollAmount);
-    
+    const newPosition =
+      direction === "left"
+        ? Math.max(0, scrollPosition - scrollAmount)
+        : Math.min(
+            container.scrollWidth - container.clientWidth,
+            scrollPosition + scrollAmount
+          );
+
     container.scrollTo({
       left: newPosition,
-      behavior: "smooth"
+      behavior: "smooth",
     });
     setScrollPosition(newPosition);
   };
@@ -153,14 +157,14 @@ const TableSlider = () => {
         <div className="flex space-x-2">
           <button
             onClick={() => handleScroll("left")}
-            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-background-light-secondary rounded-full transition-colors"
             aria-label="Scroll left"
           >
             <BsChevronLeft size={24} />
           </button>
           <button
             onClick={() => handleScroll("right")}
-            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-background-light-secondary rounded-full transition-colors"
             aria-label="Scroll right"
           >
             <BsChevronRight size={24} />
@@ -172,7 +176,11 @@ const TableSlider = () => {
         <table className="w-full border-collapse table-auto">
           <tbody className="bg-white">
             {headerList.map((header, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-50 transition-colors" role="row">
+              <tr
+                key={rowIndex}
+                className="hover:bg-gray-50 transition-colors"
+                role="row"
+              >
                 <th
                   className="p-4 text-left text-sm font-semibold text-gray-600 border-b bg-gray-50 w-48 sticky left-0"
                   aria-label={header}

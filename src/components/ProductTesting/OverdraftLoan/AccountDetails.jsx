@@ -109,7 +109,7 @@ function AccountDetails() {
 
   return (
     <>
-      <div className="mb-5 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer flex justify-between items-center w-full">
+      <div className="mb-5 px-3 py-2 hover:bg-background-light-secondary rounded-md cursor-pointer flex justify-between items-center w-full">
         <div className="w-1/4 font-bold">Account Details</div>
         <div className="w-1/4">
           <InputSelect

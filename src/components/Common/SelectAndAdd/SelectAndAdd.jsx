@@ -57,7 +57,7 @@ const SelectAndAdd = ({
             />
           </div>
           <div className="w-2/4">
-              <Button buttonIcon={PlusIcon} onClick={onClick} circle={true} />
+              <Button buttonIcon={PlusIcon} onClick={onClick} circle={true} buttonType="secondary" />
           </div>
         </div>
 

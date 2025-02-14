@@ -264,7 +264,7 @@ const DebtBurdenConfig = () => {
       />
       <ContainerTile loading={loading} error={error}>
         {!hasViewOnlyAccess(roleName) ? (
-          <div className="grid grid-cols-10 gap-2 items-end mt-2 border-b pb-5 mb-2">
+          <div className="grid grid-cols-10 gap-2 items-end mt-2 mb-5">
             <div className="relative">
               <InputSelect
                 labelName="Min Net"
@@ -362,6 +362,7 @@ const DebtBurdenConfig = () => {
                 buttonIcon={PlusIcon}
                 onClick={addNewRule}
                 circle={true}
+                buttonType="secondary"
               />
             </div>
           </div>
@@ -384,46 +385,44 @@ const DebtBurdenConfig = () => {
               empOptions={empOptions}
             />
           </div>
-          <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || currentItems.length < 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
-          </div>
-          {!hasViewOnlyAccess(roleName) ? (
-            <div className="text-right ">
+          {currentItems.length > 0 && (
+            <div className="mt-4 w-full flex justify-center gap-5 items-center">
               <button
-                type="button"
-                onClick={handleTableChange}
-                className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`flex items-center px-4 py-2 rounded-md ${
+                  currentPage === 1
+                    ? "bg-background-light-primary cursor-not-allowed"
+                    : "bg-indigo-600 text-white hover:bg-indigo-500"
+                }`}
               >
-                <CheckCircleIcon
-                  className="-ml-0.5 h-5 w-5"
-                  aria-hidden="true"
-                />
-                Save
+                <ChevronLeftIcon className="w-5 h-5" />
               </button>
+              <span className="text-sm text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages || currentItems.length < 1}
+                className={`flex items-center px-4 py-2 rounded-md ${
+                  currentPage === totalPages
+                    ? "bg-background-light-primary cursor-not-allowed"
+                    : "bg-indigo-600 text-white hover:bg-indigo-500"
+                }`}
+              >
+                <ChevronRightIcon className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+          {!hasViewOnlyAccess(roleName) ? (
+            <div className="text-right mt-4">
+              <Button
+                buttonIcon={CheckCircleIcon}
+                buttonName="Save"
+                onClick={handleTableChange}
+                rectangle={true}
+                buttonType="primary"
+              />
             </div>
           ) : (
             ""
