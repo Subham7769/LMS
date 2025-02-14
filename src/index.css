@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .active {
-  @apply text-indigo-600;
+  @apply text-blue-600;
 }
 
 .slick-next:before,

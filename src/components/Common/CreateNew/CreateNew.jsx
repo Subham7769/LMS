@@ -45,7 +45,7 @@ const CreateNew = ({
         return fetchDBRData;
       case "Blocked Employer":
         return fetchBEData;
-      case "Project":
+      case "Loan Schema":
         return fetchProjectData;
       case "Loan Product":
         return fetchProductData;
@@ -99,14 +99,14 @@ const CreateNew = ({
         onBlur={handleBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        className="placeholder:text-xs text-xs focus:ring-1 focus:ring-inset focus:ring-indigo-600 w-11/12 rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1 -mx-2"
+        className="placeholder:text-xs text-xs focus:ring-1 focus:ring-inset focus:ring-blue-primary w-11/12 rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1 -mx-2"
         placeholder={placeholder}
         autoFocus
       />
     </div>
   ) : (
     <div
-      className="text-gray-500 pl-5 pr-1 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-indigo-600"
+      className="text-gray-500 pl-5 pr-1 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-blue-primary"
       onClick={() => {
         editable ? setEditing(!isEditing) : navigate(navigateSuccess);
       }}

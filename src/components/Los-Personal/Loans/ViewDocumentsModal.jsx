@@ -20,6 +20,8 @@ const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
     dispatch(downloadDocumentFile(fileDownloadParams));
   };
 
+  const filteredDocuments = documents.filter((doc) => doc.docName);
+
   return (
     <>
       <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
@@ -44,11 +46,14 @@ const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
               />
             </svg>
           </div>
-          {documents
-            ?.filter((doc) => doc.docName) // Filter out documents without docName
-            .map((doc) => (
+          {filteredDocuments.length === 0 ? (
+            <div className="text-center text-gray-500 font-medium">
+              No documents were uploaded
+            </div>
+          ) : (
+            filteredDocuments.map((doc) => (
               <div
-                key={doc.docId} // Use docId as the key to ensure unique identifiers
+                key={doc.docId}
                 className="grid grid-cols-2 my-2 border-b border-border-gray-primary pb-2 items-center"
               >
                 <div>{convertToTitleCase(doc.documentKey)}</div>
@@ -60,7 +65,8 @@ const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
                   />
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       </div>
     </>

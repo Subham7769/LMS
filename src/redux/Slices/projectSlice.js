@@ -284,7 +284,7 @@ export const fetchList = createAsyncThunk(
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
     const projectMenu = sideBarState?.menus.find(
-      (menu) => menu.title === "Project"
+      (menu) => menu.title === "Loan Schema"
     );
     const submenuItems = projectMenu ? projectMenu.submenuItems : [];
     return submenuItems;

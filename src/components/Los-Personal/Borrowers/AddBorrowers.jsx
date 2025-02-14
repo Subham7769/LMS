@@ -81,7 +81,7 @@ const AddBorrowers = () => {
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}
           rectangle={true}
-          buttonType="tertiary"
+          buttonType="destructive"
         />
         <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
       </div>

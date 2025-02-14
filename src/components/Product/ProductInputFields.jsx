@@ -58,7 +58,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
   const ProjectDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "Project")[0]
+      state?.sidebar?.menus?.filter((item) => item.title === "Loan Schema")[0]
         ?.submenuItems
   );
   const TCLDataInfo = useSelector(
@@ -170,7 +170,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             isValidation={true}
           />
           <InputSelect
-            labelName="Project"
+            labelName="Loan Schema"
             inputOptions={formateDataDropDown(
               "/loan/project/",
               ProjectDataInfo

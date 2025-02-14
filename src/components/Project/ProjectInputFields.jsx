@@ -425,7 +425,7 @@ const ProjectInputFields = ({
               />
               <InputNumber
                 labelName={"Loan Scheme TCL"}
-                inputName={"openLoanAmount"}
+                inputName={"tclAmount"}
                 inputValue={projectData?.tclAmount}
                 onChange={handleChange}
                 placeHolder={"2"}
@@ -437,7 +437,7 @@ const ProjectInputFields = ({
                 inputName={"clientIds"}
                 inputValue={clientIdsString}
                 onChange={(e) => setClientIdsString(e.target.value)}
-                placeHolder={"0"}
+                placeHolder={"DEV-lmsClient"}
                 isValidation={true}
               />
             </div>

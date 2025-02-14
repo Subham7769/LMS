@@ -280,7 +280,7 @@ const SideBar = () => {
       {/* Collapse Button */}
       <button
         onClick={handleToggleSidebar}
-        className={`z-30 absolute right-1 top-56 bg-indigo-500 h-16 w-4 rounded-full p-0`}
+        className={`z-30 absolute right-1 top-56 bg-blue-500 h-16 w-4 rounded-full p-0`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -329,10 +329,10 @@ const SideBar = () => {
                     <NavLink to={menu.href} className="text-gray-500">
                       <li
                         onClick={() => handleToggleSubmenu(index)}
-                        className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-indigo-100 hover:text-indigo-600"
+                        className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-background-light-secondary hover:text-blue-primary"
                       >
                         <span
-                          className={`text-2xl block float-left group-hover:bg-indigo-100 `}
+                          className={`text-2xl block float-left group-hover:bg-background-light-secondary `}
                           title={menu.title}
                         >
                           <IconComponent className="h-5 w-5 shrink-0" />
@@ -360,7 +360,7 @@ const SideBar = () => {
                         {/* If create from Sidebar Using input box */}
                         {menu.createButton && (
                           <div>
-                            <li className="py-1 cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-indigo-600">
+                            <li className="py-1 cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-blue-primary">
                               <CreateNew
                                 placeholder={menu.placeholder}
                                 buttonName={menu.buttonName}
@@ -379,7 +379,7 @@ const SideBar = () => {
                               to={submenuItem.href}
                               className="text-gray-500"
                             >
-                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-background-light-secondary hover:text-indigo-600">
+                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-background-light-secondary hover:text-blue-primary">
                                 {submenuItem.name}
                               </li>
                             </NavLink>
