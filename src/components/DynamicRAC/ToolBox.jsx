@@ -9,7 +9,11 @@ import Button from "../Common/Button/Button";
 import HoverButton from "../Common/HoverButton/HoverButton";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { operatorOptions, conditionsOptions } from "../../data/OptionsData";
-import { XMarkIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  XMarkIcon,
+  PlusIcon,
+  ArchiveBoxArrowDownIcon,
+} from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import store from "../../redux/store";
 import {
@@ -18,60 +22,95 @@ import {
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import getOperatorsForCondition from "./getOperatorsForCondition";
+import {
+  addNewRule,
+  updateRuleById,
+  fetchOptionList,
+  fetchDynamicRacDetails,
+} from "../../redux/Slices/dynamicRacSlice";
+import getConditionForOperators from "./getConditionForOperators";
 
-const Toolbox = ({ sectionId, onClose, handleSaveDynamicRAC }) => {
+const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
   const { racId } = useParams();
   const dispatch = useDispatch();
   const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
   const { sections } = racConfig;
+  const userName = localStorage.getItem("username");
+  const { firstOperator, secondOperator, numberCriteriaRangeList } = rule || {};
 
   const initialState = {
     fieldType: "",
     criteriaType: "",
     blocked: false,
     name: "",
-    sectionId: "",
-    sectionName: "",
+    sectionId: sectionId,
+    sectionName: sectionName,
     status: "CREATED",
     isModified: true,
     displayName: "",
     usageList: [
-      {
-        ruleUsage: "BORROWER_OFFERS",
-        used: true,
-      },
-      {
-        ruleUsage: "REGISTRATION",
-        used: true,
-      },
-      {
-        ruleUsage: "ELIGIBILITY",
-        used: true,
-      },
+      { ruleUsage: "BORROWER_OFFERS", used: true },
+      { ruleUsage: "REGISTRATION", used: true },
+      { ruleUsage: "ELIGIBILITY", used: true },
     ],
     racId: racId,
+    dynamicRacRuleId: `Rule-${Date.now()}`,
     criteriaValues: [],
     firstOperator: "",
     secondOperator: "",
-    numberCriteriaRangeList: [
-      {
-        minimum: "",
-        maximum: "",
-        isResidence: false,
-      },
-    ],
+    numberCriteriaRangeList: [],
+    history: {
+      createdBy: userName,
+      updateBy: null,
+      creationDate: new Date().toISOString(),
+      lastUpdatedDate: new Date().toISOString(),
+      firstOperatorOldValue: "",
+      secondOperatorOldValue: "",
+      numberCriteriaRangeListOldValue: [],
+      criteriaValuesOldValue: [],
+    },
   };
+
+  const minimum = numberCriteriaRangeList
+    ? numberCriteriaRangeList[0]?.minimum
+    : null;
+
+  const maximum = numberCriteriaRangeList
+    ? numberCriteriaRangeList[0]?.maximum
+    : null;
+
   const initialMinValue = -Number(import.meta.env.VITE_MIN_MAX_LIMIT);
   const initialMaxValue = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
 
   const [equalValue, setEqualValue] = useState(0);
-  const [minValue, setMinValue] = useState(initialMinValue);
-  const [maxValue, setMaxValue] = useState(initialMaxValue);
-  const [condition, setCondition] = useState("");
-  const [ruleConfig, setRuleConfig] = useState(initialState);
+  const [minValue, setMinValue] = useState(rule ? minimum : initialMinValue);
+  const [maxValue, setMaxValue] = useState(rule ? maximum : initialMaxValue);
+  const [condition, setCondition] = useState(
+    rule
+      ? getConditionForOperators(
+          firstOperator,
+          secondOperator,
+          minimum,
+          maximum
+        )
+      : ""
+  );
+  const [ruleConfig, setRuleConfig] = useState(
+    isEditMode ? rule : initialState
+  );
 
-  // console.log(minValue)
-  // console.log(maxValue)
+  useEffect(() => {
+    // Update condition whenever any of the values change
+    if (rule) {
+      const newCondition = getConditionForOperators(
+        firstOperator,
+        secondOperator,
+        minimum,
+        maximum
+      );
+      setCondition(newCondition);
+    }
+  }, [firstOperator, secondOperator, minimum, maximum]); // Re-run effect when any of these dependencies change
 
   useEffect(() => {
     if (condition === "Less than" || condition === "Less than or equal to") {
@@ -171,34 +210,35 @@ const Toolbox = ({ sectionId, onClose, handleSaveDynamicRAC }) => {
       toast.error("Add At least 1 range");
     }
     if (isValid && isValid2 && condition === "Between") {
-      dispatch(
-        addRule({
-          sectionId,
+      // Add Rule
+      await dispatch(
+        addNewRule({
           ruleConfig: {
             ...ruleConfig,
-            sectionId: sectionId,
-            sectionName:
-              sections.find((item) => item.sectionId === sectionId)
-                ?.sectionName || "",
-            displayName: ruleConfig.name,
+            sectionId,
+            sectionName,
           },
         })
-      );
+      ).unwrap();
+
+      // First, fetch the option list
+      await dispatch(fetchOptionList(racId)).unwrap();
+
+      // After fetching the option list, fetch the dynamic RAC details
+      await dispatch(fetchDynamicRacDetails(racId));
+
+      // Reset state and Close
       setRuleConfig(initialState);
       onClose();
-      handleSaveDynamicRAC();
     } else {
       if (condition === "Equal to") {
-        dispatch(
-          addRule({
-            sectionId,
+        // Add Rule
+        await dispatch(
+          addNewRule({
             ruleConfig: {
+              sectionId,
+              sectionName,
               ...ruleConfig,
-              sectionId: sectionId,
-              sectionName:
-                sections.find((item) => item.sectionId === sectionId)
-                  ?.sectionName || "",
-              displayName: ruleConfig.name,
               numberCriteriaRangeList: [
                 {
                   minimum: equalValue,
@@ -208,21 +248,25 @@ const Toolbox = ({ sectionId, onClose, handleSaveDynamicRAC }) => {
               ],
             },
           })
-        );
+        ).unwrap();
+
+        // First, fetch the option list
+        await dispatch(fetchOptionList(racId)).unwrap();
+
+        // After fetching the option list, fetch the dynamic RAC details
+        await dispatch(fetchDynamicRacDetails(racId));
+
+        // Reset state and Close
         setRuleConfig(initialState);
         onClose();
-        handleSaveDynamicRAC();
       } else {
-        dispatch(
-          addRule({
-            sectionId,
+        // Add Rule
+        await dispatch(
+          addNewRule({
             ruleConfig: {
               ...ruleConfig,
-              sectionId: sectionId,
-              sectionName:
-                sections.find((item) => item.sectionId === sectionId)
-                  ?.sectionName || "",
-              displayName: ruleConfig.name,
+              sectionId,
+              sectionName,
               numberCriteriaRangeList: [
                 {
                   minimum: minValue,
@@ -232,12 +276,34 @@ const Toolbox = ({ sectionId, onClose, handleSaveDynamicRAC }) => {
               ],
             },
           })
-        );
+        ).unwrap();
+
+        // First, fetch the option list
+        await dispatch(fetchOptionList(racId)).unwrap();
+
+        // After fetching the option list, fetch the dynamic RAC details
+        await dispatch(fetchDynamicRacDetails(racId));
+
+        // Reset state and Close
         setRuleConfig(initialState);
         onClose();
-        handleSaveDynamicRAC();
       }
     }
+  };
+
+  const handleSave = async (rule, ruleConfig) => {
+    await dispatch(
+      updateRuleById({
+        dynamicRacRuleId: rule.dynamicRacRuleId,
+        ruleConfig,
+      })
+    ).unwrap();
+
+    // First, fetch the option list
+    await dispatch(fetchOptionList(racId)).unwrap();
+
+    // After fetching the option list, fetch the dynamic RAC details
+    await dispatch(fetchDynamicRacDetails(racId));
   };
 
   const handleStringInputChange = (newValues) => {
@@ -475,15 +541,27 @@ const Toolbox = ({ sectionId, onClose, handleSaveDynamicRAC }) => {
         </div>
 
         {/* Buttons */}
-        <div className={`flex justify-end gap-3`}>
-          <HoverButton text="Cancel" onClick={onClose} />
-          <Button
-            buttonIcon={PlusIcon}
-            buttonName="Create Rule"
-            onClick={() => handleAddRule(sectionId, ruleConfig)}
-            rectangle={true}
-          />
-        </div>
+        {isEditMode ? (
+          <div className={`flex justify-end gap-3`}>
+            <HoverButton text="Cancel" onClick={onClose} />
+            <Button
+              buttonIcon={ArchiveBoxArrowDownIcon}
+              buttonName="Save"
+              onClick={() => handleSave(rule, ruleConfig)}
+              rectangle={true}
+            />
+          </div>
+        ) : (
+          <div className={`flex justify-end gap-3`}>
+            <HoverButton text="Cancel" onClick={onClose} />
+            <Button
+              buttonIcon={PlusIcon}
+              buttonName="Create Rule"
+              onClick={() => handleAddRule(sectionId, ruleConfig)}
+              rectangle={true}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

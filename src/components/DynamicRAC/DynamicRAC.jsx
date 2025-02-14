@@ -35,7 +35,7 @@ import {
   deleteSection,
 } from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
-import Toolbox from "./ToolBox";
+import ViewRuleModal from "./ViewRuleModal";
 import RuleComponent from "./RuleComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
@@ -56,6 +56,7 @@ const DynamicRAC = () => {
   const [templateModal, setTemplateModal] = useState(false);
   const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
+  const [selectedSectionName, setSelectedSectionName] = useState(null);
   const { racConfig, loading, error } = useSelector(
     (state) => state.dynamicRac
   );
@@ -64,7 +65,9 @@ const DynamicRAC = () => {
   const { roleName } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  // console.log(fetchOptionList);
+  console.log(
+    roleName === "ROLE_MAKER_ADMIN" || roleName === "ROLE_SUPERADMIN"
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -184,11 +187,6 @@ const DynamicRAC = () => {
 
       console.log("Sections after reorder: ", newSections);
       dispatch(setSection({ newSections }));
-
-      // save Changes
-      setTimeout(() => {
-        handleSaveDynamicRAC();
-      }, 1000);
     } else {
       // Moving field between different sections
       const sourceSectionIndex = newSections.findIndex(
@@ -234,7 +232,7 @@ const DynamicRAC = () => {
       // save Changes
       setTimeout(() => {
         handleSaveDynamicRAC();
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -294,42 +292,16 @@ const DynamicRAC = () => {
     toast("Section Added successfully");
   };
 
-  const handleAddRule = (sectionId) => {
+  const handleAddRule = (sectionId, sectionName) => {
     setSelectedSectionId(sectionId); // Update sectionId first
+    setSelectedSectionName(sectionName); // Update sectionId first
     setTimeout(() => setRuleModal(true), 0); // Open modal after state updates
   };
-  const handleUseTemplate = (sectionId) => {
+
+  const handleUseTemplate = (sectionId, sectionName) => {
     setSelectedSectionId(sectionId); // Update sectionId first
+    setSelectedSectionName(sectionName); // Update sectionId first
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
-  };
-
-  const ViewRuleModal = ({ isOpen, onClose, sectionId }) => {
-    if (!isOpen) return null;
-
-    return (
-      <>
-        <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
-          <div className="relative w-[50%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
-            <div
-              className={
-                "sticky bg-white z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
-              }
-            >
-              <p className={"font-semibold text-2xl"}>Add New Rule</p>
-              <XMarkIcon
-                onClick={onClose}
-                className=" h-8 w-8 text-gray-500 rounded-full cursor-pointer"
-              />
-            </div>
-            <Toolbox
-              sectionId={sectionId}
-              onClose={() => setRuleModal(false)}
-              handleSaveDynamicRAC={handleSaveDynamicRAC}
-            />
-          </div>
-        </div>
-      </>
-    );
   };
 
   const ViewTemplateModal = ({ isOpen, onClose, sectionId }) => {
@@ -350,10 +322,7 @@ const DynamicRAC = () => {
                 className=" h-8 w-8 text-gray-500 rounded-full cursor-pointer"
               />
             </div>
-              <div className="p-5 flex">
-
-              </div>
-            
+            <div className="p-5 flex"></div>
           </div>
         </div>
       </>
@@ -400,7 +369,7 @@ const DynamicRAC = () => {
               <DynamicName
                 initialName={name}
                 onSave={(newName) => handleUpdateName(racId, newName)}
-                editable={roleName !== "ROLE_VIEWER"}
+                editable={false}
               />
             </div>
 
@@ -415,6 +384,7 @@ const DynamicRAC = () => {
               isOpen={showRuleModal}
               onClose={() => setRuleModal(false)}
               sectionId={selectedSectionId}
+              sectionName={selectedSectionName}
             />
             <ViewTemplateModal
               isOpen={templateModal}
@@ -501,7 +471,7 @@ const DynamicRAC = () => {
               <DragDropContext onDragEnd={onDragEnd}>
                 <div className="flex flex-col justify-center gap-3">
                   {/* Add first Section Box */}
-                  {sections.length < 1 && (
+                  {sections.length < 1 ? (
                     <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
                       <div className="bg-blue-50 rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
                         <span className="font-bold text-3xl text-blue-500">
@@ -511,7 +481,8 @@ const DynamicRAC = () => {
                       <h2 className="font-semibold">Create New Rac</h2>
                       <p className="flex flex-col items-center text-gray-500">
                         <span>
-                          Start by adding sections to your Risk Assessment Criteria. You{" "}
+                          Start by adding sections to your Risk Assessment
+                          Criteria. You{" "}
                         </span>
                         <span>
                           can also use an existing template as a starting point
@@ -527,130 +498,146 @@ const DynamicRAC = () => {
                         <HoverButton
                           icon={ArrowUpOnSquareIcon}
                           text="Use Template"
-                          onClick={() => handleUseTemplate()}
+                          onClick={() =>
+                            handleUseTemplate(
+                              section.sectionId,
+                              section.sectionName
+                            )
+                          }
                         />
                       </div>
                     </div>
-                  )}
-
-                  {sections?.map((section) => (
-                    <Droppable
-                      key={section.sectionId}
-                      droppableId={section.sectionId}
-                    >
-                      {(provided) => (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          className={`shadow-md border-gray-300 border rounded-xl overflow-hidden ${
-                            section.size === "full"
-                              ? "col-span-3"
-                              : section.size === "half"
-                              ? "col-span-2"
-                              : "col-span-1"
-                          }`}
-                        >
-                          <div className="flex justify-between items-center p-5 bg-white">
-                            <div className="flex justify-center align-middle">
-                              <EllipsisVerticalIcon className="h-7 text-gray-500 " />
-                              <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
-                              <DynamicName
-                                initialName={section.sectionName}
-                                editable={roleName !== "ROLE_VIEWER"}
-                                onSave={(name) =>
-                                  dispatch(
-                                    updateSection({
-                                      sectionId: section.sectionId,
-                                      name,
-                                    })
-                                  )
-                                }
-                              />
-                            </div>
-                            {roleName !== "ROLE_VIEWER" && (
-                              <div className="flex justify-between items-center gap-5">
-                                <div
-                                  className={"flex text-blue-500"}
-                                  onClick={() =>
-                                    handleAddRule(section.sectionId)
+                  ) : (
+                    sections?.map((section) => (
+                      <Droppable
+                        key={section.sectionId}
+                        droppableId={section.sectionId}
+                      >
+                        {(provided) => (
+                          <div
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                            className={`shadow-md border-gray-300 border rounded-xl overflow-hidden ${
+                              section.size === "full"
+                                ? "col-span-3"
+                                : section.size === "half"
+                                ? "col-span-2"
+                                : "col-span-1"
+                            }`}
+                          >
+                            <div className="flex justify-between items-center p-5 bg-white">
+                              <div className="flex justify-center align-middle">
+                                <EllipsisVerticalIcon className="h-7 text-gray-500 " />
+                                <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
+                                <DynamicName
+                                  initialName={section.sectionName}
+                                  editable={roleName !== "ROLE_VIEWER"}
+                                  onSave={(name) =>
+                                    dispatch(
+                                      updateSection({
+                                        sectionId: section.sectionId,
+                                        name,
+                                      })
+                                    )
                                   }
-                                >
-                                  <PlusIcon className="h-5 w-5" />
-                                  <p>Add Rule</p>
-                                </div>
+                                />
+                              </div>
+                              {(roleName == "ROLE_MAKER_ADMIN" ||
+                                roleName == "ROLE_ADMIN" ||
+                                roleName === "ROLE_SUPERADMIN") && (
+                                <div className="flex justify-between items-center gap-5">
+                                  <div
+                                    className={"flex text-blue-500"}
+                                    onClick={() => {
+                                      handleAddRule(
+                                        section.sectionId,
+                                        section.sectionName
+                                      );
+                                    }}
+                                  >
+                                    <PlusIcon className="h-5 w-5" />
+                                    <p>Add Rule</p>
+                                  </div>
 
-                                {/* <Cog6ToothIcon
+                                  {/* <Cog6ToothIcon
                                   onClick={() =>handleSectionSettings({sectionId: section.sectionId})}
                                   className="h-5 w-5 hover:text-indigo-500"
                                 /> */}
 
-                                <TrashIcon
-                                  onClick={() =>
-                                    handleDeleteSection({
-                                      racId,
-                                      sectionId: section.sectionId,
-                                    })
-                                  }
-                                  className="h-5 w-5 hover:text-red-500"
-                                />
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Add Criteria Box */}
-                          {section?.rules.length < 1 && (
-                            <div className="bg-gray-100 flex justify-center flex-col items-center p-5 gap-3">
-                              <div className="rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
-                                <span className="font-bold text-3xl text-gray-500">
-                                  +
-                                </span>
-                              </div>
-                              <p className="flex flex-col items-center text-gray-500">
-                                <span>
-                                  Click to add criteria to this section
-                                </span>
-                              </p>
-                              <div className="flex gap-5">
-                                <HoverButton
-                                  icon={PlusIcon}
-                                  text="Add Criteria"
-                                  onClick={() =>
-                                    handleAddRule(section.sectionId)
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          {section?.rules?.map((rule, index) => (
-                            <Draggable
-                              key={rule.dynamicRacRuleId}
-                              draggableId={rule.dynamicRacRuleId}
-                              index={index}
-                            >
-                              {(provided) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="mb-2 px-3"
-                                >
-                                  <RuleComponent
-                                    rule={rule}
-                                    racId={racId}
-                                    dynamicRacRuleId={rule.dynamicRacRuleId}
-                                    sectionId={section.sectionId}
-                                    handleSaveDynamicRAC={handleSaveDynamicRAC}
+                                  <TrashIcon
+                                    onClick={() =>
+                                      handleDeleteSection({
+                                        racId,
+                                        sectionId: section.sectionId,
+                                      })
+                                    }
+                                    className="h-5 w-5 hover:text-red-500"
                                   />
                                 </div>
                               )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  ))}
+                            </div>
+
+                            {/* Add Criteria Box */}
+                            {section?.rules.length < 1 ? (
+                              <div className="bg-gray-100 flex justify-center flex-col items-center p-5 gap-3">
+                                <div className="rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
+                                  <span className="font-bold text-3xl text-gray-500">
+                                    +
+                                  </span>
+                                </div>
+                                <p className="flex flex-col items-center text-gray-500">
+                                  <span>
+                                    Click to add criteria to this section
+                                  </span>
+                                </p>
+                                <div className="flex gap-5">
+                                  <HoverButton
+                                    icon={PlusIcon}
+                                    text="Add Criteria"
+                                    onClick={() =>
+                                      handleAddRule(
+                                        section.sectionId,
+                                        section.sectionName
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            ) : (
+                              section?.rules?.map((rule, index) => (
+                                <Draggable
+                                  key={rule.dynamicRacRuleId}
+                                  draggableId={rule.dynamicRacRuleId}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className="mb-2 px-3"
+                                    >
+                                      <RuleComponent
+                                        rule={rule}
+                                        racId={racId}
+                                        dynamicRacRuleId={rule.dynamicRacRuleId}
+                                        sectionId={section.sectionId}
+                                        sectionName={section.sectionName}
+                                        handleSaveDynamicRAC={
+                                          handleSaveDynamicRAC
+                                        }
+                                      />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))
+                            )}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    ))
+                  )}
                 </div>
               </DragDropContext>
             </div>

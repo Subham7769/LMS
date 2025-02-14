@@ -34,8 +34,6 @@ const NotificationWindow = () => {
       roleName !== "ROLE_MANAGEMENT_CREDIT_COMMITTEE" &&
       roleName !== "ROLE_BOARD"
     ) {
-      console.log("Fetching notifications...");
-      console.log(roleName);
       dispatch(fetchNotifications());
     }
   }, [dispatch]);

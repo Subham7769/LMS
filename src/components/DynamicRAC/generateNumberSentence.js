@@ -2,6 +2,7 @@ import convertToReadableString from "../../utils/convertToReadableString";
 const isCurrencyField = (name) => ["Salary", "Bonus", "Income"].includes(name);
 
 const generateNumberSentence = (rule) => {
+  // console.log(rule)
   const fieldName = rule.name;
   const MIN_LIMIT = -Number(import.meta.env.VITE_MIN_MAX_LIMIT);
   const MAX_LIMIT = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
