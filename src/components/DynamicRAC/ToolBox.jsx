@@ -561,6 +561,13 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
               buttonName="Create Rule"
               onClick={() => handleAddRule(sectionId, ruleConfig)}
               rectangle={true}
+              disabled={
+                ruleConfig.criteriaType &&
+                ruleConfig.fieldType &&
+                ruleConfig.name &&
+                (ruleConfig.criteriaValues.length >= 1 ||
+                  ruleConfig.numberCriteriaRangeList.length >= 1)
+              }
             />
           </div>
         )}

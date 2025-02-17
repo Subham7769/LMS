@@ -336,34 +336,32 @@ const DynamicRAC = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-2">
+          {/* Modals */}
+          <CloneModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
+            initialName={name}
+          />
+          <ViewRuleModal
+            isOpen={showRuleModal}
+            onClose={() => setRuleModal(false)}
+            sectionId={selectedSectionId}
+            sectionName={selectedSectionName}
+          />
+          <ViewTemplateModal
+            isOpen={templateModal}
+            onClose={() => setTemplateModal(false)}
+            sectionId={selectedSectionId}
+            sectionName={selectedSectionName}
+            racId={racId}
+          />
+          {/* RAC Header */}
           <div className="flex justify-between gap-2  items-center w-full">
-            <div className="flex-1 flex items-center justify-between mr-5">
-              <DynamicName
-                initialName={name}
-                onSave={(newName) => handleUpdateName(racId, newName)}
-                editable={false}
-              />
-            </div>
-
-            {/* Modals */}
-            <CloneModal
-              isOpen={isModalOpen}
-              onClose={closeModal}
-              onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
+            <DynamicName
               initialName={name}
-            />
-            <ViewRuleModal
-              isOpen={showRuleModal}
-              onClose={() => setRuleModal(false)}
-              sectionId={selectedSectionId}
-              sectionName={selectedSectionName}
-            />
-            <ViewTemplateModal
-              isOpen={templateModal}
-              onClose={() => setTemplateModal(false)}
-              sectionId={selectedSectionId}
-              sectionName={selectedSectionName}
-              racId={racId}
+              onSave={(newName) => handleUpdateName(racId, newName)}
+              editable={false}
             />
 
             {(roleName == "ROLE_MAKER_ADMIN" ||
@@ -447,20 +445,11 @@ const DynamicRAC = () => {
                   {/* Add first Section Box */}
                   {sections.length < 1 ? (
                     <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-                      <div className="bg-blue-50 rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
-                        <span className="font-bold text-3xl text-blue-500">
-                          +
-                        </span>
-                      </div>
+                      <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
                       <h2 className="font-semibold ">Create New Rac</h2>
                       <p className="flex flex-col items-center text-gray-500">
-                        <span>
-                          Start by adding sections to your Risk Assessment
-                          Criteria. You{" "}
-                        </span>
-                        <span>
-                          can also use an existing template as a starting point
-                        </span>
+                        Start by adding sections to your Risk Assessment
+                        Criteria.
                       </p>
                       <div className="flex gap-5">
                         <Button
@@ -468,16 +457,6 @@ const DynamicRAC = () => {
                           buttonName="Add First Section"
                           rectangle={true}
                           onClick={() => handleAddSection()}
-                        />
-                        <HoverButton
-                          icon={ArrowUpOnSquareIcon}
-                          text="Use Template"
-                          onClick={() =>
-                            handleUseTemplate(
-                              section.sectionId,
-                              section.sectionName
-                            )
-                          }
                         />
                       </div>
                     </div>
@@ -499,7 +478,7 @@ const DynamicRAC = () => {
                                 : "col-span-1"
                             }`}
                           >
-                            <div className="flex justify-between items-center p-5 bg-white">
+                            <div className="flex justify-between items-center p-5 bg-white border-b">
                               <div className="flex justify-center align-middle">
                                 <EllipsisVerticalIcon className="h-7 text-gray-500 " />
                                 <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
@@ -569,15 +548,15 @@ const DynamicRAC = () => {
 
                             {/* Add Criteria Box */}
                             {section?.rules.length < 1 ? (
-                              <div className="bg-gray-100 flex justify-center flex-col items-center p-5 gap-3">
-                                <div className="rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
-                                  <span className="font-bold text-3xl text-gray-500">
-                                    +
-                                  </span>
-                                </div>
+                              <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
+                                <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
                                 <p className="flex flex-col items-center text-gray-500">
                                   <span>
-                                    Click to add criteria to this section
+                                    Click to add criteria to this section. You{" "}
+                                  </span>
+                                  <span>
+                                    can also use an existing template as a
+                                    starting point
                                   </span>
                                 </p>
                                 <div className="flex gap-5">
@@ -586,6 +565,16 @@ const DynamicRAC = () => {
                                     text="Add Criteria"
                                     onClick={() =>
                                       handleAddRule(
+                                        section.sectionId,
+                                        section.sectionName
+                                      )
+                                    }
+                                  />
+                                  <HoverButton
+                                    icon={ArrowUpOnSquareIcon}
+                                    text="Use Template"
+                                    onClick={() =>
+                                      handleUseTemplate(
                                         section.sectionId,
                                         section.sectionName
                                       )

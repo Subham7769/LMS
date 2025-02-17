@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import generateNumberSentence from "./generateNumberSentence";
+import generateStringSentence from "./generateStringSentence";
 import Button from "../Common/Button/Button";
 
 import {
@@ -8,6 +9,8 @@ import {
   fetchOptionList,
   fetchDynamicRacDetails,
 } from "../../redux/Slices/dynamicRacSlice";
+import { useDispatch } from "react-redux";
+import convertToReadableString from "../../utils/convertToReadableString";
 
 const ViewTemplateModal = ({
   isOpen = true,
@@ -16,10 +19,10 @@ const ViewTemplateModal = ({
   sectionName,
   racId,
 }) => {
-
   if (!isOpen) return null;
 
   const userName = localStorage.getItem("username");
+  const dispatch = useDispatch();
 
   const templateTypes = [
     { id: 1, name: "All templates" },
@@ -31,20 +34,26 @@ const ViewTemplateModal = ({
   const templates = {
     1: [
       {
-        fieldType: "NUMBER",
-        criteriaType: "CALCULATED",
-        blocked: false,
-        name: "creditScore",
-        sectionId: sectionId,
+        dynamicRacRuleId: 1,
+        name: "age",
         sectionName: sectionName,
-        status: "CREATED",
-        isModified: true,
-        displayName: "creditScore",
-        usageList: [
+        sectionId: sectionId,
+        displayName: "age",
+        fieldType: "NUMBER",
+        racId: racId,
+        firstOperator: ">=",
+        secondOperator: "<=",
+        numberCriteriaRangeList: [
           {
-            ruleUsage: "ELIGIBILITY",
-            used: false,
+            minimum: "18",
+            maximum: "65",
+            resident: true,
           },
+        ],
+        criteriaValues: [],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
           {
             ruleUsage: "BORROWER_OFFERS",
             used: true,
@@ -53,23 +62,236 @@ const ViewTemplateModal = ({
             ruleUsage: "REGISTRATION",
             used: true,
           },
-        ],
-        racId: racId,
-        dynamicRacRuleId: `Rule-${Date.now()}`,
-        criteriaValues: [],
-        firstOperator: ">",
-        secondOperator: "<",
-        numberCriteriaRangeList: [
           {
-            minimum: "-1e+308",
-            maximum: "100",
-            resident: false,
+            ruleUsage: "ELIGIBILITY",
+            used: true,
           },
         ],
+        status: "APPROVED",
+        isModified: true,
         history: {
           createdBy: userName,
           updateBy: null,
-          creationDate: new Date().toISOString(),
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 2,
+        name: "incomeOnPaySlip",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "incomeOnPaySlip",
+        fieldType: "NUMBER",
+        racId: racId,
+        firstOperator: ">=",
+        secondOperator: "<",
+        numberCriteriaRangeList: [
+          {
+            minimum: "10000",
+            maximum: "1e+308",
+            resident: false,
+          },
+        ],
+        criteriaValues: [],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: false,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 3,
+        name: "employerFormVerified",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "employerFormVerified",
+        fieldType: "STRING",
+        racId: racId,
+        firstOperator: "",
+        secondOperator: "",
+        numberCriteriaRangeList: [],
+        criteriaValues: ["true"],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        valuePresent: false,
+        error: null,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 4,
+        name: "sixMonthsBankStatementUploaded",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "sixMonthsBankStatementUploaded",
+        fieldType: "STRING",
+        racId: racId,
+        firstOperator: "",
+        secondOperator: "",
+        numberCriteriaRangeList: [],
+        criteriaValues: ["true"],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 5,
+        name: "creditScore",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "creditScore",
+        fieldType: "NUMBER",
+        racId: racId,
+        firstOperator: ">=",
+        secondOperator: "<",
+        numberCriteriaRangeList: [
+          {
+            minimum: "0.7",
+            maximum: "1e+308",
+            resident: false,
+          },
+        ],
+        criteriaValues: [],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 6,
+        name: "natureOfCompany",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "natureOfCompany",
+        fieldType: "STRING",
+        racId: racId,
+        firstOperator: "",
+        secondOperator: "",
+        numberCriteriaRangeList: [],
+        criteriaValues: ["government"],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
           lastUpdatedDate: "",
           firstOperatorOldValue: "",
           secondOperatorOldValue: "",
@@ -78,18 +300,287 @@ const ViewTemplateModal = ({
         },
       },
     ],
-    // 2: ["Resume", "Letter", "Invitation"],
-    // 3: ["Product Catalog", "Order Form", "Marketing Flyer"],
-    // 4: ["Product Catalog", "Order Form", "Marketing Flyer"],
+    2: [
+      {
+        dynamicRacRuleId: 1,
+        name: "age",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "age",
+        fieldType: "NUMBER",
+        racId: racId,
+        firstOperator: ">=",
+        secondOperator: "<=",
+        numberCriteriaRangeList: [
+          {
+            minimum: "18",
+            maximum: "65",
+            resident: true,
+          },
+        ],
+        criteriaValues: [],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 2,
+        name: "incomeOnPaySlip",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "incomeOnPaySlip",
+        fieldType: "NUMBER",
+        racId: racId,
+        firstOperator: ">=",
+        secondOperator: "<",
+        numberCriteriaRangeList: [
+          {
+            minimum: "10000",
+            maximum: "1e+308",
+            resident: false,
+          },
+        ],
+        criteriaValues: [],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: false,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 3,
+        name: "employerFormVerified",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "employerFormVerified",
+        fieldType: "STRING",
+        racId: racId,
+        firstOperator: "",
+        secondOperator: "",
+        numberCriteriaRangeList: [],
+        criteriaValues: ["true"],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        valuePresent: false,
+        error: null,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+    ],
+    3: [
+      {
+        dynamicRacRuleId: 4,
+        name: "sixMonthsBankStatementUploaded",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "sixMonthsBankStatementUploaded",
+        fieldType: "STRING",
+        racId: racId,
+        firstOperator: "",
+        secondOperator: "",
+        numberCriteriaRangeList: [],
+        criteriaValues: ["true"],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+      {
+        dynamicRacRuleId: 5,
+        name: "creditScore",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "creditScore",
+        fieldType: "NUMBER",
+        racId: racId,
+        firstOperator: ">=",
+        secondOperator: "<",
+        numberCriteriaRangeList: [
+          {
+            minimum: "0.7",
+            maximum: "1e+308",
+            resident: false,
+          },
+        ],
+        criteriaValues: [],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+    ],
+    4: [
+      {
+        dynamicRacRuleId: 6,
+        name: "natureOfCompany",
+        sectionName: sectionName,
+        sectionId: sectionId,
+        displayName: "natureOfCompany",
+        fieldType: "STRING",
+        racId: racId,
+        firstOperator: "",
+        secondOperator: "",
+        numberCriteriaRangeList: [],
+        criteriaValues: ["government"],
+        criteriaType: "BORROWER_PROFILE",
+        blocked: false,
+        usageList: [
+          {
+            ruleUsage: "BORROWER_OFFERS",
+            used: true,
+          },
+          {
+            ruleUsage: "REGISTRATION",
+            used: true,
+          },
+          {
+            ruleUsage: "ELIGIBILITY",
+            used: true,
+          },
+        ],
+        status: "APPROVED",
+        isModified: true,
+        history: {
+          createdBy: userName,
+          updateBy: null,
+          creationDate: null,
+          lastUpdatedDate: "",
+          firstOperatorOldValue: "",
+          secondOperatorOldValue: "",
+          numberCriteriaRangeListOldValue: [],
+          criteriaValuesOldValue: [],
+        },
+      },
+    ],
   };
 
   const [selectedTemplateType, setSelectedTemplateType] = useState(
     templateTypes[0]
   );
-  const [selectedTemplate, setSelectedTemplate] = useState({});
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   const handleClose = () => {
-    setSelectedTemplate({});
+    setSelectedTemplate(null);
     setSelectedTemplateType(templateTypes[0]);
     onClose();
   };
@@ -100,8 +591,8 @@ const ViewTemplateModal = ({
       addNewRule({
         ruleConfig: {
           ...ruleConfig,
-          sectionId,
-          sectionName,
+          dynamicRacRuleId: `Rule-${Date.now()}`,
+          history: { ...history, creationDate: new Date().toISOString() },
         },
       })
     ).unwrap();
@@ -115,7 +606,7 @@ const ViewTemplateModal = ({
     handleClose();
   };
 
-  console.log(selectedTemplate)
+  console.log(selectedTemplate);
 
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
@@ -155,24 +646,30 @@ const ViewTemplateModal = ({
               {templates[selectedTemplateType.id].map((template, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col gap-2 p-4 border-2 rounded-lg ${
-                    selectedTemplate.dynamicRacRuleId === template.dynamicRacRuleId
-                      ? "bg-blue-500 text-white"
-                      : "bg-white"
+                  className={`flex flex-col gap-2 p-4 border-2 bg-white rounded-lg ${
+                    selectedTemplate?.dynamicRacRuleId ===
+                      template.dynamicRacRuleId && "border-blue-500"
                   }`}
                   onClick={() => setSelectedTemplate(template)}
                 >
                   <p className="flex justify-between items-center">
-                    <span className="font-semibold">{template.name}</span>
+                    <span className="font-semibold">{convertToReadableString(template.name)}</span>
                     {selectedTemplateType.name !== "All templates" && (
                       <span className="bg-gray-100 text-gray-500 text-[10px] font-semibold px-2 py-1 rounded ">
                         {selectedTemplateType.name}
                       </span>
                     )}
                   </p>
-                  <p className="text-xs text-gray-600">
-                    {generateNumberSentence(template)}
-                  </p>
+                  {template.fieldType === "STRING" ? (
+                    <p className="text-xs text-gray-600">
+                      {generateStringSentence(template)}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-600">
+                      {generateNumberSentence(template)}
+                    </p>
+                  )}
+
                   <div className="flex gap-2 flex-wrap">
                     {template.usageList.map((templateUsage) => {
                       if (templateUsage.used) {
@@ -194,13 +691,14 @@ const ViewTemplateModal = ({
           <Button
             buttonName="Cancel"
             rectangle={true}
-            buttonType={"secondary"}
+            buttonType={"tertiary"}
             onClick={handleClose}
           />
 
           <Button
             buttonName="Use This Template"
             rectangle={true}
+            disabled={!selectedTemplate}
             onClick={() =>
               handleAddRule(sectionId, sectionName, selectedTemplate)
             }
