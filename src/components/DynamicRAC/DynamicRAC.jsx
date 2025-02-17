@@ -389,13 +389,13 @@ const DynamicRAC = () => {
                   <div className="flex gap-2 items-end">
                     <HoverButton
                       icon={ArrowDownOnSquareIcon}
-                      text="Download Config"
+                      text="Download"
                       color="yellow" // Automatically sets hover and background colors
                       onClick={() => dispatch(downloadConfig())}
                     />
                     <HoverButton
                       icon={ArrowUpOnSquareIcon}
-                      text="Upload Config"
+                      text="Upload"
                       color="green" // Automatically sets hover and background colors
                       onClick={() => fileInputRef.current.click()}
                     />
@@ -588,13 +588,19 @@ const DynamicRAC = () => {
                                   key={rule.dynamicRacRuleId}
                                   draggableId={rule.dynamicRacRuleId}
                                   index={index}
+                                  
                                 >
-                                  {(provided) => (
+                                  {(provided,snapshot) => (
                                     <div
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className="mb-2 px-3"
+                                      className=" px-3 bg-white"
+                                      style={{
+                                        background: "white", 
+                                        padding: "8px",
+                                        ...provided.draggableProps.style, // Keep other styles from react-beautiful-dnd
+                                      }}
                                     >
                                       <RuleComponent
                                         rule={rule}
