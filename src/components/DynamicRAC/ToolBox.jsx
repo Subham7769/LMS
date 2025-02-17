@@ -562,11 +562,13 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
               onClick={() => handleAddRule(sectionId, ruleConfig)}
               rectangle={true}
               disabled={
-                ruleConfig.criteriaType &&
-                ruleConfig.fieldType &&
-                ruleConfig.name &&
-                (ruleConfig.criteriaValues.length >= 1 ||
-                  ruleConfig.numberCriteriaRangeList.length >= 1)
+                !ruleConfig.criteriaType ||
+                !ruleConfig.fieldType ||
+                !ruleConfig.name ||
+                (ruleConfig.fieldType === "NUMBER" &&
+                  ruleConfig.numberCriteriaRangeList.length < 1) ||
+                (ruleConfig.fieldType === "STRING" &&
+                  ruleConfig.criteriaValues.length < 1)
               }
             />
           </div>
