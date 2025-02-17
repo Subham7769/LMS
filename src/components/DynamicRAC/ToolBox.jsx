@@ -355,22 +355,24 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             isValidation={true}
           />
         </div>
-        <InputSelect
-          labelName="Parameter"
-          inputOptions={
-            ruleConfig.criteriaType === "BORROWER_PROFILE"
-              ? optionsList.borrowerProfileAvailableNames
-              : ruleConfig.criteriaType === "CALCULATED"
-              ? optionsList.calculatedAvailableNames
-              : []
-          }
-          inputName="name"
-          inputValue={ruleConfig.name}
-          onChange={handleChange}
-          dropdownTextSize={"small"}
-          isValidation={true}
-          searchable={true}
-        />
+        {!isEditMode && (
+          <InputSelect
+            labelName="Parameter"
+            inputOptions={
+              ruleConfig.criteriaType === "BORROWER_PROFILE"
+                ? optionsList.borrowerProfileAvailableNames
+                : ruleConfig.criteriaType === "CALCULATED"
+                ? optionsList.calculatedAvailableNames
+                : []
+            }
+            inputName="name"
+            inputValue={ruleConfig.name}
+            onChange={handleChange}
+            dropdownTextSize={"small"}
+            isValidation={true}
+            searchable={true}
+          />
+        )}
         {/* STRING Rule Criteria Values*/}
         {ruleConfig.fieldType === "STRING" && (
           <div className={"flex justify-between align-middle gap-2"}>

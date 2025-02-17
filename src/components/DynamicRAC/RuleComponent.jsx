@@ -24,14 +24,16 @@ import {
   XMarkIcon,
   CheckIcon,
   ExclamationCircleIcon,
-  PencilIcon,
-  TrashIcon,
   XCircleIcon,
   PlusCircleIcon,
   ClockIcon,
   CheckCircleIcon,
   ChevronUpDownIcon,
 } from "@heroicons/react/20/solid";
+import {
+  PencilIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import convertToReadableString from "../../utils/convertToReadableString";
 import generateNumberSentence from "./generateNumberSentence";
 import generateStringSentence from "./generateStringSentence";
@@ -701,7 +703,7 @@ const RuleComponent = ({
                             firstOperator: rule.firstOperator,
                             secondOperator: rule.secondOperator,
                             numberCriteriaRangeList:
-                              rule.history.updateBy === null
+                              rule.history.updateBy !== null
                                 ? rule.numberCriteriaRangeList
                                 : rule.history.numberCriteriaRangeListOldValue,
                           })}
@@ -714,7 +716,7 @@ const RuleComponent = ({
                             name: rule.name,
                             blocked: rule.blocked,
                             criteriaValues:
-                              rule.history.updateBy === null
+                              rule.history.updateBy !== null
                                 ? rule.criteriaValues
                                 : rule.history.criteriaValuesOldValue,
                           })}
@@ -784,7 +786,7 @@ const RuleComponent = ({
                 )}
 
                 {/* Risk Assessment */}
-                <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 rounded-lg">
+                {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 rounded-lg">
                   <span className="flex justify-start align-middle">
                     <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
                     Risk Assessment
@@ -792,7 +794,7 @@ const RuleComponent = ({
                   <p className="text-gray-700">
                     These changes may cause product financial effects.
                   </p>
-                </div>
+                </div> */}
 
                 {/* Review Comment */}
                 {!rule.needDeleteApprove && (

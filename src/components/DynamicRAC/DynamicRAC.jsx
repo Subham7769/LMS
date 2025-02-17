@@ -37,6 +37,7 @@ import {
 import { useDispatch } from "react-redux";
 import ViewRuleModal from "./ViewRuleModal";
 import RuleComponent from "./RuleComponent";
+import ViewTemplateModal from "./ViewTemplateModal";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
 import {
@@ -64,10 +65,6 @@ const DynamicRAC = () => {
   const sections = racConfig.sections;
   const { roleName } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
-  console.log(
-    roleName === "ROLE_MAKER_ADMIN" || roleName === "ROLE_SUPERADMIN"
-  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -304,31 +301,6 @@ const DynamicRAC = () => {
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
-  const ViewTemplateModal = ({ isOpen, onClose, sectionId }) => {
-    if (!isOpen) return null;
-
-    return (
-      <>
-        <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
-          <div className="relative w-[50%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
-            <div
-              className={
-                "sticky bg-white z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
-              }
-            >
-              <p className={"font-semibold text-2xl"}>Use Template</p>
-              <XMarkIcon
-                onClick={onClose}
-                className=" h-8 w-8 text-gray-500 rounded-full cursor-pointer"
-              />
-            </div>
-            <div className="p-5 flex"></div>
-          </div>
-        </div>
-      </>
-    );
-  };
-
   return (
     <div className="relative">
       {loading ? (
@@ -390,6 +362,8 @@ const DynamicRAC = () => {
               isOpen={templateModal}
               onClose={() => setTemplateModal(false)}
               sectionId={selectedSectionId}
+              sectionName={selectedSectionName}
+              racId={racId}
             />
 
             {(roleName == "ROLE_MAKER_ADMIN" ||
@@ -478,7 +452,7 @@ const DynamicRAC = () => {
                           +
                         </span>
                       </div>
-                      <h2 className="font-semibold">Create New Rac</h2>
+                      <h2 className="font-semibold ">Create New Rac</h2>
                       <p className="flex flex-col items-center text-gray-500">
                         <span>
                           Start by adding sections to your Risk Assessment
@@ -545,7 +519,19 @@ const DynamicRAC = () => {
                               {(roleName == "ROLE_MAKER_ADMIN" ||
                                 roleName == "ROLE_ADMIN" ||
                                 roleName === "ROLE_SUPERADMIN") && (
-                                <div className="flex justify-between items-center gap-5">
+                                <div className="flex justify-between items-center gap-5 hover:cursor-pointer">
+                                  <div
+                                    className={"flex text-blue-500"}
+                                    onClick={() =>
+                                      handleUseTemplate(
+                                        section.sectionId,
+                                        section.sectionName
+                                      )
+                                    }
+                                  >
+                                    <ArrowUpOnSquareIcon className="h-5 w-5" />
+                                    <p>Use Template</p>
+                                  </div>
                                   <div
                                     className={"flex text-blue-500"}
                                     onClick={() => {
@@ -560,9 +546,13 @@ const DynamicRAC = () => {
                                   </div>
 
                                   {/* <Cog6ToothIcon
-                                  onClick={() =>handleSectionSettings({sectionId: section.sectionId})}
-                                  className="h-5 w-5 hover:text-indigo-500"
-                                /> */}
+                                    onClick={() =>
+                                      handleSectionSettings({
+                                        sectionId: section.sectionId,
+                                      })
+                                    }
+                                    className="h-5 w-5 hover:text-indigo-500"
+                                  /> */}
 
                                   <TrashIcon
                                     onClick={() =>
