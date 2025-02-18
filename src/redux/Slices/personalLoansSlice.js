@@ -274,6 +274,34 @@ export const downloadDocumentFile = createAsyncThunk(
   }
 );
 
+export const getMaxPrincipalData = createAsyncThunk(
+  "personalLoans/getMaxPrincipalData",
+  async (maxPrincipalPayload, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_GET_MAX_PRINCIPAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(maxPrincipalPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const saveDraftLoanData = createAsyncThunk(
   "personalLoans/saveDraftLoanData",
   async (addLoanData, { rejectWithValue }) => {
@@ -655,17 +683,18 @@ const initialState = {
     borrowerType: "PERSONAL_BORROWER",
     generalLoanDetails: {
       borrowerId: "",
-      disbursedBy: "",
+      disbursedBy: "Bank",
       interestMethod: "",
-      loanDuration: 0,
+      loanDuration: "",
       loanInterest: 0,
+      loanInterestType: "",
+      loanInterestStr: "",
       loanProductId: "",
       loanReleaseDate: "",
-      numberOfTenure: 0,
-      perLoanDuration: "",
-      perLoanInterest: "",
+      repaymentTenure: 0,
+      repaymentTenureType: "",
+      repaymentTenureStr: "",
       principalAmount: 0,
-      repaymentCycle: "",
       refinancedLoanId: "",
       sector: "",
       branch: "",
@@ -705,6 +734,7 @@ const initialState = {
   loanHistory: [],
   loanHistoryTotalElements: 0,
   loanConfigData: {},
+  loanProductData: [],
   loanProductOptions: [],
   loanOfferFields: {
     loanProductId: "",
@@ -819,6 +849,7 @@ const personalLoansSlice = createSlice({
       })
       .addCase(fetchLoanProductData.fulfilled, (state, action) => {
         state.loading = false;
+        state.loanProductData = action.payload;
         const updatedLoanProductOptions = action.payload
           .filter((item) => item.eligibleCustomerType === "CONSUMER")
           .map((item) => ({
@@ -899,6 +930,20 @@ const personalLoansSlice = createSlice({
         toast(`Draft Saved Successfully`);
       })
       .addCase(saveDraftLoanData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getMaxPrincipalData.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMaxPrincipalData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData.generalLoanDetails.principalAmount = action.payload;
+        toast(`Principal amount cannot be greater than fetched amount`);
+      })
+      .addCase(getMaxPrincipalData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);

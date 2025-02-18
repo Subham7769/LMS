@@ -7,7 +7,11 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputFile from "../../Common/InputFile/InputFile";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
-import { countryOptions, locationOptions } from "../../../data/CountryData";
+import {
+  countryOptions,
+  districtOptions,
+  locationOptions,
+} from "../../../data/CountryData";
 import {
   maritalStatus,
   workType,
@@ -20,6 +24,11 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
+import {
+  BankNameOptions,
+  BranchNameOptions,
+  bankBranches,
+} from "../../../data/BankData";
 
 const AddUpdateBorrowerFields = ({
   BorrowerData,
@@ -30,6 +39,15 @@ const AddUpdateBorrowerFields = ({
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
+    []
+  );
+  const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
+    []
+  );
+  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
+    []
+  );
 
   useEffect(() => {
     setFilteredLocations1(
@@ -38,9 +56,21 @@ const AddUpdateBorrowerFields = ({
     setFilteredLocations2(
       locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
     );
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.contactDetails.province] || []
+    );
+    setFilteredDistrictLocations2(
+      districtOptions[BorrowerData.nextOfKinDetails.kinProvince] || []
+    );
+    setFilteredBranchNameOptions(
+      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
+    );
   }, [
     BorrowerData.contactDetails.country,
     BorrowerData.nextOfKinDetails.kinCountry,
+    BorrowerData.contactDetails.province,
+    BorrowerData.nextOfKinDetails.kinProvince,
+    BorrowerData.bankDetails.bankName,
   ]);
 
   useEffect(() => {
@@ -130,6 +160,61 @@ const AddUpdateBorrowerFields = ({
       })
     );
   };
+
+  useEffect(() => {
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branch",
+          value: "",
+        })
+      );
+  
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branchCode",
+          value: "",
+        })
+      );
+  
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "sortCode",
+          value: "",
+        })
+      );
+    }, [BorrowerData.bankDetails.bankName]);
+
+  useEffect(() => {
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
+      return;
+
+    const branch = bankBranches.find(
+      (b) =>
+        b.bankName === BorrowerData.bankDetails.bankName &&
+        b.branchName === BorrowerData.bankDetails.branch
+    );
+
+    if (branch) {
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branchCode",
+          value: branch.branchCode,
+        })
+      );
+
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "sortCode",
+          value: branch.sortCode,
+        })
+      );
+    }
+  }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
 
   //   All Fields Configuration
   const personalDetailsConfig = [
@@ -259,7 +344,8 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "District",
       inputName: "district",
-      type: "text",
+      type: "select",
+      options: filteredDistrictLocations1,
       validation: false,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
@@ -425,7 +511,8 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Name of Bank",
       inputName: "bankName",
-      type: "text",
+      type: "select",
+      options: BankNameOptions,
       validation: true,
     },
     {
@@ -450,7 +537,8 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Branch",
       inputName: "branch",
-      type: "text",
+      type: "select",
+      options: filteredBranchNameOptions,
       validation: true,
     },
     {
@@ -520,7 +608,7 @@ const AddUpdateBorrowerFields = ({
       type: "text",
       validation: true,
     },
-    { labelName: "District", inputName: "kinDistrict", type: "text" },
+
     {
       labelName: "Country",
       inputName: "kinCountry",
@@ -533,6 +621,12 @@ const AddUpdateBorrowerFields = ({
       inputName: "kinProvince",
       type: "select",
       options: filteredLocations2,
+    },
+    {
+      labelName: "District",
+      inputName: "kinDistrict",
+      type: "select",
+      options: filteredDistrictLocations2,
     },
     {
       labelName: "Employer",

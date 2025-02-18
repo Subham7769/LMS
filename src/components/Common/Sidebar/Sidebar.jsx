@@ -69,12 +69,19 @@ import { createNewRac as createNewDynamicRac } from "../../../utils/createNewDyn
 import { createNewReportingConfig } from "../../../utils/createNewReportingConfig";
 import { allSectionName } from "../../../data/MenuData.js";
 import CreateNew from "../CreateNew/CreateNew";
+import { setRole } from "../../../redux/Slices/authSlice";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const { menus, loading, error, submenuStates, open } = useSelector(
     (state) => state.sidebar
   );
+  const { roleName } = useSelector((state) => state.auth);
+  const roleNameLocal = localStorage.getItem("roleName");
+  // console.log(roleName);
+  if (!roleName) {
+    dispatch(setRole(roleNameLocal));
+  }
   const iconMapping = {
     HomeIcon,
     ClipboardDocumentCheckIcon,
@@ -128,7 +135,6 @@ const SideBar = () => {
   }, [submenuStates]);
 
   useEffect(() => {
-    const roleName = localStorage.getItem("roleName");
     switch (roleName) {
       case "ROLE_SUPERADMIN":
         // dispatch(fetchRACData());
@@ -256,9 +262,8 @@ const SideBar = () => {
       default:
         break;
     }
-
     dispatch(setMenus({ roleName }));
-  }, [dispatch]);
+  }, [dispatch, roleName]);
 
   const handleToggleSidebar = () => {
     dispatch(toggleSidebar());

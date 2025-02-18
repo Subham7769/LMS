@@ -493,6 +493,7 @@ const LoanProductConfig = () => {
           }
         `}
               disabled={currentPage === 1}
+              buttonType="secondary"
             />
 
             <span className="text-sm text-gray-700">
@@ -515,6 +516,7 @@ const LoanProductConfig = () => {
           }
         `}
               disabled={currentPage === totalPages || currentItems.length < 1}
+              buttonType="secondary"
             />
           </div>
 
