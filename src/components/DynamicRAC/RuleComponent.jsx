@@ -48,6 +48,7 @@ import {
 import store from "../../redux/store";
 import { convertDate } from "../../utils/convertDate";
 import ViewRuleModal from "./ViewRuleModal";
+import HoverButtonNew from "../Common/HoverButtonNew/HoverButtonNew";
 
 const RuleComponent = ({
   rule,
@@ -132,25 +133,6 @@ const RuleComponent = ({
     handleSaveDynamicRAC();
   };
 
-  const StatusButton = ({
-    buttonIcon: ButtonIcon,
-    buttonName,
-    onClick,
-    color,
-  }) => {
-    return (
-      <div
-        onClick={onClick}
-        className={`p-3 flex flex-col justify-center items-center text-sm font-semibold rounded-lg hover:cursor-pointer 
-        text-${color}-500 bg-${color}-50 hover:text-white hover:bg-${color}-500 transition-all duration-300 ease-in-out hover:scale-105`}
-      >
-        <div className="flex">
-          <ButtonIcon className="h-5 w-5 mr-2" />
-          {buttonName}
-        </div>
-      </div>
-    );
-  };
 
   // Edit Number Config
   const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
@@ -469,7 +451,7 @@ const RuleComponent = ({
 
                 {/* Approve/Reject  */}
                 <div className="grid grid-cols-2 gap-5 px-5 w-[100%]">
-                  <StatusButton
+                  <HoverButtonNew
                     buttonIcon={XMarkIcon}
                     buttonName="Reject"
                     onClick={() =>
@@ -481,7 +463,7 @@ const RuleComponent = ({
                     }
                     color="red"
                   />
-                  <StatusButton
+                  <HoverButtonNew
                     buttonIcon={CheckIcon}
                     buttonName="Approve"
                     onClick={() =>

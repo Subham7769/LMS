@@ -361,7 +361,11 @@ const DynamicRAC = () => {
             <DynamicName
               initialName={name}
               onSave={(newName) => handleUpdateName(racId, newName)}
-              editable={false}
+              editable={
+                roleName == "ROLE_MAKER_ADMIN" ||
+                roleName == "ROLE_ADMIN" ||
+                roleName === "ROLE_SUPERADMIN"
+              }
             />
 
             {(roleName == "ROLE_MAKER_ADMIN" ||
@@ -484,7 +488,6 @@ const DynamicRAC = () => {
                                 <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
                                 <DynamicName
                                   initialName={section.sectionName}
-                                  editable={roleName !== "ROLE_VIEWER"}
                                   onSave={(name) =>
                                     dispatch(
                                       updateSection({
@@ -492,6 +495,11 @@ const DynamicRAC = () => {
                                         name,
                                       })
                                     )
+                                  }
+                                  editable={
+                                    roleName == "ROLE_MAKER_ADMIN" ||
+                                    roleName == "ROLE_ADMIN" ||
+                                    roleName === "ROLE_SUPERADMIN"
                                   }
                                 />
                               </div>
@@ -588,16 +596,15 @@ const DynamicRAC = () => {
                                   key={rule.dynamicRacRuleId}
                                   draggableId={rule.dynamicRacRuleId}
                                   index={index}
-                                  
                                 >
-                                  {(provided,snapshot) => (
+                                  {(provided, snapshot) => (
                                     <div
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       className=" px-3 bg-white"
                                       style={{
-                                        background: "white", 
+                                        background: "white",
                                         padding: "8px",
                                         ...provided.draggableProps.style, // Keep other styles from react-beautiful-dnd
                                       }}

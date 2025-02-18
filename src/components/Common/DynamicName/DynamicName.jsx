@@ -5,7 +5,7 @@ import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import { useDispatch } from "react-redux";
 import { updateValidationError } from "../../../redux/Slices/validationSlice";
 
-const DynamicName = ({ initialName, onSave, editable = true }) => {
+const DynamicName = ({ initialName, onSave, editable }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [dynamicSectionName, setDynamicSectionName] = useState(initialName);
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const DynamicName = ({ initialName, onSave, editable = true }) => {
 
   return (
     <div ref={wrapperRef} className="flex items-center justify-between">
-      {isEditing ? (
+      {isEditing && editable ? (
         <div className="flex items-center space-x-2">
           <InputText
             inputValue={dynamicSectionName}

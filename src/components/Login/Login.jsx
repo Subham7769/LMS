@@ -18,6 +18,7 @@ import {
   setButtonText,
   setError,
   resetError,
+  setRole,
 } from "../../redux/Slices/authSlice";
 
 const Login = () => {
@@ -46,6 +47,9 @@ const Login = () => {
         // Successful login logic
         if (data?.roles && data?.roles.length > 0) {
           const role = data?.roles[0]?.name;
+
+          // Set RoleName
+          dispatch(setRole(role));
 
           // Dispatch menus
           dispatch(setMenus({ roleName: role }));

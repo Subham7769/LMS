@@ -84,6 +84,7 @@ const authSlice = createSlice({
       localStorage.removeItem("username");
     },
     setRole: (state, action) => {
+      console.log(action.payload)
       state.roleName = action.payload;
       localStorage.setItem("roleName", action.payload); // Persist role in localStorage
     },
