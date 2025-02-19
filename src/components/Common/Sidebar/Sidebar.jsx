@@ -137,6 +137,7 @@ const SideBar = () => {
   useEffect(() => {
     switch (roleName) {
       case "ROLE_SUPERADMIN":
+      case "ROLE_ADMIN":
         // dispatch(fetchRACData());
         dispatch(fetchDBRData());
         // dispatch(fetchBEData());

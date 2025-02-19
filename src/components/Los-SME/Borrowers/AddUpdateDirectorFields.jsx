@@ -138,13 +138,6 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
   };
 
   useEffect(() => {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branch",
-          value: "",
-        })
-      );
   
       dispatch(
         handleChangeReducer({

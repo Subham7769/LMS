@@ -95,7 +95,7 @@ const LoanApplication = () => {
     navigate(
       `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
     );
-    if (rowData.status === "Submitted") {
+    if (rowData.status === "Submitted" || rowData.status === "In Progress") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
     }
     await dispatch(

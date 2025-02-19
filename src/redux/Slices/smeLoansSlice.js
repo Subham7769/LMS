@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import convertToTitleCase from "../../utils/convertToTitleCase";
 import { nanoid } from "nanoid";
-import { Signature } from "lucide-react";
 
 export const getLoanApplications = createAsyncThunk(
   "smeLoans/getLoanApplications",
@@ -269,6 +268,45 @@ export const downloadDocumentFile = createAsyncThunk(
       document.body.removeChild(a);
 
       return "File downloaded successfully";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const previewDocumentFile = createAsyncThunk(
+  "smeLoans/previewDocumentFile",
+  async (filePreviewParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken, docName } = filePreviewParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_COMPANY}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to preview");
+      }
+
+      const data = await response.json();
+      const byteCharacters = atob(data.base64Content);
+      const byteNumbers = new Uint8Array(
+        Array.from(byteCharacters, (char) => char.charCodeAt(0))
+      );
+      const blob = new Blob([byteNumbers], { type: data.contentType });
+
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank");
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+      return "File opened successfully";
     } catch (error) {
       return rejectWithValue(error.message);
     }

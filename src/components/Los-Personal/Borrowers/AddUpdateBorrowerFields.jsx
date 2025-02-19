@@ -49,6 +49,8 @@ const AddUpdateBorrowerFields = ({
     []
   );
 
+  console.log(BorrowerData);
+
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.contactDetails.country] || []
@@ -162,30 +164,22 @@ const AddUpdateBorrowerFields = ({
   };
 
   useEffect(() => {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branch",
-          value: "",
-        })
-      );
-  
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branchCode",
-          value: "",
-        })
-      );
-  
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "sortCode",
-          value: "",
-        })
-      );
-    }, [BorrowerData.bankDetails.bankName]);
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "branchCode",
+        value: "",
+      })
+    );
+
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "sortCode",
+        value: "",
+      })
+    );
+  }, [BorrowerData.bankDetails.bankName]);
 
   useEffect(() => {
     if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)

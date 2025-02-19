@@ -76,8 +76,8 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
               onClick={() => {
                 onClose();
               }}
-              className={" bg-gray-600 text-white hover:bg-gray-500 self-end"}
               rectangle={true}
+              buttonType="secondary"
             />
             <Button
               buttonName={"Reject"}
