@@ -15,6 +15,7 @@ const InputTextMulti = ({
   dynamicRacRuleId,
   disabled = false,
   isValidation,
+  required,
 }) => {
   const [included, setIncluded] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -64,9 +65,15 @@ const InputTextMulti = ({
       <label
         className={`block relative ${
           validationError[validationKey] ? "text-red-600" : "text-gray-700"
-        } px-1 text-sm font-semibold`}
+        } px-1 h-[22px] text-sm font-semibold`}
       >
         {validationError[validationKey] ? "Field required" : label}
+        {required && <span className="ml-1 text-red-600">*</span>}
+        {inputValue && (
+          <span className="text-[10px] ml-1 text-gray-400">
+            (Type and press Enter)
+          </span>
+        )}
         <span
           className={
             "absolute right-1 -bottom-7 text-xs text-red-500 font-light"
@@ -95,6 +102,7 @@ const InputTextMulti = ({
             appearance: "none", // General rule for most modern browsers
           }}
           disabled={disabled}
+          required={required}
         />
       </div>
       {tag.length > 0 && !disabled && (

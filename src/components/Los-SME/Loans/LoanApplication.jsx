@@ -139,10 +139,11 @@ const LoanApplication = () => {
         <div></div>
         <div className="flex justify-end gap-2 h-12">
           {!hasViewOnlyAccessGroup3(roleName) && (
-            <HoverButton
-              icon={PlusIcon}
-              text="New Application"
+            <Button
+              buttonIcon={PlusIcon}
+              buttonName="New Application"
               onClick={handleNewApplication}
+              rectangle={true}
             />
           )}
         </div>

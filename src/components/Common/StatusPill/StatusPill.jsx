@@ -3,9 +3,10 @@ import {
   ClockIcon,
   XMarkIcon,
   CheckIcon,
-  ExclamationTriangleIcon,
+  InformationCircleIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
+import { convertDate } from "../../../utils/convertDate";
 const StatusPill = ({ rule }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -71,40 +72,16 @@ const StatusPill = ({ rule }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <ExclamationTriangleIcon
-            className={`h-5 w-5 ${
-              rule.status === "CREATED" && !rule.needDeleteApprove
-                ? rule.history.updateBy
-                  ? " text-yellow-700" // Modified (Pending Approval)
-                  : " text-green-700" // Newly Added (Pending Approval)
-                : rule.status === "REJECTED" ||
-                  (rule.status === "APPROVED" && rule.needDeleteApprove) ||
-                  (rule.status === "CREATED" && rule.needDeleteApprove)
-                ? " text-red-700" // Rejected or requires delete approval
-                : rule.status === "APPROVED" && !rule.needDeleteApprove
-                ? " text-green-700" // Approved without delete approval
-                : " text-gray-700" // Default case
-            }`}
-          />
+          <InformationCircleIcon className={`h-5 w-5 text-gray-400`} />
 
           {/* Hover effect: Show the comment inside a styled box */}
-          {isHovered && (
+          {isHovered && rule.reviewComment && (
             <div
-              className={`absolute left-7 px-3 py-1.5 font-semibold rounded-md shadow-lg text-xs whitespace-nowrap ${
-                rule.status === "CREATED" && !rule.needDeleteApprove
-                  ? rule.history.updateBy
-                    ? "bg-yellow-100 text-yellow-700" // Modified (Pending Approval)
-                    : "bg-green-100 text-green-700" // Newly Added
-                  : rule.status === "REJECTED" ||
-                    (rule.status === "APPROVED" && rule.needDeleteApprove) ||
-                    (rule.status === "CREATED" && rule.needDeleteApprove)
-                  ? "bg-red-100 text-red-700" // Rejected or requires delete approval
-                  : rule.status === "APPROVED" && !rule.needDeleteApprove
-                  ? "bg-green-100 text-green-700" // Approved without delete approval
-                  : "bg-gray-100 text-gray-700" // Default case
-              }`}
+              className={`absolute left-7 px-3 py-1.5 font-semibold border-gray-300 border rounded-md shadow-lg text-xs whitespace-nowrap bg-gray-100 flex flex-col gap-2`}
             >
-              {rule.reviewComment ? rule.reviewComment : ""}
+              <p className="text-[10px] text-gray-500">Commented By {rule.history.reviewCommentBy}</p>
+              <p className="text-[12px]">{rule.reviewComment ? rule.reviewComment : ""}</p>
+              <p className="text-[10px] text-gray-500">{convertDate(rule.history.reviewCommentDate)}</p>
             </div>
           )}
         </div>

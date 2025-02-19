@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 
 const Accordion = ({
@@ -61,11 +60,6 @@ const Accordion = ({
       )}
     </div>
   );
-};
-
-Accordion.propTypes = {
-  heading: PropTypes.node.isRequired, // The heading of the accordion (can be a string or JSX).
-  renderExpandedContent: PropTypes.func.isRequired, // Function to render the content when expanded.
 };
 
 export default Accordion;

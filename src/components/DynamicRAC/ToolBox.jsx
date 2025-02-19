@@ -114,14 +114,16 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
   useEffect(() => {
     if (condition === "Less than" || condition === "Less than or equal to") {
-      setMaxValue(0); // Reset maxValue when condition is set
+      setMaxValue(rule ? maximum : 0); // Reset maxValue when condition is set
       setMinValue(initialMinValue);
     } else if (
       condition === "Greater than" ||
       condition === "Greater than or equal to"
     ) {
-      setMinValue(0); // Reset minValue when condition is set
+      setMinValue(rule ? minimum : 0); // Reset minValue when condition is set
       setMaxValue(initialMaxValue);
+    } else if (condition === "Equal to") {
+      setEqualValue(rule ? minimum : 0);
     }
   }, [condition]);
 
@@ -220,13 +222,11 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           },
         })
       ).unwrap();
-
       // First, fetch the option list
       await dispatch(fetchOptionList(racId)).unwrap();
 
       // After fetching the option list, fetch the dynamic RAC details
       await dispatch(fetchDynamicRacDetails(racId));
-
       // Reset state and Close
       setRuleConfig(initialState);
       onClose();
@@ -249,16 +249,6 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             },
           })
         ).unwrap();
-
-        // First, fetch the option list
-        await dispatch(fetchOptionList(racId)).unwrap();
-
-        // After fetching the option list, fetch the dynamic RAC details
-        await dispatch(fetchDynamicRacDetails(racId));
-
-        // Reset state and Close
-        setRuleConfig(initialState);
-        onClose();
       } else {
         // Add Rule
         await dispatch(
@@ -277,27 +267,70 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             },
           })
         ).unwrap();
-
-        // First, fetch the option list
-        await dispatch(fetchOptionList(racId)).unwrap();
-
-        // After fetching the option list, fetch the dynamic RAC details
-        await dispatch(fetchDynamicRacDetails(racId));
-
-        // Reset state and Close
-        setRuleConfig(initialState);
-        onClose();
       }
+      // First, fetch the option list
+      await dispatch(fetchOptionList(racId)).unwrap();
+
+      // After fetching the option list, fetch the dynamic RAC details
+      await dispatch(fetchDynamicRacDetails(racId));
+      // Reset state and Close
+      setRuleConfig(initialState);
+      onClose();
     }
   };
 
   const handleSave = async (rule, ruleConfig) => {
-    await dispatch(
-      updateRuleById({
-        dynamicRacRuleId: rule.dynamicRacRuleId,
-        ruleConfig,
-      })
-    ).unwrap();
+    if (ruleConfig.fieldType == "NUMBER") {
+      if (condition === "Equal to") {
+        // Add Rule
+        await dispatch(
+          updateRuleById({
+            dynamicRacRuleId: rule.dynamicRacRuleId,
+            ruleConfig: {
+              ...ruleConfig,
+              numberCriteriaRangeList: [
+                {
+                  minimum: equalValue,
+                  maximum: equalValue,
+                  resident: false,
+                },
+              ],
+            },
+          })
+        );
+      } else if (condition === "Between") {
+        await dispatch(
+          updateRuleById({
+            dynamicRacRuleId: rule.dynamicRacRuleId,
+            ruleConfig,
+          })
+        ).unwrap();
+      }else{
+        // update Rule
+        await dispatch(
+          updateRuleById({
+            dynamicRacRuleId: rule.dynamicRacRuleId,
+            ruleConfig: {
+             ...ruleConfig,
+              numberCriteriaRangeList: [
+                {
+                  minimum: minValue,
+                  maximum: maxValue,
+                  resident: false,
+                },
+              ],
+            },
+          })
+        ).unwrap();
+      }
+    } else {
+      await dispatch(
+        updateRuleById({
+          dynamicRacRuleId: rule.dynamicRacRuleId,
+          ruleConfig,
+        })
+      ).unwrap();
+    }
 
     // First, fetch the option list
     await dispatch(fetchOptionList(racId)).unwrap();
@@ -355,22 +388,24 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             isValidation={true}
           />
         </div>
-        <InputSelect
-          labelName="Parameter"
-          inputOptions={
-            ruleConfig.criteriaType === "BORROWER_PROFILE"
-              ? optionsList.borrowerProfileAvailableNames
-              : ruleConfig.criteriaType === "CALCULATED"
-              ? optionsList.calculatedAvailableNames
-              : []
-          }
-          inputName="name"
-          inputValue={ruleConfig.name}
-          onChange={handleChange}
-          dropdownTextSize={"small"}
-          isValidation={true}
-          searchable={true}
-        />
+        {!isEditMode && (
+          <InputSelect
+            labelName="Parameter"
+            inputOptions={
+              ruleConfig.criteriaType === "BORROWER_PROFILE"
+                ? optionsList.borrowerProfileAvailableNames
+                : ruleConfig.criteriaType === "CALCULATED"
+                ? optionsList.calculatedAvailableNames
+                : []
+            }
+            inputName="name"
+            inputValue={ruleConfig.name}
+            onChange={handleChange}
+            dropdownTextSize={"small"}
+            isValidation={true}
+            searchable={true}
+          />
+        )}
         {/* STRING Rule Criteria Values*/}
         {ruleConfig.fieldType === "STRING" && (
           <div className={"flex justify-between align-middle gap-2"}>
@@ -382,6 +417,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
               sectionId={sectionId}
               dynamicRacRuleId={"123"}
               isValidation={true}
+              required={true}
             />
             {/* Blocked Checkbox */}
             <div className="mt-5">
@@ -559,6 +595,21 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
               buttonName="Create Rule"
               onClick={() => handleAddRule(sectionId, ruleConfig)}
               rectangle={true}
+              disabled={
+                !ruleConfig.criteriaType ||
+                !ruleConfig.fieldType ||
+                !ruleConfig.name ||
+                (ruleConfig.fieldType === "STRING" &&
+                  ruleConfig.criteriaValues.length < 1) ||
+                (ruleConfig.fieldType === "NUMBER" &&
+                  (condition === "Less than" ||
+                    condition === "Less than or equal to") &&
+                  minValue === undefined) ||
+                ((condition === "Greater than" ||
+                  condition === "Greater than or equal to") &&
+                  maxValue === undefined) ||
+                (condition === "Equal to" && (equalValue === 0 || equalValue === ""))
+              }
             />
           </div>
         )}

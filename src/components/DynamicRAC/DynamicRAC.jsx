@@ -37,6 +37,7 @@ import {
 import { useDispatch } from "react-redux";
 import ViewRuleModal from "./ViewRuleModal";
 import RuleComponent from "./RuleComponent";
+import ViewTemplateModal from "./ViewTemplateModal";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
 import {
@@ -64,10 +65,6 @@ const DynamicRAC = () => {
   const sections = racConfig.sections;
   const { roleName } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
-  console.log(
-    roleName === "ROLE_MAKER_ADMIN" || roleName === "ROLE_SUPERADMIN"
-  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -304,31 +301,6 @@ const DynamicRAC = () => {
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
-  const ViewTemplateModal = ({ isOpen, onClose, sectionId }) => {
-    if (!isOpen) return null;
-
-    return (
-      <>
-        <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
-          <div className="relative w-[50%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
-            <div
-              className={
-                "sticky bg-white z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
-              }
-            >
-              <p className={"font-semibold text-2xl"}>Use Template</p>
-              <XMarkIcon
-                onClick={onClose}
-                className=" h-8 w-8 text-gray-500 rounded-full cursor-pointer"
-              />
-            </div>
-            <div className="p-5 flex"></div>
-          </div>
-        </div>
-      </>
-    );
-  };
-
   return (
     <div className="relative">
       {loading ? (
@@ -364,32 +336,36 @@ const DynamicRAC = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-2">
+          {/* Modals */}
+          <CloneModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
+            initialName={name}
+          />
+          <ViewRuleModal
+            isOpen={showRuleModal}
+            onClose={() => setRuleModal(false)}
+            sectionId={selectedSectionId}
+            sectionName={selectedSectionName}
+          />
+          <ViewTemplateModal
+            isOpen={templateModal}
+            onClose={() => setTemplateModal(false)}
+            sectionId={selectedSectionId}
+            sectionName={selectedSectionName}
+            racId={racId}
+          />
+          {/* RAC Header */}
           <div className="flex justify-between gap-2  items-center w-full">
-            <div className="flex-1 flex items-center justify-between mr-5">
-              <DynamicName
-                initialName={name}
-                onSave={(newName) => handleUpdateName(racId, newName)}
-                editable={false}
-              />
-            </div>
-
-            {/* Modals */}
-            <CloneModal
-              isOpen={isModalOpen}
-              onClose={closeModal}
-              onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
+            <DynamicName
               initialName={name}
-            />
-            <ViewRuleModal
-              isOpen={showRuleModal}
-              onClose={() => setRuleModal(false)}
-              sectionId={selectedSectionId}
-              sectionName={selectedSectionName}
-            />
-            <ViewTemplateModal
-              isOpen={templateModal}
-              onClose={() => setTemplateModal(false)}
-              sectionId={selectedSectionId}
+              onSave={(newName) => handleUpdateName(racId, newName)}
+              editable={
+                roleName == "ROLE_MAKER_ADMIN" ||
+                roleName == "ROLE_ADMIN" ||
+                roleName === "ROLE_SUPERADMIN"
+              }
             />
 
             {(roleName == "ROLE_MAKER_ADMIN" ||
@@ -417,13 +393,13 @@ const DynamicRAC = () => {
                   <div className="flex gap-2 items-end">
                     <HoverButton
                       icon={ArrowDownOnSquareIcon}
-                      text="Download Config"
+                      text="Download"
                       color="yellow" // Automatically sets hover and background colors
                       onClick={() => dispatch(downloadConfig())}
                     />
                     <HoverButton
                       icon={ArrowUpOnSquareIcon}
-                      text="Upload Config"
+                      text="Upload"
                       color="green" // Automatically sets hover and background colors
                       onClick={() => fileInputRef.current.click()}
                     />
@@ -473,20 +449,11 @@ const DynamicRAC = () => {
                   {/* Add first Section Box */}
                   {sections.length < 1 ? (
                     <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-                      <div className="bg-blue-50 rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
-                        <span className="font-bold text-3xl text-blue-500">
-                          +
-                        </span>
-                      </div>
-                      <h2 className="font-semibold">Create New Rac</h2>
+                      <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
+                      <h2 className="font-semibold ">Create New Rac</h2>
                       <p className="flex flex-col items-center text-gray-500">
-                        <span>
-                          Start by adding sections to your Risk Assessment
-                          Criteria. You{" "}
-                        </span>
-                        <span>
-                          can also use an existing template as a starting point
-                        </span>
+                        Start by adding sections to your Risk Assessment
+                        Criteria.
                       </p>
                       <div className="flex gap-5">
                         <Button
@@ -494,16 +461,6 @@ const DynamicRAC = () => {
                           buttonName="Add First Section"
                           rectangle={true}
                           onClick={() => handleAddSection()}
-                        />
-                        <HoverButton
-                          icon={ArrowUpOnSquareIcon}
-                          text="Use Template"
-                          onClick={() =>
-                            handleUseTemplate(
-                              section.sectionId,
-                              section.sectionName
-                            )
-                          }
                         />
                       </div>
                     </div>
@@ -525,13 +482,12 @@ const DynamicRAC = () => {
                                 : "col-span-1"
                             }`}
                           >
-                            <div className="flex justify-between items-center p-5 bg-white">
+                            <div className="flex justify-between items-center p-5 bg-white border-b">
                               <div className="flex justify-center align-middle">
                                 <EllipsisVerticalIcon className="h-7 text-gray-500 " />
                                 <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
                                 <DynamicName
                                   initialName={section.sectionName}
-                                  editable={roleName !== "ROLE_VIEWER"}
                                   onSave={(name) =>
                                     dispatch(
                                       updateSection({
@@ -540,12 +496,29 @@ const DynamicRAC = () => {
                                       })
                                     )
                                   }
+                                  editable={
+                                    roleName == "ROLE_MAKER_ADMIN" ||
+                                    roleName == "ROLE_ADMIN" ||
+                                    roleName === "ROLE_SUPERADMIN"
+                                  }
                                 />
                               </div>
                               {(roleName == "ROLE_MAKER_ADMIN" ||
                                 roleName == "ROLE_ADMIN" ||
                                 roleName === "ROLE_SUPERADMIN") && (
-                                <div className="flex justify-between items-center gap-5">
+                                <div className="flex justify-between items-center gap-5 hover:cursor-pointer">
+                                  <div
+                                    className={"flex text-blue-500"}
+                                    onClick={() =>
+                                      handleUseTemplate(
+                                        section.sectionId,
+                                        section.sectionName
+                                      )
+                                    }
+                                  >
+                                    <ArrowUpOnSquareIcon className="h-5 w-5" />
+                                    <p>Use Template</p>
+                                  </div>
                                   <div
                                     className={"flex text-blue-500"}
                                     onClick={() => {
@@ -560,9 +533,13 @@ const DynamicRAC = () => {
                                   </div>
 
                                   {/* <Cog6ToothIcon
-                                  onClick={() =>handleSectionSettings({sectionId: section.sectionId})}
-                                  className="h-5 w-5 hover:text-indigo-500"
-                                /> */}
+                                    onClick={() =>
+                                      handleSectionSettings({
+                                        sectionId: section.sectionId,
+                                      })
+                                    }
+                                    className="h-5 w-5 hover:text-indigo-500"
+                                  /> */}
 
                                   <TrashIcon
                                     onClick={() =>
@@ -579,15 +556,15 @@ const DynamicRAC = () => {
 
                             {/* Add Criteria Box */}
                             {section?.rules.length < 1 ? (
-                              <div className="bg-gray-100 flex justify-center flex-col items-center p-5 gap-3">
-                                <div className="rounded-full px-3 py-2 h-14 w-14 flex justify-center align-middle">
-                                  <span className="font-bold text-3xl text-gray-500">
-                                    +
-                                  </span>
-                                </div>
+                              <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
+                                <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
                                 <p className="flex flex-col items-center text-gray-500">
                                   <span>
-                                    Click to add criteria to this section
+                                    Click to add criteria to this section. You{" "}
+                                  </span>
+                                  <span>
+                                    can also use an existing template as a
+                                    starting point
                                   </span>
                                 </p>
                                 <div className="flex gap-5">
@@ -596,6 +573,16 @@ const DynamicRAC = () => {
                                     text="Add Criteria"
                                     onClick={() =>
                                       handleAddRule(
+                                        section.sectionId,
+                                        section.sectionName
+                                      )
+                                    }
+                                  />
+                                  <HoverButton
+                                    icon={ArrowUpOnSquareIcon}
+                                    text="Use Template"
+                                    onClick={() =>
+                                      handleUseTemplate(
                                         section.sectionId,
                                         section.sectionName
                                       )
@@ -610,12 +597,17 @@ const DynamicRAC = () => {
                                   draggableId={rule.dynamicRacRuleId}
                                   index={index}
                                 >
-                                  {(provided) => (
+                                  {(provided, snapshot) => (
                                     <div
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className="mb-2 px-3"
+                                      className=" px-3 bg-white"
+                                      style={{
+                                        background: "white",
+                                        padding: "8px",
+                                        ...provided.draggableProps.style, // Keep other styles from react-beautiful-dnd
+                                      }}
                                     >
                                       <RuleComponent
                                         rule={rule}

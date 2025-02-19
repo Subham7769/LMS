@@ -7,12 +7,21 @@ import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
-import { countryOptions, locationOptions } from "../../../data/CountryData";
+import {
+  countryOptions,
+  districtOptions,
+  locationOptions,
+} from "../../../data/CountryData";
 import { accountType, natureOfCompanyOptions } from "../../../data/LosData";
 import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
+import {
+  BankNameOptions,
+  BranchNameOptions,
+  bankBranches,
+} from "../../../data/BankData";
 
 const AddUpdateCompanyBorrowerFields = ({
   BorrowerData,
@@ -20,12 +29,39 @@ const AddUpdateCompanyBorrowerFields = ({
 }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
-
+  const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
+    []
+  );
+  const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
+    []
+  );
+  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
+    []
+  );
   useEffect(() => {
     setFilteredLocations1(
+      locationOptions[BorrowerData.companyDetails.countryOfRegistration] || []
+    );
+    setFilteredLocations2(
       locationOptions[BorrowerData.companyContactDetails.country] || []
     );
-  }, [BorrowerData.companyContactDetails.country]);
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.companyDetails.province] || []
+    );
+    setFilteredDistrictLocations2(
+      districtOptions[BorrowerData.companyContactDetails.province] || []
+    );
+    setFilteredBranchNameOptions(
+      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
+    );
+  }, [
+    BorrowerData.companyDetails.countryOfRegistration,
+    BorrowerData.companyContactDetails.country,
+    BorrowerData.companyDetails.province,
+    BorrowerData.companyContactDetails.province,
+    BorrowerData.bankDetails.bankName,
+  ]);
 
   useEffect(() => {
     const keysArray = [
@@ -85,6 +121,61 @@ const AddUpdateCompanyBorrowerFields = ({
     );
   };
 
+  useEffect(() => {
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "branch",
+        value: "",
+      })
+    );
+
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "branchCode",
+        value: "",
+      })
+    );
+
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "sortCode",
+        value: "",
+      })
+    );
+  }, [BorrowerData.bankDetails.bankName]);
+
+  useEffect(() => {
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
+      return;
+
+    const branch = bankBranches.find(
+      (b) =>
+        b.bankName === BorrowerData.bankDetails.bankName &&
+        b.branchName === BorrowerData.bankDetails.branch
+    );
+
+    if (branch) {
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branchCode",
+          value: branch.branchCode,
+        })
+      );
+
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "sortCode",
+          value: branch.sortCode,
+        })
+      );
+    }
+  }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
+
   //   All Fields Configuration
   const companyDetailsConfig = [
     {
@@ -119,16 +210,16 @@ const AddUpdateCompanyBorrowerFields = ({
       validation: true,
     },
     {
+      labelName: "Date of Registration",
+      inputName: "dateOfIncorporation",
+      type: "date",
+      validation: true,
+    },
+    {
       labelName: "Country of Registration",
       inputName: "countryOfRegistration",
       type: "select",
       options: countryOptions,
-      validation: true,
-    },
-    {
-      labelName: "Date of Registration",
-      inputName: "dateOfIncorporation",
-      type: "date",
       validation: true,
     },
     {
@@ -141,7 +232,8 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "District",
       inputName: "district",
-      type: "text",
+      type: "select",
+      options: filteredDistrictLocations1,
       validation: true,
     },
     {
@@ -218,13 +310,14 @@ const AddUpdateCompanyBorrowerFields = ({
       labelName: "Province / State",
       inputName: "province",
       type: "select",
-      options: filteredLocations1,
+      options: filteredLocations2,
       validation: false,
     },
     {
       labelName: "District",
       inputName: "district",
-      type: "text",
+      type: "select",
+      options: filteredDistrictLocations2,
       validation: false,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
@@ -240,7 +333,8 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "Name of Bank",
       inputName: "bankName",
-      type: "text",
+      type: "select",
+      options: BankNameOptions,
       validation: true,
     },
     {
@@ -265,7 +359,8 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "Branch",
       inputName: "branch",
-      type: "text",
+      type: "select",
+      options: filteredBranchNameOptions,
       validation: true,
     },
     {
@@ -376,7 +471,11 @@ const AddUpdateCompanyBorrowerFields = ({
                 inputName={field.inputName}
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={field.labelName === "Credit Score" ? "Enter between 0 to 1" : `Enter ${field.labelName}`}
+                placeHolder={
+                  field.labelName === "Credit Score"
+                    ? "Enter between 0 to 1"
+                    : `Enter ${field.labelName}`
+                }
                 isValidation={field.validation || false}
               />
             );
@@ -505,7 +604,6 @@ const AddUpdateCompanyBorrowerFields = ({
           companyOtherDetailsInputNames
         )}
       />
-
     </>
   );
 };

@@ -6,7 +6,7 @@ import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
-import { countryOptions, locationOptions } from "../../../data/CountryData";
+import { countryOptions, districtOptions, locationOptions } from "../../../data/CountryData";
 import {
   maritalStatus,
   title,
@@ -21,13 +21,21 @@ import {
 const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
-  const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
+      []
+    );
 
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.contactDetails.country] || []
     );
-  }, [BorrowerData.contactDetails.country]);
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.contactDetails.province] || []
+    );
+  }, [
+    BorrowerData.contactDetails.country,
+    BorrowerData.contactDetails.province,
+  ]);
 
   useEffect(() => {
     const keysArray = [
@@ -197,7 +205,8 @@ console.log(name)
     {
       labelName: "District",
       inputName: "district",
-      type: "text",
+      type: "select",
+      options: filteredDistrictLocations1,
       validation: false,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },

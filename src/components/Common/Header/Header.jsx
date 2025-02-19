@@ -18,13 +18,15 @@ const UserMenu = ({ userNavigation, isOnline }) => {
   const { roleData } = useSelector((state) => state.userManagement);
   const { roleName } = useSelector((state) => state.auth);
 
+console.log(roleData)
+
   const handleRoleChange = (e) => {
     const selectedRole = e.target.value;
     dispatch(setRole(selectedRole));
   };
 
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className="relative w-[100%]">
       <div className="flex items-center gap-2">
         <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-background-light-secondary transition-colors duration-200 ">
           <span className="absolute -inset-1.5" />
@@ -41,7 +43,7 @@ const UserMenu = ({ userNavigation, isOnline }) => {
           Hello, {localStorage.getItem("username")}
         </div>
         {localStorage.getItem("username") === "superadmin" && (
-          <div>
+          <div className="w-[50%]">
             {/* Role Dropdown */}
             <InputSelect
               inputOptions={roleData.map((role) => ({

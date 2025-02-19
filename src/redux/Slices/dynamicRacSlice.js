@@ -625,7 +625,7 @@ const dynamicRacSlice = createSlice({
       .addCase(addNewRule.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        toast.success("Dynamic RAC Cloned.");
+        toast.success("Dynamic RAC Added.");
       })
       .addCase(addNewRule.rejected, (state, action) => {
         state.loading = false;
