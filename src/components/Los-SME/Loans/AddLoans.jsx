@@ -9,6 +9,7 @@ import {
   getLoanApplicationsByID,
   fetchLoanProductData,
   setLoanApplicationId,
+  setLoanBorrowerId,
   getMaxPrincipalData,
 } from "../../../redux/Slices/smeLoansSlice";
 import {
@@ -24,8 +25,11 @@ const AddLoans = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loanApplicationId } = useParams();
+  const { BorrowerId } = useParams();
   const { addLoanData, loading } = useSelector((state) => state.smeLoans);
   // const isValid = useSelector((state) => state.validation.isValid);
+
+  console.log(BorrowerId)
 
   useEffect(() => {
     dispatch(getLoanApplicationsByID(loanApplicationId));
@@ -46,10 +50,13 @@ const AddLoans = () => {
     ];
     dispatch(setFields(keysArray));
     dispatch(setLoanApplicationId(loanApplicationId));
+    if (BorrowerId) {
+      dispatch(setLoanBorrowerId(BorrowerId));
+    }
     return () => {
       dispatch(clearValidationError());
     };
-  }, [dispatch, loanApplicationId]);
+  }, [dispatch, loanApplicationId, BorrowerId]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};

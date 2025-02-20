@@ -88,11 +88,11 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
   const [condition, setCondition] = useState(
     rule
       ? getConditionForOperators(
-          firstOperator,
-          secondOperator,
-          minimum,
-          maximum
-        )
+        firstOperator,
+        secondOperator,
+        minimum,
+        maximum
+      )
       : ""
   );
   const [ruleConfig, setRuleConfig] = useState(
@@ -305,13 +305,13 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             ruleConfig,
           })
         ).unwrap();
-      }else{
+      } else {
         // update Rule
         await dispatch(
           updateRuleById({
             dynamicRacRuleId: rule.dynamicRacRuleId,
             ruleConfig: {
-             ...ruleConfig,
+              ...ruleConfig,
               numberCriteriaRangeList: [
                 {
                   minimum: minValue,
@@ -367,6 +367,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             inputOptions={[
               { label: "BORROWER_PROFILE", value: "BORROWER_PROFILE" },
               { label: "CALCULATED", value: "CALCULATED" },
+              { label: "DOCUMENT", value: "DOCUMENT" },
             ]}
             inputName="criteriaType"
             inputValue={ruleConfig.criteriaType}
@@ -377,7 +378,9 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
           <InputSelect
             labelName="Field Type"
-            inputOptions={[
+            inputOptions={ruleConfig.criteriaType === "DOCUMENT" ? [
+              { label: "STRING", value: "STRING" },
+            ] : [
               { label: "STRING", value: "STRING" },
               { label: "NUMBER", value: "NUMBER" },
             ]}
@@ -391,13 +394,13 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         {!isEditMode && (
           <InputSelect
             labelName="Parameter"
-            inputOptions={
-              ruleConfig.criteriaType === "BORROWER_PROFILE"
-                ? optionsList.borrowerProfileAvailableNames
-                : ruleConfig.criteriaType === "CALCULATED"
+            inputOptions={ruleConfig.criteriaType === "BORROWER_PROFILE"
+              ? optionsList.borrowerProfileAvailableNames
+              : ruleConfig.criteriaType === "CALCULATED"
                 ? optionsList.calculatedAvailableNames
-                : []
-            }
+                : ruleConfig.criteriaType === "DOCUMENT"
+                  ? optionsList.documentsAvailableNames
+                  : []}
             inputName="name"
             inputValue={ruleConfig.name}
             onChange={handleChange}
@@ -447,27 +450,27 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
             {(condition === "Less than" ||
               condition === "Less than or equal to") && (
-              <InputNumber
-                labelName="Value"
-                inputName="maxValue"
-                inputValue={maxValue}
-                onChange={(e) => setMaxValue(e.target.value)}
-                placeHolder="0"
-              />
-            )}
+                <InputNumber
+                  labelName="Value"
+                  inputName="maxValue"
+                  inputValue={maxValue}
+                  onChange={(e) => setMaxValue(e.target.value)}
+                  placeHolder="0"
+                />
+              )}
 
             {(condition === "Greater than" ||
               condition === "Greater than or equal to") && (
-              <>
-                <InputNumber
-                  labelName="Value"
-                  inputName="minValue"
-                  inputValue={minValue}
-                  onChange={(e) => setMinValue(e.target.value)}
-                  placeHolder="0"
-                />
-              </>
-            )}
+                <>
+                  <InputNumber
+                    labelName="Value"
+                    inputName="minValue"
+                    inputValue={minValue}
+                    onChange={(e) => setMinValue(e.target.value)}
+                    placeHolder="0"
+                  />
+                </>
+              )}
 
             {condition === "Equal to" && (
               <>

@@ -766,6 +766,7 @@ const initialState = {
       repaymentTenureStr: "",
       principalAmount: 0,
       refinancedLoanId: "",
+      refinancedLoanAmount:0,
       sector: "",
       branch: "",
       agentName: "",
@@ -846,6 +847,9 @@ const personalLoansSlice = createSlice({
     },
     setLoanApplicationId: (state, action) => {
       state.addLoanData.loanApplicationId = action.payload;
+    },
+    setLoanBorrowerId: (state, action) => {
+      state.addLoanData.generalLoanDetails.borrowerId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -1230,6 +1234,7 @@ export const {
   updateLoanField,
   updateLoanOfferFields,
   setLoanApplicationId,
+  setLoanBorrowerId,
 } = personalLoansSlice.actions;
 
 export default personalLoansSlice.reducer;

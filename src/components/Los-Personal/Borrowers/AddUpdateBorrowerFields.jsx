@@ -15,6 +15,7 @@ import {
 import {
   maritalStatus,
   workType,
+  ministriesOptions,
   title,
   gender,
   accountType,
@@ -356,6 +357,13 @@ const AddUpdateBorrowerFields = ({
       inputName: "workType",
       type: "select",
       options: workType,
+      validation: true,
+    },
+    {
+      labelName: "Ministry",
+      inputName: "ministry",
+      type: "select",
+      options: ministriesOptions,
       validation: true,
     },
     {

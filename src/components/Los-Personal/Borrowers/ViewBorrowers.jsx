@@ -26,6 +26,7 @@ import {
   UserIcon,
   ArchiveBoxIcon,
   HomeIcon,
+  PlusIcon,
   BriefcaseIcon,
   WindowIcon,
   MapPinIcon,
@@ -35,6 +36,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Menu, Transition } from "@headlessui/react";
+import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import { generateLoanApplicationId, resetAddLoanData } from "../../../redux/Slices/personalLoansSlice";
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -398,6 +401,7 @@ const ViewBorrowers = () => {
                 </div>
               </CardInfo>
             </div>
+
             {/* Actions */}
             <div className="absolute top-0 right-0">
               <button
@@ -415,6 +419,39 @@ const ViewBorrowers = () => {
         ) : (
           <p>No data found</p>
         )}
+      </div>
+    );
+  };
+
+  const ListAction = (rowData) => {
+    // if (rowData.status === "Completed" || rowData.status === "Cancel" ||
+    //       hasViewOnlyAccessGroup3(roleName)) {
+    //   return <div className="py-6">-</div>;
+    // }
+
+  const handleNewApplication = async (BorrowerId) => {
+    dispatch(resetAddLoanData());
+    try {
+      const loanApplicationId = await dispatch(
+        generateLoanApplicationId()
+      ).unwrap();
+      navigate(
+        `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}/${BorrowerId}`
+      );
+    } catch (error) {
+      console.error("Failed to generate loan application ID:", error);
+    }
+  };
+
+    return (
+      <div className="flex justify-center gap-4 px-5">
+        <Button
+          onClick={() => handleNewApplication(rowData.uniqueID)}
+          buttonName={"Add Loan"}
+          buttonIcon={PlusIcon}
+          rectangle={true}
+          className={`mt-4 h-fit self-center`}
+        />
       </div>
     );
   };
@@ -463,6 +500,7 @@ const ViewBorrowers = () => {
         columns={personalDetailsColumns}
         data={transformFlattenData}
         renderExpandedRow={renderExpandedRow}
+        ListAction={ListAction}
         loading={loading}
         error={error}
       />

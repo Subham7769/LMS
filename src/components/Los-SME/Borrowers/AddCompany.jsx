@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetCompanyData,
+  draftCompanyBorrowerInfo,
   registerCompanyBorrower,
   handleChangeAddCompanyField,
 } from "../../../redux/Slices/smeBorrowersSlice";
@@ -9,9 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import store from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 const AddCompany = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { addCompanyData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
@@ -57,6 +60,7 @@ const AddCompany = () => {
 
     if (isValid) {
       dispatch(registerCompanyBorrower(addCompanyData));
+      navigate('/loan/loan-origination-system/sme/borrowers/add-director')
     }
   };
 
@@ -73,7 +77,16 @@ const AddCompany = () => {
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
         />
-        <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
+        <Button
+          buttonName="Save Draft"
+          onClick={() => dispatch(draftCompanyBorrowerInfo(addCompanyData))}
+          rectangle={true}
+          buttonType={"secondary"}
+        />
+        <Button
+          buttonName="Submit"
+          onClick={handleSubmit}
+          rectangle={true} />
       </div>
     </>
   );

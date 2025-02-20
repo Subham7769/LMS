@@ -296,6 +296,37 @@ export const updateCompanyBorrowerInfo = createAsyncThunk(
   }
 );
 
+// Draft Company Borrower Information
+export const draftCompanyBorrowerInfo = createAsyncThunk(
+  "borrowers/draftCompanyBorrowerInfo", // action type
+  async (addCompanyData, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_DRAFT_COMPANY_BORROWER}`, //.env line no 331
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify({ ...addCompanyData, isDraft: true }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to register borrower");
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 // Update Director Information
 export const updateDirectorInfo = createAsyncThunk(
   "borrowers/updateDirectorInfo", // Action type
@@ -585,7 +616,6 @@ export const verifyDocumentInfo = createAsyncThunk(
           errorData.message || "Failed to verify document information"
         );
       }
-
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -676,10 +706,11 @@ const initialState = {
       grossSalary: "",
       groupId: "",
       reasonForBorrowing: "",
-      shareholdingStructure: "",
+      // shareholdingStructure: "",
       sourceOfRepayment: "",
       tradeUnion: "", //optional
     },
+    isDraft: false,
   },
   companyDetails: {},
   companyDocuments: [
@@ -862,6 +893,7 @@ const initialState = {
       title: "",
       uniqueID: "",
       uniqueIDType: "",
+      shareholdingPercentage:"",
     },
   },
   allCompanies: [],
@@ -1168,6 +1200,20 @@ const borrowersSlice = createSlice({
         toast.success("Borrower Registered Successfully");
       })
       .addCase(registerCompanyBorrower.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload; // Store the error message
+        toast.error(`API Error : ${action.payload}`); // Notify the user of the error
+      })
+      .addCase(draftCompanyBorrowerInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(draftCompanyBorrowerInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.borrower = action.payload; // Store the borrower data
+        toast.success("Draft Saved Successfully");
+      })
+      .addCase(draftCompanyBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Store the error message
         toast.error(`API Error : ${action.payload}`); // Notify the user of the error

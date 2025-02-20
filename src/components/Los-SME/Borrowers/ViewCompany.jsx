@@ -28,6 +28,7 @@ import {
   UserIcon,
   ArchiveBoxIcon,
   HomeIcon,
+  PlusIcon,
   BriefcaseIcon,
   WindowIcon,
   MapPinIcon,
@@ -41,6 +42,7 @@ import {
   ClockIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
+import { generateLoanApplicationId, resetAddLoanData } from "../../../redux/Slices/smeLoansSlice";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -826,6 +828,39 @@ const ViewCompany = () => {
     );
   };
 
+  const ListAction = (rowData) => {
+    // if (rowData.status === "Completed" || rowData.status === "Cancel" ||
+    //       hasViewOnlyAccessGroup3(roleName)) {
+    //   return <div className="py-6">-</div>;
+    // }
+console.log(rowData)
+  const handleNewApplication = async (BorrowerId) => {
+    dispatch(resetAddLoanData());
+    try {
+      const loanApplicationId = await dispatch(
+        generateLoanApplicationId()
+      ).unwrap();
+      navigate(
+        `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}/${BorrowerId}`
+      );
+    } catch (error) {
+      console.error("Failed to generate loan application ID:", error);
+    }
+  };
+
+    return (
+      <div className="flex justify-center gap-4 px-5">
+        <Button
+          onClick={() => handleNewApplication(rowData.companyUniqueId)}
+          buttonName={"Add Loan"}
+          buttonIcon={PlusIcon}
+          rectangle={true}
+          className={`mt-4 h-fit self-center`}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
@@ -870,6 +905,7 @@ const ViewCompany = () => {
         columns={personalDetailsColumns}
         data={flattenToSimpleObjectArray(filteredBorrowers)}
         renderExpandedRow={renderExpandedRow}
+        ListAction={ListAction}
         loading={loading}
         error={error}
       />

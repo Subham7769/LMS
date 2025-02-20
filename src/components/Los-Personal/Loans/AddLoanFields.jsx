@@ -267,7 +267,7 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Repayment Tenure",
+      labelName: "Repayment Frequency",
       inputName: "repaymentTenureStr",
       type: "select",
       options: repaymentTenureOptions,
@@ -297,6 +297,12 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "Refinanced Loan ID",
       inputName: "refinancedLoanId",
       type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Refinanced Loan Amount",
+      inputName: "refinancedLoanAmount",
+      type: "number",
       validation: false,
     },
     {

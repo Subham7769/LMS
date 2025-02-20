@@ -789,6 +789,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-loan/:loanApplicationId/:BorrowerId",
+            element: <AddLoansSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "loan-offers",
             element: <LoanOffersSME />,
             errorElement: <RouteErrorBoundary />,
@@ -921,6 +926,11 @@ const routes = [
           },
           {
             path: "add-loan/:loanApplicationId",
+            element: <AddLoans />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-loan/:loanApplicationId/:BorrowerId",
             element: <AddLoans />,
             errorElement: <RouteErrorBoundary />,
           },

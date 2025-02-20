@@ -720,6 +720,12 @@ const dynamicRacSlice = createSlice({
               label: item,
               value: item,
             })) || [],
+
+          documentsAvailableNames:
+            action.payload.documentsAvailableNames?.map((item) => ({
+              label: item,
+              value: item,
+            })) || [],
         };
       })
       .addCase(fetchOptionList.rejected, (state, action) => {
