@@ -49,6 +49,8 @@ import store from "../../redux/store";
 import { convertDate } from "../../utils/convertDate";
 import ViewRuleModal from "./ViewRuleModal";
 import HoverButtonNew from "../Common/HoverButtonNew/HoverButtonNew";
+import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from './RoleBasedView'
+
 
 const RuleComponent = ({
   rule,
@@ -72,15 +74,15 @@ const RuleComponent = ({
 
       // Second dispatch: deleteRuleById
       await dispatch(deleteRuleById(dynamicRacRuleId)).unwrap();
-      console.log("deleteRuleById");
+      // console.log("deleteRuleById");
 
       // Fourth dispatch: fetchOptionList
       await dispatch(fetchOptionList(racId)).unwrap();
-      console.log("fetchOptionList");
+      // console.log("fetchOptionList");
 
       // Third dispatch: fetchDynamicRacDetails
       await dispatch(fetchDynamicRacDetails(racId)).unwrap();
-      console.log("fetchDynamicRacDetails");
+      // console.log("fetchDynamicRacDetails");
     } catch (error) {
       console.error("Error while performing operations: ", error);
     }
@@ -108,10 +110,10 @@ const RuleComponent = ({
     ).unwrap();
 
     await dispatch(fetchOptionList(racId)).unwrap();
-    console.log("fetchOptionList");
+    // console.log("fetchOptionList");
 
     await dispatch(fetchDynamicRacDetails(racId)).unwrap();
-    console.log("fetchDynamicRacDetails");
+    // console.log("fetchDynamicRacDetails");
     setReviewComment("");
   };
 
@@ -132,7 +134,6 @@ const RuleComponent = ({
     setIsEditMode(!isEditMode);
     handleSaveDynamicRAC();
   };
-
 
   // Edit Number Config
   const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
@@ -182,6 +183,260 @@ const RuleComponent = ({
     }
   }, [condition]);
 
+  const ViewRuleAction = ({ rule, actions = false }) => {
+    return (<div className="flex justify-between items-center p-2 w-[100%] rounded-lg border">
+      <div className="flex-1 p-3 flex flex-col gap-3">
+        {/* Rule Status Pill */}
+        <StatusPill rule={rule} />
+
+        {/* Rule Main Literature Text for Number */}
+        {rule?.fieldType === "NUMBER" && (
+          <h2>{generateNumberSentence(rule)}</h2>
+        )}
+
+        {/* Rule Main Literature Text for String */}
+        {rule?.fieldType === "STRING" && (
+          <h2>{generateStringSentence(rule)}</h2>
+        )}
+
+        {/* Rule sub-main Literature Text with status */}
+        <p className={"text-sm text-gray-500"}>
+          {rule?.status === "CREATED"
+            ? rule?.history?.updateBy
+              ? "Modified"
+              : "Newly Added"
+            : rule?.status === "REJECTED"
+              ? "Rejected"
+              : rule?.status === "APPROVED"
+                ? "Approved"
+                : rule?.status}{" "}
+          By {rule?.history?.updateBy || rule?.history?.createdBy}{" "}
+          <span className="font-bold text-3xl mx-2">.</span>{" "}
+          {convertDate(
+            rule?.history?.lastUpdatedDate || rule?.history?.creationDate
+          )}
+        </p>
+      </div>
+      {/* Actions */}
+      {actions && !(rule?.needDeleteApprove && ["CREATED", "REJECTED", "APPROVED"].includes(rule?.status)) && (
+        <div className="flex flex-col gap-5">
+          <PencilIcon
+            onClick={handleEdit}
+            className="h-5 w-5  hover:text-indigo-500 hover:cursor-pointer"
+          />
+          <TrashIcon
+            onClick={() =>
+              handleRemoveRule(sectionId, rule?.dynamicRacRuleId)
+            }
+            className="h-5 w-5  hover:text-red-500 hover:cursor-pointer"
+          />
+        </div>
+      )}
+    </div>)
+  }
+
+  const ViewRuleAccordion = ({ rule }) => {
+    return (<Accordion
+      isOpen={true}
+      headerComponent={
+        <div className="flex gap-2">
+          <StatusPill rule={rule} />
+          <p>{convertToReadableString(rule?.name)}</p>
+        </div>
+      }
+    >
+      <div className="p-3 flex flex-col gap-3">
+        {/* New Addition */}
+        {rule?.history?.updateBy === null &&
+          !rule?.needDeleteApprove && (
+            <div className="p-3 flex flex-col gap-3 text-sm text-green-500 font-semibold bg-green-50 rounded-lg">
+              <span className="flex justify-start align-middle">
+                <EyeIcon className="h-5 w-5 mr-2 " />
+                Proposed Value
+              </span>
+              <p className="text-gray-700">
+                {/* Rule Main Literature Text for Number */}
+                {rule?.fieldType === "NUMBER" && (
+                  <span>
+                    {generateNumberSentence({
+                      name: rule?.name,
+                      firstOperator: rule?.firstOperator,
+                      secondOperator: rule?.secondOperator,
+                      numberCriteriaRangeList:
+                        rule?.history?.updateBy === null
+                          ? rule?.numberCriteriaRangeList
+                          : rule?.history
+                            ?.numberCriteriaRangeListOldValue,
+                    })}
+                  </span>
+                )}
+                {/* Rule Main Literature Text for String */}
+                {rule?.fieldType === "STRING" && (
+                  <span>
+                    {generateStringSentence({
+                      name: rule?.name,
+                      blocked: rule?.blocked,
+                      criteriaValues:
+                        rule?.history?.updateBy === null
+                          ? rule?.criteriaValues
+                          : rule?.history?.criteriaValuesOldValue,
+                    })}
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
+
+        {/* Approved Deleted Value */}
+        {rule?.needDeleteApprove && (
+          <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
+            <span className="flex justify-start align-middle">
+              <EyeIcon className="h-5 w-5 mr-2 " />
+              Current Value
+            </span>
+            <p className="text-gray-700">
+              {/* Rule Main Literature Text for Number */}
+              {rule?.fieldType === "NUMBER" && (
+                <span>
+                  {generateNumberSentence({
+                    name: rule?.name,
+                    firstOperator: rule?.firstOperator,
+                    secondOperator: rule?.secondOperator,
+                    numberCriteriaRangeList:
+                      rule?.numberCriteriaRangeList,
+                  })}
+                </span>
+              )}
+              {/* Rule Main Literature Text for String */}
+              {rule?.fieldType === "STRING" && (
+                <span>
+                  {generateStringSentence({
+                    name: rule?.name,
+                    blocked: rule?.blocked,
+                    criteriaValues: rule?.criteriaValues,
+                  })}
+                </span>
+              )}
+            </p>
+          </div>
+        )}
+
+        {/* Version Section */}
+        {rule?.history?.updateBy !== null &&
+          !rule?.needDeleteApprove && (
+            <div className="grid grid-cols-2 gap-5">
+              <div className="p-3 flex flex-col gap-3 text-sm text-gray-500 font-semibold bg-gray-50 rounded-lg">
+                <span className="flex justify-start align-middle">
+                  <EyeIcon className="h-5 w-5 mr-2 " />
+                  Previous Version
+                </span>
+                <p className="text-gray-700">
+                  {/* Rule Main Literature Text for Number */}
+                  {rule?.fieldType === "NUMBER" && (
+                    <span>
+                      {generateNumberSentence({
+                        name: rule?.name,
+                        firstOperator:
+                          rule?.history.firstOperatorOldValue,
+                        secondOperator:
+                          rule?.history.secondOperatorOldValue,
+                        numberCriteriaRangeList:
+                          rule?.history.updateBy === null
+                            ? rule?.numberCriteriaRangeList
+                            : rule?.history
+                              .numberCriteriaRangeListOldValue,
+                      })}
+                    </span>
+                  )}
+                  {/* Rule Main Literature Text for String */}
+                  {rule?.fieldType === "STRING" && (
+                    <span>
+                      {generateStringSentence({
+                        name: rule?.name,
+                        blocked: rule?.blocked,
+                        criteriaValues:
+                          rule?.history.updateBy === null
+                            ? rule?.criteriaValues
+                            : rule?.history.criteriaValuesOldValue,
+                      })}
+                    </span>
+                  )}
+                </p>
+              </div>
+              <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
+                <span className="flex justify-start align-middle">
+                  <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
+                  New Version
+                </span>
+                <p className="text-gray-700">
+                  {/* Rule Main Literature Text for Number */}
+                  {rule?.fieldType === "NUMBER" && (
+                    <span>{generateNumberSentence(rule)}</span>
+                  )}
+                  {/* Rule Main Literature Text for String */}
+                  {rule?.fieldType === "STRING" && (
+                    <span>{generateStringSentence(rule)}</span>
+                  )}
+                </p>
+              </div>
+            </div>
+          )}
+
+        {/* Risk Assessment */}
+        {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 rounded-lg">
+          <span className="flex justify-start align-middle">
+            <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
+            Risk Assessment
+          </span>
+          <p className="text-gray-700">
+            These changes may cause product financial effects.
+          </p>
+        </div> */}
+
+        {/* Review Comment */}
+        {!rule?.needDeleteApprove && (
+          <div>
+            <InputTextArea
+              labelName={"Review Comments"}
+              inputName={"reviewComments"}
+              inputValue={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
+              placeHolder={`Enter your review comments...`}
+            />
+          </div>
+        )}
+
+        {/* Approve/Reject  */}
+        <div className="grid grid-cols-2 gap-5 px-5 w-[100%]">
+          <HoverButtonNew
+            buttonIcon={XMarkIcon}
+            buttonName="Reject"
+            onClick={() =>
+              handleStatusChange({
+                dynamicRacRuleId,
+                status: "REJECTED",
+                reviewComment,
+              })
+            }
+            color="red"
+          />
+          <HoverButtonNew
+            buttonIcon={CheckIcon}
+            buttonName="Approve"
+            onClick={() =>
+              handleStatusChange({
+                dynamicRacRuleId,
+                status: "APPROVED",
+                reviewComment,
+              })
+            }
+            color="green"
+          />
+        </div>
+      </div>
+    </Accordion>)
+  }
+
   return (
     <>
       <ViewRuleModal
@@ -192,294 +447,37 @@ const RuleComponent = ({
         sectionName={sectionName}
         rule={rule}
       />
-      {/* Maker/Checker UI */}
-      {(roleName == "ROLE_MAKER_ADMIN" ||
-        (roleName == "ROLE_CHECKER_ADMIN" &&
-          rule?.status !== "CREATED" &&
-          !rule?.needDeleteApprove) ||
-        roleName == "ROLE_ADMIN" ||
-        roleName === "ROLE_SUPERADMIN") && (
-        <div className="flex flex-col justify-between items-center p-2 rounded-lg border ">
-          {!showRuleModal && (
-            <div className="flex justify-between items-center p-2 w-[100%]">
-              {/* <ChevronUpDownIcon className="h-5 w-5 hover:text-indigo-500 hover:cursor-pointer hover:bg-slate-200" /> */}
-              <div className="flex-1 p-3 flex flex-col gap-3">
-                {/* Rule Status Pill */}
-                <StatusPill rule={rule} />
-
-                {/* Rule Main Literature Text for Number */}
-                {rule?.fieldType === "NUMBER" && (
-                  <h2>{generateNumberSentence(rule)}</h2>
-                )}
-
-                {/* Rule Main Literature Text for String */}
-                {rule?.fieldType === "STRING" && (
-                  <h2>{generateStringSentence(rule)}</h2>
-                )}
-
-                {/* Rule sub-main Literature Text with status */}
-                <p className={"text-sm text-gray-500"}>
-                  {rule?.status === "CREATED"
-                    ? rule?.history?.updateBy
-                      ? "Modified"
-                      : "Newly Added"
-                    : rule?.status === "REJECTED"
-                    ? "Rejected"
-                    : rule?.status === "APPROVED"
-                    ? "Approved"
-                    : rule?.status}{" "}
-                  By {rule?.history?.updateBy || rule?.history?.createdBy}{" "}
-                  <span className="font-bold text-3xl mx-2">.</span>{" "}
-                  {convertDate(
-                    rule?.history?.lastUpdatedDate ||
-                      rule?.history?.creationDate
-                  )}
-                </p>
-              </div>
-
-              {/* Actions */}
-              {(roleName == "ROLE_MAKER_ADMIN" ||
-                roleName == "ROLE_ADMIN" ||
-                roleName === "ROLE_SUPERADMIN") && (
-                <div className="flex gap-5 flex-col">
-                  {!(
-                    rule?.needDeleteApprove &&
-                    (rule?.status === "REJECTED" ||
-                      rule?.status === "APPROVED" ||
-                      rule?.status === "CREATED")
-                  ) && (
-                    <>
-                      <PencilIcon
-                        onClick={handleEdit}
-                        className="h-5 w-5  hover:text-indigo-500 hover:cursor-pointer"
-                      />
-                      <TrashIcon
-                        onClick={() =>
-                          handleRemoveRule(sectionId, rule?.dynamicRacRuleId)
-                        }
-                        className="h-5 w-5  hover:text-red-500 hover:cursor-pointer"
-                      />
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+      {/* Maker UI View Rule with Actions*/}
+      {(roleName == "ROLE_MAKER_ADMIN") && (
+        <ViewRuleAction rule={rule} actions={true} />
       )}
 
-      {/* Checker UI with new API*/}
-      {(roleName == "ROLE_CHECKER_ADMIN" ||
-        roleName == "ROLE_ADMIN" ||
-        roleName === "ROLE_SUPERADMIN") &&
-        (rule?.status === "CREATED" || rule?.needDeleteApprove) && (
-          <>
-            <Accordion
-              isOpen={true}
-              headerComponent={
-                <div className="flex gap-2">
-                  <StatusPill rule={rule}/>
-                  <p>{convertToReadableString(rule?.name)}</p>
-                </div>
-              }
-            >
-              <div className="p-3 flex flex-col gap-3">
-                {/* New Addition */}
-                {rule?.history?.updateBy === null &&
-                  !rule?.needDeleteApprove && (
-                    <div className="p-3 flex flex-col gap-3 text-sm text-green-500 font-semibold bg-green-50 rounded-lg">
-                      <span className="flex justify-start align-middle">
-                        <EyeIcon className="h-5 w-5 mr-2 " />
-                        Proposed Value
-                      </span>
-                      <p className="text-gray-700">
-                        {/* Rule Main Literature Text for Number */}
-                        {rule?.fieldType === "NUMBER" && (
-                          <h2>
-                            {generateNumberSentence({
-                              name: rule?.name,
-                              firstOperator: rule?.firstOperator,
-                              secondOperator: rule?.secondOperator,
-                              numberCriteriaRangeList:
-                                rule?.history?.updateBy === null
-                                  ? rule?.numberCriteriaRangeList
-                                  : rule?.history
-                                      ?.numberCriteriaRangeListOldValue,
-                            })}
-                          </h2>
-                        )}
-                        {/* Rule Main Literature Text for String */}
-                        {rule?.fieldType === "STRING" && (
-                          <h2>
-                            {generateStringSentence({
-                              name: rule?.name,
-                              blocked: rule?.blocked,
-                              criteriaValues:
-                                rule?.history?.updateBy === null
-                                  ? rule?.criteriaValues
-                                  : rule?.history?.criteriaValuesOldValue,
-                            })}
-                          </h2>
-                        )}
-                      </p>
-                    </div>
-                  )}
-
-                {/* Approved Deleted Value */}
-                {rule?.needDeleteApprove && (
-                  <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
-                    <span className="flex justify-start align-middle">
-                      <EyeIcon className="h-5 w-5 mr-2 " />
-                      Current Value
-                    </span>
-                    <p className="text-gray-700">
-                      {/* Rule Main Literature Text for Number */}
-                      {rule?.fieldType === "NUMBER" && (
-                        <h2>
-                          {generateNumberSentence({
-                            name: rule?.name,
-                            firstOperator: rule?.firstOperator,
-                            secondOperator: rule?.secondOperator,
-                            numberCriteriaRangeList:
-                              rule?.history.updateBy !== null
-                                ? rule?.numberCriteriaRangeList
-                                : rule?.history.numberCriteriaRangeListOldValue,
-                          })}
-                        </h2>
-                      )}
-                      {/* Rule Main Literature Text for String */}
-                      {rule?.fieldType === "STRING" && (
-                        <h2>
-                          {generateStringSentence({
-                            name: rule?.name,
-                            blocked: rule?.blocked,
-                            criteriaValues:
-                              rule?.history.updateBy !== null
-                                ? rule?.criteriaValues
-                                : rule?.history.criteriaValuesOldValue,
-                          })}
-                        </h2>
-                      )}
-                    </p>
-                  </div>
-                )}
-
-                {/* Version Section */}
-                {rule?.history?.updateBy !== null &&
-                  !rule?.needDeleteApprove && (
-                    <div className="grid grid-cols-2 gap-5">
-                      <div className="p-3 flex flex-col gap-3 text-sm text-gray-500 font-semibold bg-gray-50 rounded-lg">
-                        <span className="flex justify-start align-middle">
-                          <EyeIcon className="h-5 w-5 mr-2 " />
-                          Previous Version
-                        </span>
-                        <p className="text-gray-700">
-                          {/* Rule Main Literature Text for Number */}
-                          {rule?.fieldType === "NUMBER" && (
-                            <h2>
-                              {generateNumberSentence({
-                                name: rule?.name,
-                                firstOperator:
-                                  rule?.history.firstOperatorOldValue,
-                                secondOperator:
-                                  rule?.history.secondOperatorOldValue,
-                                numberCriteriaRangeList:
-                                  rule?.history.updateBy === null
-                                    ? rule?.numberCriteriaRangeList
-                                    : rule?.history
-                                        .numberCriteriaRangeListOldValue,
-                              })}
-                            </h2>
-                          )}
-                          {/* Rule Main Literature Text for String */}
-                          {rule?.fieldType === "STRING" && (
-                            <h2>
-                              {generateStringSentence({
-                                name: rule?.name,
-                                blocked: rule?.blocked,
-                                criteriaValues:
-                                  rule?.history.updateBy === null
-                                    ? rule?.criteriaValues
-                                    : rule?.history.criteriaValuesOldValue,
-                              })}
-                            </h2>
-                          )}
-                        </p>
-                      </div>
-                      <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
-                        <span className="flex justify-start align-middle">
-                          <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
-                          New Version
-                        </span>
-                        <p className="text-gray-700">
-                          {/* Rule Main Literature Text for Number */}
-                          {rule?.fieldType === "NUMBER" && (
-                            <h2>{generateNumberSentence(rule)}</h2>
-                          )}
-                          {/* Rule Main Literature Text for String */}
-                          {rule?.fieldType === "STRING" && (
-                            <h2>{generateStringSentence(rule)}</h2>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                {/* Risk Assessment */}
-                {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 rounded-lg">
-                  <span className="flex justify-start align-middle">
-                    <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
-                    Risk Assessment
-                  </span>
-                  <p className="text-gray-700">
-                    These changes may cause product financial effects.
-                  </p>
-                </div> */}
-
-                {/* Review Comment */}
-                {!rule?.needDeleteApprove && (
-                  <div>
-                    <InputTextArea
-                      labelName={"Review Comments"}
-                      inputName={"reviewComments"}
-                      inputValue={reviewComment}
-                      onChange={(e) => setReviewComment(e.target.value)}
-                      placeHolder={`Enter your review comments...`}
-                    />
-                  </div>
-                )}
-
-                {/* Approve/Reject  */}
-                <div className="grid grid-cols-2 gap-5 px-5 w-[100%]">
-                  <HoverButtonNew
-                    buttonIcon={XMarkIcon}
-                    buttonName="Reject"
-                    onClick={() =>
-                      handleStatusChange({
-                        dynamicRacRuleId,
-                        status: "REJECTED",
-                        reviewComment,
-                      })
-                    }
-                    color="red"
-                  />
-                  <HoverButtonNew
-                    buttonIcon={CheckIcon}
-                    buttonName="Approve"
-                    onClick={() =>
-                      handleStatusChange({
-                        dynamicRacRuleId,
-                        status: "APPROVED",
-                        reviewComment,
-                      })
-                    }
-                    color="green"
-                  />
-                </div>
-              </div>
-            </Accordion>
-          </>
+      {/* Checker UI View Rule without Actions*/}
+      {(roleName == "ROLE_CHECKER_ADMIN" &&
+        (rule?.status !== "CREATED" && !rule?.needDeleteApprove)) && (
+          <ViewRuleAction rule={rule} actions={false} />
         )}
+
+      {/* Checker UI View Rule with Approval*/}
+      {(roleName == "ROLE_CHECKER_ADMIN") &&
+        (rule?.status === "CREATED" || rule?.needDeleteApprove) && (
+          <ViewRuleAccordion rule={rule} />
+        )}
+
+      {/* EditorRoles's UI View Rule with Actions & Approval */}
+      {(EditorRolesDynamicRac.includes(roleName)) && (
+        (rule?.status === "CREATED" || rule?.needDeleteApprove) ? (
+          <ViewRuleAccordion rule={rule} />
+        ) : (
+          <ViewRuleAction rule={rule} actions={true} />
+        )
+      )}
+
+      {/* ViewerRoles's UI View Rule without Actions & Approval */}
+      {(ViewerRolesDynamicRac.includes(roleName)) && (
+          <ViewRuleAction rule={rule} actions={false} />
+      )}
+
     </>
   );
 };

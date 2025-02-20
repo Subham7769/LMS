@@ -46,10 +46,12 @@ import {
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import store from "../../redux/store";
+import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from './RoleBasedView'
 
 const DynamicRAC = () => {
   const { racId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
@@ -64,7 +66,6 @@ const DynamicRAC = () => {
   const { name } = racConfig.racDetails;
   const sections = racConfig.sections;
   const { roleName } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,29 +86,6 @@ const DynamicRAC = () => {
       dispatch(clearValidationError());
     };
   }, [racId, dispatch]);
-
-  const handleUploadConfig = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const config = JSON.parse(e.target.result);
-          // Dispatch the updated structure with racDetails and sections
-          dispatch(
-            uploadConfig({
-              racDetails: config.racDetails, // Handle racDetails
-              sections: config.sections, // Handle sections
-            })
-          );
-        } catch (error) {
-          console.error("Error parsing JSON:", error);
-          toast("Failed to load configuration. Please check the file format.");
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
 
   const handleSaveDynamicRAC = async () => {
     // Extract the section names
@@ -151,6 +129,30 @@ const DynamicRAC = () => {
       } catch (error) {
         console.error("Error during handleSave:", error);
       }
+    }
+  };
+
+  const handleUploadConfig = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const config = JSON.parse(e.target.result);
+          // Dispatch the updated structure with racDetails and sections
+          dispatch(
+            uploadConfig({
+              racDetails: config.racDetails, // Handle racDetails
+              sections: config.sections, // Handle sections
+            })
+          );
+          handleSaveDynamicRAC();
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+          toast("Failed to load configuration. Please check the file format.");
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -233,18 +235,18 @@ const DynamicRAC = () => {
     }
   };
 
-  const createCloneDynamicRac = (racId, racName) => {
-    dispatch(cloneDynamicRac({ racId, racName })).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        navigate(`/loan/dynamic-rac/${action.payload.racId}`);
-        dispatch(fetchDynamicRacData());
-      }
-    });
+  const createCloneDynamicRac = async (racId, racName) => {
+    const action = await dispatch(cloneDynamicRac({ racId, racName }));
+    if (action.type === "rac/cloneDynamicRac/fulfilled") {
+      navigate(`/loan/dynamic-rac/${action.payload.racId}`);
+      dispatch(fetchDynamicRacData());
+    }
   };
 
+
   // Updated handleDelete function
-  const handleDelete = (racId) => {
-    dispatch(deleteDynamicRac(racId)).then((action) => {
+  const handleDelete = async (racId) => {
+    await dispatch(deleteDynamicRac(racId)).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacData());
         navigate("/loan/dynamic-rac");
@@ -362,15 +364,10 @@ const DynamicRAC = () => {
               initialName={name}
               onSave={(newName) => handleUpdateName(racId, newName)}
               editable={
-                roleName == "ROLE_MAKER_ADMIN" ||
-                roleName == "ROLE_ADMIN" ||
-                roleName === "ROLE_SUPERADMIN"
-              }
+                roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)}
             />
 
-            {(roleName == "ROLE_MAKER_ADMIN" ||
-              roleName == "ROLE_ADMIN" ||
-              roleName === "ROLE_SUPERADMIN") && (
+            {(roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
               <div>
                 {!sections.length < 1 && (
                   <Button
@@ -384,61 +381,57 @@ const DynamicRAC = () => {
             )}
           </div>
           <div className="flex justify-between items-center">
-            {roleName !== "ROLE_VIEWER" && (
-              <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
-                <div className="flex gap-2"></div>
-                {(roleName == "ROLE_MAKER_ADMIN" ||
-                  roleName == "ROLE_ADMIN" ||
-                  roleName === "ROLE_SUPERADMIN") && (
-                  <div className="flex gap-2 items-end">
-                    <HoverButton
-                      icon={ArrowDownOnSquareIcon}
-                      text="Download"
-                      color="yellow" // Automatically sets hover and background colors
-                      onClick={() => dispatch(downloadConfig())}
-                    />
-                    <HoverButton
-                      icon={ArrowUpOnSquareIcon}
-                      text="Upload"
-                      color="green" // Automatically sets hover and background colors
-                      onClick={() => fileInputRef.current.click()}
-                    />
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".json"
-                      style={{ display: "none" }}
-                      onChange={handleUploadConfig}
-                    />
-                    {roleName !== "ROLE_VIEWER" ? (
-                      <div className="flex gap-4">
+            <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
+              <div className="flex gap-2"></div>
+              {(roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
+                <div className="flex gap-2 items-end">
+                  <HoverButton
+                    icon={ArrowDownOnSquareIcon}
+                    text="Download"
+                    color="yellow" // Automatically sets hover and background colors
+                    onClick={() => dispatch(downloadConfig())}
+                  />
+                  <HoverButton
+                    icon={ArrowUpOnSquareIcon}
+                    text="Upload"
+                    color="green" // Automatically sets hover and background colors
+                    onClick={() => fileInputRef.current.click()}
+                  />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    style={{ display: "none" }}
+                    onChange={handleUploadConfig}
+                  />
+                  {roleName !== "ROLE_VIEWER" ? (
+                    <div className="flex gap-4">
+                      <HoverButton
+                        text={"Clone"}
+                        icon={DocumentDuplicateIcon}
+                        onClick={handleClone}
+                      />
+                      {sections.length > 0 && (
                         <HoverButton
-                          text={"Clone"}
-                          icon={DocumentDuplicateIcon}
-                          onClick={handleClone}
+                          className="mt-4"
+                          icon={CheckCircleIcon}
+                          text="Save"
+                          onClick={handleSaveDynamicRAC}
                         />
-                        {sections.length > 0 && (
-                          <HoverButton
-                            className="mt-4"
-                            icon={CheckCircleIcon}
-                            text="Save"
-                            onClick={handleSaveDynamicRAC}
-                          />
-                        )}
-                        <div className="rounded-full border text-red-500 border-red-500 p-2 hover:bg-red-500 hover:text-white hover:cursor-pointer">
-                          <TrashIcon
-                            className="h-5 w-5"
-                            onClick={() => handleDelete(racId)}
-                          />
-                        </div>
+                      )}
+                      <div className="rounded-full border text-red-500 border-red-500 p-2 hover:bg-red-500 hover:text-white hover:cursor-pointer">
+                        <TrashIcon
+                          className="h-5 w-5"
+                          onClick={() => handleDelete(racId)}
+                        />
                       </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <div className={`flex items-start "max-h-screen"`}>
             <div
@@ -448,22 +441,35 @@ const DynamicRAC = () => {
                 <div className="flex flex-col justify-center gap-3">
                   {/* Add first Section Box */}
                   {sections.length < 1 ? (
-                    <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-                      <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
-                      <h2 className="font-semibold ">Create New Rac</h2>
-                      <p className="flex flex-col items-center text-gray-500">
-                        Start by adding sections to your Risk Assessment
-                        Criteria.
-                      </p>
-                      <div className="flex gap-5">
-                        <Button
-                          buttonIcon={PlusIcon}
-                          buttonName="Add First Section"
-                          rectangle={true}
-                          onClick={() => handleAddSection()}
-                        />
+                    roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
+                      <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
+                        <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
+                        <h2 className="font-semibold ">Create New Rac</h2>
+                        <p className="flex flex-col items-center text-gray-500">
+                          Start by adding sections to your Risk Assessment
+                          Criteria.
+                        </p>
+                        <div className="flex gap-5">
+                          <Button
+                            buttonIcon={PlusIcon}
+                            buttonName="Add First Section"
+                            rectangle={true}
+                            onClick={() => handleAddSection()}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      (roleName == "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName)) && (
+                        <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
+                          <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold rotate-45" />
+                          <h2 className="font-semibold ">No Data to Review</h2>
+                          <p className="flex flex-col items-center text-gray-500">
+                            No Risk Assessment Criteria submitted for review
+                            yet.
+                          </p>
+                        </div>
+                      )
+                    )
                   ) : (
                     sections?.map((section) => (
                       <Droppable
@@ -474,13 +480,12 @@ const DynamicRAC = () => {
                           <div
                             {...provided.droppableProps}
                             ref={provided.innerRef}
-                            className={`shadow-md border-gray-300 border rounded-xl overflow-hidden ${
-                              section.size === "full"
-                                ? "col-span-3"
-                                : section.size === "half"
+                            className={`shadow-md border-gray-300 border rounded-xl overflow-hidden ${section.size === "full"
+                              ? "col-span-3"
+                              : section.size === "half"
                                 ? "col-span-2"
                                 : "col-span-1"
-                            }`}
+                              }`}
                           >
                             <div className="flex justify-between items-center p-5 bg-white border-b">
                               <div className="flex justify-center align-middle">
@@ -497,15 +502,11 @@ const DynamicRAC = () => {
                                     )
                                   }
                                   editable={
-                                    roleName == "ROLE_MAKER_ADMIN" ||
-                                    roleName == "ROLE_ADMIN" ||
-                                    roleName === "ROLE_SUPERADMIN"
+                                    roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)
                                   }
                                 />
                               </div>
-                              {(roleName == "ROLE_MAKER_ADMIN" ||
-                                roleName == "ROLE_ADMIN" ||
-                                roleName === "ROLE_SUPERADMIN") && (
+                              {(roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
                                 <div className="flex justify-between items-center gap-5 hover:cursor-pointer">
                                   <div
                                     className={"flex text-blue-500"}
@@ -556,46 +557,61 @@ const DynamicRAC = () => {
 
                             {/* Add Criteria Box */}
                             {section?.rules.length < 1 ? (
-                              <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
-                                <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
-                                <p className="flex flex-col items-center text-gray-500">
-                                  <span>
-                                    Click to add criteria to this section. You{" "}
-                                  </span>
-                                  <span>
-                                    can also use an existing template as a
-                                    starting point
-                                  </span>
-                                </p>
-                                <div className="flex gap-5">
-                                  <HoverButton
-                                    icon={PlusIcon}
-                                    text="Add Criteria"
-                                    onClick={() =>
-                                      handleAddRule(
-                                        section.sectionId,
-                                        section.sectionName
-                                      )
-                                    }
-                                  />
-                                  <HoverButton
-                                    icon={ArrowUpOnSquareIcon}
-                                    text="Use Template"
-                                    onClick={() =>
-                                      handleUseTemplate(
-                                        section.sectionId,
-                                        section.sectionName
-                                      )
-                                    }
-                                  />
+                              roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
+                                <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
+                                  <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
+                                  <p className="flex flex-col items-center text-gray-500">
+                                    <span>
+                                      Click to add criteria to this section. You{" "}
+                                    </span>
+                                    <span>
+                                      can also use an existing template as a
+                                      starting point
+                                    </span>
+                                  </p>
+                                  <div className="flex gap-5">
+                                    <HoverButton
+                                      icon={PlusIcon}
+                                      text="Add Criteria"
+                                      onClick={() =>
+                                        handleAddRule(
+                                          section.sectionId,
+                                          section.sectionName
+                                        )
+                                      }
+                                    />
+                                    <HoverButton
+                                      icon={ArrowUpOnSquareIcon}
+                                      text="Use Template"
+                                      onClick={() =>
+                                        handleUseTemplate(
+                                          section.sectionId,
+                                          section.sectionName
+                                        )
+                                      }
+                                    />
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                (roleName == "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName)) && (
+                                  <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
+                                    <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold rotate-45" />
+                                    <p className="flex flex-col items-center text-gray-500">
+                                      <span>
+                                        No Risk Assessment Criteria available
+                                        for review.
+                                      </span>
+                                    </p>
+                                  </div>
+                                )
+                              )
                             ) : (
                               section?.rules?.map((rule, index) => (
                                 <Draggable
                                   key={rule.dynamicRacRuleId}
                                   draggableId={rule.dynamicRacRuleId}
                                   index={index}
+                                  isDragDisabled={(roleName == "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName))}
                                 >
                                   {(provided, snapshot) => (
                                     <div
