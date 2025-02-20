@@ -146,7 +146,7 @@ const ViewBorrowers = () => {
 
   const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
 
-  console.log(flattenData);
+  // console.log(flattenData);
 
   const transformFlattenData = transformData(flattenData);
 
@@ -193,7 +193,7 @@ const ViewBorrowers = () => {
         navigate(
           `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
         );
-        console.log(uid);
+        // console.log(uid);
       };
 
       const handleChangeStatus = async (uid, newStatus) => {

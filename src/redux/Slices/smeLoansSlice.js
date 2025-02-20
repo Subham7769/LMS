@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import convertToTitleCase from "../../utils/convertToTitleCase";
 import { nanoid } from "nanoid";
-import { Signature } from "lucide-react";
 
 export const getLoanApplications = createAsyncThunk(
   "smeLoans/getLoanApplications",
@@ -269,6 +268,73 @@ export const downloadDocumentFile = createAsyncThunk(
       document.body.removeChild(a);
 
       return "File downloaded successfully";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const previewDocumentFile = createAsyncThunk(
+  "smeLoans/previewDocumentFile",
+  async (filePreviewParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken, docName } = filePreviewParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_COMPANY}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to preview");
+      }
+
+      const data = await response.json();
+      const byteCharacters = atob(data.base64Content);
+      const byteNumbers = new Uint8Array(
+        Array.from(byteCharacters, (char) => char.charCodeAt(0))
+      );
+      const blob = new Blob([byteNumbers], { type: data.contentType });
+
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank");
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+      return "File opened successfully";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getMaxPrincipalData = createAsyncThunk(
+  "smeLoans/getMaxPrincipalData",
+  async (maxPrincipalPayload, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_GET_MAX_PRINCIPAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(maxPrincipalPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -656,17 +722,18 @@ const initialState = {
     borrowerType: "COMPANY_BORROWER",
     generalLoanDetails: {
       borrowerId: "",
-      disbursedBy: "",
+      disbursedBy: "Bank",
       interestMethod: "",
       loanDuration: 0,
       loanInterest: 0,
+      loanInterestType: "",
+      loanInterestStr: "",
       loanProductId: "",
       loanReleaseDate: "",
-      numberOfTenure: 0,
-      perLoanDuration: "",
-      perLoanInterest: "",
+      repaymentTenure: 0,
+      repaymentTenureType: "",
+      repaymentTenureStr: "",
       principalAmount: 0,
-      repaymentCycle: "",
       sector: "",
       reasonForBorrowing: "",
       refinancedLoanId: "",
@@ -790,6 +857,7 @@ const initialState = {
   loanHistory: [],
   loanHistoryTotalElements: 0,
   loanConfigData: {},
+  loanProductData: [],
   loanProductOptions: [],
   loanOfferFields: {
     loanProductId: "",
@@ -1031,6 +1099,7 @@ const smeLoansSlice = createSlice({
       })
       .addCase(fetchLoanProductData.fulfilled, (state, action) => {
         state.loading = false;
+        state.loanProductData = action.payload;
         const updatedLoanProductOptions = action.payload
           .filter((item) => item.eligibleCustomerType === "CORPORATE")
           .map((item) => ({
@@ -1111,6 +1180,20 @@ const smeLoansSlice = createSlice({
         toast(`Draft Saved Successfully`);
       })
       .addCase(saveDraftLoanData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getMaxPrincipalData.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMaxPrincipalData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData.generalLoanDetails.principalAmount = action.payload;
+        toast(`Principal amount cannot be greater than fetched amount`);
+      })
+      .addCase(getMaxPrincipalData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);

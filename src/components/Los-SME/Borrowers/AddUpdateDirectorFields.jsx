@@ -7,7 +7,11 @@ import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
-import { countryOptions, locationOptions } from "../../../data/CountryData";
+import {
+  countryOptions,
+  districtOptions,
+  locationOptions,
+} from "../../../data/CountryData";
 import {
   maritalStatus,
   workType,
@@ -20,11 +24,25 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
+import {
+  BankNameOptions,
+  BranchNameOptions,
+  bankBranches,
+} from "../../../data/BankData";
 
-const AddUpdateDirectorFields = ({BorrowerData, handleChangeReducer}) => {
+const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
+    []
+  );
+  const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
+    []
+  );
+  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
+    []
+  );
 
   useEffect(() => {
     setFilteredLocations1(
@@ -33,9 +51,21 @@ const AddUpdateDirectorFields = ({BorrowerData, handleChangeReducer}) => {
     setFilteredLocations2(
       locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
     );
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.contactDetails.province] || []
+    );
+    setFilteredDistrictLocations2(
+      districtOptions[BorrowerData.nextOfKinDetails.kinProvince] || []
+    );
+    setFilteredBranchNameOptions(
+      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
+    );
   }, [
     BorrowerData.contactDetails.country,
     BorrowerData.nextOfKinDetails.kinCountry,
+    BorrowerData.contactDetails.province,
+    BorrowerData.nextOfKinDetails.kinProvince,
+    BorrowerData.bankDetails.bankName,
   ]);
 
   useEffect(() => {
@@ -84,7 +114,7 @@ const AddUpdateDirectorFields = ({BorrowerData, handleChangeReducer}) => {
       "freeCashInHand",
       "grossSalary",
     ];
-    
+
     dispatch(setFields(keysArray));
     return () => {
       dispatch(clearValidationError());
@@ -100,12 +130,60 @@ const AddUpdateDirectorFields = ({BorrowerData, handleChangeReducer}) => {
   };
 
   const handleFileUpload = (e, section) => {
-    const { name, value, type, checked,files } = e.target;
-console.log(name)
+    const { name, value, type, checked, files } = e.target;
+    console.log(name);
     dispatch(
-      handleChangeReducer({ section, field: name, value: files[0], type})
+      handleChangeReducer({ section, field: name, value: files[0], type })
     );
   };
+
+  useEffect(() => {
+  
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branchCode",
+          value: "",
+        })
+      );
+  
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "sortCode",
+          value: "",
+        })
+      );
+    }, [BorrowerData.bankDetails.bankName]);
+  
+    useEffect(() => {
+      if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
+        return;
+  
+      const branch = bankBranches.find(
+        (b) =>
+          b.bankName === BorrowerData.bankDetails.bankName &&
+          b.branchName === BorrowerData.bankDetails.branch
+      );
+  
+      if (branch) {
+        dispatch(
+          handleChangeReducer({
+            section: "bankDetails",
+            field: "branchCode",
+            value: branch.branchCode,
+          })
+        );
+  
+        dispatch(
+          handleChangeReducer({
+            section: "bankDetails",
+            field: "sortCode",
+            value: branch.sortCode,
+          })
+        );
+      }
+    }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
 
   //   All Fields Configuration
   const personalDetailsConfig = [
@@ -235,7 +313,8 @@ console.log(name)
     {
       labelName: "District",
       inputName: "district",
-      type: "text",
+      type: "select",
+      options: filteredDistrictLocations1,
       validation: false,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
@@ -307,7 +386,8 @@ console.log(name)
     {
       labelName: "Name of Bank",
       inputName: "bankName",
-      type: "text",
+      type: "select",
+      options: BankNameOptions,
       validation: true,
     },
     {
@@ -332,7 +412,8 @@ console.log(name)
     {
       labelName: "Branch",
       inputName: "branch",
-      type: "text",
+      type: "select",
+      options: filteredBranchNameOptions,
       validation: true,
     },
     {
@@ -402,7 +483,6 @@ console.log(name)
       type: "text",
       validation: true,
     },
-    { labelName: "District", inputName: "kinDistrict", type: "text" },
     {
       labelName: "Country",
       inputName: "kinCountry",
@@ -415,6 +495,12 @@ console.log(name)
       inputName: "kinProvince",
       type: "select",
       options: filteredLocations2,
+    },
+    {
+      labelName: "District",
+      inputName: "kinDistrict",
+      type: "select",
+      options: filteredDistrictLocations2,
     },
     {
       labelName: "Employer",
@@ -513,7 +599,6 @@ console.log(name)
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
-
                 />
               </div>
             );
@@ -556,7 +641,11 @@ console.log(name)
     renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
 
   const employmentDetails = (employmentDetails) =>
-    renderDetails(employmentDetails, employmentDetailsConfig, "employmentDetails");
+    renderDetails(
+      employmentDetails,
+      employmentDetailsConfig,
+      "employmentDetails"
+    );
 
   const bankDetails = (bankDetails) =>
     renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
@@ -567,7 +656,6 @@ console.log(name)
   // const otherDetails = (otherDetails) =>
   //   renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
 
-  
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
@@ -605,9 +693,7 @@ console.log(name)
       />
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() =>
-          bankDetails(BorrowerData.bankDetails)
-        }
+        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
         error={isValidationFailed(validationError, bankDetailsInputNames)}
       />
       <Accordion

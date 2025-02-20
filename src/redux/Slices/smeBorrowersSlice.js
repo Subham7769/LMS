@@ -645,6 +645,7 @@ const initialState = {
       natureOfCompany: "",
       numberOfPermanentEmployees: "",
       province: "",
+      district: "",
     },
     companyContactDetails: {
       mobile1: "",
@@ -771,7 +772,7 @@ const initialState = {
       sortCode: "",
     },
     contactDetails: {
-      country: "",
+      country: "Zambia",
       district: "",
       email: "",
       houseNumber: "",
@@ -795,7 +796,7 @@ const initialState = {
       workType: "",
     },
     nextOfKinDetails: {
-      kinCountry: "",
+      kinCountry: "Zambia",
       kinDistrict: "",
       kinEmail: "",
       kinEmployer: "",
@@ -835,7 +836,7 @@ const initialState = {
   },
   newShareHolder: {
     contactDetails: {
-      country: "",
+      country: "Zambia",
       district: "",
       email: "",
       houseNumber: "",

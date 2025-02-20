@@ -95,7 +95,7 @@ const LoanApplication = () => {
     navigate(
       `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
     );
-    if (rowData.status === "Submitted") {
+    if (rowData.status === "Submitted" || rowData.status === "In Progress") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
     }
     await dispatch(
@@ -144,10 +144,11 @@ const LoanApplication = () => {
         <div></div>
         <div className="flex justify-end gap-2 h-12">
           {!hasViewOnlyAccessGroup3(roleName) && (
-            <HoverButton
-              icon={PlusIcon}
-              text="New Application"
+            <Button
+              buttonIcon={PlusIcon}
+              buttonName="New Application"
               onClick={handleNewApplication}
+              rectangle={true}
             />
           )}
         </div>

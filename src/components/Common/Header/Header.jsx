@@ -18,7 +18,7 @@ const UserMenu = ({ userNavigation, isOnline }) => {
   const { roleData } = useSelector((state) => state.userManagement);
   const { roleName } = useSelector((state) => state.auth);
 
-console.log(roleData)
+  // console.log(roleData)
 
   const handleRoleChange = (e) => {
     const selectedRole = e.target.value;

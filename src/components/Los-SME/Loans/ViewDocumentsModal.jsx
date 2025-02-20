@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "../../Common/Button/Button";
 import { useDispatch } from "react-redux";
-import { downloadDocumentFile } from "../../../redux/Slices/personalLoansSlice";
+import { downloadDocumentFile, previewDocumentFile } from "../../../redux/Slices/smeLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
   const dispatch = useDispatch();
@@ -18,6 +18,16 @@ const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
       docName,
     };
     dispatch(downloadDocumentFile(fileDownloadParams));
+  };
+
+  const handlePreview = (docId, docName) => {
+    if (!docId) return;
+    const filePreviewParams = {
+      docId: docId,
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+      docName,
+    };
+    dispatch(previewDocumentFile(filePreviewParams));
   };
 
   const filteredDocuments = documents.filter((doc) => doc.docName);
@@ -57,11 +67,17 @@ const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
                 className="grid grid-cols-2 my-2 border-b border-border-gray-primary pb-2 items-center"
               >
                 <div>{convertToTitleCase(doc.documentKey)}</div>
-                <div className="text-center">
+                <div className="flex justify-center gap-2">
                   <Button
                     buttonIcon={ArrowDownTrayIcon}
                     onClick={() => handleDownload(doc?.docId, doc?.docName)}
                     circle={true}
+                  />
+                  <Button
+                    buttonIcon={EyeIcon}
+                    onClick={() => handlePreview(doc?.docId, doc?.docName)}
+                    circle={true}
+                    buttonType="secondary"
                   />
                 </div>
               </div>

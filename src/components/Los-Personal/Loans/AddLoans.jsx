@@ -9,6 +9,7 @@ import {
   getLoanApplicationsByID,
   fetchLoanProductData,
   setLoanApplicationId,
+  getMaxPrincipalData,
 } from "../../../redux/Slices/personalLoansSlice";
 import {
   clearValidationError,
@@ -17,6 +18,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -37,10 +39,7 @@ const AddLoans = () => {
       "loanProductId",
       "loanReleaseDate",
       "numberOfTenure",
-      "perLoanDuration",
-      "perLoanInterest",
       "principalAmount",
-      "repaymentCycle",
     ];
     dispatch(setFields(keysArray));
     dispatch(setLoanApplicationId(loanApplicationId));
@@ -90,6 +89,17 @@ const AddLoans = () => {
     navigate("/loan/loan-origination-system/personal/loans/loan-application");
   };
 
+  const getMaxPrincipal = async () => {
+    const maxPrincipalPayload = {
+      borrowerId: addLoanData.generalLoanDetails.borrowerId,
+      interestMethod: addLoanData.generalLoanDetails.interestMethod,
+      loanInterest: addLoanData.generalLoanDetails.loanInterest,
+      loanInterestType: addLoanData.generalLoanDetails.loanInterestType,
+      tenure: addLoanData.generalLoanDetails.repaymentTenure,
+    };
+    await dispatch(getMaxPrincipalData(maxPrincipalPayload)).unwrap();
+  };
+
   if (loading) {
     return <ContainerTile loading={loading} />;
   }
@@ -105,15 +115,30 @@ const AddLoans = () => {
       </div>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Resuable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
-      <div className="flex justify-end mt-5 gap-x-5">
-        <button
-          type="button"
-          onClick={handleDraft}
-          className={`rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-background-light-primary shadow-sm hover:bg-gray-400 focus-visible:outline-gray-600 bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-white`}
-        >
-          <span className="text-center w-full">Save Draft</span>
-        </button>
-        <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
+      <div className="flex justify-between mt-5 items-end">
+        <div className="text-xs text-text-light-tertiary flex items-center gap-1">
+          <InformationCircleIcon
+            className="-mt-0.5 h-5 w-5"
+            aria-hidden="true"
+          />
+          Loan Product, Borrower Id, Loan Duration & Repayment Tenure required
+          for fetching max principal Amount
+        </div>
+        <div className="flex gap-x-5">
+          <Button
+            buttonName="Get Max Principal Amt"
+            onClick={getMaxPrincipal}
+            buttonType="tertiary"
+            rectangle={true}
+          />
+          <Button
+            buttonName="Save Draft"
+            onClick={handleDraft}
+            buttonType="secondary"
+            rectangle={true}
+          />
+          <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
+        </div>
       </div>
     </>
   );

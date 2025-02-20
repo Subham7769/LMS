@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
@@ -13,13 +13,15 @@ import {
   uploadDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { tenureTypeOptions, sectorOptions } from "../../../data/OptionsData";
+import { sectorOptions } from "../../../data/OptionsData";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
-  const { loanProductOptions } = useSelector((state) => state.smeLoans);
+  const { loanProductOptions, loanProductData } = useSelector(
+    (state) => state.smeLoans
+  );
 
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
@@ -46,7 +48,25 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
-    // Use section to update the correct part of the state
+
+    if (name === "repaymentTenureStr") {
+      const [repaymentTenure, repaymentTenureType] = value.split(" "); // Extract number & type
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "repaymentTenure",
+          value: repaymentTenure ? parseInt(repaymentTenure, 10) : null, // Convert to number
+        })
+      );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "repaymentTenureType",
+          value: repaymentTenureType || "",
+        })
+      );
+    }
+
     dispatch(
       updateLoanField({ section, field: name, value, type, checked, index })
     );
@@ -88,6 +108,140 @@ const AddLoanFields = ({ addLoanData }) => {
     return date.toISOString().split("T")[0]; // Format as yyyy-MM-dd
   };
 
+  const selectedLoanProduct = loanProductData.find(
+    (product) =>
+      product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
+  );
+
+  // Generate unique loan tenure options combining loanTenure & loanTenureType
+  const loanTenureOptions = useMemo(() => {
+    if (!selectedLoanProduct) return [];
+
+    const uniqueLoanTenure = new Set();
+
+    return selectedLoanProduct.interestEligibleTenure
+      .filter((tenure) => {
+        const combinedValue = `${tenure.loanTenure} ${tenure.loanTenureType}`;
+        if (uniqueLoanTenure.has(combinedValue)) return false;
+        uniqueLoanTenure.add(combinedValue);
+        return true;
+      })
+      .map((tenure) => ({
+        label: `${tenure.loanTenure} ${tenure.loanTenureType}`,
+        value: `${tenure.loanTenure} ${tenure.loanTenureType}`,
+      }));
+  }, [selectedLoanProduct]);
+
+  // Generate unique repayment tenure options based on the selected loan duration
+  const repaymentTenureOptions = useMemo(() => {
+    if (!selectedLoanProduct || !addLoanData?.generalLoanDetails?.loanDuration)
+      return [];
+
+    const uniqueRepaymentTenure = new Set();
+
+    return selectedLoanProduct.interestEligibleTenure
+      .filter((tenure) => {
+        // Only include repaymentTenure if loanTenure matches the selected loan duration
+        const loanDurationMatch =
+          `${tenure.loanTenure} ${tenure.loanTenureType}` ===
+          addLoanData?.generalLoanDetails?.loanDuration;
+
+        if (!loanDurationMatch) return false;
+
+        const combinedRepayment = `${tenure.repaymentTenure} ${tenure.repaymentTenureType}`;
+
+        if (uniqueRepaymentTenure.has(combinedRepayment)) return false;
+        uniqueRepaymentTenure.add(combinedRepayment);
+        return true;
+      })
+      .map((tenure) => ({
+        label: `${tenure.repaymentTenure} ${tenure.repaymentTenureType}`,
+        value: `${tenure.repaymentTenure} ${tenure.repaymentTenureType}`,
+      }));
+  }, [selectedLoanProduct, addLoanData?.generalLoanDetails?.loanDuration]); // Runs when addLoanData?.generalLoanDetails?.loanDuration changes
+
+  // Calculate loanInterest based on selected loanDuration & repaymentTenure
+  const loanInterestStr = useMemo(() => {
+    const selectedLoanDuration = addLoanData?.generalLoanDetails?.loanDuration;
+    const selectedRepaymentTenure =
+      addLoanData?.generalLoanDetails?.repaymentTenureStr;
+
+    if (
+      !selectedLoanProduct ||
+      !selectedLoanDuration ||
+      !selectedRepaymentTenure
+    )
+      return "";
+
+    // Find the matching interest rate and period type
+    const matchingTenure = selectedLoanProduct.interestEligibleTenure.find(
+      (tenure) =>
+        `${tenure.loanTenure} ${tenure.loanTenureType}` ===
+          selectedLoanDuration &&
+        `${tenure.repaymentTenure} ${tenure.repaymentTenureType}` ===
+          selectedRepaymentTenure
+    );
+
+    return matchingTenure
+      ? `${matchingTenure.interestRate} PER ${matchingTenure.interestPeriodType} ${addLoanData?.generalLoanDetails?.interestMethod}`
+      : "";
+  }, [
+    selectedLoanProduct,
+    addLoanData?.generalLoanDetails?.loanDuration,
+    addLoanData?.generalLoanDetails?.repaymentTenureStr,
+  ]);
+
+  useEffect(() => {
+    if (!loanInterestStr) return;
+
+    const [loanInterest, loanInterestTypeStr] = loanInterestStr.split(" PER "); // Extract interest & type
+    const loanInterestType = loanInterestTypeStr
+      ? loanInterestTypeStr.split(" ")[0]
+      : ""; // Extract only YEAR
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanInterestStr",
+        value: loanInterestStr,
+      })
+    );
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanInterest",
+        value: loanInterest
+          ? parseInt(loanInterest.replace("%", "").trim())
+          : "", // Remove "%" symbol
+      })
+    );
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanInterestType",
+        value: loanInterestType.trim(), // Keep only the first word (YEAR)
+      })
+    );
+  }, [loanInterestStr]);
+
+  const interestMethod = useMemo(() => {
+    return selectedLoanProduct?.interestMethod || "";
+  }, [selectedLoanProduct]);
+
+  useEffect(() => {
+    if (!interestMethod) return;
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: interestMethod,
+      })
+    );
+  }, [interestMethod]);
+
   // All Fields Configuration
   const generalLoanDetailsConfig = [
     {
@@ -111,66 +265,35 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Principal Amount",
-      inputName: "principalAmount",
-      type: "number",
-      validation: true,
-    },
-    {
       labelName: "Loan Release Date",
       inputName: "loanReleaseDate",
       type: "date",
       validation: true,
     },
     {
-      labelName: "Interest Method",
-      inputName: "interestMethod",
+      labelName: "Loan Duration",
+      inputName: "loanDuration",
       type: "select",
-      options: [
-        { value: "FLAT", label: "FLAT" },
-        { value: "REDUCING", label: "REDUCING" },
-      ],
+      options: loanTenureOptions,
+      validation: true,
+    },
+    {
+      labelName: "Repayment Tenure",
+      inputName: "repaymentTenureStr",
+      type: "select",
+      options: repaymentTenureOptions,
       validation: true,
     },
     {
       labelName: "Loan Interest %",
-      inputName: "loanInterest",
+      inputName: "loanInterestStr",
       type: "text",
       validation: true,
+      disabled: true,
     },
     {
-      labelName: "Per (Loan Interest)",
-      inputName: "perLoanInterest",
-      type: "select",
-      options: tenureTypeOptions,
-      validation: true,
-    },
-    {
-      labelName: "Loan Duration",
-      inputName: "loanDuration",
-      type: "number",
-      validation: true,
-    },
-    {
-      labelName: "Per (Loan Duration)",
-      inputName: "perLoanDuration",
-      type: "select",
-      options: tenureTypeOptions,
-      validation: true,
-    },
-    {
-      labelName: "Repayment Cycle",
-      inputName: "repaymentCycle",
-      type: "select",
-      options: [
-        { value: "Monthly", label: "Monthly" },
-        { value: "Quarterly", label: "Quarterly" },
-      ],
-      validation: true,
-    },
-    {
-      labelName: "Number of Tenure",
-      inputName: "numberOfTenure",
+      labelName: "Principal Amount",
+      inputName: "principalAmount",
       type: "number",
       validation: true,
     },
@@ -559,6 +682,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "number":

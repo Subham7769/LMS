@@ -276,7 +276,7 @@ const initialState = {
       kinStreet: "",
       kinResidentialArea: "",
       kinDistrict: "", //optional
-      kinCountry: "",
+      kinCountry: "Zambia",
       kinProvince: "", //optional
       kinEmployer: "",
       kinOccupation: "",
