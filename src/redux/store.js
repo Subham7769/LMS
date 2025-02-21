@@ -35,8 +35,10 @@ import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";
 import affordabilitySlice from "./Slices/affordabilitySlice.js";
 import employerSlice from "./Slices/employerSlice.js";
 import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
+import documentConfigSlice from "./Slices/documentConfigSlice.js";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
+
 
 const store = configureStore({
   reducer: {
@@ -75,6 +77,7 @@ const store = configureStore({
     affordability: affordabilitySlice,
     employer: employerSlice,
     loanApproval: loanApprovalSlice,
+    documentConfig: documentConfigSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(checkTokenMiddleware),

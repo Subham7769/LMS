@@ -72,10 +72,8 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
               onClose();
               setCloneName("");
             }}
-            className={
-              "bg-gray-600 text-white hover:bg-gray-500 focus-visible:outline-gray-600 self-end"
-            }
             rectangle={true}
+            buttonType="secondary"
           />
           <Button
             buttonName={"Create Clone"}

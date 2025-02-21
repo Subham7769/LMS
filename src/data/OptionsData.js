@@ -1,3 +1,14 @@
+export const borrowerTypeOptions = [
+  { value: "PERSONAL_BORROWER", label: "PERSONAL BORROWER" },
+  { value: "COMPANY_BORROWER", label: "COMPANY BORROWER" },
+];
+
+export const eligibiltyOptions = [
+  { value: "ELIGIBILITY", label: "ELIGIBILITY" },
+  { value: "REGISTRATION", label: "REGISTRATION" },
+  { value: "BORROWER_OFFERS", label: "BORROWER OFFERS" },
+];
+
 export const loanTypeOptions = [
   { value: "asset", label: "Asset" },
   { value: "cash", label: "Cash" },

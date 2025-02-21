@@ -17,6 +17,7 @@ import {
   fetchRecoveryData,
   fetchAffordibilityData,
   fetchLoanApprovalData,
+  fetchDocumentConfigData,
   fetchCreditScoreEligibleTenureData,
   fetchDynamicRacData,
   fetchReportingConfigData,
@@ -26,7 +27,9 @@ import {
   RectangleGroupIcon,
   ArrowPathRoundedSquareIcon,
   HandThumbUpIcon,
-  DocumentCheckIcon,
+  CheckBadgeIcon,
+  BuildingOfficeIcon,
+  DocumentTextIcon,
   ChartPieIcon,
   CubeIcon,
   CurrencyRupeeIcon,
@@ -70,6 +73,7 @@ import { createNewReportingConfig } from "../../../utils/createNewReportingConfi
 import { allSectionName } from "../../../data/MenuData.js";
 import CreateNew from "../CreateNew/CreateNew";
 import { setRole } from "../../../redux/Slices/authSlice";
+import { createNewDocumentConfig } from "../../../utils/createNewDocumentConfig.js";
 
 const SideBar = () => {
   const dispatch = useDispatch();
@@ -87,7 +91,9 @@ const SideBar = () => {
     ClipboardDocumentCheckIcon,
     ArrowPathRoundedSquareIcon,
     HandThumbUpIcon,
-    DocumentCheckIcon,
+    CheckBadgeIcon,
+    BuildingOfficeIcon,
+    DocumentTextIcon,
     CurrencyRupeeIcon,
     ChartPieIcon,
     CubeIcon,
@@ -119,6 +125,7 @@ const SideBar = () => {
     createNewRecovery,
     createNewAffordability,
     createNewLoanApproval,
+    createNewDocumentConfig,
     createNewProductGroup,
     createNewDBC,
     createNewBE,
@@ -150,6 +157,7 @@ const SideBar = () => {
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
         dispatch(fetchLoanApprovalData());
+        dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -168,6 +176,7 @@ const SideBar = () => {
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
         dispatch(fetchLoanApprovalData());
+        dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -189,6 +198,7 @@ const SideBar = () => {
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
         dispatch(fetchLoanApprovalData());
+        dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
@@ -218,6 +228,7 @@ const SideBar = () => {
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
         dispatch(fetchLoanApprovalData());
+        dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         break;
@@ -234,6 +245,7 @@ const SideBar = () => {
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
         dispatch(fetchLoanApprovalData());
+        dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         break;
@@ -255,6 +267,7 @@ const SideBar = () => {
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
         dispatch(fetchLoanApprovalData());
+        dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
         dispatch(fetchDynamicRacData());
         dispatch(fetchReportingConfigData());
