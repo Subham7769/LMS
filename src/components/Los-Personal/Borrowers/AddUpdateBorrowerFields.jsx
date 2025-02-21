@@ -15,6 +15,7 @@ import {
 import {
   maritalStatus,
   workType,
+  ministriesOptions,
   title,
   gender,
   accountType,
@@ -48,6 +49,8 @@ const AddUpdateBorrowerFields = ({
   const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
     []
   );
+
+  console.log(BorrowerData);
 
   useEffect(() => {
     setFilteredLocations1(
@@ -162,30 +165,22 @@ const AddUpdateBorrowerFields = ({
   };
 
   useEffect(() => {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branch",
-          value: "",
-        })
-      );
-  
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branchCode",
-          value: "",
-        })
-      );
-  
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "sortCode",
-          value: "",
-        })
-      );
-    }, [BorrowerData.bankDetails.bankName]);
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "branchCode",
+        value: "",
+      })
+    );
+
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "sortCode",
+        value: "",
+      })
+    );
+  }, [BorrowerData.bankDetails.bankName]);
 
   useEffect(() => {
     if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
@@ -362,6 +357,13 @@ const AddUpdateBorrowerFields = ({
       inputName: "workType",
       type: "select",
       options: workType,
+      validation: true,
+    },
+    {
+      labelName: "Ministry",
+      inputName: "ministry",
+      type: "select",
+      options: ministriesOptions,
       validation: true,
     },
     {

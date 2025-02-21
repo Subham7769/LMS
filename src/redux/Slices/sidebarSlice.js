@@ -119,6 +119,24 @@ export const fetchLoanApprovalData = createAsyncThunk(
   }
 );
 
+export const fetchDocumentConfigData = createAsyncThunk(
+  "fetchDocumentConfigData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_DOCUMENT_CONFIG_READ_ALL_TEMP}`;
+    const transformData = (data) => {
+      return data.map(({ name, dynamicDocumentTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/loan/document-config/" + dynamicDocumentTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchTCLData = createAsyncThunk(
   "fetchTCLData",
   async (_, { rejectWithValue }) => {
@@ -393,6 +411,7 @@ const ROLE_VIEWER = [
   "Affordability",
   "Employer",
   "Approval Config",
+  "Document Config",
   "TCL",
   "Loan Schema",
   "Loan Product",
@@ -417,6 +436,7 @@ const ROLE_LOAN_OFFICER = [
   "Affordability",
   "Employer",
   "Approval Config",
+  "Document Config",
   "TCL",
   "Loan Schema",
   "Loan Product",
@@ -801,6 +821,27 @@ const sidebarSlice = createSlice({
         state.menus = updatedMenus;
       })
       .addCase(fetchLoanApprovalData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
+      })
+
+      .addCase(fetchDocumentConfigData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDocumentConfigData.fulfilled, (state, action) => {
+        state.loading = false;
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "Document Config") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+      })
+      .addCase(fetchDocumentConfigData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         toast.error(`API Error : ${action.error.message}`);

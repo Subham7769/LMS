@@ -95,7 +95,7 @@ const LoanApplication = () => {
     navigate(
       `/loan/loan-origination-system/sme/loans/add-loan/${rowData?.loanApplicationId}`
     );
-    if (rowData.status === "Submitted") {
+    if (rowData.status === "Submitted" || rowData.status === "In Progress") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
     }
     await dispatch(
@@ -120,12 +120,14 @@ const LoanApplication = () => {
           buttonIcon={PencilIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}
+          buttonType="secondary"
         />
         <Button
           onClick={() => handleRejectApplication(rowData.loanApplicationId)}
           buttonIcon={TrashIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}
+          buttonType="destructive"
         />
       </div>
     );

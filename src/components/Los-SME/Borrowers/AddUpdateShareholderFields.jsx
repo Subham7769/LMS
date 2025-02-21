@@ -150,6 +150,12 @@ console.log(name)
       type: "text",
       validation: true,
     },
+    {
+      labelName: "Shareholding Percentage",
+      inputName: "shareholdingPercentage",
+      type: "number",
+      validation: false,
+    },
   ];
   const contactDetailsConfig = [
     {

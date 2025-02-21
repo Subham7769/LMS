@@ -12,7 +12,7 @@ import {
   districtOptions,
   locationOptions,
 } from "../../../data/CountryData";
-import { accountType, natureOfCompanyOptions } from "../../../data/LosData";
+import { accountType, natureOfCompanyOptions,industriesOptions } from "../../../data/LosData";
 import {
   setFields,
   clearValidationError,
@@ -94,10 +94,9 @@ const AddUpdateCompanyBorrowerFields = ({
       "accountNo",
 
       "creditScore",
-      "freeCashInHand",
+      // "freeCashInHand",
       "grossSalary",
-      "shareholdingStructure",
-      "tradeUnion",
+      // "shareholdingStructure",
     ];
     dispatch(setFields(keysArray));
     return () => {
@@ -122,14 +121,6 @@ const AddUpdateCompanyBorrowerFields = ({
   };
 
   useEffect(() => {
-    dispatch(
-      handleChangeReducer({
-        section: "bankDetails",
-        field: "branch",
-        value: "",
-      })
-    );
-
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
@@ -198,14 +189,33 @@ const AddUpdateCompanyBorrowerFields = ({
       validation: true,
     },
     {
-      labelName: "Company Unique Id",
-      inputName: "companyUniqueId",
+      labelName: "Industry",
+      inputName: "industry",
+      type: "select",
+      options: industriesOptions,
+      validation: true,
+    },
+    // {
+    //   labelName: "Industry",
+    //   inputName: "industry",
+    //   type: "text",
+    //   validation: true,
+    // },
+    {
+      labelName: "Nature of Business",
+      inputName: "natureOfBusiness",
       type: "text",
       validation: true,
     },
     {
       labelName: "Company Registration No.",
       inputName: "companyRegistrationNo",
+      type: "text",
+      validation: true,
+    },
+    {
+      labelName: "Company Serial No.",
+      inputName: "companyUniqueId",
       type: "text",
       validation: true,
     },
@@ -239,18 +249,6 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "Location of HQ",
       inputName: "locationOfHQ",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Industry",
-      inputName: "industry",
-      type: "text",
-      validation: true,
-    },
-    {
-      labelName: "Nature of Business",
-      inputName: "natureOfBusiness",
       type: "text",
       validation: true,
     },
@@ -378,12 +376,7 @@ const AddUpdateCompanyBorrowerFields = ({
   ];
 
   const companyOtherDetailsConfig = [
-    {
-      labelName: "Free Cash In Hand",
-      inputName: "freeCashInHand",
-      type: "number",
-      validation: true,
-    },
+
     {
       labelName: "Monthly Revenue",
       inputName: "grossSalary",
@@ -409,17 +402,23 @@ const AddUpdateCompanyBorrowerFields = ({
       validation: true,
     },
     {
+      labelName: "Free Cash In Hand",
+      inputName: "freeCashInHand",
+      type: "number",
+      validation: false,
+    },
+    {
       labelName: "Trade Union",
       inputName: "tradeUnion",
       type: "text",
-      validation: true,
+      validation: false,
     },
-    {
-      labelName: "Shareholding Structure",
-      inputName: "shareholdingStructure",
-      type: "text",
-      validation: true,
-    },
+    // {
+    //   labelName: "Shareholding Structure",
+    //   inputName: "shareholdingStructure",
+    //   type: "text",
+    //   validation: false,
+    // },
     // {
     //   labelName: "Customer Photo",
     //   inputName: "customerPhotoId",

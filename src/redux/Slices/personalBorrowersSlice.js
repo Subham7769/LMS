@@ -234,6 +234,7 @@ const initialState = {
       workPhysicalAddress: "", //optional
       employeeNo: "",
       workType: "",
+      ministry:"",
     },
     incomeOnPaySlip: {
       basicPay: "",

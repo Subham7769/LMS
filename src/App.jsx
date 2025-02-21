@@ -66,10 +66,16 @@ const Affordability = lazy(() =>
 // Employer Imports
 const Employer = lazy(() => import("./components/Employer/Employer"));
 
-// Employer Imports
+// Approval Config Imports
 const LoanApprovalPage = lazy(() => import("./pages/LoanApprovalPage"));
 const LoanApproval = lazy(() =>
   import("./components/LoanApproval/LoanApproval")
+);
+
+// Document Config Imports
+const DocumentConfigPage = lazy(() => import("./pages/DocumentConfigPage"));
+const DocumentConfig = lazy(() =>
+  import("./components/DocumentConfig/DocumentConfig")
 );
 
 // TCL Imports
@@ -482,6 +488,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "document-config",
+        element: <DocumentConfigPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "tcl",
         element: <TclPage />,
         errorElement: <RouteErrorBoundary />,
@@ -641,6 +652,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "document-config/:dynamicDocumentTempId",
+        element: <DocumentConfig />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "business-rule/1",
         element: <BusinessRule1 />,
         errorElement: <RouteErrorBoundary />,
@@ -789,6 +805,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-loan/:loanApplicationId/:BorrowerId",
+            element: <AddLoansSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "loan-offers",
             element: <LoanOffersSME />,
             errorElement: <RouteErrorBoundary />,
@@ -921,6 +942,11 @@ const routes = [
           },
           {
             path: "add-loan/:loanApplicationId",
+            element: <AddLoans />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-loan/:loanApplicationId/:BorrowerId",
             element: <AddLoans />,
             errorElement: <RouteErrorBoundary />,
           },

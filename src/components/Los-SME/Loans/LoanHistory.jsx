@@ -11,6 +11,7 @@ import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
+import InputFile from "../../Common/InputFile/InputFile";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
@@ -27,6 +28,7 @@ import {
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
+import { uploadSignedLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -46,6 +48,7 @@ const LoanHistory = () => {
   const [documentsData, setDocumentsData] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
+  const [signedAgreement, setSignedAgreement] = useState("");
 
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
@@ -106,6 +109,23 @@ const LoanHistory = () => {
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Loan Status", field: "loanStatus" },
   ];
+
+  const handleFileChange = async (e, loanId) => {
+    const fileUploadParams = {
+      loanId: loanId,
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+    setSignedAgreement(e.target.value);
+    const { files } = e.target;
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      await dispatch(
+        uploadSignedLoanAgreement({ formData, fileUploadParams })
+      ).unwrap();
+      handleReset();
+    }
+  };
 
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
@@ -254,21 +274,35 @@ const LoanHistory = () => {
           })}
         </div>
       )}
-      <div className="w-full flex justify-end gap-2 px-5">
-        <Button
-          buttonName={"View Loan Agreement"}
-          onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-          rectangle={true}
-          buttonIcon={NewspaperIcon}
-          buttonType="tertiary"
-        />
-        <Button
-          buttonName={"View Documents"}
-          onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
-          rectangle={true}
-          buttonIcon={FiInfo}
-          buttonType="tertiary"
-        />
+      <div className="flex justify-between items-end">
+        <div>
+          <InputFile
+            placeholder="Upload Signed Agreement"
+            inputName={"signedAgreement"}
+            inputValue={signedAgreement}
+            onChange={(e) => handleFileChange(e, rowData.loanId)}
+          />
+        </div>
+        <div className="flex justify-end gap-2 px-5">
+          <div>
+            <Button
+              buttonName={"View Loan Agreement"}
+              onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
+              rectangle={true}
+              buttonIcon={NewspaperIcon}
+              buttonType="tertiary"
+            />
+          </div>
+          <div>
+            <Button
+              buttonName={"View Documents"}
+              onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
+              rectangle={true}
+              buttonIcon={FiInfo}
+              buttonType="tertiary"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

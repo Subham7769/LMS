@@ -46,12 +46,14 @@ const UpdateBorrower = () => {
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
-      dispatch(
+      await dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
       ).unwrap();
       dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      navigate(
+        `/loan/loan-origination-system/personal/borrowers/view-borrower`
+      );
     }
-    navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   };
 
   const handleCancel = () => {

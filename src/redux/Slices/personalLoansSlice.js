@@ -165,6 +165,37 @@ export const fetchBorrowerById = createAsyncThunk(
   }
 );
 
+export const uploadSignedLoanAgreement = createAsyncThunk(
+  "personalLoans/uploadSignedLoanAgreement",
+  async ({ formData, fileUploadParams }, { rejectWithValue }) => {
+    try {
+      // const token = localStorage.getItem("authToken");
+      const { loanId, authToken } = fileUploadParams;
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_SIGNED_AGREEMENT_UPLOAD
+        }${loanId}/signed-loan-agreement`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const uploadDocumentFile = createAsyncThunk(
   "personalLoans/uploadDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
@@ -230,9 +261,9 @@ export const deleteDocumentFile = createAsyncThunk(
 
 export const downloadDocumentFile = createAsyncThunk(
   "personalLoans/downloadDocumentFile",
-  async (fileDeleteParams, { rejectWithValue }) => {
+  async (fileDownloadParams, { rejectWithValue }) => {
     // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = fileDeleteParams;
+    const { docId, authToken, docName } = fileDownloadParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DOWNLOAD_PERSONAL}${docId}`;
 
     try {
@@ -268,6 +299,45 @@ export const downloadDocumentFile = createAsyncThunk(
       document.body.removeChild(a);
 
       return "File downloaded successfully";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const previewDocumentFile = createAsyncThunk(
+  "personalLoans/previewDocumentFile",
+  async (filePreviewParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken, docName } = filePreviewParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_PERSONAL}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to preview");
+      }
+
+      const data = await response.json();
+      const byteCharacters = atob(data.base64Content);
+      const byteNumbers = new Uint8Array(
+        Array.from(byteCharacters, (char) => char.charCodeAt(0))
+      );
+      const blob = new Blob([byteNumbers], { type: data.contentType });
+
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank");
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+      return "File opened successfully";
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -696,6 +766,7 @@ const initialState = {
       repaymentTenureStr: "",
       principalAmount: 0,
       refinancedLoanId: "",
+      refinancedLoanAmount:0,
       sector: "",
       branch: "",
       agentName: "",
@@ -776,6 +847,9 @@ const personalLoansSlice = createSlice({
     },
     setLoanApplicationId: (state, action) => {
       state.addLoanData.loanApplicationId = action.payload;
+    },
+    setLoanBorrowerId: (state, action) => {
+      state.addLoanData.generalLoanDetails.borrowerId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -876,6 +950,18 @@ const personalLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(uploadSignedLoanAgreement.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(uploadSignedLoanAgreement.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("File uploaded successfully");
+      })
+      .addCase(uploadSignedLoanAgreement.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(uploadDocumentFile.pending, (state) => {
         // state.loading = true;
       })
@@ -917,6 +1003,18 @@ const personalLoansSlice = createSlice({
         toast.success(`Document downloaded Successfully`);
       })
       .addCase(downloadDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(previewDocumentFile.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(previewDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(previewDocumentFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -1136,6 +1234,7 @@ export const {
   updateLoanField,
   updateLoanOfferFields,
   setLoanApplicationId,
+  setLoanBorrowerId,
 } = personalLoansSlice.actions;
 
 export default personalLoansSlice.reducer;

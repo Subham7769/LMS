@@ -25,24 +25,6 @@ export const MenusInitial = [
     submenuItems: [],
     isOpen: false,
   },
-  // {
-  //   title: "RAC",
-  //   sectionName:"LOAN MANAGEMENT",
-  //   href: "/rac",
-  //   icon: "ClipboardDocumentCheckIcon",
-  //   current: false,
-  //   submenu: true,
-  //   createButton: true, //if create RAC from Side bar Using input box
-  //   editable: true, //if Button takes input string
-  //   createFunction: "createNewRac",
-  //   buttonName: "Create RAC", //Create button text
-  //   placeholder: "Enter Name", //required placeholder for input box
-  //   navigateSuccess: "/rac/", // navigation
-  //   navigateFail: "/login", // navigation
-  //   submenuItems: [],
-  //   isOpen: false,
-  //   uniqueKey: "racId",
-  // },
   {
     title: "Dynamic RAC",
     sectionName: "LOAN MANAGEMENT",
@@ -207,24 +189,6 @@ export const MenusInitial = [
     isOpen: false,
     uniqueKey: "creditScoreEtTempId",
   },
-  // {
-  //   title: "Blocked Employer",
-  //   sectionName: "LOAN MANAGEMENT",
-  //   href: "/loan/blocked-employer",
-  //   icon: "NoSymbolIcon",
-  //   current: false,
-  //   submenu: true,
-  //   createButton: true, //if create RAC from Side bar Using input box
-  //   editable: true, //if Button takes input string
-  //   createFunction: "createNewBE",
-  //   buttonName: "Create BE", //Create button text
-  //   placeholder: "Enter Name", //required placeholder for input box
-  //   navigateSuccess: "/loan/blocked-employer/", // navigation
-  //   navigateFail: "/login", // navigation
-  //   submenuItems: [],
-  //   isOpen: false,
-  //   uniqueKey: "blockEmployersTempId",
-  // },
   {
     title: "Product Group",
     sectionName: "LOAN MANAGEMENT",
@@ -264,14 +228,14 @@ export const MenusInitial = [
     title: "Employer",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/employer",
-    icon: "BookOpenIcon",
+    icon: "BuildingOfficeIcon",
     current: false,
   },
   {
     title: "Approval Config",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/loan-approval",
-    icon: "DocumentCheckIcon",
+    icon: "CheckBadgeIcon",
     current: false,
     submenu: true,
     createButton: true, //if create recovery from Side bar Using input box
@@ -284,6 +248,24 @@ export const MenusInitial = [
     submenuItems: [],
     isOpen: false,
     uniqueKey: "approvalsConfigurationsTempId",
+  },
+  {
+    title: "Document Config",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/document-config",
+    icon: "DocumentTextIcon",
+    current: false,
+    submenu: true,
+    createButton: true, //if create recovery from Side bar Using input box
+    editable: true, //if Button takes input string
+    createFunction: "createNewDocumentConfig",
+    buttonName: "Create Document Config", //Create button text
+    placeholder: "Enter Name", //required placeholder for input box
+    navigateSuccess: "/loan/document-config/", // navigation
+    navigateFail: "/login", // navigation
+    submenuItems: [],
+    isOpen: false,
+    uniqueKey: "dynamicDocumentTempId",
   },
 
   // FINANCE
