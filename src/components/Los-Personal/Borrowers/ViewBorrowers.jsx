@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { convertDate } from "../../../utils/convertDate";
 import {
-  CurrencyDollarIcon,
+  UserCircleIcon,
   BuildingOffice2Icon,
   EnvelopeIcon,
   PhoneIcon,
@@ -31,13 +31,17 @@ import {
   WindowIcon,
   MapPinIcon,
   CalendarIcon,
-  UserCircleIcon,
   PencilIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Menu, Transition } from "@headlessui/react";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
-import { generateLoanApplicationId, resetAddLoanData } from "../../../redux/Slices/personalLoansSlice";
+import {
+  generateLoanApplicationId,
+  resetAddLoanData,
+} from "../../../redux/Slices/personalLoansSlice";
+import ViewPhotoModal from "./ViewPhotoModal";
+import { viewPhoto } from "../../../redux/Slices/personalBorrowersSlice";
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -49,6 +53,8 @@ const ViewBorrowers = () => {
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
   const [showEditModal, setEditModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [photoData, setPhotoData] = useState(null);
 
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
@@ -178,6 +184,33 @@ const ViewBorrowers = () => {
     setSearchValue("");
   };
 
+  const handleViewPhoto = async (photoId) => {
+    const filePreviewParams = {
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+      docId: photoId,
+    };
+    setShowPhotoModal(true);
+    try {
+      const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
+
+      if (result.base64Content) {
+        console.log(result);
+        setPhotoData(
+          `data:${result.contentType};base64,${result.base64Content}`
+        );
+        
+      }
+    } catch (error) {
+      console.error("Error fetching photo:", error);
+    }
+  };
+
+  console.log(photoData);
+
+  const closePhotoModal = () => {
+    setShowPhotoModal(false);
+  };
+
   const renderExpandedRow = (rowData) => {
     const currentStatus =
       borrowerStatuses[rowData.uid] || rowData.lmsUserStatus; // Get the current status for this borrower
@@ -251,12 +284,21 @@ const ViewBorrowers = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
               {/* Personal Details */}
-              <CardInfo
-                cardTitle="Personal Details"
-                cardIcon={CurrencyDollarIcon}
-                colorBG={"bg-blue-tertiary"}
-                colorText={"text-blue-primary"}
-              >
+              <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
+                <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
+                  <div
+                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}
+                    className="cursor-pointer"
+                    title="Click to view profile photo"
+                  >
+                    <UserCircleIcon
+                      className="-ml-0.5 h-5 w-5"
+                      aria-hidden="true"
+                    />
+            
+                  </div>
+                  Personal Details
+                </div>
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
                     {[
@@ -289,7 +331,7 @@ const ViewBorrowers = () => {
                     />
                   </div>
                 </div>
-              </CardInfo>
+              </div>
 
               {/* Contact Details */}
               <CardInfo
@@ -429,19 +471,19 @@ const ViewBorrowers = () => {
     //   return <div className="py-6">-</div>;
     // }
 
-  const handleNewApplication = async (BorrowerId) => {
-    dispatch(resetAddLoanData());
-    try {
-      const loanApplicationId = await dispatch(
-        generateLoanApplicationId()
-      ).unwrap();
-      navigate(
-        `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}/${BorrowerId}`
-      );
-    } catch (error) {
-      console.error("Failed to generate loan application ID:", error);
-    }
-  };
+    const handleNewApplication = async (BorrowerId) => {
+      dispatch(resetAddLoanData());
+      try {
+        const loanApplicationId = await dispatch(
+          generateLoanApplicationId()
+        ).unwrap();
+        navigate(
+          `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}/${BorrowerId}`
+        );
+      } catch (error) {
+        console.error("Failed to generate loan application ID:", error);
+      }
+    };
 
     return (
       <div className="flex justify-center gap-4 px-5">
@@ -508,6 +550,11 @@ const ViewBorrowers = () => {
         totalElements={allBorrowersTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+      />
+      <ViewPhotoModal
+        isOpen={showPhotoModal}
+        onClose={closePhotoModal}
+        photoData={photoData}
       />
     </div>
   );

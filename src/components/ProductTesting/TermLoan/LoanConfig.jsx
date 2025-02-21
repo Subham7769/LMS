@@ -27,6 +27,7 @@ import {
   validateForm,
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
+import { lhaBranchOptions } from "../../../data/OptionsData";
 
 const LoanConfig = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,6 +85,7 @@ const LoanConfig = () => {
         submitLoanConfiguration({
           loanType: loanConfigFields.loanType,
           amount: loanConfigFields.amount,
+          branchName: loanConfigFields.branchName,
           userID,
           consumerType,
         })
@@ -121,6 +123,14 @@ const LoanConfig = () => {
     <div className="flex flex-col gap-5 mt-4">
       <ContainerTile>
         <div className="grid grid-cols-5 gap-4 items-end">
+          <InputSelect
+            labelName={"Branch Name"}
+            inputName={"branchName"}
+            inputOptions={lhaBranchOptions}
+            inputValue={loanConfigFields.branchName}
+            onChange={handleChange}
+            isValidation={true}
+          />
           <InputSelect
             labelName={"Loan Type"}
             inputName={"loanType"}

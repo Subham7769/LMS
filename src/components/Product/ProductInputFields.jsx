@@ -56,6 +56,12 @@ const ProductInputFields = ({ productData, handleChange }) => {
         (item) => item.title === "Approval Config"
       )[0]?.submenuItems
   );
+  const documentConfigDataInfo = useSelector(
+    (state) =>
+      state?.sidebar?.menus?.filter(
+        (item) => item.title === "Document Config"
+      )[0]?.submenuItems
+  );
   const ProjectDataInfo = useSelector(
     (state) =>
       state?.sidebar?.menus?.filter((item) => item.title === "Loan Schema")[0]
@@ -252,6 +258,17 @@ const ProductInputFields = ({ productData, handleChange }) => {
             )}
             inputName="approvalsConfigurationsTempId"
             inputValue={productData?.approvalsConfigurationsTempId}
+            onChange={handleChange}
+            isValidation={true}
+          />
+          <InputSelect
+            labelName="Document Config"
+            inputOptions={formateDataDropDown(
+              "/loan/document-config/",
+              documentConfigDataInfo
+            )}
+            inputName="dynamicDocumentTempId"
+            inputValue={productData?.dynamicDocumentTempId}
             onChange={handleChange}
             isValidation={true}
           />

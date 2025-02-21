@@ -42,7 +42,10 @@ import {
   ClockIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
-import { generateLoanApplicationId, resetAddLoanData } from "../../../redux/Slices/smeLoansSlice";
+import {
+  generateLoanApplicationId,
+  resetAddLoanData,
+} from "../../../redux/Slices/smeLoansSlice";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -169,17 +172,15 @@ const ViewCompany = () => {
   function transformData(inputArray) {
     return inputArray.map((item) => ({
       ...item,
-      fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
-      dateOfBirth: convertDate(item?.dateOfBirth),
-      workStartDate: convertDate(item?.workStartDate),
+      fullName: `${item?.companyName} ${item?.companyShortName}`,
     }));
   }
 
-  // const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
+  const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
 
   // console.log(flattenData);
 
-  // const transformFlattenData = transformData(flattenData);
+  const transformFlattenData = transformData(flattenData);
 
   const searchOptions = [
     { label: "Name", value: "companyName" },
@@ -192,8 +193,7 @@ const ViewCompany = () => {
   ];
 
   const personalDetailsColumns = [
-    { label: "Name", field: "companyName" },
-    { label: "Short Name", field: "companyShortName" },
+    { label: "Name", field: "fullName" },
     { label: "Registration No.", field: "companyRegistrationNo" },
     { label: "Unique Id", field: "companyUniqueId" },
     { label: "Email", field: "email" },
@@ -833,20 +833,20 @@ const ViewCompany = () => {
     //       hasViewOnlyAccessGroup3(roleName)) {
     //   return <div className="py-6">-</div>;
     // }
-console.log(rowData)
-  const handleNewApplication = async (BorrowerId) => {
-    dispatch(resetAddLoanData());
-    try {
-      const loanApplicationId = await dispatch(
-        generateLoanApplicationId()
-      ).unwrap();
-      navigate(
-        `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}/${BorrowerId}`
-      );
-    } catch (error) {
-      console.error("Failed to generate loan application ID:", error);
-    }
-  };
+    console.log(rowData);
+    const handleNewApplication = async (BorrowerId) => {
+      dispatch(resetAddLoanData());
+      try {
+        const loanApplicationId = await dispatch(
+          generateLoanApplicationId()
+        ).unwrap();
+        navigate(
+          `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}/${BorrowerId}`
+        );
+      } catch (error) {
+        console.error("Failed to generate loan application ID:", error);
+      }
+    };
 
     return (
       <div className="flex justify-center gap-4 px-5">
@@ -903,7 +903,7 @@ console.log(rowData)
 
       <ExpandableTable
         columns={personalDetailsColumns}
-        data={flattenToSimpleObjectArray(filteredBorrowers)}
+        data={transformFlattenData}
         renderExpandedRow={renderExpandedRow}
         ListAction={ListAction}
         loading={loading}
