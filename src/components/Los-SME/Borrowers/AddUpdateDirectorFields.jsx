@@ -19,6 +19,7 @@ import {
   gender,
   accountType,
   uniqueIDType,
+  relationshipOptions,
 } from "../../../data/LosData";
 import {
   setFields,
@@ -106,6 +107,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       // "kinSurname",
       // "kinNrcNo",
       // "kinGender",
+      // "kinRelationship",
       // "kinMobile1",
       // "kinEmail",
       // "kinStreet",
@@ -459,6 +461,13 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "kinGender",
       type: "select",
       options: gender,
+      validation: false,
+    },
+    {
+      labelName: "Relationship",
+      inputName: "kinRelationship",
+      type: "select",
+      options: relationshipOptions,
       validation: false,
     },
     {

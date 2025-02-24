@@ -60,8 +60,11 @@ const ExpandableTable = ({
                 >
                   {columns.map((col, index) => {
                     const getStatusClass = (status) => {
+
                       const normalizedStatus = status?.toLowerCase();
+                      console.log(normalizedStatus)
                       const statusClasses = {
+                        in_progress:"bg-yellow-100 text-yellow-800",
                         rejected: "bg-red-100 text-red-800",
                         defaulter: "bg-red-100 text-red-800",
                         defaulted: "bg-red-100 text-red-800",
@@ -117,16 +120,6 @@ const ExpandableTable = ({
                     );
                   })}
 
-                  {/* {ListAction && (
-                    <ListAction
-                      id={
-                        columns.map((col, index) => {
-                          if (col.field === ActionId) return rowData[col.field];
-                        })[0]
-                      }
-                      application={data}
-                    />
-                  )} */}
                   {ListAction && (
                     <td className="flex justify-center items-center ">
                       {ListAction(rowData)}

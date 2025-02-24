@@ -270,6 +270,7 @@ const initialState = {
       kinOtherName: "", //optional
       kinNrcNo: "",
       kinGender: "",
+      kinRelationship: "",
       kinMobile1: "",
       kinMobile2: "", //optional
       kinEmail: "",

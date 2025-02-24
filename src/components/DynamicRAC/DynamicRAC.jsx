@@ -146,7 +146,8 @@ const DynamicRAC = () => {
               sections: config.sections, // Handle sections
             })
           );
-          handleSaveDynamicRAC();
+
+          setTimeout(() => handleSaveDynamicRAC(), 10);
         } catch (error) {
           console.error("Error parsing JSON:", error);
           toast("Failed to load configuration. Please check the file format.");
@@ -440,7 +441,7 @@ const DynamicRAC = () => {
               <DragDropContext onDragEnd={onDragEnd}>
                 <div className="flex flex-col justify-center gap-3">
                   {/* Add first Section Box */}
-                  {sections.length < 1 ? (
+                  {sections?.length < 1 ? (
                     roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
                       <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
                         <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
@@ -556,7 +557,7 @@ const DynamicRAC = () => {
                             </div>
 
                             {/* Add Criteria Box */}
-                            {section?.rules.length < 1 ? (
+                            {section?.rules?.length < 1 ? (
                               roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
                                 <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
                                   <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />

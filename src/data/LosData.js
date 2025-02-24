@@ -626,3 +626,31 @@ export const industriesOptions = [
   { value: "PSYCHEDELIC_MEDICINE", label: "Psychedelic Medicine & Mental Health Tech" },
   { value: "SELF_HEALING_MATERIALS", label: "Self-Healing Materials & Smart Polymers" }
 ];
+
+export const relationshipOptions = [
+  { value: "FATHER", label: "Father" },
+  { value: "MOTHER", label: "Mother" },
+  { value: "BROTHER", label: "Brother" },
+  { value: "SISTER", label: "Sister" },
+  { value: "SPOUSE", label: "Spouse" },
+  { value: "SON", label: "Son" },
+  { value: "DAUGHTER", label: "Daughter" },
+  { value: "GRANDFATHER", label: "Grandfather" },
+  { value: "GRANDMOTHER", label: "Grandmother" },
+  { value: "GRANDSON", label: "Grandson" },
+  { value: "GRANDDAUGHTER", label: "Granddaughter" },
+  { value: "UNCLE", label: "Uncle" },
+  { value: "AUNT", label: "Aunt" },
+  { value: "NEPHEW", label: "Nephew" },
+  { value: "NIECE", label: "Niece" },
+  { value: "COUSIN", label: "Cousin" },
+  { value: "GUARDIAN", label: "Guardian" },
+  { value: "FRIEND", label: "Friend" },
+  { value: "COLLEAGUE", label: "Colleague" },
+  { value: "BUSINESS_PARTNER", label: "Business Partner" },
+  { value: "EMPLOYER", label: "Employer" },
+  { value: "EMPLOYEE", label: "Employee" },
+  { value: "NEIGHBOR", label: "Neighbor" },
+  { value: "MENTOR", label: "Mentor" },
+  { value: "OTHER", label: "Other" }
+];

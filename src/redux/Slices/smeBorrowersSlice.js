@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 
 // Register a Borrower
@@ -299,18 +298,18 @@ export const updateCompanyBorrowerInfo = createAsyncThunk(
 // Draft Company Borrower Information
 export const draftCompanyBorrowerInfo = createAsyncThunk(
   "borrowers/draftCompanyBorrowerInfo", // action type
-  async (addCompanyData, { rejectWithValue }) => {
+  async (addDraftCompanyData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_DRAFT_COMPANY_BORROWER}`, //.env line no 331
+        `${import.meta.env.VITE_BORROWERS_CREATE_DRAFT_COMPANY_BORROWER}`, //.env line no 331
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth}`,
           },
-          body: JSON.stringify({ ...addCompanyData, isDraft: true }),
+          body: JSON.stringify(addDraftCompanyData),
         }
       );
 
@@ -318,11 +317,114 @@ export const draftCompanyBorrowerInfo = createAsyncThunk(
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to register borrower");
       }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Fetch Drafted COmpanies
+export const fetchDraftedCompanyBorrowers = createAsyncThunk(
+  "borrowers/fetchDraftedCompanyBorrowers", // Action type
+  async ({ page = 0, size = 10 }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_GET_DRAFT_COMPANY_BORROWER
+        }?type=COMPANY_BORROWER&page=${page}&size=${size}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to fetch drafted company borrowers"
+        );
+      }
 
       const data = await response.json();
+      return data; // Returning the fetched data as payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Handling errors
+    }
+  }
+);
+
+// Fetch Drafted Borrower By Field
+export const fetchDraftedCompanyBorrowerByField = createAsyncThunk(
+  "borrowers/fetchDraftedCompanyBorrowerByField", // action type
+  async ({ field, value }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_READ_ALL_DRAFT_BY_FIELD_NAME_COMPANY_BORROWER
+        }?fieldName=${field}&value=${value}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to fetch borrower by field"
+        );
+      }
+
+      const data = await response.json();
+      const length = data.length;
+      if (length < 1) {
+        throw new Error("User not Found");
+      }
       return data; // This will be the action payload
     } catch (error) {
       return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Async thunk to update borrower status
+export const updateDraftCompanyBorrowerStatus = createAsyncThunk(
+  "borrowers/updateDraftCompanyBorrowerStatus",
+  async ({ borrowerProfileDraftId, status }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_UPDATE_DRAFT_COMPANY_BORROWER
+        }${borrowerProfileDraftId}/status?status=${status}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower status"
+        );
+      }
+
+      return { borrowerProfileDraftId, status }; // Returning the updated data
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -710,7 +812,6 @@ const initialState = {
       sourceOfRepayment: "",
       tradeUnion: "", //optional
     },
-    isDraft: false,
   },
   companyDetails: {},
   companyDocuments: [
@@ -832,6 +933,7 @@ const initialState = {
       kinEmail: "",
       kinEmployer: "",
       kinGender: "",
+      kinRelationship: "",
       kinHouseNo: "",
       kinLocation: "",
       kinMobile1: "",
@@ -893,11 +995,13 @@ const initialState = {
       title: "",
       uniqueID: "",
       uniqueIDType: "",
-      shareholdingPercentage:"",
+      shareholdingPercentage: "",
     },
   },
   allCompanies: [],
+  allDraftedCompanies: [],
   allBorrowersData: [],
+  allDraftedBorrowersTotalElements: "",
   allBorrowersTotalElements: "",
   updateCompanyData: {},
   updateDirectorData: {},
@@ -953,6 +1057,18 @@ const borrowersSlice = createSlice({
         const { shareHolderDetails, directorsKycDetails, ...rest } =
           borrower.companyBorrowerProfile;
         state.updateCompanyData = rest;
+      } else {
+        state.updateCompanyData = null; // Reset if no match found
+      }
+    },
+    setUpdateDraftCompany: (state, action) => {
+      const { borrowerProfileDraftId } = action.payload;
+      const borrower = state.allDraftedCompanies.find(
+        (item) => item.borrowerProfileDraftId === borrowerProfileDraftId
+      );
+      if (borrower) {
+        console.log(borrower);
+        state.updateCompanyData = borrower.companyBorrowerProfileDraft;
       } else {
         state.updateCompanyData = null; // Reset if no match found
       }
@@ -1210,13 +1326,56 @@ const borrowersSlice = createSlice({
       })
       .addCase(draftCompanyBorrowerInfo.fulfilled, (state, action) => {
         state.loading = false;
-        // state.borrower = action.payload; // Store the borrower data
         toast.success("Draft Saved Successfully");
       })
       .addCase(draftCompanyBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Store the error message
         toast.error(`API Error : ${action.payload}`); // Notify the user of the error
+      })
+      .addCase(fetchDraftedCompanyBorrowers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDraftedCompanyBorrowers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allDraftedCompanies = action.payload.content;
+        state.allDraftedBorrowersTotalElements = action.payload.totalElements;
+      })
+      .addCase(fetchDraftedCompanyBorrowers.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload || "Failed to fetch drafted company borrowers.";
+        toast.error(`API Error : ${action.payload}`); // Notify the user of the error
+      })
+      .addCase(fetchDraftedCompanyBorrowerByField.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(
+        fetchDraftedCompanyBorrowerByField.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          state.allDraftedCompanies = action.payload;
+        }
+      )
+      .addCase(fetchDraftedCompanyBorrowerByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateDraftCompanyBorrowerStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(updateDraftCompanyBorrowerStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        toast(`Draft Saved!`);
+      })
+      .addCase(updateDraftCompanyBorrowerStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchAllCompanyBorrowers.pending, (state) => {
         state.loading = true;
@@ -1545,6 +1704,7 @@ export const {
   resetCompanyData,
   handleChangeUpdateCompanyField,
   setUpdateCompany,
+  setUpdateDraftCompany,
   resetUpdateCompanyData,
   addDirector,
   removeDirector,

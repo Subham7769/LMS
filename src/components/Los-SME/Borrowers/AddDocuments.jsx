@@ -111,16 +111,16 @@ const AddDocuments = () => {
           <div>Loading...</div>
         ) : (
           <div>
-            {documents.map((document, index) => (
+            {documents?.map((document, index) => (
               <DocumentUploaderVerifier
-                key={document.documentKey} // Unique key for React
-                label={document.documentKey.replace(/_/g, " ")} // Convert documentKey to a more readable label
+                key={document?.documentKey} // Unique key for React
+                label={document?.documentKey?.replace(/_/g, " ")} // Convert documentKey to a more readable label
                 inputFileName="docName"
-                inputFileValue={document.docName}
+                inputFileValue={document?.docName}
                 onFileChange={(e) => companyHandleFileChange(e, index)}
-                onFileDelete={() => companyHandleDeleteDocument(document.docId)}
+                onFileDelete={() => companyHandleDeleteDocument(document?.docId)}
                 checkboxName="verified"
-                checkboxChecked={document.verified}
+                checkboxChecked={document?.verified}
                 onCheckboxChange={(e) => companyHandleInputChange(e, index)}
               />
             ))}
@@ -140,12 +140,12 @@ const AddDocuments = () => {
   // Director
   const directorHandleFileChange = (e, index, directorId, documentKey) => {
     // Find the director by directorId
-    const director = existingDirectorDetails.find(
-      (director) => director.personalDetails.uniqueID === directorId
+    const director = existingDirectorDetails?.find(
+      (director) => director?.personalDetails?.uniqueID === directorId
     );
 
     // Find the document by documentId (docId)
-    const document = director.documents.find((doc) => doc.documentKey === documentKey);
+    const document = director?.documents.find((doc) => doc.documentKey === documentKey);
 
     // Extract documentKey and verified values
     const { verified } = document;
@@ -197,13 +197,13 @@ const AddDocuments = () => {
   const handleDirectorVerification = (directorId) => {
     // Find the director using directorId
     console.log(directorId)
-    const director = existingDirectorDetails.find(
-      (director) => director.personalDetails.uniqueID === directorId
+    const director = existingDirectorDetails?.find(
+      (director) => director?.personalDetails?.uniqueID === directorId
     );
   
     if (director) {
       // Extract the documents of the found director
-      const verifyDocumentData = director.documents
+      const verifyDocumentData = director?.documents
       .filter((doc) => doc.docId)  // Ensure docId exists
       .map((doc) => ({
         docId: doc.docId,
@@ -233,24 +233,24 @@ const AddDocuments = () => {
           <div>
             {documents.map((document, index) => (
               <DocumentUploaderVerifier
-                key={document.documentKey} // Unique key for React
-                label={document.documentKey.replace(/_/g, " ")} // Convert documentKey to a more readable label
+                key={document?.documentKey} // Unique key for React
+                label={document?.documentKey?.replace(/_/g, " ")} // Convert documentKey to a more readable label
                 inputFileName="docName"
-                inputFileValue={document.docName}
+                inputFileValue={document?.docName}
                 onFileChange={(e) =>
-                  directorHandleFileChange(e, index, directorId, document.documentKey)
+                  directorHandleFileChange(e, index, directorId, document?.documentKey)
                 }
                 onFileDelete={() =>
-                  directorHandleDeleteDocument(document.docId)
+                  directorHandleDeleteDocument(document?.docId)
                 }
                 checkboxName="verified"
-                checkboxChecked={document.verified}
+                checkboxChecked={document?.verified}
                 onCheckboxChange={(e) =>
                   directorHandleInputChange(
                     e,
                     index,
                     directorId,
-                    document.docId
+                    document?.docId
                   )
                 }
               />
@@ -300,23 +300,23 @@ const AddDocuments = () => {
         </div>
       )}
 
-      {existingDirectorDetails.length > 0 && companyId && (
+      {existingDirectorDetails?.length > 0 && companyId && (
         <div className=" flex flex-col mb-6">
           <p className="font-semibold mb-2">Existing Directors Documents</p>
-          {existingDirectorDetails.map((director, index) => (
+          {existingDirectorDetails?.map((director, index) => (
             <>
               <Accordion
-                heading={`${director.personalDetails.title} 
-                      ${director.personalDetails.firstName} 
-                      ${director.personalDetails.surname} 
-                      ${director.personalDetails.otherName}
-                      (${director.personalDetails.uniqueID})
+                heading={`${director?.personalDetails?.title} 
+                      ${director?.personalDetails?.firstName} 
+                      ${director?.personalDetails?.surname} 
+                      ${director?.personalDetails?.otherName}
+                      (${director?.personalDetails?.uniqueID})
                       `}
                 renderExpandedContent={() => (
                   <div className="px-5">
                     {directorDocumentRequirements(
-                      director.documents,
-                      director.personalDetails.uniqueID
+                      director?.documents,
+                      director?.personalDetails?.uniqueID
                     )}
                   </div>
                 )}

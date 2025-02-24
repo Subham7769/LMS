@@ -341,6 +341,9 @@ const BorrowersSME = lazy(() =>
 const AddCompany = lazy(() =>
   import("./components/Los-SME/Borrowers/AddCompany")
 );
+const AddNewCompany = lazy(() =>
+  import("./components/Los-SME/Borrowers/AddNewCompany")
+);
 const AddDirector = lazy(() =>
   import("./components/Los-SME/Borrowers/AddDirector")
 );
@@ -753,6 +756,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-new-company",
+            element: <AddNewCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "add-director",
             element: <AddDirector />,
             errorElement: <RouteErrorBoundary />,
@@ -774,6 +782,11 @@ const routes = [
           },
           {
             path: "update-company/:uid",
+            element: <UpdateCompany />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-company/draft/:borrowerProfileDraftId",
             element: <UpdateCompany />,
             errorElement: <RouteErrorBoundary />,
           },
