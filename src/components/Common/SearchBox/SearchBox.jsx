@@ -111,30 +111,30 @@ const SearchBox = () => {
   }
 
   const handleClick = async () => {
-    await dispatch(validateForm({ borrowerID }));
+    // Remove slashes from borrowerID
+    const sanitizedBorrowerID = borrowerID.replace(/[\/\\]/g, "");
+
+    await dispatch(validateForm({ sanitizedBorrowerID }));
     const state = store.getState();
     const isValid = state.validation.isValid;
+
     if (isValid) {
       if (location.pathname === "/loan/customer-care") {
-        checkBorrowerInfoCustomerCare(borrowerID);
+        checkBorrowerInfoCustomerCare(sanitizedBorrowerID);
       } else if (location.pathname === "/loan/product-testing/term-loan") {
-        checkBorrowerInfoProductTesting(borrowerID);
+        checkBorrowerInfoProductTesting(sanitizedBorrowerID);
       } else if (location.pathname === "/deposit/savings/accounts") {
-        checkBorrowerInfoAccountDetails(borrowerID);
+        checkBorrowerInfoAccountDetails(sanitizedBorrowerID);
       } else {
-        checkBorrowerInfoOverdraftLoanOffer(borrowerID);
+        checkBorrowerInfoOverdraftLoanOffer(sanitizedBorrowerID);
       }
-    } else {
-      return;
     }
   };
-
-
 
   const CustomerCareSearchIDArray = [
     "For individuals: Passport (AB123456) or NRC (12/AHKANA(N)123456)",
     "For companies: Business Registration (87654321) or Tax ID",
-    "Enter the exact ID number used during borrower/company registration"
+    "Enter the exact ID number used during borrower/company registration",
   ];
 
   const CustomerCareSearchShowArray = [
@@ -142,12 +142,12 @@ const SearchBox = () => {
     "Loan application history and status",
     "Active and past loan records",
     "Repayment history and schedule",
-    "Previous rejection records"
+    "Previous rejection records",
   ];
   const ProductTestingSearchIDArray = [
     "For individuals: Passport (AB123456) or NRC (12/AHKANA(N)123456)",
     "For companies: Business Registration (87654321) or Tax ID",
-    "Enter the exact ID number used during borrower/company registration"
+    "Enter the exact ID number used during borrower/company registration",
   ];
 
   const ProductTestingSearchShowArray = [

@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { convertDate } from "../../../utils/convertDate";
 import {
-  CurrencyDollarIcon,
+  UserCircleIcon,
   BuildingOffice2Icon,
   EnvelopeIcon,
   PhoneIcon,
@@ -31,13 +31,17 @@ import {
   WindowIcon,
   MapPinIcon,
   CalendarIcon,
-  UserCircleIcon,
   PencilIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Menu, Transition } from "@headlessui/react";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
-import { generateLoanApplicationId, resetAddLoanData } from "../../../redux/Slices/personalLoansSlice";
+import {
+  generateLoanApplicationId,
+  resetAddLoanData,
+} from "../../../redux/Slices/personalLoansSlice";
+import ViewPhotoModal from "./ViewPhotoModal";
+import { viewPhoto } from "../../../redux/Slices/personalBorrowersSlice";
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -49,6 +53,8 @@ const ViewBorrowers = () => {
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const [borrowerStatuses, setBorrowerStatuses] = useState({});
   const [showEditModal, setEditModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [photoData, setPhotoData] = useState(null);
 
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
@@ -159,15 +165,15 @@ const ViewBorrowers = () => {
     { label: "Other Name", value: "otherName" },
     { label: "Unique ID", value: "uniqueID" },
     { label: "Email", value: "email" },
-    { label: "Mobile", value: "mobile1" },
+    { label: "Cutomer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
     { label: "Unique ID", field: "uniqueID" },
+    { label: "Cutomer ID", field: "customerId" },
     { label: "Email", field: "email" },
-    { label: "Mobile", field: "mobile1" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
   ];
@@ -176,6 +182,33 @@ const ViewBorrowers = () => {
     dispatch(fetchBorrowerByField({ field: searchBy, value: searchValue }));
     setSearchBy("");
     setSearchValue("");
+  };
+
+  const handleViewPhoto = async (photoId) => {
+    const filePreviewParams = {
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+      docId: photoId,
+    };
+    setShowPhotoModal(true);
+    try {
+      const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
+
+      if (result.base64Content) {
+        console.log(result);
+        setPhotoData(
+          `data:${result.contentType};base64,${result.base64Content}`
+        );
+        
+      }
+    } catch (error) {
+      console.error("Error fetching photo:", error);
+    }
+  };
+
+  // console.log(photoData);
+
+  const closePhotoModal = () => {
+    setShowPhotoModal(false);
   };
 
   const renderExpandedRow = (rowData) => {
@@ -219,12 +252,6 @@ const ViewBorrowers = () => {
                 className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
               />
               <div className="flex justify-start gap-5 flex-col mt-4">
-                <Button
-                  buttonName={"Edit"}
-                  onClick={() => handleEdit(rowData.uid)}
-                  className={"text-center"}
-                  rectangle={true}
-                />
                 <InputSelect
                   labelName={"Account Status"}
                   inputName={"accountStatus"}
@@ -236,6 +263,19 @@ const ViewBorrowers = () => {
                   buttonName={"Change Status"}
                   onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
                   className={"bg-red-500 hover:bg-red-600"}
+                  rectangle={true}
+                />
+                {/* OR Separator with horizontal line */}
+                <div className="relative flex items-center my-2">
+                  <hr className="w-full border-gray-300" />
+                  <span className="absolute left-1/2 -translate-x-1/2 bg-white px-2 text-gray-500 text-sm">
+                    OR
+                  </span>
+                </div>
+                <Button
+                  buttonName={"Edit"}
+                  onClick={() => handleEdit(rowData.uid)}
+                  className={"text-center"}
                   rectangle={true}
                 />
               </div>
@@ -251,12 +291,21 @@ const ViewBorrowers = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
               {/* Personal Details */}
-              <CardInfo
-                cardTitle="Personal Details"
-                cardIcon={CurrencyDollarIcon}
-                colorBG={"bg-blue-tertiary"}
-                colorText={"text-blue-primary"}
-              >
+              <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
+                <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
+                  <div
+                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}
+                    className="cursor-pointer"
+                    title="Click to view profile photo"
+                  >
+                    <UserCircleIcon
+                      className="-ml-0.5 h-5 w-5"
+                      aria-hidden="true"
+                    />
+            
+                  </div>
+                  Personal Details
+                </div>
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
                     {[
@@ -289,7 +338,7 @@ const ViewBorrowers = () => {
                     />
                   </div>
                 </div>
-              </CardInfo>
+              </div>
 
               {/* Contact Details */}
               <CardInfo
@@ -429,19 +478,19 @@ const ViewBorrowers = () => {
     //   return <div className="py-6">-</div>;
     // }
 
-  const handleNewApplication = async (BorrowerId) => {
-    dispatch(resetAddLoanData());
-    try {
-      const loanApplicationId = await dispatch(
-        generateLoanApplicationId()
-      ).unwrap();
-      navigate(
-        `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}/${BorrowerId}`
-      );
-    } catch (error) {
-      console.error("Failed to generate loan application ID:", error);
-    }
-  };
+    const handleNewApplication = async (BorrowerId) => {
+      dispatch(resetAddLoanData());
+      try {
+        const loanApplicationId = await dispatch(
+          generateLoanApplicationId()
+        ).unwrap();
+        navigate(
+          `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}/${BorrowerId}`
+        );
+      } catch (error) {
+        console.error("Failed to generate loan application ID:", error);
+      }
+    };
 
     return (
       <div className="flex justify-center gap-4 px-5">
@@ -508,6 +557,11 @@ const ViewBorrowers = () => {
         totalElements={allBorrowersTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+      />
+      <ViewPhotoModal
+        isOpen={showPhotoModal}
+        onClose={closePhotoModal}
+        photoData={photoData}
       />
     </div>
   );

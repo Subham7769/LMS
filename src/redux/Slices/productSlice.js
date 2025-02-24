@@ -201,6 +201,7 @@ const productInitialState = {
   },
   productData: {
     approvalsConfigurationsTempId: "",
+    dynamicDocumentTempId: "",
     loanProductId: "",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",

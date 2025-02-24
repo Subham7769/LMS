@@ -98,13 +98,14 @@ const LoanHistory = () => {
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
+    { label: "Loan ID", value: "loanId" },
     { label: "Unique ID", value: "uid" },
   ];
 
   const columns = [
+    { label: "Loan ID", field: "loanId" },
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Disbursed By", field: "disbursedBy" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Loan Status", field: "loanStatus" },

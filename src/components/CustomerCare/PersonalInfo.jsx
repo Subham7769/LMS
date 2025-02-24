@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
@@ -28,10 +28,14 @@ import {
   ClockIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
+import { viewPhoto } from "../../redux/Slices/personalBorrowersSlice";
+import ViewPhotoModal from "../Los-Personal/Borrowers/ViewPhotoModal";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
   const dispatch = useDispatch();
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [photoData, setPhotoData] = useState(null);
 
   // Access state from Redux store
   const { personalInfo, loading, error } = useSelector(
@@ -97,6 +101,30 @@ const PersonalInfo = () => {
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
 
+  const handleViewPhoto = async (photoId) => {
+    const filePreviewParams = {
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+      docId: photoId,
+    };
+    setShowPhotoModal(true);
+    try {
+      const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
+
+      if (result.base64Content) {
+        console.log(result);
+        setPhotoData(
+          `data:${result.contentType};base64,${result.base64Content}`
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching photo:", error);
+    }
+  };
+
+  const closePhotoModal = () => {
+    setShowPhotoModal(false);
+  };
+
   const renderExpandedRowPersonal = (rowData) => {
     console.log(rowData);
     return (
@@ -105,12 +133,20 @@ const PersonalInfo = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 break-words">
               {/* Personal Details */}
-              <CardInfo
-                cardTitle="Personal Details"
-                cardIcon={CurrencyDollarIcon}
-                colorBG={"bg-blue-tertiary"}
-                colorText={"text-blue-primary"}
-              >
+              <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
+                <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
+                  <div
+                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}
+                    className="cursor-pointer"
+                    title="Click to view profile photo"
+                  >
+                    <UserCircleIcon
+                      className="-ml-0.5 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  Personal Details
+                </div>
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
                     {[
@@ -143,7 +179,7 @@ const PersonalInfo = () => {
                     />
                   </div>
                 </div>
-              </CardInfo>
+              </div>
 
               {/* Contact Details */}
               <CardInfo
@@ -759,11 +795,11 @@ const PersonalInfo = () => {
           loading={loading}
           // error={error}
         >
-          <img
+          {/* <img
             className="rounded-full w-12"
             src="https://lmscarbon.com/assets/index.png"
             alt=""
-          />
+          /> */}
           <div className="text-xl font-semibold">Borrower Id: {subID}</div>
         </ContainerTile>
         <>
@@ -773,6 +809,11 @@ const PersonalInfo = () => {
             <>{renderExpandedRowCompany(...transformFlattenDataCompany)}</>
           )}
         </>
+        <ViewPhotoModal
+          isOpen={showPhotoModal}
+          onClose={closePhotoModal}
+          photoData={photoData}
+        />
       </div>
     </>
   );

@@ -29,7 +29,7 @@ const AddLoans = () => {
   const { addLoanData, loading } = useSelector((state) => state.personalLoans);
   // const isValid = useSelector((state) => state.validation.isValid);
 
-  console.log(BorrowerId)
+  console.log(addLoanData);
 
   useEffect(() => {
     dispatch(getLoanApplicationsByID(loanApplicationId));
@@ -96,6 +96,10 @@ const AddLoans = () => {
     navigate("/loan/loan-origination-system/personal/loans/loan-application");
   };
 
+  const handleCanel = async () => {
+    navigate("/loan/loan-origination-system/personal/loans/loan-application");
+  };
+
   const getMaxPrincipal = async () => {
     const maxPrincipalPayload = {
       borrowerId: addLoanData.generalLoanDetails.borrowerId,
@@ -145,6 +149,7 @@ const AddLoans = () => {
             rectangle={true}
           />
           <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
+          <Button buttonName="Cancel" onClick={handleCanel} rectangle={true} buttonType="destructive" />
         </div>
       </div>
     </>

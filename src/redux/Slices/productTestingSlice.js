@@ -149,10 +149,14 @@ export const getUserLoanOptions = createAsyncThunk(
 
 export const submitLoanConfiguration = createAsyncThunk(
   "loanConfig/submitLoanConfiguration",
-  async ({ loanType, amount, userID, consumerType }, { rejectWithValue }) => {
+  async (
+    { loanType, amount, branchName, userID, consumerType },
+    { rejectWithValue }
+  ) => {
     const postData1 = {
       loan_type: loanType,
       customer_type: consumerType,
+      branchName,
       amount,
     };
 
@@ -553,6 +557,7 @@ const initialState = {
   loanConfigFields: {
     loanType: "",
     amount: "",
+    branchName: "",
   },
   loanConfigData: {},
   disbursementData: {

@@ -5,12 +5,16 @@ import {
   resetUpdateBorrowerData,
   updateBorrowerInfo,
   fetchAllBorrowers,
+  resetBorrowerFile,
+  uploadBorrowerPhotoFile,
+  fetchBorrowerInfo,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
+import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 
 const UpdateBorrower = () => {
   const { updateBorrowerData, error, loading } = useSelector(
@@ -19,6 +23,12 @@ const UpdateBorrower = () => {
   const dispatch = useDispatch();
   const { uid } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (uid) {
+      dispatch(fetchBorrowerInfo(uid));
+    }
+  }, [uid, dispatch]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -61,11 +71,17 @@ const UpdateBorrower = () => {
     navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
   };
 
+  if (Object.keys(updateBorrowerData).length === 0) {
+    return <ContainerTile loading={loading} />; //
+  }
+
   return (
     <>
       <AddUpdateBorrowerFields
         BorrowerData={updateBorrowerData}
         handleChangeReducer={updateBorrowerUpdateField}
+        handleFileReset={resetBorrowerFile}
+        handleFileUpload={uploadBorrowerPhotoFile}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button

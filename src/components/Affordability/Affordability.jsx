@@ -37,24 +37,22 @@ const Affordability = () => {
   const roleName = userData?.roles[0]?.name;
 
   const incomeOnPaySlipFields = {
-    actingAllowance: "",
     basicPay: "",
-    doubleClassAllowance: "",
-    healthShiftAllowance: "",
     housingAllowance: "",
-    infectiousHealthRisk: "",
-    interfaceAllowance: "",
-    otherAllowances: "",
-    responsibilityAllowance: "",
-    ruralRemoteHardshipAllowance: "",
     transportAllowance: "",
+    ruralRemoteHardshipAllowance: "",
+    infectiousHealthRisk: "",
+    healthShiftAllowance: "",
+    interfaceAllowance: "",
+    responsibilityAllowance: "",
+    doubleClassAllowance: "",
+    actingAllowance: "",
+    otherAllowances: "",
   };
 
   const deductionsOnPaySlipFields = {
-    napsa: "",
-    payee: "",
-    totalOtherDeductions: "",
-    unionContribution: "",
+    totalDeductionsOnPayslip: "",
+    totalDeductionsNotOnPayslip: "",
   };
 
   useEffect(() => {
@@ -109,7 +107,7 @@ const Affordability = () => {
       console.log(
         affordabilityData?.affordabilityCriteriaRuleId ? true : false
       );
-      console.log(affordabilityData)
+      console.log(affordabilityData);
       dispatch(
         updateOrPostData({
           formData: affordabilityData,
@@ -154,7 +152,7 @@ const Affordability = () => {
         </div>
       </ContainerTile>
       <ContainerTile loading={loading}>
-        <div className="text-lg font-semibold mb-5">Deductions on Pay Slip</div>
+        <div className="text-lg font-semibold mb-5">Deductions</div>
         <div className="grid grid-cols-4 gap-4">
           {Object.keys(deductionsOnPaySlipFields).map((key) => (
             <div key={key}>

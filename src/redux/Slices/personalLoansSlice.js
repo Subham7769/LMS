@@ -765,13 +765,20 @@ const initialState = {
       repaymentTenureType: "",
       repaymentTenureStr: "",
       principalAmount: 0,
-      refinancedLoanId: "",
-      refinancedLoanAmount:0,
       sector: "",
       branch: "",
       agentName: "",
       lhacoName: "",
     },
+    refinanceDetails: [
+      {
+        name: "",
+        loanId: "",
+        installmentOnPaySlip: "",
+        refinanceAmount: "",
+        refinanceYesNo: false,
+      },
+    ],
     documents: [
       {
         docName: "",
@@ -830,6 +837,9 @@ const personalLoansSlice = createSlice({
       if (section === "documents") {
         state.addLoanData.documents[index][field] =
           type === "checkbox" ? checked : value;
+      } else if (section === "refinanceDetails") {
+        state.addLoanData.refinanceDetails[index][field] =
+          type === "checkbox" ? checked : value;
       } else if (section && state.addLoanData[section]) {
         state.addLoanData[section][field] =
           type === "checkbox" ? checked : value;
@@ -850,6 +860,20 @@ const personalLoansSlice = createSlice({
     },
     setLoanBorrowerId: (state, action) => {
       state.addLoanData.generalLoanDetails.borrowerId = action.payload;
+    },
+    handleAddRefinance: (state) => {
+      state.addLoanData.refinanceDetails.push({
+        name: "",
+        loanId: "",
+        installmentOnPaySlip: "",
+        refinanceAmount: "",
+        refinanceYesNo: false,
+      });
+    },
+    handleDeleteRefinance: (state, action) => {
+      const index = action.payload;
+      state.addLoanData.refinanceDetails =
+        state.addLoanData.refinanceDetails.filter((_, i) => i !== index);
     },
   },
   extraReducers: (builder) => {
@@ -1235,6 +1259,8 @@ export const {
   updateLoanOfferFields,
   setLoanApplicationId,
   setLoanBorrowerId,
+  handleAddRefinance,
+  handleDeleteRefinance,
 } = personalLoansSlice.actions;
 
 export default personalLoansSlice.reducer;
