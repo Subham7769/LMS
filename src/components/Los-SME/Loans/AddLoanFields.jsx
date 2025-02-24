@@ -13,7 +13,7 @@ import {
   uploadDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { sectorOptions } from "../../../data/OptionsData";
+import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 
@@ -325,7 +325,8 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Branch",
       inputName: "branch",
-      type: "text",
+      type: "select",
+      options: lhaBranchOptions,
       validation: false,
     },
     {
@@ -808,7 +809,7 @@ const AddLoanFields = ({ addLoanData }) => {
     dispatch(deleteDocumentFile(fileDeleteParams));
   };
 
-  console.log(addLoanData);
+  // console.log(addLoanData);
 
   const requiredDocuments = (documents) => {
     return documents.map((document, index) => (

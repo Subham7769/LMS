@@ -32,7 +32,7 @@ const CardInfo = ({
       ) : (
         <>
           <div
-            className={`flex justify-between items-baseline mb-3 ${colorText}`}
+            className={`flex  justify-between items-baseline mb-3 ${colorText}`}
           >
             <div className={`text-xl font-semibold flex gap-2 items-center`}>
               {CardIcon && (

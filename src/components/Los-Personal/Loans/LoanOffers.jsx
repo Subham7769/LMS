@@ -12,7 +12,7 @@ import {
   updateLoanOfferFields,
 } from "../../../redux/Slices/personalLoansSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputText from "../../Common/InputText/InputText";
 import {
   UserIcon,
   CogIcon,
@@ -103,7 +103,7 @@ const LoanOffers = () => {
             inputValue={loanOfferFields.loanProductId}
             onChange={handleChange}
           />
-          <InputNumber
+          <InputText
             labelName={"Borrower"}
             inputName="uid"
             inputValue={loanOfferFields.uid}
@@ -147,7 +147,7 @@ const LoanOffers = () => {
               cardTitle="Meet Our Borrower"
               cardIcon={UserIcon}
               colorText={"text-blue-primary"}
-              // colorBG={"bg-blue-tertiary"}
+              colorBG={"bg-background-light-white"}
               numberBG={"bg-blue-secondary"}
               cardNumber="1"
               loading={loading}
@@ -177,7 +177,7 @@ const LoanOffers = () => {
               cardTitle="Avialable Loan Range"
               cardIcon={CogIcon}
               colorText={"text-green-primary"}
-              // colorBG={"bg-green-tertiary"}
+              colorBG={"bg-background-light-white"}
               numberBG={"bg-green-secondary"}
               cardNumber="2"
               loading={loading}
@@ -219,7 +219,7 @@ const LoanOffers = () => {
                   cardTitle="Interest Rates"
                   cardIcon={CalculatorIcon}
                   colorText={"text-violet-primary"}
-                  // colorBG={"bg-violet-tertiary"}
+                  colorBG={"bg-background-light-white"}
                   numberBG={"bg-violet-secondary"}
                   cardNumber="3"
                   loading={loading}
@@ -256,7 +256,7 @@ const LoanOffers = () => {
                   cardTitle="Financial Breakdown"
                   cardIcon={CalculatorIcon}
                   colorText={"text-orange-primary"}
-                  // colorBG={"bg-orange-tertiary"}
+                  colorBG={"bg-background-light-white"}
                   numberBG={"bg-orange-secondary"}
                   cardNumber="4"
                   loading={loading}
@@ -321,6 +321,7 @@ const LoanOffers = () => {
                 cardIcon={CurrencyDollarIcon}
                 colorText={"text-blue-primary"}
                 loading={loading}
+                colorBG={"bg-background-light-white"}
               >
                 <div
                   className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5"}

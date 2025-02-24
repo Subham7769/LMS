@@ -165,15 +165,15 @@ const ViewBorrowers = () => {
     { label: "Other Name", value: "otherName" },
     { label: "Unique ID", value: "uniqueID" },
     { label: "Email", value: "email" },
-    { label: "Mobile", value: "mobile1" },
+    { label: "Cutomer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
     { label: "Unique ID", field: "uniqueID" },
+    { label: "Cutomer ID", field: "customerId" },
     { label: "Email", field: "email" },
-    { label: "Mobile", field: "mobile1" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
   ];
@@ -205,7 +205,7 @@ const ViewBorrowers = () => {
     }
   };
 
-  console.log(photoData);
+  // console.log(photoData);
 
   const closePhotoModal = () => {
     setShowPhotoModal(false);
@@ -252,12 +252,6 @@ const ViewBorrowers = () => {
                 className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
               />
               <div className="flex justify-start gap-5 flex-col mt-4">
-                <Button
-                  buttonName={"Edit"}
-                  onClick={() => handleEdit(rowData.uid)}
-                  className={"text-center"}
-                  rectangle={true}
-                />
                 <InputSelect
                   labelName={"Account Status"}
                   inputName={"accountStatus"}
@@ -269,6 +263,19 @@ const ViewBorrowers = () => {
                   buttonName={"Change Status"}
                   onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
                   className={"bg-red-500 hover:bg-red-600"}
+                  rectangle={true}
+                />
+                {/* OR Separator with horizontal line */}
+                <div className="relative flex items-center my-2">
+                  <hr className="w-full border-gray-300" />
+                  <span className="absolute left-1/2 -translate-x-1/2 bg-white px-2 text-gray-500 text-sm">
+                    OR
+                  </span>
+                </div>
+                <Button
+                  buttonName={"Edit"}
+                  onClick={() => handleEdit(rowData.uid)}
+                  className={"text-center"}
                   rectangle={true}
                 />
               </div>

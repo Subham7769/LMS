@@ -312,10 +312,8 @@ const initialState = {
       otherAllowances: "",
     },
     deductionOnPaySlip: {
-      payee: "",
-      napsa: "",
-      unionContribution: "",
-      totalOfOtherDeductions: "",
+      totalDeductionsOnPayslip: "",
+    totalDeductionsNotOnPayslip: "",
     },
     bankDetails: {
       bankName: "",

@@ -29,7 +29,7 @@ const AddLoans = () => {
   const { addLoanData, loading } = useSelector((state) => state.personalLoans);
   // const isValid = useSelector((state) => state.validation.isValid);
 
-  console.log(BorrowerId)
+  console.log(addLoanData);
 
   useEffect(() => {
     dispatch(getLoanApplicationsByID(loanApplicationId));

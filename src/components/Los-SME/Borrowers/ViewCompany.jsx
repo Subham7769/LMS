@@ -188,7 +188,7 @@ const ViewCompany = () => {
     { label: "Registration No.", value: "companyRegistrationNo" },
     { label: "Unique Id", value: "companyUniqueId" },
     { label: "Email", value: "email" },
-    { label: "Mobile", value: "mobile1" },
+    { label: "Cutomer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
 
@@ -196,8 +196,8 @@ const ViewCompany = () => {
     { label: "Name", field: "fullName" },
     { label: "Registration No.", field: "companyRegistrationNo" },
     { label: "Unique Id", field: "companyUniqueId" },
+    { label: "Cutomer ID", field: "customerId" },
     { label: "Email", field: "email" },
-    { label: "Mobile", field: "mobile1" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
   ];
@@ -251,12 +251,6 @@ const ViewCompany = () => {
                 className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
               />
               <div className="flex justify-start gap-5 flex-col mt-4">
-                <Button
-                  buttonName={"Edit"}
-                  onClick={() => handleEdit(rowData.uid)}
-                  className={"text-center"}
-                  rectangle={true}
-                />
                 <InputSelect
                   labelName={"Account Status"}
                   inputName={"accountStatus"}
@@ -268,6 +262,19 @@ const ViewCompany = () => {
                   buttonName={"Change Status"}
                   onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
                   className={"bg-red-500 hover:bg-red-600"}
+                  rectangle={true}
+                />
+                {/* OR Separator with horizontal line */}
+                <div className="relative flex items-center my-2">
+                  <hr className="w-full border-gray-300" />
+                  <span className="absolute left-1/2 -translate-x-1/2 bg-white px-2 text-gray-500 text-sm">
+                    OR
+                  </span>
+                </div>
+                <Button
+                  buttonName={"Edit"}
+                  onClick={() => handleEdit(rowData.uid)}
+                  className={"text-center"}
                   rectangle={true}
                 />
               </div>

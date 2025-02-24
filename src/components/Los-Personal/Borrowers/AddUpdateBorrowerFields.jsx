@@ -487,26 +487,14 @@ const AddUpdateBorrowerFields = ({
   ];
   const deductionOnPaySlipConfig = [
     {
-      labelName: "Payee",
-      inputName: "payee",
+      labelName: "Total Deductions on payslip",
+      inputName: "totalDeductionsOnPayslip",
       type: "number",
       validation: false,
     },
     {
-      labelName: "NAPSA",
-      inputName: "napsa",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Union Contribution",
-      inputName: "unionContribution",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Total of Other Deductions",
-      inputName: "totalOfOtherDeductions",
+      labelName: "Total deductions not on Payslip",
+      inputName: "totalDeductionsNotOnPayslip",
       type: "number",
       validation: false,
     },
@@ -870,7 +858,7 @@ const AddUpdateBorrowerFields = ({
               )}
             />
             <Accordion
-              heading={"Deduction on PaySlip"}
+              heading={"Deduction"}
               renderExpandedContent={() =>
                 deductionOnPaySlip(BorrowerData.deductionOnPaySlip)
               }
