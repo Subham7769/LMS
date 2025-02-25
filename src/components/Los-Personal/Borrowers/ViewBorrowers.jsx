@@ -11,7 +11,7 @@ import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  fetchAllBorrowers,
+  fetchAllBorrowersByType,
   fetchBorrowerByField,
   changeBorrowerStatus,
   setUpdateBorrower,
@@ -60,7 +60,13 @@ const ViewBorrowers = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    dispatch(fetchAllBorrowers({ page: currentPage, size: pageSize }));
+    dispatch(
+      fetchAllBorrowersByType({
+        page: currentPage,
+        size: pageSize,
+        borrowerType: "PERSONAL_BORROWER",
+      })
+    );
   };
 
   useEffect(() => {
@@ -68,6 +74,7 @@ const ViewBorrowers = () => {
       ...item.borrowerProfile,
       uid: item.uid,
       lmsUserStatus: item.lmsUserStatus,
+      customerId: item.customerId,
     }));
     setFilteredBorrowers(transformedData);
   }, [allBorrowersData]);
@@ -121,7 +128,13 @@ const ViewBorrowers = () => {
       setSearchValue("");
       setFilteredBorrowers(allBorrowersData); // Reset to original data
     } else {
-      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      dispatch(
+        fetchAllBorrowersByType({
+          page: 0,
+          size: 20,
+          borrowerType: "PERSONAL_BORROWER",
+        })
+      );
     }
   };
 
@@ -155,7 +168,7 @@ const ViewBorrowers = () => {
 
   const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
 
-  // console.log(flattenData);
+  console.log(flattenData);
 
   const transformFlattenData = transformData(flattenData);
 
@@ -198,7 +211,6 @@ const ViewBorrowers = () => {
         setPhotoData(
           `data:${result.contentType};base64,${result.base64Content}`
         );
-        
       }
     } catch (error) {
       console.error("Error fetching photo:", error);
@@ -236,7 +248,13 @@ const ViewBorrowers = () => {
         console.log(uid);
         setCurrentStatus(newStatus);
         await dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
-        dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+        dispatch(
+          fetchAllBorrowersByType({
+            page: 0,
+            size: 20,
+            borrowerType: "PERSONAL_BORROWER",
+          })
+        );
         navigate(
           `/loan/loan-origination-system/personal/borrowers/view-borrower`
         );
@@ -302,7 +320,6 @@ const ViewBorrowers = () => {
                       className="-ml-0.5 h-5 w-5"
                       aria-hidden="true"
                     />
-            
                   </div>
                   Personal Details
                 </div>

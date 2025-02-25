@@ -453,6 +453,9 @@ const personalRepaymentsSlice = createSlice({
         collectionBy: "",
         description: "",
         accounting: "",
+        userId: "",
+        repaymentType: "PERSONAL",
+        payAll: false,
       };
       state.draftRepaymentDTOList.push(newRow);
     },

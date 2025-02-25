@@ -281,6 +281,9 @@ const Borrowers = lazy(() =>
 const AddBorrowers = lazy(() =>
   import("./components/Los-Personal/Borrowers/AddBorrowers")
 );
+const AddNewBorrower = lazy(() =>
+  import("./components/Los-Personal/Borrowers/AddNewBorrower")
+);
 const ViewBorrowers = lazy(() =>
   import("./components/Los-Personal/Borrowers/ViewBorrowers")
 );
@@ -919,6 +922,16 @@ const routes = [
           {
             path: "add-borrower",
             element: <AddBorrowers />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-new-borrower",
+            element: <AddNewBorrower />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-new-borrower/:borrowerProfileDraftId",
+            element: <AddNewBorrower />,
             errorElement: <RouteErrorBoundary />,
           },
           {

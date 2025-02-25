@@ -1403,7 +1403,7 @@ const borrowersSlice = createSlice({
       })
       .addCase(updateDraftCompanyBorrowerStatus.fulfilled, (state, action) => {
         state.loading = false;
-        toast(`Draft Saved!`);
+        toast(`Draft Status updated!`);
       })
       .addCase(updateDraftCompanyBorrowerStatus.rejected, (state, action) => {
         state.loading = false;

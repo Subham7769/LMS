@@ -500,7 +500,7 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const refinanceDetails = (refinanceDetails) => (
     <>
-      <div className="text-right">
+      <div className="flex justify-end">
         <Button
           buttonIcon={PlusIcon}
           onClick={() => {
