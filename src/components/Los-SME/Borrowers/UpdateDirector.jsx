@@ -4,7 +4,7 @@ import {
   handleChangeUpdateDirectorField,
   resetUpdateDirectorData,
   updateDirectorInfo,
-  fetchAllCompanyBorrowers,
+  fetchAllCompanyBorrowersByLoanOfficer,
   fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,7 +50,7 @@ const UpdateDirector = () => {
       dispatch(updateDirectorInfo({ updateDirectorData, uid }))
         .unwrap()
         .then(() => {
-          dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }))
+          dispatch(fetchAllCompanyBorrowersByLoanOfficer({ page: 0, size: 20, loanOfficer }))
             .unwrap()
             .then(() => {
               dispatch(fetchCompanyDetails({ companyId }));

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
   handleChangeAddCompanyField,
-  fetchAllCompanyBorrowersListByLoanOfficer,
   fetchDraftedCompanyBorrowers,
   fetchDraftedCompanyBorrowerByField,
   setUpdateDraftCompany,
@@ -25,7 +24,6 @@ const AddCompany = () => {
   const [searchBy, setSearchBy] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
-  const loanOfficer = localStorage.getItem("username");
 
   const { addCompanyData, allDraftedCompanies,  allDraftedBorrowersTotalElements, error, loading } = useSelector(
     (state) => state.smeBorrowers
@@ -203,13 +201,6 @@ const AddCompany = () => {
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(fetchDraftedCompanyBorrowers({ page: currentPage, size: pageSize }));
-    // dispatch(
-    //   fetchAllCompanyBorrowersListByLoanOfficer({
-    //     page: currentPage,
-    //     size: pageSize,
-    //     loanOfficer,
-    //   })
-    // );
   };
 
 

@@ -4,7 +4,7 @@ import {
   handleChangeUpdateShareholderField,
   resetUpdateShareholderData,
   updateShareholderInfo,
-  fetchAllCompanyBorrowers,
+  fetchAllCompanyBorrowersByLoanOfficer,
   fetchCompanyDetails,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,7 +52,7 @@ const UpdateShareholder = () => {
       dispatch(updateShareholderInfo({ updateShareholderData, uid }))
         .unwrap()
         .then(() => {
-          dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+          dispatch(fetchAllCompanyBorrowersByLoanOfficer({ page: 0, size: 20, loanOfficer }));
           dispatch(fetchCompanyDetails({ companyId }))
           navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
         })
