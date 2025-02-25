@@ -309,14 +309,14 @@ const AddUpdateCompanyBorrowerFields = ({
       inputName: "province",
       type: "select",
       options: filteredLocations2,
-      validation: false,
+      validation: true,
     },
     {
       labelName: "District",
       inputName: "district",
       type: "select",
       options: filteredDistrictLocations2,
-      validation: false,
+      validation: true,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
     {

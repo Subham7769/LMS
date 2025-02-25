@@ -47,7 +47,7 @@ export const addNewRule = createAsyncThunk(
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_DYNAMIC_RAC_CREATE_NEW_RAC_RULE}`,
-        { ...ruleConfig, displayName: ruleConfig.name},
+        { ...ruleConfig, displayName: ruleConfig.name },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -349,11 +349,25 @@ const dynamicRacSlice = createSlice({
     uploadConfig(state, action) {
       const { racDetails, sections } = action.payload;
 
+      
+      const uploadedSections = sections?.map((section, sectionIndex) => {
+        return {
+          ...section,
+          rules: section?.rules?.map((rule, ruleIndex) => ({
+            ...rule,
+            status: "CREATED",
+            dynamicRacRuleId: `Rule-${Date.now()}-${ruleIndex}-${sectionIndex}`,
+            isModified: true,
+          })),
+        };
+      });
+      
+      console.log(uploadedSections)
       // Update both racDetails and sections in the state
       state.racConfig = {
         ...state.racConfig,
         racDetails: racDetails || state.racConfig.racDetails, // Update racDetails, fallback to current state if undefined
-        sections: sections || state.racConfig.sections, // Update sections, fallback to current state if undefined
+        sections: uploadedSections || state.racConfig.sections, // Update sections, fallback to current state if undefined
       };
     },
     updateRacConfigName(state, action) {
@@ -427,7 +441,7 @@ const dynamicRacSlice = createSlice({
             ...ruleConfig,
             dynamicRacRuleId:
               ruleConfig.dynamicRacRuleId || `Rule-${Date.now()}`,
-              isModified: true,
+            isModified: true,
           };
         }
         state.racConfig.sections = state.racConfig.sections.map((section) => {

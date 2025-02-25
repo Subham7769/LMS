@@ -66,6 +66,68 @@ export const fetchAllBorrowers = createAsyncThunk(
   }
 );
 
+export const fetchBorrowerInfo = createAsyncThunk(
+  "borrowers/fetchBorrowerInfo", // action type
+  async (uid, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const username = localStorage.getItem("username");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_READ_INFO_PERSONAL_BORROWER}${uid}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch borrowers");
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+export const viewPhoto = createAsyncThunk(
+  "borrowers/viewPhoto",
+  async (filePreviewParams, { rejectWithValue }) => {
+    const { docId, authToken } = filePreviewParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_PERSONAL}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to preview");
+      }
+
+      const data = await response.json();
+
+      return {
+        base64Content: data.base64Content,
+        contentType: data.contentType, // Example: "image/jpeg"
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Fetch Borrower By Field
 export const fetchBorrowerByField = createAsyncThunk(
   "borrowers/fetchBorrowerByField", // action type
@@ -234,7 +296,7 @@ const initialState = {
       workPhysicalAddress: "", //optional
       employeeNo: "",
       workType: "",
-      ministry:"",
+      ministry: "",
     },
     incomeOnPaySlip: {
       basicPay: "",
@@ -250,10 +312,8 @@ const initialState = {
       otherAllowances: "",
     },
     deductionOnPaySlip: {
-      payee: "",
-      napsa: "",
-      unionContribution: "",
-      totalOfOtherDeductions: "",
+      totalDeductionsOnPayslip: "",
+    totalDeductionsNotOnPayslip: "",
     },
     bankDetails: {
       bankName: "",
@@ -270,6 +330,7 @@ const initialState = {
       kinOtherName: "", //optional
       kinNrcNo: "",
       kinGender: "",
+      kinRelationship: "",
       kinMobile1: "",
       kinMobile2: "", //optional
       kinEmail: "",
@@ -291,6 +352,7 @@ const initialState = {
       creditScore: "",
       customerPhotoId: "",
     },
+    isDraft: false,
   },
   allBorrowersData: [],
   allBorrowersTotalElements: 0,
@@ -378,6 +440,33 @@ const borrowersSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(fetchBorrowerInfo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchBorrowerInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update state with the borrowers array
+        state.updateBorrowerData = action.payload.borrowerProfile;
+        state.error = null;
+      })
+      .addCase(fetchBorrowerInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(viewPhoto.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(viewPhoto.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update state with the borrowers array
+        state.error = null;
+      })
+      .addCase(viewPhoto.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(fetchBorrowerByField.pending, (state) => {
         state.loading = true;
         state.error = null; // Reset error on new request
@@ -424,6 +513,12 @@ const borrowersSlice = createSlice({
         state.loading = false;
         const { docId } = action.payload;
         state.addBorrowerData.otherDetails.customerPhotoId = docId;
+        if (
+          state.updateBorrowerData.otherDetails.creditScore ||
+          state.updateBorrowerData.isDraft
+        ) {
+          state.updateBorrowerData.otherDetails.customerPhotoId = docId;
+        }
         toast.success("File uploaded successfully");
       })
       .addCase(uploadBorrowerPhotoFile.rejected, (state, action) => {

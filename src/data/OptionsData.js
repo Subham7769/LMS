@@ -1,3 +1,9 @@
+export const lhaBranchOptions = [
+  { value: "Lusaka", label: "Lusaka" },
+  { value: "Kitwe", label: "Kitwe" },
+  { value: "Solwezi", label: "Solwezi" },
+]
+
 export const borrowerTypeOptions = [
   { value: "PERSONAL_BORROWER", label: "PERSONAL BORROWER" },
   { value: "COMPANY_BORROWER", label: "COMPANY BORROWER" },

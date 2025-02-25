@@ -73,7 +73,7 @@ const CustomerCare = () => {
           ""
         ) : (
           <div className="px-2">
-            <Link
+            {/* <Link
               to={tabs[3].path}
               className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${
                 currentPath === tabs[3].path
@@ -82,7 +82,7 @@ const CustomerCare = () => {
               }`}
             >
               {tabs[3].label}
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

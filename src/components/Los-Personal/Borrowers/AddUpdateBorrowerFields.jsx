@@ -20,6 +20,7 @@ import {
   gender,
   accountType,
   uniqueIDType,
+  relationshipOptions,
 } from "../../../data/LosData";
 import {
   setFields,
@@ -51,30 +52,6 @@ const AddUpdateBorrowerFields = ({
   );
 
   console.log(BorrowerData);
-
-  useEffect(() => {
-    setFilteredLocations1(
-      locationOptions[BorrowerData.contactDetails.country] || []
-    );
-    setFilteredLocations2(
-      locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
-    );
-    setFilteredDistrictLocations1(
-      districtOptions[BorrowerData.contactDetails.province] || []
-    );
-    setFilteredDistrictLocations2(
-      districtOptions[BorrowerData.nextOfKinDetails.kinProvince] || []
-    );
-    setFilteredBranchNameOptions(
-      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
-    );
-  }, [
-    BorrowerData.contactDetails.country,
-    BorrowerData.nextOfKinDetails.kinCountry,
-    BorrowerData.contactDetails.province,
-    BorrowerData.nextOfKinDetails.kinProvince,
-    BorrowerData.bankDetails.bankName,
-  ]);
 
   useEffect(() => {
     const keysArray = [
@@ -110,6 +87,7 @@ const AddUpdateBorrowerFields = ({
       "kinSurname",
       // "kinNrcNo",
       "kinGender",
+      "kinRelationship",
       "kinMobile1",
       // "kinEmail",
       "kinStreet",
@@ -126,6 +104,30 @@ const AddUpdateBorrowerFields = ({
       dispatch(clearValidationError());
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredLocations1(
+      locationOptions[BorrowerData.contactDetails.country] || []
+    );
+    setFilteredLocations2(
+      locationOptions[BorrowerData.nextOfKinDetails.kinCountry] || []
+    );
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.contactDetails.province] || []
+    );
+    setFilteredDistrictLocations2(
+      districtOptions[BorrowerData.nextOfKinDetails.kinProvince] || []
+    );
+    setFilteredBranchNameOptions(
+      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
+    );
+  }, [
+    BorrowerData.contactDetails.country,
+    BorrowerData.nextOfKinDetails.kinCountry,
+    BorrowerData.contactDetails.province,
+    BorrowerData.nextOfKinDetails.kinProvince,
+    BorrowerData.bankDetails.bankName,
+  ]);
 
   const handleInputChange = (e, section) => {
     const { name, value, type, checked } = e.target;
@@ -151,6 +153,8 @@ const AddUpdateBorrowerFields = ({
       );
     }
   };
+
+  // console.log(BorrowerData.otherDetails);
 
   const handleFileRemove = (section) => {
     console.log("customerPhotoId remove");
@@ -485,26 +489,14 @@ const AddUpdateBorrowerFields = ({
   ];
   const deductionOnPaySlipConfig = [
     {
-      labelName: "Payee",
-      inputName: "payee",
+      labelName: "Total Deductions on payslip",
+      inputName: "totalDeductionsOnPayslip",
       type: "number",
       validation: false,
     },
     {
-      labelName: "NAPSA",
-      inputName: "napsa",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Union Contribution",
-      inputName: "unionContribution",
-      type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Total of Other Deductions",
-      inputName: "totalOfOtherDeductions",
+      labelName: "Total deductions not on Payslip",
+      inputName: "totalDeductionsNotOnPayslip",
       type: "number",
       validation: false,
     },
@@ -583,6 +575,13 @@ const AddUpdateBorrowerFields = ({
       type: "select",
       options: gender,
       validation: true,
+    },
+    {
+      labelName: "Relationship",
+      inputName: "kinRelationship",
+      type: "select",
+      options: relationshipOptions,
+      validation: false,
     },
     {
       labelName: "Mobile 1",
@@ -868,7 +867,7 @@ const AddUpdateBorrowerFields = ({
               )}
             />
             <Accordion
-              heading={"Deduction on PaySlip"}
+              heading={"Deduction"}
               renderExpandedContent={() =>
                 deductionOnPaySlip(BorrowerData.deductionOnPaySlip)
               }

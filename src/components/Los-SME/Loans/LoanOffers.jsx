@@ -145,7 +145,7 @@ const LoanOffers = () => {
               className={"border border-border-gray-primary"}
               cardIcon={UserIcon}
               colorText={"text-blue-primary"}
-              // colorBG={"bg-blue-tertiary"}
+              colorBG={"bg-background-light-white"}
               numberBG={"bg-blue-secondary"}
               cardNumber="1"
               loading={loading}
@@ -173,7 +173,7 @@ const LoanOffers = () => {
               className={"border border-border-gray-primary"}
               cardIcon={CogIcon}
               colorText={"text-green-primary"}
-              // colorBG={"bg-green-tertiary"}
+              colorBG={"bg-background-light-white"}
               numberBG={"bg-green-secondary"}
               cardNumber="2"
               loading={loading}
@@ -215,7 +215,7 @@ const LoanOffers = () => {
                   className={"border border-border-gray-primary"}
                   cardIcon={CalculatorIcon}
                   colorText={"text-violet-primary"}
-                  // colorBG={"bg-violet-tertiary"}
+                  colorBG={"bg-background-light-white"}
                   numberBG={"bg-violet-secondary"}
                   cardNumber="3"
                   loading={loading}
@@ -252,7 +252,7 @@ const LoanOffers = () => {
                   className={"border border-border-gray-primary"}
                   cardIcon={CalculatorIcon}
                   colorText={"text-orange-primary"}
-                  // colorBG={"bg-orange-tertiary"}
+                  colorBG={"bg-background-light-white"}
                   numberBG={"bg-orange-secondary"}
                   cardNumber="4"
                   loading={loading}
@@ -313,6 +313,7 @@ const LoanOffers = () => {
                 className={
                   "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
                 }
+                colorBG={"bg-background-light-white"}
                 cardIcon={CurrencyDollarIcon}
                 colorText={"text-blue-primary"}
                 loading={loading}

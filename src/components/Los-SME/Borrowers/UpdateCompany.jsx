@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import Button from "../../Common/Button/Button";
 import {
   handleChangeUpdateCompanyField,
   resetUpdateCompanyData,
   updateCompanyBorrowerInfo,
   fetchAllCompanyBorrowers,
+  draftCompanyBorrowerInfo,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -17,7 +18,7 @@ const UpdateCompany = () => {
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
-  const { uid } = useParams();
+  const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
 
@@ -39,27 +40,52 @@ const UpdateCompany = () => {
     return result;
   }
 
-  const handleUpdate = async (uid) => {
-    const { registrationDate, ...restUpdateCompanyData } = updateCompanyData;
-
-    await dispatch(validateForm(flattenToSimpleObject(restUpdateCompanyData)));
-
-    // Access the updated state directly using getState
-    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
-    const isValid = state.validation.isValid; // Adjust based on your state structure
-    if (isValid) {
-      dispatch(
-        updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
-      ).unwrap();
-      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+  const handleDraft = () => {
+    const addDraftCompanyData = {
+      borrowerProfileDraftId: borrowerProfileDraftId,
+      borrowerType: "COMPANY_BORROWER",
+      companyBorrowerProfileDraft: { ...updateCompanyData },
     }
-    navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+    dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
+    navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+  }
+
+
+  const handleUpdate = async (uid) => {
+    if (uid) {
+      const { registrationDate, ...restUpdateCompanyData } = updateCompanyData;
+
+      await dispatch(validateForm(flattenToSimpleObject(restUpdateCompanyData)));
+
+      // Access the updated state directly using getState
+      const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+      const isValid = state.validation.isValid; // Adjust based on your state structure
+      if (isValid) {
+        dispatch(
+          updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
+        ).unwrap();
+        dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+      }
+      dispatch(resetUpdateCompanyData());
+      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+    } else {
+      // incase of update the draft
+      handleDraft()
+      dispatch(resetUpdateCompanyData());
+      navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+    }
   };
 
   const handleCancel = () => {
     dispatch(resetUpdateCompanyData());
-    navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+    if (uid) {
+      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+    } else {
+      navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+    }
   };
+
+
 
   return (
     <>
@@ -74,6 +100,12 @@ const UpdateCompany = () => {
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
         />
+        {borrowerProfileDraftId && <Button
+          buttonName="Save Draft"
+          onClick={handleDraft}
+          rectangle={true}
+          buttonType={"secondary"}
+        />}
         <Button
           buttonName="Update"
           onClick={() => handleUpdate(uid)}

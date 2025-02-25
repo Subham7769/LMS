@@ -3,18 +3,25 @@ import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
+import Button from "../../Common/Button/Button";
 import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
 import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
+  handleAddRefinance,
+  handleDeleteRefinance,
   updateLoanField,
   uploadDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { sectorOptions } from "../../../data/OptionsData";
-import { CreditCardIcon } from "@heroicons/react/24/outline";
+import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
+import {
+  CreditCardIcon,
+  TrashIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 
 const AddLoanFields = ({ addLoanData }) => {
@@ -202,7 +209,9 @@ const AddLoanFields = ({ addLoanData }) => {
       updateLoanField({
         section: "generalLoanDetails",
         field: "loanInterest",
-        value: loanInterest ? parseInt(loanInterest.replace("%", "").trim()) : "", // Remove "%" symbol
+        value: loanInterest
+          ? parseInt(loanInterest.replace("%", "").trim())
+          : "", // Remove "%" symbol
       })
     );
 
@@ -294,21 +303,10 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Refinanced Loan ID",
-      inputName: "refinancedLoanId",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Refinanced Loan Amount",
-      inputName: "refinancedLoanAmount",
-      type: "number",
-      validation: false,
-    },
-    {
       labelName: "Branch",
       inputName: "branch",
-      type: "text",
+      type: "select",
+      options: lhaBranchOptions,
       validation: false,
     },
     {
@@ -500,6 +498,66 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   };
 
+  const refinanceDetails = (refinanceDetails) => (
+    <>
+      <div className="text-right">
+        <Button
+          buttonIcon={PlusIcon}
+          onClick={() => {
+            dispatch(handleAddRefinance());
+          }}
+          circle={true}
+          buttonType="secondary"
+        />
+      </div>
+      {refinanceDetails.map((refinance, index) => (
+        <div
+          key={index}
+          className="grid grid-cols-[repeat(5,_minmax(0,_1fr))_120px] gap-4 items-end mb-2"
+        >
+          <InputText
+            labelName="Name"
+            inputName="name"
+            inputValue={refinance?.name}
+            onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+          />
+          <InputText
+            labelName="Loan ID"
+            inputName="loanId"
+            inputValue={refinance?.loanId}
+            onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+          />
+          <InputNumber
+            labelName="Installment On PaySlip"
+            inputName="installmentOnPaySlip"
+            inputValue={refinance?.installmentOnPaySlip}
+            onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+          />
+          <InputNumber
+            labelName="Refinance Amount"
+            inputName="refinanceAmount"
+            inputValue={refinance?.refinanceAmount}
+            onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+          />
+          <div className="flex pb-2">
+            <InputCheckbox
+              labelName="Refinance"
+              inputChecked={refinance?.refinanceYesNo}
+              onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+              inputName="refinanceYesNo"
+            />
+            <Button
+              buttonIcon={TrashIcon}
+              onClick={() => dispatch(handleDeleteRefinance(index))}
+              circle={true}
+              buttonType="destructive"
+            />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+
   // Validation Checks
   const isValidationFailed = (errors, fields) => {
     // Iterate over fields and check if any corresponding error is true
@@ -518,6 +576,12 @@ const AddLoanFields = ({ addLoanData }) => {
           validationError,
           generalLoanDetailsInputNames
         )}
+      />
+      <Accordion
+        heading={"Refinance Details"}
+        renderExpandedContent={() =>
+          refinanceDetails(addLoanData?.refinanceDetails)
+        }
       />
       <Accordion
         heading={"Requirement"}

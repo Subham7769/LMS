@@ -37,9 +37,7 @@ const AddDirector = () => {
   const loanOfficer = localStorage.getItem("username");
 
   useEffect(() => {
-    if (allCompanies.length < 1) {
       dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
-    }
   }, [dispatch]);
 
   console.log(directorsKycDetails);
