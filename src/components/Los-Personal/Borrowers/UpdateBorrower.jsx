@@ -4,7 +4,7 @@ import {
   updateBorrowerUpdateField,
   resetUpdateBorrowerData,
   updateBorrowerInfo,
-  fetchAllBorrowers,
+  fetchAllBorrowersByType,
   resetBorrowerFile,
   uploadBorrowerPhotoFile,
   fetchBorrowerInfo,
@@ -59,7 +59,13 @@ const UpdateBorrower = () => {
       await dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
       ).unwrap();
-      dispatch(fetchAllBorrowers({ page: 0, size: 20 }));
+      dispatch(
+        fetchAllBorrowersByType({
+          page: 0,
+          size: 20,
+          borrowerType: "PERSONAL_BORROWER",
+        })
+      );
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
       );

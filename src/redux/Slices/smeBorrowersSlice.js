@@ -32,9 +32,42 @@ export const registerCompanyBorrower = createAsyncThunk(
   }
 );
 
-// Fetch All Borrowers
-export const fetchAllCompanyBorrowers = createAsyncThunk(
-  "borrowers/fetchAllCompanyBorrowers", // action type
+// Fetch All Borrowers  by Loan Officer
+export const fetchAllCompanyBorrowersByType = createAsyncThunk(
+  "borrowers/fetchAllCompanyBorrowersByType", // action type
+  async ({ page = 0, size = 12,borrowerType }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_READ_ALL_COMPANY_BORROWER_ALL_BY_TYPE
+        }${borrowerType}?page=${page}&size=${size}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch borrowers");
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Fetch All Borrowers  by Loan Officer
+export const fetchAllCompanyBorrowersByLoanOfficer = createAsyncThunk(
+  "borrowers/fetchAllCompanyBorrowersByLoanOfficer", // action type
   async ({ page = 0, size = 12, loanOfficer }, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
@@ -1370,24 +1403,39 @@ const borrowersSlice = createSlice({
       })
       .addCase(updateDraftCompanyBorrowerStatus.fulfilled, (state, action) => {
         state.loading = false;
-        toast(`Draft Saved!`);
+        toast(`Draft Status updated!`);
       })
       .addCase(updateDraftCompanyBorrowerStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
         toast.error(`API Error : ${action.payload}`);
       })
-      .addCase(fetchAllCompanyBorrowers.pending, (state) => {
+      .addCase(fetchAllCompanyBorrowersByLoanOfficer.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchAllCompanyBorrowers.fulfilled, (state, action) => {
+      .addCase(fetchAllCompanyBorrowersByLoanOfficer.fulfilled, (state, action) => {
         state.loading = false;
         // Update state with the borrowers array
         state.allBorrowersData = action.payload.content;
         state.allBorrowersTotalElements = action.payload.totalElements;
         state.error = null;
       })
-      .addCase(fetchAllCompanyBorrowers.rejected, (state, action) => {
+      .addCase(fetchAllCompanyBorrowersByLoanOfficer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchAllCompanyBorrowersByType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllCompanyBorrowersByType.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update state with the borrowers array
+        state.allBorrowersData = action.payload.content;
+        state.allBorrowersTotalElements = action.payload.totalElements;
+        state.error = null;
+      })
+      .addCase(fetchAllCompanyBorrowersByType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);

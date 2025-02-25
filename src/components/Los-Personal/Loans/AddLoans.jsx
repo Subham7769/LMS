@@ -102,11 +102,13 @@ const AddLoans = () => {
 
   const getMaxPrincipal = async () => {
     const maxPrincipalPayload = {
+      loanProductId: addLoanData.generalLoanDetails.loanProductId,
       borrowerId: addLoanData.generalLoanDetails.borrowerId,
       interestMethod: addLoanData.generalLoanDetails.interestMethod,
       loanInterest: addLoanData.generalLoanDetails.loanInterest,
       loanInterestType: addLoanData.generalLoanDetails.loanInterestType,
       tenure: addLoanData.generalLoanDetails.repaymentTenure,
+      refinanceDetails: addLoanData.refinanceDetails,
     };
     await dispatch(getMaxPrincipalData(maxPrincipalPayload)).unwrap();
   };
@@ -149,7 +151,12 @@ const AddLoans = () => {
             rectangle={true}
           />
           <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
-          <Button buttonName="Cancel" onClick={handleCanel} rectangle={true} buttonType="destructive" />
+          <Button
+            buttonName="Cancel"
+            onClick={handleCanel}
+            rectangle={true}
+            buttonType="destructive"
+          />
         </div>
       </div>
     </>

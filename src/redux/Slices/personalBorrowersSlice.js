@@ -1,6 +1,73 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
+// Fetch Drafted Borrowers
+export const fetchDraftedPersonalBorrowers = createAsyncThunk(
+  "borrowers/fetchDraftedPersonalBorrowers", // Action type
+  async ({ page = 0, size = 10 }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_GET_DRAFT_COMPANY_BORROWER
+        }?type=PERSONAL_BORROWER&page=${page}&size=${size}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to fetch drafted company borrowers"
+        );
+      }
+
+      const data = await response.json();
+      return data; // Returning the fetched data as payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Handling errors
+    }
+  }
+);
+
+export const getDraftBorrowerByID = createAsyncThunk(
+  "borrowers/getDraftBorrowerByID", // Action type
+  async (borrowerProfileDraftId, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_GET_DRAFT_BORROWER_BY_ID
+        }${borrowerProfileDraftId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to fetch drafted borrowers"
+        );
+      }
+
+      const data = await response.json();
+      return data; // Returning the fetched data as payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Handling errors
+    }
+  }
+);
+
 // Register a Borrower
 export const registerBorrower = createAsyncThunk(
   "borrowers/register", // action type
@@ -44,6 +111,38 @@ export const fetchAllBorrowers = createAsyncThunk(
           import.meta.env
             .VITE_BORROWERS_READ_ALL_BY_LOAN_OFFICER_PERSONAL_BORROWER
         }${username}?page=${page}&size=${size}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch borrowers");
+      }
+
+      const data = await response.json();
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+export const fetchAllBorrowersByType = createAsyncThunk(
+  "borrowers/fetchAllBorrowersByType", // action type
+  async ({ page = 0, size = 12, borrowerType }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const username = localStorage.getItem("username");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_READ_ALL_COMPANY_BORROWER_ALL_BY_TYPE
+        }${borrowerType}?page=${page}&size=${size}`,
         {
           method: "GET",
           headers: {
@@ -258,6 +357,8 @@ export const uploadBorrowerPhotoFile = createAsyncThunk(
 );
 
 const initialState = {
+  draftedBorrowerData: [],
+  draftedBorrowerDataTotalElements: 0,
   addBorrowerData: {
     personalDetails: {
       title: "",
@@ -313,7 +414,7 @@ const initialState = {
     },
     deductionOnPaySlip: {
       totalDeductionsOnPayslip: "",
-    totalDeductionsNotOnPayslip: "",
+      totalDeductionsNotOnPayslip: "",
     },
     bankDetails: {
       bankName: "",
@@ -352,7 +453,6 @@ const initialState = {
       creditScore: "",
       customerPhotoId: "",
     },
-    isDraft: false,
   },
   allBorrowersData: [],
   allBorrowersTotalElements: 0,
@@ -409,9 +509,49 @@ const borrowersSlice = createSlice({
     resetUpdateBorrowerData: (state, action) => {
       state.updateBorrowerData = initialState.updateBorrowerData;
     },
+    setUpdateDraftBorrower: (state, action) => {
+      const { borrowerProfileDraftId } = action.payload;
+      const borrower = state.draftedBorrowerData.find(
+        (item) => item.borrowerProfileDraftId === borrowerProfileDraftId
+      );
+      if (borrower) {
+        console.log(borrower);
+        state.addBorrowerData = borrower.personalBorrowerProfileDraft;
+      } else {
+        state.addBorrowerData = null; // Reset if no match found
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchDraftedPersonalBorrowers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDraftedPersonalBorrowers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.draftedBorrowerData = action.payload.content;
+        state.draftedBorrowerDataTotalElements = action.payload.totalElements;
+      })
+      .addCase(fetchDraftedPersonalBorrowers.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload || "Failed to fetch drafted personal borrowers.";
+        toast.error(`API Error : ${action.payload}`); // Notify the user of the error
+      })
+      .addCase(getDraftBorrowerByID.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDraftBorrowerByID.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addBorrowerData = action.payload.personalBorrowerProfileDraft;
+      })
+      .addCase(getDraftBorrowerByID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        // toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(registerBorrower.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -436,6 +576,21 @@ const borrowersSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllBorrowers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchAllBorrowersByType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllBorrowersByType.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update state with the borrowers array
+        state.allBorrowersData = action.payload.content;
+        state.allBorrowersTotalElements = action.payload.totalElements;
+        state.error = null;
+      })
+      .addCase(fetchAllBorrowersByType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -535,6 +690,7 @@ export const {
   updateBorrowerUpdateField,
   setUpdateBorrower,
   resetUpdateBorrowerData,
+  setUpdateDraftBorrower,
   resetBorrowerFile,
 } = borrowersSlice.actions;
 

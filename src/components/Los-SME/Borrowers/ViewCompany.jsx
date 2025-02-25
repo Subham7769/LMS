@@ -10,7 +10,8 @@ import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  fetchAllCompanyBorrowers,
+  fetchAllCompanyBorrowersByLoanOfficer,
+  fetchAllCompanyBorrowersByType,
   changeCompanyBorrowerStatus,
   fetchCompanyBorrowerByField,
   setUpdateCompany,
@@ -64,10 +65,10 @@ const ViewCompany = () => {
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
-      fetchAllCompanyBorrowers({
+      fetchAllCompanyBorrowersByType({
         page: currentPage,
         size: pageSize,
-        loanOfficer,
+        borrowerType:"COMPANY_BORROWER",
       })
     );
   };
@@ -140,7 +141,7 @@ const ViewCompany = () => {
       setSearchValue("");
       setFilteredBorrowers(allBorrowersData); // Reset to original data
     } else {
-      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+      dispatch(fetchAllCompanyBorrowersByType({ page: 0, size: 20, borrowerType:"COMPANY_BORROWER" }));
     }
   };
 
@@ -237,7 +238,7 @@ const ViewCompany = () => {
         await dispatch(
           changeCompanyBorrowerStatus({ uid, newStatus })
         ).unwrap();
-        dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+        dispatch(fetchAllCompanyBorrowersByType({ page: 0, size: 20, borrowerType:"COMPANY_BORROWER"  }));
         navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
         onClose();
       };
@@ -312,7 +313,7 @@ const ViewCompany = () => {
       console.log(uid);
       setCurrentStatus(newStatus);
       await dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
-      dispatch(fetchAllCompanyBorrowers({ page: 0, size: 20, loanOfficer }));
+      dispatch(fetchAllCompanyBorrowersByType({ page: 0, size: 20, borrowerType:"COMPANY_BORROWER" }));
       navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     };
 
