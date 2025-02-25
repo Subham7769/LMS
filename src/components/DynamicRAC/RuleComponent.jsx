@@ -1,34 +1,20 @@
 import { useDispatch } from "react-redux";
 import {
   deleteRuleById,
-  addRule,
   removeRule,
   updateStatus,
   fetchDynamicRacDetails,
   fetchOptionList,
-  updateRuleNumberCriteria,
-  handleChangeStringRule,
-  handleChangeBlocked,
   setCurrentRule,
   restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
-import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
-import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
-import { operatorOptions, conditionsOptions } from "../../data/OptionsData";
 import {
   PlusIcon,
   EyeIcon,
   XMarkIcon,
   CheckIcon,
-  ExclamationCircleIcon,
-  XCircleIcon,
-  PlusCircleIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  ChevronUpDownIcon,
+  ExclamationCircleIcon
 } from "@heroicons/react/20/solid";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import convertToReadableString from "../../utils/convertToReadableString";
@@ -39,13 +25,7 @@ import Button from "../Common/Button/Button";
 import StatusPill from "../Common/StatusPill/StatusPill";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import getOperatorsForCondition from "./getOperatorsForCondition";
 import getConditionForOperators from "./getConditionForOperators";
-import {
-  validateForm,
-  validateUserRole,
-} from "../../redux/Slices/validationSlice";
-import store from "../../redux/store";
 import { convertDate } from "../../utils/convertDate";
 import ViewRuleModal from "./ViewRuleModal";
 import HoverButtonNew from "../Common/HoverButtonNew/HoverButtonNew";
@@ -88,17 +68,6 @@ const RuleComponent = ({
     }
   };
 
-  const handleStringInputChange = (newValues) => {
-    console.log(newValues);
-    dispatch(
-      handleChangeStringRule({ sectionId, dynamicRacRuleId, values: newValues })
-    ); // Dispatch to Redux
-  };
-
-  const handleBlockedInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    dispatch(handleChangeBlocked({ sectionId, dynamicRacRuleId, checked })); // Dispatch to Redux
-  };
 
   const handleStatusChange = async ({
     dynamicRacRuleId,
@@ -127,12 +96,6 @@ const RuleComponent = ({
     dispatch(restoreRule({ sectionId, dynamicRacRuleId }));
     setShowRuleModal(!showRuleModal);
     setIsEditMode(!isEditMode);
-  };
-
-  const saveEdit = () => {
-    setShowRuleModal(!showRuleModal);
-    setIsEditMode(!isEditMode);
-    handleSaveDynamicRAC();
   };
 
   // Edit Number Config
@@ -236,6 +199,12 @@ const RuleComponent = ({
   }
 
   const ViewRuleAccordion = ({ rule }) => {
+    const [ReviewComment, setReviewComment] = useState("");
+
+    const handleInputChange = (e) => {
+      setReviewComment(e.target.value); // Only update local state
+    };
+
     return (<Accordion
       isOpen={true}
       headerComponent={
@@ -399,8 +368,8 @@ const RuleComponent = ({
             <InputTextArea
               labelName={"Review Comments"}
               inputName={"reviewComments"}
-              inputValue={reviewComment}
-              onChange={(e) => setReviewComment(e.target.value)}
+              inputValue={ReviewComment}
+              onChange={handleInputChange}
               placeHolder={`Enter your review comments...`}
             />
           </div>
@@ -415,7 +384,7 @@ const RuleComponent = ({
               handleStatusChange({
                 dynamicRacRuleId,
                 status: "REJECTED",
-                reviewComment,
+                reviewComment:ReviewComment,
               })
             }
             color="red"
@@ -427,7 +396,7 @@ const RuleComponent = ({
               handleStatusChange({
                 dynamicRacRuleId,
                 status: "APPROVED",
-                reviewComment,
+                reviewComment:ReviewComment,
               })
             }
             color="green"
@@ -475,7 +444,7 @@ const RuleComponent = ({
 
       {/* ViewerRoles's UI View Rule without Actions & Approval */}
       {(ViewerRolesDynamicRac.includes(roleName)) && (
-          <ViewRuleAction rule={rule} actions={false} />
+        <ViewRuleAction rule={rule} actions={false} />
       )}
 
     </>
