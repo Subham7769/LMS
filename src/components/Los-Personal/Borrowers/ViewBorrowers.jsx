@@ -512,7 +512,7 @@ const ViewBorrowers = () => {
     return (
       <div className="flex justify-center gap-4 px-5">
         <Button
-          onClick={() => handleNewApplication(rowData.uniqueID)}
+          onClick={() => handleNewApplication(rowData.uid)}
           buttonName={"Add Loan"}
           buttonIcon={PlusIcon}
           rectangle={true}
