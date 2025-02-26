@@ -132,7 +132,10 @@ const AddLoanFields = ({ addLoanData }) => {
 
   // Generate unique repayment tenure options based on the selected loan duration
   const repaymentTenureOptions = useMemo(() => {
-    if (!selectedLoanProduct || !addLoanData?.generalLoanDetails?.loanDuration)
+    if (
+      !selectedLoanProduct ||
+      !addLoanData?.generalLoanDetails?.loanDurationStr
+    )
       return [];
 
     const uniqueRepaymentTenure = new Set();
@@ -142,7 +145,7 @@ const AddLoanFields = ({ addLoanData }) => {
         // Only include repaymentTenure if loanTenure matches the selected loan duration
         const loanDurationMatch =
           `${tenure.loanTenure} ${tenure.loanTenureType}` ===
-          addLoanData?.generalLoanDetails?.loanDuration;
+          addLoanData?.generalLoanDetails?.loanDurationStr;
 
         if (!loanDurationMatch) return false;
 
@@ -156,11 +159,12 @@ const AddLoanFields = ({ addLoanData }) => {
         label: `${tenure.repaymentTenure} ${tenure.repaymentTenureType}`,
         value: `${tenure.repaymentTenure} ${tenure.repaymentTenureType}`,
       }));
-  }, [selectedLoanProduct, addLoanData?.generalLoanDetails?.loanDuration]); // Runs when addLoanData?.generalLoanDetails?.loanDuration changes
+  }, [selectedLoanProduct, addLoanData?.generalLoanDetails?.loanDurationStr]); // Runs when addLoanData?.generalLoanDetails?.loanDurationStr changes
 
-  // Calculate loanInterest based on selected loanDuration & repaymentTenure
+  // Calculate loanInterest based on selected loanDurationStr & repaymentTenure
   const loanInterestStr = useMemo(() => {
-    const selectedLoanDuration = addLoanData?.generalLoanDetails?.loanDuration;
+    const selectedLoanDuration =
+      addLoanData?.generalLoanDetails?.loanDurationStr;
     const selectedRepaymentTenure =
       addLoanData?.generalLoanDetails?.repaymentTenureStr;
 
@@ -185,9 +189,32 @@ const AddLoanFields = ({ addLoanData }) => {
       : "";
   }, [
     selectedLoanProduct,
-    addLoanData?.generalLoanDetails?.loanDuration,
+    addLoanData?.generalLoanDetails?.loanDurationStr,
     addLoanData?.generalLoanDetails?.repaymentTenureStr,
   ]);
+
+  useEffect(() => {
+    if (!addLoanData?.generalLoanDetails?.loanDurationStr) return;
+
+    const [loanDuration, loanDurationType] =
+      addLoanData?.generalLoanDetails?.loanDurationStr.split(" "); // Extract interest & type
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanDurationType",
+        value: loanDurationType,
+      })
+    );
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanDuration",
+        value: loanDuration ? parseFloat(loanDuration) : "", // Remove "%" symbol and preserves decimal
+      })
+    );
+  }, [addLoanData?.generalLoanDetails?.loanDurationStr]);
 
   useEffect(() => {
     if (!loanInterestStr) return;
@@ -209,9 +236,7 @@ const AddLoanFields = ({ addLoanData }) => {
       updateLoanField({
         section: "generalLoanDetails",
         field: "loanInterest",
-        value: loanInterest
-          ? parseInt(loanInterest.replace("%", "").trim())
-          : "", // Remove "%" symbol
+        value: loanInterest ? parseFloat(loanInterest) : "", // Remove "%" symbol and preserves decimal
       })
     );
 
@@ -270,7 +295,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Loan Duration",
-      inputName: "loanDuration",
+      inputName: "loanDurationStr",
       type: "select",
       options: loanTenureOptions,
       validation: true,
@@ -296,17 +321,17 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Sector",
-      inputName: "sector",
-      type: "select",
-      options: sectorOptions,
-      validation: false,
-    },
-    {
       labelName: "Branch",
       inputName: "branch",
       type: "select",
       options: lhaBranchOptions,
+      validation: true,
+    },
+    {
+      labelName: "Sector",
+      inputName: "sector",
+      type: "select",
+      options: sectorOptions,
       validation: false,
     },
     {

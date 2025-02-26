@@ -29,8 +29,6 @@ const AddLoans = () => {
   const { addLoanData, loading } = useSelector((state) => state.personalLoans);
   // const isValid = useSelector((state) => state.validation.isValid);
 
-  console.log(addLoanData);
-
   useEffect(() => {
     dispatch(getLoanApplicationsByID(loanApplicationId));
     dispatch(fetchLoanProductData());
@@ -75,7 +73,6 @@ const AddLoans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     console.log(addLoanData);
     const state = store.getState();
@@ -86,6 +83,7 @@ const AddLoans = () => {
       loanApplicationId: addLoanData.loanApplicationId,
     };
     if (isValid) {
+      await dispatch(saveDraftLoanData(addLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/personal/loans/loan-offers");
     }
