@@ -28,7 +28,7 @@ export const BranchNameOptions = {
     { value: "Ndola Branch", label: "Ndola Branch" },
   ],
   "Bank of China Zambia": [
-    { value: " Lusaka Main Branch", label: " Lusaka Main Branch" },
+    { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
   ],
   "Cavmont Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },

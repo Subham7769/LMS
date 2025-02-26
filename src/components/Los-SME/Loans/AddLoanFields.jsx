@@ -372,7 +372,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Order No. ",
       inputName: "orderNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
@@ -397,7 +397,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Proforma Invoice No.",
       inputName: "proformaInvoiceNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
@@ -422,7 +422,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Invoice No",
       inputName: "invoiceNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {

@@ -276,14 +276,18 @@ const LoanHistory = () => {
         </div>
       )}
       <div className="flex justify-between items-end">
-        <div>
-          <InputFile
-            placeholder="Upload Signed Agreement"
-            inputName={"signedAgreement"}
-            inputValue={signedAgreement}
-            onChange={(e) => handleFileChange(e, rowData.loanId)}
-          />
-        </div>
+        {rowData.verifiedDocuments.documentKey === "SIGNED_LOAN_AGREEMENT" ? (
+          <div>
+            <InputFile
+              placeholder="Upload Signed Agreement"
+              inputName={"signedAgreement"}
+              inputValue={signedAgreement}
+              onChange={(e) => handleFileChange(e, rowData.loanId)}
+            />
+          </div>
+        ) : (
+          <div>&nbsp;</div>
+        )}
         <div className="flex justify-end gap-2 px-5">
           <div>
             <Button
