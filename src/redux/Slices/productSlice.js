@@ -167,7 +167,7 @@ export const createProductData = createAsyncThunk(
       });
 
       if (!postResponse.ok) {
-        const errorData = await response.json();
+        const errorData = await postResponse.json();
         return rejectWithValue(errorData.message || "Failed to create");
       }
       if (roleName === "ROLE_MAKER_ADMIN") {
@@ -201,7 +201,7 @@ const productInitialState = {
   },
   productData: {
     approvalsConfigurationsTempId: "",
-    dynamicDocumentTempId: "",
+    dynamicDocumentTempId: null,
     loanProductId: "",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
@@ -215,7 +215,7 @@ const productInitialState = {
     interestEligibleTenure: [],
     managementFeeVat: "",
     numberOfEmisForEarlySettlement: "",
-    overdraft: null,
+    overdraft: false,
     productType: "",
     projectId: "",
     racId: "",

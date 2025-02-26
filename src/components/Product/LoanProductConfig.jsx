@@ -246,9 +246,9 @@ const LoanProductConfig = () => {
         handleNameUpdate={handleProductNameChange}
         handleDelete={() => handleDeleteLoanProduct(loanProId)}
         loading={loading}
-        error={error}
+        // error={error}
       />
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading}>
         <ProductInputFields
           productData={productData}
           handleChange={handleChange}

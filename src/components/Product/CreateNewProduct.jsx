@@ -38,11 +38,11 @@ const CreateNewProduct = () => {
   const handleDelete = (index) => {
     dispatch(deleteInterestTenure({ index: index }));
   };
-
   const handleCreateProduct = async () => {
     await dispatch(validateForm(productData));
     const state = store.getState();
     const isValid = state.validation.isValid;
+
     if (isValid) {
       try {
         const newProductData = {
@@ -50,17 +50,24 @@ const CreateNewProduct = () => {
           routingLink: `/loan/loan-product/${productName}/loan-product-config/${productData.projectId}/`,
           section: "Product",
         };
-        await dispatch(
+
+        const action = await dispatch(
           createProductData({ productData: newProductData, roleName })
-        ).then((action) => {
-          console.log(action.payload);
-          // navigate(`/product/${action.payload.productType}/${action.payload.projectId}`);
+        );
+
+        if (createProductData.fulfilled.match(action)) {
+          // ✅ Only navigate if the request was successful
           navigate(`/loan/loan-product/`);
-        });
-        dispatch(fetchProductData());
+          dispatch(fetchProductData());
+        } else {
+          console.error(
+            "Failed to create product:",
+            action.payload || action.error
+          );
+          // Optionally, display a toast notification here
+        }
       } catch (error) {
-        console.error("Failed to create product:", error);
-        // Optionally, you could use a toast notification here to notify the user of the error
+        console.error("Error while creating product:", error);
       }
     }
   };
@@ -139,11 +146,12 @@ const CreateNewProduct = () => {
                     <td className="py-2 whitespace-nowrap">
                       {item.repaymentTenureType}
                     </td>
-                    <td className="py-2">
+                    <td className="py-2 flex justify-center">
                       <Button
                         buttonIcon={TrashIcon}
                         onClick={() => handleDelete(index)}
                         circle={true}
+                        buttonType="destructive"
                       />
                     </td>
                   </tr>
