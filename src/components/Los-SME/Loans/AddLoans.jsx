@@ -11,6 +11,7 @@ import {
   setLoanApplicationId,
   setLoanBorrowerId,
   getMaxPrincipalData,
+  getDocsByIdnUsage,
 } from "../../../redux/Slices/smeLoansSlice";
 import {
   clearValidationError,
@@ -26,7 +27,9 @@ const AddLoans = () => {
   const navigate = useNavigate();
   const { loanApplicationId } = useParams();
   const { BorrowerId } = useParams();
-  const { addLoanData, loading } = useSelector((state) => state.smeLoans);
+  const { addLoanData, loading, loanProductData } = useSelector(
+    (state) => state.smeLoans
+  );
   // const isValid = useSelector((state) => state.validation.isValid);
 
   console.log(BorrowerId);
@@ -57,6 +60,22 @@ const AddLoans = () => {
       dispatch(clearValidationError());
     };
   }, [dispatch, loanApplicationId, BorrowerId]);
+
+  useEffect(() => {
+      if (addLoanData.generalLoanDetails.loanProductId) {
+        const selectedDynamicDoc = loanProductData.find(
+          (product) =>
+            product?.loanProductId ===
+            addLoanData?.generalLoanDetails?.loanProductId
+        );
+        dispatch(
+          getDocsByIdnUsage({
+            dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
+            usage: "BORROWER_OFFERS",
+          })
+        );
+      }
+    }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -97,6 +116,7 @@ const AddLoans = () => {
       await dispatch(submitLoan(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
+ 
   };
 
   const handleDraft = async () => {

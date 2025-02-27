@@ -23,6 +23,7 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
@@ -473,54 +474,37 @@ const AddLoanFields = ({ addLoanData }) => {
   };
 
   const requirements = (documents) => {
-    return (
-      <>
-        <DocumentUploaderVerifier
-          label="Payslips"
-          inputFileName="docName"
-          inputFileValue={documents[0]?.docName}
-          onFileChange={(e) => handleFileChange(e, "documents", 0)}
-          onFileDelete={() => handleDeleteDocument(documents[0]?.docId)}
-          checkboxName="verified"
-          checkboxChecked={documents[0]?.verified}
-          onCheckboxChange={(e) => handleInputChange(e, "documents", 0)}
-        />
-        <DocumentUploaderVerifier
-          label="Employer Pre-approval Form"
-          inputFileName="docName"
-          inputFileValue={documents[1]?.docName}
-          onFileChange={(e) => handleFileChange(e, "documents", 1)}
-          onFileDelete={() => handleDeleteDocument(documents[1]?.docId)}
-          checkboxName="verified"
-          checkboxChecked={documents[1]?.verified}
-          onCheckboxChange={(e) => handleInputChange(e, "documents", 1)}
-        />
-        <DocumentUploaderVerifier
-          label="Bank Statement"
-          inputFileName="docName"
-          inputFileValue={documents[2]?.docName}
-          onFileChange={(e) => handleFileChange(e, "documents", 2)}
-          onFileDelete={() => handleDeleteDocument(documents[2]?.docId)}
-          checkboxName="verified"
-          checkboxChecked={documents[2]?.verified}
-          onCheckboxChange={(e) => handleInputChange(e, "documents", 2)}
-        />
-        <div className="flex justify-between items-center">
-          <div>ATM Card</div>
-          <div className="flex gap-x-5 items-baseline">
-            <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
-            <div>
-              <InputCheckbox
-                labelName={"Verified"}
-                inputChecked={documents[3]?.verified}
-                onChange={(e) => handleInputChange(e, "documents", 3)}
-                inputName="verified"
-              />
+    return documents.map((document, index) => (
+      <React.Fragment key={document.documentKey}>
+        {document.documentKey === "ATM_CARD" ? (
+          <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
+            <div>ATM Card</div>
+            <div className="flex gap-x-5 items-baseline">
+              <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
+              <div>
+                <InputCheckbox
+                  labelName={"Verified"}
+                  inputChecked={documents[index]?.verified}
+                  onChange={(e) => handleInputChange(e, "documents", index)}
+                  inputName="verified"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </>
-    );
+        ) : (
+          <DocumentUploaderVerifier
+            label={convertToTitleCase(document.documentKey)}
+            inputFileName="docName"
+            inputFileValue={documents[index]?.docName}
+            onFileChange={(e) => handleFileChange(e, "documents", index)}
+            onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
+            checkboxName="verified"
+            checkboxChecked={documents[index]?.verified}
+            onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
+          />
+        )}
+      </React.Fragment>
+    ));
   };
 
   const refinanceDetails = (refinanceDetails) => (

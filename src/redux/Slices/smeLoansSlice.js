@@ -59,6 +59,34 @@ export const getLoanApplicationsByID = createAsyncThunk(
   }
 );
 
+export const getDocsByIdnUsage = createAsyncThunk(
+  "smeLoans/getDocsByIdnUsage",
+  async ({ dynamicDocumentTempId, usage }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_DOCUMENTS_BY_ID_AND_USAGE
+        }${dynamicDocumentTempId}/usage/${usage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const cancelLoanApplicationsByID = createAsyncThunk(
   "smeLoans/cancelLoanApplicationsByID",
   async (loanApplicationId, { rejectWithValue }) => {
@@ -737,7 +765,7 @@ const initialState = {
       sector: "",
       reasonForBorrowing: "",
       refinancedLoanId: "",
-      refinancedLoanAmount:0,
+      refinancedLoanAmount: 0,
       branch: "",
       agentName: "",
       lhacoName: "",
@@ -801,56 +829,7 @@ const initialState = {
       otherDetails: "",
       otherComments: "",
     },
-    documents: [
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "RESOLUTION_TO_BORROW",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "PURCHASE_ORDER",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "INVOICE",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "PROFOMA_INVOICE",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "QUOTATIONS_FROM_SUPPLIER",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "SIX_MONTHS_BANK_STATEMENT",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "CREDIT_REFERENCE_BUREAU_REPORT",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "CONFIRMATION_OF_BANKING_DETAILS",
-      },
-    ],
+    documents: [],
     loanApplicationId: "",
   },
   approveLoans: [],
@@ -1064,6 +1043,24 @@ const smeLoansSlice = createSlice({
         state.error = action.payload;
         // toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(getDocsByIdnUsage.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData.documents = action.payload.map((doc) => ({
+          docName: "",
+          docId: doc.dynamicDocumentId || "", // Assign dynamicDocumentId to docId, default to empty string if undefined
+          verified: false,
+          documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
+        }));
+      })
+      .addCase(getDocsByIdnUsage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        // toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(cancelLoanApplicationsByID.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -1111,6 +1108,8 @@ const smeLoansSlice = createSlice({
             value: item.loanProductId,
           }));
         state.loanProductOptions = updatedLoanProductOptions;
+        state.addLoanData.generalLoanDetails.loanProductId =
+          updatedLoanProductOptions[0].value;
       })
       .addCase(fetchLoanProductData.rejected, (state, action) => {
         state.loading = false;

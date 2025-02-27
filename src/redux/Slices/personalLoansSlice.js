@@ -59,6 +59,34 @@ export const getLoanApplicationsByID = createAsyncThunk(
   }
 );
 
+export const getDocsByIdnUsage = createAsyncThunk(
+  "personalLoans/getDocsByIdnUsage",
+  async ({ dynamicDocumentTempId, usage }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_DOCUMENTS_BY_ID_AND_USAGE
+        }${dynamicDocumentTempId}/usage/${usage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const cancelLoanApplicationsByID = createAsyncThunk(
   "personalLoans/cancelLoanApplicationsByID",
   async (loanApplicationId, { rejectWithValue }) => {
@@ -781,32 +809,7 @@ const initialState = {
         refinanceYesNo: false,
       },
     ],
-    documents: [
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "PAY_SLIP",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "EMPLOYER_FROM",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "BANK_STATEMENT",
-      },
-      {
-        docName: "",
-        docId: "",
-        verified: false,
-        documentKey: "ATM_CARD",
-      },
-    ],
+    documents: [],
     loanApplicationId: "",
   },
   approveLoans: [],
@@ -910,6 +913,24 @@ const personalLoansSlice = createSlice({
         state.error = action.payload;
         // toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(getDocsByIdnUsage.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData.documents = action.payload.map((doc) => ({
+          docName: "",
+          docId: doc.dynamicDocumentId || "", // Assign dynamicDocumentId to docId, default to empty string if undefined
+          verified: false,
+          documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
+        }));
+      })
+      .addCase(getDocsByIdnUsage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        // toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(cancelLoanApplicationsByID.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -957,6 +978,8 @@ const personalLoansSlice = createSlice({
             value: item.loanProductId,
           }));
         state.loanProductOptions = updatedLoanProductOptions;
+        state.addLoanData.generalLoanDetails.loanProductId =
+          updatedLoanProductOptions[0].value;
       })
       .addCase(fetchLoanProductData.rejected, (state, action) => {
         state.loading = false;
