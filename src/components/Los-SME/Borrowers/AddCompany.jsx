@@ -16,7 +16,6 @@ import InputText from "../../Common/InputText/InputText";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import Pagination from "../../Common/Pagination/Pagination";
 
-
 const AddCompany = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,17 +24,21 @@ const AddCompany = () => {
   const [pageSize, setPageSize] = useState(10);
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
 
-  const { addCompanyData, allDraftedCompanies,  allDraftedBorrowersTotalElements, error, loading } = useSelector(
-    (state) => state.smeBorrowers
-  );
+  const {
+    addCompanyData,
+    allDraftedCompanies,
+    allDraftedBorrowersTotalElements,
+    error,
+    loading,
+  } = useSelector((state) => state.smeBorrowers);
 
-  console.log(allDraftedCompanies)
-  console.log(flattenToSimpleObjectArray(filteredBorrowers))
+  // console.log(allDraftedCompanies)
+  console.log(flattenToSimpleObjectArray(filteredBorrowers));
 
   const applyFilters = () => {
     const filtered = allDraftedCompanies.filter((DraftedCompany) => {
-      const companyDetails = DraftedCompany?.companyBorrowerProfileDraft
-        ?.companyDetails || {};
+      const companyDetails =
+        DraftedCompany?.companyBorrowerProfileDraft?.companyDetails || {};
 
       let matchesSearchValue = false;
 
@@ -43,19 +46,19 @@ const AddCompany = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? companyDetails[searchBy]
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase())
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
           : true;
       } else {
         // Search through multiple fields if no specific 'searchBy'
         matchesSearchValue = searchValue
           ? [
-            companyDetails.companyName,
-            companyDetails.companyUniqueId,
-            companyDetails.companyRegistrationNo,
-          ]
-            .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
-            .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
+              companyDetails.companyName,
+              companyDetails.companyUniqueId,
+              companyDetails.companyRegistrationNo,
+            ]
+              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
           : true;
       }
 
@@ -98,10 +101,12 @@ const AddCompany = () => {
     { label: "Unique Id", value: "companyUniqueId" },
   ];
 
-
   const SearchBorrowerByFieldSearch = () => {
     dispatch(
-      fetchDraftedCompanyBorrowerByField({ field: searchBy, value: searchValue })
+      fetchDraftedCompanyBorrowerByField({
+        field: searchBy,
+        value: searchValue,
+      })
     );
     setSearchBy("");
     setSearchValue("");
@@ -169,12 +174,19 @@ const AddCompany = () => {
     }
 
     const handleEditApplication = (borrowerProfileDraftId) => {
-      dispatch(setUpdateDraftCompany({borrowerProfileDraftId}));
-      navigate(`/loan/loan-origination-system/sme/borrowers/update-company/draft/${borrowerProfileDraftId}`)
+      dispatch(setUpdateDraftCompany({ borrowerProfileDraftId }));
+      navigate(
+        `/loan/loan-origination-system/sme/borrowers/update-company/draft/${borrowerProfileDraftId}`
+      );
     };
 
     const handleRejectApplication = async (borrowerProfileDraftId) => {
-      await dispatch(updateDraftCompanyBorrowerStatus({borrowerProfileDraftId, status:"CANCEL"})).unwrap();
+      await dispatch(
+        updateDraftCompanyBorrowerStatus({
+          borrowerProfileDraftId,
+          status: "CANCEL",
+        })
+      ).unwrap();
       dispatch(fetchDraftedCompanyBorrowers({ page: 0, size: pageSize }));
     };
 
@@ -188,34 +200,39 @@ const AddCompany = () => {
           buttonType="secondary"
         />
         <Button
-          onClick={() => handleRejectApplication(rowData.borrowerProfileDraftId)}
+          onClick={() =>
+            handleRejectApplication(rowData.borrowerProfileDraftId)
+          }
           buttonIcon={TrashIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}
           buttonType="destructive"
         />
-
       </div>
     );
   };
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    dispatch(fetchDraftedCompanyBorrowers({ page: currentPage, size: pageSize }));
+    dispatch(
+      fetchDraftedCompanyBorrowers({ page: currentPage, size: pageSize })
+    );
   };
-
 
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">
-          Company</div>
+        <div className="text-xl font-semibold">Company</div>
         <div></div>
         <div></div>
         <div className="flex justify-end gap-2 h-12">
           <Button
             buttonIcon={PlusIcon}
             buttonName="Add New Company"
-            onClick={() => navigate('/loan/loan-origination-system/sme/borrowers/add-new-company')}
+            onClick={() =>
+              navigate(
+                "/loan/loan-origination-system/sme/borrowers/add-new-company"
+              )
+            }
             rectangle={true}
           />
         </div>

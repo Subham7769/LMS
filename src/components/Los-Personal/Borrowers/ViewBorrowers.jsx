@@ -177,7 +177,6 @@ const ViewBorrowers = () => {
     { label: "Surname", value: "surname" },
     { label: "Other Name", value: "otherName" },
     { label: "Unique ID", value: "uniqueID" },
-    { label: "Email", value: "email" },
     { label: "Cutomer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
@@ -186,7 +185,6 @@ const ViewBorrowers = () => {
     { label: "Name", field: "fullName" },
     { label: "Unique ID", field: "uniqueID" },
     { label: "Cutomer ID", field: "customerId" },
-    { label: "Email", field: "email" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
   ];
