@@ -12,7 +12,11 @@ import {
   districtOptions,
   locationOptions,
 } from "../../../data/CountryData";
-import { accountType, natureOfCompanyOptions,industriesOptions } from "../../../data/LosData";
+import {
+  accountType,
+  natureOfCompanyOptions,
+  industriesOptions,
+} from "../../../data/LosData";
 import {
   setFields,
   clearValidationError,
@@ -39,6 +43,7 @@ const AddUpdateCompanyBorrowerFields = ({
   const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
     []
   );
+  const loanOfficer = localStorage.getItem("username");
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.companyDetails.countryOfRegistration] || []
@@ -73,7 +78,7 @@ const AddUpdateCompanyBorrowerFields = ({
       "countryOfRegistration",
       "dateOfIncorporation",
       "province",
-      "district",
+      "registeredDistrict",
       "locationOfHQ",
       "industry",
       "natureOfBusiness",
@@ -99,6 +104,15 @@ const AddUpdateCompanyBorrowerFields = ({
       // "shareholdingStructure",
     ];
     dispatch(setFields(keysArray));
+    if (!BorrowerData.companyDetails.loanOfficer) {
+      dispatch(
+        handleChangeReducer({
+          section: "companyDetails",
+          field: "loanOfficer",
+          value: loanOfficer,
+        })
+      );
+    }
     return () => {
       dispatch(clearValidationError());
     };
@@ -241,7 +255,7 @@ const AddUpdateCompanyBorrowerFields = ({
     },
     {
       labelName: "District",
-      inputName: "district",
+      inputName: "registeredDistrict",
       type: "select",
       options: filteredDistrictLocations1,
       validation: true,
@@ -376,7 +390,6 @@ const AddUpdateCompanyBorrowerFields = ({
   ];
 
   const companyOtherDetailsConfig = [
-
     {
       labelName: "Monthly Revenue",
       inputName: "grossSalary",

@@ -34,9 +34,9 @@ const InputSelect = ({
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
 
-  if (inputValue === undefined) {
-    throw new Error(`Invalid inputValue for ${labelName}`);
-  }
+  // if (inputValue === undefined) {
+  //   throw new Error(`Invalid inputValue for ${labelName}`);
+  // }
 
   const handleChange = (selectedOption) => {
     onChange({

@@ -26,24 +26,24 @@ module.exports = {
       },
       colors: {
         blue: {
-          primary: "#2563eb", // blue 600
+          primary: "#1c398e", // blue 900
           secondary: "#dbeafe", // blue 100
-          tertiary: "#F0F4FF",
+          tertiary: "#EFF6FF", // blue 50
         },
         green: {
-          primary: "#16a34a", // green 600
+          primary: "#0d542b", // green 900
           secondary: "#dcfce7", // green 100
-          tertiary: "#F0FFF4",
+          tertiary: "#f0fdf4", // green 50
         },
         violet: {
-          primary: "#7c3aed", // violet 600
+          primary: "#4d179a", // violet 900
           secondary: "#ede9fe", // violet 100
-          tertiary: "#F9F0FF",
+          tertiary: "#f5f3ff", // violet 50
         },
         orange: {
-          primary: "#ea580c", // orange 600
+          primary: "#7e2a0c", // orange 900
           secondary: "#ffedd5", // orange 100
-          tertiary: "#FFF4F0",
+          tertiary: "#fff7ed", // orange 50
         },
         gray: {
           primary: "#d1d5db", // gray-500
@@ -74,7 +74,7 @@ module.exports = {
           light: {
             heading: "#111827", // gray-900
             primary: "#1f2937", // gray-800
-            secondary: "#4b5563", // gray-600
+            secondary: "#364153", // gray-700
             tertiary: "#6b7280", //gray-500
           },
           dark: {

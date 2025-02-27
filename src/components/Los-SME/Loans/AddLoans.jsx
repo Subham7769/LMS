@@ -97,7 +97,6 @@ const AddLoans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
     console.log(addLoanData);
     const state = store.getState();
@@ -114,6 +113,7 @@ const AddLoans = () => {
     };
     if (isValid) {
       await dispatch(submitLoan(submitPayload)).unwrap();
+      await dispatch(saveDraftLoanData(addLoanData)).unwrap();
       navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
  
@@ -130,6 +130,7 @@ const AddLoans = () => {
 
   const getMaxPrincipal = async () => {
     const maxPrincipalPayload = {
+      loanProductId: addLoanData.generalLoanDetails.loanProductId,
       borrowerId: addLoanData.generalLoanDetails.borrowerId,
       interestMethod: addLoanData.generalLoanDetails.interestMethod,
       loanInterest: addLoanData.generalLoanDetails.loanInterest,

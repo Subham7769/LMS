@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 const ExpandableTable = ({
   columns,
@@ -24,6 +26,15 @@ const ExpandableTable = ({
         <div className="h-4 bg-background-light-primary rounded"></div>
       </div>
     );
+  };
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("ID was copied successfully!");
+    } catch (err) {
+      toast.error("The ID was not copied!");
+    }
   };
 
   return (
@@ -110,9 +121,26 @@ const ExpandableTable = ({
                           className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${cellClass}`}
                         >
                           {col.field.toLowerCase() === "aging" &&
-                          rowData[col.field] !== undefined
-                            ? `${rowData[col.field]} Days`
-                            : rowData[col.field] ?? "-"}
+                          rowData[col.field] !== undefined ? (
+                            `${rowData[col.field]} Days`
+                          ) : col.field.toLowerCase() ===
+                            "companyregistrationno" ? (
+                            <div className="flex items-center justify-center gap-2" title={rowData[col.field]}>
+                              {/* Shortened display value */}
+                              <div className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
+                                {rowData[col.field] ?? "-"}
+                              </div>
+                              <ClipboardDocumentListIcon
+                                className="h-5 w-5 cursor-pointer text-gray-500 hover:text-black"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  copyToClipboard(rowData[col.field]);
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            rowData[col.field] ?? "-"
+                          )}
                         </span>
                       </td>
                     );

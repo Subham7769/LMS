@@ -13,6 +13,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
     { label: "Date", field: "installmentDate" },
     { label: "Principal", field: "principalValue" },
     { label: "Interest", field: "interestValue" },
+    { label: "Monthly Admin Fee", field: "serviceFee" },
     { label: "Outstanding", field: "totalOutstandingAmount" },
     { label: "EMI Amount", field: "installmentValue" },
   ];

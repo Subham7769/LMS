@@ -787,7 +787,7 @@ const initialState = {
     offTakerDetails: {
       cellPhoneNumber: "",
       contactperson: "",
-      country: "",
+      country: "Zambia",
       industry: "",
       location: "",
       nameOfCompany: "",
@@ -798,7 +798,7 @@ const initialState = {
     supplierDetails: {
       cellPhoneNumber: "",
       contactperson: "",
-      country: "",
+      country: "Zambia",
       emailAddress: "",
       industry: "",
       location: "",

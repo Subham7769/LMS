@@ -22,7 +22,6 @@ const UpdateCompany = () => {
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
 
-
   function flattenToSimpleObject(nestedObject) {
     const result = {};
 
@@ -45,32 +44,42 @@ const UpdateCompany = () => {
       borrowerProfileDraftId: borrowerProfileDraftId,
       borrowerType: "COMPANY_BORROWER",
       companyBorrowerProfileDraft: { ...updateCompanyData },
-    }
-    dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
+    };
+    dispatch(draftCompanyBorrowerInfo(addDraftCompanyData));
     navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
-  }
-
+  };
 
   const handleUpdate = async (uid) => {
     if (uid) {
       const { registrationDate, ...restUpdateCompanyData } = updateCompanyData;
-
-      await dispatch(validateForm(flattenToSimpleObject(restUpdateCompanyData)));
+      // console.log(restUpdateCompanyData)
+      await dispatch(
+        validateForm(flattenToSimpleObject(restUpdateCompanyData))
+      );
 
       // Access the updated state directly using getState
       const state = store.getState(); // Ensure 'store' is imported from your Redux setup
       const isValid = state.validation.isValid; // Adjust based on your state structure
       if (isValid) {
         dispatch(
-          updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
+          updateCompanyBorrowerInfo({
+            UpdateCompanyData: restUpdateCompanyData,
+            uid,
+          })
         ).unwrap();
-        dispatch(fetchAllCompanyBorrowersByLoanOfficer({ page: 0, size: 20, loanOfficer }));
+        dispatch(
+          fetchAllCompanyBorrowersByLoanOfficer({
+            page: 0,
+            size: 20,
+            loanOfficer,
+          })
+        );
+        navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
       }
-      dispatch(resetUpdateCompanyData());
-      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+      // dispatch(resetUpdateCompanyData());
     } else {
       // incase of update the draft
-      handleDraft()
+      handleDraft();
       dispatch(resetUpdateCompanyData());
       navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
     }
@@ -85,8 +94,6 @@ const UpdateCompany = () => {
     }
   };
 
-
-
   return (
     <>
       <AddUpdateCompanyBorrowerFields
@@ -100,12 +107,14 @@ const UpdateCompany = () => {
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
         />
-        {borrowerProfileDraftId && <Button
-          buttonName="Save Draft"
-          onClick={handleDraft}
-          rectangle={true}
-          buttonType={"secondary"}
-        />}
+        {borrowerProfileDraftId && (
+          <Button
+            buttonName="Save Draft"
+            onClick={handleDraft}
+            rectangle={true}
+            buttonType={"secondary"}
+          />
+        )}
         <Button
           buttonName="Update"
           onClick={() => handleUpdate(uid)}

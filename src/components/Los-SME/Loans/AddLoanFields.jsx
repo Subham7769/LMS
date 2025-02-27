@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import InputDate from "../../Common/InputDate/InputDate";
@@ -16,12 +16,41 @@ import { useDispatch, useSelector } from "react-redux";
 import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
+import {
+  countryOptions,
+  districtOptions,
+  locationOptions,
+} from "../../../data/CountryData";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
     (state) => state.smeLoans
   );
+  const [filteredProvinces1, setFilteredProvinces1] = useState([]);
+  const [filteredLocations1, setFilteredLocations1] = useState([]);
+  const [filteredProvinces2, setFilteredProvinces2] = useState([]);
+  const [filteredLocations2, setFilteredLocations2] = useState([]);
+
+  useEffect(() => {
+    setFilteredProvinces1(
+      locationOptions[addLoanData.offTakerDetails.country] || []
+    );
+    setFilteredLocations1(
+      districtOptions[addLoanData.offTakerDetails.province] || []
+    );
+    setFilteredProvinces2(
+      locationOptions[addLoanData.supplierDetails.country] || []
+    );
+    setFilteredLocations2(
+      districtOptions[addLoanData.supplierDetails.province] || []
+    );
+  }, [
+    addLoanData.offTakerDetails.country,
+    addLoanData.offTakerDetails.province,
+    addLoanData.supplierDetails.country,
+    addLoanData.supplierDetails.province,
+  ]);
 
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
@@ -277,7 +306,7 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Borrower Unique ID",
+      labelName: "Borrower Serial No (Unique ID)",
       inputName: "borrowerId",
       type: "text",
       validation: true,
@@ -329,6 +358,13 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
+      labelName: "Branch",
+      inputName: "branch",
+      type: "select",
+      options: lhaBranchOptions,
+      validation: true,
+    },
+    {
       labelName: "Sector",
       inputName: "sector",
       type: "select",
@@ -345,13 +381,6 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "Refinanced Loan Amount",
       inputName: "refinancedLoanAmount",
       type: "number",
-      validation: false,
-    },
-    {
-      labelName: "Branch",
-      inputName: "branch",
-      type: "select",
-      options: lhaBranchOptions,
       validation: false,
     },
     {
@@ -466,21 +495,24 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Location (Town/City)",
-      inputName: "location",
-      type: "text",
+      labelName: "Country",
+      inputName: "country",
+      type: "select",
+      options: countryOptions,
       validation: false,
     },
     {
       labelName: "Province",
       inputName: "province",
-      type: "text",
+      type: "select",
+      options: filteredProvinces1,
       validation: false,
     },
     {
-      labelName: "Country",
-      inputName: "country",
-      type: "text",
+      labelName: "Location (Town/City)",
+      inputName: "location",
+      type: "select",
+      options: filteredLocations1,
       validation: false,
     },
     {
@@ -523,21 +555,24 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Location (Town/City)",
-      inputName: "location",
-      type: "text",
+      labelName: "Country",
+      inputName: "country",
+      type: "select",
+      options: countryOptions,
       validation: false,
     },
     {
       labelName: "Province",
       inputName: "province",
-      type: "text",
+      type: "select",
+      options: filteredProvinces2,
       validation: false,
     },
     {
-      labelName: "Country",
-      inputName: "country",
-      type: "text",
+      labelName: "Location (Town/City)",
+      inputName: "location",
+      type: "select",
+      options: filteredLocations2,
       validation: false,
     },
     {

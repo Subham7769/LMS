@@ -47,6 +47,7 @@ import {
   generateLoanApplicationId,
   resetAddLoanData,
 } from "../../../redux/Slices/smeLoansSlice";
+import { convertDate } from "../../../utils/convertDate";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const ViewCompany = () => {
       fetchAllCompanyBorrowersByType({
         page: currentPage,
         size: pageSize,
-        borrowerType:"COMPANY_BORROWER",
+        borrowerType: "COMPANY_BORROWER",
       })
     );
   };
@@ -79,6 +80,7 @@ const ViewCompany = () => {
         ...item.companyBorrowerProfile,
         uid: item.uid,
         lmsUserStatus: item.lmsUserStatus,
+        customerId: item.customerId,
       };
     });
     setFilteredBorrowers(transformedData);
@@ -141,7 +143,13 @@ const ViewCompany = () => {
       setSearchValue("");
       setFilteredBorrowers(allBorrowersData); // Reset to original data
     } else {
-      dispatch(fetchAllCompanyBorrowersByType({ page: 0, size: 20, borrowerType:"COMPANY_BORROWER" }));
+      dispatch(
+        fetchAllCompanyBorrowersByType({
+          page: 0,
+          size: 20,
+          borrowerType: "COMPANY_BORROWER",
+        })
+      );
     }
   };
 
@@ -187,8 +195,7 @@ const ViewCompany = () => {
     { label: "Name", value: "companyName" },
     { label: "Short Name", value: "companyShortName" },
     { label: "Registration No.", value: "companyRegistrationNo" },
-    { label: "Unique Id", value: "companyUniqueId" },
-    { label: "Email", value: "email" },
+    { label: "Serial No", value: "companyUniqueId" },
     { label: "Cutomer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
@@ -196,9 +203,8 @@ const ViewCompany = () => {
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
     { label: "Registration No.", field: "companyRegistrationNo" },
-    { label: "Unique Id", field: "companyUniqueId" },
+    { label: "Serial No", field: "companyUniqueId" },
     { label: "Cutomer ID", field: "customerId" },
-    { label: "Email", field: "email" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
   ];
@@ -238,7 +244,13 @@ const ViewCompany = () => {
         await dispatch(
           changeCompanyBorrowerStatus({ uid, newStatus })
         ).unwrap();
-        dispatch(fetchAllCompanyBorrowersByType({ page: 0, size: 20, borrowerType:"COMPANY_BORROWER"  }));
+        dispatch(
+          fetchAllCompanyBorrowersByType({
+            page: 0,
+            size: 20,
+            borrowerType: "COMPANY_BORROWER",
+          })
+        );
         navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
         onClose();
       };
@@ -313,7 +325,13 @@ const ViewCompany = () => {
       console.log(uid);
       setCurrentStatus(newStatus);
       await dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
-      dispatch(fetchAllCompanyBorrowersByType({ page: 0, size: 20, borrowerType:"COMPANY_BORROWER" }));
+      dispatch(
+        fetchAllCompanyBorrowersByType({
+          page: 0,
+          size: 20,
+          borrowerType: "COMPANY_BORROWER",
+        })
+      );
       navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     };
 
@@ -351,7 +369,7 @@ const ViewCompany = () => {
                       <CardInfoRow
                         icon={CalendarIcon}
                         label="Incorporated"
-                        value={rowData.dateOfIncorporation}
+                        value={convertDate(rowData.dateOfIncorporation)}
                       />
                       <CardInfoRow
                         icon={UsersIcon}
@@ -841,7 +859,7 @@ const ViewCompany = () => {
     //       hasViewOnlyAccessGroup3(roleName)) {
     //   return <div className="py-6">-</div>;
     // }
-    console.log(rowData);
+    // console.log(rowData);
     const handleNewApplication = async (BorrowerId) => {
       dispatch(resetAddLoanData());
       try {
