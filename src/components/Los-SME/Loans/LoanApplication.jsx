@@ -84,7 +84,7 @@ const LoanApplication = () => {
         generateLoanApplicationId()
       ).unwrap();
       navigate(
-        `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`
+        `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}`
       );
     } catch (error) {
       console.error("Failed to generate loan application ID:", error);
@@ -109,8 +109,11 @@ const LoanApplication = () => {
   };
 
   const renderActionList = (rowData) => {
-    if (rowData.status === "Completed" || rowData.status === "Cancel" ||
-          hasViewOnlyAccessGroup3(roleName)) {
+    if (
+      rowData.status === "Completed" ||
+      rowData.status === "Cancel" ||
+      hasViewOnlyAccessGroup3(roleName)
+    ) {
       return <div className="py-6">-</div>;
     }
     return (

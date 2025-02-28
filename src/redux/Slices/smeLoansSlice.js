@@ -1041,7 +1041,7 @@ const smeLoansSlice = createSlice({
       .addCase(getLoanApplicationsByID.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        // toast.error(`API Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getDocsByIdnUsage.pending, (state) => {
         // state.loading = true;
@@ -1051,7 +1051,7 @@ const smeLoansSlice = createSlice({
         state.loading = false;
         state.addLoanData.documents = action.payload.map((doc) => ({
           docName: "",
-          docId: doc.dynamicDocumentId || "", // Assign dynamicDocumentId to docId, default to empty string if undefined
+          docId: "",
           verified: false,
           documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
         }));

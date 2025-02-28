@@ -816,12 +816,17 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-loan/new/:loanApplicationId",
+            element: <AddLoansSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "add-loan/:loanApplicationId",
             element: <AddLoansSME />,
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "add-loan/:loanApplicationId/:BorrowerId",
+            path: "add-loan/new/:loanApplicationId/:BorrowerId",
             element: <AddLoansSME />,
             errorElement: <RouteErrorBoundary />,
           },
@@ -967,12 +972,17 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-loan/new/:loanApplicationId",
+            element: <AddLoans />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "add-loan/:loanApplicationId",
             element: <AddLoans />,
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "add-loan/:loanApplicationId/:BorrowerId",
+            path: "add-loan/new/:loanApplicationId/:BorrowerId",
             element: <AddLoans />,
             errorElement: <RouteErrorBoundary />,
           },

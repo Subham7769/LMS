@@ -143,39 +143,39 @@ export const createProject = createAsyncThunk(
       );
     }
 
-    const requiredFields = [
-      "startDate",
-      "endDate",
-      "currencyName",
-      "interestRatePeriod",
-      "country",
-      "location",
-      "projectDescription",
-      "interestPeriodUnit",
-      "loanType",
-      "lateRepaymentPenalty",
-      "earlyRepaymentDiscount",
-      "maxPaymetAttemps",
-      "serviceFee",
-      "downRepaymentGracePeriod",
-      "emiRepaymentGracePeriod",
-      "loanGracePeriod",
-      "rollOverGracePeriod",
-      // "rollOverPenaltyFee",
-      "lateEmiPenaltyFactor",
-      "name",
-      "managementFee",
-      "vatFee",
-    ];
+    // const requiredFields = [
+    //   "startDate",
+    //   "endDate",
+    //   "currencyName",
+    //   "interestRatePeriod",
+    //   "country",
+    //   "location",
+    //   "projectDescription",
+    //   "interestPeriodUnit",
+    //   "loanType",
+    //   "lateRepaymentPenalty",
+    //   "earlyRepaymentDiscount",
+    //   "maxPaymetAttemps",
+    //   "serviceFee",
+    //   "downRepaymentGracePeriod",
+    //   "emiRepaymentGracePeriod",
+    //   "loanGracePeriod",
+    //   "rollOverGracePeriod",
+    //   // "rollOverPenaltyFee",
+    //   "lateEmiPenaltyFactor",
+    //   "name",
+    //   "managementFee",
+    //   "vatFee",
+    // ];
 
-    for (const field of requiredFields) {
-      if (!projectData[field]) {
-        toast.error(
-          `Please fill in ${field.replace(/([A-Z])/g, " $1").trim()}.`
-        );
-        return rejectWithValue(`Validation Error: ${field}`);
-      }
-    }
+    // for (const field of requiredFields) {
+    //   if (!projectData[field]) {
+    //     toast.error(
+    //       `Please fill in ${field.replace(/([A-Z])/g, " $1").trim()}.`
+    //     );
+    //     return rejectWithValue(`Validation Error: ${field}`);
+    //   }
+    // }
 
     const {
       tclAmount,
