@@ -93,6 +93,7 @@ const ProjectInputFields = ({
               inputValue={projectData?.country}
               onChange={handleChange}
               isValidation={true}
+              searchable={true}
             />
 
             {/* Location */}
@@ -103,6 +104,7 @@ const ProjectInputFields = ({
               inputValue={projectData?.location}
               onChange={handleChange}
               isValidation={true}
+              searchable={true}
             />
 
             {/* Loan Scheme Currency */}
@@ -113,6 +115,7 @@ const ProjectInputFields = ({
               inputValue={projectData?.currencyName}
               onChange={handleChange}
               isValidation={true}
+              searchable={true}
             />
 
             {/* Loan Scheme Type */}

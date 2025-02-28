@@ -137,6 +137,7 @@ console.log(name)
       type: "select",
       options: countryOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Date of Birth",
@@ -200,6 +201,7 @@ console.log(name)
       type: "select",
       options: countryOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Province / State",
@@ -207,6 +209,7 @@ console.log(name)
       type: "select",
       options: filteredLocations1,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "District",
@@ -214,6 +217,7 @@ console.log(name)
       type: "select",
       options: filteredDistrictLocations1,
       validation: false,
+      searchable: true,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
     {
@@ -271,6 +275,7 @@ console.log(name)
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
+                searchable={field.searchable || false}
               />
             );
           case "date":

@@ -251,6 +251,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: countryOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Date of Birth",
@@ -308,6 +309,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: countryOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Province / State",
@@ -315,6 +317,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: filteredLocations1,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "District",
@@ -322,6 +325,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: filteredDistrictLocations1,
       validation: false,
+      searchable: true,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
     {
@@ -395,6 +399,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: BankNameOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Account Name",
@@ -502,18 +507,21 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: countryOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Province / State",
       inputName: "kinProvince",
       type: "select",
       options: filteredLocations2,
+      searchable: true,
     },
     {
       labelName: "District",
       inputName: "kinDistrict",
       type: "select",
       options: filteredDistrictLocations2,
+      searchable: true,
     },
     {
       labelName: "Employer",
@@ -601,6 +609,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
+                searchable={field.searchable || false}
               />
             );
           case "date":

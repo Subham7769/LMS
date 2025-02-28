@@ -500,6 +500,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: countryOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Province",
@@ -507,6 +508,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: filteredProvinces1,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Location (Town/City)",
@@ -514,6 +516,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: filteredLocations1,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Contact Person (full name)",
@@ -560,6 +563,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: countryOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Province",
@@ -567,6 +571,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: filteredProvinces2,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Location (Town/City)",
@@ -574,6 +579,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: filteredLocations2,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Contact Person (full name)",
@@ -774,6 +780,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
+                searchable={field.searchable || false}
               />
             );
           case "date":

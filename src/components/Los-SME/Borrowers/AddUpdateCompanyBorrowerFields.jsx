@@ -245,6 +245,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: countryOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Province / State",
@@ -252,6 +253,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: filteredLocations1,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "District",
@@ -259,6 +261,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: filteredDistrictLocations1,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Location of HQ",
@@ -317,6 +320,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: countryOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Province / State",
@@ -324,6 +328,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: filteredLocations2,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "District",
@@ -331,6 +336,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: filteredDistrictLocations2,
       validation: true,
+      searchable: true,
     },
     { labelName: "Email", inputName: "email", type: "email", validation: true },
     {
@@ -348,6 +354,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: BankNameOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Account Name",
@@ -501,6 +508,7 @@ const AddUpdateCompanyBorrowerFields = ({
                 inputValue={details[field.inputName]}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
+                searchable={field.searchable || false}
               />
             );
           case "date":
