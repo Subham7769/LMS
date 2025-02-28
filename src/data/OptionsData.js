@@ -237,3 +237,8 @@ export const sectorOptions = [
   { label: "Trading", value: "Trading" },
   { label: "Transport", value: "Transport" },
 ];
+
+export const trueFalseOptions = [
+  { label: "True", value: "true" },
+  { label: "False", value: "false" },
+];

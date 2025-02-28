@@ -8,7 +8,7 @@ import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
 import HoverButton from "../Common/HoverButton/HoverButton";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import { operatorOptions, conditionsOptions } from "../../data/OptionsData";
+import { operatorOptions, conditionsOptions, trueFalseOptions } from "../../data/OptionsData";
 import {
   XMarkIcon,
   PlusIcon,
@@ -346,6 +346,14 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     }));
   };
 
+  const handleDocumentInputChange = (e) => {
+    const { name, checked, type, value } = e.target;
+    setRuleConfig((prevConfig) => ({
+      ...prevConfig,
+      criteriaValues: [value],
+    }));
+  };
+
   const handleConditionChange = (e) => {
     setCondition(e.target.value);
     const { firstOperator, secondOperator } = getOperatorsForCondition(
@@ -412,7 +420,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         {/* STRING Rule Criteria Values*/}
         {ruleConfig.fieldType === "STRING" && (
           <div className={"flex justify-between align-middle gap-2"}>
-            <InputTextMulti
+            {ruleConfig.criteriaType !== "DOCUMENT" && <InputTextMulti
               label={"Value"}
               inputName={ruleConfig.name}
               tag={ruleConfig?.criteriaValues}
@@ -421,7 +429,21 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
               dynamicRacRuleId={"123"}
               isValidation={true}
               required={true}
-            />
+            />}
+            {ruleConfig.criteriaType === "DOCUMENT" && (
+              <div className="flex-1">
+                <InputSelect
+                  labelName="Value"
+                  inputOptions={trueFalseOptions}
+                  inputName="name"
+                  inputValue={ruleConfig?.criteriaValues[0]}
+                  onChange={handleDocumentInputChange}
+                  dropdownTextSize={"small"}
+                  isValidation={true}
+                  searchable={true}
+                />
+              </div>
+            )}
             {/* Blocked Checkbox */}
             <div className="mt-5">
               <InputCheckbox
