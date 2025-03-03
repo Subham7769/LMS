@@ -542,7 +542,7 @@ const smeRepaymentsSlice = createSlice({
         state.loading = false;
         console.log(action.payload);
         state.openLoans = action.payload.map((item) => ({
-          label: `${item.userName} ${item.productType}`,
+          label: `${item.loanId} ${item.userName}`,
           value: `${item.loanId}@${item.userId}`,
         }));
       })

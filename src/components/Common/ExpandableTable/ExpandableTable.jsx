@@ -123,23 +123,33 @@ const ExpandableTable = ({
                           {col.field.toLowerCase() === "aging" &&
                           rowData[col.field] !== undefined ? (
                             `${rowData[col.field]} Days`
-                          ) : col.field.toLowerCase() ===
-                            "companyregistrationno" ? (
-                            <div className="flex items-center justify-center gap-2" title={rowData[col.field]}>
-                              {/* Shortened display value */}
-                              <div className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
-                                {rowData[col.field] ?? "-"}
-                              </div>
-                              <ClipboardDocumentListIcon
-                                className="h-5 w-5 cursor-pointer text-gray-500 hover:text-black"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  copyToClipboard(rowData[col.field]);
-                                }}
-                              />
+                          ) : rowData[col.field] ? (
+                            <div
+                              className="flex items-center justify-center gap-2"
+                              title={rowData[col.field]}
+                            >
+                              {rowData[col.field] && col.copy ? (
+                                <>
+                                  {/* Shortened display value */}
+                                  <div
+                                    className={` whitespace-nowrap overflow-hidden text-ellipsis w-[100px]`}
+                                  >
+                                    {rowData[col.field]}
+                                  </div>
+                                  <ClipboardDocumentListIcon
+                                    className="h-5 w-5 cursor-pointer text-gray-500 hover:text-black"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      copyToClipboard(rowData[col.field]);
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                rowData[col.field]
+                              )}
                             </div>
                           ) : (
-                            rowData[col.field] ?? "-"
+                            "-"
                           )}
                         </span>
                       </td>

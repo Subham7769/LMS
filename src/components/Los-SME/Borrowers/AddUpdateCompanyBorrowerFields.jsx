@@ -201,6 +201,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: natureOfCompanyOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Industry",
@@ -208,6 +209,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: industriesOptions,
       validation: true,
+      searchable: true,
     },
     // {
     //   labelName: "Industry",
@@ -228,7 +230,7 @@ const AddUpdateCompanyBorrowerFields = ({
       validation: true,
     },
     {
-      labelName: "Company Serial No.",
+      labelName: "Borrower Serial No.",
       inputName: "companyUniqueId",
       type: "text",
       validation: true,
@@ -381,6 +383,7 @@ const AddUpdateCompanyBorrowerFields = ({
       type: "select",
       options: filteredBranchNameOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Branch Code",

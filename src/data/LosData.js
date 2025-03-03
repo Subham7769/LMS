@@ -57,7 +57,7 @@ export const CollateralRegisterHeaderList = [
   "Borrower",
   "Name",
   "Model",
-  "Serial Number",
+  "Borrower Serial No.",
   "Status",
   "Condition",
 ];

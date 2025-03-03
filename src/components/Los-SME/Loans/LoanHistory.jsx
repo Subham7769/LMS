@@ -99,11 +99,11 @@ const LoanHistory = () => {
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Borrower Serial No.", value: "uid" },
   ];
 
   const columns = [
-    { label: "Loan ID", field: "loanId" },
+    { label: "Loan ID", field: "loanId", copy: true },
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
@@ -198,7 +198,7 @@ const LoanHistory = () => {
             <div>
               <div className="text-gray-500">Tenure</div>
               <div className="font-semibold">
-                {rowData.loanDuration} {rowData.perLoanDuration}
+                {rowData.numberOfTenure} {rowData.perLoanDuration}
               </div>
             </div>
             <div>

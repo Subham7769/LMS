@@ -143,7 +143,7 @@ const AddBorrowers = () => {
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
-    { label: "Unique Id", field: "uniqueID" },
+    { label: "Unique Id", field: "uniqueID" ,copy:true},
     { label: "Creation Date", field: "creationDate" },
     { label: "Last Update", field: "lastUpdate" },
     { label: "Status", field: "status" },
