@@ -17,7 +17,7 @@ import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -27,13 +27,17 @@ const AddLoans = () => {
   const navigate = useNavigate();
   const { loanApplicationId } = useParams();
   const { BorrowerId } = useParams();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.personalLoans
   );
   // const isValid = useSelector((state) => state.validation.isValid);
 
   useEffect(() => {
-    dispatch(getLoanApplicationsByID(loanApplicationId));
+    if (!currentPath.includes("new")) {
+      dispatch(getLoanApplicationsByID(loanApplicationId));
+    }
     dispatch(fetchLoanProductData());
     const keysArray = [
       "borrowerId",

@@ -84,7 +84,7 @@ const LoanApplication = () => {
         generateLoanApplicationId()
       ).unwrap();
       navigate(
-        `/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}`
+        `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
       );
     } catch (error) {
       console.error("Failed to generate loan application ID:", error);

@@ -59,6 +59,7 @@ const LoanProductConfig = () => {
   useEffect(() => {
     dispatch(fetchData(productType));
     dispatch(fetchRoles());
+    setCurrentPage(1);
     return () => {
       dispatch(clearValidationError());
       dispatch(clearUpdateMap());

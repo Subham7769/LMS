@@ -867,7 +867,7 @@ const ViewCompany = () => {
           generateLoanApplicationId()
         ).unwrap();
         navigate(
-          `/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}/${BorrowerId}`
+          `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}/${BorrowerId}`
         );
       } catch (error) {
         console.error("Failed to generate loan application ID:", error);

@@ -17,7 +17,7 @@ import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -27,6 +27,8 @@ const AddLoans = () => {
   const navigate = useNavigate();
   const { loanApplicationId } = useParams();
   const { BorrowerId } = useParams();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.smeLoans
   );
@@ -35,7 +37,9 @@ const AddLoans = () => {
   console.log(BorrowerId);
 
   useEffect(() => {
-    dispatch(getLoanApplicationsByID(loanApplicationId));
+    if (!currentPath.includes("new")) {
+      dispatch(getLoanApplicationsByID(loanApplicationId));
+    }
     dispatch(fetchLoanProductData());
     const keysArray = [
       "borrowerId",
@@ -62,20 +66,20 @@ const AddLoans = () => {
   }, [dispatch, loanApplicationId, BorrowerId]);
 
   useEffect(() => {
-      if (addLoanData.generalLoanDetails.loanProductId) {
-        const selectedDynamicDoc = loanProductData.find(
-          (product) =>
-            product?.loanProductId ===
-            addLoanData?.generalLoanDetails?.loanProductId
-        );
-        dispatch(
-          getDocsByIdnUsage({
-            dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
-            usage: "BORROWER_OFFERS",
-          })
-        );
-      }
-    }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
+    if (addLoanData.generalLoanDetails.loanProductId) {
+      const selectedDynamicDoc = loanProductData.find(
+        (product) =>
+          product?.loanProductId ===
+          addLoanData?.generalLoanDetails?.loanProductId
+      );
+      dispatch(
+        getDocsByIdnUsage({
+          dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
+          usage: "BORROWER_OFFERS",
+        })
+      );
+    }
+  }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -116,7 +120,6 @@ const AddLoans = () => {
       await dispatch(saveDraftLoanData(addLoanData)).unwrap();
       navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
- 
   };
 
   const handleDraft = async () => {

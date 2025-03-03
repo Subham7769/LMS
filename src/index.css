@@ -6,6 +6,10 @@
   @apply text-blue-600;
 }
 
+[type="text"]:focus {
+  --tw-ring-color: #fff;
+}
+
 .slick-next:before,
 .slick-prev:before {
   content: "" !important;
