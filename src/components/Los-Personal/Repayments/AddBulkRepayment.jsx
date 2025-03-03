@@ -144,8 +144,10 @@ const AddBulkRepayment = () => {
                   inputValue={item.collectionDate}
                   onChange={(e) =>
                     handleChange(e.target.value, rowIndex, "collectionDate")
+                    
                   }
                   isValidation={true}
+                  showIcon={false}
                 />
               </td>
               <td className="py-3 text-center ">

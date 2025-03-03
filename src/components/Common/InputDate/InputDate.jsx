@@ -6,6 +6,10 @@ import {
   setValidationError,
 } from "../../../redux/Slices/validationSlice";
 import { useSelector } from "react-redux";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const dateFormat = import.meta.env.VITE_DATE_FORMAT || "dd/MM/yyyy";
 
 const InputDate = ({
   labelName,
@@ -17,6 +21,7 @@ const InputDate = ({
   isDisabled = false,
   minSelectableDate = null,
   maxSelectableDate = null,
+  showIcon = true
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -64,23 +69,33 @@ const InputDate = ({
           {isValidation && <span className="text-red-600">*</span>}
         </label>
       )}
-      <input
-        type="date"
-        name={inputName}
-        value={inputValue}
-        onChange={onChange}
+      <div className="relative w-full">
+      <DatePicker
+        selected={inputValue ? new Date(inputValue) : null}
+        onChange={(date) => onChange({ 
+          target: { name: inputName, value: date ? date.toISOString().split("T")[0] : "" } 
+        })} // Store date as YYYY-MM-DD string
         onFocus={() => dispatch(setValidationError(validationKey))}
         className={`block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
-          ${
-            validationError[validationKey]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          sm:text-sm sm:leading-6 `}
+          ${showIcon ? "mx-4" : ""} 
+          ${validationError[validationKey] ? "ring-red-600 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"} 
+          sm:text-sm sm:leading-6`}
         disabled={isDisabled}
-        min={minSelectableDate} // Apply the min attribute if provided
-        max={maxSelectableDate} // Apply the max attribute if provided
+        minDate={minSelectableDate}
+        maxDate={maxSelectableDate}
+        dateFormat={dateFormat}
+        showMonthDropdown
+        showYearDropdown
+        dropdownMode="select"
+        toggleCalendarOnIconClick
+        showIcon={showIcon}
+        icon={<span className="ml-3 mt-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+      </svg></span>
+      }
+      popperClassName="text-xs"
       />
+      </div>
     </>
   );
 };
