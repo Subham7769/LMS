@@ -169,6 +169,14 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "repaymentTenureStr",
+        value: "",
+      })
+    );
+
     const uniqueRepaymentTenure = new Set();
 
     return selectedLoanProduct.interestEligibleTenure
@@ -304,6 +312,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: loanProductOptions, // Dynamically populated
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Borrower Serial No.",
@@ -342,7 +351,7 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "Loan Interest %",
       inputName: "loanInterestStr",
       type: "text",
-      validation: true,
+      validation: false,
       disabled: true,
     },
     {
@@ -363,6 +372,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: lhaBranchOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Sector",
@@ -370,6 +380,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: sectorOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Refinanced Loan ID",

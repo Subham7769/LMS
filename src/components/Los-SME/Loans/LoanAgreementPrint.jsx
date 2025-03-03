@@ -88,7 +88,7 @@ const LoanAgreementPrint = () => {
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
                   &nbsp;
-                  {businessDetails[key]}
+                  {businessDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -114,7 +114,7 @@ const LoanAgreementPrint = () => {
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
                   &nbsp;
-                  {contactDetails[key]}
+                  {contactDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -139,7 +139,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{profomaDetails[key]}
+                  &nbsp;{profomaDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -164,7 +164,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{offTakerDetails[key]}
+                  &nbsp;{offTakerDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -189,7 +189,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{supplierDetails[key]}
+                  &nbsp;{supplierDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -214,7 +214,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{generalLoanDetails[key]}
+                  &nbsp;{generalLoanDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -239,7 +239,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{collateralDetails[key]}
+                  &nbsp;{collateralDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -264,7 +264,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{bankingDetails[key]}
+                  &nbsp;{bankingDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -289,7 +289,7 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{loanOfficerFinding[key]}
+                  &nbsp;{loanOfficerFinding[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -298,79 +298,91 @@ const LoanAgreementPrint = () => {
             DIRECTORS’ DETAILS
           </div>
           <div className="overflow-x-auto mb-5 no-scroll">
-            <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
-              <thead>
-                <tr className="bg-background-light-secondary">
-                  <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
-                    No.
-                  </th>
-                  {Object.keys(directorDetails[0]).map((key) => (
-                    <th
-                      key={key}
-                      className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
-                    >
-                      {convertToReadableString(key)}
+            {directorDetails?.length > 0 ? (
+              <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
+                <thead>
+                  <tr className="bg-background-light-secondary">
+                    <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                      No.
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {directorDetails.map((director, index) => (
-                  <tr key={index} className="even:bg-gray-50">
-                    <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                      {index + 1}
-                    </td>
-                    {Object.values(director).map((value, valueIndex) => (
-                      <td
-                        key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                    {Object.keys(directorDetails[0]).map((key) => (
+                      <th
+                        key={key}
+                        className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
                       >
-                        {value || "-"}
-                      </td>
+                        {convertToReadableString(key)}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {directorDetails.map((director, index) => (
+                    <tr key={index} className="even:bg-gray-50">
+                      <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                        {index + 1}
+                      </td>
+                      {Object.values(director).map((value, valueIndex) => (
+                        <td
+                          key={valueIndex}
+                          className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        >
+                          {value || "-"}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center text-gray-600 py-4">
+                No Directors Found
+              </div>
+            )}
           </div>
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             SHAREHOLDER DETAILS
           </div>
           <div className="overflow-x-auto mb-5 no-scroll">
-            <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
-              <thead>
-                <tr className="bg-background-light-secondary">
-                  <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
-                    No.
-                  </th>
-                  {Object.keys(shareHolderDetails[0]).map((key) => (
-                    <th
-                      key={key}
-                      className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
-                    >
-                      {convertToReadableString(key)}
+            {shareHolderDetails?.length > 0 ? (
+              <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
+                <thead>
+                  <tr className="bg-background-light-secondary">
+                    <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                      No.
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {shareHolderDetails.map((shareholder, index) => (
-                  <tr key={index} className="even:bg-gray-50">
-                    <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                      {index + 1}
-                    </td>
-                    {Object.values(shareholder).map((value, valueIndex) => (
-                      <td
-                        key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                    {Object.keys(shareHolderDetails[0]).map((key) => (
+                      <th
+                        key={key}
+                        className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
                       >
-                        {value || "-"}
-                      </td>
+                        {convertToReadableString(key)}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {shareHolderDetails.map((shareholder, index) => (
+                    <tr key={index} className="even:bg-gray-50">
+                      <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                        {index + 1}
+                      </td>
+                      {Object.values(shareholder).map((value, valueIndex) => (
+                        <td
+                          key={valueIndex}
+                          className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        >
+                          {value || "-"}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center text-gray-600 py-4">
+                No Directors Found
+              </div>
+            )}
           </div>
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             CREDIT OFFICER COMMENTS

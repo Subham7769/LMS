@@ -239,7 +239,7 @@ const ApproveLoans = () => {
             <div>
               <div className="text-gray-500">Tenure</div>
               <div className="font-semibold">
-                {rowData.loanDuration} {rowData.perLoanDuration}
+                {rowData.numberOfTenure} {rowData.perLoanDuration}
               </div>
             </div>
             <div>

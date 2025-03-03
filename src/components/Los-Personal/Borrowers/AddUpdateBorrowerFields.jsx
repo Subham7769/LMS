@@ -373,6 +373,7 @@ const AddUpdateBorrowerFields = ({
       type: "select",
       options: ministriesOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Employer",
@@ -539,6 +540,7 @@ const AddUpdateBorrowerFields = ({
       type: "select",
       options: filteredBranchNameOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Branch Code",
@@ -587,6 +589,7 @@ const AddUpdateBorrowerFields = ({
       type: "select",
       options: relationshipOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Mobile 1",

@@ -92,7 +92,7 @@ export const createClone = createAsyncThunk(
     const token = localStorage.getItem("authToken");
     const response = await fetch(
       `${
-        import.meta.env.VITE_LOAN_APPROVAL_CREATE_CLONE
+        import.meta.env.VITE_DOCUMENT_CONFIG_CLONE
       }${dynamicDocumentTempId}/clone/${cloneName}`,
       {
         method: "POST",

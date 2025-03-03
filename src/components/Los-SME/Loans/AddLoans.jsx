@@ -42,18 +42,13 @@ const AddLoans = () => {
     }
     dispatch(fetchLoanProductData());
     const keysArray = [
+      "loanProductId",
       "borrowerId",
       "disbursedBy",
-      "interestMethod",
-      "loanDuration",
-      "loanInterest",
-      "loanProductId",
       "loanReleaseDate",
-      "numberOfTenure",
-      "perLoanDuration",
-      "perLoanInterest",
-      "principalAmount",
-      "repaymentCycle",
+      "loanDurationStr",
+      "repaymentTenureStr",
+      "branch",
     ];
     dispatch(setFields(keysArray));
     dispatch(setLoanApplicationId(loanApplicationId));
