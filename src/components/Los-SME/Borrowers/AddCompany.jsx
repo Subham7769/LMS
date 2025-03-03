@@ -137,7 +137,7 @@ const AddCompany = () => {
   const personalDetailsColumns = [
     // { label: "Borrower Draft Id", field: "borrowerProfileDraftId" },
     { label: "Name", field: "companyName" },
-    { label: "Registration No.", field: "companyRegistrationNo" },
+    { label: "Registration No.", field: "companyRegistrationNo", copy:true },
     { label: "Unique Id", field: "companyUniqueId" },
     { label: "Status", field: "status" },
   ];

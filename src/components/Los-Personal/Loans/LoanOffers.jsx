@@ -143,6 +143,7 @@ const LoanOffers = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-5">
+            {/* Meet Our Borrower */}
             <CardInfo
               cardTitle="Meet Our Borrower"
               cardIcon={UserIcon}
@@ -173,8 +174,10 @@ const LoanOffers = () => {
                 />
               </div>
             </CardInfo>
+
+            {/* Available Loan Range */}
             <CardInfo
-              cardTitle="Avialable Loan Range"
+              cardTitle="Available Loan Range"
               cardIcon={CogIcon}
               colorText={"text-green-primary"}
               colorBG={"bg-background-light-white"}
@@ -215,6 +218,7 @@ const LoanOffers = () => {
           {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => (
             <React.Fragment key={index}>
               <div className="grid grid-cols-2 gap-5">
+                {/* Interest Rates */}
                 <CardInfo
                   cardTitle="Interest Rates"
                   cardIcon={CalculatorIcon}
@@ -252,6 +256,8 @@ const LoanOffers = () => {
                     </div>
                   </div>
                 </CardInfo>
+
+                {/* Financial Breakdown */}
                 <CardInfo
                   cardTitle="Financial Breakdown"
                   cardIcon={CalculatorIcon}
@@ -277,7 +283,7 @@ const LoanOffers = () => {
                     <div className="font-semibold text-lg mb-2">
                       {formatNumber(ci?.totalInterestAmount.toFixed(2))}
                     </div>
-                    <div className="text-gray-500">Service Fee:</div>
+                    <div className="text-gray-500">Total Admin Fee (or Service Fee):</div>
                     <div className="flex items-baseline gap-x-2">
                       <div className="font-semibold text-lg mb-2">
                         {ci?.serviceFee.toFixed(2)}
@@ -286,13 +292,13 @@ const LoanOffers = () => {
                         (tax: {ci?.serviceFeeTax.toFixed(2)})
                       </div>
                     </div>
-                    <div className="text-gray-500">Management Fee:</div>
+                    <div className="text-gray-500">Application Fee:</div>
                     <div className="flex items-baseline gap-x-2">
                       <div className="font-semibold text-lg mb-2">
-                        {ci?.totalManagementFee.toFixed(2)}
+                        {ci?.applicationFees.toFixed(2)}
                       </div>
                       <div className="text-gray-500">
-                        (VAT: {ci?.totalManagementVatFee.toFixed(2)})
+                        (CRB: {ci?.crbCharge.toFixed(2)})
                       </div>
                     </div>
                     <div className="text-gray-500">Insurance Fee:</div>

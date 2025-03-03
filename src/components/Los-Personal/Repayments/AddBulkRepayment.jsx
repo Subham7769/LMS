@@ -105,6 +105,7 @@ const AddBulkRepayment = () => {
                   onChange={(e) =>
                     handleSelectChange(e.target.value, rowIndex, "loan")
                   }
+                  searchable={true}
                   isValidation={true}
                 />
               </td>

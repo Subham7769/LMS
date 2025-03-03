@@ -109,8 +109,8 @@ const ExpandableTable = ({
                     const cellClass = col.field.toLowerCase().includes("status")
                       ? getStatusClass(rowData[col.field])
                       : col.field.toLowerCase() === "aging"
-                      ? getAgingClass(Number(rowData[col.field]))
-                      : "";
+                        ? getAgingClass(Number(rowData[col.field]))
+                        : "";
 
                     return (
                       <td
@@ -121,26 +121,21 @@ const ExpandableTable = ({
                           className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${cellClass}`}
                         >
                           {col.field.toLowerCase() === "aging" &&
-                          rowData[col.field] !== undefined ? (
-                            `${rowData[col.field]} Days`
-                          ) : col.field.toLowerCase() ===
-                            "companyregistrationno" ? (
-                            <div className="flex items-center justify-center gap-2" title={rowData[col.field]}>
+                            rowData[col.field] !== undefined
+                            ? `${rowData[col.field]} Days`
+                            : rowData[col.field] ? <div className="flex items-center justify-center gap-2" title={rowData[col.field]}>
                               {/* Shortened display value */}
                               <div className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
-                                {rowData[col.field] ?? "-"}
+                                {rowData[col.field]}
                               </div>
-                              <ClipboardDocumentListIcon
+                              {rowData[col.field] && col.copy ? <ClipboardDocumentListIcon
                                 className="h-5 w-5 cursor-pointer text-gray-500 hover:text-black"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   copyToClipboard(rowData[col.field]);
                                 }}
-                              />
-                            </div>
-                          ) : (
-                            rowData[col.field] ?? "-"
-                          )}
+                              /> : ""}
+                            </div> : "-"}
                         </span>
                       </td>
                     );
