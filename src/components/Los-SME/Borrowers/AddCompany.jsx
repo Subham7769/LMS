@@ -98,7 +98,7 @@ const AddCompany = () => {
   const searchOptions = [
     { label: "Name", value: "companyName" },
     { label: "Registration No.", value: "companyRegistrationNo" },
-    { label: "Unique Id", value: "companyUniqueId" },
+    { label: "Borrower Serial No.", value: "companyUniqueId" },
   ];
 
   const SearchBorrowerByFieldSearch = () => {
@@ -138,7 +138,7 @@ const AddCompany = () => {
     // { label: "Borrower Draft Id", field: "borrowerProfileDraftId" },
     { label: "Name", field: "companyName" },
     { label: "Registration No.", field: "companyRegistrationNo", copy:true },
-    { label: "Unique Id", field: "companyUniqueId" },
+    { label: "Borrower Serial No.", field: "companyUniqueId" },
     { label: "Status", field: "status" },
   ];
 

@@ -228,7 +228,7 @@ const AddUpdateCompanyBorrowerFields = ({
       validation: true,
     },
     {
-      labelName: "Company Serial No.",
+      labelName: "Borrower Serial No.",
       inputName: "companyUniqueId",
       type: "text",
       validation: true,

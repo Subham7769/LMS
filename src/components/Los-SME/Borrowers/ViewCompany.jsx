@@ -195,15 +195,15 @@ const ViewCompany = () => {
     { label: "Name", value: "companyName" },
     { label: "Short Name", value: "companyShortName" },
     { label: "Registration No.", value: "companyRegistrationNo" },
-    { label: "Serial No", value: "companyUniqueId" },
-    { label: "Cutomer ID", value: "customerId" },
+    { label: "Borrower Serial No.", value: "companyUniqueId" },
+    { label: "Customer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
     { label: "Registration No.", field: "companyRegistrationNo" },
-    { label: "Serial No", field: "companyUniqueId", copy:true },
+    { label: "Borrower Serial No.", field: "companyUniqueId", copy:true },
     { label: "Customer ID", field: "customerId" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
@@ -363,7 +363,7 @@ const ViewCompany = () => {
                       />
                       <CardInfoRow
                         icon={WindowIcon}
-                        label="Unique ID"
+                        label="Borrower Serial No"
                         value={rowData.companyUniqueId}
                       />
                       <CardInfoRow

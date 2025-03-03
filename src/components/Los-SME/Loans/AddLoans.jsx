@@ -157,7 +157,7 @@ const AddLoans = () => {
         </div>
       </div>
       <AddLoanFields addLoanData={addLoanData} />
-      {/* Resuable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
+      {/* Reusable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
       <div className="flex justify-between mt-5 items-end">
         <div className="text-xs text-text-light-tertiary flex items-center gap-1">
           <InformationCircleIcon

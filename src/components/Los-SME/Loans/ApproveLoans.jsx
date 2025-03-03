@@ -157,13 +157,13 @@ const ApproveLoans = () => {
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Borrower Serial No.", value: "uid" },
   ];
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Borrower ID", field: "uid" },
+    { label: "Borrower Serial No.", field: "uid" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },

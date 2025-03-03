@@ -149,54 +149,59 @@ const ApproveRepayment = () => {
             </div>
           </div>
         </CardInfo>
-        <CardInfo
-          cardTitle="Borrower Profile"
-          className={"bg-white border-border-gray-primary border"}
-          cardIcon={UserIcon}
-          colorText={"text-blue-primary"}
-        >
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Name</div>
-            <div className="text-gray-700">{rowData.borrowerProfile.name}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">User ID</div>
-            <div className="text-gray-700">{rowData.userId}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Email</div>
-            <div className="text-gray-700">{rowData.borrowerProfile.email}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Phone</div>
-            <div className="text-gray-700">{rowData.borrowerProfile.phone}</div>
-          </div>
-        </CardInfo>
-        <CardInfo
-          cardTitle="Recent Payments"
-          className={"bg-white border-border-gray-primary border"}
-          cardIcon={ClockIcon}
-          colorText={"text-blue-primary"}
-        >
-          {rowData.paymentsData.slice(-3).map((payment) => (
-            <div className="flex justify-between mb-2 border-b border-border-gray-primary pb-3">
-              <div>
-                <div className="text-black font-semibold">
-                  {convertDate(payment.paymentDate)}
-                </div>
-                <div className="font-light">{payment.paymentType}</div>
+        {
+          rowData?.borrowerProfile && (
+            <CardInfo
+              cardTitle="Borrower Profile"
+              className={"bg-white border-border-gray-primary border"}
+              cardIcon={UserIcon}
+              colorText={"text-blue-primary"}
+            >
+              <div className="flex justify-between mb-2">
+                <div className="text-gray-500">Name</div>
+                <div className="text-gray-700">{rowData.borrowerProfile.name}</div>
               </div>
-              <div className="text-right">
-                <div className="text-black font-semibold">
-                  {payment.paymentAmount}
+              <div className="flex justify-between mb-2">
+                <div className="text-gray-500">Borrower Serial No.</div>
+                <div className="text-gray-700">{rowData.userId}</div>
+              </div>
+              <div className="flex justify-between mb-2">
+                <div className="text-gray-500">Email</div>
+                <div className="text-gray-700">{rowData.borrowerProfile.email}</div>
+              </div>
+              <div className="flex justify-between mb-2">
+                <div className="text-gray-500">Phone</div>
+                <div className="text-gray-700">{rowData.borrowerProfile.phone}</div>
+              </div>
+            </CardInfo>)
+        }
+        {rowData?.paymentsData && (
+          <CardInfo
+            cardTitle="Recent Payments"
+            className={"bg-white border-border-gray-primary border"}
+            cardIcon={ClockIcon}
+            colorText={"text-blue-primary"}
+          >
+            {rowData.paymentsData.slice(-3).map((payment) => (
+              <div className="flex justify-between mb-2 border-b border-border-gray-primary pb-3">
+                <div>
+                  <div className="text-black font-semibold">
+                    {convertDate(payment.paymentDate)}
+                  </div>
+                  <div className="font-light">{payment.paymentType}</div>
                 </div>
-                <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs text-black">
-                  {payment.paymentStatus}
+                <div className="text-right">
+                  <div className="text-black font-semibold">
+                    {payment.paymentAmount}
+                  </div>
+                  <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs text-black">
+                    {payment.paymentStatus}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </CardInfo>
+            ))}
+          </CardInfo>)}
+
       </div>
       <div className="w-full flex justify-end gap-2 px-5 mt-5">
         <Button
@@ -230,23 +235,23 @@ const ApproveRepayment = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? repayment[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase())
           : true;
       } else {
         matchesSearchValue = searchValue
           ? [
-              repayment.userId,
-              repayment.loan,
-              repayment.collectionBy,
-              repayment.accounting,
-              repayment.method,
-              repayment.transactionId,
-              repayment.installmentId,
-              repayment.requestId,
-            ].some((field) =>
-              field?.toLowerCase().includes(searchValue.toLowerCase())
-            )
+            repayment.userId,
+            repayment.loan,
+            repayment.collectionBy,
+            repayment.accounting,
+            repayment.method,
+            repayment.transactionId,
+            repayment.installmentId,
+            repayment.requestId,
+          ].some((field) =>
+            field?.toLowerCase().includes(searchValue.toLowerCase())
+          )
           : true;
       }
 

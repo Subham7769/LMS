@@ -50,12 +50,12 @@ const LoanApplication = () => {
 
   const searchOptions = [
     { label: "Loan Application Id", value: "loanApplicationId" },
-    { label: "Borrower ID", value: "borrowerId" },
+    { label: "Borrower Serial No.", value: "borrowerId" },
   ];
 
   const columns = [
     { label: "Loan Application ID", field: "loanApplicationId" },
-    { label: "Borrower ID", field: "borrowerId" },
+    { label: "Borrower Serial No.", field: "borrowerId" },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },
     { label: "Status", field: "status" },

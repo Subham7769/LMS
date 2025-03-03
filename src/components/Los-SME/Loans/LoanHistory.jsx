@@ -99,7 +99,7 @@ const LoanHistory = () => {
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Borrower Serial No.", value: "uid" },
   ];
 
   const columns = [

@@ -101,7 +101,7 @@ const LoanOffers = () => {
             onChange={handleChange}
           />
           <InputText
-            labelName={"Borrower"}
+            labelName={"Borrower Serial No."}
             inputName="uid"
             inputValue={loanOfferFields.uid}
             onChange={handleChange}
