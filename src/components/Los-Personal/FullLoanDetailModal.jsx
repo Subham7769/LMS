@@ -134,10 +134,10 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                 : <span className="mr-2">{""}</span>
                 {loanDetails.totalOutstanding}
               </div>
-              <div>Submit Date</div>
+              <div>Release Date</div>
               <div className="font-bold text-black">
                 : <span className="mr-2">{""}</span>
-                {convertDate(loanDetails.submitDate)}
+                {convertDate(loanDetails?.releaseDate)}
               </div>
               <div>Due Date</div>
               <div className="font-bold text-black">

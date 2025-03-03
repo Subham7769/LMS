@@ -39,7 +39,7 @@ const AddLoanFields = ({ addLoanData }) => {
     let verifiedCount = 0;
 
     // Loop through the documents array
-    addLoanData.documents.forEach((document) => {
+    addLoanData?.documents?.forEach((document) => {
       // Check if docName is not empty for uploaded count
       if (document.docName) {
         uploadedCount++;
@@ -138,6 +138,14 @@ const AddLoanFields = ({ addLoanData }) => {
       !addLoanData?.generalLoanDetails?.loanDurationStr
     )
       return [];
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "repaymentTenureStr",
+        value: "",
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -312,7 +320,7 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "Loan Interest %",
       inputName: "loanInterestStr",
       type: "text",
-      validation: true,
+      validation: false,
       disabled: true,
     },
     {

@@ -169,6 +169,14 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "repaymentTenureStr",
+        value: "",
+      })
+    );
+
     const uniqueRepaymentTenure = new Set();
 
     return selectedLoanProduct.interestEligibleTenure
@@ -342,7 +350,7 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "Loan Interest %",
       inputName: "loanInterestStr",
       type: "text",
-      validation: true,
+      validation: false,
       disabled: true,
     },
     {

@@ -40,15 +40,13 @@ const AddLoans = () => {
     }
     dispatch(fetchLoanProductData());
     const keysArray = [
+      "loanProductId",
       "borrowerId",
       "disbursedBy",
-      "interestMethod",
-      "loanDuration",
-      "loanInterest",
-      "loanProductId",
       "loanReleaseDate",
-      "numberOfTenure",
-      "principalAmount",
+      "loanDurationStr",
+      "repaymentTenureStr",
+      "branch",
     ];
     dispatch(setFields(keysArray));
     dispatch(setLoanApplicationId(loanApplicationId));
@@ -69,7 +67,7 @@ const AddLoans = () => {
       );
       dispatch(
         getDocsByIdnUsage({
-          dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
+          dynamicDocumentTempId: selectedDynamicDoc?.dynamicDocumentTempId,
           usage: "BORROWER_OFFERS",
         })
       );
@@ -90,14 +88,14 @@ const AddLoans = () => {
     }
 
     recurse(nestedObject);
-    console.log(result);
+    // console.log(result);
     return result;
   }
 
+  console.log(addLoanData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
-    console.log(addLoanData);
     const state = store.getState();
     const isValid = state.validation.isValid;
     const submitPayload = {

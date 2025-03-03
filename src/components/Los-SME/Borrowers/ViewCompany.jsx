@@ -202,8 +202,8 @@ const ViewCompany = () => {
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
-    { label: "Registration No.", field: "companyRegistrationNo" },
-    { label: "Serial No", field: "companyUniqueId", copy:true },
+    { label: "Registration No.", field: "companyRegistrationNo", copy: true },
+    { label: "Serial No", field: "companyUniqueId", copy: true },
     { label: "Customer ID", field: "customerId" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
