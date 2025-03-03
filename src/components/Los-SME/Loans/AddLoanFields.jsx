@@ -312,6 +312,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: loanProductOptions, // Dynamically populated
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Borrower Serial No (Unique ID)",
@@ -371,6 +372,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: lhaBranchOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Sector",
@@ -378,6 +380,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: sectorOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Refinanced Loan ID",

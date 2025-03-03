@@ -426,6 +426,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       type: "select",
       options: filteredBranchNameOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Branch Code",

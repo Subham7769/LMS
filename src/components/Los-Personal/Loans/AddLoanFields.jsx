@@ -282,6 +282,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: loanProductOptions, // Dynamically populated
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Borrower Unique ID",
@@ -308,6 +309,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: loanTenureOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Repayment Frequency",
@@ -315,6 +317,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: repaymentTenureOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Loan Interest %",
@@ -335,6 +338,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: lhaBranchOptions,
       validation: true,
+      searchable: true,
     },
     {
       labelName: "Sector",
@@ -342,6 +346,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "select",
       options: sectorOptions,
       validation: false,
+      searchable: true,
     },
     {
       labelName: "Agent Name",
