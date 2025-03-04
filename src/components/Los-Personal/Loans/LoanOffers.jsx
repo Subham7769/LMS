@@ -172,30 +172,6 @@ const LoanOffers = () => {
                   label="Net Total Credit Limit"
                   value={formatNumber(loanConfigData?.profile?.netCashTCL)}
                 />
-                <div className="text-gray-500">
-                  Available Loan Duration Range:
-                </div>
-                <div className="font-semibold text-lg">
-                  {loanConfigData?.cashLoanStats?.minEligibleDuration} -{" "}
-                  {loanConfigData?.cashLoanStats?.maxEligibleDuration} days
-                </div>
-                <div className="text-gray-500 mb-2">
-                  ({loanConfigData?.cashLoanStats?.minEligibleDurationMonths} -{" "}
-                  {loanConfigData?.cashLoanStats?.maxEligibleDurationMonths}{" "}
-                  months)
-                </div>
-                <div className="text-gray-500">
-                  Available Loan Amount Range:
-                </div>
-                <div className="font-semibold text-lg">
-                  {formatNumber(
-                    loanConfigData?.cashLoanStats?.minLoanProductAmount
-                  )}{" "}
-                  -{" "}
-                  {formatNumber(
-                    loanConfigData?.cashLoanStats?.maxLoanAmountForBorrower
-                  )}
-                </div>
               </div>
             </CardInfo>
 
@@ -220,13 +196,15 @@ const LoanOffers = () => {
                   )}{" "}
                   -{" "}
                   {formatNumber(
-                    loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)
+                    loanConfigData?.cashLoanStats?.maxLoanAmountForBorrower.toFixed(
+                      2
+                    )
                   )}
                 </div>
                 <div className="text-gray-500">Duration Range:</div>
                 <div className="font-semibold text-lg">
                   {loanConfigData?.cashLoanStats?.minEligibleDuration} -{" "}
-                  {loanConfigData?.cashLoanStats?.maxLoanDuration} days
+                  {loanConfigData?.cashLoanStats?.maxEligibleDuration} days
                 </div>
                 <div className="text-gray-500 mb-2">
                   ({loanConfigData?.cashLoanStats?.minEligibleDurationMonths} -{" "}
@@ -234,7 +212,7 @@ const LoanOffers = () => {
                 </div>
                 <div className="text-gray-500">Average Installments: </div>
                 <div className="font-semibold text-lg">
-                  {loanConfigData?.dynamicCashLoanOffers[0]?.avrageNumberOfenstallment.toFixed(
+                  {loanConfigData?.dynamicCashLoanOffers[0]?.instalmentsNumber.toFixed(
                     2
                   )}
                 </div>

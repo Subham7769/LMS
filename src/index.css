@@ -10,6 +10,14 @@
   --tw-ring-color: #fff;
 }
 
+.react-datepicker-wrapper {
+  display: block !important;
+}
+
+.react-datepicker__view-calendar-icon input {
+  padding: 6px 10px 5px 30px !important;
+}
+
 .slick-next:before,
 .slick-prev:before {
   content: "" !important;
