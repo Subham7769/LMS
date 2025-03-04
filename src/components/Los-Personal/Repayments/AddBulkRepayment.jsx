@@ -29,9 +29,9 @@ const AddBulkRepayment = () => {
   console.log(draftRepaymentDTOList);
 
   useEffect(() => {
-    if (openLoans.length < 1) {
+    // if (openLoans.length < 1) {
       dispatch(getOpenLoans());
-    }
+    // }
   }, [dispatch]);
 
   const addRow = () => {

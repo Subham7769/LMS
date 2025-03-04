@@ -221,7 +221,7 @@ const AddCompany = () => {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Company</div>
+        <div className="text-xl font-semibold">Draft Company</div>
         <div></div>
         <div></div>
         <div className="flex justify-end gap-2 h-12">
