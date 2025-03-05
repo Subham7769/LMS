@@ -13,11 +13,10 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
   const [rejectionReason, setRejectionReason] = useState("");
   const dispatch = useDispatch();
   const { validationError } = useSelector((state) => state.validation);
-  const { userData } = useSelector((state) => state.auth);
+  const { userData, roleName } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const handleRejection = async (rowData) => {
-    const roleNames = userData.roles.map((role) => role.name); // Extract role names
 
     const rejectLoanPayload = {
       amount: rowData.principalAmount,
@@ -26,7 +25,7 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
       uid: rowData.uid,
       rejectionReason: rejectionReason,
       username: userData.username,
-      roleName: roleNames,
+      roleName: [roleName],
     };
     console.log(rejectLoanPayload);
     let isValid = true;
@@ -42,7 +41,7 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
         getPendingLoans({
           page: 0,
           size: 20,
-          getPayload: { roleNames: roleNames },
+          getPayload: { roleNames: [roleName] },
         })
       ).unwrap();
       onClose();
