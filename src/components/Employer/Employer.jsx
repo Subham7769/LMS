@@ -36,6 +36,7 @@ const Employer = () => {
   const { menus } = useSelector((state) => state.sidebar);
   const roleName = userData?.roles[0]?.name;
   const [affordabilityOptions, setAffordabilityOptions] = useState([]);
+  const [employerOptions, setEmployerOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showEmployerModal, setShowEmployerModal] = useState(false);
 
@@ -58,6 +59,16 @@ const Employer = () => {
         })) || [];
     setAffordabilityOptions(options);
   }, [menus]);
+
+  useEffect(() => {
+    if (allEmployerData?.length) {
+      const options = allEmployerData.map(({ employerId, employerName }) => ({
+        value: employerName,
+        label: employerName,
+      }));
+      setEmployerOptions(options);
+    }
+  }, [allEmployerData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -213,6 +224,8 @@ const Employer = () => {
             handleInputChange={handleInputChange}
             handleAddFields={handleAddFields}
             affordabilityOptions={affordabilityOptions}
+            employerOptions={employerOptions}
+            setEmployerOptions={setEmployerOptions}
           />
         </div>
       </ContainerTile>

@@ -134,7 +134,7 @@ const ApproveRepayment = () => {
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Outstanding Balance</div>
-            <div className="font-semibold">{rowData?.outstandingBalance}</div>
+            <div className="font-semibold">{rowData?.outstandingBalance?.toFixed(2)}</div>
           </div>
           <div className="flex justify-between mb-2">
             <div className="text-gray-500">Due Date</div>

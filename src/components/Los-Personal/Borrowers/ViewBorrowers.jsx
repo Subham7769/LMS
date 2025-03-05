@@ -183,7 +183,7 @@ const ViewBorrowers = () => {
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
-    { label: "Unique ID", field: "uniqueID" },
+    { label: "Unique ID", field: "uniqueID", copy:true },
     { label: "Cutomer ID", field: "customerId" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
