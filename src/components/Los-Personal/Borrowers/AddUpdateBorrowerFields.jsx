@@ -681,7 +681,7 @@ const AddUpdateBorrowerFields = ({
       labelName: "Customer Photo",
       inputName: "customerPhotoId",
       type: "file",
-      validation: true,
+      validation: false,
       accept: "image/*",
     },
   ];

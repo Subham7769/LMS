@@ -9,7 +9,7 @@ import {
   removeShareholder,
   resetShareholder,
   addShareholderInfo,
-  fetchAllCompanyBorrowersListByLoanOfficer,
+  fetchAllCompanyBorrowers,
   fetchCompanyDetails,
   setUpdateExistingShareholder,
   deleteShareholderInfo,
@@ -55,9 +55,7 @@ const AddShareHolder = () => {
   }
 
   useEffect(() => {
-    if (allCompanies.length < 1) {
-      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
-    }
+      dispatch(fetchAllCompanyBorrowers())
   }, [dispatch]);
 
   // console.log(isValid);

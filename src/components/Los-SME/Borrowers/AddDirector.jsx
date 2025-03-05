@@ -9,7 +9,7 @@ import {
   removeDirector,
   resetDirector,
   addDirectorInfo,
-  fetchAllCompanyBorrowersListByLoanOfficer,
+  fetchAllCompanyBorrowers,
   fetchCompanyDetails,
   setUpdateDirector,
   setUpdateExistingDirector,
@@ -37,7 +37,7 @@ const AddDirector = () => {
   const loanOfficer = localStorage.getItem("username");
 
   useEffect(() => {
-      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
+      dispatch(fetchAllCompanyBorrowers());
   }, [dispatch]);
 
   console.log(directorsKycDetails);
