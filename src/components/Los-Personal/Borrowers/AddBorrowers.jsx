@@ -38,7 +38,7 @@ const AddBorrowers = () => {
     error,
     loading,
   } = useSelector((state) => state.personalBorrowers);
-
+console.log(addBorrowerData)
   // console.log(draftedBorrowerData);
   // console.log(flattenToSimpleObjectArray(filteredBorrowers));
 

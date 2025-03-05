@@ -32,6 +32,37 @@ export const registerCompanyBorrower = createAsyncThunk(
   }
 );
 
+// Fetch All Borrowers
+export const fetchAllCompanyBorrowers = createAsyncThunk(
+  "borrowers/fetchAllCompanyBorrowers", // action type
+  async (_, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_READ_ALL_COMPANY_BORROWER}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch borrowers");
+      }
+
+      const data = await response.json();
+      console.log(data)
+      return data; // This will be the action payload
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 // Fetch All Borrowers  by Loan Officer
 export const fetchAllCompanyBorrowersByType = createAsyncThunk(
   "borrowers/fetchAllCompanyBorrowersByType", // action type
@@ -1467,6 +1498,22 @@ const borrowersSlice = createSlice({
           toast.error(`API Error : ${action.payload}`);
         }
       )
+      .addCase(fetchAllCompanyBorrowers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllCompanyBorrowers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allCompanies = action.payload.map((company) => ({
+          label: company.companyBorrowerProfile.companyDetails.companyName,
+          value: company.uid,
+        }));
+      })
+      .addCase(fetchAllCompanyBorrowers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrowers";
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(fetchCompanyDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
