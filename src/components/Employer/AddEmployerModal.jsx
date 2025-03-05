@@ -2,9 +2,10 @@ import React from "react";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
+import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
-const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, handleInputChange, handleAddFields }) => {
+const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, handleInputChange, handleAddFields, employerOptions, setEmployerOptions }) => {
 
   if (!isOpen) return null;
 
@@ -33,14 +34,24 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
             </svg>
           </div>
           <div className="grid grid-cols-2 gap-4 mb-5 mt-3">
-            <InputText
+            {/* <InputText
               labelName="Employer Name"
               inputName="employerName"
               inputValue={employerData?.employerName}
               onChange={handleInputChange}
               placeHolder="Infosys"
               isValidation={true}
-            />
+            /> */}
+            <InputSelectCreatable
+              labelName="Employer Name"
+              inputOptions={employerOptions}
+              inputName="employerName"
+              inputValue={employerData?.employerName}
+              onChange={handleInputChange}
+              isValidation={true}
+              searchable={true}
+              setInputOptions={setEmployerOptions}
+            />            
             <InputSelect
               labelName="Affordability Criteria"
               inputOptions={affordabilityOptions}

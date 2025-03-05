@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+import "./CustomDatepicker.css";
 
 const dateFormat = import.meta.env.VITE_DATE_FORMAT || "dd/MM/yyyy";
 
