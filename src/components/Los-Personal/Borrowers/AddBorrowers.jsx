@@ -104,7 +104,7 @@ const AddBorrowers = () => {
 
   const searchOptions = [
     { label: "Name", value: "companyName" },
-    { label: "Registration No.", value: "companyRegistrationNo" },
+    { label: "Registration No.", value: "companyRegistrationNo"  },
     { label: "Unique Id", value: "companyUniqueId" },
   ];
 
@@ -254,7 +254,7 @@ const AddBorrowers = () => {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Borrower</div>
+        <div className="text-xl font-semibold">Draft Borrower</div>
         <div></div>
         <div></div>
         <div className="flex justify-end gap-2 h-12">
