@@ -33,9 +33,9 @@ export const ProductStats = [
 
 export const HeaderList = [
   "Name",
-  // "Created On",
-  // "Open Loans",
-  // "Total Disbursed Principal",
+  "Customer Type",
+  "Loan Schema",
+  "# Eligible Tenure",
   // "Status",
 ];
 

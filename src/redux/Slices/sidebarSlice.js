@@ -179,10 +179,21 @@ export const fetchProductData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const url = `${import.meta.env.VITE_PRODUCT_READ_ALL_PRODUCT}`;
     const transformData = (data) => {
-      return data.map(({ productType, projectId, loanProductId }) => ({
-        name: productType.replace(/_/g, " "),
-        href: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
-      }));
+      return data.map(
+        ({
+          productType,
+          projectId,
+          loanProductId,
+          eligibleCustomerType,
+          interestEligibleTenure,
+        }) => ({
+          name: productType.replace(/_/g, " "),
+          href: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
+          customerType: eligibleCustomerType,
+          loanSchema: projectId,
+          eligbleTenure : interestEligibleTenure.length,
+        })
+      );
     };
     try {
       return await useFetchData(url, transformData);

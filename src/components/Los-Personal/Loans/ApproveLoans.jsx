@@ -44,7 +44,7 @@ const ApproveLoans = () => {
   const dispatch = useDispatch();
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
-  const { userData } = useSelector((state) => state.auth);
+  const { userData, roleName } = useSelector((state) => state.auth);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
@@ -57,15 +57,13 @@ const ApproveLoans = () => {
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
-  const roleNames = userData.roles.map((role) => role.name); // Extract role names
-  const roleName = userData?.roles[0]?.name;
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
       getPendingLoans({
         page: currentPage,
         size: pageSize,
-        getPayload: { roleNames: roleNames },
+        getPayload: { roleNames: [roleName] },
       })
     );
   };
@@ -77,7 +75,7 @@ const ApproveLoans = () => {
       getLoansByField({
         field: searchBy,
         value: searchValue,
-        getPayload: { roleNames: roleNames },
+        getPayload: { roleNames: [roleName] },
       })
     );
     setSearchBy("");
@@ -91,7 +89,7 @@ const ApproveLoans = () => {
       getPendingLoans({
         page: 0,
         size: pageSize,
-        getPayload: { roleNames: roleNames },
+        getPayload: { roleNames: [roleName] },
       })
     );
   };
@@ -115,7 +113,7 @@ const ApproveLoans = () => {
       loanId: rowData.loanId,
       uid: rowData.uid,
       username: userData.username,
-      roleName: roleNames,
+      roleName: [roleName],
     };
 
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
@@ -123,7 +121,7 @@ const ApproveLoans = () => {
       getPendingLoans({
         page: 0,
         size: 20,
-        getPayload: { roleNames: roleNames },
+        getPayload: { roleNames: [roleName] },
       })
     ).unwrap();
     if (rowData?.rolePermissions?.finalApprove) {
