@@ -31,9 +31,9 @@ const InputNumber = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
-  if (inputValue === null || inputValue === undefined) {
-    throw new Error(`Invalid inputValue for ${labelName}`);
-  }
+  // if (inputValue === null || inputValue === undefined) {
+  //   throw new Error(`Invalid inputValue for ${labelName}`);
+  // }
 
   if (!inputName || (!disabled && typeof onChange !== "function")) {
     let errorMessage = "";

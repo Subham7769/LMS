@@ -186,13 +186,44 @@ export const fetchList = createAsyncThunk(
   "product/fetchList",
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
+
+    // Get Loan Product menu
     const Menu = sideBarState?.menus.find(
       (menu) => menu.title === "Loan Product"
     );
     const submenuItems = Menu ? Menu.submenuItems : [];
-    return submenuItems;
+
+    // Get Loan Schema menu
+    const loanschema = sideBarState?.menus.find(
+      (menu) => menu.title === "Loan Schema"
+    );
+
+    if (!loanschema?.submenuItems) {
+      console.warn("Loan Schema submenu items not found!");
+      return submenuItems; // Return original if Loan Schema is missing
+    }
+
+    console.log("Loan Schemas:", loanschema.submenuItems);
+    console.log("Submenu Items:", submenuItems);
+
+    // Create a lookup map of loan schema IDs to names
+    const loanSchemaMap = new Map(
+      loanschema.submenuItems.map((item) => [
+        item.href.split("/").pop(),
+        item.name,
+      ])
+    );
+
+    // Update submenuItems with correct loanSchema names
+    const updatedSubmenuItems = submenuItems.map((item) => ({
+      ...item,
+      loanSchema: loanSchemaMap.get(item.loanSchema) || item.loanSchema, // Replace if found
+    }));
+
+    return updatedSubmenuItems;
   }
 );
+
 
 const productInitialState = {
   productStatsData: {
@@ -282,6 +313,9 @@ const productSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
+          customerType: newListItem.customerType,
+          loanSchema: newListItem.loanSchema,
+          eligbleTenure: newListItem.eligbleTenure,
           // createdOn: ProductList[index]?.createdOn || "14/09/2022",
           // openLoans: ProductList[index]?.openLoans || "1490",
           // totalDisbursedPrincipal:
