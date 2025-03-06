@@ -108,22 +108,27 @@ const AddNewBorrowers = () => {
           onClick={handleDraft}
           rectangle={true}
           buttonType={"secondary"}
-          disabled={loading}
+          loading={loading}
         />
-        <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} disabled={loading}/>
+        <Button
+          buttonName="Submit"
+          onClick={handleSubmit}
+          rectangle={true}
+          loading={loading}
+        />
         <Button
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}
           rectangle={true}
           buttonType="destructive"
-          disabled={loading}
+          loading={loading}
         />
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
           buttonType="destructive"
           rectangle={true}
-          disabled={loading}
+          loading={loading}
         />
       </div>
     </>

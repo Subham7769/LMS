@@ -43,10 +43,12 @@ const ProductGroup = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    dispatch(handleChangeDispatch({ name, value }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(handleChangeDispatch({ name, value }));
+    }
   };
 
-  const handleUpdatePGName = async(updatePGName) => {
+  const handleUpdatePGName = async (updatePGName) => {
     dispatch(setFormData({ name: "configName", value: updatePGName }));
     const state = store.getState();
     const productGroupData = state.productGroup.productGroupData;
@@ -56,7 +58,9 @@ const ProductGroup = () => {
 
   const handleTagInputChange = (e) => {
     const { name, value } = e.target;
-    dispatch(setFormData({ name, value }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(setFormData({ name, value }));
+    }
   };
 
   const addTag = async () => {

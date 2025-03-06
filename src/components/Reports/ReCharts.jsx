@@ -191,7 +191,7 @@ const ReCharts = ({ response, index }) => {
                 onChange={(e) => setChartType(e.target.value)}
               />
             </div>
-            <div className="text-right">
+            <div className="flex justify-end">
               <Button
                 buttonIcon={TrashIcon}
                 onClick={() => onDeleteReportingConfig(configData[index].name)}

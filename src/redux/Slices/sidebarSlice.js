@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MenusInitial } from "../../data/MenuData";
 import axios from "axios";
 import { toast } from "react-toastify";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 
 const useFetchData = async (url, transformData, options = {}) => {
   const {
@@ -187,11 +188,11 @@ export const fetchProductData = createAsyncThunk(
           eligibleCustomerType,
           interestEligibleTenure,
         }) => ({
-          name: productType.replace(/_/g, " "),
+          name: convertToTitleCase(productType),
           href: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
-          customerType: eligibleCustomerType,
+          customerType: convertToTitleCase(eligibleCustomerType),
           loanSchema: projectId,
-          eligbleTenure : interestEligibleTenure.length,
+          eligbleTenure: interestEligibleTenure.length,
         })
       );
     };
@@ -325,6 +326,7 @@ export const fetchDynamicRacData = createAsyncThunk(
         const transformedItem = {
           name: item.racDetails.name.replace(/-/g, " "), // Transform the name if needed
           href: "/loan/dynamic-rac/" + item.racDetails.racId, // Construct href for navigation
+          sections: item.sections,
         };
         return transformedItem;
       });

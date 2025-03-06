@@ -28,7 +28,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { fetchDocumentConfigData } from "../../redux/Slices/sidebarSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { borrowerTypeOptions, eligibiltyOptions } from "../../data/OptionsData";
@@ -104,7 +104,9 @@ const DocumentConfig = () => {
 
   const handleChange = (e, id) => {
     const { name, value } = e.target;
-    dispatch(handleChangeDocumentConfigData({ id, name, value }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(handleChangeDocumentConfigData({ id, name, value }));
+    }
   };
 
   const handleSave = async (id, index) => {
@@ -133,40 +135,42 @@ const DocumentConfig = () => {
         initialName={itemName}
       />
       <ContainerTile loading={loading}>
-        <div className="grid grid-cols-4 gap-4 items-end mb-4">
-          <InputText
-            labelName="Document Key Name"
-            inputName="documentKeyName"
-            inputValue={addDocumentConfigData?.documentKeyName}
-            onChange={handleInputChange}
-            placeHolder="PAY_SLIP"
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Borrower Type"
-            inputOptions={borrowerTypeOptions}
-            inputName="borrowerType"
-            inputValue={addDocumentConfigData?.borrowerType}
-            onChange={handleInputChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Usage"
-            inputOptions={eligibiltyOptions}
-            inputName="usage"
-            inputValue={addDocumentConfigData?.usage}
-            onChange={handleInputChange}
-            isValidation={true}
-          />
-          <div>
-            <Button
-              buttonIcon={PlusIcon}
-              buttonName="Add"
-              onClick={handleAdd}
-              rectangle={true}
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="grid grid-cols-4 gap-4 items-end mb-4">
+            <InputText
+              labelName="Document Key Name"
+              inputName="documentKeyName"
+              inputValue={addDocumentConfigData?.documentKeyName}
+              onChange={handleInputChange}
+              placeHolder="PAY_SLIP"
+              isValidation={true}
             />
+            <InputSelect
+              labelName="Borrower Type"
+              inputOptions={borrowerTypeOptions}
+              inputName="borrowerType"
+              inputValue={addDocumentConfigData?.borrowerType}
+              onChange={handleInputChange}
+              isValidation={true}
+            />
+            <InputSelect
+              labelName="Usage"
+              inputOptions={eligibiltyOptions}
+              inputName="usage"
+              inputValue={addDocumentConfigData?.usage}
+              onChange={handleInputChange}
+              isValidation={true}
+            />
+            <div>
+              <Button
+                buttonIcon={PlusIcon}
+                buttonName="Add"
+                onClick={handleAdd}
+                rectangle={true}
+              />
+            </div>
           </div>
-        </div>
+        )}
         {documentConfigData.length > 0 && (
           <div className="shadow-md border border-border-gray-primary rounded-md text-center bg-white">
             <div className="grid grid-cols-4 items-end mb-4 bg-background-light-secondary px-5">
@@ -216,7 +220,7 @@ const DocumentConfig = () => {
                   inputValue={docData?.usage}
                   onChange={(e) => handleChange(e, docData?.dynamicDocumentId)}
                 />
-                {!hasViewOnlyAccessGroup2(roleName) ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   <div className="flex items-center justify-center gap-4">
                     <Button
                       buttonIcon={CheckCircleIcon}

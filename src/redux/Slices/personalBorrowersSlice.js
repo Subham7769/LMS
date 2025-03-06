@@ -667,9 +667,11 @@ const borrowersSlice = createSlice({
       .addCase(uploadBorrowerPhotoFile.fulfilled, (state, action) => {
         state.loading = false;
         const { docId } = action.payload;
-        console.log(docId)
+        console.log(docId);
         state.addBorrowerData.otherDetails.customerPhotoId = docId;
-        state.updateBorrowerData.otherDetails.customerPhotoId = docId;
+        if (state.updateBorrowerData?.otherDetails?.creditScore) {
+          state.updateBorrowerData.otherDetails.customerPhotoId = docId;
+        }
         toast.success("File uploaded successfully");
       })
       .addCase(uploadBorrowerPhotoFile.rejected, (state, action) => {

@@ -15,6 +15,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { addInterestTenure } from "../../redux/Slices/productSlice";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const ProductInputFields = ({ productData, handleChange }) => {
   // Sidebar Redux Data
@@ -402,7 +403,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           )}
         </div>
       </div>
-      {roleName !== "ROLE_VIEWER" ? (
+      {!hasViewOnlyAccess(roleName) ? (
         <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
           <InputText
             labelName="Simple Interest"

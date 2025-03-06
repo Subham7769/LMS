@@ -38,7 +38,7 @@ const CreditScore = () => {
   const { creditScoreId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { creditScoreData, loading,error } = useSelector(
+  const { creditScoreData, loading, error } = useSelector(
     (state) => state.creditScore
   );
   const { userData } = useSelector((state) => state.auth);
@@ -60,7 +60,9 @@ const CreditScore = () => {
 
   const handleChange = (e) => {
     const { name, value, id } = e.target;
-    dispatch(setcreditScoreData({ name, value, id }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(setcreditScoreData({ name, value, id }));
+    }
   };
 
   const handleAddFields = async () => {
@@ -72,7 +74,6 @@ const CreditScore = () => {
       dispatch(updateCreditScore({ creditScoreId, creditScoreData }));
     }
   };
-
 
   return (
     <>
@@ -154,10 +155,7 @@ const CreditScore = () => {
           error={error}
         />
       </div>
-      <ContainerTile 
-                loading={loading}
-                error={error}
-      >
+      <ContainerTile loading={loading} error={error}>
         <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">
           Dependents Rules
         </h2>
