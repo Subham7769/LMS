@@ -456,7 +456,7 @@ const initialState = {
   },
   allBorrowersData: [],
   allBorrowersTotalElements: 0,
-  updateBorrowerData: {},
+  updateBorrowerData: [],
   error: null,
   loading: false,
 };
@@ -662,11 +662,12 @@ const borrowersSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadBorrowerPhotoFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true;
       })
       .addCase(uploadBorrowerPhotoFile.fulfilled, (state, action) => {
         state.loading = false;
         const { docId } = action.payload;
+        console.log(docId)
         state.addBorrowerData.otherDetails.customerPhotoId = docId;
         state.updateBorrowerData.otherDetails.customerPhotoId = docId;
         toast.success("File uploaded successfully");
