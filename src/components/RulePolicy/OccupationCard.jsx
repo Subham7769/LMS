@@ -12,12 +12,15 @@ import {
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { toast } from "react-toastify";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const OccupationCard = ({ occupationData, loading, error }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
   const { occupationFormData } = useSelector((state) => state.rulePolicy);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     if (occupationData) {
@@ -43,7 +46,9 @@ const OccupationCard = ({ occupationData, loading, error }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(setOccupationFormData({ name, value, rulePolicyId }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(setOccupationFormData({ name, value, rulePolicyId }));
+    }
   };
 
   const addTag = async () => {

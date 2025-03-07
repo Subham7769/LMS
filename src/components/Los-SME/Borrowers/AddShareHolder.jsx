@@ -55,7 +55,7 @@ const AddShareHolder = () => {
   }
 
   useEffect(() => {
-      dispatch(fetchAllCompanyBorrowers())
+    dispatch(fetchAllCompanyBorrowers())
   }, [dispatch]);
 
   // console.log(isValid);
@@ -123,6 +123,7 @@ const AddShareHolder = () => {
           {existingShareholderDetails.map((shareholder, index) => (
             <>
               <Accordion
+                key={index}
                 heading={`${shareholder.personalDetails.title} 
                       ${shareholder.personalDetails.firstName} 
                       ${shareholder.personalDetails.surname} 

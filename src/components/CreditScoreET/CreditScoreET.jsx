@@ -110,12 +110,16 @@ const CreditScoreET = () => {
 
   const handleChange = (e, ruleIndex) => {
     const { name, value } = e.target;
-    dispatch(updateCreditScoreET({ name, value, ruleIndex }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(updateCreditScoreET({ name, value, ruleIndex }));
+    }
   };
 
   const handleChangeTenure = (e, ruleIndex) => {
     const { name, value } = e.target;
-    dispatch(setTenure({ name, value, ruleIndex }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(setTenure({ name, value, ruleIndex }));
+    }
   };
 
   const handleDelete = (tag, ruleIndex) => {
@@ -176,7 +180,6 @@ const CreditScoreET = () => {
     dispatch(setNewRangeTenure({ name, value }));
   };
 
-
   return (
     <>
       <DynamicHeader
@@ -196,10 +199,7 @@ const CreditScoreET = () => {
         initialName={creditScoreETName}
       />
       {!hasViewOnlyAccess(roleName) ? (
-        <ContainerTile
-        loading={loading}
-        error={error}
-        >
+        <ContainerTile loading={loading} error={error}>
           <div className="grid grid-cols-4 gap-2 mb-5 items-end">
             <InputSelect
               labelName={"Minimum Credit Score"}

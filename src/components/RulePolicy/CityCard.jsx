@@ -13,12 +13,15 @@ import { validateForm } from "../../redux/Slices/validationSlice";
 
 import { toast } from "react-toastify";
 import store from "../../redux/store";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const CityCard = ({ cityData, loading, error }) => {
   const { rulePolicyId } = useParams();
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
   const { cityFormData } = useSelector((state) => state.rulePolicy);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   useEffect(() => {
     if (cityData) {
@@ -45,7 +48,9 @@ const CityCard = ({ cityData, loading, error }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(setCityFormData({ name, value, rulePolicyId }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(setCityFormData({ name, value, rulePolicyId }));
+    }
   };
 
   const addTag = async () => {

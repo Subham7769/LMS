@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 
 // Register a Borrower
@@ -1505,8 +1506,8 @@ const borrowersSlice = createSlice({
       .addCase(fetchAllCompanyBorrowers.fulfilled, (state, action) => {
         state.loading = false;
         state.allCompanies = action.payload.map((company) => ({
-          label: company.companyBorrowerProfile.companyDetails.companyName,
-          value: company.uid,
+          label: company.companyName,
+          value: company.companyUniqueId,
         }));
       })
       .addCase(fetchAllCompanyBorrowers.rejected, (state, action) => {

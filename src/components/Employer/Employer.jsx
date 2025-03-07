@@ -21,7 +21,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { hasViewOnlyAccess, hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 import { fetchAffordibilityData } from "../../redux/Slices/sidebarSlice";
 import { convertDate } from "../../utils/convertDate";
 import AddEmployerModal from "./AddEmployerModal";
@@ -87,7 +87,9 @@ const Employer = () => {
 
   const handleChange = (e, id) => {
     const { name, value } = e.target;
-    dispatch(handleChangeEmployerData({ id, name, value }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(handleChangeEmployerData({ id, name, value }));
+    }
   };
 
   const handleSave = async (id, index) => {

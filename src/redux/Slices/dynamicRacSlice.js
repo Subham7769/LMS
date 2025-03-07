@@ -10,10 +10,41 @@ export const fetchList = createAsyncThunk(
     const Menu = sideBarState?.menus.find(
       (menu) => menu.title === "Dynamic RAC"
     );
+
     const submenuItems = Menu ? Menu.submenuItems : [];
-    return submenuItems;
+
+    // Add `noOfCriteria`, `rejected`, and `created` counts to each submenu item
+    const updatedSubmenuItems = submenuItems.map((submenu) => {
+      let noOfCriteria = 0;
+      let rejected = 0;
+      let created = 0;
+
+      submenu.sections?.forEach((section) => {
+        section.rules?.forEach((rule) => {
+          noOfCriteria++;
+
+          if (rule.status === "REJECTED") {
+            rejected++;
+          } else if (rule.status === "CREATED") {
+            created++;
+          }
+        });
+      });
+
+      return {
+        ...submenu,
+        noOfCriteria,
+        rejected,
+        created,
+      };
+    });
+
+    // console.log(updatedSubmenuItems);
+    return updatedSubmenuItems;
   }
 );
+
+
 
 // Define the asyncThunk for fetching dynamicRac details
 export const fetchDynamicRacDetails = createAsyncThunk(
@@ -625,6 +656,9 @@ const dynamicRacSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
+          noOfCriteria: newListItem.noOfCriteria,
+          created: newListItem.created,
+          rejected: newListItem.rejected,
         }));
         state.racStatsData.RACList = updatedList;
       })

@@ -40,7 +40,6 @@ const AddDirector = () => {
       dispatch(fetchAllCompanyBorrowers());
   }, [dispatch]);
 
-  console.log(directorsKycDetails);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -126,6 +125,7 @@ const AddDirector = () => {
           {existingDirectorDetails.map((director, index) => (
             <>
               <Accordion
+              key={index}
                 heading={`${director.personalDetails.title} 
                       ${director.personalDetails.firstName} 
                       ${director.personalDetails.surname} 

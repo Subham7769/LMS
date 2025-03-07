@@ -69,7 +69,9 @@ const LoanProductConfig = () => {
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
-    dispatch(updateProductDataField({ name, value: fieldValue }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(updateProductDataField({ name, value: fieldValue }));
+    }
   };
 
   const handleInterestChange = (index, field, eventOrValue) => {

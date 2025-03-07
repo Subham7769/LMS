@@ -34,7 +34,9 @@ const CreateNewReportingConfig = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(updateReportingConfigField({ name, value }));
+    if (!hasViewOnlyAccessGroup2(roleName)) {
+      dispatch(updateReportingConfigField({ name, value }));
+    }
   };
 
   const onDeleteReportingConfig = async (RCName) => {
