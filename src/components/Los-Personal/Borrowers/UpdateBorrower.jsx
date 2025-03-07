@@ -95,11 +95,13 @@ const UpdateBorrower = () => {
           onClick={handleCancel}
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
+          loading={loading}
         />
         <Button
           buttonName="Update"
           onClick={() => handleUpdate(uid)}
           rectangle={true}
+          loading={loading}
         />
       </div>
     </>

@@ -33,9 +33,9 @@ export const RacStats = [
 
 export const HeaderList = [
   "Name",
-  // "Created On",
-  // "Approved",
-  // "Total Processed",
+  "# Criteria",
+  "Pending Approval",
+  "Rejected",
   // "Status",
 ];
 

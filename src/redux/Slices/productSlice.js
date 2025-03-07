@@ -203,8 +203,8 @@ export const fetchList = createAsyncThunk(
       return submenuItems; // Return original if Loan Schema is missing
     }
 
-    console.log("Loan Schemas:", loanschema.submenuItems);
-    console.log("Submenu Items:", submenuItems);
+    // console.log("Loan Schemas:", loanschema.submenuItems);
+    // console.log("Submenu Items:", submenuItems);
 
     // Create a lookup map of loan schema IDs to names
     const loanSchemaMap = new Map(
@@ -223,7 +223,6 @@ export const fetchList = createAsyncThunk(
     return updatedSubmenuItems;
   }
 );
-
 
 const productInitialState = {
   productStatsData: {
