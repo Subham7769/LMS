@@ -725,6 +725,7 @@ const AddUpdateBorrowerFields = ({
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "number":
@@ -737,6 +738,7 @@ const AddUpdateBorrowerFields = ({
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "select":
@@ -750,6 +752,7 @@ const AddUpdateBorrowerFields = ({
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
                 searchable={field.searchable || false}
+                disabled={field.disabled || false}
               />
             );
           case "date":
@@ -761,6 +764,7 @@ const AddUpdateBorrowerFields = ({
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+                  isDisabled={field.disabled || false}
                 />
               </div>
             );
@@ -774,6 +778,7 @@ const AddUpdateBorrowerFields = ({
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "file":
@@ -787,6 +792,7 @@ const AddUpdateBorrowerFields = ({
                 onDelete={() => handleFileRemove(sectionName)}
                 accept={field.accept || "*"}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           default:

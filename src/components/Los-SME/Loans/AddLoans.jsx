@@ -25,13 +25,14 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 const AddLoans = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loanApplicationId } = useParams();
-  const { BorrowerId } = useParams();
+  const { loanApplicationId, BorrowerId } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.smeLoans
   );
+  // Decode the BorrowerId to restore its original value
+  const decodedBorrowerId = decodeURIComponent(BorrowerId);
   // const isValid = useSelector((state) => state.validation.isValid);
 
   console.log(BorrowerId);
@@ -52,13 +53,13 @@ const AddLoans = () => {
     ];
     dispatch(setFields(keysArray));
     dispatch(setLoanApplicationId(loanApplicationId));
-    if (BorrowerId) {
-      dispatch(setLoanBorrowerId(BorrowerId));
+    if (decodedBorrowerId) {
+      dispatch(setLoanBorrowerId(decodedBorrowerId));
     }
     return () => {
       dispatch(clearValidationError());
     };
-  }, [dispatch, loanApplicationId, BorrowerId]);
+  }, [dispatch, loanApplicationId, decodedBorrowerId]);
 
   useEffect(() => {
     if (addLoanData.generalLoanDetails.loanProductId) {

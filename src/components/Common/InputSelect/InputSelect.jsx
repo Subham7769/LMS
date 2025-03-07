@@ -10,6 +10,7 @@ import {
   addUpdateFields,
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
+import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 
 const InputSelect = ({
   labelName,
@@ -19,7 +20,7 @@ const InputSelect = ({
   inputOptions,
   onChange,
   placeHolder,
-  disabled = false,
+  disabled,
   hidden = false,
   isMulti = false,
   searchable = false,
@@ -33,10 +34,8 @@ const InputSelect = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
-
-  // if (inputValue === undefined) {
-  //   throw new Error(`Invalid inputValue for ${labelName}`);
-  // }
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const handleChange = (selectedOption) => {
     onChange({
@@ -98,6 +97,9 @@ const InputSelect = ({
     }, [inputName, dispatch]);
   }
 
+  if (disabled === undefined) {
+    disabled = hasViewOnlyAccess(roleName);
+  }
   useEffect(() => {
     if (!updateFields.includes(inputName)) {
       dispatch(addUpdateFields({ inputName }));
@@ -135,7 +137,7 @@ const InputSelect = ({
         onFocus={() => {
           dispatch(setValidationError(validationKey));
           dispatch(setUpdateMap(inputName));
-        }} // Call onFocus to reset the error state
+        }} // Call onFocus to reset the error state -- hasViewOnlyAccess(roleName) ||
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}

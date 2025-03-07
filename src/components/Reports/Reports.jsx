@@ -68,6 +68,7 @@ const Reports = () => {
             inputValue={reportGenerationData?.reportName}
             onChange={handleChange}
             isValidation={true}
+            disabled={false}
           />
           <div className="col-span-1">
             <InputDate
@@ -75,6 +76,7 @@ const Reports = () => {
               inputName={"startDate"}
               inputValue={reportGenerationData?.startDate}
               onChange={handleChange}
+              disabled={false}
             />
           </div>
           <div className="col-span-1">
@@ -83,6 +85,7 @@ const Reports = () => {
               inputName={"endDate"}
               inputValue={reportGenerationData?.endDate}
               onChange={handleChange}
+              disabled={false}
             />
           </div>
           <div className="flex items-center gap-5">

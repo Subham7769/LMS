@@ -311,6 +311,7 @@ const ApproveRepayment = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -320,6 +321,7 @@ const ApproveRepayment = () => {
             inputValue={searchValue}
             onChange={(e) => handleSearchFilter(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

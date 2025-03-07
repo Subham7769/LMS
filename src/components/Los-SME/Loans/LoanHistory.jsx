@@ -322,6 +322,7 @@ const LoanHistory = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -331,9 +332,9 @@ const LoanHistory = () => {
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             required
+            disabled={false}
           />
         </div>
-
         <div className="flex align-middle gap-5">
           <Button
             buttonName={"Search"}
