@@ -7,10 +7,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { tenureTypeOptions } from "../../data/OptionsData";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleChangeCommonSelection,
-  handleChangeInreportGenerationData,
-} from "../../redux/Slices/reportsSlice";
+import { handleChangeCommonSelection } from "../../redux/Slices/reportsSlice";
 
 const DatePicker = () => {
   const dispatch = useDispatch();
@@ -18,7 +15,7 @@ const DatePicker = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(handleChangeInreportGenerationData({ name, value }));
+    dispatch(handleChangeCommonSelection({ name, value }));
   };
 
   const handleCommonSelection = (time, unit) => {
@@ -60,12 +57,14 @@ const DatePicker = () => {
                   inputName={"time"}
                   inputValue={reportGenerationData.relativeTimeRange.time}
                   onChange={handleChange}
+                  disabled={false}
                 />
                 <InputSelect
                   inputName={"unit"}
                   inputOptions={tenureTypeOptions}
                   inputValue={reportGenerationData.relativeTimeRange.unit}
                   onChange={handleChange}
+                  disabled={false}
                 />
               </div>
               <div className="font-semibold">Commanly Used</div>

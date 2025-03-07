@@ -251,6 +251,7 @@ console.log(name)
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "number":
@@ -263,6 +264,7 @@ console.log(name)
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "select":
@@ -276,6 +278,7 @@ console.log(name)
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
                 searchable={field.searchable || false}
+                disabled={field.disabled || false}
               />
             );
           case "date":
@@ -287,7 +290,7 @@ console.log(name)
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
-
+                  isDisabled={field.disabled || false}
                 />
               </div>
             );

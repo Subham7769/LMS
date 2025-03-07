@@ -117,6 +117,7 @@ const AddBulkRepayment = () => {
                   }
                   searchable={true}
                   isValidation={true}
+                  disabled={false}
                 />
               </td>
               <td className="py-3 text-center w-1/12">
@@ -130,6 +131,7 @@ const AddBulkRepayment = () => {
                       }
                       loading={loading}
                       isValidation={true}
+                      disabled={false}
                     />
                   </div>
                   {item.closingBalance && (
@@ -146,6 +148,7 @@ const AddBulkRepayment = () => {
                     handleChange(e.target.value, rowIndex, "method")
                   }
                   isValidation={true}
+                  disabled={false}
                 />
               </td>
               <td className="py-3 text-center w-1/12">
@@ -156,6 +159,7 @@ const AddBulkRepayment = () => {
                     handleChange(e.target.value, rowIndex, "collectionDate")
                   }
                   isValidation={true}
+                  isDisabled={false}
                 />
               </td>
               <td className="py-3 text-center ">
@@ -179,6 +183,7 @@ const AddBulkRepayment = () => {
                     handleChange(e.target.value, rowIndex, "collectionBy")
                   }
                   isValidation={true}
+                  disabled={false}
                 />
               </td>
               <td className="py-3 text-center">
@@ -189,6 +194,7 @@ const AddBulkRepayment = () => {
                     handleChange(e.target.value, rowIndex, "description")
                   }
                   isValidation={true}
+                  disabled={false}
                 />
               </td>
               <td className="py-3 text-center w-1/12">
@@ -200,6 +206,7 @@ const AddBulkRepayment = () => {
                     handleChange(e.target.value, rowIndex, "accounting")
                   }
                   isValidation={true}
+                  disabled={false}
                 />
               </td>
               <td className="py-3 text-center">

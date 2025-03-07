@@ -105,6 +105,7 @@ const AddDirector = () => {
           inputOptions={allCompanies}
           inputValue={companyId}
           onChange={changeCompany}
+          disabled={false}
         />
         <div></div>
         <div></div>

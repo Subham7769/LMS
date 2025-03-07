@@ -164,6 +164,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
             }
             onChange={handleChange}
             isValidation={true}
+            disabled={hasViewOnlyAccess(roleName)}
           />
           <InputSelect
             labelName="RAC"

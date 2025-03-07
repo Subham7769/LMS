@@ -398,6 +398,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "select":
@@ -410,6 +411,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 inputValue={value}
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "date":
@@ -421,6 +423,7 @@ const AddLoanFields = ({ addLoanData }) => {
                   inputValue={value}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+                  isDisabled={field.disabled || false}
                 />
               </div>
             );
@@ -542,24 +545,28 @@ const AddLoanFields = ({ addLoanData }) => {
             inputName="name"
             inputValue={refinance?.name}
             onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+            disabled={false}
           />
           <InputText
             labelName="Loan ID"
             inputName="loanId"
             inputValue={refinance?.loanId}
             onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+            disabled={false}
           />
           <InputNumber
             labelName="Installment On PaySlip"
             inputName="installmentOnPaySlip"
             inputValue={refinance?.installmentOnPaySlip}
             onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+            disabled={false}
           />
           <InputNumber
             labelName="Refinance Amount"
             inputName="refinanceAmount"
             inputValue={refinance?.refinanceAmount}
             onChange={(e) => handleInputChange(e, "refinanceDetails", index)}
+            disabled={false}
           />
           <div className="flex pb-2">
             <InputCheckbox

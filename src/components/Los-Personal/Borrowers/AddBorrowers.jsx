@@ -278,6 +278,7 @@ console.log(addBorrowerData)
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -287,6 +288,7 @@ console.log(addBorrowerData)
             inputValue={searchValue}
             onChange={(e) => handleSearchFilter(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

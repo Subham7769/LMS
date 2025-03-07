@@ -586,6 +586,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "number":
@@ -598,6 +599,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "select":
@@ -611,6 +613,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
                 searchable={field.searchable || false}
+                disabled={field.disabled || false}
               />
             );
           case "date":
@@ -622,6 +625,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
                   inputValue={details[field.inputName]}
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
+                  isDisabled={field.disabled || false}
                 />
               </div>
             );
