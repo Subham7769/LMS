@@ -66,7 +66,7 @@ const LoanApplication = () => {
 
   const handleSearch = () => {
     //if empty searchBy or searchValue then display a message (otherwise API will return java runtime error)
-    if(!searchBy || !searchValue){
+    if (!searchBy || !searchValue) {
       toast.error("Please select Search by and a value");
       return;
     }
@@ -168,6 +168,7 @@ const LoanApplication = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -177,6 +178,7 @@ const LoanApplication = () => {
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

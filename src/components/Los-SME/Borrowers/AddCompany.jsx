@@ -137,7 +137,7 @@ const AddCompany = () => {
   const personalDetailsColumns = [
     // { label: "Borrower Draft Id", field: "borrowerProfileDraftId" },
     { label: "Name", field: "companyName" },
-    { label: "Registration No.", field: "companyRegistrationNo", copy:true },
+    { label: "Registration No.", field: "companyRegistrationNo", copy: true },
     { label: "Borrower Serial No.", field: "companyUniqueId" },
     { label: "Status", field: "status" },
   ];
@@ -245,6 +245,7 @@ const AddCompany = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -254,6 +255,7 @@ const AddCompany = () => {
             inputValue={searchValue}
             onChange={(e) => handleSearchFilter(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

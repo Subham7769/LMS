@@ -779,6 +779,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 placeHolder={`Enter ${field.labelName}`}
                 isValidation={field.validation || false}
+                disabled={field.disabled || false}
               />
             );
           case "select":
@@ -792,6 +793,7 @@ const AddLoanFields = ({ addLoanData }) => {
                 onChange={(e) => handleInputChange(e, sectionName)}
                 isValidation={field.validation || false}
                 searchable={field.searchable || false}
+                disabled={field.disabled || false}
               />
             );
           case "date":
@@ -805,6 +807,7 @@ const AddLoanFields = ({ addLoanData }) => {
                   isValidation={field.validation || false}
                   minSelectableDate={field.minSelectableDate || null}
                   maxSelectableDate={field.maxSelectableDate || null}
+                  isDisabled={field.disabled || false}
                 />
               </div>
             );

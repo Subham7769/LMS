@@ -102,12 +102,14 @@ const LoanOffers = () => {
             inputOptions={loanProductOptions}
             inputValue={loanOfferFields.loanProductId}
             onChange={handleChange}
+            disabled={false}
           />
           <InputText
             labelName={"Borrower"}
             inputName="uid"
             inputValue={loanOfferFields.uid}
             onChange={handleChange}
+            disabled={false}
           />
           <div>
             <Button

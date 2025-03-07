@@ -10,6 +10,7 @@ import {
   addUpdateFields,
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
+import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 
 const InputText = ({
   labelName,
@@ -17,7 +18,7 @@ const InputText = ({
   inputValue,
   onChange,
   placeHolder = "",
-  disabled = false,
+  disabled,
   readOnly = false,
   isValidation = false,
   isIndex,
@@ -26,34 +27,21 @@ const InputText = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { updateFields } = useSelector((state) => state.notification);
-  // if (inputValue == null || inputValue === undefined) {
-  //   throw new Error(`Invalid inputValue for ${labelName}`);
-  // }
-
-  if (!inputName || (!disabled && typeof onChange !== "function")) {
-    let errorMessage = "";
-
-    if (!inputName) {
-      errorMessage += "inputName is required";
-    }
-
-    if (!disabled && typeof onChange !== "function") {
-      if (errorMessage) {
-        errorMessage += ", "; // Add a separator if there is already an error message
-      }
-      errorMessage += "onChange (should be a function) is required";
-    }
-
-    throw new Error(errorMessage);
-  }
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
+
   if (isValidation) {
     useEffect(() => {
       if (!fields.includes(inputName)) {
         dispatch(addFields({ inputName }));
       }
     }, [inputName, dispatch]);
+  }
+
+  if (disabled === undefined) {
+    disabled = hasViewOnlyAccess(roleName);
   }
   useEffect(() => {
     if (!updateFields.includes(inputName)) {
