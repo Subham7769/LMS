@@ -161,6 +161,7 @@ const LoanApplication = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -170,6 +171,7 @@ const LoanApplication = () => {
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

@@ -44,7 +44,9 @@ const RecoveryConfig = () => {
 
   const handleChangeWrapper = (e) => {
     const { name, value } = e.target;
-    dispatch(handleChange({ name, value }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(handleChange({ name, value }));
+    }
   };
 
   const handleNameUpdate = async (newName) => {

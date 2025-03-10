@@ -274,6 +274,7 @@ const ViewBorrowers = () => {
                   inputOptions={accountStatusOptions}
                   inputValue={currentStatus}
                   onChange={(e) => setCurrentStatus(e.target.value)}
+                  disabled={false}
                 />
                 <Button
                   buttonName={"Change Status"}
@@ -499,8 +500,12 @@ const ViewBorrowers = () => {
         const loanApplicationId = await dispatch(
           generateLoanApplicationId()
         ).unwrap();
+
+        // Encode BorrowerId to handle slashes
+        const encodedBorrowerId = encodeURIComponent(BorrowerId);
+
         navigate(
-          `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}/${BorrowerId}`
+          `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}/${encodedBorrowerId}`
         );
       } catch (error) {
         console.error("Failed to generate loan application ID:", error);
@@ -510,7 +515,7 @@ const ViewBorrowers = () => {
     return (
       <div className="flex justify-center gap-4 px-5">
         <Button
-          onClick={() => handleNewApplication(rowData.uid)}
+          onClick={() => handleNewApplication(rowData.uniqueID)}
           buttonName={"Add Loan"}
           buttonIcon={PlusIcon}
           rectangle={true}
@@ -530,6 +535,7 @@ const ViewBorrowers = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -539,6 +545,7 @@ const ViewBorrowers = () => {
             inputValue={searchValue}
             onChange={(e) => handleSearchFilter(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

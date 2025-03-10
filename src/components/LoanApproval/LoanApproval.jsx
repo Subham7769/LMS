@@ -143,7 +143,9 @@ const LoanApproval = () => {
   const handleChange = (e, index, idx) => {
     const { name, value, checked, type } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
-    dispatch(handleLoanapprovalData({ name, value: fieldValue, index, idx }));
+    if (!hasViewOnlyAccessGroup2(roleName)) {
+      dispatch(handleLoanapprovalData({ name, value: fieldValue, index, idx }));
+    }
   };
 
   const handleAddRolesExisting = (index) => {
@@ -165,7 +167,7 @@ const LoanApproval = () => {
 
   const deleteApprover = (index) => {
     dispatch(handleDeleteApprover(index));
-    toast.warn("Please click on update to confirm removal of entry")
+    toast.warn("Please click on update to confirm removal of entry");
   };
 
   return (
@@ -269,12 +271,16 @@ const LoanApproval = () => {
               key={"Loan" + index}
             >
               <div className="absolute right-3 top-3 text-right">
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => deleteApprover(index)}
-                  circle={true}
-                  buttonType="destructive"
-                />
+                {!hasViewOnlyAccessGroup2(roleName) ? (
+                  <Button
+                    buttonIcon={TrashIcon}
+                    onClick={() => deleteApprover(index)}
+                    circle={true}
+                    buttonType="destructive"
+                  />
+                ) : (
+                  ""
+                )}
               </div>
               <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-4">
                 <InputNumber
@@ -293,12 +299,14 @@ const LoanApproval = () => {
                   placeHolder="10000"
                   isValidation={true}
                 />
-                <Button
-                  buttonIcon={PlusIcon}
-                  onClick={() => handleAddRolesExisting(index)}
-                  circle={true}
-                  buttonType="secondary"
-                />
+                {!hasViewOnlyAccessGroup2(roleName) && (
+                  <Button
+                    buttonIcon={PlusIcon}
+                    onClick={() => handleAddRolesExisting(index)}
+                    circle={true}
+                    buttonType="secondary"
+                  />
+                )}
               </div>
               {loanData.approvalRoles.map((addRole, idx) => (
                 <div
@@ -327,12 +335,14 @@ const LoanApproval = () => {
                       inputName="reject"
                     />
                   </div>
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => handleDeleteRolesExisting(index, idx)}
-                    circle={true}
-                    buttonType="destructive"
-                  />
+                  {!hasViewOnlyAccessGroup2(roleName) && (
+                    <Button
+                      buttonIcon={TrashIcon}
+                      onClick={() => handleDeleteRolesExisting(index, idx)}
+                      circle={true}
+                      buttonType="destructive"
+                    />
+                  )}
                 </div>
               ))}
             </ContainerTile>

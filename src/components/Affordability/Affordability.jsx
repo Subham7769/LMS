@@ -23,7 +23,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import convertToReadableString from "../../utils/convertToReadableString";
-import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { hasViewOnlyAccess, hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 
 const Affordability = () => {
   const { affordabilityCriteriaTempId } = useParams();
@@ -95,7 +95,9 @@ const Affordability = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(handleChangeAffordabilityData({ name, value }));
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(handleChangeAffordabilityData({ name, value }));
+    }
   };
 
   const handleUpdate = async (e) => {

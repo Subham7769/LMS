@@ -22,6 +22,7 @@ import {
 } from "../../../redux/Slices/personalLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import { toast } from "react-toastify";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -64,6 +65,12 @@ const LoanApplication = () => {
   const loanApplicationsData = transformData(loanApplications);
 
   const handleSearch = () => {
+    //if empty searchBy or searchValue then display a message (otherwise API will return java runtime error)
+    if (!searchBy || !searchValue) {
+      toast.error("Please select Search by and a value");
+      return;
+    }
+
     dispatch(
       getLoanApplicationByField({ field: searchBy, value: searchValue })
     );
@@ -161,6 +168,7 @@ const LoanApplication = () => {
             inputOptions={searchOptions}
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
+            disabled={false}
           />
         </div>
         <div className="w-[45%]">
@@ -170,6 +178,7 @@ const LoanApplication = () => {
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             required
+            disabled={false}
           />
         </div>
 

@@ -56,7 +56,8 @@ const ProjectInputFields = ({
           cardTitle="Basic Details & Amount"
           className={"border"}
           cardIcon={DocumentTextIcon}
-          color={"blue"}
+          colorText={"text-blue-primary"}
+          colorBG={"bg-white"}
         >
           <div
             className={`grid ${
@@ -216,7 +217,8 @@ const ProjectInputFields = ({
           cardTitle="Interest & Periods"
           className={"border"}
           cardIcon={CurrencyDollarIcon}
-          color={"green"}
+          colorText={"text-green-primary"}
+          colorBG={"bg-white"}
         >
           <div className={`mb-5`}>
             <div className={`grid grid-cols-1 md:grid-cols-3 gap-5 mb-5`}>
@@ -339,7 +341,8 @@ const ProjectInputFields = ({
           cardTitle="Fees & Grace Periods"
           className={"border"}
           cardIcon={ClockIcon}
-          color={"orange"}
+          colorText={"text-orange-primary"}
+          colorBG={"bg-white"}
         >
           <div className={`mb-5`}>
             <div className={`grid grid-cols-1 md:grid-cols-3 gap-5 mb-5`}>
@@ -405,7 +408,8 @@ const ProjectInputFields = ({
           cardTitle="Capping & Additional Settings"
           className={"border"}
           cardIcon={CogIcon}
-          color={"violet"}
+          colorText={"text-violet-primary"}
+          colorBG={"bg-white"}
         >
           <div className={`mb-5`}>
             <div className={`grid grid-cols-1 md:grid-cols-4 gap-5 mb-5`}>

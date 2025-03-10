@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import "./CustomDatepicker.css";
+import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 
 const dateFormat = import.meta.env.VITE_DATE_FORMAT || "dd/MM/yyyy";
 
@@ -20,34 +21,15 @@ const InputDate = ({
   onChange,
   isValidation = false,
   isIndex,
-  isDisabled = false,
+  isDisabled,
   minSelectableDate = null,
   maxSelectableDate = null,
   showIcon = true,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
-
-  if (inputValue == null || inputValue === undefined) {
-    throw new Error(`Invalid inputValue for ${labelName}`);
-  }
-
-  if (!inputName || typeof onChange !== "function") {
-    let errorMessage = "";
-
-    if (!inputName) {
-      errorMessage += "inputName is required";
-    }
-
-    if (typeof onChange !== "function") {
-      if (errorMessage) {
-        errorMessage += ", "; // Add a separator if there is already an error message
-      }
-      errorMessage += "onChange (should be a function) is required";
-    }
-
-    throw new Error(errorMessage);
-  }
+  const { userData } = useSelector((state) => state.auth);
+    const roleName = userData?.roles[0]?.name;
 
   const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
   if (isValidation) {
@@ -56,6 +38,10 @@ const InputDate = ({
         dispatch(addFields({ inputName }));
       }
     }, [inputName, dispatch]);
+  }
+
+  if (isDisabled === undefined) {
+    isDisabled = hasViewOnlyAccess(roleName);
   }
 
   return (
@@ -78,12 +64,12 @@ const InputDate = ({
             onChange({
               target: {
                 name: inputName,
-                value: date ? date.toISOString().split("T")[0] : "",
+                value: date ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0] : "",
               },
             })
           } // Store date as YYYY-MM-DD string
           onFocus={() => dispatch(setValidationError(validationKey))}
-          className={`block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
+          className={`block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 
           ${showIcon ? "" : ""} 
           ${
             validationError[validationKey]

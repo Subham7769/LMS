@@ -46,7 +46,9 @@ const Project = () => {
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target; // Extracting only the name and value properties
-    dispatch(handleChangeInProjectData({ name, value, checked, type })); // Passing only the serializable data
+    if (!hasViewOnlyAccess(roleName)) {
+      dispatch(handleChangeInProjectData({ name, value, checked, type })); // Passing only the serializable data
+    }
   };
 
   const updateName = (name) => {
@@ -59,7 +61,9 @@ const Project = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      await dispatch(updateProject({ projectData, projectId, clientIdsString })).unwrap();
+      await dispatch(
+        updateProject({ projectData, projectId, clientIdsString })
+      ).unwrap();
       dispatch(fetchProjectData());
     }
   };
