@@ -47,6 +47,7 @@ import {
 import { toast } from "react-toastify";
 import store from "../../redux/store";
 import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from './RoleBasedView'
+import ErrorFailure from "../Common/ErrorFailure/ErrorFailure";
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -333,11 +334,7 @@ const DynamicRAC = () => {
             ))}
           </div>
         </>
-      ) : error ? (
-        <div className="text-red-500 text-center py-4">
-          <p>Oops! Something went wrong. Please try again later.</p>
-        </div>
-      ) : (
+      ) : error ? (<ErrorFailure error={error} />) : (
         <div className="flex flex-col gap-2">
           {/* Modals */}
           <CloneModal

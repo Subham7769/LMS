@@ -20,6 +20,7 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { toast } from "react-toastify";
 import ProjectInputFields from "./ProjectInputFields";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import ErrorFailure from "../Common/ErrorFailure/ErrorFailure";
 
 const Project = () => {
   const [clientIdsString, setClientIdsString] = useState("");
@@ -76,6 +77,7 @@ const Project = () => {
 
   return (
     <>
+    {error && <ErrorFailure error={error}/>}
       <DynamicHeader
         itemName={projectData?.name}
         isEditable={true}
@@ -101,6 +103,7 @@ const Project = () => {
                 buttonIcon={CheckCircleIcon}
                 onClick={handleUpdate}
                 rectangle={true}
+                loading={loading}
               />
             )}
           </div>
