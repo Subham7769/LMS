@@ -105,6 +105,7 @@ const Project = () => {
                 buttonIcon={CheckCircleIcon}
                 onClick={handleUpdate}
                 rectangle={true}
+                loading={loading}
               />
             )}
           </div>

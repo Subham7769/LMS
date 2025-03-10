@@ -19,7 +19,7 @@ const CreateNewProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
   const dispatch = useDispatch();
-  const { productData, error } = useSelector((state) => state.product);
+  const { productData,loading } = useSelector((state) => state.product);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
 
@@ -170,6 +170,7 @@ const CreateNewProduct = () => {
           onClick={handleCreateProduct}
           rectangle={true}
           className="flex items-center justify-center mt-3 w-44"
+          loading={loading}
         />
       </div>
     </>
