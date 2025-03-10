@@ -52,6 +52,7 @@ const UserMenu = ({ userNavigation, isOnline }) => {
               }))}
               inputValue={roleName}
               onChange={handleRoleChange}
+              disabled={false}
             />
           </div>
         )}
