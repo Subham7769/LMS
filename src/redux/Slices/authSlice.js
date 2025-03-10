@@ -38,7 +38,7 @@ const initialUserData = JSON.parse(localStorage.getItem("userData")) || {};
 const initialState = {
   isSignup: "Login",
   username: "",
-  roleName:localStorage.getItem("roleName") || null,
+  roleName: localStorage.getItem("roleName") || null,
   password: "",
   email: "",
   newPassword: "",
@@ -84,8 +84,9 @@ const authSlice = createSlice({
       localStorage.removeItem("username");
     },
     setRole: (state, action) => {
-      console.log(action.payload)
+      console.log(action.payload);
       state.roleName = action.payload;
+      state.userData.roles[0].name = action.payload;
       localStorage.setItem("roleName", action.payload); // Persist role in localStorage
     },
   },
