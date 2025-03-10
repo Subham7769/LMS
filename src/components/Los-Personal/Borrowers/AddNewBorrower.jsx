@@ -82,7 +82,7 @@ const AddNewBorrowers = () => {
   const handleDraft = () => {
     const addDrafTPersonalData = {
       borrowerType: "PERSONAL_BORROWER",
-      borrowerProfileDraftId: nanoid(),
+      borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
       personalBorrowerProfileDraft: { ...addBorrowerData },
     };
     dispatch(draftCompanyBorrowerInfo(addDrafTPersonalData));
