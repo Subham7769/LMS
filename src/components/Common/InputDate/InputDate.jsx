@@ -64,7 +64,7 @@ const InputDate = ({
             onChange({
               target: {
                 name: inputName,
-                value: date ? date.toISOString().split("T")[0] : "",
+                value: date ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0] : "",
               },
             })
           } // Store date as YYYY-MM-DD string
