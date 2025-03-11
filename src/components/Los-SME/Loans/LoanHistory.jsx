@@ -61,8 +61,8 @@ const LoanHistory = () => {
 
   const handleSearch = () => {
     dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
-    setSearchBy("");
-    setSearchValue("");
+    // setSearchBy("");
+    // setSearchValue("");
   };
 
   const handleReset = () => {
@@ -99,7 +99,7 @@ const LoanHistory = () => {
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
-    { label: "Borrower Serial No.", value: "uid" },
+    { label: "Borrower Serial No.", value: "uniqueID" },
   ];
 
   const columns = [
@@ -358,11 +358,13 @@ const LoanHistory = () => {
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
-      <Pagination
-        totalElements={loanHistoryTotalElements}
-        dispatcherFunction={dispatcherFunction}
-        pageSize={pageSize}
-      />
+      {loanHistoryData.length > 1 && (
+        <Pagination
+          totalElements={loanHistoryTotalElements}
+          dispatcherFunction={dispatcherFunction}
+          pageSize={pageSize}
+        />
+      )}
       <FullLoanDetailModal
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}

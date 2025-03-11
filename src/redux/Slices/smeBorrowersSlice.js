@@ -56,7 +56,7 @@ export const fetchAllCompanyBorrowers = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       return data; // This will be the action payload
     } catch (error) {
       return rejectWithValue(error.message); // Return the error message
@@ -657,14 +657,8 @@ export const uploadCompanyDocumentFile = createAsyncThunk(
   "borrowers/uploadCompanyDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const {
-        companyBorrowerId,
-        documentKey,
-        verified,
-        borrowerType,
-        authToken,
-      } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { companyBorrowerId, documentKey, verified } = fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_BORROWERS_FILE_UPLOAD_COMPANY_BORROWER
@@ -672,7 +666,7 @@ export const uploadCompanyDocumentFile = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -694,15 +688,9 @@ export const uploadDirectorDocumentFile = createAsyncThunk(
   "borrowers/uploadDirectorDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const {
-        companyBorrowerId,
-        documentKey,
-        verified,
-        borrowerType,
-        authToken,
-        directorId,
-      } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { companyBorrowerId, documentKey, verified, directorId } =
+        fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_BORROWERS_FILE_UPLOAD_COMPANY_BORROWER
@@ -710,7 +698,7 @@ export const uploadDirectorDocumentFile = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -732,8 +720,8 @@ export const uploadDirectorDocumentFile = createAsyncThunk(
 export const deleteDocumentFile = createAsyncThunk(
   "borrowers/deleteDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken } = fileDeleteParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = fileDeleteParams;
     const url = `${
       import.meta.env.VITE_BORROWERS_FILE_DELETE_COMPANY_BORROWER
     }${docId}`;
@@ -743,7 +731,7 @@ export const deleteDocumentFile = createAsyncThunk(
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 

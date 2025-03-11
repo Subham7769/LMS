@@ -21,10 +21,10 @@ export const login = createAsyncThunk(
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to login");
       }
-
-      const authToken = response.headers.get("Authorization");
-      const token = authToken ? authToken.replace("Bearer ", "") : null;
+      
       const data = await response.json();
+      const token = data.token ? data.token.replace("Bearer ", "") : null; // Ensure token exists in the response
+
       return { token, data };
     } catch (error) {
       return rejectWithValue(error.message);

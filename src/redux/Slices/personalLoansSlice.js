@@ -197,8 +197,8 @@ export const uploadSignedLoanAgreement = createAsyncThunk(
   "personalLoans/uploadSignedLoanAgreement",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const { loanId, authToken } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { loanId } = fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_LOAN_SIGNED_AGREEMENT_UPLOAD
@@ -206,7 +206,7 @@ export const uploadSignedLoanAgreement = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -228,14 +228,9 @@ export const uploadDocumentFile = createAsyncThunk(
   "personalLoans/uploadDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const {
-        loanApplicationId,
-        documentKey,
-        verified,
-        borrowerType,
-        authToken,
-      } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { loanApplicationId, documentKey, verified, borrowerType } =
+        fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_LOAN_FILE_UPLOAD_PERSONAL
@@ -243,7 +238,7 @@ export const uploadDocumentFile = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -264,8 +259,8 @@ export const uploadDocumentFile = createAsyncThunk(
 export const deleteDocumentFile = createAsyncThunk(
   "personalLoans/deleteDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken } = fileDeleteParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = fileDeleteParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
 
     try {
@@ -273,7 +268,7 @@ export const deleteDocumentFile = createAsyncThunk(
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -290,8 +285,8 @@ export const deleteDocumentFile = createAsyncThunk(
 export const downloadDocumentFile = createAsyncThunk(
   "personalLoans/downloadDocumentFile",
   async (fileDownloadParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = fileDownloadParams;
+    const token = localStorage.getItem("authToken");
+    const { docId, docName } = fileDownloadParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DOWNLOAD_PERSONAL}${docId}`;
 
     try {
@@ -299,7 +294,7 @@ export const downloadDocumentFile = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -336,8 +331,8 @@ export const downloadDocumentFile = createAsyncThunk(
 export const previewDocumentFile = createAsyncThunk(
   "personalLoans/previewDocumentFile",
   async (filePreviewParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = filePreviewParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = filePreviewParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_PERSONAL}${docId}`;
 
     try {
@@ -345,7 +340,7 @@ export const previewDocumentFile = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 

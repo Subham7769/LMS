@@ -67,8 +67,8 @@ const LoanApplication = () => {
     dispatch(
       getLoanApplicationByField({ field: searchBy, value: searchValue })
     );
-    setSearchBy("");
-    setSearchValue("");
+    // setSearchBy("");
+    // setSearchValue("");
   };
 
   const handleReset = () => {

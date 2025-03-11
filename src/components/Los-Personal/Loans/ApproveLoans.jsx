@@ -78,8 +78,8 @@ const ApproveLoans = () => {
         getPayload: { roleNames: [roleName] },
       })
     );
-    setSearchBy("");
-    setSearchValue("");
+    // setSearchBy("");
+    // setSearchValue("");
   };
 
   const handleReset = () => {
@@ -156,7 +156,7 @@ const ApproveLoans = () => {
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Unique ID", value: "uniqueID" },
   ];
 
   const columns = [
@@ -399,11 +399,13 @@ const ApproveLoans = () => {
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
-      <Pagination
-        totalElements={approveLoansTotalElements}
-        dispatcherFunction={dispatcherFunction}
-        pageSize={pageSize}
-      />
+      {approveLoansData.length > 1 && (
+        <Pagination
+          totalElements={approveLoansTotalElements}
+          dispatcherFunction={dispatcherFunction}
+          pageSize={pageSize}
+        />
+      )}
       <LoanRejectModal
         isOpen={showModal}
         onClose={closeRejectModal}
