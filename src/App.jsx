@@ -934,11 +934,11 @@ const routes = [
             element: <AddNewBorrower />,
             errorElement: <RouteErrorBoundary />,
           },
-          {
-            path: "add-new-borrower/:borrowerProfileDraftId",
-            element: <AddNewBorrower />,
-            errorElement: <RouteErrorBoundary />,
-          },
+          // {
+          //   path: "add-new-borrower/:borrowerProfileDraftId",
+          //   element: <AddNewBorrower />,
+          //   errorElement: <RouteErrorBoundary />,
+          // },
           {
             path: "view-borrower",
             element: <ViewBorrowers />,
@@ -946,6 +946,11 @@ const routes = [
           },
           {
             path: "update-borrower/:uid",
+            element: <UpdateBorrower />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "update-borrower/draft/:borrowerProfileDraftId",
             element: <UpdateBorrower />,
             errorElement: <RouteErrorBoundary />,
           },
