@@ -41,8 +41,8 @@ function transformData(inputArray) {
 
 const LoanApplication = () => {
   const dispatch = useDispatch();
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [plaSearchValue, setPlaSearchValue] = useState("");
+  const [plaSearchBy, setPlaSearchBy] = useState("");
   const navigate = useNavigate();
   const { loanApplications, loading, loanApplicationsTotalElements } =
     useSelector((state) => state.personalLoans);
@@ -77,22 +77,22 @@ const LoanApplication = () => {
 
   const handleSearch = async () => {
     await dispatch(
-      validateForm({ searchBy: searchBy, searchValue: searchValue })
+      validateForm({ plaSearchBy: plaSearchBy, plaSearchValue: plaSearchValue })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanApplicationByField({ field: searchBy, value: searchValue })
+        getLoanApplicationByField({ field: plaSearchBy, value: plaSearchValue })
       );
     }
-    // setSearchBy("");
-    // setSearchValue("");
+    // setPlaSearchBy("");
+    // setPlaSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setPlaSearchBy("");
+    setPlaSearchValue("");
     dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
@@ -176,10 +176,10 @@ const LoanApplication = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="plaSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={plaSearchBy}
+            onChange={(e) => setPlaSearchBy(e.target.value)}
             disabled={false}
             isValidation={true}
           />
@@ -187,9 +187,9 @@ const LoanApplication = () => {
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            inputName="plaSearchValue"
+            inputValue={plaSearchValue}
+            onChange={(e) => setPlaSearchValue(e.target.value)}
             isValidation={true}
             disabled={false}
           />

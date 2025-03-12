@@ -51,8 +51,8 @@ const LoanHistory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [slhSearchValue, setSlhSearchValue] = useState("");
+  const [slhSearchBy, setSlhSearchBy] = useState("");
   const [signedAgreement, setSignedAgreement] = useState("");
 
   // Pagination state
@@ -72,20 +72,20 @@ const LoanHistory = () => {
 
   const handleSearch = async () => {
     await dispatch(
-      validateForm({ searchBy: searchBy, searchValue: searchValue })
+      validateForm({ slhSearchBy: slhSearchBy, slhSearchValue: slhSearchValue })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
+      dispatch(getLoanHistoryByField({ field: slhSearchBy, value: slhSearchValue }));
     }
-    // setSearchBy("");
-    // setSearchValue("");
+    // setSlhSearchBy("");
+    // setSlhSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setSlhSearchBy("");
+    setSlhSearchValue("");
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
   };
 
@@ -336,10 +336,10 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="slhSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={slhSearchBy}
+            onChange={(e) => setSlhSearchBy(e.target.value)}
             disabled={false}
             isValidation={true}
           />
@@ -347,9 +347,9 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            inputName="slhSearchValue"
+            inputValue={slhSearchValue}
+            onChange={(e) => setSlhSearchValue(e.target.value)}
             isValidation={true}
             disabled={false}
           />
