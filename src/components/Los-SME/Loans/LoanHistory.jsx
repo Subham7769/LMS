@@ -29,6 +29,11 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import { uploadSignedLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
+import store from "../../../redux/store";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -53,14 +58,27 @@ const LoanHistory = () => {
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
+
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
   };
 
   const loanHistoryData = transformData(loanHistory);
 
-  const handleSearch = () => {
-    dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
+  const handleSearch = async () => {
+    await dispatch(
+      validateForm({ searchBy: searchBy, searchValue: searchValue })
+    );
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
+    }
     // setSearchBy("");
     // setSearchValue("");
   };
@@ -323,6 +341,7 @@ const LoanHistory = () => {
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
@@ -331,7 +350,7 @@ const LoanHistory = () => {
             inputName="searchValue"
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            required
+            isValidation={true}
             disabled={false}
           />
         </div>

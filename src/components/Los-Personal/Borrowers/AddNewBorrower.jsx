@@ -82,7 +82,7 @@ const AddNewBorrowers = () => {
   const handleDraft = () => {
     const addDrafTPersonalData = {
       borrowerType: "PERSONAL_BORROWER",
-      borrowerProfileDraftId: nanoid(),
+      borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
       personalBorrowerProfileDraft: { ...addBorrowerData },
     };
     dispatch(draftCompanyBorrowerInfo(addDrafTPersonalData));
@@ -103,19 +103,7 @@ const AddNewBorrowers = () => {
         handleFileUpload={uploadBorrowerPhotoFile}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
-        <Button
-          buttonName="Save Draft"
-          onClick={handleDraft}
-          rectangle={true}
-          buttonType={"secondary"}
-          loading={loading}
-        />
-        <Button
-          buttonName="Submit"
-          onClick={handleSubmit}
-          rectangle={true}
-          loading={loading}
-        />
+        
         <Button
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}
@@ -127,6 +115,19 @@ const AddNewBorrowers = () => {
           buttonName="Cancel"
           onClick={handleCancel}
           buttonType="destructive"
+          rectangle={true}
+          loading={loading}
+        />
+        <Button
+          buttonName="Save Draft"
+          onClick={handleDraft}
+          rectangle={true}
+          buttonType={"secondary"}
+          loading={loading}
+        />
+        <Button
+          buttonName="Submit"
+          onClick={handleSubmit}
           rectangle={true}
           loading={loading}
         />

@@ -8,6 +8,7 @@ import {
   resetBorrowerFile,
   uploadBorrowerPhotoFile,
   fetchBorrowerInfo,
+  registerBorrower,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
@@ -15,20 +16,25 @@ import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import { nanoid } from "nanoid";
+import { draftCompanyBorrowerInfo } from "../../../redux/Slices/smeBorrowersSlice";
 
 const UpdateBorrower = () => {
   const { updateBorrowerData, error, loading } = useSelector(
     (state) => state.personalBorrowers
   );
   const dispatch = useDispatch();
-  const { uid } = useParams();
+  const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
 
+  console.log(uid)
+  console.log(Object.keys(updateBorrowerData).length === 0)
+
   useEffect(() => {
-    if (uid) {
+    if (uid && Object.keys(updateBorrowerData).length === 0) {
       dispatch(fetchBorrowerInfo(uid));
     }
-  }, [uid, dispatch]);
+  }, [dispatch, uid]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -47,7 +53,37 @@ const UpdateBorrower = () => {
     return result;
   }
 
-  const handleUpdate = async (uid) => {
+  const handleDraftUpdate = async () => {
+    try {
+      const addDrafTPersonalData = {
+        borrowerType: "PERSONAL_BORROWER",
+        borrowerProfileDraftId: nanoid(),
+        personalBorrowerProfileDraft: { ...updateBorrowerData },
+      };
+
+      // Wait for draftCompanyBorrowerInfo to complete successfully
+      await dispatch(draftCompanyBorrowerInfo(addDrafTPersonalData)).unwrap();
+
+      // After success, fetch updated borrower list
+      dispatch(
+        fetchAllBorrowersByType({
+          page: 0,
+          size: 20,
+          borrowerType: "PERSONAL_BORROWER",
+        })
+      );
+
+      // Navigate to the new borrower page
+      navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
+
+      // Reset borrower data
+      dispatch(resetUpdateBorrowerData());
+    } catch (error) {
+      console.error("Error updating draft:", error);
+    }
+  };
+
+  const handleUpdateBorrower = async (uid) => {
     const { registrationDate, ...restUpdateBorrowerData } = updateBorrowerData;
 
     await dispatch(validateForm(flattenToSimpleObject(restUpdateBorrowerData)));
@@ -69,6 +105,28 @@ const UpdateBorrower = () => {
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
       );
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Dispatch the validation action
+    await dispatch(validateForm(flattenToSimpleObject(updateBorrowerData)));
+
+    // Access the updated state directly using getState
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+    const isValid = state.validation.isValid; // Adjust based on your state structure
+
+    if (isValid) {
+      const addBorrowerData = updateBorrowerData
+      dispatch(registerBorrower(addBorrowerData))
+        .unwrap()
+        .then(() => {
+          navigate(
+            `/loan/loan-origination-system/personal/borrowers/view-borrower`
+          );
+        });
     }
   };
 
@@ -97,12 +155,30 @@ const UpdateBorrower = () => {
           className={"bg-red-500 hover:bg-red-600"}
           loading={loading}
         />
-        <Button
+        {uid && <Button
           buttonName="Update"
-          onClick={() => handleUpdate(uid)}
+          onClick={() => handleUpdateBorrower(uid)}
           rectangle={true}
           loading={loading}
-        />
+        />}
+        {borrowerProfileDraftId && (
+          <>
+            <Button
+              buttonName="Update Draft"
+              onClick={handleDraftUpdate}
+              rectangle={true}
+              loading={loading}
+              buttonType={"secondary"}
+            />
+            <Button
+              buttonName="Submit"
+              onClick={handleSubmit}
+              rectangle={true}
+              loading={loading}
+            />
+          </>
+        )
+        }
       </div>
     </>
   );

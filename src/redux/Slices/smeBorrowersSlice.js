@@ -748,16 +748,16 @@ export const deleteDocumentFile = createAsyncThunk(
 // Verify Document Information
 export const verifyDocumentInfo = createAsyncThunk(
   "documents/verifyDocumentInfo",
-  async ({ verifyDocumentData, auth }, { rejectWithValue }) => {
+  async ({ verifyDocumentData }, { rejectWithValue }) => {
     try {
-      // const auth = localStorage.getItem("authToken");
+      const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${import.meta.env.VITE_BORROWERS_VERIFY_DOCUMENTS_COMPANY_BORROWER}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${auth}`,
+            Authorization: `Bearer ${auth}`,
           },
           body: JSON.stringify(verifyDocumentData),
         }
@@ -779,10 +779,10 @@ export const verifyDocumentInfo = createAsyncThunk(
 // Fetch Company Documents
 export const fetchCompanyDocuments = createAsyncThunk(
   "company/fetchDocuments", // Action type
-  async ({ companyId, auth }, { rejectWithValue }) => {
+  async ({ companyId }, { rejectWithValue }) => {
     if (companyId) {
       try {
-        // const auth = localStorage.getItem("authToken"); // Retrieve auth token
+        const auth = localStorage.getItem("authToken"); // Retrieve auth token
         const response = await fetch(
           `${
             import.meta.env
@@ -792,7 +792,7 @@ export const fetchCompanyDocuments = createAsyncThunk(
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `${auth}`,
+              Authorization: `Bearer ${auth}`,
             },
           }
         );

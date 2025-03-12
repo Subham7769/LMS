@@ -22,6 +22,11 @@ import {
 } from "../../../redux/Slices/smeLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import store from "../../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -44,6 +49,12 @@ const LoanApplication = () => {
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
+
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getLoanApplications({ page: currentPage, size: pageSize }));
   };
@@ -63,10 +74,17 @@ const LoanApplication = () => {
 
   const loanApplicationsData = transformData(loanApplications);
 
-  const handleSearch = () => {
-    dispatch(
-      getLoanApplicationByField({ field: searchBy, value: searchValue })
+  const handleSearch = async () => {
+    await dispatch(
+      validateForm({ searchBy: searchBy, searchValue: searchValue })
     );
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(
+        getLoanApplicationByField({ field: searchBy, value: searchValue })
+      );
+    }
     // setSearchBy("");
     // setSearchValue("");
   };
@@ -162,6 +180,7 @@ const LoanApplication = () => {
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
@@ -170,7 +189,7 @@ const LoanApplication = () => {
             inputName="searchValue"
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            required
+            isValidation={true}
             disabled={false}
           />
         </div>

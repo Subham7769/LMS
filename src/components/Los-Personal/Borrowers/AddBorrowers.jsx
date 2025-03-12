@@ -193,7 +193,7 @@ console.log(addBorrowerData)
     console.log(borrowerProfileDraftId);
     dispatch(setUpdateDraftBorrower({ borrowerProfileDraftId }));
     navigate(
-      `/loan/loan-origination-system/personal/borrowers/add-new-borrower/${borrowerProfileDraftId}`
+      `/loan/loan-origination-system/personal/borrowers/update-borrower/draft/${borrowerProfileDraftId}`
     );
   };
 

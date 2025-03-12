@@ -33,15 +33,12 @@ export const fetchRoles = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_USER_ROLES_READ}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_USER_ROLES_READ}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to get roles");
@@ -52,9 +49,7 @@ export const fetchRoles = createAsyncThunk(
         value: id,
       }));
       dispatch(fetchUsers());
-      return formattedRoleData.filter(
-        (item) => item.label !== "ROLE_SUPERADMIN"
-      );
+      return formattedRoleData;
     } catch (error) {
       console.error(error);
       return rejectWithValue(error.message);
@@ -106,7 +101,9 @@ export const generatePassword = createAsyncThunk(
       );
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to generate password");
+        return rejectWithValue(
+          errorData.message || "Failed to generate password"
+        );
       }
     } catch (error) {
       return rejectWithValue(error);

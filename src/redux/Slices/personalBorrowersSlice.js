@@ -517,9 +517,7 @@ const borrowersSlice = createSlice({
       );
       if (borrower) {
         console.log(borrower);
-        state.addBorrowerData = borrower.personalBorrowerProfileDraft;
-      } else {
-        state.addBorrowerData = null; // Reset if no match found
+        state.updateBorrowerData = borrower.personalBorrowerProfileDraft;
       }
     },
   },

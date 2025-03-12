@@ -61,7 +61,7 @@ const ViewPhotoModal = ({ isOpen, onClose, photoData }) => {
           <div className="flex justify-center items-center">
             <img
               src={photoData}
-              alt="Client Profile"
+              alt="Client Profile Not Uploaded Yet"
               className="rounded-lg max-w-full h-auto"
             />
           </div>
