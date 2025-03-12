@@ -157,7 +157,7 @@ const ExpandableTable = ({
                   })}
 
                   {ListAction && (
-                    <td className="flex justify-center items-center ">
+                    <td className="flex justify-center items-center py-6">
                       {ListAction(rowData)}
                     </td>
                   )}
