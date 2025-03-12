@@ -399,13 +399,11 @@ const ApproveLoans = () => {
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
-      {approveLoansData.length > 1 && (
-        <Pagination
-          totalElements={approveLoansTotalElements}
-          dispatcherFunction={dispatcherFunction}
-          pageSize={pageSize}
-        />
-      )}
+      <Pagination
+        totalElements={approveLoansTotalElements}
+        dispatcherFunction={dispatcherFunction}
+        pageSize={pageSize}
+      />
       <LoanRejectModal
         isOpen={showModal}
         onClose={closeRejectModal}

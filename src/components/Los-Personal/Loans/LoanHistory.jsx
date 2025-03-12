@@ -359,13 +359,11 @@ const LoanHistory = () => {
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
-      {loanHistoryData.length > 1 && (
-        <Pagination
-          totalElements={loanHistoryTotalElements}
-          dispatcherFunction={dispatcherFunction}
-          pageSize={pageSize}
-        />
-      )}
+      <Pagination
+        totalElements={loanHistoryTotalElements}
+        dispatcherFunction={dispatcherFunction}
+        pageSize={pageSize}
+      />
       <FullLoanDetailModal
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}
