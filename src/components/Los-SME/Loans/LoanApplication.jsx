@@ -22,6 +22,11 @@ import {
 } from "../../../redux/Slices/smeLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import store from "../../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -35,14 +40,20 @@ function transformData(inputArray) {
 
 const LoanApplication = () => {
   const dispatch = useDispatch();
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [slaSearchValue, setSlaSearchValue] = useState("");
+  const [slaSearchBy, setSlaSearchBy] = useState("");
   const navigate = useNavigate();
   const { loanApplications, loading, loanApplicationsTotalElements } =
     useSelector((state) => state.smeLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getLoanApplications({ page: currentPage, size: pageSize }));
@@ -63,17 +74,24 @@ const LoanApplication = () => {
 
   const loanApplicationsData = transformData(loanApplications);
 
-  const handleSearch = () => {
-    dispatch(
-      getLoanApplicationByField({ field: searchBy, value: searchValue })
+  const handleSearch = async () => {
+    await dispatch(
+      validateForm({ slaSearchBy: slaSearchBy, slaSearchValue: slaSearchValue })
     );
-    setSearchBy("");
-    setSearchValue("");
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(
+        getLoanApplicationByField({ field: slaSearchBy, value: slaSearchValue })
+      );
+    }
+    // setSlaSearchBy("");
+    // setSlaSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setSlaSearchBy("");
+    setSlaSearchValue("");
     dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
@@ -157,20 +175,21 @@ const LoanApplication = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="slaSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={slaSearchBy}
+            onChange={(e) => setSlaSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            required
+            inputName="slaSearchValue"
+            inputValue={slaSearchValue}
+            onChange={(e) => setSlaSearchValue(e.target.value)}
+            isValidation={true}
             disabled={false}
           />
         </div>

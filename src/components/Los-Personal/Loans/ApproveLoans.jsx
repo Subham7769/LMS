@@ -30,6 +30,11 @@ import {
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
 import ViewDocumentsModal from "./ViewDocumentsModal";
+import store from "../../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -50,13 +55,19 @@ const ApproveLoans = () => {
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [documentsData, setDocumentsData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [palSearchValue, setPalSearchValue] = useState("");
+  const [palSearchBy, setPalSearchBy] = useState("");
   const navigate = useNavigate();
 
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
@@ -70,21 +81,30 @@ const ApproveLoans = () => {
 
   const approveLoansData = transformData(approveLoans);
 
-  const handleSearch = () => {
-    dispatch(
-      getLoansByField({
-        field: searchBy,
-        value: searchValue,
-        getPayload: { roleNames: [roleName] },
-      })
+  const handleSearch = async () => {
+    //if empty palSearchBy or palSearchValue then display a message (otherwise API will return java runtime error)
+    await dispatch(
+      validateForm({ palSearchBy: palSearchBy, palSearchValue: palSearchValue })
     );
-    setSearchBy("");
-    setSearchValue("");
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(
+        getLoansByField({
+          field: palSearchBy,
+          value: palSearchValue,
+          getPayload: { roleNames: [roleName] },
+        })
+      );
+    }
+
+    // setPalSearchBy("");
+    // setPalSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setPalSearchBy("");
+    setPalSearchValue("");
     dispatch(
       getPendingLoans({
         page: 0,
@@ -156,13 +176,13 @@ const ApproveLoans = () => {
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Unique ID", value: "uniqueID" },
   ];
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Borrower ID", field: "uid" },
+    { label: "Unique ID", field: "uniqueID" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },
@@ -358,21 +378,22 @@ const ApproveLoans = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="palSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={palSearchBy}
+            onChange={(e) => setPalSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            inputName="palSearchValue"
+            inputValue={palSearchValue}
+            onChange={(e) => setPalSearchValue(e.target.value)}
             disabled={false}
-            required
+            isValidation={true}
           />
         </div>
 

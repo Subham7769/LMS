@@ -29,6 +29,11 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import { uploadSignedLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
+import store from "../../../redux/store";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -46,12 +51,18 @@ const LoanHistory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [slhSearchValue, setSlhSearchValue] = useState("");
+  const [slhSearchBy, setSlhSearchBy] = useState("");
   const [signedAgreement, setSignedAgreement] = useState("");
 
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
@@ -59,15 +70,22 @@ const LoanHistory = () => {
 
   const loanHistoryData = transformData(loanHistory);
 
-  const handleSearch = () => {
-    dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
-    setSearchBy("");
-    setSearchValue("");
+  const handleSearch = async () => {
+    await dispatch(
+      validateForm({ slhSearchBy: slhSearchBy, slhSearchValue: slhSearchValue })
+    );
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(getLoanHistoryByField({ field: slhSearchBy, value: slhSearchValue }));
+    }
+    // setSlhSearchBy("");
+    // setSlhSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setSlhSearchBy("");
+    setSlhSearchValue("");
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
   };
 
@@ -99,7 +117,7 @@ const LoanHistory = () => {
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
-    { label: "Borrower Serial No.", value: "uid" },
+    { label: "Borrower Serial No.", value: "uniqueID" },
   ];
 
   const columns = [
@@ -318,20 +336,21 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="slhSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={slhSearchBy}
+            onChange={(e) => setSlhSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            required
+            inputName="slhSearchValue"
+            inputValue={slhSearchValue}
+            onChange={(e) => setSlhSearchValue(e.target.value)}
+            isValidation={true}
             disabled={false}
           />
         </div>

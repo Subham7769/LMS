@@ -30,6 +30,11 @@ import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
 import ViewDocumentsModal from "./ViewDocumentsModal";
 import convertToReadableString from "../../../utils/convertToReadableString";
+import store from "../../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -50,13 +55,19 @@ const ApproveLoans = () => {
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [documentsData, setDocumentsData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [salSearchValue, setSalSearchValue] = useState("");
+  const [salSearchBy, setSalSearchBy] = useState("");
   const navigate = useNavigate();
 
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
@@ -70,21 +81,28 @@ const ApproveLoans = () => {
 
   const approveLoansData = transformData(approveLoans);
 
-  const handleSearch = () => {
-    dispatch(
-      getLoansByField({
-        field: searchBy,
-        value: searchValue,
-        getPayload: { roleNames: [roleName] },
-      })
+  const handleSearch = async () => {
+    await dispatch(
+      validateForm({ salSearchBy: salSearchBy, salSearchValue: salSearchValue })
     );
-    setSearchBy("");
-    setSearchValue("");
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(
+        getLoansByField({
+          field: salSearchBy,
+          value: salSearchValue,
+          getPayload: { roleNames: [roleName] },
+        })
+      );
+    }
+    // setSalSearchBy("");
+    // setSalSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setSalSearchBy("");
+    setSalSearchValue("");
     dispatch(
       getPendingLoans({
         page: 0,
@@ -155,7 +173,7 @@ const ApproveLoans = () => {
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
-    { label: "Borrower Serial No.", value: "uid" },
+    { label: "Borrower Serial No.", value: "uniqueID" },
   ];
 
   const columns = [
@@ -358,20 +376,21 @@ const ApproveLoans = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="salSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={salSearchBy}
+            onChange={(e) => setSalSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            required
+            inputName="salSearchValue"
+            inputValue={salSearchValue}
+            onChange={(e) => setSalSearchValue(e.target.value)}
+            isValidation={true}
             disabled={false}
           />
         </div>
