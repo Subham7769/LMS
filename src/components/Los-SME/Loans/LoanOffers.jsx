@@ -9,6 +9,7 @@ import {
   fetchLoanProductData,
   getLoanOffers,
   handleProceed,
+  resetLoanOfferFields,
   updateLoanOfferFields,
 } from "../../../redux/Slices/smeLoansSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
@@ -22,6 +23,12 @@ import {
 import formatNumber from "../../../utils/formatNumber";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import { sanitizeUid } from "../../../utils/sanitizeUid";
+import store from "../../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +49,10 @@ const LoanOffers = () => {
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
+    return () => {
+      dispatch(clearValidationError());
+      dispatch(resetLoanOfferFields());
+    };
   }, [dispatch]);
 
   const SubmitProceed = async (transactionId, index) => {
@@ -60,9 +71,14 @@ const LoanOffers = () => {
     dispatch(updateLoanOfferFields({ name, value }));
   };
 
-  const handleGetOffers = () => {
-    dispatch(getLoanOffers(loanOfferFields));
-    dispatch(fetchBorrowerById(loanOfferFields?.uid));
+  const handleGetOffers = async () => {
+    await dispatch(validateForm(loanOfferFields));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(getLoanOffers(loanOfferFields));
+      dispatch(fetchBorrowerById(sanitizeUid(loanOfferFields?.uid)));
+    }
   };
 
   const handleInstallmentModal = (data) => {
@@ -100,6 +116,7 @@ const LoanOffers = () => {
             inputValue={loanOfferFields.loanProductId}
             onChange={handleChange}
             disabled={false}
+            isValidation={true}
           />
           <InputText
             labelName={"Borrower Serial No."}
@@ -107,6 +124,7 @@ const LoanOffers = () => {
             inputValue={loanOfferFields.uid}
             onChange={handleChange}
             disabled={false}
+            isValidation={true}
           />
           <div>
             <Button
