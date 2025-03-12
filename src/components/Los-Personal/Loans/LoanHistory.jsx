@@ -51,8 +51,8 @@ const LoanHistory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [plhSearchValue, setPlhSearchValue] = useState("");
+  const [plhSearchBy, setPlhSearchBy] = useState("");
   const [signedAgreement, setSignedAgreement] = useState("");
 
   // Pagination state
@@ -72,21 +72,21 @@ const LoanHistory = () => {
 
   const handleSearch = async () => {
     await dispatch(
-      validateForm({ searchBy: searchBy, searchValue: searchValue })
+      validateForm({ plhSearchBy: plhSearchBy, plhSearchValue: plhSearchValue })
     );
     console.log(searchBy + "----" + searchValue);
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(getLoanHistoryByField({ field: searchBy, value: searchValue }));
+      dispatch(getLoanHistoryByField({ field: plhSearchBy, value: plhSearchValue }));
     }
-    // setSearchBy("");
-    // setSearchValue("");
+    // setPlhSearchBy("");
+    // setPlhSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setPlhSearchBy("");
+    setPlhSearchValue("");
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
   };
 
@@ -337,10 +337,10 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="plhSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={plhSearchBy}
+            onChange={(e) => setPlhSearchBy(e.target.value)}
             disabled={false}
             isValidation={true}
           />
@@ -348,9 +348,9 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            inputName="plhSearchValue"
+            inputValue={plhSearchValue}
+            onChange={(e) => setPlhSearchValue(e.target.value)}
             required
             disabled={false}
             isValidation={true}
