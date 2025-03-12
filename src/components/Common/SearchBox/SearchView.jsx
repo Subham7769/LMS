@@ -19,7 +19,7 @@ const SearchView = ({
       <div className="flex gap-5 justify-between items-center">
         <div className="flex-1">
           <InputText
-            labelName={"Customer ID"}
+            labelName={"Unique ID"}
             inputName="borrowerID"
             inputValue={borrowerID}
             onChange={onChange}
