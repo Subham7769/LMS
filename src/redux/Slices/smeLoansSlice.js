@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import convertToTitleCase from "../../utils/convertToTitleCase";
 import { nanoid } from "nanoid";
+import { sanitizeUid } from "../../utils/sanitizeUid";
 
 export const getLoanApplications = createAsyncThunk(
   "smeLoans/getLoanApplications",
@@ -134,9 +135,13 @@ export const getLoanApplicationByField = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to fetch");
       }
       const responseData = await response.json();
+      const length = responseData.length;
+      if (length < 1) {
+        throw new Error("Data not Found");
+      }
       return responseData;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -428,10 +433,11 @@ export const getLoanOffers = createAsyncThunk(
   async (loanOfferFields, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
+      const sanitizedUid = sanitizeUid(loanOfferFields.uid);
       const response = await fetch(
         `${import.meta.env.VITE_LOAN_READ_LOAN_OFFERS_PERSONAL}${
           loanOfferFields.loanProductId
-        }/caching/${loanOfferFields.uid}`,
+        }/caching/${sanitizedUid}`,
         {
           method: "GET",
           headers: {
@@ -560,9 +566,13 @@ export const getLoansByField = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to fetch");
       }
       const responseData = await response.json();
+      const length = responseData.length;
+      if (length < 1) {
+        throw new Error("Data not Found");
+      }
       return responseData;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -669,9 +679,13 @@ export const getLoanHistoryByField = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to fetch");
       }
       const responseData = await response.json();
+      const length = responseData.length;
+      if (length < 1) {
+        throw new Error("Data not Found");
+      }
       return responseData;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -1005,6 +1019,9 @@ const smeLoansSlice = createSlice({
     updateLoanOfferFields: (state, action) => {
       const { name, value } = action.payload;
       state.loanOfferFields[name] = value; // Dynamically update the field in loanConfigFields
+    },
+    resetLoanOfferFields: (state, action) => {
+      state.loanOfferFields = initialState.loanOfferFields;
     },
     setLoanApplicationId: (state, action) => {
       state.addLoanData.loanApplicationId = action.payload;
@@ -1390,6 +1407,7 @@ export const {
   resetAddLoanData,
   updateLoanField,
   updateLoanOfferFields,
+  resetLoanOfferFields,
   setLoanApplicationId,
   setLoanBorrowerId,
 } = smeLoansSlice.actions;

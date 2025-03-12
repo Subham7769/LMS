@@ -53,7 +53,7 @@ const AddLoans = () => {
     ];
     dispatch(setFields(keysArray));
     dispatch(setLoanApplicationId(loanApplicationId));
-    if (decodedBorrowerId) {
+    if (decodedBorrowerId != "undefined") {
       dispatch(setLoanBorrowerId(decodedBorrowerId));
     }
     return () => {

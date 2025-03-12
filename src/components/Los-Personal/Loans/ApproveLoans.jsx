@@ -30,6 +30,11 @@ import {
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
 import ViewDocumentsModal from "./ViewDocumentsModal";
+import store from "../../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../../redux/Slices/validationSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -58,6 +63,12 @@ const ApproveLoans = () => {
 
   const [pageSize, setPageSize] = useState(10);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
+
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
       getPendingLoans({
@@ -70,16 +81,25 @@ const ApproveLoans = () => {
 
   const approveLoansData = transformData(approveLoans);
 
-  const handleSearch = () => {
-    dispatch(
-      getLoansByField({
-        field: searchBy,
-        value: searchValue,
-        getPayload: { roleNames: [roleName] },
-      })
+  const handleSearch = async () => {
+    //if empty searchBy or searchValue then display a message (otherwise API will return java runtime error)
+    await dispatch(
+      validateForm({ searchBy: searchBy, searchValue: searchValue })
     );
-    setSearchBy("");
-    setSearchValue("");
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(
+        getLoansByField({
+          field: searchBy,
+          value: searchValue,
+          getPayload: { roleNames: [roleName] },
+        })
+      );
+    }
+
+    // setSearchBy("");
+    // setSearchValue("");
   };
 
   const handleReset = () => {
@@ -156,13 +176,13 @@ const ApproveLoans = () => {
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
-    { label: "Unique ID", value: "uid" },
+    { label: "Unique ID", value: "uniqueID" },
   ];
 
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Borrower ID", field: "uid" },
+    { label: "Unique ID", field: "uniqueID" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },
@@ -363,6 +383,7 @@ const ApproveLoans = () => {
             inputValue={searchBy}
             onChange={(e) => setSearchBy(e.target.value)}
             disabled={false}
+            isValidation={true}
           />
         </div>
         <div className="w-[45%]">
@@ -372,7 +393,7 @@ const ApproveLoans = () => {
             inputValue={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             disabled={false}
-            required
+            isValidation={true}
           />
         </div>
 

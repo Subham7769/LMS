@@ -93,21 +93,21 @@ const ViewBorrowers = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? personalDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase())
           : true;
       } else {
         matchesSearchValue = searchValue
           ? [
-              personalDetails.firstName,
-              personalDetails.surname,
-              personalDetails.otherName,
-              personalDetails.uniqueID,
-              contactDetails.email,
-              contactDetails.mobile1,
-            ].some((field) =>
-              field?.toLowerCase().includes(searchValue.toLowerCase())
-            )
+            personalDetails.firstName,
+            personalDetails.surname,
+            personalDetails.otherName,
+            personalDetails.uniqueID,
+            contactDetails.email,
+            contactDetails.mobile1,
+          ].some((field) =>
+            field?.toLowerCase().includes(searchValue.toLowerCase())
+          )
           : true;
       }
 
@@ -183,7 +183,7 @@ const ViewBorrowers = () => {
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
-    { label: "Unique ID", field: "uniqueID", copy:true },
+    { label: "Unique ID", field: "uniqueID", copy: true },
     { label: "Cutomer ID", field: "customerId" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
@@ -196,22 +196,24 @@ const ViewBorrowers = () => {
   };
 
   const handleViewPhoto = async (photoId) => {
-    const filePreviewParams = {
-      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
-      docId: photoId,
-    };
-    setShowPhotoModal(true);
-    try {
-      const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
+    if (photoId) {
+      const filePreviewParams = {
+        authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+        docId: photoId,
+      };
+      setShowPhotoModal(true);
+      try {
+        const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
 
-      if (result.base64Content) {
-        console.log(result);
-        setPhotoData(
-          `data:${result.contentType};base64,${result.base64Content}`
-        );
+        if (result.base64Content) {
+          console.log(result);
+          setPhotoData(
+            `data:${result.contentType};base64,${result.base64Content}`
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching photo:", error);
       }
-    } catch (error) {
-      console.error("Error fetching photo:", error);
     }
   };
 
@@ -312,15 +314,20 @@ const ViewBorrowers = () => {
                 <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
                   <div
                     onClick={() => handleViewPhoto(rowData.customerPhotoId)}
-                    className="cursor-pointer"
-                    title="Click to view profile photo"
+                    className={`${rowData.customerPhotoId && 'cursor-pointer'}`}
+                    title={"View Client Photo"}
                   >
                     <UserCircleIcon
                       className="-ml-0.5 h-5 w-5"
                       aria-hidden="true"
                     />
                   </div>
-                  Personal Details
+                  Personal Details {rowData.customerPhotoId && <p
+                      className="text-[9px] text-gray-600 -mb-2"
+                      onClick={() => handleViewPhoto(rowData.customerPhotoId)}>
+                      View Client Photo
+                    </p>
+                  }
                 </div>
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>

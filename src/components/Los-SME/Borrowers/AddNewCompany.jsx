@@ -66,7 +66,7 @@ const AddNewCompany = () => {
         }
         dispatch(resetCompanyData())
       });
-      
+
     }
 
   };
@@ -81,7 +81,11 @@ const AddNewCompany = () => {
     navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
     dispatch(resetCompanyData())
   }
-  
+
+  const handleCancel = () => {
+    navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+  };
+
   return (
     <>
       <AddUpdateCompanyBorrowerFields
@@ -94,6 +98,13 @@ const AddNewCompany = () => {
           onClick={() => dispatch(resetCompanyData())}
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
+        />
+        <Button
+          buttonName="Cancel"
+          onClick={handleCancel}
+          buttonType="destructive"
+          rectangle={true}
+          loading={loading}
         />
         <Button
           buttonName="Save Draft"
