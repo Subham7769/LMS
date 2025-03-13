@@ -45,9 +45,12 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   generateLoanApplicationId,
+  getLoanHistoryByField,
   resetAddLoanData,
 } from "../../../redux/Slices/smeLoansSlice";
 import { convertDate } from "../../../utils/convertDate";
+import ActionOption from "../../Common/ActionOptions/ActionOption";
+import { toast } from "react-toastify";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -107,22 +110,22 @@ const ViewCompany = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? companyDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase())
           : true;
       } else {
         // Search through multiple fields if no specific 'searchBy'
         matchesSearchValue = searchValue
           ? [
-              companyDetails.companyName,
-              companyDetails.companyShortName,
-              companyDetails.companyUniqueId,
-              companyDetails.companyRegistrationNo,
-              companyContactDetails.email,
-              companyContactDetails.mobile1,
-            ]
-              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
-              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
+            companyDetails.companyName,
+            companyDetails.companyShortName,
+            companyDetails.companyUniqueId,
+            companyDetails.companyRegistrationNo,
+            companyContactDetails.email,
+            companyContactDetails.mobile1,
+          ]
+            .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+            .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
           : true;
       }
 
@@ -203,7 +206,7 @@ const ViewCompany = () => {
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
     { label: "Registration No.", field: "companyRegistrationNo" },
-    { label: "Borrower Serial No.", field: "companyUniqueId", copy:true },
+    { label: "Borrower Serial No.", field: "companyUniqueId", copy: true },
     { label: "Customer ID", field: "customerId" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
@@ -855,12 +858,15 @@ const ViewCompany = () => {
     );
   };
 
+
+
   const ListAction = (rowData) => {
     // if (rowData.status === "Completed" || rowData.status === "Cancel" ||
     //       hasViewOnlyAccessGroup3(roleName)) {
     //   return <div className="py-6">-</div>;
     // }
     // console.log(rowData);
+
     const handleNewApplication = async (BorrowerId) => {
       dispatch(resetAddLoanData());
       try {
@@ -877,18 +883,68 @@ const ViewCompany = () => {
       }
     };
 
+    const checkBorrowerInfoCustomerCare = async (borrowerID) => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const data = await fetch(
+          `${import.meta.env.VITE_BORROWER_INFO}${borrowerID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (data.status === 404) {
+          toast.error("Borrower Not Found");
+          return; // Stop further execution
+        }
+        // Check for token expiration or invalid token
+        if (data.status === 401 || data.status === 403) {
+          toast.error("Token Expired");
+          localStorage.removeItem("authToken"); // Clear the token
+          navigate("/login"); // Redirect to login page
+          return; // Stop further execution
+        }
+        navigate("/loan/customer-care/" + borrowerID + "/personal-info");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    
+    const getExistingLoan = async (borrowerID) => {
+      dispatch(getLoanHistoryByField({ field: 'borrowerId', value: borrowerID }));
+      navigate("/loan/loan-origination-system/sme/loans/loan-history");
+    }
+  
+
+    const userNavigation = [
+      {
+        name: "Add Loan",
+        href: "#",
+        action: handleNewApplication,
+      },
+      {
+        name: "Existing Loan",
+        href: "#",
+        action: getExistingLoan,
+      },
+      {
+        name: "Customer Care",
+        href: "#",
+        action:checkBorrowerInfoCustomerCare,
+      },
+    ]
+
     return (
-      <div className="flex justify-center gap-4 px-5">
-        <Button
-          onClick={() => handleNewApplication(rowData.companyUniqueId)}
-          buttonName={"Add Loan"}
-          buttonIcon={PlusIcon}
-          rectangle={true}
-          className={`mt-4 h-fit self-center`}
-        />
+      <div className="flex justify-center align-middle gap-4 px-5">
+        <ActionOption userNavigation={userNavigation} actionID={rowData.companyUniqueId}/>
       </div>
     );
   };
+
+
 
   return (
     <div className={`flex flex-col gap-3`}>

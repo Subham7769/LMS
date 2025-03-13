@@ -18,6 +18,7 @@ import {
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
 import { convertDate } from "../../../utils/convertDate";
+import { removeSlashes } from "../../../utils/removeSlashes";
 import {
   UserCircleIcon,
   BuildingOffice2Icon,
@@ -38,10 +39,13 @@ import { Menu, Transition } from "@headlessui/react";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 import {
   generateLoanApplicationId,
+  getLoanHistoryByField,
   resetAddLoanData,
 } from "../../../redux/Slices/personalLoansSlice";
 import ViewPhotoModal from "./ViewPhotoModal";
 import { viewPhoto } from "../../../redux/Slices/personalBorrowersSlice";
+import ActionOption from "../../Common/ActionOptions/ActionOption";
+
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -168,8 +172,6 @@ const ViewBorrowers = () => {
 
   const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
 
-  console.log(flattenData);
-
   const transformFlattenData = transformData(flattenData);
 
   const searchOptions = [
@@ -217,7 +219,6 @@ const ViewBorrowers = () => {
     }
   };
 
-  // console.log(photoData);
 
   const closePhotoModal = () => {
     setShowPhotoModal(false);
@@ -323,10 +324,10 @@ const ViewBorrowers = () => {
                     />
                   </div>
                   Personal Details {rowData.customerPhotoId && <p
-                      className="text-[9px] text-gray-600 -mb-2"
-                      onClick={() => handleViewPhoto(rowData.customerPhotoId)}>
-                      View Client Photo
-                    </p>
+                    className="text-[9px] text-gray-600 -mb-2"
+                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}>
+                    View Client Photo
+                  </p>
                   }
                 </div>
                 <div className="space-y-2 flex flex-col gap-5 p-3">
@@ -519,15 +520,65 @@ const ViewBorrowers = () => {
       }
     };
 
+    const checkBorrowerInfoCustomerCare = async (borrowerID) => {
+      const borrowerIdUpdated = removeSlashes(borrowerID)
+      try {
+        const token = localStorage.getItem("authToken");
+        const data = await fetch(
+          `${import.meta.env.VITE_BORROWER_INFO}${borrowerIdUpdated}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (data.status === 404) {
+          toast.error("Borrower Not Found");
+          return; // Stop further execution
+        }
+        // Check for token expiration or invalid token
+        if (data.status === 401 || data.status === 403) {
+          toast.error("Token Expired");
+          localStorage.removeItem("authToken"); // Clear the token
+          navigate("/login"); // Redirect to login page
+          return; // Stop further execution
+        }
+        navigate("/loan/customer-care/" + borrowerIdUpdated + "/personal-info");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const getExistingLoan = async (borrowerID) => {
+      const borrowerIdUpdated = removeSlashes(borrowerID)
+      dispatch(getLoanHistoryByField({ field: 'uid', value: borrowerIdUpdated }));
+      navigate("/loan/loan-origination-system/personal/loans/loan-history");
+    }
+
+
+    const userNavigation = [
+      {
+        name: "Add Loan",
+        href: "#",
+        action: handleNewApplication,
+      },
+      {
+        name: "Existing Loan",
+        href: "#",
+        action: getExistingLoan,
+      },
+      {
+        name: "Customer Care",
+        href: "#",
+        action: checkBorrowerInfoCustomerCare,
+      },
+    ]
+
     return (
-      <div className="flex justify-center gap-4 px-5">
-        <Button
-          onClick={() => handleNewApplication(rowData.uniqueID)}
-          buttonName={"Add Loan"}
-          buttonIcon={PlusIcon}
-          rectangle={true}
-          className={`mt-4 h-fit self-center`}
-        />
+      <div className="flex justify-center align-middle gap-4 px-5">
+        <ActionOption userNavigation={userNavigation} actionID={rowData.uniqueID} />
       </div>
     );
   };

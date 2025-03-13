@@ -808,6 +808,7 @@ const initialState = {
       branch: "",
       agentName: "",
       lhacoName: "",
+      uniqueID: "",
     },
     refinanceDetails: [
       {
@@ -877,6 +878,7 @@ const personalLoansSlice = createSlice({
     },
     setLoanBorrowerId: (state, action) => {
       state.addLoanData.generalLoanDetails.borrowerId = action.payload;
+      state.addLoanData.generalLoanDetails.uniqueID = action.payload;
     },
     handleAddRefinance: (state) => {
       state.addLoanData.refinanceDetails.push({
@@ -1117,7 +1119,7 @@ const personalLoansSlice = createSlice({
         state.loanOfferFields.loanProductId =
           state.addLoanData.generalLoanDetails.loanProductId;
         state.loanOfferFields.uid =
-          state.addLoanData.generalLoanDetails.borrowerId;
+          state.addLoanData.generalLoanDetails.uniqueID;
         state.addLoanData = initialState.addLoanData;
         toast.success("Offer generated successfully");
       })

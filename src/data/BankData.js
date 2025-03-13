@@ -9,11 +9,21 @@ export const BankNameOptions = [
   { value: "First National Bank", label: "First National Bank" },
   { value: "Indo-Zambia Bank", label: "Indo-Zambia Bank" },
   { value: "Investrust Bank", label: "Investrust Bank" },
+  {
+    value: "National Credit and Saving Bank",
+    label: "National Credit and Saving Bank",
+  },
   { value: "Stanbic Bank", label: "Stanbic Bank" },
   { value: "Standard Chartered Bank", label: "Standard Chartered Bank" },
   { value: "United Bank for Africa", label: "United Bank for Africa" },
-  { value: "Zambia Industrial Commercial Bank", label: "Zambia Industrial Commercial Bank" },
-  { value: "Zambia National Commercial Bank", label: "Zambia National Commercial Bank" },
+  {
+    value: "Zambia Industrial Commercial Bank",
+    label: "Zambia Industrial Commercial Bank",
+  },
+  {
+    value: "Zambia National Commercial Bank",
+    label: "Zambia National Commercial Bank",
+  },
 ];
 
 export const BranchNameOptions = {
@@ -60,6 +70,9 @@ export const BranchNameOptions = {
   "Investrust Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Ndola Branch", label: "Ndola Branch" },
+  ],
+  "National Credit and Saving Bank": [
+    { value: "Lusaka Main", label: "Lusaka Main" },
   ],
   "Stanbic Bank": [
     { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
@@ -220,6 +233,12 @@ export const bankBranches = [
     branchName: "Ndola Branch",
     branchCode: "140002",
     sortCode: "14-00-02",
+  },
+  {
+    bankName: "National Credit and Saving Bank",
+    branchName: "Lusaka Main",
+    branchCode: "580010",
+    sortCode: "58-00-10",
   },
   {
     bankName: "Stanbic Bank",

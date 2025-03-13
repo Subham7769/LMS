@@ -374,6 +374,7 @@ const UploadRepayment = () => {
                     <a
                       href={"/assets/files/sample_file_bulk_repayments.csv"}
                       className="text-blue-600 underline"
+                      download="sample_file_bulk_repayments.csv"
                     >
                       Click here to download a sample file.
                     </a>
@@ -521,7 +522,7 @@ const UploadRepayment = () => {
             <div className="flex justify-end gap-5 px-5 ">
               <Button
                 buttonName={"Reset"}
-                onClick={() => {}}
+                onClick={() => { }}
                 rectangle={true}
                 className={`bg-red-500 hover:bg-red-600 h-fit self-center`}
               />
@@ -603,11 +604,10 @@ const UploadRepayment = () => {
                   </div>
                 </div>
                 <div
-                  className={`absolute top-1/2 right-1 font-semibold translate-x-[-50%] translate-y-[-50%] px-2 py-1 rounded-lg ${
-                    fileHistory.status === "DONE_SUCCESSFULLY"
+                  className={`absolute top-1/2 right-1 font-semibold translate-x-[-50%] translate-y-[-50%] px-2 py-1 rounded-lg ${fileHistory.status === "DONE_SUCCESSFULLY"
                       ? "bg-green-100 text-green-500"
                       : "bg-red-100 text-red-500"
-                  }`}
+                    }`}
                 >
                   {fileHistory.status === "DONE_SUCCESSFULLY"
                     ? "Success"
@@ -671,9 +671,8 @@ const UploadRepayment = () => {
                       {columnArray.map((column, index) => (
                         <th
                           key={index}
-                          className={`w-1/${
-                            columnArray.length + 1
-                          } max-w-24 text-center py-3 px-2`}
+                          className={`w-1/${columnArray.length + 1
+                            } max-w-24 text-center py-3 px-2`}
                         >
                           <InputSelect
                             inputName={column}
@@ -698,9 +697,8 @@ const UploadRepayment = () => {
                         {Object.entries(rowData).map(([key, value]) => (
                           <td
                             key={key}
-                            className={`w-1/${
-                              Object.keys(rowData).length
-                            } text-center py-3 px-1 text-[14px] text-gray-500`}
+                            className={`w-1/${Object.keys(rowData).length
+                              } text-center py-3 px-1 text-[14px] text-gray-500`}
                           >
                             <InputText
                               inputName={key}
