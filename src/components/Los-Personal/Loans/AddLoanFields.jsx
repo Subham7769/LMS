@@ -286,7 +286,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Borrower Unique ID",
-      inputName: "borrowerId",
+      inputName: "uniqueID",
       type: "text",
       validation: true,
     },

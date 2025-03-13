@@ -316,7 +316,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Borrower Serial No.",
-      inputName: "borrowerId",
+      inputName: "uniqueID",
       type: "text",
       validation: true,
     },

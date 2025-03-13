@@ -21,6 +21,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { sanitizeUid } from "../../../utils/sanitizeUid";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -95,27 +96,49 @@ const AddLoans = () => {
     return result;
   }
 
-  console.log(addLoanData);
+  // console.log(addLoanData);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
+    // Ensure borrowerId is set to the sanitized uniqueID
+    const sanitizedUniqueID = sanitizeUid(
+      addLoanData.generalLoanDetails.uniqueID
+    );
+    const updatedLoanData = {
+      ...addLoanData,
+      generalLoanDetails: {
+        ...addLoanData.generalLoanDetails,
+        borrowerId: sanitizedUniqueID,
+      },
+    };
+    await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
     const state = store.getState();
     const isValid = state.validation.isValid;
     const submitPayload = {
-      ...addLoanData.generalLoanDetails,
-      documents: addLoanData.documents,
-      loanApplicationId: addLoanData.loanApplicationId,
-      refinanceDetails: addLoanData.refinanceDetails,
+      ...updatedLoanData.generalLoanDetails,
+      documents: updatedLoanData.documents,
+      loanApplicationId: updatedLoanData.loanApplicationId,
+      refinanceDetails: updatedLoanData.refinanceDetails,
     };
     if (isValid) {
-      await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+      await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/personal/loans/loan-offers");
     }
   };
 
   const handleDraft = async () => {
-    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+    // Ensure borrowerId is set to the sanitized uniqueID
+    const sanitizedUniqueID = sanitizeUid(
+      addLoanData.generalLoanDetails.uniqueID
+    );
+    const updatedLoanData = {
+      ...addLoanData,
+      generalLoanDetails: {
+        ...addLoanData.generalLoanDetails,
+        borrowerId: sanitizedUniqueID,
+      },
+    };
+    await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
     navigate("/loan/loan-origination-system/personal/loans/loan-application");
   };
 
@@ -126,7 +149,7 @@ const AddLoans = () => {
   const getMaxPrincipal = async () => {
     const maxPrincipalPayload = {
       loanProductId: addLoanData.generalLoanDetails.loanProductId,
-      borrowerId: addLoanData.generalLoanDetails.borrowerId,
+      borrowerId: addLoanData.generalLoanDetails.uniqueID,
       interestMethod: addLoanData.generalLoanDetails.interestMethod,
       loanInterest: addLoanData.generalLoanDetails.loanInterest,
       loanInterestType: addLoanData.generalLoanDetails.loanInterestType,
