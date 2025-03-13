@@ -235,7 +235,7 @@ const LoanConfig = () => {
                   </div>
                   <div className="text-gray-500">Average Installments: </div>
                   <div className="font-semibold text-lg">
-                    {loanConfigData?.dynamicCashLoanOffers[0]?.avrageNumberOfenstallment.toFixed(
+                    {loanConfigData?.dynamicCashLoanOffers[0]?.averageNumberOfInstallment.toFixed(
                       2
                     )}
                   </div>
