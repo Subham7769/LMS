@@ -61,6 +61,9 @@ const UserManagement = ({ role }) => {
                   User Name
                 </th>
                 <th className="py-3.5 px-2 text-center text-gray-900">
+                  Role
+                </th>
+                <th className="py-3.5 px-2 text-center text-gray-900">
                   Status
                 </th>
                 <th className="py-3.5 px-2 text-center text-gray-900">
@@ -78,6 +81,7 @@ const UserManagement = ({ role }) => {
                   className="divide-x divide-gray-200 text-center"
                 >
                   <td className="p-4 text-gray-500">{item?.username}</td>
+                  <td className="p-4 text-gray-500">{item?.roles[0]?.name}</td>
                   <td className="p-4 text-gray-500">
                     {item?.active ? "Active" : "Suspended"}
                   </td>
