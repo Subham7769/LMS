@@ -50,7 +50,8 @@ const AddUpdateBorrowerFields = ({
   const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
     []
   );
-
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); 
   // console.log(BorrowerData);
 
   useEffect(() => {
@@ -282,6 +283,7 @@ const AddUpdateBorrowerFields = ({
       inputName: "dateOfBirth",
       type: "date",
       validation: true,
+      maxSelectableDate:yesterday,
     },
     {
       labelName: "Place of Birth",
@@ -765,6 +767,8 @@ const AddUpdateBorrowerFields = ({
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
                   isDisabled={field.disabled || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
                 />
               </div>
             );

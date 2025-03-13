@@ -24,6 +24,9 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer}) => {
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
       []
     );
+    
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); 
 
   useEffect(() => {
     setFilteredLocations1(
@@ -144,6 +147,7 @@ console.log(name)
       inputName: "dateOfBirth",
       type: "date",
       validation: true,
+      maxSelectableDate:yesterday,
     },
     {
       labelName: "Place of Birth",
@@ -291,6 +295,8 @@ console.log(name)
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
                   isDisabled={field.disabled || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
                 />
               </div>
             );
