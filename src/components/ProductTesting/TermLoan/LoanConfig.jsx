@@ -181,9 +181,12 @@ const LoanConfig = () => {
               <CardInfo
                 cardTitle="Meet Our Borrower"
                 cardIcon={UserIcon}
-                color={"blue"}
+                colorText={"text-blue-primary"}
+                colorBG={"bg-background-light-white"}
+                numberBG={"bg-blue-secondary"}
                 cardNumber="1"
                 loading={loading}
+                className={"border border-border-gray-primary"}
               >
                 {/* <div className="font-semibold text-[15px] mb-2">
                   {borrowerData?.personalDetails?.title}{" "}
@@ -208,34 +211,41 @@ const LoanConfig = () => {
               <CardInfo
                 cardTitle="Avialable Loan Range"
                 cardIcon={CogIcon}
-                color={"green"}
+                colorText={"text-green-primary"}
+                colorBG={"bg-background-light-white"}
+                numberBG={"bg-green-secondary"}
                 cardNumber="2"
                 loading={loading}
+                className={"border border-border-gray-primary"}
               >
                 <div className="text-[14px]">
                   <div className="text-gray-500">Loan Range:</div>
                   <div className="font-semibold text-lg mb-2">
                     {formatNumber(
-                      loanConfigData?.cashLoanStats?.minLoanAmount.toFixed(2)
+                      loanConfigData?.cashLoanStats?.minLoanProductAmount.toFixed(
+                        2
+                      )
                     )}{" "}
                     -{" "}
                     {formatNumber(
-                      loanConfigData?.cashLoanStats?.maxLoanAmount.toFixed(2)
+                      loanConfigData?.cashLoanStats?.maxLoanAmountForBorrower.toFixed(
+                        2
+                      )
                     )}
                   </div>
                   <div className="text-gray-500">Duration Range:</div>
                   <div className="font-semibold text-lg">
-                    {loanConfigData?.cashLoanStats?.minLoanDuration} -{" "}
-                    {loanConfigData?.cashLoanStats?.maxLoanDuration} days
+                    {loanConfigData?.cashLoanStats?.minEligibleDuration} -{" "}
+                    {loanConfigData?.cashLoanStats?.maxEligibleDuration} days
                   </div>
                   <div className="text-gray-500 mb-2">
-                    ({loanConfigData?.cashLoanStats?.minLoanDurationMonths} -{" "}
-                    {loanConfigData?.cashLoanStats?.maxLoanDurationMonths}{" "}
+                    ({loanConfigData?.cashLoanStats?.minEligibleDurationMonths}{" "}
+                    - {loanConfigData?.cashLoanStats?.maxLoanDurationMonths}{" "}
                     months)
                   </div>
                   <div className="text-gray-500">Average Installments: </div>
                   <div className="font-semibold text-lg">
-                    {loanConfigData?.dynamicCashLoanOffers[0]?.averageNumberOfInstallment.toFixed(
+                    {loanConfigData?.dynamicCashLoanOffers[0]?.instalmentsNumber.toFixed(
                       2
                     )}
                   </div>
@@ -248,9 +258,12 @@ const LoanConfig = () => {
                   <CardInfo
                     cardTitle="Interest Rates"
                     cardIcon={CalculatorIcon}
-                    color={"violet"}
-                    // cardNumber={index + 3}
+                    colorText={"text-violet-primary"}
+                    colorBG={"bg-background-light-white"}
+                    numberBG={"bg-violet-secondary"}
+                    cardNumber="3"
                     loading={loading}
+                    className={"border border-border-gray-primary"}
                   >
                     <div className="text-[14px]">
                       <InfoRow2
@@ -282,9 +295,12 @@ const LoanConfig = () => {
                   <CardInfo
                     cardTitle="Financial Breakdown"
                     cardIcon={CalculatorIcon}
-                    color={"red"}
-                    // cardNumber={index + 4}
+                    colorText={"text-orange-primary"}
+                    colorBG={"bg-background-light-white"}
+                    numberBG={"bg-orange-secondary"}
+                    cardNumber="4"
                     loading={loading}
+                    className={"border border-border-gray-primary"}
                   >
                     <div className="text-[14px]">
                       <div className="text-gray-500">Principal Amount:</div>
@@ -343,8 +359,9 @@ const LoanConfig = () => {
                     "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
                   }
                   cardIcon={CurrencyDollarIcon}
-                  color={"blue"}
+                  colorText={"text-blue-primary"}
                   loading={loading}
+                  colorBG={"bg-background-light-white"}
                 >
                   <div
                     className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5"}
