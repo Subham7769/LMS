@@ -291,11 +291,11 @@ export const MenusInitial = [
         href: "/loan/product-testing/term-loan",
         current: false,
       },
-      {
-        name: "Overdraft Loan",
-        href: "/loan/product-testing/overdraft-loan",
-        current: false,
-      },
+      // {
+      //   name: "Overdraft Loan",
+      //   href: "/loan/product-testing/overdraft-loan",
+      //   current: false,
+      // },
     ],
     isOpen: false,
   },
