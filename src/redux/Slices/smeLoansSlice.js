@@ -785,6 +785,7 @@ const initialState = {
       branch: "",
       agentName: "",
       lhacoName: "",
+      uniqueID: "",
     },
     proformaDetails: {
       amountOfInvoice: "",
@@ -1028,6 +1029,7 @@ const smeLoansSlice = createSlice({
     },
     setLoanBorrowerId: (state, action) => {
       state.addLoanData.generalLoanDetails.borrowerId = action.payload;
+      state.addLoanData.generalLoanDetails.uniqueID = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -1230,7 +1232,7 @@ const smeLoansSlice = createSlice({
         state.loanOfferFields.loanProductId =
           state.addLoanData.generalLoanDetails.loanProductId;
         state.loanOfferFields.uid =
-          state.addLoanData.generalLoanDetails.borrowerId;
+          state.addLoanData.generalLoanDetails.uniqueID;
         state.addLoanData = initialState.addLoanData;
         toast.success("Offer generated successfully");
       })

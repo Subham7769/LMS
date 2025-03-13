@@ -55,8 +55,8 @@ const ApproveLoans = () => {
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [documentsData, setDocumentsData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchBy, setSearchBy] = useState("");
+  const [palSearchValue, setPalSearchValue] = useState("");
+  const [palSearchBy, setPalSearchBy] = useState("");
   const navigate = useNavigate();
 
   // Pagination state
@@ -82,29 +82,29 @@ const ApproveLoans = () => {
   const approveLoansData = transformData(approveLoans);
 
   const handleSearch = async () => {
-    //if empty searchBy or searchValue then display a message (otherwise API will return java runtime error)
+    //if empty palSearchBy or palSearchValue then display a message (otherwise API will return java runtime error)
     await dispatch(
-      validateForm({ searchBy: searchBy, searchValue: searchValue })
+      validateForm({ palSearchBy: palSearchBy, palSearchValue: palSearchValue })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
         getLoansByField({
-          field: searchBy,
-          value: searchValue,
+          field: palSearchBy,
+          value: palSearchValue,
           getPayload: { roleNames: [roleName] },
         })
       );
     }
 
-    // setSearchBy("");
-    // setSearchValue("");
+    // setPalSearchBy("");
+    // setPalSearchValue("");
   };
 
   const handleReset = () => {
-    setSearchBy("");
-    setSearchValue("");
+    setPalSearchBy("");
+    setPalSearchValue("");
     dispatch(
       getPendingLoans({
         page: 0,
@@ -378,10 +378,10 @@ const ApproveLoans = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="searchBy"
+            inputName="palSearchBy"
             inputOptions={searchOptions}
-            inputValue={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            inputValue={palSearchBy}
+            onChange={(e) => setPalSearchBy(e.target.value)}
             disabled={false}
             isValidation={true}
           />
@@ -389,9 +389,9 @@ const ApproveLoans = () => {
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="searchValue"
-            inputValue={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            inputName="palSearchValue"
+            inputValue={palSearchValue}
+            onChange={(e) => setPalSearchValue(e.target.value)}
             disabled={false}
             isValidation={true}
           />

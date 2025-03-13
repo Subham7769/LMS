@@ -58,7 +58,7 @@ const ProductNotifications = () => {
           </h2>
           <div className="flex gap-5 w-1/8">
             <span className="mt-6">
-              {notificationsHistoryFiltered.length + 1 + " results"}
+              {notificationsHistoryFiltered.length + " results"}
             </span>
             <InputSelect
               labelName="Status"
