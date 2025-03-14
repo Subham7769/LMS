@@ -57,7 +57,7 @@ const UpdateBorrower = () => {
     try {
       const addDrafTPersonalData = {
         borrowerType: "PERSONAL_BORROWER",
-        borrowerProfileDraftId: nanoid(),
+        borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
         personalBorrowerProfileDraft: { ...updateBorrowerData },
       };
 

@@ -17,6 +17,7 @@ const InputSelectCreatable = ({
   inputValue,
   inputId,
   inputOptions,
+  onCreateOption,//either send from the parent or use handleCreateOption from this component.
   setInputOptions, // Add this prop to update options dynamically
   onChange,
   placeHolder,
@@ -143,7 +144,7 @@ const InputSelectCreatable = ({
         }
         inputId={inputId}
         onChange={handleChange}
-        onCreateOption={handleCreateOption} // Enable new option creation
+        onCreateOption={onCreateOption ? onCreateOption : handleCreateOption} 
         isClearable={isClearable}
         isSearchable={searchable}
         placeholder={placeHolder}
