@@ -6,6 +6,8 @@ import InputDate from "../../Common/InputDate/InputDate";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputFile from "../../Common/InputFile/InputFile";
 import Accordion from "../../Common/Accordion/Accordion";
+import InputSelectCreatable from  "../../Common/InputSelectCreatable/InputSelectCreatable";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
   countryOptions,
@@ -32,6 +34,15 @@ import {
   bankBranches,
 } from "../../../data/BankData";
 
+import {
+  setEmployerData,
+  handleChangeEmployerData,
+  fetchEmployerData,
+  addEmployerData,
+  updateEmployerData,
+  deleteEmployerData,
+} from "../../../redux/Slices/employerSlice";
+
 const AddUpdateBorrowerFields = ({
   BorrowerData,
   handleChangeReducer,
@@ -39,6 +50,10 @@ const AddUpdateBorrowerFields = ({
   handleFileUpload,
 }) => {
   const dispatch = useDispatch();
+  const { employerData, allEmployerData, loading, error } = useSelector(
+    (state) => state.employer
+  );
+
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
@@ -52,8 +67,11 @@ const AddUpdateBorrowerFields = ({
   );
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1); 
+  const [employerOptions, setEmployerOptions] = useState([]);
   // console.log(BorrowerData);
-
+  const { menus } = useSelector((state) => state.sidebar);
+  const [defaultAffordability, setDefaultAffordability] = useState([]);
+  
   useEffect(() => {
     const keysArray = [
       "title",
@@ -101,11 +119,40 @@ const AddUpdateBorrowerFields = ({
       "grossSalary",
     ];
     dispatch(setFields(keysArray));
+    dispatch(fetchEmployerData());
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    //create employer dropdown
+    if (allEmployerData?.length) {
+      const options = allEmployerData.map(({ employerId, employerName }) => ({
+        value: employerName,
+        label: employerName,
+      }));
+      setEmployerOptions(options);
+    }
+
+  }, [allEmployerData]);
+
+  useEffect(() => {
+
+    console.log(menus)
+    //get the default affordability
+    const result = menus
+    .find((menu) => menu.title === "Affordability")
+    ?.submenuItems?.find((submenuItem) => submenuItem.name === "CRITERIA_DEFAULT_TEMP");
+    console.log(result)
+    setDefaultAffordability(result
+    ? {
+        name: result.name,
+        value: result.href.split("/").pop(),
+      }
+    : {name:"",value:""});
+  }, [menus]);
+  
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.contactDetails.country] || []
@@ -122,6 +169,7 @@ const AddUpdateBorrowerFields = ({
     setFilteredBranchNameOptions(
       BranchNameOptions[BorrowerData.bankDetails.bankName] || []
     );
+    
   }, [
     BorrowerData.contactDetails.country,
     BorrowerData.nextOfKinDetails.kinCountry,
@@ -168,6 +216,39 @@ const AddUpdateBorrowerFields = ({
       })
     );
   };
+
+  //Add new employer from the dropdown. 
+  const handleNewEmployer = async (inputValue, onChange) => {
+    if(!defaultAffordability?.value){
+      toast.warning("Default Affordibility not found, cannot create new employer");
+      return ;
+    }
+    const employerData = {
+      employerName: inputValue,
+      affordabilityCriteriaTempId: defaultAffordability?.value,
+    };
+
+    // await dispatch(validateForm(employerData));
+    // const state = store.getState();
+    // const isValid = state.validation.isValid;
+    // if (isValid) {
+    //  dispatch(addEmployerData(employerData)).unwrap();      
+    // }
+    dispatch(addEmployerData(employerData)).unwrap();
+    const newOption = { value: inputValue, label: inputValue };
+    setEmployerOptions((prev) => [...prev, newOption]); // Add new option to the list
+    // Explicitly call onChange to update the selected value
+    if (onChange) {
+      onChange({
+        target: {
+          name: "employer", // Ensure this matches your input field name
+          value: newOption.value, // Pass only the value
+          selectedOption: newOption, // Optionally, store full selected option
+        },
+      });
+    }
+  };
+
 
   useEffect(() => {
     dispatch(
@@ -380,8 +461,11 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Employer",
       inputName: "employer",
-      type: "text",
+      type: "InputSelectCreatable",
+      options: employerOptions,
       validation: true,
+      searchable: true,      
+      onCreateOption: handleNewEmployer,
     },
     {
       labelName: "Occupation",
@@ -757,6 +841,24 @@ const AddUpdateBorrowerFields = ({
                 disabled={field.disabled || false}
               />
             );
+          case "InputSelectCreatable":
+            return (
+              <InputSelectCreatable
+                key={index}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputOptions={field.options}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName)}
+                isValidation={field.validation || false}
+                searchable={field.searchable || false}
+                setInputOptions={setEmployerOptions}
+                onCreateOption={field.onCreateOption 
+                  ? (inputValue) => field.onCreateOption(inputValue, (e) => handleInputChange(e, sectionName)) 
+                  : null
+                }
+              />
+            );            
           case "date":
             return (
               <div className="col-span-1" key={index}>
