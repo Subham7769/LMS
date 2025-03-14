@@ -124,8 +124,8 @@ const AddLoans = () => {
       supplierDetails: updatedLoanData.supplierDetails,
     };
     if (isValid) {
-      await dispatch(submitLoan(submitPayload)).unwrap();
       await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
+      await dispatch(submitLoan(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
   };

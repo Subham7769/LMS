@@ -74,6 +74,7 @@ const ExpandableTable = ({
                       const normalizedStatus = status?.toLowerCase();
                       const statusClasses = {
                         in_progress: "bg-yellow-100 text-yellow-800",
+                        new: "bg-yellow-100 text-yellow-800",
                         rejected: "bg-red-100 text-red-800",
                         defaulter: "bg-red-100 text-red-800",
                         defaulted: "bg-red-100 text-red-800",

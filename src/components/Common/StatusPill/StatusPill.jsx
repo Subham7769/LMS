@@ -14,7 +14,7 @@ const StatusPill = ({ rule }) => {
     <div className="flex gap-3 align-middle">
       <div
         className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${
-          rule.status === "CREATED" && !rule.needDeleteApprove
+          (rule.status === "CREATED" || rule.status === "NEW") && !rule.needDeleteApprove
             ? rule.history.updateBy
               ? "bg-yellow-100 text-yellow-700" // Modified (Pending Approval)
               : "bg-green-100 text-green-700" // Newly Added

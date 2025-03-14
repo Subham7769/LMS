@@ -46,7 +46,6 @@ import ViewPhotoModal from "./ViewPhotoModal";
 import { viewPhoto } from "../../../redux/Slices/personalBorrowersSlice";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 
-
 const ViewBorrowers = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -97,21 +96,21 @@ const ViewBorrowers = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? personalDetails[searchBy]
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase())
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
           : true;
       } else {
         matchesSearchValue = searchValue
           ? [
-            personalDetails.firstName,
-            personalDetails.surname,
-            personalDetails.otherName,
-            personalDetails.uniqueID,
-            contactDetails.email,
-            contactDetails.mobile1,
-          ].some((field) =>
-            field?.toLowerCase().includes(searchValue.toLowerCase())
-          )
+              personalDetails.firstName,
+              personalDetails.surname,
+              personalDetails.otherName,
+              personalDetails.uniqueID,
+              contactDetails.email,
+              contactDetails.mobile1,
+            ].some((field) =>
+              field?.toLowerCase().includes(searchValue.toLowerCase())
+            )
           : true;
       }
 
@@ -197,7 +196,11 @@ const ViewBorrowers = () => {
     setSearchValue("");
   };
 
-  const handleViewPhoto = async (photoId) => {
+  const handleViewPhoto = async (e, photoId) => {
+    
+    e.preventDefault();
+    e.stopPropagation(); 
+    
     if (photoId) {
       const filePreviewParams = {
         authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
@@ -218,7 +221,6 @@ const ViewBorrowers = () => {
       }
     }
   };
-
 
   const closePhotoModal = () => {
     setShowPhotoModal(false);
@@ -314,8 +316,8 @@ const ViewBorrowers = () => {
               <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
                 <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
                   <div
-                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}
-                    className={`${rowData.customerPhotoId && 'cursor-pointer'}`}
+                    onClick={(e) => handleViewPhoto(e, rowData.customerPhotoId)}
+                    className={`${rowData.customerPhotoId && "cursor-pointer"}`}
                     title={"View Client Photo"}
                   >
                     <UserCircleIcon
@@ -323,12 +325,15 @@ const ViewBorrowers = () => {
                       aria-hidden="true"
                     />
                   </div>
-                  Personal Details {rowData.customerPhotoId && <p
-                    className="text-[9px] text-gray-600 -mb-2"
-                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}>
-                    View Client Photo
-                  </p>
-                  }
+                  Personal Details{" "}
+                  {rowData.customerPhotoId && (
+                    <p 
+                      className="text-[9px] text-gray-600 -mb-2 cursor-pointer underline"
+                      onClick={(e) => handleViewPhoto(e, rowData.customerPhotoId)}
+                    >
+                      View Client Photo
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
@@ -521,7 +526,7 @@ const ViewBorrowers = () => {
     };
 
     const checkBorrowerInfoCustomerCare = async (borrowerID) => {
-      const borrowerIdUpdated = removeSlashes(borrowerID)
+      const borrowerIdUpdated = removeSlashes(borrowerID);
       try {
         const token = localStorage.getItem("authToken");
         const data = await fetch(
@@ -549,14 +554,16 @@ const ViewBorrowers = () => {
       } catch (error) {
         console.error(error);
       }
-    }
+    };
 
     const getExistingLoan = async (borrowerID) => {
-      const borrowerIdUpdated = removeSlashes(borrowerID)
-      dispatch(getLoanHistoryByField({ field: 'uid', value: borrowerIdUpdated }));
-      navigate("/loan/loan-origination-system/personal/loans/loan-history");
-    }
-
+      // Encode BorrowerId to handle slashes
+      const encodedBorrowerId = encodeURIComponent(borrowerID);
+      dispatch(getLoanHistoryByField({ field: "uniqueID", value: borrowerID }));
+      navigate(
+        `/loan/loan-origination-system/personal/loans/loan-history/${encodedBorrowerId}`
+      );
+    };
 
     const userNavigation = [
       {
@@ -565,7 +572,7 @@ const ViewBorrowers = () => {
         action: handleNewApplication,
       },
       {
-        name: "Existing Loan",
+        name: "Existing Loans",
         href: "#",
         action: getExistingLoan,
       },
@@ -574,11 +581,14 @@ const ViewBorrowers = () => {
         href: "#",
         action: checkBorrowerInfoCustomerCare,
       },
-    ]
+    ];
 
     return (
       <div className="flex justify-center align-middle gap-4 px-5">
-        <ActionOption userNavigation={userNavigation} actionID={rowData.uniqueID} />
+        <ActionOption
+          userNavigation={userNavigation}
+          actionID={rowData.uniqueID}
+        />
       </div>
     );
   };

@@ -1,4 +1,5 @@
 export const BankNameOptions = [
+  { value: "Absa Bank", label: "Absa Bank" },
   { value: "Access Bank Zambia", label: "Access Bank Zambia" },
   { value: "Atlas Mara Bank", label: "Atlas Mara Bank" },
   { value: "Bank of China Zambia", label: "Bank of China Zambia" },
@@ -27,6 +28,15 @@ export const BankNameOptions = [
 ];
 
 export const BranchNameOptions = {
+  "Absa Bank": [
+    { value: "Acardes Branch", label: "Acardes Branch" },
+    { value: "Longacres Branch", label: "Longacres Branch" },
+    { value: "Lusaka Business Centre", label: "Lusaka Business Centre" },
+    { value: "Kitwe Branch", label: "Kitwe Branch" },
+    { value: "Ndola Branch", label: "Ndola Branch" },
+    { value: "Kabwe Branch", label: "Kabwe Branch" },
+    { value: "Levy Junction", label: "Levy Junction" },
+  ],
   "Access Bank Zambia": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Longacres Branch", label: "Longacres Branch" },
@@ -102,6 +112,48 @@ export const BranchNameOptions = {
 };
 
 export const bankBranches = [
+  {
+    bankName: "Absa Bank",
+    branchName: "Acardes Branch",
+    branchCode: "020017",
+    sortCode: "02-00-17",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Longacres Branch",
+    branchCode: "020017",
+    sortCode: "02-00-17",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Lusaka Business Centre",
+    branchCode: "020016",
+    sortCode: "02-00-16",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Kitwe Branch",
+    branchCode: "020209",
+    sortCode: "02-02-09",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Ndola Branch",
+    branchCode: "020125",
+    sortCode: "02-01-25",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Kabwe Branch",
+    branchCode: "020906",
+    sortCode: "02-09-06",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Levy Junction",
+    branchCode: "020015",
+    sortCode: "02-00-15",
+  },
   {
     bankName: "Access Bank Zambia",
     branchName: "Cairo Road Branch",
