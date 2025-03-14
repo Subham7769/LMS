@@ -39,11 +39,19 @@ export const fetchClosingBalance = createAsyncThunk(
   async ({ userId, loanId }, { rejectWithValue }) => {
     console.log(userId, loanId);
     try {
+      const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
           import.meta.env
             .VITE_REPAYMENT_GET_ALL_CLOSING_AMOUNT_PERSONAL_BORROWER
-        }${userId}/loan/${loanId}/loan-amounts`
+        }${userId}/loan/${loanId}/loan-amounts`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!response.ok) {

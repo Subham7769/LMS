@@ -7,6 +7,8 @@ import {
   getLoanHistoryByField,
   getLoanAgreement,
   uploadSignedLoanAgreement,
+  generateLoanApplicationId,
+  getRefinanceDetails,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -16,7 +18,7 @@ import InputFile from "../../Common/InputFile/InputFile";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "../FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "./ViewDocumentsModal";
 import {
@@ -25,6 +27,7 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
+  ReceiptRefundIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
@@ -54,9 +57,12 @@ const LoanHistory = () => {
   const [plhSearchValue, setPlhSearchValue] = useState("");
   const [plhSearchBy, setPlhSearchBy] = useState("");
   const [signedAgreement, setSignedAgreement] = useState("");
-
+  const { uniqueID } = useParams();
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
+
+  // Decode the BorrowerId to restore its original value
+  const decodedUniqueID = decodeURIComponent(uniqueID);
 
   useEffect(() => {
     return () => {
@@ -77,7 +83,9 @@ const LoanHistory = () => {
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(getLoanHistoryByField({ field: plhSearchBy, value: plhSearchValue }));
+      dispatch(
+        getLoanHistoryByField({ field: plhSearchBy, value: plhSearchValue })
+      );
     }
     // setPlhSearchBy("");
     // setPlhSearchValue("");
@@ -87,6 +95,7 @@ const LoanHistory = () => {
     setPlhSearchBy("");
     setPlhSearchValue("");
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
+    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
@@ -112,6 +121,16 @@ const LoanHistory = () => {
       `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
     );
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  const handleRefinanceLoan = async (loanId, uid, uniqueID) => {
+    await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
+    const loanApplicationId = await dispatch(
+      generateLoanApplicationId()
+    ).unwrap();
+    navigate(
+      `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
+    );
   };
 
   const searchOptions = [
@@ -294,7 +313,11 @@ const LoanHistory = () => {
         </div>
       )}
       <div className="flex justify-between items-end">
-        {rowData.verifiedDocuments.documentKey === "SIGNED_LOAN_AGREEMENT" ? (
+        {rowData.verifiedDocuments.some(
+          (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
+        ) ? (
+          <div>&nbsp;</div>
+        ) : (
           <div>
             <InputFile
               placeholder="Upload Signed Agreement"
@@ -303,10 +326,25 @@ const LoanHistory = () => {
               onChange={(e) => handleFileChange(e, rowData.loanId)}
             />
           </div>
-        ) : (
-          <div>&nbsp;</div>
         )}
         <div className="flex justify-end gap-2 px-5">
+          {rowData.loanStatus === "ACTIVATED" && (
+            <div>
+              <Button
+                buttonName={"Refinance Loan"}
+                onClick={() =>
+                  handleRefinanceLoan(
+                    rowData.loanId,
+                    rowData.uid,
+                    rowData.uniqueID
+                  )
+                }
+                rectangle={true}
+                buttonIcon={ReceiptRefundIcon}
+                buttonType="tertiary"
+              />
+            </div>
+          )}
           <div>
             <Button
               buttonName={"View Loan Agreement"}
@@ -379,11 +417,13 @@ const LoanHistory = () => {
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
-      <Pagination
-        totalElements={loanHistoryTotalElements}
-        dispatcherFunction={dispatcherFunction}
-        pageSize={pageSize}
-      />
+      {decodedUniqueID === "undefined" && (
+        <Pagination
+          totalElements={loanHistoryTotalElements}
+          dispatcherFunction={dispatcherFunction}
+          pageSize={pageSize}
+        />
+      )}
       <FullLoanDetailModal
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}

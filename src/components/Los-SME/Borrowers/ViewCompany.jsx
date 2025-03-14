@@ -110,22 +110,22 @@ const ViewCompany = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? companyDetails[searchBy]
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase())
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
           : true;
       } else {
         // Search through multiple fields if no specific 'searchBy'
         matchesSearchValue = searchValue
           ? [
-            companyDetails.companyName,
-            companyDetails.companyShortName,
-            companyDetails.companyUniqueId,
-            companyDetails.companyRegistrationNo,
-            companyContactDetails.email,
-            companyContactDetails.mobile1,
-          ]
-            .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
-            .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
+              companyDetails.companyName,
+              companyDetails.companyShortName,
+              companyDetails.companyUniqueId,
+              companyDetails.companyRegistrationNo,
+              companyContactDetails.email,
+              companyContactDetails.mobile1,
+            ]
+              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
           : true;
       }
 
@@ -858,8 +858,6 @@ const ViewCompany = () => {
     );
   };
 
-
-
   const ListAction = (rowData) => {
     // if (rowData.status === "Completed" || rowData.status === "Cancel" ||
     //       hasViewOnlyAccessGroup3(roleName)) {
@@ -911,13 +909,16 @@ const ViewCompany = () => {
       } catch (error) {
         console.error(error);
       }
-    }
-    
+    };
+
     const getExistingLoan = async (borrowerID) => {
-      dispatch(getLoanHistoryByField({ field: 'borrowerId', value: borrowerID }));
-      navigate("/loan/loan-origination-system/sme/loans/loan-history");
-    }
-  
+      // Encode BorrowerId to handle slashes
+      const encodedBorrowerId = encodeURIComponent(borrowerID);
+      dispatch(getLoanHistoryByField({ field: "uniqueID", value: borrowerID }));
+      navigate(
+        `/loan/loan-origination-system/sme/loans/loan-history/${encodedBorrowerId}`
+      );
+    };
 
     const userNavigation = [
       {
@@ -926,25 +927,26 @@ const ViewCompany = () => {
         action: handleNewApplication,
       },
       {
-        name: "Existing Loan",
+        name: "Existing Loans",
         href: "#",
         action: getExistingLoan,
       },
       {
         name: "Customer Care",
         href: "#",
-        action:checkBorrowerInfoCustomerCare,
+        action: checkBorrowerInfoCustomerCare,
       },
-    ]
+    ];
 
     return (
       <div className="flex justify-center align-middle gap-4 px-5">
-        <ActionOption userNavigation={userNavigation} actionID={rowData.companyUniqueId}/>
+        <ActionOption
+          userNavigation={userNavigation}
+          actionID={rowData.companyUniqueId}
+        />
       </div>
     );
   };
-
-
 
   return (
     <div className={`flex flex-col gap-3`}>
