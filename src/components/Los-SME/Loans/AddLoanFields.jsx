@@ -31,7 +31,9 @@ const AddLoanFields = ({ addLoanData }) => {
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredProvinces2, setFilteredProvinces2] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
-
+  
+  const today = new Date();
+  
   useEffect(() => {
     setFilteredProvinces1(
       locationOptions[addLoanData.offTakerDetails.country] || []
@@ -332,6 +334,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "loanReleaseDate",
       type: "date",
       validation: true,
+      minSelectableDate: today,
     },
     {
       labelName: "Loan Duration",

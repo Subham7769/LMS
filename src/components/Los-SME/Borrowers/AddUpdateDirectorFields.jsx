@@ -44,6 +44,9 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
   const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
     []
   );
+  
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); 
 
   useEffect(() => {
     setFilteredLocations1(
@@ -258,6 +261,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "dateOfBirth",
       type: "date",
       validation: true,
+      maxSelectableDate:yesterday,
     },
     {
       labelName: "Place of Birth",
@@ -626,6 +630,8 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
                   isDisabled={field.disabled || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
                 />
               </div>
             );

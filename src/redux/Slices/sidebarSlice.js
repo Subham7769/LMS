@@ -92,6 +92,7 @@ export const fetchAffordibilityData = createAsyncThunk(
       return data.map(({ name, affordabilityCriteriaTempId }) => ({
         name: name.replace(/-/g, " "),
         href: "/loan/affordability/" + affordabilityCriteriaTempId,
+        default: name === "CRITERIA_DEFAULT_TEMP"
       }));
     };
     try {

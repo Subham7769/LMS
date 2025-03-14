@@ -25,6 +25,8 @@ import {
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 
+const today = new Date();
+
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
@@ -302,6 +304,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "loanReleaseDate",
       type: "date",
       validation: true,
+      minSelectableDate: today,
     },
     {
       labelName: "Loan Duration",
@@ -424,6 +427,8 @@ const AddLoanFields = ({ addLoanData }) => {
                   onChange={(e) => handleInputChange(e, sectionName)}
                   isValidation={field.validation || false}
                   isDisabled={field.disabled || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
                 />
               </div>
             );

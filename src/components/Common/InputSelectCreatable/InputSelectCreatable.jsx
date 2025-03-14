@@ -17,6 +17,7 @@ const InputSelectCreatable = ({
   inputValue,
   inputId,
   inputOptions,
+  onCreateOption,//either send from the parent or use handleCreateOption from this component.
   setInputOptions, // Add this prop to update options dynamically
   onChange,
   placeHolder,
@@ -57,10 +58,11 @@ const InputSelectCreatable = ({
       ...provided,
       fontSize:
         dropdownTextSize === "small"
-          ? "12px"
+          ? "0.875rem"
           : dropdownTextSize === "large"
-          ? "16px"
-          : "14px",
+          ? "1rem"
+          : "0.875rem", // Change font size
+      fontFamily: "inherit", // Set font to inherit
       padding: 6,
     }),
     control: (provided) => ({
@@ -77,14 +79,25 @@ const InputSelectCreatable = ({
       ...provided,
       zIndex: 9999,
     }),
+    placeholder: (provided) => ({
+      ...provided,
+      fontFamily: "inherit",
+      fontSize:
+        dropdownTextSize === "small"
+          ? "0.875rem"
+          : dropdownTextSize === "large"
+          ? "1rem"
+          : "0.875rem", // Convert px to rem
+      color: "#9ca3af", // Equivalent to Tailwind's text-gray-400
+    }),
     singleValue: (provided) => ({
       ...provided,
       fontSize:
         dropdownTextSize === "small"
-          ? "12px"
+          ? "0.875rem"
           : dropdownTextSize === "large"
-          ? "16px"
-          : "14px",
+          ? "1rem"
+          : "0.875rem", // Change font size
     }),
   };
 
@@ -131,7 +144,7 @@ const InputSelectCreatable = ({
         }
         inputId={inputId}
         onChange={handleChange}
-        onCreateOption={handleCreateOption} // Enable new option creation
+        onCreateOption={onCreateOption ? onCreateOption : handleCreateOption} 
         isClearable={isClearable}
         isSearchable={searchable}
         placeholder={placeHolder}

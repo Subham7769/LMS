@@ -84,6 +84,7 @@ const InputDate = ({
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
+          todayButton="Today"
           toggleCalendarOnIconClick
           showIcon={showIcon}
           icon={

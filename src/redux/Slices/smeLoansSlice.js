@@ -135,10 +135,6 @@ export const getLoanApplicationByField = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to fetch");
       }
       const responseData = await response.json();
-      const length = responseData.length;
-      if (length < 1) {
-        throw new Error("Data not Found");
-      }
       return responseData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -566,10 +562,6 @@ export const getLoansByField = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to fetch");
       }
       const responseData = await response.json();
-      const length = responseData.length;
-      if (length < 1) {
-        throw new Error("Data not Found");
-      }
       return responseData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -679,10 +671,6 @@ export const getLoanHistoryByField = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to fetch");
       }
       const responseData = await response.json();
-      const length = responseData.length;
-      if (length < 1) {
-        throw new Error("Data not Found");
-      }
       return responseData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -752,6 +740,34 @@ export const generateLoanApplicationId = createAsyncThunk(
     const id = nanoid();
     // You can perform any async operations here if needed
     return id;
+  }
+);
+
+export const getRefinanceDetails = createAsyncThunk(
+  "smeLoans/getRefinanceDetails",
+  async ({ loanId, uid, uniqueID }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_FULL_LOAN_DETAILS_BY_ID_PERSONAL
+        }${uid}/loan-details/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return { responseData, uniqueID };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -1109,6 +1125,9 @@ const smeLoansSlice = createSlice({
 
         // Check if loanId is null in each object and filter accordingly
         state.loanApplications = payload;
+
+        // hide the pagination
+        state.loanApplicationsTotalElements = 0;
       })
       .addCase(getLoanApplicationByField.rejected, (state, action) => {
         state.loading = false;
@@ -1309,6 +1328,9 @@ const smeLoansSlice = createSlice({
         state.approveLoans = payload.some((item) => item.loanId === null)
           ? [] // Set to an empty array if any loanId is null
           : payload;
+
+        // hide the pagination
+        state.approveLoansTotalElements = 0;
       })
       .addCase(getLoansByField.rejected, (state, action) => {
         state.loading = false;
@@ -1370,6 +1392,9 @@ const smeLoansSlice = createSlice({
         state.loanHistory = payload.some((item) => item.loanId === null)
           ? [] // Set to an empty array if any loanId is null
           : payload;
+
+        // hide the pagination
+        state.loanHistoryTotalElements = 0;
       })
       .addCase(getLoanHistoryByField.rejected, (state, action) => {
         state.loading = false;
@@ -1398,6 +1423,24 @@ const smeLoansSlice = createSlice({
         state.loanAgreementData = action.payload;
       })
       .addCase(getLoanAgreement.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getRefinanceDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getRefinanceDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        const { responseData, uniqueID } = action.payload;
+        state.addLoanData.generalLoanDetails.uniqueID = uniqueID;
+        state.addLoanData.generalLoanDetails.refinancedLoanId =
+          responseData.loanId;
+        state.addLoanData.generalLoanDetails.refinancedLoanAmount =
+          responseData.xcClosingAmount;
+      })
+      .addCase(getRefinanceDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);

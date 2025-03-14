@@ -15,6 +15,9 @@ import {
 const RegistrationForm = () => {
   const dispatch = useDispatch();
   const { registrationDetails } = useSelector((state) => state.productTesting);
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -111,6 +114,7 @@ const RegistrationForm = () => {
               inputValue={registrationDetails?.dateOfBirth}
               onChange={handleChange}
               isValidation={true}
+              minSelectableDate={yesterday || null}
             />
           </div>
           <InputText
