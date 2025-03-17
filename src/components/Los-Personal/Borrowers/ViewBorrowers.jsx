@@ -196,7 +196,11 @@ const ViewBorrowers = () => {
     setSearchValue("");
   };
 
-  const handleViewPhoto = async (photoId) => {
+  const handleViewPhoto = async (e, photoId) => {
+    
+    e.preventDefault();
+    e.stopPropagation(); 
+    
     if (photoId) {
       const filePreviewParams = {
         authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
@@ -312,7 +316,7 @@ const ViewBorrowers = () => {
               <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
                 <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
                   <div
-                    onClick={() => handleViewPhoto(rowData.customerPhotoId)}
+                    onClick={(e) => handleViewPhoto(e, rowData.customerPhotoId)}
                     className={`${rowData.customerPhotoId && "cursor-pointer"}`}
                     title={"View Client Photo"}
                   >
@@ -323,9 +327,9 @@ const ViewBorrowers = () => {
                   </div>
                   Personal Details{" "}
                   {rowData.customerPhotoId && (
-                    <p
-                      className="text-[9px] text-gray-600 -mb-2"
-                      onClick={() => handleViewPhoto(rowData.customerPhotoId)}
+                    <p 
+                      className="text-[9px] text-gray-600 -mb-2 cursor-pointer underline"
+                      onClick={(e) => handleViewPhoto(e, rowData.customerPhotoId)}
                     >
                       View Client Photo
                     </p>

@@ -33,8 +33,9 @@ const ViewPhotoModal = ({ isOpen, onClose, photoData }) => {
 
   return (
     <>
-      <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-        <div className="bg-white border border-red-600 p-8 rounded-xl w-1/3 relative shadow-lg transition-all duration-500 ease-in-out">
+<div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
+      <div className="bg-white border border-red-600 p-6 rounded-xl w-1/3 max-h-[80vh] relative shadow-lg flex flex-col justify-center items-center">
+        {/* Close Button */}
           {/* Close Button */}
           <div
             onClick={onClose}
@@ -58,11 +59,11 @@ const ViewPhotoModal = ({ isOpen, onClose, photoData }) => {
           </div>
 
           {/* Profile Image */}
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center w-full h-full overflow-hidden">
             <img
               src={photoData}
               alt="Client Profile Not Uploaded Yet"
-              className="rounded-lg max-w-full h-auto"
+              className="rounded-lg max-w-full max-h-[60vh] w-auto h-auto"
             />
           </div>
         </div>

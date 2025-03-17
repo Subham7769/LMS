@@ -16,7 +16,8 @@ const UserMenu = ({ userNavigation, isOnline }) => {
   const dispatch = useDispatch();
 
   const { roleData } = useSelector((state) => state.userManagement);
-  const { roleName } = useSelector((state) => state.auth);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
 
   // console.log(roleData)
 
