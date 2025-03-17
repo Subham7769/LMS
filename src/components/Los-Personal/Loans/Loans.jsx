@@ -42,8 +42,12 @@ const Loans = () => {
   ];
 
   useEffect(() => {
-    const active = tabs.find((tab) => currentPath.includes(tab.id)); // Check if path contains tab.id
-    if (active) {
+    let active = tabs.find((tab) => currentPath.includes(tab.id));
+
+    // If currentPath includes "add-loan", force "loan-application" as active
+    if (currentPath.includes("add-loan")) {
+      setActiveTab("loan-application");
+    } else if (active) {
       setActiveTab(active.id);
     }
   }, [location, tabs]);
