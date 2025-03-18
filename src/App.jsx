@@ -851,6 +851,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "loan-history/:uniqueID",
+            element: <LoanHistorySME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "collateral-register",
             element: <CollateralRegisterSME />,
             errorElement: <RouteErrorBoundary />,
@@ -1003,6 +1008,11 @@ const routes = [
           },
           {
             path: "loan-history",
+            element: <LoanHistory />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history/:uniqueID",
             element: <LoanHistory />,
             errorElement: <RouteErrorBoundary />,
           },

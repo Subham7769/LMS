@@ -21,6 +21,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { sanitizeUid } from "../../../utils/sanitizeUid";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -97,29 +98,51 @@ const AddLoans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(validateForm(flattenToSimpleObject(addLoanData)));
-    console.log(addLoanData);
+    // Ensure borrowerId is set to the sanitized uniqueID
+    const sanitizedUniqueID = sanitizeUid(
+      addLoanData.generalLoanDetails.uniqueID
+    );
+    const updatedLoanData = {
+      ...addLoanData,
+      generalLoanDetails: {
+        ...addLoanData.generalLoanDetails,
+        borrowerId: sanitizedUniqueID,
+      },
+    };
+    await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
+    // console.log(updatedLoanData);
     const state = store.getState();
     const isValid = state.validation.isValid;
     const submitPayload = {
-      ...addLoanData.generalLoanDetails,
-      documents: addLoanData.documents,
-      loanApplicationId: addLoanData.loanApplicationId,
-      collateralDetails: addLoanData.collateralDetails,
-      lhaDetails: addLoanData.lhaDetails,
-      offTakerDetails: addLoanData.offTakerDetails,
-      proformaDetails: addLoanData.proformaDetails,
-      supplierDetails: addLoanData.supplierDetails,
+      ...updatedLoanData.generalLoanDetails,
+      documents: updatedLoanData.documents,
+      loanApplicationId: updatedLoanData.loanApplicationId,
+      collateralDetails: updatedLoanData.collateralDetails,
+      lhaDetails: updatedLoanData.lhaDetails,
+      offTakerDetails: updatedLoanData.offTakerDetails,
+      proformaDetails: updatedLoanData.proformaDetails,
+      supplierDetails: updatedLoanData.supplierDetails,
     };
     if (isValid) {
+      await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
-      await dispatch(saveDraftLoanData(addLoanData)).unwrap();
       navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
   };
 
   const handleDraft = async () => {
-    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+    // Ensure borrowerId is set to the sanitized uniqueID
+    const sanitizedUniqueID = sanitizeUid(
+      addLoanData.generalLoanDetails.uniqueID
+    );
+    const updatedLoanData = {
+      ...addLoanData,
+      generalLoanDetails: {
+        ...addLoanData.generalLoanDetails,
+        borrowerId: sanitizedUniqueID,
+      },
+    };
+    await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
     navigate("/loan/loan-origination-system/sme/loans/loan-application");
   };
 

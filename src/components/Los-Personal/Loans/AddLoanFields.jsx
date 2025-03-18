@@ -20,6 +20,8 @@ import {
 } from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
+
+const today = new Date();
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
@@ -284,7 +286,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Borrower Unique ID",
-      inputName: "borrowerId",
+      inputName: "uniqueID",
       type: "text",
       validation: true,
     },
@@ -300,6 +302,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "loanReleaseDate",
       type: "date",
       validation: true,
+      minSelectableDate: today,
     },
     {
       labelName: "Loan Duration",
@@ -480,6 +483,7 @@ const AddLoanFields = ({ addLoanData }) => {
             details={addLoanData.generalLoanDetails}
             config={generalLoanDetailsConfig}
             sectionName={"generalLoanDetails"}
+            handleInputChange={handleInputChange}
           />
         }
         isOpen={true}

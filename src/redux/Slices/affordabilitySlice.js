@@ -167,6 +167,7 @@ export const fetchData = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to read");
       }
       const data = await response.json();
+      console.log(data)
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -208,6 +209,7 @@ const affordabilityInitialState = {
     totalDeductionsOnPayslip: "",
     totalDeductionsNotOnPayslip: "",
   },
+  defaultAffordibility: [],
   loading: false,
   error: null,
 };
@@ -251,8 +253,18 @@ const affordabilitySlice = createSlice({
           //   TCLList[index]?.totalDisbursedPrincipal || "$750M",
           // status: TCLList[index]?.status || "Active",
         }));
+        
+        // Populate defaultAffordibility with {name, affordabilityCriteriaTempId}
+        state.defaultAffordibility = action.payload
+        .find((item) => item.name === "CRITERIA_DEFAULT_TEMP")
+        ? {
+            name: action.payload.find((item) => item.name === "CRITERIA_DEFAULT_TEMP").name,
+            affordabilityCriteriaTempId: action.payload.find((item) => item.name === "CRITERIA_DEFAULT_TEMP").affordabilityCriteriaTempId,
+          }
+        : null; // Or handle the case when no match is found
 
         // Assign the updatedList to RecoveryList
+        console.log(updatedList)
         state.affordabilityStatsData.AffordabilityList = updatedList;
       })
       .addCase(fetchList.rejected, (state, action) => {

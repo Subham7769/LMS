@@ -1,4 +1,5 @@
 export const BankNameOptions = [
+  { value: "Absa Bank", label: "Absa Bank" },
   { value: "Access Bank Zambia", label: "Access Bank Zambia" },
   { value: "Atlas Mara Bank", label: "Atlas Mara Bank" },
   { value: "Bank of China Zambia", label: "Bank of China Zambia" },
@@ -9,14 +10,33 @@ export const BankNameOptions = [
   { value: "First National Bank", label: "First National Bank" },
   { value: "Indo-Zambia Bank", label: "Indo-Zambia Bank" },
   { value: "Investrust Bank", label: "Investrust Bank" },
+  {
+    value: "National Credit and Saving Bank",
+    label: "National Credit and Saving Bank",
+  },
   { value: "Stanbic Bank", label: "Stanbic Bank" },
   { value: "Standard Chartered Bank", label: "Standard Chartered Bank" },
   { value: "United Bank for Africa", label: "United Bank for Africa" },
-  { value: "Zambia Industrial Commercial Bank", label: "Zambia Industrial Commercial Bank" },
-  { value: "Zambia National Commercial Bank", label: "Zambia National Commercial Bank" },
+  {
+    value: "Zambia Industrial Commercial Bank",
+    label: "Zambia Industrial Commercial Bank",
+  },
+  {
+    value: "Zambia National Commercial Bank",
+    label: "Zambia National Commercial Bank",
+  },
 ];
 
 export const BranchNameOptions = {
+  "Absa Bank": [
+    { value: "Acardes Branch", label: "Acardes Branch" },
+    { value: "Longacres Branch", label: "Longacres Branch" },
+    { value: "Lusaka Business Centre", label: "Lusaka Business Centre" },
+    { value: "Kitwe Branch", label: "Kitwe Branch" },
+    { value: "Ndola Branch", label: "Ndola Branch" },
+    { value: "Kabwe Branch", label: "Kabwe Branch" },
+    { value: "Levy Junction", label: "Levy Junction" },
+  ],
   "Access Bank Zambia": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Longacres Branch", label: "Longacres Branch" },
@@ -61,6 +81,9 @@ export const BranchNameOptions = {
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Ndola Branch", label: "Ndola Branch" },
   ],
+  "National Credit and Saving Bank": [
+    { value: "Lusaka Main", label: "Lusaka Main" },
+  ],
   "Stanbic Bank": [
     { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
     { value: "Arcades Branch", label: "Arcades Branch" },
@@ -89,6 +112,48 @@ export const BranchNameOptions = {
 };
 
 export const bankBranches = [
+  {
+    bankName: "Absa Bank",
+    branchName: "Acardes Branch",
+    branchCode: "020017",
+    sortCode: "02-00-17",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Longacres Branch",
+    branchCode: "020017",
+    sortCode: "02-00-17",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Lusaka Business Centre",
+    branchCode: "020016",
+    sortCode: "02-00-16",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Kitwe Branch",
+    branchCode: "020209",
+    sortCode: "02-02-09",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Ndola Branch",
+    branchCode: "020125",
+    sortCode: "02-01-25",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Kabwe Branch",
+    branchCode: "020906",
+    sortCode: "02-09-06",
+  },
+  {
+    bankName: "Absa Bank",
+    branchName: "Levy Junction",
+    branchCode: "020015",
+    sortCode: "02-00-15",
+  },
   {
     bankName: "Access Bank Zambia",
     branchName: "Cairo Road Branch",
@@ -220,6 +285,12 @@ export const bankBranches = [
     branchName: "Ndola Branch",
     branchCode: "140002",
     sortCode: "14-00-02",
+  },
+  {
+    bankName: "National Credit and Saving Bank",
+    branchName: "Lusaka Main",
+    branchCode: "580010",
+    sortCode: "58-00-10",
   },
   {
     bankName: "Stanbic Bank",

@@ -231,7 +231,7 @@ const AddDocuments = () => {
           <div>Loading...</div>
         ) : (
           <div>
-            {documents.map((document, index) => (
+            {documents?.map((document, index) => (
               <DocumentUploaderVerifier
                 key={document?.documentKey} // Unique key for React
                 label={document?.documentKey?.replace(/_/g, " ")} // Convert documentKey to a more readable label

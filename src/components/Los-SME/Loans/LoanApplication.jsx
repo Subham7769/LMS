@@ -31,6 +31,7 @@ import {
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     loanApplicationId: item?.loanApplicationId,
+    uniqueID: item?.generalLoanDetails?.uniqueID,
     borrowerId: item?.generalLoanDetails?.borrowerId,
     creationDate: convertDate(item?.creationDate),
     lastUpdate: item?.lastUpdate ? convertDate(item?.lastUpdate) : " - ",
@@ -61,12 +62,12 @@ const LoanApplication = () => {
 
   const searchOptions = [
     { label: "Loan Application Id", value: "loanApplicationId" },
-    { label: "Borrower Serial No.", value: "borrowerId" },
+    { label: "Borrower Serial No.", value: "uniqueID" },
   ];
 
   const columns = [
     { label: "Loan Application ID", field: "loanApplicationId" },
-    { label: "Borrower Serial No.", field: "borrowerId" },
+    { label: "Borrower Serial No.", field: "uniqueID" },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },
     { label: "Status", field: "status" },

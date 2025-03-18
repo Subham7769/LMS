@@ -790,7 +790,7 @@ export const verifyDocumentInfo = createAsyncThunk(
 
 // Fetch Company Documents
 export const fetchCompanyDocuments = createAsyncThunk(
-  "company/fetchDocuments", // Action type
+  "company/fetchCompanyDocuments", // Action type
   async ({ companyId, auth }, { rejectWithValue }) => {
     if (companyId) {
       try {

@@ -19,8 +19,11 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
-    []
-  );
+      []
+    );
+    
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); 
 
   useEffect(() => {
     setFilteredLocations1(
@@ -141,6 +144,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "dateOfBirth",
       type: "date",
       validation: true,
+      maxSelectableDate:yesterday,
     },
     {
       labelName: "Place of Birth",
@@ -224,6 +228,112 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: false,
     },
   ];
+
+  // Generate the Form Field
+  const personalDetailsInputNames = personalDetailsConfig.map(
+    (field) => field.inputName
+  );
+  const contactDetailsInputNames = contactDetailsConfig.map(
+    (field) => field.inputName
+  );
+
+  // Rendering Input Fields
+  const renderDetails = (details, config, sectionName) => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {config.map((field, index) => {
+        switch (field.type) {
+          case "text":
+            return (
+              <InputText
+                key={index}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName)}
+                placeHolder={`Enter ${field.labelName}`}
+                isValidation={field.validation || false}
+                disabled={field.disabled || false}
+              />
+            );
+          case "number":
+            return (
+              <InputNumber
+                key={index}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName)}
+                placeHolder={`Enter ${field.labelName}`}
+                isValidation={field.validation || false}
+                disabled={field.disabled || false}
+              />
+            );
+          case "select":
+            return (
+              <InputSelect
+                key={index}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputOptions={field.options}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName)}
+                isValidation={field.validation || false}
+                searchable={field.searchable || false}
+                disabled={field.disabled || false}
+              />
+            );
+          case "date":
+            return (
+              <div className="col-span-1" key={index}>
+                <InputDate
+                  labelName={field.labelName}
+                  inputName={field.inputName}
+                  inputValue={details[field.inputName]}
+                  onChange={(e) => handleInputChange(e, sectionName)}
+                  isValidation={field.validation || false}
+                  isDisabled={field.disabled || false}
+                  minSelectableDate={field.minSelectableDate || null}
+                  maxSelectableDate={field.maxSelectableDate || null}
+                />
+              </div>
+            );
+          case "email":
+            return (
+              <InputEmail
+                key={index}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleInputChange(e, sectionName)}
+                placeHolder={`Enter ${field.labelName}`}
+                isValidation={field.validation || false}
+              />
+            );
+          case "file":
+            return (
+              <InputFile
+                key={index}
+                labelName={field.labelName}
+                inputName={field.inputName}
+                inputValue={details[field.inputName]}
+                onChange={(e) => handleFileUpload(e, sectionName)}
+                accept={field.accept || "*"}
+                isValidation={field.validation || false}
+              />
+            );
+          default:
+            return null;
+        }
+      })}
+    </div>
+  );
+
+  // Dedicated UI Components Creation
+  const personalDetails = (personalDetails) =>
+    renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
+
+  const contactDetails = (contactDetails) =>
+    renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
 
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
