@@ -32,7 +32,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import CloneModal from "../Common/CloneModal/CloneModal";
@@ -143,7 +143,7 @@ const LoanApproval = () => {
   const handleChange = (e, index, idx) => {
     const { name, value, checked, type } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
-    if (!hasViewOnlyAccessGroup2(roleName)) {
+    if (!hasViewOnlyAccess(roleName)) {
       dispatch(handleLoanapprovalData({ name, value: fieldValue, index, idx }));
     }
   };
@@ -186,7 +186,7 @@ const LoanApproval = () => {
         initialName={itemName}
       />
       <div className="flex flex-col gap-5">
-        {!hasViewOnlyAccessGroup2(roleName) ? (
+        {!hasViewOnlyAccess(roleName) ? (
           <ContainerTile
             loading={loading}
             // error={error}
@@ -271,7 +271,7 @@ const LoanApproval = () => {
               key={"Loan" + index}
             >
               <div className="absolute right-3 top-3 text-right">
-                {!hasViewOnlyAccessGroup2(roleName) ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   <Button
                     buttonIcon={TrashIcon}
                     onClick={() => deleteApprover(index)}
@@ -299,7 +299,7 @@ const LoanApproval = () => {
                   placeHolder="10000"
                   isValidation={true}
                 />
-                {!hasViewOnlyAccessGroup2(roleName) && (
+                {!hasViewOnlyAccess(roleName) && (
                   <Button
                     buttonIcon={PlusIcon}
                     onClick={() => handleAddRolesExisting(index)}
@@ -335,7 +335,7 @@ const LoanApproval = () => {
                       inputName="reject"
                     />
                   </div>
-                  {!hasViewOnlyAccessGroup2(roleName) && (
+                  {!hasViewOnlyAccess(roleName) && (
                     <Button
                       buttonIcon={TrashIcon}
                       onClick={() => handleDeleteRolesExisting(index, idx)}
@@ -348,7 +348,7 @@ const LoanApproval = () => {
             </ContainerTile>
           )
         )}
-        {!hasViewOnlyAccessGroup2(roleName) &&
+        {!hasViewOnlyAccess(roleName) &&
           loanapprovalData[0]?.loanCriteriaRangeRolesList.length > 0 && (
             <div className="text-right">
               <Button
