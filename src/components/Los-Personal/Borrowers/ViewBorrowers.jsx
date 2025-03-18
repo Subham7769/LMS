@@ -324,7 +324,7 @@ const ViewBorrowers = () => {
                     />
                   </div>
                   Personal Details {rowData.customerPhotoId && <p
-                    className="text-[9px] text-gray-600 -mb-2"
+                    className={`${rowData.customerPhotoId && 'cursor-pointer'} text-[9px] text-gray-600 -mb-2`}
                     onClick={() => handleViewPhoto(rowData.customerPhotoId)}>
                     View Client Photo
                   </p>

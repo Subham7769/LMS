@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-import InputText from "../../Common/InputText/InputText";
-import InputNumber from "../../Common/InputNumber/InputNumber";
-import InputEmail from "../../Common/InputEmail/InputEmail";
-import InputDate from "../../Common/InputDate/InputDate";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputFile from "../../Common/InputFile/InputFile";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -31,6 +25,8 @@ import {
   BranchNameOptions,
   bankBranches,
 } from "../../../data/BankData";
+import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../../utils/isValidationFailed";
 
 const AddUpdateBorrowerFields = ({
   BorrowerData,
@@ -50,8 +46,6 @@ const AddUpdateBorrowerFields = ({
   const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
     []
   );
-
-  // console.log(BorrowerData);
 
   useEffect(() => {
     const keysArray = [
@@ -153,8 +147,6 @@ const AddUpdateBorrowerFields = ({
       );
     }
   };
-
-  // console.log(BorrowerData.otherDetails);
 
   const handleFileRemove = (section) => {
     console.log("customerPhotoId remove");
@@ -686,189 +678,49 @@ const AddUpdateBorrowerFields = ({
     },
   ];
 
-  // Generate the Form Field
-  const personalDetailsInputNames = personalDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const contactDetailsInputNames = contactDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const employmentDetailsInputNames = employmentDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const incomeOnPaySlipInputNames = incomeOnPaySlipConfig.map(
-    (field) => field.inputName
-  );
-  const deductionOnPaySlipInputNames = deductionOnPaySlipConfig.map(
-    (field) => field.inputName
-  );
-  const bankDetailsInputNames = bankDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const nextOfKinInputNames = nextOfKinConfig.map((field) => field.inputName);
-  const otherDetailsInputNames = otherDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  // Rendering Input Fields
-  const renderDetails = (details, config, sectionName) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
-        switch (field.type) {
-          case "text":
-            return (
-              <InputText
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "number":
-            return (
-              <InputNumber
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "select":
-            return (
-              <InputSelect
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputOptions={field.options}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                isValidation={field.validation || false}
-                searchable={field.searchable || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "date":
-            return (
-              <div className="col-span-1" key={index}>
-                <InputDate
-                  labelName={field.labelName}
-                  inputName={field.inputName}
-                  inputValue={details[field.inputName]}
-                  onChange={(e) => handleInputChange(e, sectionName)}
-                  isValidation={field.validation || false}
-                  isDisabled={field.disabled || false}
-                />
-              </div>
-            );
-          case "email":
-            return (
-              <InputEmail
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "file":
-            return (
-              <InputFile
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleFileUploads(e)}
-                onDelete={() => handleFileRemove(sectionName)}
-                accept={field.accept || "*"}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-
-  // Dedicated UI Components Creation
-  const personalDetails = (personalDetails) =>
-    renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
-
-  const contactDetails = (contactDetails) =>
-    renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
-
-  const employmentDetails = (employmentDetails) =>
-    renderDetails(
-      employmentDetails,
-      employmentDetailsConfig,
-      "employmentDetails"
-    );
-
-  const incomeOnPaySlip = (incomeOnPaySlip) =>
-    renderDetails(incomeOnPaySlip, incomeOnPaySlipConfig, "incomeOnPaySlip");
-
-  const deductionOnPaySlip = (deductionOnPaySlip) =>
-    renderDetails(
-      deductionOnPaySlip,
-      deductionOnPaySlipConfig,
-      "deductionOnPaySlip"
-    );
-
-  const bankDetails = (bankDetails) =>
-    renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
-
-  const nextOfKinDetails = (nextOfKinData) =>
-    renderDetails(nextOfKinData, nextOfKinConfig, "nextOfKinDetails");
-
-  const otherDetails = (otherDetails) =>
-    renderDetails(otherDetails, otherDetailsConfig, "otherDetails");
-
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
   );
-
-  //   Validation Checks
-  const isValidationFailed = (validationError, sectionInputFields) => {
-    // Iterate over fields and check if any corresponding error is true
-    return sectionInputFields.some((field) => validationError[field] === true);
-  };
 
   return (
     <>
       <Accordion
         heading={"Personal Details"}
         renderExpandedContent={() =>
-          personalDetails(BorrowerData.personalDetails)
+          <DynamicForm
+            details={BorrowerData.personalDetails}
+            config={personalDetailsConfig}
+            sectionName={"personalDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
         isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsInputNames)}
+        error={isValidationFailed(validationError, personalDetailsConfig)}
       />
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
-          contactDetails(BorrowerData.contactDetails)
+          <DynamicForm
+            details={BorrowerData.contactDetails}
+            config={contactDetailsConfig}
+            sectionName={"contactDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
-        error={isValidationFailed(validationError, contactDetailsInputNames)}
+        error={isValidationFailed(validationError, contactDetailsConfig)}
       />
       <Accordion
         heading={"Employment Details"}
         renderExpandedContent={() =>
-          employmentDetails(BorrowerData.employmentDetails)
+          <DynamicForm
+            details={BorrowerData.employmentDetails}
+            config={employmentDetailsConfig}
+            sectionName={"employmentDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
-        error={isValidationFailed(validationError, employmentDetailsInputNames)}
+        error={isValidationFailed(validationError, employmentDetailsConfig)}
       />
       <Accordion
         heading={`Salary Details`}
@@ -877,21 +729,31 @@ const AddUpdateBorrowerFields = ({
             <Accordion
               heading={"Income on PaySlip"}
               renderExpandedContent={() =>
-                incomeOnPaySlip(BorrowerData.incomeOnPaySlip)
+                <DynamicForm
+                  details={BorrowerData.incomeOnPaySlip}
+                  config={incomeOnPaySlipConfig}
+                  sectionName={"incomeOnPaySlip"}
+                  handleInputChange={handleInputChange}
+                />
               }
               error={isValidationFailed(
                 validationError,
-                incomeOnPaySlipInputNames
+                incomeOnPaySlipConfig
               )}
             />
             <Accordion
               heading={"Deduction"}
               renderExpandedContent={() =>
-                deductionOnPaySlip(BorrowerData.deductionOnPaySlip)
+                <DynamicForm
+                  details={BorrowerData.deductionOnPaySlip}
+                  config={deductionOnPaySlipConfig}
+                  sectionName={"deductionOnPaySlip"}
+                  handleInputChange={handleInputChange}
+                />
               }
               error={isValidationFailed(
                 validationError,
-                deductionOnPaySlipInputNames
+                deductionOnPaySlipConfig
               )}
             />
           </>
@@ -900,20 +762,41 @@ const AddUpdateBorrowerFields = ({
 
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
-        error={isValidationFailed(validationError, bankDetailsInputNames)}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={BorrowerData.bankDetails}
+            config={bankDetailsConfig}
+            sectionName={"bankDetails"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        error={isValidationFailed(validationError, bankDetailsConfig)}
       />
       <Accordion
         heading={"Next of Kin Details"}
         renderExpandedContent={() =>
-          nextOfKinDetails(BorrowerData.nextOfKinDetails)
+          <DynamicForm
+            details={BorrowerData.nextOfKinDetails}
+            config={nextOfKinConfig}
+            sectionName={"nextOfKinDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
-        error={isValidationFailed(validationError, nextOfKinInputNames)}
+        error={isValidationFailed(validationError, nextOfKinConfig)}
       />
       <Accordion
         heading={"Other Details"}
-        renderExpandedContent={() => otherDetails(BorrowerData.otherDetails)}
-        error={isValidationFailed(validationError, otherDetailsInputNames)}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={BorrowerData.otherDetails}
+            config={otherDetailsConfig}
+            sectionName={"otherDetails"}
+            handleInputChange={handleInputChange}
+            handleFileUploads={handleFileUploads}
+            handleFileRemove={handleFileRemove}
+          />
+        }
+        error={isValidationFailed(validationError, otherDetailsConfig)}
       />
     </>
   );

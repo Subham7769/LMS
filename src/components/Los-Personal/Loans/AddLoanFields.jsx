@@ -1,12 +1,8 @@
 import React, { useEffect, useMemo } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
-import InputDate from "../../Common/InputDate/InputDate";
-import InputSelect from "../../Common/InputSelect/InputSelect";
 import Button from "../../Common/Button/Button";
 import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
-import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
-import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
@@ -24,6 +20,8 @@ import {
 } from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
+import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../../utils/isValidationFailed";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
@@ -188,9 +186,9 @@ const AddLoanFields = ({ addLoanData }) => {
     const matchingTenure = selectedLoanProduct.interestEligibleTenure.find(
       (tenure) =>
         `${tenure.loanTenure} ${tenure.loanTenureType}` ===
-          selectedLoanDuration &&
+        selectedLoanDuration &&
         `${tenure.repaymentTenure} ${tenure.repaymentTenureType}` ===
-          selectedRepaymentTenure
+        selectedRepaymentTenure
     );
 
     return matchingTenure
@@ -366,120 +364,6 @@ const AddLoanFields = ({ addLoanData }) => {
     (state) => state.validation.validationError
   );
 
-  const generalLoanDetailsInputNames = generalLoanDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const renderDetails = (details, config, sectionName) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
-        const value = details[field.inputName] ?? ""; // Fallback to empty string
-        switch (field.type) {
-          case "text":
-            return (
-              <InputText
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "number":
-            return (
-              <InputNumber
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "select":
-            return (
-              <InputSelect
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputOptions={field.options}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "date":
-            return (
-              <div className="col-span-1" key={index}>
-                <InputDate
-                  labelName={field.labelName}
-                  inputName={field.inputName}
-                  inputValue={value}
-                  onChange={(e) => handleInputChange(e, sectionName)}
-                  isValidation={field.validation || false}
-                  isDisabled={field.disabled || false}
-                />
-              </div>
-            );
-          case "email":
-            return (
-              <InputEmail
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-              />
-            );
-          case "file":
-            return (
-              <InputFile
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleFileChange(e, sectionName)}
-                accept={field.accept || "*"}
-                isValidation={field.validation || false}
-              />
-            );
-          case "textarea":
-            return (
-              <InputTextArea
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                rowCount={field.rowCount || 3}
-                isValidation={field.validation || false}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-
-  // Dedicated UI Components
-  const generalLoanDetails = (generalLoanDetails) =>
-    renderDetails(
-      generalLoanDetails,
-      generalLoanDetailsConfig,
-      "generalLoanDetails"
-    );
-
-  // console.log(addLoanData);
-
   const handleDeleteDocument = (docId) => {
     if (!docId) return;
     const fileDeleteParams = {
@@ -587,23 +471,21 @@ const AddLoanFields = ({ addLoanData }) => {
     </>
   );
 
-  // Validation Checks
-  const isValidationFailed = (errors, fields) => {
-    // Iterate over fields and check if any corresponding error is true
-    return fields.some((field) => errors[field] === true);
-  };
-
   return (
     <>
       <Accordion
         heading={"General Loan Details"}
         renderExpandedContent={() =>
-          generalLoanDetails(addLoanData?.generalLoanDetails)
+          <DynamicForm
+            details={addLoanData.generalLoanDetails}
+            config={generalLoanDetailsConfig}
+            sectionName={"generalLoanDetails"}
+          />
         }
         isOpen={true}
         error={isValidationFailed(
           validationError,
-          generalLoanDetailsInputNames
+          generalLoanDetailsConfig
         )}
       />
       <Accordion
