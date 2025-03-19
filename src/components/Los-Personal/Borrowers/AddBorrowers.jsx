@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
-import {
-  fetchDraftedCompanyBorrowerByField,
-  updateDraftCompanyBorrowerStatus,
-} from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
@@ -18,6 +14,8 @@ import {
   fetchDraftedPersonalBorrowers,
   setUpdateDraftBorrower,
   updateAddBorrowerField,
+  fetchDraftedBorrowerByField,
+  updateDraftBorrowerStatus,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 
@@ -43,31 +41,20 @@ const AddBorrowers = () => {
   // console.log(flattenToSimpleObjectArray(filteredBorrowers));
 
   const applyFilters = () => {
-    const filtered = draftedBorrowerData.filter((DraftedCompany) => {
+    const filtered = draftedBorrowerData.filter((DraftedBorrower) => {
       const personalDetails =
-        DraftedCompany?.personalBorrowerProfileDraft?.personalDetails || {};
+        DraftedBorrower?.personalBorrowerProfileDraft?.personalDetails || {};
 
       let matchesSearchValue = false;
-
-      // If 'searchBy' is specified, search based on that field
-      if (searchBy) {
-        matchesSearchValue = searchValue
-          ? personalDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
-          : true;
-      } else {
-        // Search through multiple fields if no specific 'searchBy'
-        matchesSearchValue = searchValue
-          ? [
-              personalDetails.companyName,
-              personalDetails.companyUniqueId,
-              personalDetails.companyRegistrationNo,
-            ]
-              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
-              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
-          : true;
-      }
+      matchesSearchValue = searchValue
+        ? [
+            personalDetails.firstName,
+            personalDetails.surname,
+            personalDetails.uniqueID,
+          ]
+            .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+            .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
+        : true;
 
       return matchesSearchValue;
     });
@@ -103,20 +90,18 @@ const AddBorrowers = () => {
   }
 
   const searchOptions = [
-    { label: "Name", value: "companyName" },
-    { label: "Registration No.", value: "companyRegistrationNo"  },
-    { label: "Unique Id", value: "companyUniqueId" },
+    { label: "First Name", value: "firstName" },
+    { label: "Last Name", value: "surname" },
+    { label: "Unique Id", value: "uniqueID" },
   ];
 
   const SearchBorrowerByFieldSearch = () => {
     dispatch(
-      fetchDraftedCompanyBorrowerByField({
+      fetchDraftedBorrowerByField({
         field: searchBy,
         value: searchValue,
       })
     );
-    setSearchBy("");
-    setSearchValue("");
   };
 
   const handleSearchFilter = (term) => {
@@ -125,25 +110,14 @@ const AddBorrowers = () => {
   };
 
   const handleResetSearchBy = () => {
-    if (searchBy || searchValue) {
-      setSearchBy("");
-      setSearchValue("");
-      const transformedData = draftedBorrowerData.map((item) => {
-        const { personalBorrowerProfileDraft, ...allOther } = item;
-        return {
-          ...allOther,
-          ...personalBorrowerProfileDraft,
-        };
-      });
-      setFilteredBorrowers(transformedData);
-    } else {
-      dispatch(fetchDraftedPersonalBorrowers({ page: 0, size: pageSize }));
-    }
+    setSearchBy("");
+    setSearchValue("");
+    dispatch(fetchDraftedPersonalBorrowers({ page: 0, size: pageSize }));
   };
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
-    { label: "Unique Id", field: "uniqueID" ,copy:true},
+    { label: "Unique Id", field: "uniqueID", copy: true },
     { label: "Creation Date", field: "creationDate" },
     { label: "Last Update", field: "lastUpdate" },
     { label: "Status", field: "status" },
@@ -199,7 +173,7 @@ const AddBorrowers = () => {
 
   const handleRejectApplication = async (borrowerProfileDraftId) => {
     await dispatch(
-      updateDraftCompanyBorrowerStatus({
+      updateDraftBorrowerStatus({
         borrowerProfileDraftId,
         status: "CANCEL",
       })

@@ -21,10 +21,10 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
   const dataWithEmiNo = installmentConfigData.map((item, index) => ({
     ...item,
     emiNo: index + 1,
-    principalValue: formatNumber(item.principalValue),
-    interestValue: formatNumber(item.interestValue),
-    totalOutstandingAmount: formatNumber(item.totalOutstandingAmount),
-    installmentValue: formatNumber(item.installmentValue),
+    principalValue: item.principalValue,
+    interestValue: item.interestValue,
+    totalOutstandingAmount: item.totalOutstandingAmount,
+    installmentValue: item.installmentValue,
     installmentDate: convertDate(item.installmentDate),
   }));
 
@@ -119,6 +119,7 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                 <th className="px-4">Date</th>
                 <th className="px-4">Principal</th>
                 <th className="px-4">Interest</th>
+                <th className="px-4">Monthly Admin Fee</th>
                 <th className="px-4">Outstanding</th>
                 <th className="px-4">EMI Amount</th>
                 <th className="px-4"></th>
@@ -141,44 +142,48 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
                       1 Mar 2025
                     </span>
                   </td>
-                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                  <td className="max-w-28 break-words text-sm text-right text-gray-800">
                     <span
                       className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
-                      {formatNumber(
-                        loanConfigData?.dynamicCashLoanOffers[0]?.principalAmount.toFixed(
-                          2
-                        )
-                      )}
+                      <div className="flex items-center justify-center gap-2">
+                        {formatNumber(
+                          loanConfigData?.dynamicCashLoanOffers[0]?.principalAmount.toFixed(
+                            2
+                          )
+                        )}
+                      </div>
+                    </span>
+                  </td>
+                  <td className="max-w-28 break-words text-sm text-right text-gray-800">
+                    <span
+                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        {formatNumber(
+                          loanConfigData?.dynamicCashLoanOffers[0]?.totalInterestAmount.toFixed(
+                            2
+                          )
+                        )}
+                      </div>
                     </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
                     <span
                       className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
-                    >
-                      {formatNumber(
-                        loanConfigData?.dynamicCashLoanOffers[0]?.totalInterestAmount.toFixed(
-                          2
-                        )
-                      )}
-                    </span>
+                    ></span>
                   </td>
-                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
+                  <td className="max-w-28 break-words text-sm text-right text-gray-800">
                     <span
                       className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
                     >
-                      -
-                    </span>
-                  </td>
-                  <td className="max-w-28 break-words text-sm text-center text-gray-800">
-                    <span
-                      className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium`}
-                    >
-                      {formatNumber(
-                        loanConfigData?.dynamicCashLoanOffers[0]?.totalLoanAmount.toFixed(
-                          2
-                        )
-                      )}
+                      <div className="flex items-center justify-center gap-2">
+                        {formatNumber(
+                          loanConfigData?.dynamicCashLoanOffers[0]?.totalLoanAmount.toFixed(
+                            2
+                          )
+                        )}
+                      </div>
                     </span>
                   </td>
                   <td className="max-w-28 break-words text-sm text-center text-gray-800">
