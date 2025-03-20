@@ -17,7 +17,7 @@ const resetTimer = (store) => {
       // Redirect to login page
       window.location.pathname = "/login";
     }, 1000);
-  }, 10 * 60 * 1000); // 30 minutes Auto Logout time
+  }, 10 * 60 * 1000); // 10 minutes Auto Logout time
 };
 
 export const initializeAutoLogout = (store) => {

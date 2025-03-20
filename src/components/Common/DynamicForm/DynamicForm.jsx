@@ -6,6 +6,8 @@ import InputDate from "../InputDate/InputDate";
 import InputSelect from "../InputSelect/InputSelect";
 import InputFile from "../InputFile/InputFile";
 import InputTextArea from "../InputTextArea/InputTextArea";
+import InputSelectCreatable from "../InputSelectCreatable/InputSelectCreatable";
+
 
 const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFileUploads, handleFileRemove }) => {
 
@@ -36,9 +38,9 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 onChange={(e) => handleInputChange(e, sectionName)}
                                 placeHolder={
                                     field.labelName === "Credit Score"
-                                      ? "Enter between 0 to 1"
-                                      : `Enter ${field.labelName}`
-                                  }
+                                        ? "Enter between 0 to 1"
+                                        : `Enter ${field.labelName}`
+                                }
                                 isValidation={field.validation || false}
                                 disabled={field.disabled || false}
                             />
@@ -109,6 +111,24 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 onChange={(e) => handleInputChange(e, sectionName)}
                                 rowCount={field.rowCount || 3}
                                 isValidation={field.validation || false}
+                            />
+                        );
+                    case "InputSelectCreatable":
+                        return (
+                            <InputSelectCreatable
+                                key={index}
+                                labelName={field.labelName}
+                                inputName={field.inputName}
+                                inputOptions={field.options}
+                                inputValue={details[field.inputName] || ""}
+                                onChange={(e) => handleInputChange(e, sectionName)}
+                                isValidation={field.validation || false}
+                                searchable={field.searchable || false}
+                                setInputOptions={field.setEmployerOptions}
+                                onCreateOption={field.onCreateOption
+                                    ? (inputValue) => field.onCreateOption(inputValue, (e) => handleInputChange(e, sectionName))
+                                    : null
+                                }
                             />
                         );
                     default:

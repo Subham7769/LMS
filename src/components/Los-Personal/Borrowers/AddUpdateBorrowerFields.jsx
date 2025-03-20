@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
-import InputSelectCreatable from  "../../Common/InputSelectCreatable/InputSelectCreatable";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -86,11 +85,13 @@ const AddUpdateBorrowerFields = ({
       "country",
       "email",
       "employer",
-      "occupation",
-      "employmentLocation",
-      "workStartDate",
-      "employeeNo",
+      
       "workType",
+      "occupation",
+      "employeeNo",
+      "workStartDate",
+      "employmentLocation",
+
       "bankName",
       "accountName",
       "accountType",
@@ -137,8 +138,7 @@ const AddUpdateBorrowerFields = ({
 
     console.log(menus)
     //get the default affordability
-    const result = menus
-    .find((menu) => menu.title === "Affordability")
+    const result = menus.find((menu) => menu.title === "Affordability")
     ?.submenuItems?.find((submenuItem) => submenuItem.name === "CRITERIA_DEFAULT_TEMP");
     console.log(result)
     setDefaultAffordability(result
@@ -242,7 +242,6 @@ const AddUpdateBorrowerFields = ({
       });
     }
   };
-
 
   useEffect(() => {
     dispatch(
@@ -460,6 +459,7 @@ const AddUpdateBorrowerFields = ({
       validation: true,
       searchable: true,      
       onCreateOption: handleNewEmployer,
+      setEmployerOptions:setEmployerOptions,
     },
     {
       labelName: "Occupation",
