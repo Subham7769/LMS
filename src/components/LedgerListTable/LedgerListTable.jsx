@@ -7,6 +7,7 @@ import {
 import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
+import {removeSlashes} from "../../utils/removeSlashes";
 
 const LedgerListTable = ({
   ListName,
@@ -50,9 +51,13 @@ const LedgerListTable = ({
   }, []);
 
   useEffect(() => {
+    var borrowerIdQueryWithoutSlash = "";
+    if(borrowerIdQuery !== false)
+      borrowerIdQueryWithoutSlash = removeSlashes(borrowerIdQuery)
+      
     setFilteredData(
       ListItem.filter((entry) =>
-        entry.userId.toString().includes(borrowerIdQuery)
+        entry.userId.toString().includes(borrowerIdQueryWithoutSlash)
       )
     );
     setCurrentPage(1);
