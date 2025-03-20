@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
+import formatNumber from "../../../utils/formatNumber";
 
 const ExpandableTable = ({
   columns,
@@ -36,6 +37,8 @@ const ExpandableTable = ({
       toast.error("The ID was not copied!");
     }
   };
+
+  const centerAlignedFields = ["uniqueid", "userid", "emino", "aging"];
 
   return (
     <div className="overflow-x-auto min-h-[5rem] max-h-full bg-white rounded-lg shadow-lg">
@@ -116,7 +119,13 @@ const ExpandableTable = ({
                     return (
                       <td
                         key={index}
-                        className="max-w-28 break-words py-6 text-sm text-center text-gray-800"
+                        className={`max-w-28 break-words py-6 text-sm ${
+                          centerAlignedFields.includes(col.field.toLowerCase())
+                            ? "text-center"
+                            : typeof rowData[col.field] === "number"
+                            ? "text-right"
+                            : "text-center"
+                        } text-gray-800`}
                       >
                         <span
                           className={`inline-block min-w-24 px-3 py-1 rounded-full text-xs font-medium ${cellClass}`}
@@ -145,6 +154,12 @@ const ExpandableTable = ({
                                     }}
                                   />
                                 </>
+                              ) : centerAlignedFields.includes(
+                                  col.field.toLowerCase()
+                                ) ? (
+                                rowData[col.field]
+                              ) : typeof rowData[col.field] === "number" ? (
+                                formatNumber(rowData[col.field])
                               ) : (
                                 rowData[col.field]
                               )}

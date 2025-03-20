@@ -68,6 +68,72 @@ export const getDraftBorrowerByID = createAsyncThunk(
   }
 );
 
+// Fetch Drafted Borrower By Field
+export const fetchDraftedBorrowerByField = createAsyncThunk(
+  "borrowers/fetchDraftedBorrowerByField", // action type
+  async ({ field, value }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env
+            .VITE_BORROWERS_READ_ALL_DRAFT_BY_FIELD_NAME_COMPANY_BORROWER
+        }?fieldName=${field}&value=${value}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// Async thunk to update borrower status
+export const updateDraftBorrowerStatus = createAsyncThunk(
+  "borrowers/updateDraftBorrowerStatus",
+  async ({ borrowerProfileDraftId, status }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BORROWERS_UPDATE_DRAFT_COMPANY_BORROWER
+        }${borrowerProfileDraftId}/status?status=${status}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower status"
+        );
+      }
+
+      return { borrowerProfileDraftId, status }; // Returning the updated data
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Register a Borrower
 export const registerBorrower = createAsyncThunk(
   "borrowers/register", // action type
@@ -549,6 +615,38 @@ const borrowersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         // toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchDraftedBorrowerByField.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(fetchDraftedBorrowerByField.fulfilled, (state, action) => {
+        state.loading = false;
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+        state.draftedBorrowerData = payload;
+        // hide the pagination
+        state.draftedBorrowerDataTotalElements = 0;
+      })
+      .addCase(fetchDraftedBorrowerByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateDraftBorrowerStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(updateDraftBorrowerStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        toast(`Draft Status updated!`);
+      })
+      .addCase(updateDraftBorrowerStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch borrower by field"; // Set error message
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(registerBorrower.pending, (state) => {
         state.loading = true;
