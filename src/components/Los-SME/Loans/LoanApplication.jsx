@@ -67,6 +67,7 @@ const LoanApplication = () => {
 
   const columns = [
     { label: "Loan Application ID", field: "loanApplicationId" },
+    { label: "Borrower Name", field: "borrowerName" },
     { label: "Borrower Serial No.", field: "uniqueID" },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },

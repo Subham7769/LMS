@@ -119,7 +119,12 @@ const UpdateBorrower = () => {
     const isValid = state.validation.isValid; // Adjust based on your state structure
 
     if (isValid) {
-      const addBorrowerData = updateBorrowerData
+      let addBorrowerData = {};
+      if (borrowerProfileDraftId) {
+        addBorrowerData = { ...updateBorrowerData, borrowerProfileDraftId }
+      } else {
+        addBorrowerData = updateBorrowerData
+      }
       dispatch(registerBorrower(addBorrowerData))
         .unwrap()
         .then(() => {

@@ -183,6 +183,7 @@ const ApproveLoans = () => {
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
     { label: "Unique ID", field: "uniqueID" },
+    { label: "Loan ID", field: "loanId" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },

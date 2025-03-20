@@ -121,6 +121,9 @@ const LedgerListTable = ({
                     {accountItem?.entryName}
                   </td>
                   <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
+                    {item?.loanId}
+                  </td>
+                  <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">
                     {item?.userId}
                   </td>
                   <td className="w-1/6 whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500">

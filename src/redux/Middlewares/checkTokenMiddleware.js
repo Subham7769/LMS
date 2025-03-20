@@ -13,16 +13,18 @@ const tokenMiddleware = (storeAPI) => (next) => (action) => {
 
     if (decodedToken?.exp < currentTime) {
       // Toast Token has expired
-      alert("Token expired. Logging out...");
+      toast("Token expired. Logging out...");
 
       // Clear the token
       localStorage.removeItem("authToken");
 
-      // Dispatch logout action
-      storeAPI.dispatch(logout());
+      setTimeout(() => {
+        // Dispatch logout action
+        storeAPI.dispatch(logout());
 
-      // Redirect to login page
-      window.location.pathname = "/login";
+        // Redirect to login page
+        window.location.pathname = "/login";
+      }, 1000);
 
       // Stop further execution
       return;
@@ -35,7 +37,7 @@ const tokenMiddleware = (storeAPI) => (next) => (action) => {
 // Utility function to decode JWT
 const parseJwt = (token) => {
   try {
-    if(token){
+    if (token) {
       const base64Url = token.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       return JSON.parse(atob(base64));

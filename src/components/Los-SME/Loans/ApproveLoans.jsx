@@ -179,6 +179,7 @@ const ApproveLoans = () => {
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
+    { label: "Loan Id", field: "loanId" },
     { label: "Borrower Serial No.", field: "uid" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
