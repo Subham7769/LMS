@@ -68,14 +68,18 @@ const UpdateCompany = () => {
     const isValid = state.validation.isValid; // Adjust based on your state structure
 
     if (isValid) {
-      const addCompanyData = updateCompanyData
+      let addCompanyData = {};
+      if (borrowerProfileDraftId) {
+        addCompanyData = { ...updateCompanyData, borrowerProfileDraftId }
+      } else {
+        addCompanyData = updateCompanyData
+      }
       dispatch(registerCompanyBorrower(addCompanyData)).then((action) => {
         if (action.type.endsWith("fulfilled")) {
           navigate('/loan/loan-origination-system/sme/borrowers/add-director');
         }
         dispatch(resetUpdateCompanyData())
       });
-
     }
 
   };
@@ -126,6 +130,7 @@ const UpdateCompany = () => {
           onClick={handleCancel}
           rectangle={true}
           className={"bg-red-500 hover:bg-red-600"}
+          loading={loading}
         />
         {borrowerProfileDraftId && (<>
           <Button
@@ -133,6 +138,7 @@ const UpdateCompany = () => {
             onClick={handleDraftUpdate}
             rectangle={true}
             buttonType={"secondary"}
+            loading={loading}
           />
           <Button
             buttonName="Submit"
