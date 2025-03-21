@@ -29,7 +29,7 @@ import getConditionForOperators from "./getConditionForOperators";
 import { convertDate } from "../../utils/convertDate";
 import ViewRuleModal from "./ViewRuleModal";
 import HoverButtonNew from "../Common/HoverButtonNew/HoverButtonNew";
-import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from './RoleBasedView'
+import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from '../../data/RoleBasedAccessAndView'
 
 
 const RuleComponent = ({
