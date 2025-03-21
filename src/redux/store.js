@@ -38,7 +38,7 @@ import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
 import documentConfigSlice from "./Slices/documentConfigSlice.js";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
-
+import AutoLogoutMiddleware from "./Middlewares/AutoLogoutMiddleware";
 
 const store = configureStore({
   reducer: {
@@ -80,7 +80,7 @@ const store = configureStore({
     documentConfig: documentConfigSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(checkTokenMiddleware),
+    getDefaultMiddleware().concat(AutoLogoutMiddleware, checkTokenMiddleware),
 });
 
 export default store;

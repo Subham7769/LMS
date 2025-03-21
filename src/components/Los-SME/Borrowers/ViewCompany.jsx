@@ -92,7 +92,7 @@ const ViewCompany = () => {
   // Trigger Filtering on Search Value Change
   useEffect(() => {
     applyFilters();
-  }, [searchValue]);
+  }, [searchValue, searchBy]);
 
   const applyFilters = () => {
     const filtered = allBorrowersData.filter((borrower) => {
@@ -105,29 +105,18 @@ const ViewCompany = () => {
       // console.log("searchValue:", searchValue);
 
       let matchesSearchValue = false;
-
-      // If 'searchBy' is specified, search based on that field
-      if (searchBy) {
-        matchesSearchValue = searchValue
-          ? companyDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
-          : true;
-      } else {
-        // Search through multiple fields if no specific 'searchBy'
-        matchesSearchValue = searchValue
-          ? [
-              companyDetails.companyName,
-              companyDetails.companyShortName,
-              companyDetails.companyUniqueId,
-              companyDetails.companyRegistrationNo,
-              companyContactDetails.email,
-              companyContactDetails.mobile1,
-            ]
-              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
-              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
-          : true;
-      }
+      matchesSearchValue = searchValue
+        ? [
+            companyDetails.companyName,
+            companyDetails.companyShortName,
+            companyDetails.companyUniqueId,
+            companyDetails.companyRegistrationNo,
+            borrower.customerId,
+            companyContactDetails.mobile1,
+          ]
+            .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+            .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
+        : true;
 
       return matchesSearchValue;
     });

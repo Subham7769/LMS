@@ -4,7 +4,6 @@ import Button from "../../Common/Button/Button";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import {
   setCompanyId,
-  fetchAllCompanyBorrowersListByLoanOfficer,
   fetchCompanyDetails,
   handleChangeCompanyDocuments,
   fetchCompanyDocuments,
@@ -13,6 +12,7 @@ import {
   uploadDirectorDocumentFile,
   handleChangeDirectorDocuments,
   verifyDocumentInfo,
+  fetchAllCompanyBorrowers,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import InputSelect from "../../Common/InputSelect/InputSelect";
@@ -30,7 +30,6 @@ const AddDocuments = () => {
     error,
     loading,
   } = useSelector((state) => state.smeBorrowers);
-  const loanOfficer = localStorage.getItem("username");
 
   useEffect(() => {
     dispatch(
@@ -41,11 +40,9 @@ const AddDocuments = () => {
     );
   }, [companyId, dispatch]);
 
-  useEffect(() => {
-    if (allCompanies.length < 1) {
-      dispatch(fetchAllCompanyBorrowersListByLoanOfficer({ loanOfficer }));
-    }
-  }, [dispatch]);
+    useEffect(() => {
+        dispatch(fetchAllCompanyBorrowers());
+    }, [dispatch]);
 
   const changeCompany = (e) => {
     dispatch(setCompanyId({ companyId: e.target.value }));
@@ -231,7 +228,7 @@ const AddDocuments = () => {
           <div>Loading...</div>
         ) : (
           <div>
-            {documents.map((document, index) => (
+            {documents?.map((document, index) => (
               <DocumentUploaderVerifier
                 key={document?.documentKey} // Unique key for React
                 label={document?.documentKey?.replace(/_/g, " ")} // Convert documentKey to a more readable label

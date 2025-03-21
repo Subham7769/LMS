@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import InputText from "../../Common/InputText/InputText";
-import InputNumber from "../../Common/InputNumber/InputNumber";
-import InputEmail from "../../Common/InputEmail/InputEmail";
-import InputDate from "../../Common/InputDate/InputDate";
-import InputSelect from "../../Common/InputSelect/InputSelect";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import { countryOptions, districtOptions, locationOptions } from "../../../data/CountryData";
@@ -17,8 +12,10 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
+import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../../utils/isValidationFailed";
 
-const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer}) => {
+const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
@@ -73,10 +70,10 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer}) => {
   };
 
   const handleFileUpload = (e, section) => {
-    const { name, value, type, checked,files } = e.target;
-console.log(name)
+    const { name, value, type, checked, files } = e.target;
+    console.log(name)
     dispatch(
-      handleChangeReducer({ section, field: name, value: files[0], type})
+      handleChangeReducer({ section, field: name, value: files[0], type })
     );
   };
 
@@ -343,28 +340,32 @@ console.log(name)
     (state) => state.validation.validationError
   );
 
-  //   Validation Checks
-  const isValidationFailed = (validationError, sectionInputFields) => {
-    // Iterate over fields and check if any corresponding error is true
-    return sectionInputFields.some((field) => validationError[field] === true);
-  };
-
   return (
     <>
       <Accordion
         heading={"Personal Details"}
         renderExpandedContent={() =>
-          personalDetails(BorrowerData.personalDetails)
+          <DynamicForm
+            details={BorrowerData.personalDetails}
+            config={personalDetailsConfig}
+            sectionName={"personalDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
         isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsInputNames)}
+        error={isValidationFailed(validationError, personalDetailsConfig)}
       />
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
-          contactDetails(BorrowerData.contactDetails)
+          <DynamicForm
+            details={BorrowerData.contactDetails}
+            config={contactDetailsConfig}
+            sectionName={"contactDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
-        error={isValidationFailed(validationError, contactDetailsInputNames)}
+        error={isValidationFailed(validationError, contactDetailsConfig)}
       />
     </>
   );
