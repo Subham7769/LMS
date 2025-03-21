@@ -17,7 +17,7 @@ const LoanAgreement = () => {
   return (
     <>
       <LoanAgreementPrint />
-      <div className={"text-right"}>
+      <div className={"text-right mt-5"}>
         <Button
           buttonIcon={PrinterIcon}
           buttonName={"View Print Layout"}

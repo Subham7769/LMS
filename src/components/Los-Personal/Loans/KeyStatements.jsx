@@ -9,7 +9,7 @@ const KeyStatements = ({
   repayment,
 }) => {
   return (
-    <div className="flex flex-col justify-center align-middle gap-5 m-10">
+    <div className="flex flex-col justify-center align-middle gap-5">
       <div className="text-xl font-semibold text-center">
         LOAN AGREEMENT PART D: KEY FACTS STATEMENT FOR CONSUMER CREDIT
       </div>
@@ -71,7 +71,7 @@ const KeyStatements = ({
               8. Date First Payment Due
             </td>
             <td className="border border-border-gray-primary p-2 text-center">
-              {keyFactStatements?.dateFirstPaymentDue}
+              {convertDate(keyFactStatements?.dateFirstPaymentDue)}
             </td>
           </tr>
           <tr className="border border-border-gray-primary">
