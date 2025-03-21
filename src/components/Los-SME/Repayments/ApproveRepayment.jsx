@@ -27,6 +27,8 @@ import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
+import { AccessChecker } from "../../../utils/AccessChecker";
+import { EditorRolesApproveRepayment } from "../../../data/RoleBasedAccessAndView";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -46,6 +48,7 @@ const ApproveRepayment = () => {
   } = useSelector((state) => state.smeRepayments);
   const { fullLoanDetails } = useSelector((state) => state.smeLoans);
   const loading2 = useSelector((state) => state.smeLoans.loading);
+  const { roleName } = useSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState("");
   const [showLoanModal, setShowLoanModal] = useState(false);
   // Pagination state & Functionality
@@ -211,19 +214,25 @@ const ApproveRepayment = () => {
           buttonIcon={CalendarDaysIcon}
           buttonType="tertiary"
         />
-        <Button
-          buttonName={"Reject"}
-          onClick={() => handleReject(rowData.transactionId)}
-          rectangle={true}
-          buttonIcon={FiXCircle}
-          buttonType="destructive"
-        />
-        <Button
-          buttonName={"Approve"}
-          onClick={() => handleApprove(rowData.transactionId)}
-          rectangle={true}
-          buttonIcon={FiCheckCircle}
-        />
+        {AccessChecker(EditorRolesApproveRepayment, roleName) && (
+          <>
+            <Button
+              buttonName={"Reject"}
+              onClick={() => handleReject(rowData.transactionId)}
+              rectangle={true}
+              buttonIcon={FiXCircle}
+              buttonType="destructive"
+            />
+            <Button
+              buttonName={"Approve"}
+              onClick={() => handleApprove(rowData.transactionId)}
+              rectangle={true}
+              buttonIcon={FiCheckCircle}
+            />
+          </>
+        )
+        }
+
       </div>
     </div>
   );
