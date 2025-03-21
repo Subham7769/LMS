@@ -230,7 +230,7 @@ const RiskBasedPricing = ({ loading, error }) => {
                 riskBasedPricingInput?.riskBasedPricingRules[0]?.interestRate
               }
               onChange={handleRiskBasedPricingChange}
-              placeHolder={"4000"}
+              placeHolder={"10%"}
               isValidation={true}
             />
             <InputSelect
