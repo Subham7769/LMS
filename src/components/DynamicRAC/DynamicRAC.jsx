@@ -46,7 +46,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import store from "../../redux/store";
-import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from './RoleBasedView'
+import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from '../../data/RoleBasedAccessAndView'
 import ErrorFailure from "../Common/ErrorFailure/ErrorFailure";
 
 const DynamicRAC = () => {

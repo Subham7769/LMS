@@ -678,6 +678,33 @@ export const getLoanHistoryByField = createAsyncThunk(
   }
 );
 
+export const getRepaymentHistory = createAsyncThunk(
+  "smeLoans/getRepaymentHistory",
+  async ({ loanId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_FULL_REPAYMENT_HISTORY_BY_LOAN_ID
+        }${loanId}/loan-repayments`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const getFullLoanDetails = createAsyncThunk(
   "smeLoans/getFullLoanDetails",
   async ({ loanId, uid }, { rejectWithValue }) => {
@@ -868,6 +895,7 @@ const initialState = {
   approveLoans: [],
   approveLoansTotalElements: 0,
   loanHistory: [],
+  paymentHistory: [],
   loanHistoryTotalElements: 0,
   loanConfigData: {},
   loanProductData: [],
@@ -1397,6 +1425,19 @@ const smeLoansSlice = createSlice({
         state.loanHistoryTotalElements = 0;
       })
       .addCase(getLoanHistoryByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getRepaymentHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getRepaymentHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.paymentHistory = action.payload;
+      })
+      .addCase(getRepaymentHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
