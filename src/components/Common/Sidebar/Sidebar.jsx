@@ -345,7 +345,17 @@ const SideBar = () => {
                     key={menu.title}
                     className={`${index === menus.length - 1 && "mb-52"}`}
                   >
-                    <NavLink to={menu.href} className="text-gray-500">
+                    <NavLink to={menu.openInNewTab ? "#" : menu.href}
+                                  onClick={(e) => {
+                                    if (menu.openInNewTab) {
+                                      e.preventDefault();
+                                      window.open(menu.href, "_blank");
+                                    } else {
+                                      handleToggleSubmenu(index);
+                                    }
+                                  }}
+                            target={menu.openInNewTab ? "_blank" : undefined}
+                            rel={menu.openInNewTab ? "noopener noreferrer" : undefined} className="text-gray-500">
                       <li
                         onClick={() => handleToggleSubmenu(index)}
                         className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-background-light-secondary hover:text-blue-primary"

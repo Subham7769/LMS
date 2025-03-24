@@ -449,14 +449,21 @@ export const MenusInitial = [
     isOpen: false,
     current: false,
   },
+  // {
+  //   title: "Reports",
+  //   sectionName: "REPORTS & ANALYSIS",
+  //   href: "/loan/reports",
+  //   icon: "NewspaperIcon",
+  //   current: false,
+  // },
   {
     title: "Reports",
     sectionName: "REPORTS & ANALYSIS",
-    href: "/loan/reports",
+    href: import.meta.env.VITE_KIBANA_APP_LINK || "/loan/reports",
     icon: "NewspaperIcon",
     current: false,
+    openInNewTab:true,
   },
-
   // USER TOOLS
   {
     title: "Customer Care",
