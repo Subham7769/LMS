@@ -312,28 +312,15 @@ const ApproveRepayment = () => {
     setSearchValue("");
   };
 
-  // Define the mapping for repayment data
-const repaymentMapping = {
-  serviceFeeRepayment: "Service Fee Repayment",
-  requestId: "Request ID",
-  payAll: "Pay All",
-  draftStatus: "Draft Status",
-  repaymentType: "Repayment Type",
-  originalLoanAmount: "Original Loan Amount",
-  outstandingBalance: "Outstanding Balance",
-  closingLoanAmount: "Closing Loan Amount",
-  dueDate: "Due Date",
-  status: "Status",
-  "borrowerProfile.name": "Borrower Name",
-  "borrowerProfile.userId": "Borrower User ID",
-  "borrowerProfile.email": "Borrower Email",
-  "borrowerProfile.phone": "Borrower Phone",
-  loan: "Loan",
-  transactionId: "Transaction ID",
-  collectionDate: "Collection Date",
+  // Define the mapping for repayment data excel file fields
+  const repaymentMapping = {
   amount: "Amount",
-  method: "Method",
+  collectionDate: "Collection Date",
+  "borrowerProfile.userId": "User ID",
+  loan: "Loan Id",
   collectionBy: "Collected By",
+  method: "Method",
+  accounting: "Accounting",
 };
 
   return (
