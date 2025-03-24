@@ -6,6 +6,7 @@ import { getLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
 import TermsNConditions from "./TermsNConditions";
 import longHornLogo from "../../../assets/image/longhorn-logo.png";
 import KeyStatements from "./KeyStatements";
+import formatNumber from "../../../utils/formatNumber";
 
 const ShimmerTable = () => {
   return (
@@ -64,16 +65,16 @@ const LoanAgreementPrint = () => {
 
   return (
     <>
-      <div className={"flex flex-col justify-center align-middle gap-5 m-10"}>
-        <div className="flex w-full items-center">
-          <div className="">
+      <div className={"flex flex-col justify-center align-middle gap-5"}>
+        <div className="flex w-full items-center relative">
+          <div className="absolute left-0 top-0">
             <img src={longHornLogo} className="w-32" />
           </div>
-          <div className="text-xl font-semibold text-center flex-1">
+          <div className="font-semibold text-center flex-1">
             LOAN AGREEMENT - PART A
           </div>
         </div>
-        <div className="grid grid-cols-2 border-2 border-gray-500 text-sm">
+        <div className="grid grid-cols-2 border-2 border-gray-500 text-xs">
           <div className="border-r border-gray-500">
             <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
               PERSONAL DETAILS
@@ -122,7 +123,7 @@ const LoanAgreementPrint = () => {
                   >
                     &nbsp;
                     {typeof loanDetails[key] === "number"
-                      ? loanDetails[key].toFixed(2) // Round off numbers to 2 decimal places
+                      ? formatNumber(loanDetails[key]) // Round off numbers to 2 decimal places
                       : loanDetails[key]}
                   </div>
                 ))}
@@ -260,7 +261,7 @@ const LoanAgreementPrint = () => {
             </div>
           </div>
           <div className="col-span-2">
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500 mb-24">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500 mb-14">
               CUSTOMER SIGNATURE
             </div>
           </div>
