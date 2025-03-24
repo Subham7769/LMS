@@ -922,6 +922,7 @@ const personalLoansSlice = createSlice({
     },
     resetLoanOfferFields: (state, action) => {
       state.loanOfferFields = initialState.loanOfferFields;
+      state.loanConfigData = {};
     },
     setLoanApplicationId: (state, action) => {
       state.addLoanData.loanApplicationId = action.payload;
