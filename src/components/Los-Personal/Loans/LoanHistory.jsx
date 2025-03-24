@@ -39,6 +39,7 @@ import {
   validateForm,
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
+import ActionOption from "../../Common/ActionOptions/ActionOption";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -129,9 +130,23 @@ const LoanHistory = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    navigate(
-      `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
-    );
+    // navigate(
+    //   `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
+    // );
+    const printUrl = `/loan-agreement/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  const handleLoanStatement = async (loanId, uid) => {
+    const printUrl = `/loan-statement/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  const handleOutrightSettlement = async (loanId, uid) => {
+    const printUrl = `/outright-settlement/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
@@ -176,6 +191,25 @@ const LoanHistory = () => {
       handleReset();
     }
   };
+
+  const userNavigation = [
+    {
+      name: "Loan Statement",
+      action: (rowData) => handleLoanStatement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Outright Settlement",
+      action: (rowData) => handleOutrightSettlement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Loan Agreement",
+      action: (rowData) => handleLoanAgreement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Documents",
+      action: (rowData) => handleViewDocuments(rowData.verifiedDocuments),
+    },
+  ];
 
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
@@ -365,6 +399,15 @@ const LoanHistory = () => {
               />
             </div>
           )}
+          {/* <div>
+            <Button
+              buttonName={"View Loan Statement"}
+              onClick={() => handleLoanStatement(rowData.loanId, rowData.uid)}
+              rectangle={true}
+              buttonIcon={NewspaperIcon}
+              buttonType="tertiary"
+            />
+          </div>
           <div>
             <Button
               buttonName={"View Loan Agreement"}
@@ -382,6 +425,9 @@ const LoanHistory = () => {
               buttonIcon={FiInfo}
               buttonType="tertiary"
             />
+          </div> */}
+          <div>
+            <ActionOption userNavigation={userNavigation} actionID={rowData} />
           </div>
         </div>
       </div>

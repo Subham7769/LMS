@@ -318,6 +318,12 @@ const LoanAgreement = lazy(() =>
 const LoanAgreementPrint = lazy(() =>
   import("./components/Los-Personal/Loans/LoanAgreementPrint")
 );
+const LoanStatementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanStatementPrint")
+);
+const OutrightSettlementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/OutrightSettlementPrint")
+);
 const CollateralRegister = lazy(() =>
   import("./components/Los-Personal/Loans/CollateralRegister")
 );
@@ -1247,6 +1253,16 @@ const routes = [
   {
     path: "/loan-agreement/:loanApplicationId/:userId",
     element: <LoanAgreementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/loan-statement/:loanApplicationId/:userId",
+    element: <LoanStatementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/outright-settlement/:loanApplicationId/:userId",
+    element: <OutrightSettlementPrint />,
     errorElement: <RouteErrorBoundary />,
   },
   {
