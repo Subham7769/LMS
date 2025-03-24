@@ -20,6 +20,7 @@ import {
   UserIcon,
   ClockIcon,
   CalendarDaysIcon,
+  DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
@@ -29,6 +30,7 @@ import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
 import { AccessChecker } from "../../../utils/AccessChecker";
 import { EditorRolesApproveRepayment } from "../../../data/RoleBasedAccessAndView";
+import exportToExcel from "../../../utils/exportToExcel";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -60,7 +62,7 @@ const ApproveRepayment = () => {
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getRepayments({ pageNumber: currentPage, pageSize: pageSize }));
   };
-
+  console.log(approveRepaymentData)
   useEffect(() => {
     setFilteredRepayments(approveRepaymentData);
   }, [approveRepaymentData]);
@@ -310,6 +312,30 @@ const ApproveRepayment = () => {
     setSearchValue("");
   };
 
+  // Define the mapping for repayment data
+const repaymentMapping = {
+  serviceFeeRepayment: "Service Fee Repayment",
+  requestId: "Request ID",
+  payAll: "Pay All",
+  draftStatus: "Draft Status",
+  repaymentType: "Repayment Type",
+  originalLoanAmount: "Original Loan Amount",
+  outstandingBalance: "Outstanding Balance",
+  closingLoanAmount: "Closing Loan Amount",
+  dueDate: "Due Date",
+  status: "Status",
+  "borrowerProfile.name": "Borrower Name",
+  "borrowerProfile.userId": "Borrower User ID",
+  "borrowerProfile.email": "Borrower Email",
+  "borrowerProfile.phone": "Borrower Phone",
+  loan: "Loan",
+  transactionId: "Transaction ID",
+  collectionDate: "Collection Date",
+  amount: "Amount",
+  method: "Method",
+  collectionBy: "Collected By",
+};
+
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
@@ -351,6 +377,15 @@ const ApproveRepayment = () => {
           />
         </div>
       </ContainerTile>
+     {approveRepaymentData.length > 0 && <div className="flex justify-end">
+        <Button
+          buttonName={"Export Excel"}
+          onClick={() => exportToExcel(approveRepaymentData, repaymentMapping, "Repayment_Data.xlsx")}
+          rectangle={true}
+          buttonIcon={DocumentArrowDownIcon}
+          // buttonType="tertiary"
+        />
+      </div>}
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}
