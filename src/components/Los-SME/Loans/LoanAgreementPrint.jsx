@@ -7,6 +7,7 @@ import { creditCommitteDecision, documentsData } from "../../../data/LosData";
 import longHornLogo from "../../../assets/image/longhorn-logo.png";
 import formatNumber from "../../../utils/formatNumber";
 import { convertDate } from "../../../utils/convertDate";
+import isDateString from "../../../utils/isDateString";
 
 const ShimmerTable = () => {
   return (
@@ -53,12 +54,7 @@ const LoanAgreementPrint = () => {
     ccoFoComments = {},
   } = loanAgreementData || {};
 
-  const isDateString = (value) => {
-    return (
-      typeof value === "string" &&
-      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value) // Checks YYYY-MM-DD HH:MM:SS format
-    );
-  };
+  
 
   if (loading) {
     return (

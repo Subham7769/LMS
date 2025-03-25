@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
 import TermsNConditions from "./TermsNConditions";
 import longHornLogo from "../../../assets/image/longhorn-logo.png";
@@ -25,6 +25,7 @@ const LoanAgreementPrint = () => {
   const { loanAgreementData, loading } = useSelector(
     (state) => state.personalLoans
   );
+  const location = useLocation();
 
   useEffect(() => {
     dispatch(getLoanAgreement({ loanId: loanApplicationId, uid: userId }));
@@ -261,7 +262,7 @@ const LoanAgreementPrint = () => {
             </div>
           </div>
           <div className="col-span-2">
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500 mb-14">
+            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500 mb-24">
               CUSTOMER SIGNATURE
             </div>
           </div>
