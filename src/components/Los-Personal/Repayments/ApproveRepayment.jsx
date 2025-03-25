@@ -36,7 +36,7 @@ function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     collectionDate: convertDate(item?.collectionDate),
-    aging: calculateAging(item?.loanCreationDate),
+    aging: calculateAging(item?.collectionDate),
   }));
 }
 

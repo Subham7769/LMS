@@ -54,6 +54,7 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
   const { userData, roleName } = useSelector((state) => state.auth);
+  const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
@@ -66,6 +67,7 @@ const ApproveLoans = () => {
 
   const navigate = useNavigate();
 
+  console.log(userData.username)
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
@@ -210,18 +212,18 @@ const ApproveLoans = () => {
         <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
           <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
             <div className="text-xl font-semibold flex gap-2 items-center">
-                        <UserCircleIcon
-                          className="-ml-0.5 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                    
-                      Borrower Information{" "}
-                <p 
-                  className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
-                  onClick={(e) => handleViewProfile(e, rowData.uid)}
-                >
+              <UserCircleIcon
+                className="-ml-0.5 h-5 w-5"
+                aria-hidden="true"
+              />
+
+              Borrower Information{" "}
+              <p
+                className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
+                onClick={(e) => handleViewProfile(e, rowData.uid)}
+              >
                 View Borrower Profile
-                </p>
+              </p>
             </div>
           </div>
           <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
@@ -399,6 +401,23 @@ const ApproveLoans = () => {
     </div>
   );
 
+  useEffect(() => {
+    const filteredApproveLoansDataFunction = () => {
+      if (!approveLoans) return [];
+  
+      return approveLoans.filter(item =>
+        // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
+        !item?.loanActionDetailsList?.some(loanItem =>
+          loanItem?.recommendedBy === userData.username || loanItem?.rejectedBy === userData.username
+        )
+      );
+    };
+  
+      setFilteredApproveLoansData(filteredApproveLoansDataFunction());
+    }, [approveLoans, roleName, userData]);
+  
+
+
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
@@ -443,7 +462,7 @@ const ApproveLoans = () => {
       </ContainerTile>
       <ExpandableTable
         columns={columns}
-        data={approveLoansData}
+        data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
