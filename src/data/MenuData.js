@@ -449,19 +449,20 @@ export const MenusInitial = [
     isOpen: false,
     current: false,
   },
-  // {
-  //   title: "Reports",
-  //   sectionName: "REPORTS & ANALYSIS",
-  //   href: "/loan/reports",
-  //   icon: "NewspaperIcon",
-  //   current: false,
-  // },
   {
     title: "Reports",
     sectionName: "REPORTS & ANALYSIS",
-    href: import.meta.env.VITE_KIBANA_APP_LINK || "/loan/reports",
+    href: "/loan/reports",
     icon: "NewspaperIcon",
     current: false,
+  },
+  {
+    title: "ELK Reports",
+    sectionName: "REPORTS & ANALYSIS",
+    href: import.meta.env.VITE_KIBANA_APP_LINK || "/loan/reports",
+    icon: "CubeTransparentIcon",
+    current: false,
+    isOpen: false,
     openInNewTab:true,
   },
   // USER TOOLS
