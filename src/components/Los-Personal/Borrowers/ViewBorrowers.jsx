@@ -85,7 +85,7 @@ const ViewBorrowers = () => {
   // Trigger Filtering on Search Value Change
   useEffect(() => {
     applyFilters();
-  }, [searchValue]);
+  }, [searchValue, searchBy]);
 
   // Filter Borrowers Based on Search Value
   const applyFilters = () => {
@@ -93,26 +93,19 @@ const ViewBorrowers = () => {
       const personalDetails = borrower.borrowerProfile?.personalDetails || {};
       const contactDetails = borrower.borrowerProfile?.contactDetails || {};
       let matchesSearchValue = "";
-      if (searchBy) {
-        matchesSearchValue = searchValue
-          ? personalDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
-          : true;
-      } else {
-        matchesSearchValue = searchValue
-          ? [
-              personalDetails.firstName,
-              personalDetails.surname,
-              personalDetails.otherName,
-              personalDetails.uniqueID,
-              contactDetails.email,
-              contactDetails.mobile1,
-            ].some((field) =>
-              field?.toLowerCase().includes(searchValue.toLowerCase())
-            )
-          : true;
-      }
+      console.log(borrower);
+      matchesSearchValue = searchValue
+        ? [
+            personalDetails.firstName,
+            personalDetails.surname,
+            personalDetails.otherName,
+            personalDetails.uniqueID,
+            borrower.customerId,
+            contactDetails.mobile1,
+          ].some((field) =>
+            field?.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        : true;
 
       return matchesSearchValue;
     });
@@ -178,14 +171,14 @@ const ViewBorrowers = () => {
     { label: "Surname", value: "surname" },
     { label: "Other Name", value: "otherName" },
     { label: "Unique ID", value: "uniqueID" },
-    { label: "Cutomer ID", value: "customerId" },
+    { label: "Customer ID", value: "customerId" },
     { label: "Loan Officer", value: "loanOfficer" },
   ];
 
   const personalDetailsColumns = [
     { label: "Name", field: "fullName" },
     { label: "Unique ID", field: "uniqueID", copy: true },
-    { label: "Cutomer ID", field: "customerId" },
+    { label: "Customer ID", field: "customerId" },
     { label: "Loan Officer", field: "loanOfficer" },
     { label: "Status", field: "lmsUserStatus" },
   ];
@@ -197,10 +190,9 @@ const ViewBorrowers = () => {
   };
 
   const handleViewPhoto = async (e, photoId) => {
-    
     e.preventDefault();
-    e.stopPropagation(); 
-    
+    e.stopPropagation();
+
     if (photoId) {
       const filePreviewParams = {
         authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
@@ -327,9 +319,11 @@ const ViewBorrowers = () => {
                   </div>
                   Personal Details{" "}
                   {rowData.customerPhotoId && (
-                    <p 
+                    <p
                       className="text-[9px] text-gray-600 -mb-2 cursor-pointer underline"
-                      onClick={(e) => handleViewPhoto(e, rowData.customerPhotoId)}
+                      onClick={(e) =>
+                        handleViewPhoto(e, rowData.customerPhotoId)
+                      }
                     >
                       View Client Photo
                     </p>

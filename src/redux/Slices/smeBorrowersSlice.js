@@ -778,7 +778,7 @@ export const verifyDocumentInfo = createAsyncThunk(
 
 // Fetch Company Documents
 export const fetchCompanyDocuments = createAsyncThunk(
-  "company/fetchDocuments", // Action type
+  "company/fetchCompanyDocuments", // Action type
   async ({ companyId }, { rejectWithValue }) => {
     if (companyId) {
       try {
@@ -1327,7 +1327,7 @@ const borrowersSlice = createSlice({
         type === "checkbox" ? checked : value;
     },
     handleChangeDirectorDocuments: (state, action) => {
-      const { field, value, type, checked, directorId, documentId } =
+      const { field, value, type, checked, directorId, index, documentId } =
         action.payload;
 
       // Find the director by directorId
@@ -1335,14 +1335,25 @@ const borrowersSlice = createSlice({
         (director) => {
           if (director.personalDetails.uniqueID === directorId) {
             // Find the document by documentId (docId)
-            const updatedDocuments = director.documents.map((doc) => {
-              if (doc.docId === documentId) {
-                // Update the specified field in the document
-                return {
-                  ...doc,
-                  [field]: type === "checkbox" ? checked : value, // Update field value based on type
-                };
+            const updatedDocuments = director.documents.map((doc, docIndex) => {
+              if (documentId) {
+                if (doc.docId === documentId) {
+                  // Update the specified field in the document
+                  return {
+                    ...doc,
+                    [field]: type === "checkbox" ? checked : value, // Update field value based on type
+                  };
+                }
+              } else {
+                if (docIndex === index) {
+                  // Update the specified field in the document
+                  return {
+                    ...doc,
+                    [field]: type === "checkbox" ? checked : value, // Update field value based on type
+                  };
+                }
               }
+
               return doc; // Keep other documents unchanged
             });
 

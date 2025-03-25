@@ -45,7 +45,7 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
         })
       ).unwrap();
       onClose();
-      navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+      // navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
       setRejectionReason("");
     }
   };

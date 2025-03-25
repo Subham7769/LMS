@@ -12,6 +12,7 @@ import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import store from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 const AddNewCompany = () => {
   const dispatch = useDispatch();
@@ -77,9 +78,14 @@ const AddNewCompany = () => {
       borrowerProfileDraftId: nanoid(),
       companyBorrowerProfileDraft: { ...addCompanyData },
     }
-    dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
-    navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
-    dispatch(resetCompanyData())
+    if (addDraftCompanyData.companyBorrowerProfileDraft.companyDetails.companyName !== "") {
+
+      dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
+      navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+      dispatch(resetCompanyData())
+    } else {
+      toast.error("Company Name Required");
+    }
   }
 
   const handleCancel = () => {

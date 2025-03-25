@@ -26,6 +26,8 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
+  UserCircleIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
@@ -35,6 +37,8 @@ import {
   clearValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
+
+import ViewBorrowerDetailsModal from "../Borrowers/ViewBorrowerDetailsModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -50,6 +54,7 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
   const { userData, roleName } = useSelector((state) => state.auth);
+  const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
@@ -57,8 +62,12 @@ const ApproveLoans = () => {
   const [documentsData, setDocumentsData] = useState(null);
   const [palSearchValue, setPalSearchValue] = useState("");
   const [palSearchBy, setPalSearchBy] = useState("");
+  const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
+  const [selectedBorrowerData, setSelectedBorrowerData] = useState(null);
+
   const navigate = useNavigate();
 
+  console.log(userData.username)
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
@@ -144,9 +153,9 @@ const ApproveLoans = () => {
         getPayload: { roleNames: [roleName] },
       })
     ).unwrap();
-    if (rowData?.rolePermissions?.finalApprove) {
-      navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
-    }
+    // if (rowData?.rolePermissions?.finalApprove) {
+    //   navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    // }
   };
 
   const handleReject = async (rowData) => {
@@ -174,6 +183,14 @@ const ApproveLoans = () => {
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
+  // Function to handle opening the modal
+  const handleViewProfile = (e, uid) => {
+    e.preventDefault();
+    // If you already have the uid, simply pass it on.
+    setSelectedBorrowerData(uid);
+    setIsViewPopupOpen(true);
+  };
+
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Unique ID", value: "uniqueID" },
@@ -183,6 +200,7 @@ const ApproveLoans = () => {
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
     { label: "Unique ID", field: "uniqueID" },
+    { label: "Loan ID", field: "loanId" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },
@@ -191,12 +209,23 @@ const ApproveLoans = () => {
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <CardInfo
-          cardIcon={UserIcon}
-          cardTitle="Borrower Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
-        >
+        <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
+          <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
+            <div className="text-xl font-semibold flex gap-2 items-center">
+              <UserCircleIcon
+                className="-ml-0.5 h-5 w-5"
+                aria-hidden="true"
+              />
+
+              Borrower Information{" "}
+              <p
+                className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
+                onClick={(e) => handleViewProfile(e, rowData.uid)}
+              >
+                View Borrower Profile
+              </p>
+            </div>
+          </div>
           <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Employment</div>
@@ -234,7 +263,7 @@ const ApproveLoans = () => {
               </div>
             </div>
           </div>
-        </CardInfo>
+        </div>
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
@@ -372,6 +401,23 @@ const ApproveLoans = () => {
     </div>
   );
 
+  useEffect(() => {
+    const filteredApproveLoansDataFunction = () => {
+      if (!approveLoans) return [];
+  
+      return approveLoans.filter(item =>
+        // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
+        !item?.loanActionDetailsList?.some(loanItem =>
+          loanItem?.recommendedBy === userData.username || loanItem?.rejectedBy === userData.username
+        )
+      );
+    };
+  
+      setFilteredApproveLoansData(filteredApproveLoansDataFunction());
+    }, [approveLoans, roleName, userData]);
+  
+
+
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile className={`flex justify-between gap-5 align-middle`}>
@@ -416,7 +462,7 @@ const ApproveLoans = () => {
       </ContainerTile>
       <ExpandableTable
         columns={columns}
-        data={approveLoansData}
+        data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
@@ -441,6 +487,14 @@ const ApproveLoans = () => {
         onClose={closeViewDocumentModal}
         documents={documentsData}
       />
+
+      {isViewPopupOpen && selectedBorrowerData && (
+        <ViewBorrowerDetailsModal
+          uid={selectedBorrowerData} // pass only the uid
+          onClose={() => setIsViewPopupOpen(false)}
+        />
+      )}
+
     </div>
   );
 };

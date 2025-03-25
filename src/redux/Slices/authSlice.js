@@ -72,6 +72,7 @@ const authSlice = createSlice({
       state.buttonText = action.payload;
     },
     logout: (state) => {
+      console.log("User is being logged out!");
       state.userData = null;
       state.token = null;
       state.isAuthenticated = false;

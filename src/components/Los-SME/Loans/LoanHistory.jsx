@@ -8,6 +8,7 @@ import {
   getLoanAgreement,
   generateLoanApplicationId,
   getRefinanceDetails,
+  getRepaymentHistory,
 } from "../../../redux/Slices/smeLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -16,6 +17,7 @@ import InputText from "../../Common/InputText/InputText";
 import InputFile from "../../Common/InputFile/InputFile";
 import Pagination from "../../Common/Pagination/Pagination";
 import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
+import RepaymentHistoryModal from "../../Los-Personal/RepaymentHistoryModal";
 import { convertDate } from "../../../utils/convertDate";
 import { useNavigate, useParams } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
@@ -37,6 +39,7 @@ import {
   validateForm,
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
+import ActionOption from "../../Common/ActionOptions/ActionOption";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -49,10 +52,16 @@ function transformData(inputArray) {
 const LoanHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loanHistory, loading, loanHistoryTotalElements, fullLoanDetails } =
-    useSelector((state) => state.smeLoans);
+  const {
+    loanHistory,
+    paymentHistory,
+    loading,
+    loanHistoryTotalElements,
+    fullLoanDetails,
+  } = useSelector((state) => state.smeLoans);
   const [showModal, setShowModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
+  const [showRepaymentModal, setRepaymentModal] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
   const [slhSearchValue, setSlhSearchValue] = useState("");
   const [slhSearchBy, setSlhSearchBy] = useState("");
@@ -63,6 +72,8 @@ const LoanHistory = () => {
 
   // Decode the BorrowerId to restore its original value
   const decodedUniqueID = decodeURIComponent(uniqueID);
+
+  console.log(paymentHistory);
 
   useEffect(() => {
     return () => {
@@ -103,8 +114,16 @@ const LoanHistory = () => {
     await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
   };
 
+  const handleRepaymentHistory = async (loanId) => {
+    setRepaymentModal(true);
+    await dispatch(getRepaymentHistory({ loanId })).unwrap();
+  };
+
   const closeFullLoanDetailModal = () => {
     setShowModal(false);
+  };
+  const closeRepaymentHistoryModal = () => {
+    setRepaymentModal(false);
   };
 
   const handleViewDocuments = (verifiedDocuments) => {
@@ -117,9 +136,23 @@ const LoanHistory = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    navigate(
-      `/loan/loan-origination-system/sme/loans/loan-agreement/${loanId}/${uid}`
-    );
+    // navigate(
+    //   `/loan/loan-origination-system/sme/loans/loan-agreement/${loanId}/${uid}`
+    // );
+    const printUrl = `/loan-agreement-sme/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  const handleLoanStatement = async (loanId, uid) => {
+    const printUrl = `/loan-statement-sme/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  const handleOutrightSettlement = async (loanId, uid) => {
+    const printUrl = `/outright-settlement-sme/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
@@ -132,6 +165,12 @@ const LoanHistory = () => {
       `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}`
     );
   };
+
+  const handleDisbursementFile = async (loanId, uid) => {
+      const printUrl = `/disbursement-sme/${loanId}/${uid}`;
+      window.open(printUrl, "_blank");
+      await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+    };
 
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
@@ -164,6 +203,30 @@ const LoanHistory = () => {
       handleReset();
     }
   };
+
+  const userNavigation = [
+    {
+      name: "Loan Statement",
+      action: (rowData) => handleLoanStatement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Outright Settlement",
+      action: (rowData) =>
+        handleOutrightSettlement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Loan Agreement",
+      action: (rowData) => handleLoanAgreement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Disbursement File",
+      action: (rowData) => handleDisbursementFile(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Documents",
+      action: (rowData) => handleViewDocuments(rowData.verifiedDocuments),
+    },
+  ];
 
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
@@ -249,11 +312,20 @@ const LoanHistory = () => {
               </div>
             </div>
           </div>
-          <div
-            className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-            onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-          >
-            <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+          <div className="flex gap-5 flex-wrap">
+            <div
+              className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+              onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+            >
+              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+            </div>
+            <div
+              className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+              onClick={() => handleRepaymentHistory(rowData.loanId)}
+            >
+              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment
+              History
+            </div>
           </div>
         </CardInfo>
       </div>
@@ -346,22 +418,7 @@ const LoanHistory = () => {
             </div>
           )}
           <div>
-            <Button
-              buttonName={"View Loan Agreement"}
-              onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-              rectangle={true}
-              buttonIcon={NewspaperIcon}
-              buttonType="tertiary"
-            />
-          </div>
-          <div>
-            <Button
-              buttonName={"View Documents"}
-              onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
-              rectangle={true}
-              buttonIcon={FiInfo}
-              buttonType="tertiary"
-            />
+            <ActionOption userNavigation={userNavigation} actionID={rowData} />
           </div>
         </div>
       </div>
@@ -426,6 +483,12 @@ const LoanHistory = () => {
         isOpen={showModal}
         onClose={closeFullLoanDetailModal}
         loanDetails={fullLoanDetails}
+        loading={loading}
+      />
+      <RepaymentHistoryModal
+        isOpen={showRepaymentModal}
+        onClose={closeRepaymentHistoryModal}
+        paymentHistory={paymentHistory}
         loading={loading}
       />
       <ViewDocumentsModal

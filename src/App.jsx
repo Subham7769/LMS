@@ -318,6 +318,15 @@ const LoanAgreement = lazy(() =>
 const LoanAgreementPrint = lazy(() =>
   import("./components/Los-Personal/Loans/LoanAgreementPrint")
 );
+const LoanStatementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanStatementPrint")
+);
+const OutrightSettlementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/OutrightSettlementPrint")
+);
+const DisbursementFilePrint = lazy(() =>
+  import("./components/Los-Personal/Loans/DisbursementFilePrint")
+);
 const CollateralRegister = lazy(() =>
   import("./components/Los-Personal/Loans/CollateralRegister")
 );
@@ -389,6 +398,15 @@ const LoanAgreementSME = lazy(() =>
 );
 const LoanAgreementPrintSME = lazy(() =>
   import("./components/Los-SME/Loans/LoanAgreementPrint")
+);
+const LoanStatementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanStatementPrint")
+);
+const OutrightSettlementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/OutrightSettlementPrint")
+);
+const DisbursementFilePrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/DisbursementFilePrint")
 );
 const CollateralRegisterSME = lazy(() =>
   import("./components/Los-SME/Loans/CollateralRegister")
@@ -1250,8 +1268,38 @@ const routes = [
     errorElement: <RouteErrorBoundary />,
   },
   {
+    path: "/loan-statement/:loanApplicationId/:userId",
+    element: <LoanStatementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/outright-settlement/:loanApplicationId/:userId",
+    element: <OutrightSettlementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/disbursement/:loanApplicationId/:userId",
+    element: <DisbursementFilePrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
     path: "/loan-agreement-sme/:loanApplicationId/:userId",
     element: <LoanAgreementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/loan-statement-sme/:loanApplicationId/:userId",
+    element: <LoanStatementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/outright-settlement-sme/:loanApplicationId/:userId",
+    element: <OutrightSettlementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/disbursement-sme/:loanApplicationId/:userId",
+    element: <DisbursementFilePrintSME />,
     errorElement: <RouteErrorBoundary />,
   },
 

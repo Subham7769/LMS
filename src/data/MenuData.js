@@ -456,7 +456,15 @@ export const MenusInitial = [
     icon: "NewspaperIcon",
     current: false,
   },
-
+  {
+    title: "ELK Reports",
+    sectionName: "REPORTS & ANALYSIS",
+    href: import.meta.env.VITE_KIBANA_APP_LINK || "/loan/reports",
+    icon: "CubeTransparentIcon",
+    current: false,
+    isOpen: false,
+    openInNewTab:true,
+  },
   // USER TOOLS
   {
     title: "Customer Care",

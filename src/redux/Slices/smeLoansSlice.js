@@ -673,6 +673,33 @@ export const getLoanHistoryByField = createAsyncThunk(
   }
 );
 
+export const getRepaymentHistory = createAsyncThunk(
+  "smeLoans/getRepaymentHistory",
+  async ({ loanId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_FULL_REPAYMENT_HISTORY_BY_LOAN_ID
+        }${loanId}/loan-repayments`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const getFullLoanDetails = createAsyncThunk(
   "smeLoans/getFullLoanDetails",
   async ({ loanId, uid }, { rejectWithValue }) => {
@@ -731,10 +758,27 @@ export const getLoanAgreement = createAsyncThunk(
 
 export const generateLoanApplicationId = createAsyncThunk(
   "smeLoans/generateLoanApplicationId",
-  async (_, { getState }) => {
-    const id = nanoid();
-    // You can perform any async operations here if needed
-    return id;
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_GET_DRAFT_APPLICATION_ID}COMPANY`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to generate ID");
+      }
+      const responseData = await response.json();
+      return responseData.sequenceId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -863,6 +907,7 @@ const initialState = {
   approveLoans: [],
   approveLoansTotalElements: 0,
   loanHistory: [],
+  paymentHistory: [],
   loanHistoryTotalElements: 0,
   loanConfigData: {},
   loanProductData: [],
@@ -1034,6 +1079,7 @@ const smeLoansSlice = createSlice({
     },
     resetLoanOfferFields: (state, action) => {
       state.loanOfferFields = initialState.loanOfferFields;
+      state.loanConfigData = {};
     },
     setLoanApplicationId: (state, action) => {
       state.addLoanData.loanApplicationId = action.payload;
@@ -1045,8 +1091,17 @@ const smeLoansSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(generateLoanApplicationId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(generateLoanApplicationId.fulfilled, (state, action) => {
         state.addLoanData.loanApplicationId = action.payload;
+      })
+      .addCase(generateLoanApplicationId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getLoanApplications.pending, (state) => {
         state.loading = true;
@@ -1392,6 +1447,19 @@ const smeLoansSlice = createSlice({
         state.loanHistoryTotalElements = 0;
       })
       .addCase(getLoanHistoryByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getRepaymentHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getRepaymentHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.paymentHistory = action.payload;
+      })
+      .addCase(getRepaymentHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
