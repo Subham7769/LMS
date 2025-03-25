@@ -7,9 +7,10 @@ const generateNumberSentence = (rule) => {
   const MIN_LIMIT = -Number(import.meta.env.VITE_MIN_MAX_LIMIT);
   const MAX_LIMIT = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
 
-  const sentences = rule?.numberCriteriaRangeList?.map((item) => {
-      const minimum = Number(item.minimum); 
-      const maximum = Number(item.maximum); 
+  const sentences = rule?.numberCriteriaRangeList
+    ?.map((item) => {
+      const minimum = Number(item.minimum);
+      const maximum = Number(item.maximum);
       const currencySymbol = isCurrencyField(fieldName) ? "$" : "";
 
       // Less than
@@ -46,10 +47,30 @@ const generateNumberSentence = (rule) => {
     })
     .filter(Boolean); // Remove empty strings
 
+  const usageListSentence = (() => {
+    const filteredList = rule?.usageList
+      ?.filter((item) => item.used) // Filter items where used is true
+      .map((item) => {
+        // Replace _ with space and then capitalize each word
+        return item.ruleUsage
+          .toLowerCase() // Convert to lowercase
+          .replace(/_/g, " ") // Replace underscores with spaces
+          .replace(/\b\w/g, (match) => match.toUpperCase()) // Capitalize first letter of each word
+          .replace(/\s+/g, ""); // Remove spaces between words to form UpperCamelCase
+      });
+
+    if (!filteredList || filteredList.length === 0) return "";
+    if (filteredList.length === 1) return filteredList[0]; // If there's only one item, return it directly
+
+    return `${filteredList.slice(0, -1).join(", ")} & ${
+      filteredList[filteredList.length - 1]
+    }`;
+  })();
+
   return sentences?.length
     ? `${convertToReadableString(fieldName)} should be ${sentences?.join(
         " or "
-      )}`
+      )} during ${usageListSentence}.`
     : ""; // Handle empty cases gracefully
 };
 

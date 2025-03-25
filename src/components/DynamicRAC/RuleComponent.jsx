@@ -243,6 +243,7 @@ const RuleComponent = ({
                 {rule?.fieldType === "STRING" && (
                   <span>
                     {generateStringSentence({
+                      usageList:rule?.usageList,
                       name: rule?.name,
                       blocked: rule?.blocked,
                       criteriaValues:
