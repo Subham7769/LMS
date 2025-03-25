@@ -422,6 +422,33 @@ export const uploadBorrowerPhotoFile = createAsyncThunk(
   }
 );
 
+export const draftBorrowerInfo = createAsyncThunk(
+  "borrowers/draftBorrowerInfo", // action type
+  async (addDraftBorrowerData, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_CREATE_DRAFT_PERSONAL_BORROWER}`, //.env line no 331
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify(addDraftBorrowerData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to register borrower");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
 const initialState = {
   draftedBorrowerData: [],
   draftedBorrowerDataTotalElements: 0,
@@ -774,6 +801,19 @@ const borrowersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(draftBorrowerInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(draftBorrowerInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Draft Saved Successfully");
+      })
+      .addCase(draftBorrowerInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload; // Store the error message
+        toast.error(`API Error : ${action.payload}`); // Notify the user of the error
       });
   },
 });
