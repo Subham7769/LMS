@@ -371,18 +371,21 @@ const AddUpdateBorrowerFields = ({
       labelName: "Mobile 1",
       inputName: "mobile1",
       type: "number",
+      maxLength:10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "number",
+      maxLength:10,
       validation: false,
     },
     {
       labelName: "Landline Phone",
       inputName: "landlinePhone",
       type: "text",
+      maxLength:10,
       validation: false,
     },
     {
@@ -484,6 +487,7 @@ const AddUpdateBorrowerFields = ({
       inputName: "workPhoneNumber",
       type: "text",
       validation: false,
+      maxLength: 10,
     },
     {
       labelName: "Work Physical Address",
@@ -675,9 +679,10 @@ const AddUpdateBorrowerFields = ({
       labelName: "Mobile 1",
       inputName: "kinMobile1",
       type: "number",
+      maxLength:10,
       validation: true,
     },
-    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number" },
+    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number",maxLength:10 },
     {
       labelName: "Email",
       inputName: "kinEmail",
@@ -737,6 +742,7 @@ const AddUpdateBorrowerFields = ({
       labelName: "Work Phone Number",
       inputName: "kinWorkPhoneNumber",
       type: "text",
+      maxLength: 10,
     },
   ];
   const otherDetailsConfig = [

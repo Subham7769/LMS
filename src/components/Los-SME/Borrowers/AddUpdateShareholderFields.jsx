@@ -165,18 +165,21 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "mobile1",
       type: "number",
       validation: true,
+      maxLength:10,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "number",
       validation: false,
+      maxLength:10,
     },
     {
       labelName: "Landline Phone",
       inputName: "landlinePhone",
       type: "text",
       validation: false,
+      maxLength:10,
     },
     {
       labelName: "House Number",
