@@ -53,6 +53,7 @@ import {
   NewspaperIcon,
   AtSymbolIcon,
   WrenchScrewdriverIcon,
+  CubeTransparentIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -116,6 +117,7 @@ const SideBar = () => {
     NewspaperIcon,
     AtSymbolIcon,
     WrenchScrewdriverIcon,
+    CubeTransparentIcon,
   };
 
   const functionMapping = {
@@ -345,17 +347,19 @@ const SideBar = () => {
                     key={menu.title}
                     className={`${index === menus.length - 1 && "mb-52"}`}
                   >
-                    <NavLink to={menu.openInNewTab ? "#" : menu.href}
+                    <NavLink to={menu.openInNewTab ? "#" : menu.href} end
                                   onClick={(e) => {
                                     if (menu.openInNewTab) {
                                       e.preventDefault();
                                       window.open(menu.href, "_blank");
-                                    } else {
-                                      handleToggleSubmenu(index);
                                     }
                                   }}
+
                             target={menu.openInNewTab ? "_blank" : undefined}
-                            rel={menu.openInNewTab ? "noopener noreferrer" : undefined} className="text-gray-500">
+                            rel={menu.openInNewTab ? "noopener noreferrer" : undefined} 
+                            className={({ isActive }) =>
+                              `text-gray-500 ${isActive && !menu.openInNewTab ? "text-blue-primary" : ""}`
+                            }>
                       <li
                         onClick={() => handleToggleSubmenu(index)}
                         className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-background-light-secondary hover:text-blue-primary"
