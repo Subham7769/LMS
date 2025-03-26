@@ -84,6 +84,7 @@ const LoanHistory = () => {
     await dispatch(
       validateForm({ plhSearchBy: plhSearchBy, plhSearchValue: plhSearchValue })
     );
+    console.log(searchBy + "----" + searchValue);
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
@@ -160,6 +161,12 @@ const LoanHistory = () => {
     );
   };
 
+  const handleDisbursementFile = async (loanId, uid) => {
+    const printUrl = `/disbursement/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
+    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
@@ -199,11 +206,16 @@ const LoanHistory = () => {
     },
     {
       name: "Outright Settlement",
-      action: (rowData) => handleOutrightSettlement(rowData.loanId, rowData.uid),
+      action: (rowData) =>
+        handleOutrightSettlement(rowData.loanId, rowData.uid),
     },
     {
       name: "Loan Agreement",
       action: (rowData) => handleLoanAgreement(rowData.loanId, rowData.uid),
+    },
+    {
+      name: "Disbursement File",
+      action: (rowData) => handleDisbursementFile(rowData.loanId, rowData.uid),
     },
     {
       name: "Documents",
@@ -399,33 +411,6 @@ const LoanHistory = () => {
               />
             </div>
           )}
-          {/* <div>
-            <Button
-              buttonName={"View Loan Statement"}
-              onClick={() => handleLoanStatement(rowData.loanId, rowData.uid)}
-              rectangle={true}
-              buttonIcon={NewspaperIcon}
-              buttonType="tertiary"
-            />
-          </div>
-          <div>
-            <Button
-              buttonName={"View Loan Agreement"}
-              onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-              rectangle={true}
-              buttonIcon={NewspaperIcon}
-              buttonType="tertiary"
-            />
-          </div>
-          <div>
-            <Button
-              buttonName={"View Documents"}
-              onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
-              rectangle={true}
-              buttonIcon={FiInfo}
-              buttonType="tertiary"
-            />
-          </div> */}
           <div>
             <ActionOption userNavigation={userNavigation} actionID={rowData} />
           </div>

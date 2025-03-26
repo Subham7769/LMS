@@ -264,7 +264,8 @@ export const fetchBorrowerInfo = createAsyncThunk(
 export const viewPhoto = createAsyncThunk(
   "borrowers/viewPhoto",
   async (filePreviewParams, { rejectWithValue }) => {
-    const { docId, authToken } = filePreviewParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = filePreviewParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_PERSONAL}${docId}`;
 
     try {
@@ -272,7 +273,7 @@ export const viewPhoto = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -396,15 +397,15 @@ export const updateBorrowerInfo = createAsyncThunk(
 
 export const uploadBorrowerPhotoFile = createAsyncThunk(
   "borrowers/uploadBorrowerPhotoFile",
-  async ({ formData, authToken }, { rejectWithValue }) => {
+  async ({ formData }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${import.meta.env.VITE_BORROWERS_UPLOAD_PHOTO_PERSONAL_BORROWER}`,
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }

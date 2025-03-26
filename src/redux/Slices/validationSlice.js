@@ -201,7 +201,7 @@ const validationSlice = createSlice({
           }
         });
       }
-
+      console.log(errors)
       state.validationError = {
         ...state.validationError,
         ...errors,
