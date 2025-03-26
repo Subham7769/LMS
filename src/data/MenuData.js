@@ -346,6 +346,13 @@ export const MenusInitial = [
     icon: "WrenchScrewdriverIcon",
     current: false,
   },
+  {
+    title: "App Config",
+    sectionName: "CONFIGURATION",
+    href: "/loan/app-config",
+    icon: "CpuChipIcon",
+    current: false,
+  },
 
   // LOAN ORIGINATION
   {
