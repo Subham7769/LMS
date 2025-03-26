@@ -10,6 +10,7 @@ import {
   generateLoanApplicationId,
   getRefinanceDetails,
   getRepaymentHistory,
+  getDisbursementFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -52,8 +53,13 @@ function transformData(inputArray) {
 const LoanHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loanHistory, paymentHistory, loading, loanHistoryTotalElements, fullLoanDetails } =
-    useSelector((state) => state.personalLoans);
+  const {
+    loanHistory,
+    paymentHistory,
+    loading,
+    loanHistoryTotalElements,
+    fullLoanDetails,
+  } = useSelector((state) => state.personalLoans);
   const [showModal, setShowModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [showRepaymentModal, setRepaymentModal] = useState(false);
@@ -112,7 +118,6 @@ const LoanHistory = () => {
     await dispatch(getRepaymentHistory({ loanId })).unwrap();
   };
 
-
   const closeFullLoanDetailModal = () => {
     setShowModal(false);
   };
@@ -163,7 +168,7 @@ const LoanHistory = () => {
   const handleDisbursementFile = async (loanId, uid) => {
     const printUrl = `/disbursement/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
-    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+    await dispatch(getDisbursementFile({ loanId, uid })).unwrap();
   };
 
   const searchOptions = [
@@ -222,201 +227,221 @@ const LoanHistory = () => {
     },
   ];
 
-  const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
-      <div className="grid grid-cols-2 gap-4">
-        <CardInfo
-          cardIcon={UserIcon}
-          cardTitle="Borrower Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
-        >
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
-            <div>
-              <div className="text-gray-500">Employment</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.employerName}
+  const renderExpandedRow = (rowData) => {
+    const filteredUserNavigation = userNavigation.filter(
+      (item) =>
+        !(
+          item.name === "Disbursement File" &&
+          (rowData.loanStatus === "PENDING" ||
+            rowData.loanStatus === "CANCELED")
+        )
+    );
+    return (
+      <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+        <div className="grid grid-cols-2 gap-4">
+          <CardInfo
+            cardIcon={UserIcon}
+            cardTitle="Borrower Information"
+            className={"bg-white border-border-gray-primary border"}
+            colorText={"text-blue-primary"}
+          >
+            <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+              <div>
+                <div className="text-gray-500">Employment</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.employerName}
+                </div>
+                <div className="text-gray-500 font-light text-xs">
+                  {rowData?.borrowerDetails?.employmentDuration}
+                </div>
               </div>
-              <div className="text-gray-500 font-light text-xs">
-                {rowData?.borrowerDetails?.employmentDuration}
-              </div>
-            </div>
-            <div>
-              <div className="text-gray-500">Monthly Income</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.monthlyIncome}
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3">
-            <div>
-              <div className="text-gray-500">Credit Score</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.creditScore}
-              </div>
-            </div>
-            <div>
-              <div className="text-gray-500">Active Loans</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.activeLoans}
+              <div>
+                <div className="text-gray-500">Monthly Income</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.monthlyIncome}
+                </div>
               </div>
             </div>
-            <div>
-              <div className="text-gray-500">Payment History</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.paymentHistory}
+            <div className="grid grid-cols-3">
+              <div>
+                <div className="text-gray-500">Credit Score</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.creditScore}
+                </div>
+              </div>
+              <div>
+                <div className="text-gray-500">Active Loans</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.activeLoans}
+                </div>
+              </div>
+              <div>
+                <div className="text-gray-500">Payment History</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.paymentHistory}
+                </div>
               </div>
             </div>
-          </div>
-        </CardInfo>
-        <CardInfo
-          cardIcon={CurrencyDollarIcon}
-          cardTitle="Loan Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
-        >
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
-            <div>
-              <div className="text-gray-500">Disbursed Amount</div>
-              <div className="font-semibold">{rowData?.disbursedAmount}</div>
-            </div>
-            <div>
-              <div className="text-gray-500">Interest Rate</div>
-              <div className="font-semibold">
-                {rowData.loanInterest}% {rowData.interestMethod} per{" "}
-                {rowData.perLoanInterest}
+          </CardInfo>
+          <CardInfo
+            cardIcon={CurrencyDollarIcon}
+            cardTitle="Loan Information"
+            className={"bg-white border-border-gray-primary border"}
+            colorText={"text-blue-primary"}
+          >
+            <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+              <div>
+                <div className="text-gray-500">Disbursed Amount</div>
+                <div className="font-semibold">{rowData?.disbursedAmount}</div>
+              </div>
+              <div>
+                <div className="text-gray-500">Interest Rate</div>
+                <div className="font-semibold">
+                  {rowData.loanInterest}% {rowData.interestMethod} per{" "}
+                  {rowData.perLoanInterest}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
-            <div>
-              <div className="text-gray-500">Tenure</div>
-              <div className="font-semibold">
-                {rowData.numberOfTenure} {rowData.perLoanDuration}
+            <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
+              <div>
+                <div className="text-gray-500">Tenure</div>
+                <div className="font-semibold">
+                  {rowData.numberOfTenure} {rowData.perLoanDuration}
+                </div>
+              </div>
+              <div>
+                <div className="text-gray-500">Monthly EMI</div>
+                <div className="font-semibold">{rowData.monthlyEMI}</div>
+              </div>
+              <div>
+                <div className="text-gray-500">First Payment</div>
+                <div className="font-semibold">
+                  {convertDate(rowData.firstEmiPayment)}
+                </div>
               </div>
             </div>
-            <div>
-              <div className="text-gray-500">Monthly EMI</div>
-              <div className="font-semibold">{rowData.monthlyEMI}</div>
-            </div>
-            <div>
-              <div className="text-gray-500">First Payment</div>
-              <div className="font-semibold">
-                {convertDate(rowData.firstEmiPayment)}
+            <div className="flex gap-5 flex-wrap">
+              <div
+                className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+                onClick={() =>
+                  handleFullLoanDetails(rowData.loanId, rowData.uid)
+                }
+              >
+                <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI
+                Schedule
+              </div>
+              <div
+                className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+                onClick={() => handleRepaymentHistory(rowData.loanId)}
+              >
+                <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment
+                History
               </div>
             </div>
-          </div>
-          <div className="flex gap-5 flex-wrap">
-            <div
-              className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-              onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-            >
-              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
-            </div>
-            <div
-              className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-              onClick={() => handleRepaymentHistory(rowData.loanId)}
-            >
-              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment History
-            </div>
-          </div>
-        </CardInfo>
-      </div>
-      <div className="bg-white p-3 shadow-md border-border-gray-primary border rounded-md my-5">
-        <div className="font-semibold text-xl mb-3">
-          Verified Documents{" "}
-          <span className="font-light text-xs">
-            ({rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
-            documents)
-          </span>
+          </CardInfo>
         </div>
-        <div className="flex gap-10">
-          {rowData?.verifiedDocuments
-            ?.filter((doc) => doc.verified) // Filter only verified documents
-            .map((doc) => (
-              <div className="flex gap-1.5" key={doc.docId}>
-                <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
-                {convertToTitleCase(doc.documentKey)}
-              </div>
-            ))}
+        <div className="bg-white p-3 shadow-md border-border-gray-primary border rounded-md my-5">
+          <div className="font-semibold text-xl mb-3">
+            Verified Documents{" "}
+            <span className="font-light text-xs">
+              (
+              {rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
+              documents)
+            </span>
+          </div>
+          <div className="flex gap-10">
+            {rowData?.verifiedDocuments
+              ?.filter((doc) => doc.verified) // Filter only verified documents
+              .map((doc) => (
+                <div className="flex gap-1.5" key={doc.docId}>
+                  <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
+                  {convertToTitleCase(doc.documentKey)}
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
-      {rowData?.loanActionDetailsList && (
-        <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
-          <div className="font-semibold text-xl mb-3">Loan Action History</div>
-          {rowData?.loanActionDetailsList.map((action, index) => {
-            const actionKeys = Object.keys(action);
-            let sentence = "";
+        {rowData?.loanActionDetailsList && (
+          <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
+            <div className="font-semibold text-xl mb-3">
+              Loan Action History
+            </div>
+            {rowData?.loanActionDetailsList.map((action, index) => {
+              const actionKeys = Object.keys(action);
+              let sentence = "";
 
-            actionKeys.forEach((key) => {
-              if (key.includes("By")) {
-                const role = convertToTitleCase(action[key]);
+              actionKeys.forEach((key) => {
+                if (key.includes("By")) {
+                  const role = convertToTitleCase(action[key]);
 
-                // Finding the corresponding date key dynamically
-                const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
-                const dateKey = actionKeys.find(
-                  (k) =>
-                    k.toLowerCase().includes(baseKey) &&
-                    k.toLowerCase().includes("date")
-                );
+                  // Finding the corresponding date key dynamically
+                  const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
+                  const dateKey = actionKeys.find(
+                    (k) =>
+                      k.toLowerCase().includes(baseKey) &&
+                      k.toLowerCase().includes("date")
+                  );
 
-                const formattedDate = dateKey
-                  ? `on ${convertDate(new Date(action[dateKey]))}`
-                  : "";
-                sentence = `Loan has been ${convertToReadableString(
-                  key.replace("By", "")
-                )} By ${role} ${formattedDate}`;
-              }
-            });
+                  const formattedDate = dateKey
+                    ? `on ${convertDate(new Date(action[dateKey]))}`
+                    : "";
+                  sentence = `Loan has been ${convertToReadableString(
+                    key.replace("By", "")
+                  )} By ${role} ${formattedDate}`;
+                }
+              });
 
-            return (
-              <div key={index} className="border-b pb-2 mb-2">
-                <p>{sentence}</p>
-              </div>
-            );
-          })}
-        </div>
-      )}
-      <div className="flex justify-between items-end">
-        {rowData.verifiedDocuments.some(
-          (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
-        ) ? (
-          <div>&nbsp;</div>
-        ) : (
-          <div>
-            <InputFile
-              placeholder="Upload Signed Agreement"
-              inputName={"signedAgreement"}
-              inputValue={signedAgreement}
-              onChange={(e) => handleFileChange(e, rowData.loanId)}
-            />
+              return (
+                <div key={index} className="border-b pb-2 mb-2">
+                  <p>{sentence}</p>
+                </div>
+              );
+            })}
           </div>
         )}
-        <div className="flex justify-end gap-2 px-5">
-          {rowData.loanStatus === "ACTIVATED" && (
+        <div className="flex justify-between items-end">
+          {rowData.verifiedDocuments.some(
+            (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
+          ) ? (
+            <div>&nbsp;</div>
+          ) : (
             <div>
-              <Button
-                buttonName={"Refinance Loan"}
-                onClick={() =>
-                  handleRefinanceLoan(
-                    rowData.loanId,
-                    rowData.uid,
-                    rowData.uniqueID
-                  )
-                }
-                rectangle={true}
-                buttonIcon={ReceiptRefundIcon}
-                buttonType="tertiary"
+              <InputFile
+                placeholder="Upload Signed Agreement"
+                inputName={"signedAgreement"}
+                inputValue={signedAgreement}
+                onChange={(e) => handleFileChange(e, rowData.loanId)}
               />
             </div>
           )}
-          <div>
-            <ActionOption userNavigation={userNavigation} actionID={rowData} />
+          <div className="flex justify-end gap-2 px-5">
+            {rowData.loanStatus === "ACTIVATED" && (
+              <div>
+                <Button
+                  buttonName={"Refinance Loan"}
+                  onClick={() =>
+                    handleRefinanceLoan(
+                      rowData.loanId,
+                      rowData.uid,
+                      rowData.uniqueID
+                    )
+                  }
+                  rectangle={true}
+                  buttonIcon={ReceiptRefundIcon}
+                  buttonType="tertiary"
+                />
+              </div>
+            )}
+            <div>
+              <ActionOption
+                userNavigation={filteredUserNavigation}
+                actionID={rowData}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className={`flex flex-col gap-3`}>

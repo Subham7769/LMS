@@ -32,7 +32,7 @@ function transformData(inputArray) {
   return inputArray.map((item) => ({
     loanApplicationId: item?.loanApplicationId,
     uniqueID: item?.generalLoanDetails?.uniqueID,
-    borrowerId: item?.generalLoanDetails?.borrowerId,
+    borrowerName: item?.borrowerName,
     creationDate: convertDate(item?.creationDate),
     lastUpdate: item?.lastUpdate ? convertDate(item?.lastUpdate) : " - ",
     status: convertToTitleCase(item?.status),
