@@ -21,6 +21,11 @@ import {
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
+import convertToReadableString from "../../../utils/convertToReadableString";
+import formatNumber from "../../../utils/formatNumber";
+import isDateString from "../../../utils/isDateString";
+import { convertDate } from "../../../utils/convertDate";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
@@ -30,7 +35,7 @@ const AddBulkRepayment = () => {
 
   useEffect(() => {
     // if (openLoans.length < 1) {
-      dispatch(getOpenLoans());
+    dispatch(getOpenLoans());
     // }
   }, [dispatch]);
 
@@ -68,8 +73,18 @@ const AddBulkRepayment = () => {
         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden w-64 bg-gray-700 text-white text-xs rounded-md shadow-lg p-3 group-hover:block">
           <ul>
             {Object.entries(data).map(([key, value]) => (
-              <li key={key} className="mb-1 last:mb-0">
-                <strong>{key}:</strong> {value}
+              <li
+                key={key}
+                className="mb-1 last:mb-0 flex font-semibold justify-between"
+              >
+                <div>{convertToReadableString(key)}:</div>
+                <div>
+                  {typeof value === "number"
+                    ? formatNumber(value)
+                    : isDateString(value)
+                    ? convertDate(value)
+                    : convertToTitleCase(value)}
+                </div>
               </li>
             ))}
           </ul>

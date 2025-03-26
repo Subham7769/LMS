@@ -272,12 +272,14 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "mobile1",
       type: "number",
       validation: true,
+      maxLength:10,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "number",
       validation: false,
+      maxLength:10,
     },
     {
       labelName: "Landline Phone",
@@ -372,6 +374,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "workPhoneNumber",
       type: "text",
       validation: false,
+      maxLength: 10,
     },
     {
       labelName: "Work Physical Address",
@@ -481,8 +484,9 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "kinMobile1",
       type: "number",
       validation: false,
+      maxLength:10,
     },
-    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number" },
+    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number",maxLength:10, },
     {
       labelName: "Email",
       inputName: "kinEmail",
@@ -541,6 +545,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       labelName: "Work Phone Number",
       inputName: "kinWorkPhoneNumber",
       type: "text",
+      maxLength: 10,
     },
   ];
   // const otherDetailsConfig = [

@@ -13,6 +13,7 @@ import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
+import { toast } from "react-toastify";
 
 const UpdateCompany = () => {
   const { updateCompanyData, error, loading } = useSelector(
@@ -46,15 +47,20 @@ const UpdateCompany = () => {
       borrowerType: "COMPANY_BORROWER",
       companyBorrowerProfileDraft: { ...updateCompanyData },
     };
-    dispatch(draftCompanyBorrowerInfo(addDraftCompanyData)).unwrap()
-    dispatch(
-      fetchAllCompanyBorrowersByLoanOfficer({
-        page: 0,
-        size: 20,
-        loanOfficer,
-      })
-    );
-    navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+    if (addDraftCompanyData.companyBorrowerProfileDraft.companyDetails.companyName !== "") {
+
+      dispatch(draftCompanyBorrowerInfo(addDraftCompanyData)).unwrap()
+      dispatch(
+        fetchAllCompanyBorrowersByLoanOfficer({
+          page: 0,
+          size: 20,
+          loanOfficer,
+        })
+      );
+      navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+    } else {
+      toast.error("Company Name Required");
+    }
   };
 
   const handleSubmit = async (e) => {
