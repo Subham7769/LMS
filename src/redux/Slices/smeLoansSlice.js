@@ -763,10 +763,27 @@ export const getLoanAgreement = createAsyncThunk(
 
 export const generateLoanApplicationId = createAsyncThunk(
   "smeLoans/generateLoanApplicationId",
-  async (_, { getState }) => {
-    const id = nanoid();
-    // You can perform any async operations here if needed
-    return id;
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_GET_DRAFT_APPLICATION_ID}COMPANY`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to generate ID");
+      }
+      const responseData = await response.json();
+      return responseData.sequenceId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -1079,8 +1096,17 @@ const smeLoansSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(generateLoanApplicationId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(generateLoanApplicationId.fulfilled, (state, action) => {
         state.addLoanData.loanApplicationId = action.payload;
+      })
+      .addCase(generateLoanApplicationId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getLoanApplications.pending, (state) => {
         state.loading = true;

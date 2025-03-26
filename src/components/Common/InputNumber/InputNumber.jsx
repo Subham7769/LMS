@@ -11,6 +11,8 @@ import {
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 
+
+
 const InputNumber = ({
   labelName,
   inputName,
@@ -28,6 +30,7 @@ const InputNumber = ({
   isRuleId,
   isRangeIndex,
   loading = false,
+  maxLength = null,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -59,7 +62,42 @@ const InputNumber = ({
       dispatch(addUpdateFields({ inputName }));
     }
   }, [inputName, dispatch]);
-
+  
+  const handleKeyDown = (e) => {
+    const allowedKeys = [
+      "Backspace",
+      "Tab",
+      "ArrowLeft",
+      "ArrowRight",
+      "Delete",
+      "Home",
+      "End",
+    ];
+  
+    const key = e.key;
+    const currentValue = inputValue?.toString() || "";
+  
+    const isNumberKey = /^[0-9.]$/.test(key);
+    const alreadyHasDot = currentValue.includes(".");
+  
+    // Disallow extra dot or non-numeric keys
+    if (
+      (!isNumberKey && !allowedKeys.includes(key)) ||
+      (key === "." && alreadyHasDot)
+    ) {
+      e.preventDefault();
+    }
+  
+    // Disallow input beyond maxLength (if set)
+    if (
+      maxLength &&
+      currentValue.length >= maxLength &&
+      !allowedKeys.includes(key)
+    ) {
+      e.preventDefault();
+    }
+  };
+  
   const handleChange = (e) => {
     const { name, value, id } = e.target;
     onChange({
@@ -126,6 +164,8 @@ const InputNumber = ({
             focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`} // Conditionally apply red or indigo focus ring
           required
           disabled={disabled}
+          maxLength={maxLength}
+          onKeyDown={handleKeyDown}
         />
         {inputValuePercentage && (
           <span className=" block absolute right-2 text-gray-500">

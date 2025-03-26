@@ -11,6 +11,24 @@ const generateStringSentence = (rule) => {
     : "";
   const criteriaValues = rule?.criteriaValues?.join(", ");
 
-  return `${readableName} must ${condition} ${criteriaPrefix}${criteriaValues}.`;
+  const usageListSentence = (() => {
+    const filteredList = rule?.usageList
+      ?.filter(item => item.used) // Filter items where used is true
+      .map(item => {
+        // Replace _ with space and then capitalize each word
+        return item.ruleUsage
+          .toLowerCase() // Convert to lowercase
+          .replace(/_/g, " ") // Replace underscores with spaces
+          .replace(/\b\w/g, match => match.toUpperCase()) // Capitalize first letter of each word
+          .replace(/\s+/g, ''); // Remove spaces between words to form UpperCamelCase
+      });
+  
+    if (!filteredList || filteredList.length === 0) return "";
+    if (filteredList.length === 1) return filteredList[0]; // If there's only one item, return it directly
+  
+    return `${filteredList.slice(0, -1).join(", ")} & ${filteredList[filteredList.length - 1]}`;
+  })();
+
+  return `${readableName} must ${condition} ${criteriaPrefix}${criteriaValues} during ${usageListSentence}.`;
 };
 export default generateStringSentence

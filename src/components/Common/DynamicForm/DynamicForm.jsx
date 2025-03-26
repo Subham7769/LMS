@@ -26,6 +26,7 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 placeHolder={`Enter ${field.labelName}`}
                                 isValidation={field.validation || false}
                                 disabled={field.disabled || false}
+                                maxLength={field.maxLength || null }
                             />
                         );
                     case "number":
@@ -43,6 +44,7 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 }
                                 isValidation={field.validation || false}
                                 disabled={field.disabled || false}
+                                maxLength={field.maxLength || null }
                             />
                         );
                     case "select":

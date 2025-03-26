@@ -324,6 +324,9 @@ const LoanStatementPrint = lazy(() =>
 const OutrightSettlementPrint = lazy(() =>
   import("./components/Los-Personal/Loans/OutrightSettlementPrint")
 );
+const DisbursementFilePrint = lazy(() =>
+  import("./components/Los-Personal/Loans/DisbursementFilePrint")
+);
 const CollateralRegister = lazy(() =>
   import("./components/Los-Personal/Loans/CollateralRegister")
 );
@@ -395,6 +398,15 @@ const LoanAgreementSME = lazy(() =>
 );
 const LoanAgreementPrintSME = lazy(() =>
   import("./components/Los-SME/Loans/LoanAgreementPrint")
+);
+const LoanStatementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanStatementPrint")
+);
+const OutrightSettlementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/OutrightSettlementPrint")
+);
+const DisbursementFilePrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/DisbursementFilePrint")
 );
 const CollateralRegisterSME = lazy(() =>
   import("./components/Los-SME/Loans/CollateralRegister")
@@ -1266,8 +1278,28 @@ const routes = [
     errorElement: <RouteErrorBoundary />,
   },
   {
+    path: "/disbursement/:loanApplicationId/:userId",
+    element: <DisbursementFilePrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
     path: "/loan-agreement-sme/:loanApplicationId/:userId",
     element: <LoanAgreementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/loan-statement-sme/:loanApplicationId/:userId",
+    element: <LoanStatementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/outright-settlement-sme/:loanApplicationId/:userId",
+    element: <OutrightSettlementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/disbursement-sme/:loanApplicationId/:userId",
+    element: <DisbursementFilePrintSME />,
     errorElement: <RouteErrorBoundary />,
   },
 
