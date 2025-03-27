@@ -40,6 +40,7 @@ export const countryOptions = [
   { value: "Lebanon", label: "Lebanon" },
   { value: "Luxembourg", label: "Luxembourg" },
   { value: "Malaysia", label: "Malaysia" },
+  { value: "Madagascar", label: "Madagascar" },
   { value: "Mexico", label: "Mexico" },
   { value: "Netherlands", label: "Netherlands" },
   { value: "New Zealand", label: "New Zealand" },
@@ -67,6 +68,18 @@ export const countryOptions = [
 ];
 
 export const locationOptions = {
+  Madagascar: [
+    { value: "Antananarivo", label: "Antananarivo" },
+    { value: "Antsiranana", label: "Antsiranana" },
+    { value: "Fianarantsoa", label: "Fianarantsoa" },
+    { value: "Mahajanga", label: "Mahajanga" },
+    { value: "Toamasina", label: "Toamasina" },
+    { value: "Toliara", label: "Toliara" },
+    { value: "Vakinankaratra", label: "Vakinankaratra" },
+    { value: "Alaotra-Mangoro", label: "Alaotra-Mangoro" },
+    { value: "Amoron'i Mania", label: "Amoron'i Mania" },
+    { value: "Analamanga", label: "Analamanga" },
+  ],
   Zambia: [
     { value: "Lusaka", label: "Lusaka" },
     { value: "Copperbelt", label: "Copperbelt" },
@@ -2874,7 +2887,8 @@ export const currencyOptions = [
   { value: "KHR", label: "Cambodian Riel (៛)" },
   { value: "KMF", label: "Comorian Franc (CF)" },
   { value: "KPW", label: "North Korean Won (₩)" },
-  { value: "KRW", label: "South Korean Won (₩)" }
+  { value: "KRW", label: "South Korean Won (₩)" },
+  { value: "MGA", label: "Malagasy Ariary (Ar)" }
 ];
 
 export const currencySymbolOptions = [

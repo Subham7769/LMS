@@ -26,7 +26,7 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "Dynamic RAC",
+    title: "Decision Engine",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/dynamic-rac",
     icon: "ClipboardDocumentCheckIcon",
@@ -34,7 +34,7 @@ export const MenusInitial = [
     createButton: true,
     editable: true,
     createFunction: "createNewDynamicRac",
-    buttonName: "Create RAC",
+    buttonName: "Create Decision Engine",
     placeholder: "Enter Name",
     navigateSuccess: "/loan/dynamic-rac/",
     navigateFail: "/login",

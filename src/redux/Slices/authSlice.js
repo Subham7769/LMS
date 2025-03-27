@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { fetchAppConfigData } from "./appConfigSlice";
 
 // AsyncThunk for login
 export const login = createAsyncThunk(
@@ -25,6 +26,7 @@ export const login = createAsyncThunk(
       const authToken = response.headers.get("Authorization");
       const token = authToken ? authToken.replace("Bearer ", "") : null;
       const data = await response.json();
+
       return { token, data };
     } catch (error) {
       return rejectWithValue(error.message);

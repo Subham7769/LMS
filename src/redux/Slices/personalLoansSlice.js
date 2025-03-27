@@ -792,13 +792,39 @@ export const getLoanAgreement = createAsyncThunk(
   }
 );
 
+export const getDisbursementFile = createAsyncThunk(
+  "personalLoans/getDisbursementFile",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_DISBURSEMENT_FILE_BY_ID
+        }${uid}/loan-disbursement/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const generateLoanApplicationId = createAsyncThunk(
   "personalLoans/generateLoanApplicationId",
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${
-      import.meta.env.VITE_LOAN_GET_DRAFT_APPLICATION_ID
-    }PERSONAL`;
+    const url = `${import.meta.env.VITE_LOAN_GET_DRAFT_APPLICATION_ID}PERSONAL`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -866,6 +892,7 @@ const initialState = {
       loanInterestType: "",
       loanInterestStr: "",
       loanProductId: "",
+      loanCreationDate:"",
       loanReleaseDate: "",
       repaymentTenure: 0,
       repaymentTenureType: "",
@@ -903,6 +930,7 @@ const initialState = {
   },
   fullLoanDetails: {},
   loanAgreementData: {},
+  disbursement: {},
   error: null,
   loading: false,
 };
@@ -1385,6 +1413,19 @@ const personalLoansSlice = createSlice({
         state.loanAgreementData = action.payload;
       })
       .addCase(getLoanAgreement.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getDisbursementFile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDisbursementFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.disbursement = action.payload;
+      })
+      .addCase(getDisbursementFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);

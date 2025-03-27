@@ -3,72 +3,28 @@ import { convertDate } from "../../../utils/convertDate";
 import longHornLogo from "../../../assets/image/longhorn-logo.png";
 import formatNumber from "../../../utils/formatNumber";
 import convertToReadableString from "../../../utils/convertToReadableString";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getDisbursementFile } from "../../../redux/Slices/personalLoansSlice";
 
-const disbursement = {
-  disbursementDate: "2021-09-01",
-  disbursementDetails: [
-    {
-      firstName: "John",
-      surname: "Doe",
-      loanProcessDate: "2021-09-01",
-      disbursementDate: "2021-09-01",
-      loanAmount: 100000,
-      disburseLoanAmount: 100000,
-      bankName: "GTBank",
-      branchName: "Ikeja",
-      accountNumber: "1234567890",
-      branchCode: "1234",
-    },
-    {
-      firstName: "John",
-      surname: "Doe",
-      loanProcessDate: "2021-09-01",
-      disbursementDate: "2021-09-01",
-      loanAmount: 100000,
-      disburseLoanAmount: 100000,
-      bankName: "GTBank",
-      branchName: "Ikeja",
-      accountNumber: "1234567890",
-      branchCode: "1234",
-    },
-    {
-      firstName: "John",
-      surname: "Doe",
-      loanProcessDate: "2021-09-01",
-      disbursementDate: "2021-09-01",
-      loanAmount: 100000,
-      disburseLoanAmount: 100000,
-      bankName: "GTBank",
-      branchName: "Ikeja",
-      accountNumber: "1234567890",
-      branchCode: "1234",
-    },
-  ],
-  approvedByName: "Patrick Zulu",
-  approvedByPosition: "Chief credit operations and Fintech Officer",
-  approvedByDate: "2021-09-01",
-  disbursedByName: "Sara",
-  disbursedByPosition: "Manager",
-  disbursedByDate: "2021-09-01",
+const ShimmerTable = () => {
+  return (
+    <div className="grid grid-cols-4 gap-4 animate-pulse">
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+    </div>
+  );
 };
 
-const transformedDisbursementDetails = disbursement.disbursementDetails.map(
-  (dbDetails) => {
-    return {
-      ...dbDetails,
-      loanProcessDate: convertDate(dbDetails.loanProcessDate),
-      disbursementDate: convertDate(dbDetails.disbursementDate),
-      loanAmount: formatNumber(dbDetails.loanAmount),
-      disburseLoanAmount: formatNumber(dbDetails.disburseLoanAmount),
-    };
-  }
-);
-
 const DisbursementFilePrint = () => {
+  const dispatch = useDispatch();
+  const { loanApplicationId, userId } = useParams();
+  const { disbursement, loading } = useSelector((state) => state.personalLoans);
   const location = useLocation();
   useEffect(() => {
-    // dispatch(getLoanAgreement({ loanId: loanApplicationId, uid: userId }));
+    dispatch(getDisbursementFile({ loanId: loanApplicationId, uid: userId }));
 
     if (!location.pathname.includes("loan-origination-system")) {
       const timeoutId = setTimeout(() => {
@@ -80,6 +36,28 @@ const DisbursementFilePrint = () => {
     }
     // dispatch, loanApplicationId, userId,
   }, [location.pathname]);
+
+  if (loading || (disbursement && Object.keys(disbursement).length === 0)) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
+
+  const transformedDisbursementDetails = disbursement?.disbursementDetails?.map(
+    (dbDetails) => {
+      return {
+        ...dbDetails,
+        loanProcessDate: convertDate(dbDetails.loanProcessDate),
+        disbursementDate: convertDate(dbDetails.disbursementDate),
+        loanAmount: formatNumber(dbDetails.loanAmount),
+        disburseLoanAmount: formatNumber(dbDetails.disburseLoanAmount),
+      };
+    }
+  );
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-5">
