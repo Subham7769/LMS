@@ -225,7 +225,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
       // First, fetch the option list
       await dispatch(fetchOptionList(racId)).unwrap();
 
-      // After fetching the option list, fetch the dynamic RAC details
+      // After fetching the option list, fetch the Decision Engine details
       await dispatch(fetchDynamicRacDetails(racId));
       // Reset state and Close
       setRuleConfig(initialState);
@@ -271,7 +271,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
       // First, fetch the option list
       await dispatch(fetchOptionList(racId)).unwrap();
 
-      // After fetching the option list, fetch the dynamic RAC details
+      // After fetching the option list, fetch the Decision Engine details
       await dispatch(fetchDynamicRacDetails(racId));
       // Reset state and Close
       setRuleConfig(initialState);
@@ -335,7 +335,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     // First, fetch the option list
     await dispatch(fetchOptionList(racId)).unwrap();
 
-    // After fetching the option list, fetch the dynamic RAC details
+    // After fetching the option list, fetch the Decision Engine details
     await dispatch(fetchDynamicRacDetails(racId));
   };
 

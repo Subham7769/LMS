@@ -244,6 +244,11 @@ const ServerConfig = lazy(() =>
   import("./components/ServerConfig/ServerConfig")
 );
 
+//App Config imports
+const AppConfig = lazy(() =>
+  import("./components/AppConfig/AppConfig")
+);
+
 // Reporting Config imports
 const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
 const ReportingConfig = lazy(() =>
@@ -579,6 +584,11 @@ const routes = [
       {
         path: "server-config",
         element: <ServerConfig />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "app-config",
+        element: <AppConfig />,
         errorElement: <RouteErrorBoundary />,
       },
       {

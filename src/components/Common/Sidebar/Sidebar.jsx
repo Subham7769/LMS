@@ -54,6 +54,7 @@ import {
   AtSymbolIcon,
   WrenchScrewdriverIcon,
   CubeTransparentIcon,
+  CpuChipIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -118,6 +119,7 @@ const SideBar = () => {
     AtSymbolIcon,
     WrenchScrewdriverIcon,
     CubeTransparentIcon,
+    CpuChipIcon,
   };
 
   const functionMapping = {

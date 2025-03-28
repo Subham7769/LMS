@@ -24,6 +24,7 @@ import reportsSlice from "./Slices/reportsSlice";
 import authSlice from "./Slices/authSlice";
 import notificationSlice from "./Slices/notificationSlice";
 import serverConfigSlice from "./Slices/serverConfigSlice";
+import appConfigSlice from "./Slices/appConfigSlice";
 import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
 import personalBorrowersSlice from "./Slices/personalBorrowersSlice";
@@ -66,6 +67,7 @@ const store = configureStore({
     auth: authSlice,
     notification: notificationSlice,
     serverConfig: serverConfigSlice,
+    appConfig: appConfigSlice,
     depositSidebar: depositSidebarSlice,
     accounts: accountsSlice,
     personalBorrowers: personalBorrowersSlice,

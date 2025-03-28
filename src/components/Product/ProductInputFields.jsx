@@ -26,7 +26,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   );
   const DynamicRACDataInfo = useSelector(
     (state) =>
-      state?.sidebar?.menus?.filter((item) => item.title === "Dynamic RAC")[0]
+      state?.sidebar?.menus?.filter((item) => item.title === "Decision Engine")[0]
         ?.submenuItems
   );
 
@@ -142,7 +142,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
 
     return formattedData;
   }
-  useEffect(() => {}, [
+  useEffect(() => { }, [
     DBRConfigInfo,
     ProjectDataInfo,
     RPDataInfo,
@@ -150,182 +150,195 @@ const ProductInputFields = ({ productData, handleChange }) => {
     RecoveryDataInfo,
   ]);
   return (
-    <>
-      <div className="border-b border-border-gray-primary pb-5">
-        <div className="grid grid-cols-5 gap-5 items-end pb-2">
-          <InputSelect
-            labelName="Eligible Customer Type"
-            inputOptions={tenureOptions}
-            inputName="eligibleCustomerType"
-            inputValue={
-              productData?.eligibleCustomerType
-                ? productData?.eligibleCustomerType
-                : ""
-            }
-            onChange={handleChange}
-            isValidation={true}
-            disabled={hasViewOnlyAccess(roleName)}
-          />
-          <InputSelect
-            labelName="RAC"
-            inputOptions={formateDataDropDown(
-              "/loan/dynamic-rac/",
-              RACDataInfo ? RACDataInfo : DynamicRACDataInfo
-            )}
-            inputName="racId"
-            inputValue={productData?.racId}
-            onChange={handleChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Loan Schema"
-            inputOptions={formateDataDropDown(
-              "/loan/project/",
-              ProjectDataInfo
-            )}
-            inputName="projectId"
-            inputValue={productData?.projectId}
-            onChange={handleChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="TCL"
-            inputOptions={formateDataDropDown("/loan/tcl/", TCLDataInfo)}
-            inputName="tclFileId"
-            inputValue={productData?.tclFileId}
-            onChange={handleChange}
-            // isValidation={true}
-            // isClearable={true}
-          />
-          <InputSelect
-            inputOptions={formateDataDropDown(
-              "/loan/recovery/",
-              RecoveryDataInfo
-            )}
-            labelName="Recovery Type"
-            inputName="recoveryEquationTempId"
-            inputValue={productData?.recoveryEquationTempId}
-            onChange={handleChange}
-            // isValidation={true}
-            // isClearable={true}
-          />
+    <div className="flex flex-col gap-5">
 
-          <InputSelect
-            labelName="DBR Config"
-            inputOptions={formateDataDropDown(
-              "/loan/dbr-config/",
-              DBRConfigInfo
-            )}
-            inputName="dbcTempId"
-            inputValue={productData?.dbcTempId}
-            onChange={handleChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Rule Policy"
-            inputOptions={formateDataDropDown("/loan/rule-policy/", RPDataInfo)}
-            inputName="rulePolicyTempId"
-            inputValue={productData?.rulePolicyTempId}
-            onChange={handleChange}
-            // isValidation={true}
-            // isClearable={true}
-          />
-          <InputSelect
-            labelName="Credit Score"
-            inputOptions={formateDataDropDown(
-              "/loan/credit-score/",
-              CSDataInfo
-            )}
-            inputName="creditScoreEqTempId"
-            inputValue={productData?.creditScoreEqTempId}
-            onChange={handleChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Eligible Tenure"
-            inputOptions={formateDataDropDown(
-              "/loan/credit-score-eligible-tenure/",
-              CSETDataInfo
-            )}
-            inputName="creditScoreEtTempId"
-            inputValue={productData?.creditScoreEtTempId}
-            onChange={handleChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Approval Config"
-            inputOptions={formateDataDropDown(
-              "/loan/loan-approval/",
-              loanApprovalDataInfo
-            )}
-            inputName="approvalsConfigurationsTempId"
-            inputValue={productData?.approvalsConfigurationsTempId}
-            onChange={handleChange}
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Document Config"
-            inputOptions={formateDataDropDown(
-              "/loan/document-config/",
-              documentConfigDataInfo
-            )}
-            inputName="dynamicDocumentTempId"
-            inputValue={productData?.dynamicDocumentTempId}
-            onChange={handleChange}
-            isValidation={true}
-          />
+      <div className="grid grid-cols-5 gap-5 items-end">
+        <InputSelect
+          labelName="Eligible Customer Type"
+          inputOptions={tenureOptions}
+          inputName="eligibleCustomerType"
+          inputValue={
+            productData?.eligibleCustomerType
+              ? productData?.eligibleCustomerType
+              : ""
+          }
+          onChange={handleChange}
+          isValidation={true}
+          disabled={hasViewOnlyAccess(roleName)}
+        />
+        <InputSelect
+          labelName="RAC"
+          inputOptions={formateDataDropDown(
+            "/loan/dynamic-rac/",
+            RACDataInfo ? RACDataInfo : DynamicRACDataInfo
+          )}
+          inputName="racId"
+          inputValue={productData?.racId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Loan Schema"
+          inputOptions={formateDataDropDown(
+            "/loan/project/",
+            ProjectDataInfo
+          )}
+          inputName="projectId"
+          inputValue={productData?.projectId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="TCL"
+          inputOptions={formateDataDropDown("/loan/tcl/", TCLDataInfo)}
+          inputName="tclFileId"
+          inputValue={productData?.tclFileId}
+          onChange={handleChange}
+        // isValidation={true}
+        // isClearable={true}
+        />
+        <InputSelect
+          inputOptions={formateDataDropDown(
+            "/loan/recovery/",
+            RecoveryDataInfo
+          )}
+          labelName="Recovery Type"
+          inputName="recoveryEquationTempId"
+          inputValue={productData?.recoveryEquationTempId}
+          onChange={handleChange}
+        // isValidation={true}
+        // isClearable={true}
+        />
 
-          <InputText
-            labelName="Processing Fee"
-            inputName="fee"
-            inputValue={productData?.fee}
-            inputValuePercentage={true}
-            onChange={handleChange}
-            placeHolder="1%"
-            isValidation={true}
-          />
-          <InputText
-            labelName="Management Fee Vat"
-            inputName="managementFeeVat"
-            inputValue={productData?.managementFeeVat}
-            onChange={handleChange}
-            placeHolder="15%"
-            isValidation={true}
-          />
-          <InputText
-            labelName="Insurance Fee"
-            inputName="insuranceFee"
-            inputValue={productData?.insuranceFee}
-            onChange={handleChange}
-            placeHolder="4%"
-            isValidation={true}
-          />
-          <InputText
-            labelName="Insurance Levy"
-            inputName="insuranceLevy"
-            inputValue={productData?.insuranceLevy}
-            onChange={handleChange}
-            placeHolder="3%"
-            isValidation={true}
-          />
-          <InputNumber
-            labelName="No. of Early Settlement Installments"
-            inputName="numberOfEmisForEarlySettlement"
-            inputValue={productData?.numberOfEmisForEarlySettlement}
-            onChange={handleChange}
-            placeHolder="3"
-            isValidation={true}
-          />
-          <InputSelect
-            labelName="Interest Method"
-            inputOptions={interestMethodOptions}
-            inputName="interestMethod"
-            inputValue={productData?.interestMethod}
-            onChange={handleChange}
-            isValidation={true}
-          />
+        <InputSelect
+          labelName="DBR Config"
+          inputOptions={formateDataDropDown(
+            "/loan/dbr-config/",
+            DBRConfigInfo
+          )}
+          inputName="dbcTempId"
+          inputValue={productData?.dbcTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Rule Policy"
+          inputOptions={formateDataDropDown("/loan/rule-policy/", RPDataInfo)}
+          inputName="rulePolicyTempId"
+          inputValue={productData?.rulePolicyTempId}
+          onChange={handleChange}
+        // isValidation={true}
+        // isClearable={true}
+        />
+        <InputSelect
+          labelName="Credit Score"
+          inputOptions={formateDataDropDown(
+            "/loan/credit-score/",
+            CSDataInfo
+          )}
+          inputName="creditScoreEqTempId"
+          inputValue={productData?.creditScoreEqTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Eligible Tenure"
+          inputOptions={formateDataDropDown(
+            "/loan/credit-score-eligible-tenure/",
+            CSETDataInfo
+          )}
+          inputName="creditScoreEtTempId"
+          inputValue={productData?.creditScoreEtTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Approval Config"
+          inputOptions={formateDataDropDown(
+            "/loan/loan-approval/",
+            loanApprovalDataInfo
+          )}
+          inputName="approvalsConfigurationsTempId"
+          inputValue={productData?.approvalsConfigurationsTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Document Config"
+          inputOptions={formateDataDropDown(
+            "/loan/document-config/",
+            documentConfigDataInfo
+          )}
+          inputName="dynamicDocumentTempId"
+          inputValue={productData?.dynamicDocumentTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputNumber
+          labelName="No. of Early Settlement Installments"
+          inputName="numberOfEmisForEarlySettlement"
+          inputValue={productData?.numberOfEmisForEarlySettlement}
+          onChange={handleChange}
+          placeHolder="3"
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Interest Method"
+          inputOptions={interestMethodOptions}
+          inputName="interestMethod"
+          inputValue={productData?.interestMethod}
+          onChange={handleChange}
+          isValidation={true}
+        />
+      </div>
 
-          <div className="col-span-5 grid grid-cols-5 gap-5 items-end border-t-2 ">
+      {/* Upfront Fee */}
+      <div>
+        <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Upfront Fee</span>
+        <div className="border-t-2">
+          <div className="grid grid-cols-5 gap-5 items-end py-2 ">
+            <InputText
+              labelName="Processing Fee"
+              inputName="fee"
+              inputValue={productData?.fee}
+              inputValuePercentage={true}
+              onChange={handleChange}
+              placeHolder="1%"
+              isValidation={true}
+            />
+            <InputText
+              labelName="Application Fee Vat"
+              inputName="managementFeeVat"
+              inputValue={productData?.managementFeeVat}
+              onChange={handleChange}
+              placeHolder="15%"
+              isValidation={true}
+            />
+            <InputText
+              labelName="Insurance Fee"
+              inputName="insuranceFee"
+              inputValue={productData?.insuranceFee}
+              onChange={handleChange}
+              placeHolder="4%"
+              isValidation={true}
+            />
+            <InputText
+              labelName="Insurance Levy"
+              inputName="insuranceLevy"
+              inputValue={productData?.insuranceLevy}
+              onChange={handleChange}
+              placeHolder="3%"
+              isValidation={true}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Options */}
+      <div>
+        <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Options</span>
+        <div className="border-t-2 py-2">
+          <div className="grid grid-cols-5 gap-5 items-end py-2 ">
             <InputCheckbox
               labelName="Overdraft"
               inputChecked={productData?.overdraft}
@@ -360,7 +373,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
           </div>
           {/* Newly added fields */}
           {productData?.overdraft && (
-            <>
+            <div className="grid grid-cols-5 gap-5 items-end ">
               <InputNumber
                 labelName="Max. Overdraft Principle Limit"
                 inputName="maxOverdraftPrincipalLimit"
@@ -400,12 +413,14 @@ const ProductInputFields = ({ productData, handleChange }) => {
                 onChange={handleChange}
                 placeHolder="3"
               />
-            </>
+            </div>
           )}
         </div>
       </div>
+
+
       {!hasViewOnlyAccess(roleName) ? (
-        <div className="grid grid-cols-7 gap-5 items-end mt-5 border-b pb-5">
+        <div className="grid grid-cols-7 gap-5 items-end border-t-2 py-5">
           <InputText
             labelName="Simple Interest"
             inputName="interestRate"
@@ -459,8 +474,9 @@ const ProductInputFields = ({ productData, handleChange }) => {
         </div>
       ) : (
         ""
-      )}
-    </>
+      )
+      }
+    </div>
   );
 };
 

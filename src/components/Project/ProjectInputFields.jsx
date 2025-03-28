@@ -9,6 +9,7 @@ import {
   interestPeriodOptions,
   loanTypeOptions,
   operatorOptions,
+  tenureTypeOptions,
 } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
@@ -60,9 +61,8 @@ const ProjectInputFields = ({
           colorBG={"bg-white"}
         >
           <div
-            className={`grid ${
-              isNewProject ? "grid-cols-2" : "grid-cols-1"
-            } gap-5 mb-5`}
+            className={`grid ${isNewProject ? "grid-cols-2" : "grid-cols-1"
+              } gap-5 mb-5`}
           >
             {/* Name */}
             {isNewProject && (
@@ -85,7 +85,7 @@ const ProjectInputFields = ({
               isValidation={true}
             />
           </div>
-          <div className="grid md:grid-cols-4  grid-cols-1 gap-5 mb-5">
+          <div className="grid md:grid-cols-2  grid-cols-1 gap-5 mb-5">
             {/* Country */}
             <InputSelect
               labelName={"Country"}
@@ -132,11 +132,10 @@ const ProjectInputFields = ({
           {projectData?.loanType === "asset" && (
             <div className="grid md:grid-cols-4  grid-cols-1 gap-5 mb-5">
               <div
-                className={`mt-4 ${
-                  (projectData.loanType === "cash" ||
-                    projectData.loanType === "") &&
+                className={`mt-4 ${(projectData.loanType === "cash" ||
+                  projectData.loanType === "") &&
                   "hidden"
-                }`}
+                  }`}
               >
                 <InputCheckbox
                   labelName={"Down Payment"}
@@ -255,13 +254,14 @@ const ProjectInputFields = ({
             </div>
             <div className={"grid grid-cols-1 md:grid-cols-2 gap-5 mb-5"}>
               {/* Start Date */}
-              <div className="col-span-1" onClick={addNoEditToast}>
+              <div className="col-span-1">
                 <InputDate
                   labelName={"Validity Period"}
                   inputName={"startDate"}
                   inputValue={projectData?.startDate}
-                  onChange={addNoEditToast}
+                  onChange={handleChange}
                   isValidation={true}
+                  isDisabled={isNewProject ? false : true}
                 />
               </div>
 
@@ -273,79 +273,117 @@ const ProjectInputFields = ({
                   inputValue={projectData?.endDate}
                   onChange={handleChange}
                   isValidation={true}
+                  isDisabled={isNewProject ? false : true}
                 />
               </div>
             </div>
-            <div className={"grid grid-cols-1 md:grid-cols-3 gap-5 mb-5"}>
-              {/* Roll Over Period (Days) */}
-              <InputNumber
-                labelName={"Roll Over Period (Days)"}
-                inputName={"rollOverGracePeriod"}
-                inputValue={projectData?.rollOverGracePeriod}
-                onChange={handleChange}
-                placeHolder={"30"}
-                isValidation={true}
-              />
-              {/* Roll Over Interest Rate */}
-              <InputNumber
-                labelName={"Roll Over Interest"}
-                inputName={"rollOverInterestRate"}
-                inputValue={projectData?.rollOverInterestRate}
-                onChange={handleChange}
-                inputValuePercentage={true}
-                placeHolder={"6"}
-                isValidation={true}
-              />
-              {/* RollOver Penalty Factor */}
-              <InputText
-                labelName={"Roll Over Factor"}
-                inputName={"rollOverPenaltyFactor"}
-                inputValue={projectData?.rollOverPenaltyFactor}
-                onChange={handleChange}
-                placeHolder={"0"}
-                isValidation={true}
-              />
+            <div>
+              <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Roll Over</span>
+              <div className="border-t-2 py-2">
+                <div className={"grid grid-cols-1 md:grid-cols-3 gap-5 mb-5"}>
+                  {/* Roll Over Interest Rate */}
+                  <InputNumber
+                    labelName={"Interest"}
+                    inputName={"rollOverInterestRate"}
+                    inputValue={projectData?.rollOverInterestRate}
+                    onChange={handleChange}
+                    inputValuePercentage={true}
+                    placeHolder={"6"}
+                    isValidation={true}
+                  />
+
+                  <InputNumber
+                    labelName="Tenure"
+                    inputName="rollOverTenure"
+                    inputValue={projectData?.rollOverTenure}
+                    onChange={handleChange}
+                    placeHolder="3"
+                  />
+                  <InputSelect
+                    labelName="Tenure Type"
+                    inputName="rollOverTenureType"
+                    inputValue={projectData?.rollOverTenureType}
+                    inputOptions={tenureTypeOptions}
+                    onChange={handleChange}
+                  />
+
+                  {/* Roll Over Period (Days) */}
+                  <InputNumber
+                    labelName={"Period (Days)"}
+                    inputName={"rollOverGracePeriod"}
+                    inputValue={projectData?.rollOverGracePeriod}
+                    onChange={handleChange}
+                    placeHolder={"30"}
+                    isValidation={true}
+                  />
+                  {/* RollOver Penalty Factor */}
+                  <InputText
+                    labelName={"Fixed Price"}
+                    inputName={"rollOverPenaltyFactor"}
+                    inputValue={projectData?.rollOverPenaltyFactor}
+                    onChange={handleChange}
+                    placeHolder={"0"}
+                    isValidation={true}
+                  />
+                </div>
+              </div>
             </div>
-            <div className={"grid grid-cols-1 md:grid-cols-3 gap-5 mb-5"}>
-              {/* Late EMI Penalty */}
-              <InputText
-                labelName={"Late EMI Penalty"}
-                inputName={"lateEmiPenaltyFactor"}
-                inputValue={projectData?.lateEmiPenaltyFactor}
-                onChange={handleChange}
-                placeHolder={"6"}
-                isValidation={true}
-              />
-              {/* Late Repayment Penalty */}
-              <InputText
-                labelName={"Late Repayment Penalty (%)"}
-                inputName={"lateRepaymentPenalty"}
-                inputValue={projectData?.lateRepaymentPenalty}
-                onChange={handleChange}
-                placeHolder={"10%"}
-                isValidation={true}
-              />
-              {/* Early Repayment Discount */}
-              <InputText
-                labelName={"Early Repayment Discount"}
-                inputName={"earlyRepaymentDiscount"}
-                inputValue={projectData?.earlyRepaymentDiscount}
-                onChange={handleChange}
-                placeHolder={"0"}
-                isValidation={true}
-              />
+
+            <div>
+              <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Late Penalty & Discount</span>
+              <div className="border-t-2 py-2">
+                <div className={"grid grid-cols-1 md:grid-cols-2 gap-5 mb-5"}>
+                  {/* Late EMI Penalty */}
+                  <InputText
+                    labelName={"Late EMI Penalty"}
+                    inputName={"lateEmiPenaltyFactor"}
+                    inputValue={projectData?.lateEmiPenaltyFactor}
+                    onChange={handleChange}
+                    placeHolder={"6"}
+                    isValidation={true}
+                  />
+                  {/* Late Repayment Penalty */}
+                  <InputText
+                    labelName={"Late Repayment Penalty (%)"}
+                    inputName={"lateRepaymentPenalty"}
+                    inputValue={projectData?.lateRepaymentPenalty}
+                    onChange={handleChange}
+                    placeHolder={"10"}
+                    isValidation={true}
+                  />
+                  {/* Late Penalty Period  */}
+                  <InputNumber
+                    labelName={"Penalty Period (Days)"}
+                    inputName={"latePenaltyPeriod"}
+                    inputValue={projectData?.latePenaltyPeriod}
+                    onChange={handleChange}
+                    placeHolder={"30"}
+                    isValidation={true}
+                  />
+                  {/* Early Repayment Discount */}
+                  <InputText
+                    labelName={"Early Repayment Discount"}
+                    inputName={"earlyRepaymentDiscount"}
+                    inputValue={projectData?.earlyRepaymentDiscount}
+                    onChange={handleChange}
+                    placeHolder={"0"}
+                    isValidation={true}
+                  />
+
+                </div>
+              </div>
             </div>
           </div>
         </CardInfo>
         <CardInfo
-          cardTitle="Fees & Grace Periods"
+          cardTitle="Recurring Fees & Grace Periods"
           className={"border"}
           cardIcon={ClockIcon}
           colorText={"text-orange-primary"}
           colorBG={"bg-white"}
         >
           <div className={`mb-5`}>
-            <div className={`grid grid-cols-1 md:grid-cols-3 gap-5 mb-5`}>
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-5 mb-5`}>
               <InputText
                 labelName={"Service Fee"}
                 inputName={"serviceFee"}
@@ -370,8 +408,6 @@ const ProjectInputFields = ({
                 placeHolder={"15%"}
                 isValidation={true}
               />
-            </div>
-            <div className={"grid grid-cols-1 md:grid-cols-3 gap-5 mb-5"}>
               {/* Grace Period For Down Payment (Days) */}
               <InputNumber
                 labelName={"Down Payment Grace (Days)"}
@@ -402,6 +438,7 @@ const ProjectInputFields = ({
                 isValidation={true}
               />
             </div>
+
           </div>
         </CardInfo>
         <CardInfo
@@ -412,7 +449,7 @@ const ProjectInputFields = ({
           colorBG={"bg-white"}
         >
           <div className={`mb-5`}>
-            <div className={`grid grid-cols-1 md:grid-cols-4 gap-5 mb-5`}>
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-5 mb-5`}>
               {/* Max. Payment Attempt */}
               <InputNumber
                 labelName={"Max Attempts"}

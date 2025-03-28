@@ -19,7 +19,7 @@ const DynamicRacPage = () => {
     <>
       {/* <StatContainer stats={RacStats} /> */}
       <ListTable
-        ListName="Dynamic RAC List"
+        ListName="Decision Engine List"
         ListHeader={HeaderList}
         ListItem={RACList}
         Searchable={true}

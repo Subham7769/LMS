@@ -61,11 +61,9 @@ const DynamicRAC = () => {
   const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
-  const { racConfig, loading, error } = useSelector(
-    (state) => state.dynamicRac
-  );
-  const { name } = racConfig.racDetails;
-  const sections = racConfig.sections;
+  const { racConfig, loading, error } = useSelector((state) => state.dynamicRac);
+  const { name } = racConfig?.racDetails;
+  const sections = racConfig?.sections;
   const { roleName } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -74,7 +72,7 @@ const DynamicRAC = () => {
         // First, fetch the option list
         await dispatch(fetchOptionList(racId));
 
-        // After fetching the option list, fetch the dynamic RAC details
+        // After fetching the option list, fetch the Decision Engine details
         await dispatch(fetchDynamicRacDetails(racId));
       } catch (error) {
         console.error("Error fetching data:", error);
