@@ -68,7 +68,7 @@ const CreateNew = ({
         return fetchDocumentConfigData;
       case "Eligible Tenure":
         return fetchCreditScoreEligibleTenureData;
-      case "Dynamic RAC":
+      case "Decision Engine":
         return fetchDynamicRacData;
       case "Reporting Config":
         return fetchReportingConfigData;

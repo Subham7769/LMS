@@ -26,6 +26,7 @@ import { fetchAffordibilityData } from "../../redux/Slices/sidebarSlice";
 import { convertDate } from "../../utils/convertDate";
 import AddEmployerModal from "./AddEmployerModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 
 const Employer = () => {
   const dispatch = useDispatch();
@@ -154,12 +155,19 @@ const Employer = () => {
 
           {/* Employer Data Table */}
           <div className="shadow-md border border-border-gray-primary rounded-md text-center bg-white">
-            <div className="grid grid-cols-4 items-end mb-4 bg-background-light-secondary px-5">
+            <div className="grid grid-cols-6 items-end mb-4 bg-background-light-secondary px-5">
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Employer Name
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Affordability Criteria
+              </div>
+
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Day of Month
+              </div>
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Which Month ?
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Creation Date
@@ -171,12 +179,11 @@ const Employer = () => {
             {filteredEmployers?.map((empData, index) => (
               <div
                 key={empData.employerId}
-                className={`grid grid-cols-4 gap-4 items-center pb-3 px-5 mb-3 
-                ${
-                  index !== filteredEmployers.length - 1
+                className={`grid grid-cols-6 gap-4 items-center pb-3 px-5 mb-3 
+                ${index !== filteredEmployers.length - 1
                     ? "border-b border-border-gray-primary"
                     : ""
-                }`}
+                  }`}
               >
                 <InputText
                   inputName="employerName"
@@ -192,6 +199,21 @@ const Employer = () => {
                   id={`affordability_${empData?.employerId}`}
                   inputName="affordabilityCriteriaTempId"
                   inputValue={empData?.affordabilityCriteriaTempId}
+                  onChange={(e) => handleChange(e, empData?.employerId)}
+                />
+
+                <InputSelect
+                  inputOptions={daysOfMonth}
+                  id={`firstEmiDay_${empData?.employerId}`}
+                  inputName="firstEmiDay"
+                  inputValue={empData?.firstEmiDay}
+                  onChange={(e) => handleChange(e, empData?.employerId)}
+                />
+                <InputSelect
+                  inputOptions={upcomingMonths}
+                  id={`moratoriumMonths_${empData?.employerId}`}
+                  inputName="moratoriumMonths"
+                  inputValue={empData?.moratoriumMonths}
                   onChange={(e) => handleChange(e, empData?.employerId)}
                 />
                 <div className="text-gray-600">

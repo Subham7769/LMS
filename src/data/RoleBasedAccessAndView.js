@@ -1,4 +1,4 @@
-// Dynamic Rac
+// Decision Engine
 export const ViewerRolesDynamicRac = [
   "ROLE_LOAN_OFFICER",
   "ROLE_CHIEF_EXECUTIVE_OFFICER",
