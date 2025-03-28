@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { setMenus } from "../../redux/Slices/sidebarSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { BoltIcon } from "@heroicons/react/24/outline";
 
 import BG from "../../assets/image/1.webp";
 import BG1 from "../../assets/image/2.webp";
@@ -159,6 +160,14 @@ const Login = () => {
     autoplaySpeed: 5000,
     pauseOnHover: false,
     beforeChange: (current, next) => setImageIndex(next),
+    responsive: [
+      {
+        breakpoint: 1026,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
 
   const handleChange = (e) => {
@@ -166,11 +175,11 @@ const Login = () => {
     dispatch(updateDataField({ name, value }));
   };
   const InputStyle =
-    "mt-1 block w-full rounded-md border-border-gray-primary shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
+    "mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-200">
-      <div className="w-1/2 h-screen flex justify-between relative overflow-hidden">
+    <div className="min-h-screen flex flex-row-reverse items-center justify-center bg-white relative">
+      <div className="hidden md:flex md:w-1/2 h-screen  justify-between relative overflow-hidden">
         <div className="w-full min-h-screen">
           <Slider {...settings}>
             {images.map((image, index) => (
@@ -184,18 +193,23 @@ const Login = () => {
             ))}
           </Slider>
         </div>
-        <div className="inset-0 bg-black bg-opacity-50 absolute z-10" />
+        <div className="inset-0 bg-black/50 absolute z-10" />
       </div>
 
-      <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-8 max-sm:w-full md:w-full lg:w-1/2 max-w-md mx-auto">
-        <h2 className="text-2xl font-bold text-center mb-6">
+      <div className="bg-white bg-opacity-80 p-8 w-full md:w-1/2 max-w-md mx-auto">
+        {/* Header */}
+        <div className="absolute top-3 left-0">
+          {/* Logo */}
+          <BoltIcon className={`h-8 w-auto ml-5 text-indigo-500`} />
+        </div>
+        <h2 className="text-3xl font-bold text-text-light-primary mb-6 ">
           {isSignup === "Login"
-            ? "Welcome Back"
+            ? "Welcome back!"
             : isSignup === "Signup"
             ? "Create an Account"
             : "Reset Your Password"}
         </h2>
-        <form>
+        <form className="border-b border-border-gray-secondary pb-6">
           {isSignup === "Signup" && (
             <div className="mb-4">
               <label
@@ -307,58 +321,90 @@ const Login = () => {
             </>
           )}
           {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
-          <button
-            type="button"
-            onClick={() => {
-              if (isSignup === "Login") {
-                handleLogin(username, password);
-              } else if (isSignup === "Signup") {
-                const fullName = document.getElementById("fullName").value;
-                signup(username, password, fullName);
-              } else if (isSignup === "Forget Password") {
-                resetPassword(email, newPassword, confirmPassword);
-              }
-            }}
-            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            {isSignup === "Login" &&
-              buttonText !== "Validating User" &&
-              "Login"}
-            {isSignup === "Signup" &&
-              buttonText !== "Creating User" &&
-              "Create an Account"}
-            {isSignup === "Forget Password" &&
-              buttonText !== "Setting up Password" &&
-              "Set New Password"}
-            {isSignup === "Login" && buttonText === "Validating User" && (
-              <>
-                {buttonText}
-                <span className="animate-pulse">...</span>
-              </>
-            )}
-            {isSignup === "Signup" && buttonText === "Creating User" && (
-              <>
-                {buttonText}
-                <span className="animate-pulse">...</span>
-              </>
-            )}
-            {buttonText === "Setting up Password" && (
-              <>
-                {buttonText}
-                <span className="animate-pulse">...</span>
-              </>
-            )}
-          </button>
+          <div className="flex justify-between items-center">
+            <div className="">
+              {isSignup === "Login" && (
+                <p>
+                  <button
+                    onClick={() => {
+                      dispatch(setIsSignup("Forget Password"));
+                      dispatch(resetError());
+                      dispatch(setButtonText("Set New Password"));
+                    }}
+                    className="text-gray-primary hover:no-underline underline"
+                  >
+                    Forgot password?
+                  </button>
+                </p>
+              )}
+              {isSignup === "Forget Password" && (
+                <p>
+                  <button
+                    onClick={() => {
+                      dispatch(setIsSignup("Login"));
+                      dispatch(resetError());
+                      dispatch(setButtonText("Login"));
+                    }}
+                    className="text-gray-primary hover:no-underline underline"
+                  >
+                    Back To Login
+                  </button>
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (isSignup === "Login") {
+                  handleLogin(username, password);
+                } else if (isSignup === "Signup") {
+                  const fullName = document.getElementById("fullName").value;
+                  signup(username, password, fullName);
+                } else if (isSignup === "Forget Password") {
+                  resetPassword(email, newPassword, confirmPassword);
+                }
+              }}
+              className="py-2 px-4 bg-black text-white font-semibold rounded-md shadow hover:bg-text-light-primary focus:outline-none"
+            >
+              {isSignup === "Login" &&
+                buttonText !== "Validating User" &&
+                "Login"}
+              {isSignup === "Signup" &&
+                buttonText !== "Creating User" &&
+                "Sign Up"}
+              {isSignup === "Forget Password" &&
+                buttonText !== "Setting up Password" &&
+                "Set New Password"}
+              {isSignup === "Login" && buttonText === "Validating User" && (
+                <>
+                  {buttonText}
+                  <span className="animate-pulse">...</span>
+                </>
+              )}
+              {isSignup === "Signup" && buttonText === "Creating User" && (
+                <>
+                  {buttonText}
+                  <span className="animate-pulse">...</span>
+                </>
+              )}
+              {buttonText === "Setting up Password" && (
+                <>
+                  {buttonText}
+                  <span className="animate-pulse">...</span>
+                </>
+              )}
+            </button>
+          </div>
         </form>
-        <div className="mt-6 text-center">
+        <div className="mt-6">
           {isSignup === "Login" && (
-            <p>
+            <p className="text-gray-primary">
               Don't have an account?{" "}
               <button
                 onClick={() => {
                   dispatch(setIsSignup("Signup"));
                   dispatch(resetError());
-                  dispatch(setButtonText("Create an Account"));
+                  dispatch(setButtonText("Sign Up"));
                 }}
                 className="text-indigo-600 hover:text-indigo-500 font-semibold"
               >
@@ -367,7 +413,7 @@ const Login = () => {
             </p>
           )}
           {isSignup === "Signup" && (
-            <p>
+            <p className="text-gray-primary">
               Already have an account?{" "}
               <button
                 onClick={() => {
@@ -378,34 +424,6 @@ const Login = () => {
                 className="text-indigo-600 hover:text-indigo-500 font-semibold"
               >
                 Login
-              </button>
-            </p>
-          )}
-          {isSignup === "Login" && (
-            <p>
-              <button
-                onClick={() => {
-                  dispatch(setIsSignup("Forget Password"));
-                  dispatch(resetError());
-                  dispatch(setButtonText("Set New Password"));
-                }}
-                className="text-indigo-600 hover:text-indigo-500 font-semibold"
-              >
-                Forgot password?
-              </button>
-            </p>
-          )}
-          {isSignup === "Forget Password" && (
-            <p>
-              <button
-                onClick={() => {
-                  dispatch(setIsSignup("Login"));
-                  dispatch(resetError());
-                  dispatch(setButtonText("Login"));
-                }}
-                className="text-indigo-600 hover:text-indigo-500 font-semibold"
-              >
-                Back To Login
               </button>
             </p>
           )}

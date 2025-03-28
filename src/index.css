@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./additional-styles/utility-patterns.css" layer(components);
 
 @theme {
   /* Font Family */
@@ -14,46 +15,48 @@
   --height-200: 200vh;
 
   /* Colors */
-  --color-blue-primary: #1c398e;
-  --color-blue-secondary: #dbeafe;
-  --color-blue-tertiary: #eff6ff;
+  --color-blue-primary: #1c398e; /* blue 900 */
+  --color-blue-secondary: #dbeafe; /* blue 100 */
+  --color-blue-tertiary: #eff6ff; /* blue 50 */
 
-  --color-green-primary: #0d542b;
-  --color-green-secondary: #dcfce7;
-  --color-green-tertiary: #f0fdf4;
+  --color-green-primary: #0d542b; /* green 900 */
+  --color-green-secondary: #dcfce7; /* green 100 */
+  --color-green-tertiary: #f0fdf4; /* green 50 */
 
-  --color-violet-primary: #4d179a;
-  --color-violet-secondary: #ede9fe;
-  --color-violet-tertiary: #f5f3ff;
+  --color-violet-primary: #4d179a; /* violet 900 */
+  --color-violet-secondary: #ede9fe; /* violet 100 */
+  --color-violet-tertiary: #f5f3ff; /* violet 50 */
+  --color-violet-quaternary: #8e51ff; /* violet 500 */
 
-  --color-orange-primary: #7e2a0c;
-  --color-orange-secondary: #ffedd5;
-  --color-orange-tertiary: #fff7ed;
+  --color-orange-primary: #7e2a0c; /* orange 900 */
+  --color-orange-secondary: #ffedd5; /* orange 100 */
+  --color-orange-tertiary: #fff7ed; /* orange 50 */
 
-  --color-gray-primary: #d1d5db;
-  --color-gray-secondary: #f1f5f9;
-  --color-gray-tertiary: #d1d5db;
+  --color-gray-primary: #6a7282; /* gray 500 */
+  --color-gray-secondary: #9ca3af; /* gray 400 */
+  --color-gray-tertiary: #d1d5db; /* gray 300 */
 
   /* Border Colors */
-  --color-border-gray-primary: #d1d5db;
-  --color-border-gray-secondary: #e5e7eb;
-  --color-border-gray-tertiary: #f3f4f6;
+  --color-border-gray-primary: #d1d5db; /* gray 300 */
+  --color-border-gray-secondary: #e5e7eb; /* gray 200 */
+  --color-border-gray-tertiary: #f3f4f6; /* gray 100 */
 
   /* Background Colors */
   --color-background-light-white: #ffffff;
-  --color-background-light-primary: #e5e7eb;
-  --color-background-light-secondary: #f3f4f6;
-  --color-background-light-tertiary: #f9fafb;
+  --color-background-light-primary: #e5e7eb; /* gray 200 */
+  --color-background-light-secondary: #f3f4f6; /* gray 100 */
+  --color-background-light-tertiary: #f9fafb; /* gray 50 */
 
   --color-background-dark-primary: #111827;
   --color-background-dark-secondary: #1f2937;
   --color-background-dark-tertiary: #374151;
 
   /* Text Colors */
-  --color-text-light-heading: #111827;
-  --color-text-light-primary: #1f2937;
-  --color-text-light-secondary: #364153;
-  --color-text-light-tertiary: #6b7280;
+  --color-text-light-heading: #111827; /* gray 900 */
+  --color-text-light-primary: #1e2939; /* gray 800 */
+  --color-text-light-secondary: #364153; /* gray 700 */
+  --color-text-light-tertiary: #6a7282; /* gray 500 */
+  --color-text-light-quaternary: #9ca3af; /* gray 400 */
 
   --color-text-dark-primary: #f9fafb;
   --color-text-dark-secondary: #d1d5db;
@@ -108,7 +111,7 @@ input:focus {
 /* Plugins (You still need to include them) */
 
 .active {
-  @apply text-blue-600;
+  @apply text-violet-500;
 }
 
 [type="text"]:focus {
@@ -191,5 +194,23 @@ input:focus {
 
   .no-scroll {
     overflow: visible !important;
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 }

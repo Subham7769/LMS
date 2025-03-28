@@ -296,7 +296,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-background-light-tertiary flex pl-1 transform duration-1000 ease-in-out ${
+      className={`-mr-1 relative overflow-y-auto h-screen no-scrollbar bg-background-light-tertiary flex pl-1 transform duration-1000 ease-in-out ${
         open ? "w-56" : "w-14"
       }`}
     >
@@ -323,15 +323,15 @@ const SideBar = () => {
         </svg>
       </button>
       <ul
-        className={`pt-2 pr-1 border-r h-auto ${
+        className={`pt-4 px-2 border-r h-auto ${
           open ? "w-52" : "w-10"
-        } overflow-y-auto scrollbar-none border-gray-200 bg-white`}
+        } overflow-y-auto no-scrollbar border-gray-200 bg-white`}
       >
         {allSectionName.map((sectionName, sectionIndex) => (
           <div key={sectionName} className={`${!open && "mb-2 "} `}>
             {menus.some((menu) => menu.sectionName === sectionName) && (
               <h2
-                className={`text-blue-primary uppercase dark:text-gray-500 text-xs font-semibold ml-3 ${
+                className={`text-gray-secondary uppercase dark:text-gray-primary text-xs font-semibold ml-3 mb-3 ${
                   !open && "hidden"
                 } ${sectionIndex !== 0 ? "mt-7" : ""}`}
               >
@@ -365,14 +365,14 @@ const SideBar = () => {
                       className={({ isActive }) =>
                         `text-gray-500 ${
                           isActive && !menu.openInNewTab
-                            ? "text-blue-primary"
+                            ? "text-violet-quaternary"
                             : ""
                         }`
                       }
                     >
                       <li
                         onClick={() => handleToggleSubmenu(index)}
-                        className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-background-light-secondary hover:text-blue-primary"
+                        className="group w-full text-sm flex items-center justify-center gap-x-3 cursor-pointer px-3 py-2 rounded-md hover:bg-background-light-secondary hover:text-violet-quaternary"
                       >
                         <span
                           className={`text-2xl block float-left group-hover:bg-background-light-secondary `}
@@ -381,7 +381,7 @@ const SideBar = () => {
                           <IconComponent className="h-5 w-5 shrink-0" />
                         </span>
                         <span
-                          className={`text-sm flex-1 transform duration-1000 ease-in-out ${
+                          className={`text-sm flex-1 transform duration-1000 ease-in-out text-text-light-primary ${
                             !open && "hidden"
                           }`}
                         >
@@ -403,7 +403,7 @@ const SideBar = () => {
                         {/* If create from Sidebar Using input box */}
                         {menu.createButton && (
                           <div>
-                            <li className="py-1 cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-blue-primary">
+                            <li className="py-1 cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-violet-quaternary">
                               <CreateNew
                                 placeholder={menu.placeholder}
                                 buttonName={menu.buttonName}
@@ -422,7 +422,7 @@ const SideBar = () => {
                               to={submenuItem.href}
                               className="text-gray-500"
                             >
-                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-background-light-secondary hover:text-blue-primary">
+                              <li className="text-xs flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 px-6 rounded-md hover:bg-background-light-secondary hover:text-violet-quaternary">
                                 {submenuItem.name}
                               </li>
                             </NavLink>
