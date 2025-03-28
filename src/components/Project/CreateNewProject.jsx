@@ -45,7 +45,7 @@ const CreateNewProject = () => {
     dispatch(handleChangeInProjectData({ name, value, checked, type })); // Passing only the serializable data
   };
 
-  const createNewProject = async (event) => {
+  const createNewProjectFunction = async (event) => {
     event.preventDefault();
     await dispatch(validateForm(projectData));
     const state = store.getState();
@@ -86,7 +86,7 @@ const CreateNewProject = () => {
           <Button
             buttonIcon={CheckCircleIcon}
             buttonName="Create"
-            onClick={createNewProject}
+            onClick={createNewProjectFunction}
             rectangle={true}
             buttonType={"primary"}
           />

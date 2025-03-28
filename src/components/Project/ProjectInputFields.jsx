@@ -254,13 +254,14 @@ const ProjectInputFields = ({
             </div>
             <div className={"grid grid-cols-1 md:grid-cols-2 gap-5 mb-5"}>
               {/* Start Date */}
-              <div className="col-span-1" onClick={addNoEditToast}>
+              <div className="col-span-1">
                 <InputDate
                   labelName={"Validity Period"}
                   inputName={"startDate"}
                   inputValue={projectData?.startDate}
-                  onChange={addNoEditToast}
+                  onChange={handleChange}
                   isValidation={true}
+                  isDisabled={isNewProject ? false : true}
                 />
               </div>
 
@@ -272,6 +273,7 @@ const ProjectInputFields = ({
                   inputValue={projectData?.endDate}
                   onChange={handleChange}
                   isValidation={true}
+                  isDisabled={isNewProject ? false : true}
                 />
               </div>
             </div>
