@@ -331,7 +331,7 @@ const SideBar = () => {
           <div key={sectionName} className={`${!open && "mb-2 "} `}>
             {menus.some((menu) => menu.sectionName === sectionName) && (
               <h2
-                className={`text-gray-500 text-xs font-semibold ml-4 ${
+                className={`text-blue-primary uppercase dark:text-gray-500 text-xs font-semibold ml-3 ${
                   !open && "hidden"
                 } ${sectionIndex !== 0 ? "mt-7" : ""}`}
               >
@@ -349,19 +349,27 @@ const SideBar = () => {
                     key={menu.title}
                     className={`${index === menus.length - 1 && "mb-52"}`}
                   >
-                    <NavLink to={menu.openInNewTab ? "#" : menu.href} end
-                                  onClick={(e) => {
-                                    if (menu.openInNewTab) {
-                                      e.preventDefault();
-                                      window.open(menu.href, "_blank");
-                                    }
-                                  }}
-
-                            target={menu.openInNewTab ? "_blank" : undefined}
-                            rel={menu.openInNewTab ? "noopener noreferrer" : undefined} 
-                            className={({ isActive }) =>
-                              `text-gray-500 ${isActive && !menu.openInNewTab ? "text-blue-primary" : ""}`
-                            }>
+                    <NavLink
+                      to={menu.openInNewTab ? "#" : menu.href}
+                      end
+                      onClick={(e) => {
+                        if (menu.openInNewTab) {
+                          e.preventDefault();
+                          window.open(menu.href, "_blank");
+                        }
+                      }}
+                      target={menu.openInNewTab ? "_blank" : undefined}
+                      rel={
+                        menu.openInNewTab ? "noopener noreferrer" : undefined
+                      }
+                      className={({ isActive }) =>
+                        `text-gray-500 ${
+                          isActive && !menu.openInNewTab
+                            ? "text-blue-primary"
+                            : ""
+                        }`
+                      }
+                    >
                       <li
                         onClick={() => handleToggleSubmenu(index)}
                         className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-background-light-secondary hover:text-blue-primary"

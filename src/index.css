@@ -1,5 +1,112 @@
 @import "tailwindcss";
 
+@theme {
+  /* Font Family */
+  --font-sans: "Inter var", sans-serif;
+
+  /* Container */
+  --container-padding: 15px;
+
+  /* Heights */
+  --height-120: 120vh;
+  --height-150: 150vh;
+  --height-180: 180vh;
+  --height-200: 200vh;
+
+  /* Colors */
+  --color-blue-primary: #1c398e;
+  --color-blue-secondary: #dbeafe;
+  --color-blue-tertiary: #eff6ff;
+
+  --color-green-primary: #0d542b;
+  --color-green-secondary: #dcfce7;
+  --color-green-tertiary: #f0fdf4;
+
+  --color-violet-primary: #4d179a;
+  --color-violet-secondary: #ede9fe;
+  --color-violet-tertiary: #f5f3ff;
+
+  --color-orange-primary: #7e2a0c;
+  --color-orange-secondary: #ffedd5;
+  --color-orange-tertiary: #fff7ed;
+
+  --color-gray-primary: #d1d5db;
+  --color-gray-secondary: #f1f5f9;
+  --color-gray-tertiary: #d1d5db;
+
+  /* Border Colors */
+  --color-border-gray-primary: #d1d5db;
+  --color-border-gray-secondary: #e5e7eb;
+  --color-border-gray-tertiary: #f3f4f6;
+
+  /* Background Colors */
+  --color-background-light-white: #ffffff;
+  --color-background-light-primary: #e5e7eb;
+  --color-background-light-secondary: #f3f4f6;
+  --color-background-light-tertiary: #f9fafb;
+
+  --color-background-dark-primary: #111827;
+  --color-background-dark-secondary: #1f2937;
+  --color-background-dark-tertiary: #374151;
+
+  /* Text Colors */
+  --color-text-light-heading: #111827;
+  --color-text-light-primary: #1f2937;
+  --color-text-light-secondary: #364153;
+  --color-text-light-tertiary: #6b7280;
+
+  --color-text-dark-primary: #f9fafb;
+  --color-text-dark-secondary: #d1d5db;
+  --color-text-dark-tertiary: #9ca3af;
+
+  /* Easing Functions */
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Apply styles globally */
+:root {
+  font-family: var(--font-sans);
+}
+
+/* Center container */
+.container {
+  margin: 0 auto;
+  padding: var(--container-padding);
+}
+
+/* Input focus */
+input:focus {
+  box-shadow: none !important;
+}
+
+/* Height utility classes */
+.h-120 {
+  height: var(--height-120);
+}
+.h-150 {
+  height: var(--height-150);
+}
+.h-180 {
+  height: var(--height-180);
+}
+.h-200 {
+  height: var(--height-200);
+}
+
+/* Color utility classes */
+.text-blue-primary {
+  color: var(--color-blue-primary);
+}
+.bg-blue-secondary {
+  background-color: var(--color-blue-secondary);
+}
+.border-gray-primary {
+  border-color: var(--color-border-gray-primary);
+}
+
+/* Plugins (You still need to include them) */
+
 .active {
   @apply text-blue-600;
 }
