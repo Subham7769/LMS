@@ -4,6 +4,7 @@ import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 
 const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, handleInputChange, handleAddFields, employerOptions, setEmployerOptions }) => {
 
@@ -57,6 +58,22 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
               inputOptions={affordabilityOptions}
               inputName="affordabilityCriteriaTempId"
               inputValue={employerData?.affordabilityCriteriaTempId}
+              onChange={handleInputChange}
+              isValidation={true}
+            />
+            <InputSelect
+              labelName="Day of Month"
+              inputOptions={daysOfMonth}
+              inputName="firstEmiDay"
+              inputValue={employerData?.firstEmiDay}
+              onChange={handleInputChange}
+              isValidation={true}
+            />
+            <InputSelect
+              labelName="Which Month ?"
+              inputOptions={upcomingMonths}
+              inputName="moratoriumMonths"
+              inputValue={employerData?.moratoriumMonths}
               onChange={handleInputChange}
               isValidation={true}
             />

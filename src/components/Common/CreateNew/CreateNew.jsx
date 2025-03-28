@@ -36,8 +36,15 @@ const CreateNew = ({
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    setName(e.target.value);
+    const value = e.target.value;
+    // Regex to allow letters, numbers, space, underscore, and hyphen
+    const regex = /^[a-zA-Z0-9 _-]*$/;
+
+    if (regex.test(value)) {
+      setName(value);
+    }
   };
+  
   function dispatchType(menuTitle) {
     switch (menuTitle) {
       case "RAC":
@@ -68,7 +75,7 @@ const CreateNew = ({
         return fetchDocumentConfigData;
       case "Eligible Tenure":
         return fetchCreditScoreEligibleTenureData;
-      case "Dynamic RAC":
+      case "Decision Engine":
         return fetchDynamicRacData;
       case "Reporting Config":
         return fetchReportingConfigData;

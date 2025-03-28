@@ -80,7 +80,6 @@ const ApproveLoans = () => {
     );
   };
 
-  const approveLoansData = transformData(approveLoans);
 
   const handleSearch = async () => {
     await dispatch(
@@ -191,12 +190,14 @@ const ApproveLoans = () => {
     const filteredApproveLoansDataFunction = () => {
       if (!approveLoans) return [];
 
-      return approveLoans.filter(item =>
+      const filteredData  = approveLoans.filter(item =>
         // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
         !item?.loanActionDetailsList?.some(loanItem =>
           loanItem?.recommendedBy === userData.username || loanItem?.rejectedBy === userData.username
         )
       );
+
+      return transformData(filteredData)
     };
 
     setFilteredApproveLoansData(filteredApproveLoansDataFunction());

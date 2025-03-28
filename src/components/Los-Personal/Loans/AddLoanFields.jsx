@@ -20,8 +20,6 @@ import {
 } from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-
-const today = new Date();
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
@@ -30,8 +28,6 @@ const AddLoanFields = ({ addLoanData }) => {
   const { loanProductOptions, loanProductData } = useSelector(
     (state) => state.personalLoans
   );
-
-  // console.log(addLoanData);
 
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
@@ -274,6 +270,33 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [interestMethod]);
 
+
+  const today = new Date();
+  const { loanCreationDate, loanReleaseDate } = addLoanData.generalLoanDetails;
+
+  // Reset loanReleaseDate  if loanCreationDate changes
+  useEffect(() => {
+    if (loanCreationDate) {
+      dispatch(updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanReleaseDate",
+        value: "",
+      }));
+    }
+  }, [loanCreationDate, dispatch]);
+
+  // Ensure loanReleaseDate ≥ loanCreationDate
+  useEffect(() => {
+    if (loanReleaseDate && new Date(loanReleaseDate) < new Date(loanCreationDate)) {
+      dispatch(updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanReleaseDate",
+        value: "",
+      }));
+    }
+  }, [loanCreationDate, loanReleaseDate, dispatch]);
+
+
   // All Fields Configuration
   const generalLoanDetailsConfig = [
     {
@@ -285,12 +308,6 @@ const AddLoanFields = ({ addLoanData }) => {
       searchable: true,
     },
     {
-      labelName: "Borrower Unique ID",
-      inputName: "uniqueID",
-      type: "text",
-      validation: true,
-    },
-    {
       labelName: "Disbursed By",
       inputName: "disbursedBy",
       type: "select",
@@ -298,11 +315,22 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Loan Release Date",
-      inputName: "loanReleaseDate",
-      type: "date",
+      labelName: "Borrower Unique ID",
+      inputName: "uniqueID",
+      type: "text",
       validation: true,
-      minSelectableDate: today,
+    },
+    {
+      labelName: "Agent Name",
+      inputName: "agentName",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Principal Amount",
+      inputName: "principalAmount",
+      type: "number",
+      validation: true,
     },
     {
       labelName: "Loan Duration",
@@ -328,10 +356,17 @@ const AddLoanFields = ({ addLoanData }) => {
       disabled: true,
     },
     {
-      labelName: "Principal Amount",
-      inputName: "principalAmount",
-      type: "number",
+      labelName: "Loan Creation Date",
+      inputName: "loanCreationDate",
+      type: "date",
       validation: true,
+    },
+    {
+      labelName: "Loan Release Date",
+      inputName: "loanReleaseDate",
+      type: "date",
+      validation: true,
+      minSelectableDate: loanCreationDate ? new Date(loanCreationDate) : today,
     },
     {
       labelName: "Branch",
@@ -348,12 +383,6 @@ const AddLoanFields = ({ addLoanData }) => {
       options: sectorOptions,
       validation: false,
       searchable: true,
-    },
-    {
-      labelName: "Agent Name",
-      inputName: "agentName",
-      type: "text",
-      validation: false,
     },
     // {
     //   labelName: "CO Name",
@@ -473,6 +502,8 @@ const AddLoanFields = ({ addLoanData }) => {
       ))}
     </>
   );
+
+
 
   return (
     <>

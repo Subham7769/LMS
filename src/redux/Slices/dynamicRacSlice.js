@@ -8,7 +8,7 @@ export const fetchList = createAsyncThunk(
   async (_, { getState }) => {
     const sideBarState = getState().sidebar;
     const Menu = sideBarState?.menus.find(
-      (menu) => menu.title === "Dynamic RAC"
+      (menu) => menu.title === "Decision Engine"
     );
 
     const submenuItems = Menu ? Menu.submenuItems : [];
@@ -94,7 +94,7 @@ export const addNewRule = createAsyncThunk(
   }
 );
 
-// Async thunk for updating a Dynamic RAC rule by ID
+// Async thunk for updating a Decision Engine rule by ID
 export const updateRuleById = createAsyncThunk(
   "rac/updateRuleById",
   async ({ dynamicRacRuleId, ruleConfig }, { rejectWithValue }) => {
@@ -121,7 +121,7 @@ export const updateRuleById = createAsyncThunk(
   }
 );
 
-// Define the asyncThunk for deleting a Dynamic RAC
+// Define the asyncThunk for deleting a Decision Engine
 export const deleteDynamicRac = createAsyncThunk(
   "rac/deleteDynamicRac",
   async (racId, { rejectWithValue }) => {
@@ -143,7 +143,7 @@ export const deleteDynamicRac = createAsyncThunk(
   }
 );
 
-// Async thunk for updating a Dynamic RAC All rules
+// Async thunk for updating a Decision Engine All rules
 export const saveDynamicRac = createAsyncThunk(
   "rac/saveDynamicRac", // Action type
   async (racConfig, { rejectWithValue }) => {
@@ -166,7 +166,7 @@ export const saveDynamicRac = createAsyncThunk(
   }
 );
 
-// Define the asyncThunk for cloning Dynamic RAC
+// Define the asyncThunk for cloning Decision Engine
 export const cloneDynamicRac = createAsyncThunk(
   "rac/cloneDynamicRac",
   async ({ racId, racName }, { rejectWithValue }) => {
@@ -673,7 +673,7 @@ const dynamicRacSlice = createSlice({
       .addCase(addNewRule.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        toast.success("Dynamic RAC Added.");
+        toast.success("Decision Engine Added.");
       })
       .addCase(addNewRule.rejected, (state, action) => {
         state.loading = false;
@@ -686,7 +686,7 @@ const dynamicRacSlice = createSlice({
       .addCase(updateRuleById.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        toast.success("Dynamic RAC Rule Updated.");
+        toast.success("Decision Engine Rule Updated.");
       })
       .addCase(updateRuleById.rejected, (state, action) => {
         state.loading = false;
@@ -698,7 +698,7 @@ const dynamicRacSlice = createSlice({
       })
       .addCase(deleteDynamicRac.fulfilled, (state, action) => {
         state.loading = false;
-        toast("Dynamic RAC Deleted.");
+        toast("Decision Engine Deleted.");
       })
       .addCase(deleteDynamicRac.rejected, (state, action) => {
         state.loading = false;
@@ -711,7 +711,7 @@ const dynamicRacSlice = createSlice({
       })
       .addCase(cloneDynamicRac.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Dynamic RAC Cloned.");
+        toast.success("Decision Engine Cloned.");
       })
       .addCase(cloneDynamicRac.rejected, (state, action) => {
         state.loading = false;
@@ -743,7 +743,7 @@ const dynamicRacSlice = createSlice({
       .addCase(saveDynamicRac.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        toast.success("Dynamic RAC Saved.");
+        toast.success("Decision Engine Saved.");
       })
       .addCase(saveDynamicRac.rejected, (state, action) => {
         state.loading = false;
@@ -788,7 +788,7 @@ const dynamicRacSlice = createSlice({
       .addCase(updateStatus.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        toast.success("Dynamic RAC Updated.");
+        toast.success("Decision Engine Updated.");
       })
       .addCase(updateStatus.rejected, (state, action) => {
         state.loading = false;
@@ -805,7 +805,7 @@ const dynamicRacSlice = createSlice({
           name: action.payload.name,
         };
         state.loading = false;
-        toast.success("Dynamic RAC Updated.");
+        toast.success("Decision Engine Updated.");
       })
       .addCase(updateRacName.rejected, (state, action) => {
         state.loading = false;

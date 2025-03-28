@@ -228,6 +228,7 @@ const RuleComponent = ({
                 {rule?.fieldType === "NUMBER" && (
                   <span>
                     {generateNumberSentence({
+                      usageList:rule?.usageList,
                       name: rule?.name,
                       firstOperator: rule?.firstOperator,
                       secondOperator: rule?.secondOperator,
@@ -269,6 +270,7 @@ const RuleComponent = ({
               {rule?.fieldType === "NUMBER" && (
                 <span>
                   {generateNumberSentence({
+                    usageList:rule?.usageList,
                     name: rule?.name,
                     firstOperator: rule?.firstOperator,
                     secondOperator: rule?.secondOperator,
@@ -281,6 +283,7 @@ const RuleComponent = ({
               {rule?.fieldType === "STRING" && (
                 <span>
                   {generateStringSentence({
+                    usageList:rule?.usageList,
                     name: rule?.name,
                     blocked: rule?.blocked,
                     criteriaValues: rule?.criteriaValues,
@@ -305,6 +308,7 @@ const RuleComponent = ({
                   {rule?.fieldType === "NUMBER" && (
                     <span>
                       {generateNumberSentence({
+                        usageList:rule?.usageList,
                         name: rule?.name,
                         firstOperator:
                           rule?.history.firstOperatorOldValue,
@@ -322,6 +326,7 @@ const RuleComponent = ({
                   {rule?.fieldType === "STRING" && (
                     <span>
                       {generateStringSentence({
+                        usageList:rule?.usageList,
                         name: rule?.name,
                         blocked: rule?.blocked,
                         criteriaValues:
