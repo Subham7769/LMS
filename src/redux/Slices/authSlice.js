@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { fetchAppConfigData } from "./appConfigSlice";
 
 // AsyncThunk for login
 export const login = createAsyncThunk(

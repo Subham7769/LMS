@@ -298,7 +298,7 @@ const ProjectInputFields = ({
               />
               {/* RollOver Penalty Factor */}
               <InputText
-                labelName={"Roll Over Factor"}
+                labelName={"Roll Over Fixed Price"}
                 inputName={"rollOverPenaltyFactor"}
                 inputValue={projectData?.rollOverPenaltyFactor}
                 onChange={handleChange}
@@ -322,7 +322,7 @@ const ProjectInputFields = ({
                 inputName={"lateRepaymentPenalty"}
                 inputValue={projectData?.lateRepaymentPenalty}
                 onChange={handleChange}
-                placeHolder={"10%"}
+                placeHolder={"10"}
                 isValidation={true}
               />
               {/* Early Repayment Discount */}
@@ -338,7 +338,7 @@ const ProjectInputFields = ({
           </div>
         </CardInfo>
         <CardInfo
-          cardTitle="Fees & Grace Periods"
+          cardTitle="Schedule Fees & Grace Periods"
           className={"border"}
           cardIcon={ClockIcon}
           colorText={"text-orange-primary"}

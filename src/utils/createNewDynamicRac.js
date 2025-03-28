@@ -23,7 +23,7 @@ export async function createNewRac(Name, navigate, navigateSuccess, navigateFail
     }
     const racDetails = await response.json();
     // console.log(racDetails);
-    toast("Dynamic Rac Created.")
+    toast("Decision Engine Created.")
     navigate(navigateSuccess + racDetails.racId);
     // window.location.reload();
   } catch (error) {
