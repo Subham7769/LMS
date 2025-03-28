@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { PencilIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
+import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputText from "../Common/InputText/InputText";
@@ -34,6 +35,7 @@ const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [RTN, setRTN] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditingEquation, setIsEditingEquation] = useState(false);
   const { itemName, data, loading, error } = useSelector(
@@ -143,7 +145,7 @@ const RecoveryConfig = () => {
         initialName={itemName}
       />
       <ContainerTile className=" flex flex-col gap-4 " loading={loading}>
-        <div className="flex gap-4 space-x-2 2xl:w-[50%] w-[75%]">
+        <div className="grid grid-cols-3 gap-5">
           <div className="flex-1">
             <InputNumber
               labelName={"Tenure"}
@@ -163,6 +165,16 @@ const RecoveryConfig = () => {
               onChange={handleChangeWrapper}
               placeHolder="Select Tenure Type"
               isValidation={true}
+            />
+          </div>
+          <div className="w-fit">
+
+            <InputCheckbox
+              labelName="RTN"
+              inputChecked={RTN}
+              onChange={() => setRTN(!RTN)}
+              inputName="refinancedWith"
+              upperLabel={true}
             />
           </div>
         </div>

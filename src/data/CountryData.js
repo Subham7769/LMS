@@ -2888,7 +2888,8 @@ export const currencyOptions = [
   { value: "KMF", label: "Comorian Franc (CF)" },
   { value: "KPW", label: "North Korean Won (₩)" },
   { value: "KRW", label: "South Korean Won (₩)" },
-  { value: "MGA", label: "Malagasy Ariary (Ar)" }
+  { value: "MGA", label: "Malagasy Ariary (Ar)" },
+  { value: "USD", label: "US Dollar ($)" }
 ];
 
 export const currencySymbolOptions = [
@@ -2967,7 +2968,8 @@ export const currencySymbolOptions = [
   { value: "៛", label: "Cambodian Riel (៛)" },
   { value: "CF", label: "Comorian Franc (CF)" },
   { value: "₩", label: "North Korean Won (₩)" },
-  { value: "₩", label: "South Korean Won (₩)" }
+  { value: "₩", label: "South Korean Won (₩)" },
+  { value: "$", label: "US Dollar ($)" }
 ];
 
 export const dateFormateOptions = [
