@@ -309,7 +309,16 @@ const AddLoanFields = ({ addLoanData }) => {
     result.setMonth(result.getMonth() + months);
     return result;
   };
-
+  // Ensure loanCreationDate is set to today if not selected
+  useEffect(() => {
+    if (!loanCreationDate) {
+      dispatch(updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanCreationDate",
+        value: new Date().toISOString().split("T")[0], // Setting default to today
+      }));
+    }
+  }, [loanCreationDate, dispatch]);
   // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {

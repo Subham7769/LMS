@@ -274,6 +274,17 @@ const AddLoanFields = ({ addLoanData }) => {
   const today = new Date();
   const { loanCreationDate, loanReleaseDate } = addLoanData.generalLoanDetails;
 
+    // Ensure loanCreationDate is set to today if not selected
+    useEffect(() => {
+      if (!loanCreationDate) {
+        dispatch(updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanCreationDate",
+          value: new Date().toISOString().split("T")[0], // Setting default to today
+        }));
+      }
+    }, [loanCreationDate, dispatch]);
+
   // Reset loanReleaseDate  if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {
