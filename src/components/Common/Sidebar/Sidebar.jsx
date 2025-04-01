@@ -460,7 +460,7 @@ const SideBar = () => {
                                 className="text-gray-500/90"
                                 onClick={() => handleToggleSidebarOnMobile()}
                               >
-                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-11 rounded-md hover:text-text-light-secondary ">
+                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md hover:text-text-light-secondary ">
                                   {submenuItem.name}
                                 </li>
                               </NavLink>
