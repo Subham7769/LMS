@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback");
+
 @import "tailwindcss";
 @import "./additional-styles/utility-patterns.css" layer(components);
 
@@ -111,6 +113,10 @@ input:focus {
 /* Plugins (You still need to include them) */
 
 .active {
+  @apply text-violet-500;
+}
+
+.active li:hover {
   @apply text-violet-500;
 }
 

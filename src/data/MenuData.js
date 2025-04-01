@@ -241,7 +241,7 @@ export const MenusInitial = [
     createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewLoanApproval",
-    buttonName: "Create Approval Config", //Create button text
+    buttonName: "Create New Config", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/loan/loan-approval/", // navigation
     navigateFail: "/login", // navigation
@@ -259,7 +259,7 @@ export const MenusInitial = [
     createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewDocumentConfig",
-    buttonName: "Create Document Config", //Create button text
+    buttonName: "Create New Config", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/loan/document-config/", // navigation
     navigateFail: "/login", // navigation
@@ -448,7 +448,7 @@ export const MenusInitial = [
     createButton: true,
     editable: true,
     createFunction: "createNewReportingConfig",
-    buttonName: "Create Report",
+    buttonName: "Create New Config",
     placeholder: "Enter Name",
     navigateSuccess: "/loan/reporting-config/newConfig/",
     navigateFail: "/login",

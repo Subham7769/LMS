@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { BoltIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import useOnline from "../../../utils/useOnline";
@@ -11,6 +11,7 @@ import { logout, setRole } from "../../../redux/Slices/authSlice";
 import { fetchRoles } from "../../../redux/Slices/userManagementSlice";
 import InputSelect from "../InputSelect/InputSelect";
 import { useSelector } from "react-redux";
+import { toggleSidebar } from "../../../redux/Slices/sidebarSlice";
 
 const UserMenu = ({ userNavigation, isOnline }) => {
   const dispatch = useDispatch();
@@ -27,22 +28,8 @@ const UserMenu = ({ userNavigation, isOnline }) => {
   };
 
   return (
-    <Menu as="div" className="relative w-[100%]">
+    <Menu as="div" className="relative">
       <div className="flex items-center gap-2">
-        <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-background-light-secondary transition-colors duration-200 ">
-          <span className="absolute -inset-1.5" />
-          <span className="sr-only">Open user menu</span>
-          <UserCircleIcon className="h-8 w-8 text-gray-500" />
-          <span
-            title={isOnline ? "Internet Access" : "No Internet Access"}
-            className={`absolute bottom-1 right-1 h-3 w-3 ${
-              isOnline ? "bg-green-500" : "bg-red-500"
-            }  rounded-full text-xs text-white flex items-center justify-center`}
-          ></span>
-        </Menu.Button>
-        <div className="text-gray-500">
-          Hello, {localStorage.getItem("username")}
-        </div>
         {localStorage.getItem("username") === "superadmin" && (
           <div className="w-[50%]">
             {/* Role Dropdown */}
@@ -57,6 +44,20 @@ const UserMenu = ({ userNavigation, isOnline }) => {
             />
           </div>
         )}
+        <Menu.Button className="relative flex rounded-full p-1 bg-white  hover:bg-background-light-secondary transition-colors duration-200 ">
+          <span className="absolute -inset-1.5" />
+          <span className="sr-only">Open user menu</span>
+          <UserCircleIcon className="h-8 w-8 text-gray-500" />
+          <span
+            title={isOnline ? "Internet Access" : "No Internet Access"}
+            className={`absolute bottom-1 right-1 h-3 w-3 ${
+              isOnline ? "bg-green-500" : "bg-red-500"
+            }  rounded-full text-xs text-white flex items-center justify-center`}
+          ></span>
+        </Menu.Button>
+        <div className="text-gray-500">
+          Hello, {localStorage.getItem("username")}
+        </div>
       </div>
       <Transition
         enter="transition ease-out duration-100"
@@ -94,6 +95,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isOnline = useOnline();
+  const { open } = useSelector((state) => state.sidebar);
 
   const userNavigation = [
     { name: "Sign out", href: "/login", action: () => dispatch(logout()) },
@@ -128,20 +130,32 @@ const Header = () => {
     dispatch(fetchRoles());
   }, [dispatch]);
 
+  const handleToggleSidebar = () => {
+    dispatch(toggleSidebar());
+  };
+
   return (
     <header
-      className="shadow-md sticky h-14 top-0 left-0 bg-white z-50 flex items-center justify-between"
+      className="border-gray-200 border-b sticky h-14 top-0 left-0 bg-background-light-tertiary z-30 flex items-center justify-between"
       id="navBarId"
     >
       {/* logo */}
-      <div className="w-1/3 flex shrink-0 items-center">
+      {/* <div className="w-1/3 flex shrink-0 items-center">
         <BoltIcon
           className={`h-8 ${
             open ? "w-auto" : "w-10 h-auto"
           } ml-5 text-indigo-500`}
         />
+      </div> */}
+      <div className=" flex shrink-0 items-center lg:hidden">
+        {!open && (
+          <Bars3Icon
+            className={`h-8 w-auto ml-5`}
+            onClick={handleToggleSidebar}
+          />
+        )}
       </div>
-      <div className="flex justify-center w-1/3">
+      <div className="flex justify-center ">
         {/* <div>
           <label htmlFor="search" className="sr-only">
             Search
@@ -173,7 +187,7 @@ const Header = () => {
           ))}
         </ul> */}
       </div>
-      <div className="px-8 py-3 relative flex justify-end items-center gap-5 w-1/3">
+      <div className="px-8 py-3 relative flex justify-end items-center gap-3 ">
         <ElementErrorBoundary>
           <NotificationWindow />
         </ElementErrorBoundary>

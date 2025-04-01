@@ -94,7 +94,7 @@ export const deleteRecovery = createAsyncThunk(
   async (recoveryEquationTempId, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `${import.meta.env.VITE_RECOVERY_DELETE}/${recoveryEquationTempId}`,
+      `${import.meta.env.VITE_RECOVERY_DELETE}${recoveryEquationTempId}`,
       {
         method: "DELETE",
         headers: {
