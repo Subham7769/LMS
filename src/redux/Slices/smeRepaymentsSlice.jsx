@@ -565,18 +565,26 @@ const smeRepaymentsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchClosingBalance.fulfilled, (state, action) => {
-        const { userId } = action.meta.arg;
+        const { rowIndex } = action.meta.arg;
         const { totalOutstanding } = action.payload;
         // Update the amount in the draftRepaymentDTOList
-        state.draftRepaymentDTOList = state.draftRepaymentDTOList.map((entry) =>
-          entry.userId === userId
-            ? {
-                ...entry,
-                amount: totalOutstanding,
-                closingBalance: action.payload,
-              }
-            : entry
-        );
+        // Fix - Update only the amount in the current Row. It was wrongly updating amounts for all the entries where userId is matching
+        // state.draftRepaymentDTOList = state.draftRepaymentDTOList.map((entry) =>
+        //   entry.userId === userId
+        //     ? {
+        //         ...entry,
+        //         amount: totalOutstanding,
+        //         closingBalance: action.payload,
+        //       }
+        //     : entry
+        // );
+        if (state.draftRepaymentDTOList[rowIndex]) {
+          state.draftRepaymentDTOList[rowIndex] = {
+            ...state.draftRepaymentDTOList[rowIndex],
+            amount: totalOutstanding,
+            closingBalance: action.payload,
+          };
+        }
         state.loading = false;
       })
       .addCase(fetchClosingBalance.rejected, (state, action) => {
