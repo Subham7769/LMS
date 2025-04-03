@@ -916,7 +916,7 @@ const AddLoanFields = ({ addLoanData }) => {
         renderExpandedContent={() => requiredDocuments(addLoanData.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
-        <div>{`${uploadedCount} of 8 documents uploaded`}</div>
+        <div>{`${uploadedCount} of ${addLoanData.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>
     </>
