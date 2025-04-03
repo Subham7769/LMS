@@ -55,7 +55,6 @@ import {
   WrenchScrewdriverIcon,
   CubeTransparentIcon,
   CpuChipIcon,
-  BoltIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
 
@@ -78,6 +77,7 @@ import { allSectionName } from "../../../data/MenuData.js";
 import CreateNew from "../CreateNew/CreateNew";
 import { setRole } from "../../../redux/Slices/authSlice";
 import { createNewDocumentConfig } from "../../../utils/createNewDocumentConfig.js";
+import { LogoIcon } from "../../../assets/icons.jsx";
 
 const SideBar = () => {
   const dispatch = useDispatch();
@@ -314,7 +314,7 @@ const SideBar = () => {
         aria-hidden="true"
       ></div>
       <div
-        className={`z-40 absolute top-0 left-0 -mr-1 lg:relative overflow-y-auto h-screen no-scrollbar bg-white lg:bg-background-light-tertiary flex transform duration-1000 ease-in-out ${
+        className={`z-40 absolute top-0 left-0 -mr-1 lg:relative overflow-y-auto h-screen no-scrollbar lg:bg-background-light-tertiary flex transform duration-1000 ease-in-out ${
           open ? "w-[17rem]" : "lg:w-14 w-0"
         }`}
       >
@@ -346,10 +346,10 @@ const SideBar = () => {
           } overflow-y-auto no-scrollbar border-gray-200 bg-white`}
         >
           <div className="w-full flex shrink-0 items-center justify-between lg:w-1/3">
-            <BoltIcon
+            <LogoIcon
               className={`h-8 ${
                 open ? "w-auto" : "hidden"
-              } mb-10 text-indigo-500`}
+              } mb-10 fill-violet-500`}
             />
             <ArrowLeftIcon
               className={`h-6 w-auto mb-10 lg:hidden`}

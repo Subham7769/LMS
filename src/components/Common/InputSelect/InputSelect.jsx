@@ -58,7 +58,15 @@ const InputSelect = ({
           ? "1rem"
           : "0.875rem", // Change font size
       fontFamily: "inherit", // Set font to inherit
-      padding: 6,
+      padding: "8px 12px",
+      backgroundColor: "#fff",
+      color: state.isSelected ? "#8e51ff" : "#4a5565",
+      fontWeight: 500,
+      borderBottom: "1px solid #e2e8f0",
+      "&:hover": {
+        backgroundColor: "#f9fafb",
+        color: state.isSelected ? "#8e51ff" : "#4a5565",
+      },
     }),
     control: (provided) => ({
       ...provided,
@@ -84,7 +92,7 @@ const InputSelect = ({
           ? "1rem"
           : "0.875rem", // Convert px to rem
       color: "#9ca3af", // Equivalent to Tailwind's text-gray-400
-    }),    
+    }),
     singleValue: (provided) => ({
       ...provided,
       fontSize:
@@ -135,6 +143,30 @@ const InputSelect = ({
         name={inputName}
         styles={customStyles} // Apply custom styles
         options={inputOptions}
+        getOptionLabel={(e) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {e.label}
+            {e.value === inputValue && (
+              <span
+                style={{
+                  marginLeft: "auto",
+                }}
+              >
+                <svg
+                  className="shrink-0 mr-2 fill-current text-violet-500"
+                  width="12"
+                  height="9"
+                  viewBox="0 0 12 9"
+                >
+                  <path d="M10.28.28L3.989 6.575 1.695 4.28A1 1 0 00.28 5.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28.28z" />
+                </svg>
+              </span>
+            )}
+          </div>
+        )}
+        components={{
+          SingleValue: ({ data }) => <div>{data.label}</div>, // Prevent tick mark when closed
+        }}
         value={
           isMulti
             ? inputValue

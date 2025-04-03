@@ -124,6 +124,11 @@ input:focus {
   --tw-ring-color: #fff;
 }
 
+/* react select internal class */
+.css-hlgwow{
+  display: flex !important;
+}
+
 .react-datepicker-wrapper {
   display: block !important;
 }
