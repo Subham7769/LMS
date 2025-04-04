@@ -309,7 +309,16 @@ const AddLoanFields = ({ addLoanData }) => {
     result.setMonth(result.getMonth() + months);
     return result;
   };
-
+  // Ensure loanCreationDate is set to today if not selected
+  useEffect(() => {
+    if (!loanCreationDate) {
+      dispatch(updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanCreationDate",
+        value: new Date().toISOString().split("T")[0], // Setting default to today
+      }));
+    }
+  }, [loanCreationDate, dispatch]);
   // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {
@@ -907,7 +916,7 @@ const AddLoanFields = ({ addLoanData }) => {
         renderExpandedContent={() => requiredDocuments(addLoanData.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
-        <div>{`${uploadedCount} of 8 documents uploaded`}</div>
+        <div>{`${uploadedCount} of ${addLoanData.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>
     </>
