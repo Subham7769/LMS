@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import AppErrorBoundary from "./components/ErrorBoundary/AppErrorBoundary"; // Import AppErrorBoundary
+import ThemeProvider from "./utils/ThemeContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,7 +15,9 @@ root.render(
     <AppErrorBoundary>
       {" "}
       {/* Wrap App in AppErrorBoundary */}
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </AppErrorBoundary>
   </Provider>
 );

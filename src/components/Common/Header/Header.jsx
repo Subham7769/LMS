@@ -9,8 +9,9 @@ import { toggleSidebar } from "../../../redux/Slices/sidebarSlice";
 import HelpMenu from "./HelpMenu";
 import UserMenu from "./UserMenu";
 import InputSelect from "../InputSelect/InputSelect";
-import convertToTitleCase from "../../../utils/convertToTitleCase.js";
-import { setRole } from "../../../redux/Slices/authSlice.js";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { setRole } from "../../../redux/Slices/authSlice";
+import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Header = () => {
   const [activeTab, setActiveTab] = useState("loan");
   const { roleData } = useSelector((state) => state.userManagement);
   const { userData } = useSelector((state) => state.auth);
-    const roleName = userData?.roles[0]?.name;
+  const roleName = userData?.roles[0]?.name;
 
   // console.log(activeTab);
 
@@ -55,7 +56,7 @@ const Header = () => {
 
   return (
     <header
-      className="border-gray-200 border-b sticky h-14 top-0 left-0 bg-background-light-tertiary z-30 flex items-center justify-between"
+      className="border-gray-200 border-b dark:bg-gray-900 text-gray-600 dark:text-gray-400 sticky h-14 top-0 left-0 z-30 flex items-center justify-between"
       id="navBarId"
     >
       <div className="flex shrink-0 items-center lg:hidden">
@@ -118,6 +119,9 @@ const Header = () => {
         </ElementErrorBoundary>
         <ElementErrorBoundary>
           <HelpMenu align="right" />
+        </ElementErrorBoundary>
+        <ElementErrorBoundary>
+          <ThemeToggle />
         </ElementErrorBoundary>
         <ElementErrorBoundary>
           <UserMenu align="right" />
