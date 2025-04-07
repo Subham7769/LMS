@@ -189,6 +189,7 @@ const AddLoans = () => {
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
+            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr)}
           />
           <Button
             buttonName="Save Draft"

@@ -274,16 +274,16 @@ const AddLoanFields = ({ addLoanData }) => {
   const today = new Date();
   const { loanCreationDate, loanReleaseDate } = addLoanData.generalLoanDetails;
 
-    // Ensure loanCreationDate is set to today if not selected
-    useEffect(() => {
-      if (!loanCreationDate) {
-        dispatch(updateLoanField({
-          section: "generalLoanDetails",
-          field: "loanCreationDate",
-          value: new Date().toISOString().split("T")[0], // Setting default to today
-        }));
-      }
-    }, [loanCreationDate, dispatch]);
+  // Ensure loanCreationDate is set to today if not selected
+  useEffect(() => {
+    if (!loanCreationDate) {
+      dispatch(updateLoanField({
+        section: "generalLoanDetails",
+        field: "loanCreationDate",
+        value: new Date().toISOString().split("T")[0], // Setting default to today
+      }));
+    }
+  }, [loanCreationDate, dispatch]);
 
   // Reset loanReleaseDate  if loanCreationDate changes
   useEffect(() => {
@@ -338,12 +338,6 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Principal Amount",
-      inputName: "principalAmount",
-      type: "number",
-      validation: true,
-    },
-    {
       labelName: "Loan Duration",
       inputName: "loanDurationStr",
       type: "select",
@@ -365,6 +359,12 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "text",
       validation: false,
       disabled: true,
+    },
+    {
+      labelName: "Principal Amount",
+      inputName: "principalAmount",
+      type: "number",
+      validation: true,
     },
     {
       labelName: "Loan Creation Date",

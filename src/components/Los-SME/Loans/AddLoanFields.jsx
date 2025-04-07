@@ -388,13 +388,6 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Principal Amount",
-      inputName: "principalAmount",
-      type: "number",
-      validation: true,
-    },
-
-    {
       labelName: "Loan Duration",
       inputName: "loanDurationStr",
       type: "select",
@@ -414,6 +407,12 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "text",
       validation: false,
       disabled: true,
+    },
+    {
+      labelName: "Principal Amount",
+      inputName: "principalAmount",
+      type: "number",
+      validation: true,
     },
     {
       labelName: "Loan Creation Date",
