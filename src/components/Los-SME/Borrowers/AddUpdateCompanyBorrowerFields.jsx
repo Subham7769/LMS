@@ -22,6 +22,7 @@ import {
 } from "../../../data/BankData";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
+import { useLocation } from "react-router-dom";
 
 const AddUpdateCompanyBorrowerFields = ({
   BorrowerData,
@@ -39,6 +40,11 @@ const AddUpdateCompanyBorrowerFields = ({
   const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
     []
   );
+  const location = useLocation();
+
+  const isUpdateCompany = location.pathname.includes('update-company');
+  const isDraftCompany = location.pathname.includes('update-company/draft');
+
   const loanOfficer = localStorage.getItem("username");
   useEffect(() => {
     setFilteredLocations1(
@@ -224,6 +230,7 @@ const AddUpdateCompanyBorrowerFields = ({
       inputName: "companyRegistrationNo",
       type: "text",
       validation: true,
+      disabled: isUpdateCompany && !isDraftCompany,
     },
     {
       labelName: "Borrower Serial No.",
@@ -281,21 +288,21 @@ const AddUpdateCompanyBorrowerFields = ({
       inputName: "mobile1",
       type: "number",
       validation: true,
-      maxLength:10,
+      maxLength: 10,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "number",
       validation: false,
-      maxLength:10,
+      maxLength: 10,
     },
     {
       labelName: "Landline Phone",
       inputName: "landlinePhone",
       type: "text",
       validation: false,
-      maxLength:10,
+      maxLength: 10,
     },
     {
       labelName: "House Number",
@@ -476,11 +483,11 @@ const AddUpdateCompanyBorrowerFields = ({
         heading={"Contact Details"}
         renderExpandedContent={() =>
           <DynamicForm
-          details={BorrowerData.companyContactDetails}
-          config={companyContactDetailsConfig}
-          sectionName={"companyContactDetails"}
-          handleInputChange={handleInputChange}
-        />
+            details={BorrowerData.companyContactDetails}
+            config={companyContactDetailsConfig}
+            sectionName={"companyContactDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
         error={isValidationFailed(
           validationError,
@@ -490,13 +497,13 @@ const AddUpdateCompanyBorrowerFields = ({
 
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() => 
+        renderExpandedContent={() =>
           <DynamicForm
-          details={BorrowerData.bankDetails}
-          config={bankDetailsConfig}
-          sectionName={"bankDetails"}
-          handleInputChange={handleInputChange}
-        />
+            details={BorrowerData.bankDetails}
+            config={bankDetailsConfig}
+            sectionName={"bankDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
         error={isValidationFailed(validationError, bankDetailsConfig)}
       />
@@ -505,12 +512,12 @@ const AddUpdateCompanyBorrowerFields = ({
         heading={"Other Details"}
         renderExpandedContent={() =>
           <DynamicForm
-          details={BorrowerData.companyOtherDetails}
-          config={companyOtherDetailsConfig}
-          sectionName={"companyOtherDetails"}
-          handleInputChange={handleInputChange}
-          handleFileUploads={handleFileUpload}
-        />
+            details={BorrowerData.companyOtherDetails}
+            config={companyOtherDetailsConfig}
+            sectionName={"companyOtherDetails"}
+            handleInputChange={handleInputChange}
+            handleFileUploads={handleFileUpload}
+          />
         }
         error={isValidationFailed(
           validationError,
