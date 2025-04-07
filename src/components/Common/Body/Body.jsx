@@ -1,6 +1,6 @@
 const Body = ({ children }) => {
   return (
-    <div className="flex-grow p-5 bg-background-light-tertiary">{children}</div>
+    <div className="flex-grow bg-background-light-tertiary">{children}</div>
   );
 };
 

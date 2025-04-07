@@ -11,6 +11,7 @@ import {
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
+import { color } from "framer-motion";
 
 const InputSelect = ({
   labelName,
@@ -60,7 +61,7 @@ const InputSelect = ({
       fontFamily: "inherit", // Set font to inherit
       padding: "8px 12px",
       backgroundColor: "#fff",
-      color: state.isSelected ? "#8e51ff" : "#4a5565",
+      color: state.isSelected ? "#8e51ff" : "#4a5565", 
       fontWeight: 500,
       borderBottom: "1px solid #e2e8f0",
       "&:hover": {
@@ -70,10 +71,11 @@ const InputSelect = ({
     }),
     control: (provided) => ({
       ...provided,
-      border: "1px solid #ccc",
-      height: "30px",
+      border: "1px solid #e5e7eb",
       padding: 0,
       boxShadow: "none",
+      height: 28,
+      borderRadius: "0.5rem",
       "&:hover": {
         border: "1px solid #aaa",
       },
@@ -81,6 +83,10 @@ const InputSelect = ({
     menu: (provided) => ({
       ...provided,
       zIndex: 9999, // Ensure menu appears above other elements
+      boxShadow:
+        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // Tailwind's shadow-lg
+      borderRadius: "0.5rem", // Optional: match rounded-lg
+      border: "1px solid #e5e7eb",
     }),
     placeholder: (provided) => ({
       ...provided,
@@ -101,6 +107,26 @@ const InputSelect = ({
           : dropdownTextSize === "large"
           ? "1rem"
           : "0.875rem", // Change font size
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: "#9ca3af", // Tailwind's text-gray-400
+      "&:hover": {
+        color: "#9ca3af", // maintain the same color on hover
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none", // safety check for visual separation
+    }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      display: "flex",
+      backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
+      color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
+      // overflow: "hidden",
+      // whiteSpace: "nowrap",
+      // height: "28px",
+      // alignItems: "center",
     }),
   };
 
@@ -127,11 +153,14 @@ const InputSelect = ({
   }, [inputName, dispatch]);
 
   return (
-    <div className="flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex flex-col shadow-l"
+      onClick={(e) => e.stopPropagation()}
+    >
       {labelName && (
         <label
-          className={`block text-sm font-semibold ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
+          className={`block text-sm font-medium ${
+            validationError[validationKey] ? "text-red-600" : "text-gray-600"
           } px-1`}
           htmlFor={inputName}
         >
@@ -165,7 +194,25 @@ const InputSelect = ({
           </div>
         )}
         components={{
-          SingleValue: ({ data }) => <div>{data.label}</div>, // Prevent tick mark when closed
+          SingleValue: ({ data, innerRef, innerProps }) => (
+            <div
+              ref={innerRef}
+              {...innerProps}
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontSize:
+                  dropdownTextSize === "small"
+                    ? "0.875rem"
+                    : dropdownTextSize === "large"
+                    ? "1rem"
+                    : "0.875rem", // Convert px to rem
+              }}
+            >
+              {data.label}
+            </div>
+          ),
         }}
         value={
           isMulti

@@ -1042,7 +1042,7 @@ export const ProductList = [
     openLoans: "2367",
     disbursedPrincipal: "$234M",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan/",
   },
   {
     name: "BNPL",
@@ -1595,7 +1595,7 @@ export const ProductList = [
     openLoans: "2367",
     disbursedPrincipal: "$234M",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan/",
   },
   {
     name: "BNPL",

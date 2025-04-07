@@ -19,7 +19,7 @@ const CreateNewProduct = () => {
   const navigate = useNavigate();
   const { productName } = useParams();
   const dispatch = useDispatch();
-  const { productData,loading } = useSelector((state) => state.product);
+  const { productData, loading } = useSelector((state) => state.product);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
 
@@ -47,7 +47,7 @@ const CreateNewProduct = () => {
       try {
         const newProductData = {
           ...productData,
-          routingLink: `/loan/loan-product/${productName}/loan-product-config/${productData.projectId}/`,
+          routingLink: `/loan/loan-product/${productName}/${productData.projectId}/product-config`,
           section: "Product",
         };
 

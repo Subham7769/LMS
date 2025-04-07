@@ -97,6 +97,10 @@ const CreateNewProduct = lazy(() =>
 const LoanProductConfig = lazy(() =>
   import("./components/Product/LoanProductConfig")
 );
+const ProductConfig = lazy(() => import("./components/Product/ProductConfig"));
+const UpfrontFee = lazy(() => import("./components/Product/UpfrontFee"));
+const Options = lazy(() => import("./components/Product/Options"));
+const InterestTenure = lazy(() => import("./components/Product/InterestTenure"));
 
 // CreditScoreET Imports
 const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
@@ -245,9 +249,7 @@ const ServerConfig = lazy(() =>
 );
 
 //App Config imports
-const AppConfig = lazy(() =>
-  import("./components/AppConfig/AppConfig")
-);
+const AppConfig = lazy(() => import("./components/AppConfig/AppConfig"));
 
 // Reporting Config imports
 const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
@@ -641,9 +643,31 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "loan-product/:productType/loan-product-config/:projectId/:loanProId",
+        path: "loan-product/:productType/:projectId/:loanProId",
         element: <LoanProductConfig />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "product-config",
+            element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upfront-fee",
+            element: <UpfrontFee />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "options",
+            element: <Options />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-tenure",
+            element: <InterestTenure />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "credit-score-eligible-tenure/:creditScoreETId",
