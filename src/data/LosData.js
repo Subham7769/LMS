@@ -258,6 +258,7 @@ export const accountType = [
 export const uniqueIDType = [
   { value: "PASSPORT", label: "PASSPORT" },
   { value: "NRC", label: "NRC" },
+  { value: "EMAIL", label: "EMAIL" },
   // { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
   // { value: "NATIONAL ID", label: "NATIONAL ID" },
   // { value: "VOTER ID", label: "VOTER ID" },

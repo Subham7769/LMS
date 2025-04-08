@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import AppLayoutB2C from "./components/AppLayout/AppLayoutB2C";
 
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
@@ -466,6 +467,11 @@ const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
 const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
+const CustomerLoanApplication = React.lazy(() => import("./components/B2CCustomer/LoanApplication"));
+const Onboarding01 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding01"));
+const Onboarding02 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding02"));
+const Onboarding03 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding03"));
+
 
 const routes = [
   // Accessing All Main Components
@@ -1353,6 +1359,43 @@ const routes = [
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
+ 
+  //Lead Capture, Customer loan application Route
+ {
+  path: "/customer",
+  element: (
+    <PageErrorBoundary>
+      <ProtectedRoute>
+        <AppLayoutB2C />
+      </ProtectedRoute>
+    </PageErrorBoundary>
+  ),
+  children: [
+    {
+      path: "loan-application",
+      element: <CustomerLoanApplication />,
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: "loan-application/step01",
+      element: <Onboarding01 />,
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: "loan-application/step02",
+      element: <Onboarding02 />,
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: "loan-application/step03",
+      element: <Onboarding03 />,
+      errorElement: <RouteErrorBoundary />,
+    },            
+  ],
+},
+
+// Catch-All Route for 404 Page Not Found
+{ path: "*", element: <PageNotFound /> },
 ];
 
 const appRouter = createBrowserRouter(routes);
