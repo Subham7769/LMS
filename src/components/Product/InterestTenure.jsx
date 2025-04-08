@@ -7,7 +7,7 @@ import { tenureTypeOptions } from "../../data/OptionsData";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { addInterestTenure } from "../../redux/Slices/productSlice";
+import { addInterestTenure, updateInterestTenure } from "../../redux/Slices/productSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { useOutletContext } from "react-router-dom";
 import {
@@ -21,6 +21,7 @@ import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { setUpdateMap } from "../../redux/Slices/notificationSlice";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import formatStringNumber from "../../utils/formatStringNumber";
 
 const InterestTenure = () => {
   const { productData, handleChange } = useOutletContext();
@@ -160,16 +161,9 @@ const InterestTenure = () => {
   }
 
   let columns = [
-    { label: "Simple Interest", key: "interestRate", sortable: true },
-    { label: "PER", key: "interestPeriodType", sortable: true },
-    { label: "Loan Tenure", key: "LoanTenure", sortable: true },
-    { label: "Loan Tenure Type", key: "tenureType", sortable: true },
-    { label: "Repayment Tenure", key: "RepaymentTenure", sortable: true },
-    {
-      label: "Repayment Tenure Type",
-      key: "RepaymentTenureType",
-      sortable: true,
-    },
+    { label: "Simple Interest", key: "interestRate", sortable: false },
+    { label: "Loan Tenure", key: "LoanTenure", sortable: false },
+    { label: "Repayment Tenure", key: "RepaymentTenure", sortable: false },
   ];
 
   // Conditionally add the "Actions" column if roleName has view only access
@@ -180,7 +174,7 @@ const InterestTenure = () => {
   return (
     <div className="flex flex-col gap-5">
       {!hasViewOnlyAccess(roleName) ? (
-        <div className="grid grid-cols-7 gap-5 items-end border-t-2 py-5">
+        <div className="grid grid-cols-7 gap-5 items-end py-5">
           <InputText
             labelName="Simple Interest"
             inputName="interestRate"
@@ -262,144 +256,120 @@ const InterestTenure = () => {
           ) : (
             currentItems?.map((item, index) => (
               <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-4 whitespace-nowrap">
                   {editingIndex === index ? (
-                    <InputText
-                      inputName={"interestRate"}
-                      inputValue={item?.interestRate}
-                      onChange={(e) =>
-                        handleInterestChange(
-                          index,
-                          "interestRate",
-                          e.target.value
-                        )
-                      }
-                      placeHolder="2%"
-                      isValidation={true}
-                      isIndex={item?.dataIndex}
-                    />
+                    <div className="grid grid-cols-[30%_20%_50%] gap-2 items-center text-center">
+                      <InputText
+                        inputName={"interestRate"}
+                        inputValue={formatStringNumber(item?.interestRate)}
+                        onChange={(e) =>
+                          handleInterestChange(
+                            index,
+                            "interestRate",
+                            e.target.value
+                          )
+                        }
+                        placeHolder="2%"
+                        isValidation={true}
+                        isIndex={item?.dataIndex}
+                      />
+                      PER
+                      <InputSelect
+                        inputOptions={tenureTypeOptions}
+                        inputName={"interestPeriodType"}
+                        inputValue={item?.interestPeriodType}
+                        onChange={(selectedOption) =>
+                          handleInterestChange(
+                            index,
+                            "interestPeriodType",
+                            selectedOption
+                          )
+                        }
+                        isValidation={true}
+                        isIndex={item?.dataIndex}
+                      />
+                    </div>
                   ) : (
                     <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {item?.interestRate}
-                    </span>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {editingIndex === index ? (
-                    <InputSelect
-                      inputOptions={tenureTypeOptions}
-                      inputName={"interestPeriodType"}
-                      inputValue={item?.interestPeriodType}
-                      onChange={(selectedOption) =>
-                        handleInterestChange(
-                          index,
-                          "interestPeriodType",
-                          selectedOption
-                        )
-                      }
-                      isValidation={true}
-                      isIndex={item?.dataIndex}
-                    />
-                  ) : (
-                    <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                      {formatStringNumber(item?.interestRate)} PER{" "}
                       {item?.interestPeriodType ? item?.interestPeriodType : ""}
                     </span>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {editingIndex === index ? (
-                    <InputNumber
-                      inputName={"loanTenure"}
-                      inputValue={item?.loanTenure}
-                      onChange={(e) =>
-                        handleInterestChange(
-                          index,
-                          "loanTenure",
-                          e.target.value
-                        )
-                      }
-                      placeHolder="3"
-                      isValidation={true}
-                      isIndex={item?.dataIndex}
-                    />
+                    <div className="grid grid-cols-[30%_70%] gap-2 items-center">
+                      <InputNumber
+                        inputName={"loanTenure"}
+                        inputValue={item?.loanTenure}
+                        onChange={(e) =>
+                          handleInterestChange(
+                            index,
+                            "loanTenure",
+                            e.target.value
+                          )
+                        }
+                        placeHolder="3"
+                        isValidation={true}
+                        isIndex={item?.dataIndex}
+                      />
+                      <InputSelect
+                        inputOptions={tenureTypeOptions}
+                        inputName={"loanTenureType"}
+                        inputValue={item?.loanTenureType}
+                        onChange={(selectedOption) =>
+                          handleInterestChange(
+                            index,
+                            "loanTenureType",
+                            selectedOption
+                          )
+                        }
+                        isValidation={true}
+                        isIndex={item?.dataIndex}
+                      />
+                    </div>
                   ) : (
                     <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {item?.loanTenure}
-                    </span>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {editingIndex === index ? (
-                    <InputSelect
-                      inputOptions={tenureTypeOptions}
-                      inputName={"loanTenureType"}
-                      inputValue={item?.loanTenureType}
-                      onChange={(selectedOption) =>
-                        handleInterestChange(
-                          index,
-                          "loanTenureType",
-                          selectedOption
-                        )
-                      }
-                      isValidation={true}
-                      isIndex={item?.dataIndex}
-                    />
-                  ) : (
-                    <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                      {item?.loanTenure}{" "}
                       {item?.loanTenureType ? item?.loanTenureType : ""}
                     </span>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {editingIndex === index ? (
-                    <InputNumber
-                      // inputName={`repaymentTenure-${index}`}
-                      inputName={"repaymentTenure"}
-                      inputValue={item?.repaymentTenure}
-                      onChange={(e) =>
-                        handleInterestChange(
-                          index,
-                          "repaymentTenure",
-                          e.target.value
-                        )
-                      }
-                      placeHolder="3"
-                      isValidation={true}
-                      isIndex={item?.dataIndex}
-                      // showError={validationError.repaymentTenure}
-                      // onFocus={() =>
-                      //   dispatch(
-                      //     setValidationError({
-                      //       ...validationError,
-                      //       repaymentTenure: false,
-                      //     })
-                      //   )
-                      // }
-                    />
+                    <div className="grid grid-cols-[30%_70%] gap-2 items-center">
+                      <InputNumber
+                        inputName={"repaymentTenure"}
+                        inputValue={item?.repaymentTenure}
+                        onChange={(e) =>
+                          handleInterestChange(
+                            index,
+                            "repaymentTenure",
+                            e.target.value
+                          )
+                        }
+                        placeHolder="3"
+                        isValidation={true}
+                        isIndex={item?.dataIndex}
+                      />
+                      <InputSelect
+                        inputOptions={tenureTypeOptions}
+                        inputName={"repaymentTenureType"}
+                        inputValue={item?.repaymentTenureType}
+                        onChange={(selectedOption) =>
+                          handleInterestChange(
+                            index,
+                            "repaymentTenureType",
+                            selectedOption
+                          )
+                        }
+                        isValidation={true}
+                        isIndex={item?.dataIndex}
+                      />
+                    </div>
                   ) : (
                     <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                      {item?.repaymentTenure}
-                    </span>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {editingIndex === index ? (
-                    <InputSelect
-                      inputOptions={tenureTypeOptions}
-                      inputName={"repaymentTenureType"}
-                      inputValue={item?.repaymentTenureType}
-                      onChange={(selectedOption) =>
-                        handleInterestChange(
-                          index,
-                          "repaymentTenureType",
-                          selectedOption
-                        )
-                      }
-                      isValidation={true}
-                      isIndex={item?.dataIndex}
-                    />
-                  ) : (
-                    <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
+                      {item?.repaymentTenure}{" "}
                       {item?.repaymentTenureType
                         ? item?.repaymentTenureType
                         : ""}

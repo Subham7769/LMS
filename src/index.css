@@ -216,6 +216,10 @@ input:focus {
 
 /* Plugins (You still need to include them) */
 
+.form-switch input:checked + label {
+  background-color: #8470ff;
+}
+
 .active {
   @apply text-violet-500;
 }

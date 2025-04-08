@@ -314,7 +314,7 @@ const SideBar = () => {
         aria-hidden="true"
       ></div>
       <div
-        className={`z-40 absolute top-0 left-0 -mr-1 lg:relative overflow-y-auto h-screen no-scrollbar lg:bg-background-light-tertiary flex transform duration-1000 ease-in-out ${
+        className={`z-40 absolute top-0 left-0 -mr-1 lg:relative overflow-y-auto h-screen no-scrollbar lg:bg-gray-100 flex transform duration-1000 ease-in-out ${
           open ? "w-[17rem]" : "lg:w-14 w-0"
         }`}
       >
@@ -343,7 +343,7 @@ const SideBar = () => {
         <ul
           className={`pt-4 border-r h-auto ${
             open ? "w-64 px-4" : "lg:w-10 w-0 pl-1 pr-2"
-          } overflow-y-auto no-scrollbar border-gray-200 bg-white`}
+          } overflow-y-auto no-scrollbar border-gray-200 bg-white transition-all duration-1000 ease-in-out`}
         >
           <div className="w-full flex shrink-0 items-center justify-between lg:w-1/3">
             <LogoIcon

@@ -103,9 +103,18 @@ const ProductConfig = () => {
     TCLDataInfo,
     RecoveryDataInfo,
   ]);
+
+  const SectionCard = ({ title, children }) => (
+    <div className="mb-6">
+      <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
+        {title}
+      </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">{children}</div>
+    </div>
+  );
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-3 gap-5 items-end">
+      <SectionCard title="Basic Information">
         <InputSelect
           labelName="Eligible Customer Type"
           inputOptions={tenureOptions}
@@ -118,17 +127,6 @@ const ProductConfig = () => {
           onChange={handleChange}
           isValidation={true}
           disabled={hasViewOnlyAccess(roleName)}
-        />
-        <InputSelect
-          labelName="RAC"
-          inputOptions={formateDataDropDown(
-            "/loan/dynamic-rac/",
-            RACDataInfo ? RACDataInfo : DynamicRACDataInfo
-          )}
-          inputName="racId"
-          inputValue={productData?.racId}
-          onChange={handleChange}
-          isValidation={true}
         />
         <InputSelect
           labelName="Loan Schema"
@@ -147,6 +145,20 @@ const ProductConfig = () => {
           // isValidation={true}
           // isClearable={true}
         />
+      </SectionCard>
+
+      <SectionCard title="Eligibility & Configuration">
+        <InputSelect
+          labelName="RAC"
+          inputOptions={formateDataDropDown(
+            "/loan/dynamic-rac/",
+            RACDataInfo ? RACDataInfo : DynamicRACDataInfo
+          )}
+          inputName="racId"
+          inputValue={productData?.racId}
+          onChange={handleChange}
+          isValidation={true}
+        />
         <InputSelect
           inputOptions={formateDataDropDown(
             "/loan/recovery/",
@@ -158,15 +170,6 @@ const ProductConfig = () => {
           onChange={handleChange}
           // isValidation={true}
           // isClearable={true}
-        />
-
-        <InputSelect
-          labelName="DBR Config"
-          inputOptions={formateDataDropDown("/loan/dbr-config/", DBRConfigInfo)}
-          inputName="dbcTempId"
-          inputValue={productData?.dbcTempId}
-          onChange={handleChange}
-          isValidation={true}
         />
         <InputSelect
           labelName="Rule Policy"
@@ -182,17 +185,6 @@ const ProductConfig = () => {
           inputOptions={formateDataDropDown("/loan/credit-score/", CSDataInfo)}
           inputName="creditScoreEqTempId"
           inputValue={productData?.creditScoreEqTempId}
-          onChange={handleChange}
-          isValidation={true}
-        />
-        <InputSelect
-          labelName="Eligible Tenure"
-          inputOptions={formateDataDropDown(
-            "/loan/credit-score-eligible-tenure/",
-            CSETDataInfo
-          )}
-          inputName="creditScoreEtTempId"
-          inputValue={productData?.creditScoreEtTempId}
           onChange={handleChange}
           isValidation={true}
         />
@@ -218,6 +210,28 @@ const ProductConfig = () => {
           onChange={handleChange}
           isValidation={true}
         />
+      </SectionCard>
+
+      <SectionCard title="Loan Parameters">
+        <InputSelect
+          labelName="DBR Config"
+          inputOptions={formateDataDropDown("/loan/dbr-config/", DBRConfigInfo)}
+          inputName="dbcTempId"
+          inputValue={productData?.dbcTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Eligible Tenure"
+          inputOptions={formateDataDropDown(
+            "/loan/credit-score-eligible-tenure/",
+            CSETDataInfo
+          )}
+          inputName="creditScoreEtTempId"
+          inputValue={productData?.creditScoreEtTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
         <InputNumber
           labelName="No. of Early Settlement Installments"
           inputName="numberOfEmisForEarlySettlement"
@@ -234,7 +248,7 @@ const ProductConfig = () => {
           onChange={handleChange}
           isValidation={true}
         />
-      </div>
+      </SectionCard>
     </div>
   );
 };

@@ -50,7 +50,6 @@ const TestComponent = lazy(() =>
 const RacPage = lazy(() => import("./pages/RacPage"));
 const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
-const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -628,11 +627,6 @@ const routes = [
       },
 
       // Accessing All Child Components
-      {
-        path: "rac/:racID",
-        element: <NewCreatedRAC />,
-        errorElement: <RouteErrorBoundary />,
-      },
       {
         path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,

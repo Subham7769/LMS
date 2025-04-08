@@ -56,7 +56,7 @@ const Header = () => {
 
   return (
     <header
-      className="border-gray-200 border-b bg-background-light-tertiary dark:bg-gray-900 text-gray-600 dark:text-gray-400 sticky h-14 top-0 left-0 z-30 flex items-center justify-between"
+      className="border-gray-200 border-b bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400 sticky h-14 top-0 left-0 z-30 flex items-center justify-between"
       id="navBarId"
     >
       <div className="flex shrink-0 items-center lg:hidden">

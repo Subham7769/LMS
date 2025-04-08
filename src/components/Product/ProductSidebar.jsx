@@ -7,7 +7,7 @@ const ProductSidebar = () => {
   const { productType, loanProId, projectId } = useParams();
 
   return (
-    <div className="flex flex-nowrap overflow-x-scroll no-scrollbar md:block md:overflow-auto py-6 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700/60 min-w-[10rem] md:space-y-3">
+    <div className="flex flex-nowrap overflow-x-scroll no-scrollbar md:block md:overflow-auto px-3 py-6 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700/60 min-w-[10rem] md:space-y-3">
       {/* Group 1 */}
       <div>
         <ul className="flex flex-nowrap md:block mr-3 md:mr-0">

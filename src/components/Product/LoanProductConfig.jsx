@@ -40,6 +40,7 @@ import {
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import ProductSidebar from "./ProductSidebar";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -244,35 +245,33 @@ const LoanProductConfig = () => {
   return (
     <>
       <DynamicHeader
-        itemName={productData?.productType}
+        itemName={convertToTitleCase(productData?.productType)}
         handleNameUpdate={handleProductNameChange}
         handleDelete={() => handleDeleteLoanProduct(loanProId)}
         loading={loading}
         // error={error}
       />
       <ContainerTile loading={loading}>
-        <div className="bg-white dark:bg-gray-800 mb-8">
-          <div className="flex flex-col md:flex-row md:-mr-px">
-            <ProductSidebar />
-            <div className="flex-grow">
-              <div className="py-5 pl-5">
-                <Outlet context={{ productData, handleChange }} />
-              </div>
-              <div className="border-t border-gray-200 dark:border-gray-700/60">
-                {!hasViewOnlyAccess(roleName) ? (
-                  <div className="text-right mt-5">
-                    <Button
-                      buttonIcon={CheckCircleIcon}
-                      buttonName="Save"
-                      onClick={handleSave}
-                      rectangle={true}
-                      buttonType={"primary"}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
+        <div className="flex flex-col md:flex-row md:-mr-px">
+          <ProductSidebar />
+          <div className="flex-grow">
+            <div className="p-5">
+              <Outlet context={{ productData, handleChange }} />
+            </div>
+            <div className="border-t border-gray-200 dark:border-gray-700/60 px-6 py-5">
+              {!hasViewOnlyAccess(roleName) ? (
+                <div className="text-right">
+                  <Button
+                    buttonIcon={CheckCircleIcon}
+                    buttonName="Save"
+                    onClick={handleSave}
+                    rectangle={true}
+                    buttonType={"primary"}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>
