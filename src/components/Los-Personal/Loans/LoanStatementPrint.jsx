@@ -244,27 +244,21 @@ const LoanStatementPrint = () => {
                 <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
                   Above 89 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
-                  Outright Settlement Balance
-                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(loanStatement["0-29Days"])}
+                  {formatNumber(loanStatement.days0to29)}
                 </td>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(loanStatement["30-59Days"])}
+                  {formatNumber(loanStatement.days30to59)}
                 </td>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(loanStatement["60-89Days"])}
+                  {formatNumber(loanStatement.days60to89)}
                 </td>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.above89Days)}
-                </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(loanStatement.outrightSettlementBalance)}
                 </td>
               </tr>
             </tbody>
