@@ -376,6 +376,8 @@ const DynamicRAC = () => {
               </div>
             )}
           </div>
+
+          {/* Utility Functions */}
           <div className="flex justify-between items-center">
             <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
               <div className="flex gap-2"></div>
@@ -429,6 +431,8 @@ const DynamicRAC = () => {
               )}
             </div>
           </div>
+          
+          {/* Drag and Drop Context */}
           <div className={`flex items-start "max-h-screen"`}>
             <div
               className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-screen overflow-hidden pb-20`}

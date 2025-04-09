@@ -52,11 +52,9 @@ const AddBulkRepayment = () => {
     console.log(loanId, userId);
 
     if (userId && loanId) {
-      dispatch(fetchClosingBalance({ userId, loanId }));
+      dispatch(fetchClosingBalance({ userId, loanId, rowIndex }));
     }
-    dispatch(
-      updateBulkRepaymentData({ rowIndex, fieldName: "userId", value: userId })
-    );
+    dispatch(updateBulkRepaymentData({ rowIndex, fieldName: "userId", value: userId }));
     dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value: value }));
   };
 

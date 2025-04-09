@@ -292,6 +292,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
         />
       </div>
 
+      {/* Upfront Fee */}
       <div>
         <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Upfront Fee</span>
         <div className="border-t-2">
@@ -333,10 +334,11 @@ const ProductInputFields = ({ productData, handleChange }) => {
         </div>
       </div>
 
+      {/* Options */}
       <div>
         <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Options</span>
         <div className="border-t-2 py-2">
-          <div className="grid grid-cols-6 gap-5 items-end py-2 ">
+          <div className="grid grid-cols-5 gap-5 items-end py-2 ">
             <InputCheckbox
               labelName="Overdraft"
               inputChecked={productData?.overdraft}
@@ -348,12 +350,6 @@ const ProductInputFields = ({ productData, handleChange }) => {
               labelName="Refinanced With"
               inputChecked={productData?.refinancedWith}
               onChange={handleChange}
-              inputName="refinancedWith"
-            />
-            <InputCheckbox
-              labelName="RTN"
-              inputChecked={false}
-              onChange={() => { }}
               inputName="refinancedWith"
             />
             <InputCheckbox

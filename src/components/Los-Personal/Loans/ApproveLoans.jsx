@@ -67,7 +67,7 @@ const ApproveLoans = () => {
 
   const navigate = useNavigate();
 
-  console.log(userData.username)
+  console.log(userData.username);
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
@@ -87,7 +87,6 @@ const ApproveLoans = () => {
       })
     );
   };
-
 
   const handleSearch = async () => {
     //if empty palSearchBy or palSearchValue then display a message (otherwise API will return java runtime error)
@@ -176,9 +175,8 @@ const ApproveLoans = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    navigate(
-      `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
-    );
+    const printUrl = `/loan-agreement/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
@@ -211,11 +209,7 @@ const ApproveLoans = () => {
         <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
           <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
             <div className="text-xl font-semibold flex gap-2 items-center">
-              <UserCircleIcon
-                className="-ml-0.5 h-5 w-5"
-                aria-hidden="true"
-              />
-
+              <UserCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
               Borrower Information{" "}
               <p
                 className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
@@ -404,11 +398,14 @@ const ApproveLoans = () => {
     const filteredApproveLoansDataFunction = () => {
       if (!approveLoans) return [];
 
-      const filteredData = approveLoans.filter(item =>
-        // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
-        !item?.loanActionDetailsList?.some(loanItem =>
-          loanItem?.recommendedBy === userData.username || loanItem?.rejectedBy === userData.username
-        )
+      const filteredData = approveLoans.filter(
+        (item) =>
+          // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
+          !item?.loanActionDetailsList?.some(
+            (loanItem) =>
+              loanItem?.recommendedBy === userData.username ||
+              loanItem?.rejectedBy === userData.username
+          )
       );
 
       return transformData(filteredData);
@@ -416,8 +413,6 @@ const ApproveLoans = () => {
 
     setFilteredApproveLoansData(filteredApproveLoansDataFunction());
   }, [approveLoans, roleName, userData]);
-
-
 
   return (
     <div className={`flex flex-col gap-3`}>
@@ -495,7 +490,6 @@ const ApproveLoans = () => {
           onClose={() => setIsViewPopupOpen(false)}
         />
       )}
-
     </div>
   );
 };
