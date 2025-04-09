@@ -1,0 +1,186 @@
+import React, { useEffect, useState } from "react";
+//import HoverButton from "../Common/HoverButton/HoverButton";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import Button from "../Common//Button/Button";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
+import Pagination from "../Common/Pagination/Pagination";
+import { convertDate } from "../../utils/convertDate";
+
+import {
+  generateLoanApplicationId,
+  getLoanApplications,
+  getLoanApplicationsByID,
+  cancelLoanApplicationsByID,
+  getLoanApplicationByField,
+  resetAddLoanData,
+  deleteLoanOffers,
+} from "../../redux/Slices/personalLoansSlice";
+import convertToTitleCase from "../../utils/convertToTitleCase";
+import { hasViewOnlyAccessGroup3 } from "../../utils/roleUtils";
+import store from "../../redux/store";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../redux/Slices/validationSlice";
+import Onboarding01 from './Onboarding/Onboarding01';
+import Onboarding02 from './Onboarding/Onboarding02';
+import Onboarding03 from './Onboarding/Onboarding03';
+import LoanOffer from './Onboarding/LoanOffer';
+
+
+function transformData(inputArray) {
+  return inputArray.map((item) => ({
+    loanApplicationId: item?.loanApplicationId,
+    uniqueID: item?.generalLoanDetails?.uniqueID,
+    borrowerName: item?.borrowerName,
+    creationDate: convertDate(item?.creationDate),
+    lastUpdate: item?.lastUpdate ? convertDate(item?.lastUpdate) : " - ",
+    status: convertToTitleCase(item?.status),
+  }));
+}
+
+const LoanApplication = () => {
+  const dispatch = useDispatch();
+  const [plaSearchValue, setPlaSearchValue] = useState("");
+  const [plaSearchBy, setPlaSearchBy] = useState("");
+  const navigate = useNavigate();
+  const { loanApplications, loading, loanApplicationsTotalElements } =
+    useSelector((state) => state.personalLoans);
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearValidationError());
+    };
+  }, [dispatch]);
+
+  const dispatcherFunction = (currentPage, pageSize) => {
+    dispatch(getLoanApplications({ page: currentPage, size: pageSize }));
+  };
+
+  const searchOptions = [
+    { label: "Loan Application Id", value: "loanApplicationId" },
+    { label: "Unique ID", value: "uniqueID" },
+  ];
+
+  const columns = [
+    { label: "Loan Application ID", field: "loanApplicationId" },
+    { label: "Borrower Name", field: "borrowerName" },
+    { label: "Unique ID", field: "uniqueID" },
+    { label: "Created Date", field: "creationDate" },
+    { label: "Last Updated", field: "lastUpdate" },
+    { label: "Status", field: "status" },
+  ];
+
+  const loanApplicationsData = transformData(loanApplications);
+
+  const handleSearch = async () => {
+    await dispatch(
+      validateForm({ plaSearchBy: plaSearchBy, plaSearchValue: plaSearchValue })
+    );
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(
+        getLoanApplicationByField({ field: plaSearchBy, value: plaSearchValue })
+      );
+    }
+    // setPlaSearchBy("");
+    // setPlaSearchValue("");
+  };
+
+  const handleReset = () => {
+    setPlaSearchBy("");
+    setPlaSearchValue("");
+    dispatch(getLoanApplications({ page: 0, size: 20 }));
+  };
+
+  const handleNewApplication = async () => {
+    dispatch(resetAddLoanData());
+    try {
+      const loanApplicationId = await dispatch(
+        generateLoanApplicationId()
+      ).unwrap();
+      navigate(
+        `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
+      );
+    } catch (error) {
+      console.error("Failed to generate loan application ID:", error);
+    }
+  };
+
+  const handleEditApplication = async (rowData) => {
+    navigate(
+      `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
+    );
+    if (rowData.status === "Submitted" || rowData.status === "In Progress") {
+      await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
+    }
+    await dispatch(
+      getLoanApplicationsByID(rowData?.loanApplicationId)
+    ).unwrap();
+  };
+
+  const handleRejectApplication = async (loanApplicationId) => {
+    await dispatch(cancelLoanApplicationsByID(loanApplicationId)).unwrap();
+    dispatch(getLoanApplications({ page: 0, size: 20 }));
+  };
+
+  const renderActionList = (rowData) => {
+    if (
+      rowData.status === "Completed" ||
+      rowData.status === "Cancel" ||
+      hasViewOnlyAccessGroup3(roleName)
+    ) {
+      return <div className="py-6">-</div>;
+    }
+    return (
+      <div className="flex justify-center gap-4 px-5">
+        <Button
+          onClick={() => handleEditApplication(rowData)}
+          buttonIcon={PencilIcon}
+          circle={true}
+          className={`mt-4 h-fit self-center`}
+          buttonType="secondary"
+        />
+        <Button
+          onClick={() => handleRejectApplication(rowData.loanApplicationId)}
+          buttonIcon={TrashIcon}
+          circle={true}
+          className={`mt-4 h-fit self-center`}
+          buttonType="destructive"
+        />
+      </div>
+    );
+  };
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
+
+  const nextStep = (data) => {
+    setFormData(prev => ({ ...prev, ...data }));
+    setStep(prev => prev + 1);
+  };
+  const prevStep = () => {
+    setStep(prev => Math.max(prev - 1, 1));
+  };
+  const steps = {
+    1: <Onboarding01 onNext={nextStep} defaultData={formData} />,
+    2: <Onboarding02 onNext={nextStep} onBack={prevStep} defaultData={formData} />,
+    3: <Onboarding03 onNext={nextStep} onBack={prevStep} defaultData={formData} />,
+    4: <LoanOffer onBack={prevStep} formData={formData} />,
+  };
+  
+  
+  return <>{steps[step]}</>;
+
+};
+
+export default LoanApplication;

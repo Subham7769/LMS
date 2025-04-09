@@ -11,7 +11,7 @@ const ContainerTile = ({
     <div
       className={`${
         defaultClass
-          ? "shadow-md bg-white border border-gray-tertiary rounded-xl pb-8 pt-6 px-5"
+          ? "bg-white dark:bg-gray-800 shadow-xs rounded-xl mb-8"
           : ""
       }  ${!loading && !error ? className : ""}`}
     >

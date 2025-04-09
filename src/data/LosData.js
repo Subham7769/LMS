@@ -84,7 +84,7 @@ export const BorrowersList = [
     totalPaid: "$5000",
     openLoans: "$10000",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     fullName: "Jack",
@@ -95,7 +95,7 @@ export const BorrowersList = [
     totalPaid: "$3000",
     openLoans: "$7000",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     fullName: "Julie",
@@ -106,7 +106,7 @@ export const BorrowersList = [
     totalPaid: "$4000",
     openLoans: "$8000",
     status: "Inactive",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
 ];
 
@@ -117,7 +117,7 @@ export const BorrowersGroupList = [
     groupLeader: "Tahseen",
     collector: "A",
     Meeting: "2",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     groupName: "BNPL Group",
@@ -125,7 +125,7 @@ export const BorrowersGroupList = [
     groupLeader: "Tahseen",
     collector: "B",
     Meeting: "3",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     groupName: "Overdraft Group",
@@ -133,7 +133,7 @@ export const BorrowersGroupList = [
     groupLeader: "Tahseen",
     collector: "C",
     Meeting: "4",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
 ];
 
@@ -258,6 +258,7 @@ export const accountType = [
 export const uniqueIDType = [
   { value: "PASSPORT", label: "PASSPORT" },
   { value: "NRC", label: "NRC" },
+  { value: "EMAIL", label: "EMAIL" },
   // { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
   // { value: "NATIONAL ID", label: "NATIONAL ID" },
   // { value: "VOTER ID", label: "VOTER ID" },

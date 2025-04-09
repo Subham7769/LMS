@@ -4,10 +4,8 @@ import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
-
 import {
   interestMethodOptions,
-  options,
   tenureOptions,
   tenureTypeOptions,
 } from "../../data/OptionsData";
@@ -152,7 +150,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
   return (
     <div className="flex flex-col gap-5">
 
-      <div className="grid grid-cols-5 gap-5 items-end">
+      <div className="grid grid-cols-4 gap-5 items-end">
         <InputSelect
           labelName="Eligible Customer Type"
           inputOptions={tenureOptions}

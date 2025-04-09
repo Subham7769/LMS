@@ -18,6 +18,7 @@ import {
   fetchCreditScoreEligibleTenureData,
   fetchDynamicRacData,
   fetchReportingConfigData,
+  toggleSidebar,
 } from "../../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
 
@@ -91,6 +92,9 @@ const CreateNew = ({
       dispatch(dispatcherFunction());
       setEditing(false);
       setName("");
+      if (window.innerWidth < 1024) {
+        dispatch(toggleSidebar());
+      }
     }
   };
 
@@ -116,7 +120,7 @@ const CreateNew = ({
     </div>
   ) : (
     <div
-      className="text-gray-500 pl-5 pr-1 w-full text-xs flex items-center justify-between cursor-pointer rounded-md hover:bg-background-light-secondary hover:text-blue-primary"
+      className="text-gray-500/90 pl-[3.25rem] pr-3 w-full text-sm flex items-center justify-between cursor-pointer rounded-md hover:text-text-light-secondary"
       onClick={() => {
         editable ? setEditing(!isEditing) : navigate(navigateSuccess);
       }}

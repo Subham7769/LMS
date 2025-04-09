@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import AppLayoutB2C from "./components/AppLayout/AppLayoutB2C";
 
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
@@ -49,7 +50,6 @@ const TestComponent = lazy(() =>
 const RacPage = lazy(() => import("./pages/RacPage"));
 const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
-const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -97,6 +97,10 @@ const CreateNewProduct = lazy(() =>
 const LoanProductConfig = lazy(() =>
   import("./components/Product/LoanProductConfig")
 );
+const ProductConfig = lazy(() => import("./components/Product/ProductConfig"));
+const UpfrontFee = lazy(() => import("./components/Product/UpfrontFee"));
+const Options = lazy(() => import("./components/Product/Options"));
+const InterestTenure = lazy(() => import("./components/Product/InterestTenure"));
 
 // CreditScoreET Imports
 const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
@@ -245,9 +249,7 @@ const ServerConfig = lazy(() =>
 );
 
 //App Config imports
-const AppConfig = lazy(() =>
-  import("./components/AppConfig/AppConfig")
-);
+const AppConfig = lazy(() => import("./components/AppConfig/AppConfig"));
 
 // Reporting Config imports
 const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
@@ -464,6 +466,11 @@ const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
 const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
+const CustomerLoanApplication = React.lazy(() => import("./components/B2CCustomer/LoanApplication"));
+const Onboarding01 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding01"));
+const Onboarding02 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding02"));
+const Onboarding03 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding03"));
+
 
 const routes = [
   // Accessing All Main Components
@@ -621,11 +628,6 @@ const routes = [
 
       // Accessing All Child Components
       {
-        path: "rac/:racID",
-        element: <NewCreatedRAC />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
         path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,
         errorElement: <RouteErrorBoundary />,
@@ -641,9 +643,31 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "loan-product/:productType/loan-product-config/:projectId/:loanProId",
+        path: "loan-product/:productType/:projectId/:loanProId",
         element: <LoanProductConfig />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "product-config",
+            element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upfront-fee",
+            element: <UpfrontFee />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "options",
+            element: <Options />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-tenure",
+            element: <InterestTenure />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "credit-score-eligible-tenure/:creditScoreETId",
@@ -1329,6 +1353,43 @@ const routes = [
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
+ 
+  //Lead Capture, Customer loan application Route
+ {
+  path: "/customer",
+  element: (
+    <PageErrorBoundary>
+      <ProtectedRoute>
+        <AppLayoutB2C />
+      </ProtectedRoute>
+    </PageErrorBoundary>
+  ),
+  children: [
+    {
+      path: "loan-application",
+      element: <CustomerLoanApplication />,
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: "loan-application/step01",
+      element: <Onboarding01 />,
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: "loan-application/step02",
+      element: <Onboarding02 />,
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: "loan-application/step03",
+      element: <Onboarding03 />,
+      errorElement: <RouteErrorBoundary />,
+    },            
+  ],
+},
+
+// Catch-All Route for 404 Page Not Found
+{ path: "*", element: <PageNotFound /> },
 ];
 
 const appRouter = createBrowserRouter(routes);

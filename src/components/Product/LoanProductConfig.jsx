@@ -6,7 +6,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
@@ -39,6 +39,8 @@ import {
 } from "../../redux/Slices/notificationSlice";
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import ProductSidebar from "./ProductSidebar";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -130,7 +132,7 @@ const LoanProductConfig = () => {
         } else {
           const updatedProductData = {
             ...productData,
-            routingLink: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProId}`,
+            routingLink: `/loan/loan-product/${productType}/${projectId}/${loanProId}`,
             updateMap: updateMap,
             section: "Product",
           };
@@ -161,9 +163,7 @@ const LoanProductConfig = () => {
           newName,
         })
       );
-      navigate(
-        `/loan/loan-product/${newName}/loan-product-config/${projectId}/${loanProId}`
-      );
+      navigate(`/loan/loan-product/${newName}/${projectId}/${loanProId}`);
       dispatch(fetchData(newName));
       dispatch(fetchProductData());
     } catch (error) {
@@ -245,297 +245,35 @@ const LoanProductConfig = () => {
   return (
     <>
       <DynamicHeader
-        itemName={productData?.productType}
+        itemName={convertToTitleCase(productData?.productType)}
         handleNameUpdate={handleProductNameChange}
         handleDelete={() => handleDeleteLoanProduct(loanProId)}
         loading={loading}
         // error={error}
       />
       <ContainerTile loading={loading}>
-        <ProductInputFields
-          productData={productData}
-          handleChange={handleChange}
-        />
-        <div className="">
-          <table className="w-full divide-y divide-gray-200 border border-border-gray-primary">
-            <thead className="bg-background-light-secondary">
-              <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    scope="col"
-                    onClick={
-                      column.sortable ? () => handleSort(column.key) : null
-                    }
-                    className={column.sortable ? "cursor-pointer" : ""}
-                  >
-                    <div className="px-6 py-3 text-left text-[10px] font-medium text-text-light-primary uppercase tracking-wider flex">
-                      {column.label}{" "}
-                      {column.sortable && getSortIcon(column.key)}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.length < 1 ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No Data To Show Yet
-                  </td>
-                </tr>
-              ) : (
-                currentItems?.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputText
-                          inputName={"interestRate"}
-                          inputValue={item?.interestRate}
-                          onChange={(e) =>
-                            handleInterestChange(
-                              index,
-                              "interestRate",
-                              e.target.value
-                            )
-                          }
-                          placeHolder="2%"
-                          isValidation={true}
-                          isIndex={item?.dataIndex}
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item?.interestRate}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputSelect
-                          inputOptions={tenureTypeOptions}
-                          inputName={"interestPeriodType"}
-                          inputValue={item?.interestPeriodType}
-                          onChange={(selectedOption) =>
-                            handleInterestChange(
-                              index,
-                              "interestPeriodType",
-                              selectedOption
-                            )
-                          }
-                          isValidation={true}
-                          isIndex={item?.dataIndex}
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item?.interestPeriodType
-                            ? item?.interestPeriodType
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputNumber
-                          inputName={"loanTenure"}
-                          inputValue={item?.loanTenure}
-                          onChange={(e) =>
-                            handleInterestChange(
-                              index,
-                              "loanTenure",
-                              e.target.value
-                            )
-                          }
-                          placeHolder="3"
-                          isValidation={true}
-                          isIndex={item?.dataIndex}
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item?.loanTenure}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputSelect
-                          inputOptions={tenureTypeOptions}
-                          inputName={"loanTenureType"}
-                          inputValue={item?.loanTenureType}
-                          onChange={(selectedOption) =>
-                            handleInterestChange(
-                              index,
-                              "loanTenureType",
-                              selectedOption
-                            )
-                          }
-                          isValidation={true}
-                          isIndex={item?.dataIndex}
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item?.loanTenureType ? item?.loanTenureType : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputNumber
-                          // inputName={`repaymentTenure-${index}`}
-                          inputName={"repaymentTenure"}
-                          inputValue={item?.repaymentTenure}
-                          onChange={(e) =>
-                            handleInterestChange(
-                              index,
-                              "repaymentTenure",
-                              e.target.value
-                            )
-                          }
-                          placeHolder="3"
-                          isValidation={true}
-                          isIndex={item?.dataIndex}
-                          // showError={validationError.repaymentTenure}
-                          // onFocus={() =>
-                          //   dispatch(
-                          //     setValidationError({
-                          //       ...validationError,
-                          //       repaymentTenure: false,
-                          //     })
-                          //   )
-                          // }
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item?.repaymentTenure}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <InputSelect
-                          inputOptions={tenureTypeOptions}
-                          inputName={"repaymentTenureType"}
-                          inputValue={item?.repaymentTenureType}
-                          onChange={(selectedOption) =>
-                            handleInterestChange(
-                              index,
-                              "repaymentTenureType",
-                              selectedOption
-                            )
-                          }
-                          isValidation={true}
-                          isIndex={item?.dataIndex}
-                        />
-                      ) : (
-                        <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item?.repaymentTenureType
-                            ? item?.repaymentTenureType
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    {!hasViewOnlyAccess(roleName) ? (
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                        <button
-                          onClick={() => {
-                            toggleEdit(index);
-                            dispatch(setUpdateMap("interestEligibleTenure"));
-                          }}
-                          type="button"
-                        >
-                          {editingIndex === index ? (
-                            <div
-                              // onClick={informUser}
-                              className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
-                            >
-                              <CheckCircleIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">
-                              <PencilIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </div>
-                          )}
-                        </button>
-                        <Button
-                          buttonIcon={TrashIcon}
-                          onClick={() => handleDelete(index)}
-                          circle={true}
-                          buttonType="destructive"
-                        />
-                      </td>
-                    ) : (
-                      ""
-                    )}
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <Button
-              buttonIcon={ChevronLeftIcon}
-              onClick={
-                currentPage === 1
-                  ? () => {}
-                  : () => handlePageChange(currentPage - 1)
-              }
-              rectangle={true}
-              className={`
-          ${
-            currentPage === 1
-              ? "bg-background-light-primary cursor-not-allowed"
-              : ""
-          }
-        `}
-              disabled={currentPage === 1}
-              buttonType="secondary"
-            />
-
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-
-            <Button
-              buttonIcon={ChevronRightIcon}
-              onClick={
-                currentPage === totalPages || currentItems.length < 1
-                  ? () => {}
-                  : () => handlePageChange(currentPage + 1)
-              }
-              rectangle={true}
-              className={`
-          ${
-            currentPage === totalPages || currentItems.length < 1
-              ? "bg-background-light-primary cursor-not-allowed"
-              : ""
-          }
-        `}
-              disabled={currentPage === totalPages || currentItems.length < 1}
-              buttonType="secondary"
-            />
-          </div>
-
-          {!hasViewOnlyAccess(roleName) ? (
-            <div className="text-right mt-5">
-              <Button
-                buttonIcon={CheckCircleIcon}
-                buttonName="Save"
-                onClick={handleSave}
-                rectangle={true}
-                buttonType={"primary"}
-              />
+        <div className="flex flex-col md:flex-row md:-mr-px">
+          <ProductSidebar />
+          <div className="flex-grow">
+            <div className="p-5">
+              <Outlet context={{ productData, handleChange }} />
             </div>
-          ) : (
-            ""
-          )}
+            <div className="border-t border-gray-200 dark:border-gray-700/60 px-6 py-5">
+              {!hasViewOnlyAccess(roleName) ? (
+                <div className="text-right">
+                  <Button
+                    buttonIcon={CheckCircleIcon}
+                    buttonName="Save"
+                    onClick={handleSave}
+                    rectangle={true}
+                    buttonType={"primary"}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
         </div>
       </ContainerTile>
     </>

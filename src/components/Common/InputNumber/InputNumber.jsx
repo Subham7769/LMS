@@ -11,8 +11,6 @@ import {
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 
-
-
 const InputNumber = ({
   labelName,
   inputName,
@@ -62,7 +60,7 @@ const InputNumber = ({
       dispatch(addUpdateFields({ inputName }));
     }
   }, [inputName, dispatch]);
-  
+
   const handleKeyDown = (e) => {
     const allowedKeys = [
       "Backspace",
@@ -73,13 +71,13 @@ const InputNumber = ({
       "Home",
       "End",
     ];
-  
+
     const key = e.key;
     const currentValue = inputValue?.toString() || "";
-  
+
     const isNumberKey = /^[0-9.]$/.test(key);
     const alreadyHasDot = currentValue.includes(".");
-  
+
     // Disallow extra dot or non-numeric keys
     if (
       (!isNumberKey && !allowedKeys.includes(key)) ||
@@ -87,7 +85,7 @@ const InputNumber = ({
     ) {
       e.preventDefault();
     }
-  
+
     // Disallow input beyond maxLength (if set)
     if (
       maxLength &&
@@ -97,7 +95,7 @@ const InputNumber = ({
       e.preventDefault();
     }
   };
-  
+
   const handleChange = (e) => {
     const { name, value, id } = e.target;
     onChange({
@@ -114,8 +112,8 @@ const InputNumber = ({
       {labelName && (
         <label
           className={`block ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-sm font-semibold`}
+            validationError[validationKey] ? "text-red-600" : "text-gray-600"
+          } px-1 text-sm font-medium`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Field required" : labelName}{" "}
@@ -155,13 +153,9 @@ const InputNumber = ({
           style={{
             appearance: "none", // General rule for most modern browsers
           }}
-          className={`flex-1 h-10 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
-            ${
-              validationError[validationKey]
-                ? "ring-red-600 focus:ring-red-600"
-                : "ring-gray-300 focus:ring-indigo-600"
-            } 
-            focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`} // Conditionally apply red or indigo focus ring
+          className={`form-input  w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
+            ${validationError[validationKey] ? "border-red-300" : ""} 
+            `}
           required
           disabled={disabled}
           maxLength={maxLength}

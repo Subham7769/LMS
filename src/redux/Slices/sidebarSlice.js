@@ -92,7 +92,7 @@ export const fetchAffordibilityData = createAsyncThunk(
       return data.map(({ name, affordabilityCriteriaTempId }) => ({
         name: name.replace(/-/g, " "),
         href: "/loan/affordability/" + affordabilityCriteriaTempId,
-        default: name === "CRITERIA_DEFAULT_TEMP"
+        default: name === "CRITERIA_DEFAULT_TEMP",
       }));
     };
     try {
@@ -190,7 +190,7 @@ export const fetchProductData = createAsyncThunk(
           interestEligibleTenure,
         }) => ({
           name: convertToTitleCase(productType),
-          href: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
+          href: `/loan/loan-product/${productType}/${projectId}/${loanProductId}/product-config`,
           customerType: convertToTitleCase(eligibleCustomerType),
           loanSchema: projectId,
           eligbleTenure: interestEligibleTenure.length,

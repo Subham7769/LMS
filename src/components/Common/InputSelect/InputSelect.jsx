@@ -11,6 +11,7 @@ import {
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
+import { color } from "framer-motion";
 
 const InputSelect = ({
   labelName,
@@ -58,14 +59,23 @@ const InputSelect = ({
           ? "1rem"
           : "0.875rem", // Change font size
       fontFamily: "inherit", // Set font to inherit
-      padding: 6,
+      padding: "8px 12px",
+      backgroundColor: "#fff",
+      color: state.isSelected ? "#8e51ff" : "#4a5565", 
+      fontWeight: 500,
+      borderBottom: "1px solid #e2e8f0",
+      "&:hover": {
+        backgroundColor: "#f9fafb",
+        color: state.isSelected ? "#8e51ff" : "#4a5565",
+      },
     }),
     control: (provided) => ({
       ...provided,
-      border: "1px solid #ccc",
-      height: "30px",
+      border: "1px solid #e5e7eb",
       padding: 0,
       boxShadow: "none",
+      height: 28,
+      borderRadius: "0.5rem",
       "&:hover": {
         border: "1px solid #aaa",
       },
@@ -73,6 +83,10 @@ const InputSelect = ({
     menu: (provided) => ({
       ...provided,
       zIndex: 9999, // Ensure menu appears above other elements
+      boxShadow:
+        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // Tailwind's shadow-lg
+      borderRadius: "0.5rem", // Optional: match rounded-lg
+      border: "1px solid #e5e7eb",
     }),
     placeholder: (provided) => ({
       ...provided,
@@ -84,7 +98,7 @@ const InputSelect = ({
           ? "1rem"
           : "0.875rem", // Convert px to rem
       color: "#9ca3af", // Equivalent to Tailwind's text-gray-400
-    }),    
+    }),
     singleValue: (provided) => ({
       ...provided,
       fontSize:
@@ -93,6 +107,26 @@ const InputSelect = ({
           : dropdownTextSize === "large"
           ? "1rem"
           : "0.875rem", // Change font size
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: "#9ca3af", // Tailwind's text-gray-400
+      "&:hover": {
+        color: "#9ca3af", // maintain the same color on hover
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none", // safety check for visual separation
+    }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      display: "flex",
+      backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
+      color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
+      // overflow: "hidden",
+      // whiteSpace: "nowrap",
+      // height: "28px",
+      // alignItems: "center",
     }),
   };
 
@@ -119,11 +153,14 @@ const InputSelect = ({
   }, [inputName, dispatch]);
 
   return (
-    <div className="flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex flex-col shadow-l"
+      onClick={(e) => e.stopPropagation()}
+    >
       {labelName && (
         <label
-          className={`block text-sm font-semibold ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
+          className={`block text-sm font-medium ${
+            validationError[validationKey] ? "text-red-600" : "text-gray-600"
           } px-1`}
           htmlFor={inputName}
         >
@@ -135,6 +172,48 @@ const InputSelect = ({
         name={inputName}
         styles={customStyles} // Apply custom styles
         options={inputOptions}
+        getOptionLabel={(e) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {e.label}
+            {e.value === inputValue && (
+              <span
+                style={{
+                  marginLeft: "auto",
+                }}
+              >
+                <svg
+                  className="shrink-0 mr-2 fill-current text-violet-500"
+                  width="12"
+                  height="9"
+                  viewBox="0 0 12 9"
+                >
+                  <path d="M10.28.28L3.989 6.575 1.695 4.28A1 1 0 00.28 5.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28.28z" />
+                </svg>
+              </span>
+            )}
+          </div>
+        )}
+        components={{
+          SingleValue: ({ data, innerRef, innerProps }) => (
+            <div
+              ref={innerRef}
+              {...innerProps}
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontSize:
+                  dropdownTextSize === "small"
+                    ? "0.875rem"
+                    : dropdownTextSize === "large"
+                    ? "1rem"
+                    : "0.875rem", // Convert px to rem
+              }}
+            >
+              {data.label}
+            </div>
+          ),
+        }}
         value={
           isMulti
             ? inputValue

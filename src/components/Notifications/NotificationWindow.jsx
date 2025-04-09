@@ -4,7 +4,6 @@ import Button from "../Common/Button/Button";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdInfo, MdOutlineAddTask } from "react-icons/md";
 import { AiOutlineSetting } from "react-icons/ai";
-import { BsBell } from "react-icons/bs";
 import {
   fetchNotifications,
   updateNotificationStatus,
@@ -13,6 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import convertToReadableString from "../../utils/convertToReadableString";
+import { BellIcon } from "@heroicons/react/24/outline";
 
 const NotificationWindow = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -196,23 +196,23 @@ const NotificationWindow = () => {
   return (
     <div className="relative" ref={notificationRef}>
       <button
-        className="p-2 rounded-full hover:bg-background-light-secondary transition-colors duration-200 relative"
+        className="p-2 rounded-full hover:bg-background-light-primary transition-colors duration-200 relative"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle notifications"
         aria-expanded={isOpen}
       >
-        <BsBell size={24} className="text-gray-600" />
+        <BellIcon className="text-gray-500/80 h-5 w-5" />
         {notifications.length >= 1 && (
-          <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+          <span className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
             {notifications.length}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute -right-20 mt-2 w-96 max-w-[96vw] bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right z-50">
-          <div className="p-4 py-3 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">
+        <div className="absolute -right-48 lg:-right-20 mt-2 w-[80vw] lg:w-96 max-w-[96vw] bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right z-50">
+          <div className="p-4 py-3 ">
+            <h2 className="text-xs font-semibold text-text-light-quaternary uppercase">
               Notifications
             </h2>
           </div>
