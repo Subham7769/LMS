@@ -37,6 +37,7 @@ import {
   updateEmployerData,
   deleteEmployerData,
 } from "../../../redux/Slices/employerSlice";
+import { useLocation } from "react-router-dom";
 
 const AddUpdateBorrowerFields = ({
   BorrowerData,
@@ -48,6 +49,10 @@ const AddUpdateBorrowerFields = ({
   const { employerData, allEmployerData, loading, error } = useSelector(
     (state) => state.employer
   );
+  const location = useLocation();
+
+  const isUpdateBorrower = location.pathname.includes('update-borrower') ;
+  const isDraftBorrower = location.pathname.includes('update-borrower/draft') ;
 
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -103,7 +108,7 @@ const AddUpdateBorrowerFields = ({
       "kinSurname",
       // "kinNrcNo",
       "kinGender",
-      "kinRelationship",
+      // "kinRelationship",
       "kinMobile1",
       // "kinEmail",
       "kinStreet",
@@ -343,6 +348,7 @@ const AddUpdateBorrowerFields = ({
       inputName: "uniqueID",
       type: "text",
       validation: true,
+      disabled: isUpdateBorrower && !isDraftBorrower,
     },
     {
       labelName: "Nationality",

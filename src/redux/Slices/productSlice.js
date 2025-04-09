@@ -275,6 +275,7 @@ const productSlice = createSlice({
     },
     setProductData: (state, action) => {
       const { productType } = action.payload;
+      state.loading = false;
       state.productData = {
         ...productInitialState.productData, // Reset to initial state
         ...action.payload, // Apply the new changes
