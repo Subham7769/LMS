@@ -33,7 +33,12 @@ import {
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
-import { uploadSignedLoanAgreement } from "../../../redux/Slices/personalLoansSlice";
+import {
+  getDisbursementFile,
+  getLoanStatement,
+  getOutrightSettlement,
+  uploadSignedLoanAgreement,
+} from "../../../redux/Slices/personalLoansSlice";
 import {
   clearValidationError,
   validateForm,
@@ -136,9 +141,6 @@ const LoanHistory = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    // navigate(
-    //   `/loan/loan-origination-system/sme/loans/loan-agreement/${loanId}/${uid}`
-    // );
     const printUrl = `/loan-agreement-sme/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
@@ -147,13 +149,13 @@ const LoanHistory = () => {
   const handleLoanStatement = async (loanId, uid) => {
     const printUrl = `/loan-statement-sme/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
-    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+    await dispatch(getLoanStatement({ loanId, uid })).unwrap();
   };
 
   const handleOutrightSettlement = async (loanId, uid) => {
     const printUrl = `/outright-settlement-sme/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
-    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+    await dispatch(getOutrightSettlement({ loanId, uid })).unwrap();
   };
 
   const handleRefinanceLoan = async (loanId, uid, uniqueID) => {
@@ -169,7 +171,7 @@ const LoanHistory = () => {
   const handleDisbursementFile = async (loanId, uid) => {
     const printUrl = `/disbursement-sme/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
-    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+    await dispatch(getDisbursementFile({ loanId, uid })).unwrap();
   };
 
   const searchOptions = [
@@ -228,15 +230,21 @@ const LoanHistory = () => {
     },
   ];
 
+  const excludedForPendingOrCanceled = [
+    "Loan Statement",
+    "Disbursement File",
+    "Outright Settlement",
+  ];
+
   const renderExpandedRow = (rowData) => {
-    const filteredUserNavigation = userNavigation.filter(
-      (item) =>
-        !(
-          item.name === "Disbursement File" &&
-          (rowData.loanStatus === "PENDING" ||
-            rowData.loanStatus === "CANCELED")
-        )
-    );
+    const { loanStatus } = rowData;
+
+    const filteredUserNavigation = userNavigation.filter((item) => {
+      if (["PENDING", "CANCELED"].includes(loanStatus)) {
+        return !excludedForPendingOrCanceled.includes(item.name);
+      }
+      return true;
+    });
     return (
       <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
         <div className="grid grid-cols-2 gap-4">

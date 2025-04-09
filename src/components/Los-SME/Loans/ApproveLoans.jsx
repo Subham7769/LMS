@@ -80,7 +80,6 @@ const ApproveLoans = () => {
     );
   };
 
-
   const handleSearch = async () => {
     await dispatch(
       validateForm({ salSearchBy: salSearchBy, salSearchValue: salSearchValue })
@@ -165,9 +164,8 @@ const ApproveLoans = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    navigate(
-      `/loan/loan-origination-system/sme/loans/loan-agreement/${loanId}/${uid}`
-    );
+    const printUrl = `/loan-agreement-sme/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
@@ -190,14 +188,17 @@ const ApproveLoans = () => {
     const filteredApproveLoansDataFunction = () => {
       if (!approveLoans) return [];
 
-      const filteredData  = approveLoans.filter(item =>
-        // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
-        !item?.loanActionDetailsList?.some(loanItem =>
-          loanItem?.recommendedBy === userData.username || loanItem?.rejectedBy === userData.username
-        )
+      const filteredData = approveLoans.filter(
+        (item) =>
+          // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
+          !item?.loanActionDetailsList?.some(
+            (loanItem) =>
+              loanItem?.recommendedBy === userData.username ||
+              loanItem?.rejectedBy === userData.username
+          )
       );
 
-      return transformData(filteredData)
+      return transformData(filteredData);
     };
 
     setFilteredApproveLoansData(filteredApproveLoansDataFunction());
