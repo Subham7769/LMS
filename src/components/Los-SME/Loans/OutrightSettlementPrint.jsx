@@ -3,110 +3,81 @@ import longHornLogo from "../../../assets/image/longhorn-logo.png";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import { convertDate } from "../../../utils/convertDate";
 import formatNumber from "../../../utils/formatNumber";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { getOutrightSettlement } from "../../../redux/Slices/personalLoansSlice";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
-const outrightSettlement = {
-  customerId: "CUST001",
-  loanId: "LOAN001",
-  statementValueDate: "01-01-2021",
-  customerName: "John Doe",
-  employeeId: "EMP001",
-  nrcId: "NRC001",
-  employer: "Longhorn",
-  sector: "IT",
-  loanStatus: "Performing",
-  gender: "Female",
-  loanIssueDate: "01-01-2021",
-  firstPaymentDate: "01-02-2021",
-  loanMaturityDate: "01-02-2021",
-  loanTenor: "36",
-  loanAmount: 1000000,
-  monthlyInstalment: 2717.47,
-  interestRate: "48%",
-  loanStatementTransactions: [
-    {
-      transactionDate: "01-20-2021",
-      descriptionOfTransaction: "LOAN DISBURSED",
-      debits: 0.0,
-      credits: 0.0,
-      loanBalance: 45000.0,
-      paymentStatus: "Full Payment",
-    },
-    {
-      transactionDate: "02-20-2021",
-      descriptionOfTransaction: "LOAN DISBURSED",
-      debits: 579.1,
-      credits: 0.0,
-      loanBalance: 45000.0,
-      paymentStatus: "",
-    },
-    {
-      transactionDate: "03-20-2021",
-      descriptionOfTransaction: "LOAN DISBURSED",
-      debits: 1800,
-      credits: 0.0,
-      loanBalance: 45000.0,
-      paymentStatus: "",
-    },
-  ],
-  "0-29Days": 0.0,
-  "30-59Days": 0.0,
-  "60-89Days": 0.0,
-  above89Days: 0.0,
-  outrightSettlementDetails: [
-    {
-      date: "01-20-2021",
-      description: "Outright Settlement Balance",
-      amount: 42537.44,
-    },
-    {
-      date: "02-20-2021",
-      description: "Outright Settlement Balance",
-      amount: 42537.44,
-    },
-    {
-      date: "03-20-2021",
-      description: "Outright Settlement Balance",
-      amount: 42537.44,
-    },
-  ],
+const ShimmerTable = () => {
+  return (
+    <div className="grid grid-cols-4 gap-4 animate-pulse">
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-background-light-primary rounded"></div>
+    </div>
+  );
 };
 
-const transformedLoanStatementTransactions =
-  outrightSettlement.loanStatementTransactions.map((lsTransaction) => {
-    return {
-      ...lsTransaction,
-      transactionDate: convertDate(lsTransaction.transactionDate),
-      debits: formatNumber(lsTransaction.debits),
-      credits: formatNumber(lsTransaction.credits),
-      loanBalance: formatNumber(lsTransaction.loanBalance),
-    };
-  });
-
-const transFormendOutrightSettlementDetails =
-  outrightSettlement.outrightSettlementDetails.map((osDetails) => {
-    return {
-      ...osDetails,
-      date: convertDate(osDetails.date),
-      amount: formatNumber(osDetails.amount),
-    };
-  });
-
 const OutrightSettlementPrint = () => {
+  const dispatch = useDispatch();
+  const { loanApplicationId, userId } = useParams();
+  const { outrightSettlement, loading } = useSelector(
+    (state) => state.personalLoans
+  );
   const location = useLocation();
+
   useEffect(() => {
-    // dispatch(getLoanAgreement({ loanId: loanApplicationId, uid: userId }));
+    dispatch(getOutrightSettlement({ loanId: loanApplicationId, uid: userId }));
 
     if (!location.pathname.includes("loan-origination-system")) {
       const timeoutId = setTimeout(() => {
         window.print();
-      }, 1500);
+      }, 2000);
 
       // Cleanup to avoid potential memory leaks
       return () => clearTimeout(timeoutId);
     }
     // dispatch, loanApplicationId, userId,
   }, [location.pathname]);
+
+  if (
+    loading ||
+    (outrightSettlement && Object.keys(outrightSettlement).length === 0)
+  ) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
+
+  const transformedLoanStatementTransactions =
+    outrightSettlement.loanStatementTransactions.map((lsTransaction) => {
+      return {
+        ...lsTransaction,
+        descriptionOfTransaction: convertToTitleCase(
+          lsTransaction.descriptionOfTransaction
+        ),
+        transactionDate: convertDate(lsTransaction.transactionDate),
+        debits: formatNumber(lsTransaction.debits),
+        credits: formatNumber(lsTransaction.credits),
+        loanBalance: formatNumber(lsTransaction.loanBalance),
+      };
+    });
+
+  const transFormendOutrightSettlementDetails =
+    outrightSettlement.outrightSettlementDetails.map((osDetails) => {
+      return {
+        ...osDetails,
+        date: convertDate(osDetails.date),
+        amount: formatNumber(osDetails.amount),
+      };
+    });
+
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-5">
@@ -298,27 +269,21 @@ const OutrightSettlementPrint = () => {
                 <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
                   Above 89 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
-                  Outright Settlement Balance
-                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(outrightSettlement["0-29Days"])}
+                  {formatNumber(outrightSettlement.days0to29)}
                 </td>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(outrightSettlement["30-59Days"])}
+                  {formatNumber(outrightSettlement.days30to59)}
                 </td>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(outrightSettlement["60-89Days"])}
+                  {formatNumber(outrightSettlement.days60to89)}
                 </td>
                 <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
                   {formatNumber(outrightSettlement.above89Days)}
-                </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
-                  {formatNumber(outrightSettlement.outrightSettlementBalance)}
                 </td>
               </tr>
             </tbody>
