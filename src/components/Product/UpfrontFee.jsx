@@ -7,7 +7,7 @@ const UpfrontFee = () => {
   const { productData, handleChange } = useOutletContext();
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-4 gap-5 items-end py-2 ">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end py-2 ">
         <InputText
           labelName="Processing Fee"
           inputName="fee"
@@ -18,7 +18,7 @@ const UpfrontFee = () => {
           isValidation={true}
         />
         <InputText
-          labelName="Application Fee Vat"
+          labelName="Application Fee"
           inputName="managementFeeVat"
           inputValue={productData?.managementFeeVat}
           onChange={handleChange}

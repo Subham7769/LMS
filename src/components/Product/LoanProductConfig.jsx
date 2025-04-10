@@ -1,25 +1,11 @@
-import { useEffect, useState } from "react";
-import {
-  TrashIcon,
-  CheckCircleIcon,
-  PencilIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/20/solid";
+import { useEffect } from "react";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
-import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputText from "../Common/InputText/InputText";
-import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
-import { tenureTypeOptions, options } from "../../data/OptionsData";
-import ProductInputFields from "./ProductInputFields";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
 import {
   fetchData,
   updateProductDataField,
-  updateInterestTenure,
-  deleteInterestTenure,
   saveProductData,
   updateProductName,
   deleteLoanProduct,
@@ -32,11 +18,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
-import { toast } from "react-toastify";
-import {
-  clearUpdateMap,
-  setUpdateMap,
-} from "../../redux/Slices/notificationSlice";
+import { clearUpdateMap } from "../../redux/Slices/notificationSlice";
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import ProductSidebar from "./ProductSidebar";
@@ -46,22 +28,14 @@ const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // Sort & Pagination
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const { productData, loading, error } = useSelector((state) => state.product);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const { updateMap } = useSelector((state) => state.notification);
-  const { roleData } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
     dispatch(fetchData(productType));
     dispatch(fetchRoles());
-    setCurrentPage(1);
     return () => {
       dispatch(clearValidationError());
       dispatch(clearUpdateMap());
@@ -74,51 +48,6 @@ const LoanProductConfig = () => {
     if (!hasViewOnlyAccess(roleName)) {
       dispatch(updateProductDataField({ name, value: fieldValue }));
     }
-  };
-
-  const handleInterestChange = (index, field, eventOrValue) => {
-    const absoluteIndex = index + indexOfFirstItem;
-    const value = eventOrValue?.target
-      ? eventOrValue.target.value
-      : eventOrValue;
-    dispatch(updateInterestTenure({ index: absoluteIndex, field, value }));
-  };
-
-  const handleSort = (column) => {
-    let direction = "asc";
-    if (sortConfig.key === column && sortConfig.direction === "asc") {
-      direction = "desc";
-    } else if (sortConfig.key === column && sortConfig.direction === "desc") {
-      direction = ""; // This will reset the sort
-    }
-    setSortConfig({ key: column, direction });
-  };
-
-  const toggleEdit = async (index) => {
-    const absoluteIndex = index + indexOfFirstItem;
-    if (editingIndex !== null) {
-      const interestEligibleTenure =
-        productData.interestEligibleTenure[absoluteIndex];
-      // console.log(interestEligibleTenure);
-      await dispatch(validateForm(interestEligibleTenure));
-      const state = store.getState();
-      const isValid = state.validation.isValid;
-
-      if (isValid) {
-        informUser();
-        setEditingIndex(editingIndex === index ? null : index);
-      } else {
-        return;
-      }
-    } else {
-      setEditingIndex(editingIndex === index ? null : index);
-    }
-  };
-
-  const handleDelete = (indexInPage) => {
-    const absoluteIndex = indexOfFirstItem + indexInPage;
-    dispatch(deleteInterestTenure({ index: absoluteIndex }));
-    toast.warn("Please click the save button to confirm removal of entry");
   };
 
   const handleSave = async () => {
@@ -163,7 +92,9 @@ const LoanProductConfig = () => {
           newName,
         })
       );
-      navigate(`/loan/loan-product/${newName}/${projectId}/${loanProId}`);
+      navigate(
+        `/loan/loan-product/${newName}/${projectId}/${loanProId}/product-config`
+      );
       dispatch(fetchData(newName));
       dispatch(fetchProductData());
     } catch (error) {
@@ -182,65 +113,15 @@ const LoanProductConfig = () => {
     }
   };
 
-  // Handle page change
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    toast(`You have switched to page: ${newPage}`);
-  };
+  const basePath = `/loan/loan-product/${productType}/${projectId}/${loanProId}`;
 
-  const getSortIcon = (column) => {
-    if (sortConfig.key === column) {
-      if (sortConfig.direction === "asc") {
-        return <FaSortAmountDown className="ml-2" />;
-      } else if (sortConfig.direction === "desc") {
-        return <FaSortAmountUp className="ml-2" />;
-      }
-    }
-    return <FaSort className="ml-2" title="Sort Data" />;
-  };
-
-  // Sort the items based on sortConfig
-  const sortedItems = [...productData?.interestEligibleTenure].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "asc" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "asc" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  // Calculate the indices for current items to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Determine total number of pages
-  const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
-
-  function informUser() {
-    toast.warn("Please click the save button to confirm changes");
-  }
-
-  let columns = [
-    { label: "Simple Interest", key: "interestRate", sortable: true },
-    { label: "PER", key: "interestPeriodType", sortable: true },
-    { label: "Loan Tenure", key: "LoanTenure", sortable: true },
-    { label: "Loan Tenure Type", key: "tenureType", sortable: true },
-    { label: "Repayment Tenure", key: "RepaymentTenure", sortable: true },
-    {
-      label: "Repayment Tenure Type",
-      key: "RepaymentTenureType",
-      sortable: true,
-    },
+  const navItems = [
+    { label: "Product Config", path: "/product-config" },
+    { label: "Eligibility", path: "/eligibility" },
+    { label: "Upfront Fee", path: "/upfront-fee" },
+    { label: "Options", path: "/options" },
+    { label: "Interest Tenure", path: "/interest-tenure" },
   ];
-
-  // Conditionally add the "Actions" column if roleName has view only access
-  if (!hasViewOnlyAccess(roleName)) {
-    columns.push({ label: "Actions", key: "actions", sortable: false });
-  }
-
-  // console.log(updateMap);
 
   return (
     <>
@@ -253,7 +134,7 @@ const LoanProductConfig = () => {
       />
       <ContainerTile loading={loading}>
         <div className="flex flex-col md:flex-row md:-mr-px">
-          <ProductSidebar />
+          <ProductSidebar navItems={navItems} basePath={basePath} />
           <div className="flex-grow">
             <div className="p-5">
               <Outlet context={{ productData, handleChange }} />
@@ -266,7 +147,7 @@ const LoanProductConfig = () => {
                     buttonName="Save"
                     onClick={handleSave}
                     rectangle={true}
-                    buttonType={"primary"}
+                    buttonType={"success"}
                   />
                 </div>
               ) : (

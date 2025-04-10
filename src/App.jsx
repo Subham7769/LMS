@@ -98,9 +98,14 @@ const LoanProductConfig = lazy(() =>
   import("./components/Product/LoanProductConfig")
 );
 const ProductConfig = lazy(() => import("./components/Product/ProductConfig"));
+const ProductEligibility = lazy(() =>
+  import("./components/Product/Eligibility")
+);
 const UpfrontFee = lazy(() => import("./components/Product/UpfrontFee"));
 const Options = lazy(() => import("./components/Product/Options"));
-const InterestTenure = lazy(() => import("./components/Product/InterestTenure"));
+const InterestTenure = lazy(() =>
+  import("./components/Product/InterestTenure")
+);
 
 // CreditScoreET Imports
 const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
@@ -466,11 +471,18 @@ const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
 const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
-const CustomerLoanApplication = React.lazy(() => import("./components/B2CCustomer/LoanApplication"));
-const Onboarding01 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding01"));
-const Onboarding02 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding02"));
-const Onboarding03 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding03"));
-
+const CustomerLoanApplication = React.lazy(() =>
+  import("./components/B2CCustomer/LoanApplication")
+);
+const Onboarding01 = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/Onboarding01")
+);
+const Onboarding02 = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/Onboarding02")
+);
+const Onboarding03 = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/Onboarding03")
+);
 
 const routes = [
   // Accessing All Main Components
@@ -653,6 +665,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "eligibility",
+            element: <ProductEligibility />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "upfront-fee",
             element: <UpfrontFee />,
             errorElement: <RouteErrorBoundary />,
@@ -788,6 +805,33 @@ const routes = [
         path: "loan-product/newProduct/:productName",
         element: <CreateNewProduct />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "product-config",
+            element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility",
+            element: <ProductEligibility />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upfront-fee",
+            element: <UpfrontFee />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "options",
+            element: <Options />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-tenure",
+            element: <InterestTenure />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "reporting-config/newConfig/:RCName",
@@ -1353,43 +1397,43 @@ const routes = [
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
- 
-  //Lead Capture, Customer loan application Route
- {
-  path: "/customer",
-  element: (
-    <PageErrorBoundary>
-      <ProtectedRoute>
-        <AppLayoutB2C />
-      </ProtectedRoute>
-    </PageErrorBoundary>
-  ),
-  children: [
-    {
-      path: "loan-application",
-      element: <CustomerLoanApplication />,
-      errorElement: <RouteErrorBoundary />,
-    },
-    {
-      path: "loan-application/step01",
-      element: <Onboarding01 />,
-      errorElement: <RouteErrorBoundary />,
-    },
-    {
-      path: "loan-application/step02",
-      element: <Onboarding02 />,
-      errorElement: <RouteErrorBoundary />,
-    },
-    {
-      path: "loan-application/step03",
-      element: <Onboarding03 />,
-      errorElement: <RouteErrorBoundary />,
-    },            
-  ],
-},
 
-// Catch-All Route for 404 Page Not Found
-{ path: "*", element: <PageNotFound /> },
+  //Lead Capture, Customer loan application Route
+  {
+    path: "/customer",
+    element: (
+      <PageErrorBoundary>
+        <ProtectedRoute>
+          <AppLayoutB2C />
+        </ProtectedRoute>
+      </PageErrorBoundary>
+    ),
+    children: [
+      {
+        path: "loan-application",
+        element: <CustomerLoanApplication />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-application/step01",
+        element: <Onboarding01 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-application/step02",
+        element: <Onboarding02 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-application/step03",
+        element: <Onboarding03 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+    ],
+  },
+
+  // Catch-All Route for 404 Page Not Found
+  { path: "*", element: <PageNotFound /> },
 ];
 
 const appRouter = createBrowserRouter(routes);

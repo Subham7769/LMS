@@ -25,6 +25,13 @@ const Options = () => {
             onChange={handleChange}
           />
           <ToggleSwitch
+            label="RTN"
+            description="Indicates whether the loan is RTN."
+            inputName="RTN"
+            inputChecked={false}
+            onChange={() => {}}
+          />
+          <ToggleSwitch
             label="Disable RAC"
             description="Disable Risk Assessment Configuration."
             inputName="disableRac"
@@ -49,7 +56,7 @@ const Options = () => {
       </section>
       {/* Newly added fields */}
       {productData?.overdraft && (
-        <div className="grid grid-cols-3 gap-5 items-end ">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end ">
           <InputNumber
             labelName="Max. Overdraft Principle Limit"
             inputName="maxOverdraftPrincipalLimit"
