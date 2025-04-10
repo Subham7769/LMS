@@ -113,6 +113,32 @@ export const cancelLoanApplicationsByID = createAsyncThunk(
   }
 );
 
+export const cloneLoanApplicationsByID = createAsyncThunk(
+  "personalLoans/cloneLoanApplicationsByID",
+  async (loanApplicationId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_LOAN_CLONE_APPLICATION_BY_ID_PERSONAL}${loanApplicationId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const getLoanApplicationByField = createAsyncThunk(
   "personalLoans/getLoanApplicationByField",
   async ({ field, value }, { rejectWithValue }) => {
@@ -1060,6 +1086,19 @@ const personalLoansSlice = createSlice({
         toast("Loan Application Cancelled!!");
       })
       .addCase(cancelLoanApplicationsByID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(cloneLoanApplicationsByID.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(cloneLoanApplicationsByID.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData = action.payload;
+      })
+      .addCase(cloneLoanApplicationsByID.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);

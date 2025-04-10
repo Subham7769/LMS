@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import HoverButton from "../../Common/HoverButton/HoverButton";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
+import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -16,6 +15,7 @@ import {
   getLoanApplications,
   getLoanApplicationsByID,
   cancelLoanApplicationsByID,
+  cloneLoanApplicationsByID,
   getLoanApplicationByField,
   resetAddLoanData,
   deleteLoanOffers,
@@ -128,13 +128,27 @@ const LoanApplication = () => {
     dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
+  const handleCloneLoanApplication = async (loanApplicationId) => {
+    await dispatch(cloneLoanApplicationsByID(loanApplicationId)).unwrap();
+    navigate(`/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}`)
+  }
+
   const renderActionList = (rowData) => {
     if (
       rowData.status === "Completed" ||
       rowData.status === "Cancel" ||
       hasViewOnlyAccessGroup3(roleName)
     ) {
-      return <div className="py-6">-</div>;
+      return <div className="flex justify-center gap-4 px-5">
+        <Button
+          onClick={() => handleCloneLoanApplication(rowData.loanApplicationId)}
+          buttonIcon={DocumentDuplicateIcon}
+          circle={true}
+          className={`mt-4 h-fit self-center`}
+          buttonType="secondary"
+          title={"Clone"}
+        />
+      </div>;
     }
     return (
       <div className="flex justify-center gap-4 px-5">
@@ -156,6 +170,7 @@ const LoanApplication = () => {
     );
   };
 
+  
   return (
     <div className={`flex flex-col gap-3`}>
       <div className="grid grid-cols-4 gap-5 items-center">
