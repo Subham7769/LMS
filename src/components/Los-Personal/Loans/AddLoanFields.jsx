@@ -80,9 +80,9 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const handleFileChange = (e, section, index) => {
     const fileUploadParams = {
-      loanApplicationId: addLoanData.loanApplicationId,
-      documentKey: addLoanData.documents[index].documentKey,
-      verified: addLoanData.documents[index].verified,
+      loanApplicationId: addLoanData?.loanApplicationId,
+      documentKey: addLoanData?.documents[index].documentKey,
+      verified: addLoanData?.documents[index].verified,
       borrowerType: "PERSONAL_BORROWER",
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
@@ -226,7 +226,7 @@ const AddLoanFields = ({ addLoanData }) => {
 
     const [loanInterest, loanInterestTypeStr] = loanInterestStr.split(" PER "); // Extract interest & type
     const loanInterestType = loanInterestTypeStr
-      ? loanInterestTypeStr.split(" ")[0]
+      ? loanInterestTypeStr?.split(" ")[0]
       : ""; // Extract only YEAR
 
     dispatch(
@@ -270,9 +270,8 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [interestMethod]);
 
-
   const today = new Date();
-  const { loanCreationDate, loanReleaseDate } = addLoanData.generalLoanDetails;
+  const { loanCreationDate, loanReleaseDate } = addLoanData?.generalLoanDetails;
 
   // Ensure loanCreationDate is set to today if not selected
   useEffect(() => {
@@ -522,7 +521,7 @@ const AddLoanFields = ({ addLoanData }) => {
         heading={"General Loan Details"}
         renderExpandedContent={() =>
           <DynamicForm
-            details={addLoanData.generalLoanDetails}
+            details={addLoanData?.generalLoanDetails}
             config={generalLoanDetailsConfig}
             sectionName={"generalLoanDetails"}
             handleInputChange={handleInputChange}
@@ -542,10 +541,10 @@ const AddLoanFields = ({ addLoanData }) => {
       />
       <Accordion
         heading={"Requirement"}
-        renderExpandedContent={() => requirements(addLoanData.documents)}
+        renderExpandedContent={() => requirements(addLoanData?.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
-        <div>{`${uploadedCount} of ${addLoanData.documents.length} documents uploaded`}</div>
+        <div>{`${uploadedCount} of ${addLoanData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>
     </>

@@ -467,6 +467,9 @@ const personalRepaymentsSlice = createSlice({
       };
       state.draftRepaymentDTOList.push(newRow);
     },
+    resetAddBulkRepaymentData: (state) => {
+      state.draftRepaymentDTOList=initialState.draftRepaymentDTOList;
+    },
     removeBulkRepaymentRow: (state, action) => {
       const rowIndex = action.payload;
       state.draftRepaymentDTOList.splice(rowIndex, 1);
@@ -665,6 +668,7 @@ const personalRepaymentsSlice = createSlice({
 export const {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
+  resetAddBulkRepaymentData,
   removeBulkRepaymentRow,
   setRepaymentData,
   updateRepaymentData,

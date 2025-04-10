@@ -18,6 +18,7 @@ import {
   uploadRepayment,
   getOpenLoans,
   fetchClosingBalance,
+  resetAddBulkRepaymentData,
 } from "../../../redux/Slices/personalRepaymentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
@@ -26,12 +27,14 @@ import formatNumber from "../../../utils/formatNumber";
 import isDateString from "../../../utils/isDateString";
 import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { useNavigate } from "react-router-dom";
 
 const AddBulkRepayment = () => {
   const dispatch = useDispatch();
   const { draftRepaymentDTOList, closingBalance, openLoans, loading } =
     useSelector((state) => state.personalRepayments);
   console.log(draftRepaymentDTOList);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // if (openLoans.length < 1) {
@@ -62,6 +65,13 @@ const AddBulkRepayment = () => {
     dispatch(updateBulkRepaymentData({ rowIndex, fieldName, value }));
   };
 
+  const handleUploadRepayment = async () => {
+    await dispatch(uploadRepayment({ draftRepaymentDTOList })).unwrap()
+    dispatch(resetAddBulkRepaymentData());
+    navigate(`/loan/loan-origination-system/personal/repayments/approve-repayment`)
+
+  }
+
   const InfoIcon = ({ data }) => {
     return (
       <div className="relative inline-block group z-50">
@@ -80,8 +90,8 @@ const AddBulkRepayment = () => {
                   {typeof value === "number"
                     ? formatNumber(value)
                     : isDateString(value)
-                    ? convertDate(value)
-                    : convertToTitleCase(value)}
+                      ? convertDate(value)
+                      : convertToTitleCase(value)}
                 </div>
               </li>
             ))}
@@ -237,9 +247,7 @@ const AddBulkRepayment = () => {
 
         <Button
           buttonName={"Upload Repayments"}
-          onClick={() => {
-            dispatch(uploadRepayment({ draftRepaymentDTOList }));
-          }}
+          onClick={handleUploadRepayment}
           rectangle={true}
         />
       </div>

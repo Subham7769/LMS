@@ -63,7 +63,7 @@ const AddLoans = () => {
   }, [dispatch, loanApplicationId, decodedBorrowerId]);
 
   useEffect(() => {
-    if (addLoanData.generalLoanDetails.loanProductId) {
+    if (addLoanData?.generalLoanDetails?.loanProductId) {
       const selectedDynamicDoc = loanProductData.find(
         (product) =>
           product?.loanProductId ===
@@ -76,7 +76,7 @@ const AddLoans = () => {
         })
       );
     }
-  }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
+  }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -189,7 +189,7 @@ const AddLoans = () => {
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
-            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr)}
+            disabled={!(addLoanData?.generalLoanDetails?.loanDuration && addLoanData?.generalLoanDetails?.repaymentTenureStr)}
           />
           <Button
             buttonName="Save Draft"

@@ -12,6 +12,7 @@ const Button = ({
   disabled = false,
   buttonType = "primary", // Default to "primary",
   loading = false,
+  title,
 }) => {
   const rectangleClass =
     "rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5";
@@ -30,6 +31,7 @@ const Button = ({
     <button
       type="button"
       onClick={onClick}
+      title={title}
       className={`
         ${rectangle ? rectangleClass : ""}
         ${circle ? circleClass : ""}
