@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate, Outlet, useLocation } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,8 +10,20 @@ import {
   createProductData,
 } from "../../redux/Slices/productSlice";
 import store from "../../redux/store";
-import { validateForm } from "../../redux/Slices/validationSlice";
+import {
+  clearValidationError,
+  validateForm,
+} from "../../redux/Slices/validationSlice";
 import ProductSidebar from "./ProductSidebar";
+import { CheckIcon } from "../../assets/icons";
+import { toast } from "react-toastify";
+import {
+  AdjustmentsHorizontalIcon,
+  BanknotesIcon,
+  CalculatorIcon,
+  CpuChipIcon,
+  EllipsisHorizontalCircleIcon,
+} from "@heroicons/react/24/outline";
 
 const CreateNewProduct = () => {
   const navigate = useNavigate();
@@ -33,6 +44,9 @@ const CreateNewProduct = () => {
     if (productName) {
       dispatch(setProductData({ productType: productName }));
     }
+    return () => {
+      dispatch(clearValidationError());
+    };
   }, [dispatch, productName]);
 
   const handleCreateProduct = async () => {
@@ -66,17 +80,31 @@ const CreateNewProduct = () => {
       } catch (error) {
         console.error("Error while creating product:", error);
       }
+    } else {
+      toast.error("Please fill all the required fields before saving.");
     }
   };
 
   const basePath = `/loan/loan-product/newProduct/${productName}`;
 
   const navItems = [
-    { label: "Product Config", path: "/product-config" },
-    { label: "Eligibility", path: "/eligibility" },
-    { label: "Upfront Fee", path: "/upfront-fee" },
-    { label: "Options", path: "/options" },
-    { label: "Interest Tenure", path: "/interest-tenure" },
+    {
+      label: "Product Config",
+      path: "/product-config",
+      ButtonIcon: CpuChipIcon,
+    },
+    { label: "Eligibility", path: "/eligibility", ButtonIcon: CalculatorIcon },
+    { label: "Upfront Fee", path: "/upfront-fee", ButtonIcon: BanknotesIcon },
+    {
+      label: "Options",
+      path: "/options",
+      ButtonIcon: EllipsisHorizontalCircleIcon,
+    },
+    {
+      label: "Interest Tenure",
+      path: "/interest-tenure",
+      ButtonIcon: AdjustmentsHorizontalIcon,
+    },
   ];
 
   const currentIndex = navItems.findIndex((item) =>
@@ -112,10 +140,10 @@ const CreateNewProduct = () => {
               <div className="text-right">
                 {isLastPage ? (
                   <Button
-                    buttonIcon={CheckCircleIcon}
+                    buttonIcon={CheckIcon}
                     buttonName="Create"
                     onClick={handleCreateProduct}
-                    buttonType="success"
+                    buttonType="primary"
                     loading={loading}
                   />
                 ) : (

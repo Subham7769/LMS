@@ -6,7 +6,10 @@ const UpfrontFee = () => {
   // Sidebar Redux Data
   const { productData, handleChange } = useOutletContext();
   return (
-    <div className="flex flex-col gap-5">
+    <>
+      <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
+        Upfront Fee
+      </h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end py-2 ">
         <InputText
           labelName="Processing Fee"
@@ -42,7 +45,7 @@ const UpfrontFee = () => {
           isValidation={true}
         />
       </div>
-    </div>
+    </>
   );
 };
 

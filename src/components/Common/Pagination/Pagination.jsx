@@ -8,7 +8,9 @@ const Pagination = ({ dispatcherFunction, totalElements, pageSize }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatcherFunction(currentPage, pageSize);
+    if (dispatcherFunction) {
+      dispatcherFunction(currentPage, pageSize);
+    }
   }, [dispatch, currentPage, pageSize]);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const Pagination = ({ dispatcherFunction, totalElements, pageSize }) => {
     }
   };
 
-  if(totalElements === 0) return null;
+  if (totalElements === 0) return null;
 
   return (
     <div className="flex justify-center gap-4 items-center mt-4">

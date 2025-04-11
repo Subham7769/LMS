@@ -65,6 +65,9 @@ const ProductConfig = () => {
 
   return (
     <>
+      <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
+        Product Config
+      </h2>
       <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
         Loan Parameter
       </h2>

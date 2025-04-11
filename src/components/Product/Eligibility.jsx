@@ -55,53 +55,58 @@ const Eligibility = () => {
   useEffect(() => {}, [DBRConfigInfo, TCLDataInfo]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end">
-      <InputSelect
-        labelName="TCL"
-        inputOptions={formateDataDropDown("/loan/tcl/", TCLDataInfo)}
-        inputName="tclFileId"
-        inputValue={productData?.tclFileId}
-        onChange={handleChange}
-      />
-      <InputSelect
-        labelName="RAC"
-        inputOptions={formateDataDropDown(
-          "/loan/dynamic-rac/",
-          DynamicRACDataInfo
-        )}
-        inputName="racId"
-        inputValue={productData?.racId}
-        onChange={handleChange}
-        isValidation={true}
-      />
-      <InputSelect
-        labelName="Credit Score"
-        inputOptions={formateDataDropDown("/loan/credit-score/", CSDataInfo)}
-        inputName="creditScoreEqTempId"
-        inputValue={productData?.creditScoreEqTempId}
-        onChange={handleChange}
-        isValidation={true}
-      />
-      <InputSelect
-        labelName="Eligible Tenure"
-        inputOptions={formateDataDropDown(
-          "/loan/credit-score-eligible-tenure/",
-          CSETDataInfo
-        )}
-        inputName="creditScoreEtTempId"
-        inputValue={productData?.creditScoreEtTempId}
-        onChange={handleChange}
-        isValidation={true}
-      />
-      <InputSelect
-        labelName="DBR Config"
-        inputOptions={formateDataDropDown("/loan/dbr-config/", DBRConfigInfo)}
-        inputName="dbcTempId"
-        inputValue={productData?.dbcTempId}
-        onChange={handleChange}
-        isValidation={true}
-      />
-    </div>
+    <>
+      <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
+        Eligibility
+      </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end">
+        <InputSelect
+          labelName="TCL"
+          inputOptions={formateDataDropDown("/loan/tcl/", TCLDataInfo)}
+          inputName="tclFileId"
+          inputValue={productData?.tclFileId}
+          onChange={handleChange}
+        />
+        <InputSelect
+          labelName="RAC"
+          inputOptions={formateDataDropDown(
+            "/loan/dynamic-rac/",
+            DynamicRACDataInfo
+          )}
+          inputName="racId"
+          inputValue={productData?.racId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Credit Score"
+          inputOptions={formateDataDropDown("/loan/credit-score/", CSDataInfo)}
+          inputName="creditScoreEqTempId"
+          inputValue={productData?.creditScoreEqTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Eligible Tenure"
+          inputOptions={formateDataDropDown(
+            "/loan/credit-score-eligible-tenure/",
+            CSETDataInfo
+          )}
+          inputName="creditScoreEtTempId"
+          inputValue={productData?.creditScoreEtTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="DBR Config"
+          inputOptions={formateDataDropDown("/loan/dbr-config/", DBRConfigInfo)}
+          inputName="dbcTempId"
+          inputValue={productData?.dbcTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+      </div>
+    </>
   );
 };
 

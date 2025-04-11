@@ -7,7 +7,10 @@ import ToggleSwitch from "../Common/ToggleSwitch/ToggleSwitch";
 const Options = () => {
   const { productData, handleChange } = useOutletContext();
   return (
-    <div className="flex flex-col gap-5">
+    <>
+      <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
+        Options
+      </h2>
       <section>
         <ul>
           <ToggleSwitch
@@ -98,7 +101,7 @@ const Options = () => {
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

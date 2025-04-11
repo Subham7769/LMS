@@ -344,7 +344,7 @@ const productSlice = createSlice({
           interestEligibleTenure: action.payload.interestEligibleTenure.map(
             (tenure) => ({
               ...tenure,
-              interestRate: formatStringNumber(tenure.interestRate),
+              // interestRate: formatStringNumber(tenure.interestRate),
               dataIndex: nanoid(), // Assign nanoid() to dataIndex
             })
           ),

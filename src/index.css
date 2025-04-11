@@ -269,7 +269,7 @@ input:focus {
   -webkit-overflow-scrolling: touch;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
@@ -282,7 +282,7 @@ input:focus {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #6366f1;
-}
+} */
 
 @media print {
   body {

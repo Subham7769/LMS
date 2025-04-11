@@ -5,11 +5,10 @@ const Button = ({
   buttonIcon: ButtonIcon,
   buttonName,
   onClick,
-  rectangle = false,
-  circle = false,
   className,
   disabled = false,
   buttonType = "primary", // Default to "primary",
+  iconClassName = "h-4 w-4",
   loading = false,
 }) => {
   const buttonTypeClass = {
@@ -33,7 +32,7 @@ const Button = ({
         disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-white dark:disabled:bg-gray-800 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:cursor-not-allowed
         ${buttonTypeClass[buttonType] || buttonTypeClass.primary}
         ${className} 
-        relative items-center justify-center inline-flex
+        relative items-center justify-center inline-flex cursor-pointer
       `}
       disabled={disabled || loading} // Disable button when loading
     >
@@ -42,7 +41,7 @@ const Button = ({
           loading ? "opacity-50" : "opacity-100"
         }`}
       >
-        {ButtonIcon && <ButtonIcon className="h-5 w-5" aria-hidden="true" />}
+        {ButtonIcon && <ButtonIcon className={iconClassName} aria-hidden="true" />}
         {buttonName && ButtonIcon ? (
           <span className="ml-2">{buttonName}</span>
         ) : (

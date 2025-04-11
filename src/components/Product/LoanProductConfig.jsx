@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import { fetchProductData } from "../../redux/Slices/sidebarSlice";
@@ -23,6 +22,9 @@ import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import ProductSidebar from "./ProductSidebar";
 import convertToTitleCase from "../../utils/convertToTitleCase";
+import { CheckIcon } from "../../assets/icons";
+import { toast } from "react-toastify";
+import { AdjustmentsHorizontalIcon, BanknotesIcon, CalculatorIcon, CpuChipIcon, EllipsisHorizontalCircleIcon } from "@heroicons/react/24/outline";
 
 const LoanProductConfig = () => {
   const { productType, loanProId, projectId } = useParams();
@@ -81,6 +83,8 @@ const LoanProductConfig = () => {
       } catch (error) {
         console.error("Failed to update data:", error);
       }
+    } else {
+      toast.error("Please fill all the required fields before saving.");
     }
   };
 
@@ -116,11 +120,19 @@ const LoanProductConfig = () => {
   const basePath = `/loan/loan-product/${productType}/${projectId}/${loanProId}`;
 
   const navItems = [
-    { label: "Product Config", path: "/product-config" },
-    { label: "Eligibility", path: "/eligibility" },
-    { label: "Upfront Fee", path: "/upfront-fee" },
-    { label: "Options", path: "/options" },
-    { label: "Interest Tenure", path: "/interest-tenure" },
+    {
+      label: "Product Config",
+      path: "/product-config",
+      ButtonIcon: CpuChipIcon,
+    },
+    { label: "Eligibility", path: "/eligibility", ButtonIcon: CalculatorIcon },
+    { label: "Upfront Fee", path: "/upfront-fee", ButtonIcon: BanknotesIcon },
+    { label: "Options", path: "/options", ButtonIcon: EllipsisHorizontalCircleIcon },
+    {
+      label: "Interest Tenure",
+      path: "/interest-tenure",
+      ButtonIcon: AdjustmentsHorizontalIcon,
+    },
   ];
 
   return (
@@ -143,11 +155,11 @@ const LoanProductConfig = () => {
               {!hasViewOnlyAccess(roleName) ? (
                 <div className="text-right">
                   <Button
-                    buttonIcon={CheckCircleIcon}
+                    buttonIcon={CheckIcon}
                     buttonName="Save"
                     onClick={handleSave}
                     rectangle={true}
-                    buttonType={"success"}
+                    buttonType={"primary"}
                   />
                 </div>
               ) : (

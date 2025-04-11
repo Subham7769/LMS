@@ -3,6 +3,7 @@ import Button from "../Button/Button";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
+import { DeleteIcon } from "../../../assets/icons";
 
 const DynamicHeader = ({
   itemName,
@@ -56,7 +57,7 @@ const DynamicHeader = ({
           )}
           {handleDelete && (
             <Button
-              buttonIcon={TrashIcon}
+              buttonIcon={DeleteIcon}
               onClick={handleDelete}
               circle={true}
               buttonType="destructive"
