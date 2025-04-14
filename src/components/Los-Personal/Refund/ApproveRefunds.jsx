@@ -14,7 +14,7 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
 import { useNavigate } from "react-router-dom";
-import LoanRejectModal from "./LoanRejectModal";
+import LoanRejectModal from "../Loans/LoanRejectModal";
 import Pagination from "../../Common/Pagination/Pagination";
 import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -31,7 +31,7 @@ import {
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
-import ViewDocumentsModal from "./ViewDocumentsModal";
+import ViewDocumentsModal from "../Loans/ViewDocumentsModal";
 import store from "../../../redux/store";
 import {
   clearValidationError,
@@ -49,7 +49,7 @@ function transformData(inputArray) {
   }));
 }
 
-const ApproveLoans = () => {
+const ApproveRefunds = () => {
   const dispatch = useDispatch();
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
@@ -494,4 +494,4 @@ const ApproveLoans = () => {
   );
 };
 
-export default ApproveLoans;
+export default ApproveRefunds;

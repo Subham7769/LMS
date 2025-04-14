@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { downloadDocumentFile } from "../../../redux/Slices/personalLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { ArrowDownTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { accountStatusOptions } from "../../../data/LosData";
+import { accountStatusOptionsPersonal } from "../../../data/LosData";
 
 const ViewEditModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const ViewEditModal = ({ isOpen, onClose }) => {
               <InputSelect
                 labelName={"Account Status"}
                 inputName={"accountStatus"}
-                inputOptions={accountStatusOptions}
+                inputOptions={accountStatusOptionsPersonal}
                 inputValue={currentStatus}
                 onChange={(e) => setCurrentStatus(e.target.value)}
               />

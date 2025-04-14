@@ -113,6 +113,32 @@ export const cancelLoanApplicationsByID = createAsyncThunk(
   }
 );
 
+export const cloneLoanApplicationsByID = createAsyncThunk(
+  "personalLoans/cloneLoanApplicationsByID",
+  async (loanApplicationId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_LOAN_CLONE_APPLICATION_BY_ID_PERSONAL}${loanApplicationId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const getLoanApplicationByField = createAsyncThunk(
   "personalLoans/getLoanApplicationByField",
   async ({ field, value }, { rejectWithValue }) => {
@@ -792,6 +818,62 @@ export const getLoanAgreement = createAsyncThunk(
   }
 );
 
+export const getLoanStatement = createAsyncThunk(
+  "personalLoans/getLoanStatement",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_STATEMENT_BY_ID
+        }${uid}/loan-statement/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getOutrightSettlement = createAsyncThunk(
+  "personalLoans/getOutrightSettlement",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_STATEMENT_BY_ID
+        }${uid}/loan-outright-settlement/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const getDisbursementFile = createAsyncThunk(
   "personalLoans/getDisbursementFile",
   async ({ loanId, uid }, { rejectWithValue }) => {
@@ -892,7 +974,7 @@ const initialState = {
       loanInterestType: "",
       loanInterestStr: "",
       loanProductId: "",
-      loanCreationDate:"",
+      loanCreationDate: "",
       loanReleaseDate: "",
       repaymentTenure: 0,
       repaymentTenureType: "",
@@ -930,7 +1012,9 @@ const initialState = {
   },
   fullLoanDetails: {},
   loanAgreementData: {},
+  loanStatement: {},
   disbursement: {},
+  outrightSettlement: {},
   error: null,
   loading: false,
 };
@@ -1060,6 +1144,19 @@ const personalLoansSlice = createSlice({
         toast("Loan Application Cancelled!!");
       })
       .addCase(cancelLoanApplicationsByID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(cloneLoanApplicationsByID.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(cloneLoanApplicationsByID.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addLoanData = action.payload;
+      })
+      .addCase(cloneLoanApplicationsByID.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -1413,6 +1510,32 @@ const personalLoansSlice = createSlice({
         state.loanAgreementData = action.payload;
       })
       .addCase(getLoanAgreement.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getLoanStatement.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLoanStatement.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanStatement = action.payload;
+      })
+      .addCase(getLoanStatement.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getOutrightSettlement.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOutrightSettlement.fulfilled, (state, action) => {
+        state.loading = false;
+        state.outrightSettlement = action.payload;
+      })
+      .addCase(getOutrightSettlement.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);

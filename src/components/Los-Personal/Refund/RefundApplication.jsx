@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import HoverButton from "../../Common/HoverButton/HoverButton";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -16,11 +15,11 @@ import {
   getLoanApplications,
   getLoanApplicationsByID,
   cancelLoanApplicationsByID,
+  cloneLoanApplicationsByID,
   getLoanApplicationByField,
   resetAddLoanData,
   deleteLoanOffers,
-  cloneLoanApplicationsByID,
-} from "../../../redux/Slices/smeLoansSlice";
+} from "../../../redux/Slices/personalLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 import store from "../../../redux/store";
@@ -40,13 +39,13 @@ function transformData(inputArray) {
   }));
 }
 
-const LoanApplication = () => {
+const RefundApplication = () => {
   const dispatch = useDispatch();
-  const [slaSearchValue, setSlaSearchValue] = useState("");
-  const [slaSearchBy, setSlaSearchBy] = useState("");
+  const [plaSearchValue, setPlaSearchValue] = useState("");
+  const [plaSearchBy, setPlaSearchBy] = useState("");
   const navigate = useNavigate();
   const { loanApplications, loading, loanApplicationsTotalElements } =
-    useSelector((state) => state.smeLoans);
+    useSelector((state) => state.personalLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
@@ -63,13 +62,13 @@ const LoanApplication = () => {
 
   const searchOptions = [
     { label: "Loan Application Id", value: "loanApplicationId" },
-    { label: "Borrower Serial No.", value: "uniqueID" },
+    { label: "Unique ID", value: "uniqueID" },
   ];
 
   const columns = [
     { label: "Loan Application ID", field: "loanApplicationId" },
     { label: "Borrower Name", field: "borrowerName" },
-    { label: "Borrower Serial No.", field: "uniqueID" },
+    { label: "Unique ID", field: "uniqueID" },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },
     { label: "Status", field: "status" },
@@ -79,22 +78,22 @@ const LoanApplication = () => {
 
   const handleSearch = async () => {
     await dispatch(
-      validateForm({ slaSearchBy: slaSearchBy, slaSearchValue: slaSearchValue })
+      validateForm({ plaSearchBy: plaSearchBy, plaSearchValue: plaSearchValue })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanApplicationByField({ field: slaSearchBy, value: slaSearchValue })
+        getLoanApplicationByField({ field: plaSearchBy, value: plaSearchValue })
       );
     }
-    // setSlaSearchBy("");
-    // setSlaSearchValue("");
+    // setPlaSearchBy("");
+    // setPlaSearchValue("");
   };
 
   const handleReset = () => {
-    setSlaSearchBy("");
-    setSlaSearchValue("");
+    setPlaSearchBy("");
+    setPlaSearchValue("");
     dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
@@ -105,7 +104,7 @@ const LoanApplication = () => {
         generateLoanApplicationId()
       ).unwrap();
       navigate(
-        `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}`
+        `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
       );
     } catch (error) {
       console.error("Failed to generate loan application ID:", error);
@@ -114,7 +113,7 @@ const LoanApplication = () => {
 
   const handleEditApplication = async (rowData) => {
     navigate(
-      `/loan/loan-origination-system/sme/loans/add-loan/${rowData?.loanApplicationId}`
+      `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
     );
     if (rowData.status === "Submitted" || rowData.status === "In Progress") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
@@ -131,7 +130,7 @@ const LoanApplication = () => {
 
   const handleCloneLoanApplication = async (loanApplicationId) => {
     await dispatch(cloneLoanApplicationsByID(loanApplicationId)).unwrap();
-    navigate(`/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`);
+    navigate(`/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}`)
   }
 
   const renderActionList = (rowData) => {
@@ -171,10 +170,11 @@ const LoanApplication = () => {
     );
   };
 
+  
   return (
     <div className={`flex flex-col gap-3`}>
       <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Loan Applications</div>
+        <div className="text-xl font-semibold">Refund Applications</div>
         <div></div>
         <div></div>
         <div className="flex justify-end gap-2 h-12">
@@ -192,10 +192,10 @@ const LoanApplication = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="slaSearchBy"
+            inputName="plaSearchBy"
             inputOptions={searchOptions}
-            inputValue={slaSearchBy}
-            onChange={(e) => setSlaSearchBy(e.target.value)}
+            inputValue={plaSearchBy}
+            onChange={(e) => setPlaSearchBy(e.target.value)}
             disabled={false}
             isValidation={true}
           />
@@ -203,9 +203,9 @@ const LoanApplication = () => {
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="slaSearchValue"
-            inputValue={slaSearchValue}
-            onChange={(e) => setSlaSearchValue(e.target.value)}
+            inputName="plaSearchValue"
+            inputValue={plaSearchValue}
+            onChange={(e) => setPlaSearchValue(e.target.value)}
             isValidation={true}
             disabled={false}
           />
@@ -243,4 +243,4 @@ const LoanApplication = () => {
   );
 };
 
-export default LoanApplication;
+export default RefundApplication;

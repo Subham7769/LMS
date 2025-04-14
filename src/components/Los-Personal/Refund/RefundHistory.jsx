@@ -6,39 +6,37 @@ import {
   getLoanHistory,
   getLoanHistoryByField,
   getLoanAgreement,
+  uploadSignedLoanAgreement,
   generateLoanApplicationId,
   getRefinanceDetails,
   getRepaymentHistory,
-} from "../../../redux/Slices/smeLoansSlice";
+  getDisbursementFile,
+  getLoanStatement,
+  getOutrightSettlement,
+} from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import InputFile from "../../Common/InputFile/InputFile";
 import Pagination from "../../Common/Pagination/Pagination";
-import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
-import RepaymentHistoryModal from "../../Los-Personal/RepaymentHistoryModal";
+import FullLoanDetailModal from "../FullLoanDetailModal";
+import RepaymentHistoryModal from "../RepaymentHistoryModal";
 import { convertDate } from "../../../utils/convertDate";
 import { useNavigate, useParams } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
-import ViewDocumentsModal from "./ViewDocumentsModal";
+import ViewDocumentsModal from "../Loans/ViewDocumentsModal";
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
   NewspaperIcon,
-  ReceiptRefundIcon,
   CurrencyDollarIcon,
   UserIcon,
+  ReceiptRefundIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
-import {
-  getDisbursementFile,
-  getLoanStatement,
-  getOutrightSettlement,
-  uploadSignedLoanAgreement,
-} from "../../../redux/Slices/personalLoansSlice";
 import {
   clearValidationError,
   validateForm,
@@ -49,7 +47,7 @@ import ActionOption from "../../Common/ActionOptions/ActionOption";
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
-    loanProduct: convertToTitleCase(item?.loanProductName),
+    loanProduct: item?.loanProductName?.replace(/_/g, " "),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
   }));
 }
@@ -63,13 +61,13 @@ const LoanHistory = () => {
     loading,
     loanHistoryTotalElements,
     fullLoanDetails,
-  } = useSelector((state) => state.smeLoans);
+  } = useSelector((state) => state.personalLoans);
   const [showModal, setShowModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
   const [showRepaymentModal, setRepaymentModal] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
-  const [slhSearchValue, setSlhSearchValue] = useState("");
-  const [slhSearchBy, setSlhSearchBy] = useState("");
+  const [plhSearchValue, setPlhSearchValue] = useState("");
+  const [plhSearchBy, setPlhSearchBy] = useState("");
   const [signedAgreement, setSignedAgreement] = useState("");
   const { uniqueID } = useParams();
   // Pagination state
@@ -77,8 +75,6 @@ const LoanHistory = () => {
 
   // Decode the BorrowerId to restore its original value
   const decodedUniqueID = decodeURIComponent(uniqueID);
-
-  console.log(paymentHistory);
 
   useEffect(() => {
     return () => {
@@ -94,24 +90,24 @@ const LoanHistory = () => {
 
   const handleSearch = async () => {
     await dispatch(
-      validateForm({ slhSearchBy: slhSearchBy, slhSearchValue: slhSearchValue })
+      validateForm({ plhSearchBy: plhSearchBy, plhSearchValue: plhSearchValue })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanHistoryByField({ field: slhSearchBy, value: slhSearchValue })
+        getLoanHistoryByField({ field: plhSearchBy, value: plhSearchValue })
       );
     }
-    // setSlhSearchBy("");
-    // setSlhSearchValue("");
+    // setPlhSearchBy("");
+    // setPlhSearchValue("");
   };
 
   const handleReset = () => {
-    setSlhSearchBy("");
-    setSlhSearchValue("");
+    setPlhSearchBy("");
+    setPlhSearchValue("");
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
-    navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
+    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
@@ -141,19 +137,19 @@ const LoanHistory = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    const printUrl = `/loan-agreement-sme/${loanId}/${uid}`;
+    const printUrl = `/loan-agreement/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
   const handleLoanStatement = async (loanId, uid) => {
-    const printUrl = `/loan-statement-sme/${loanId}/${uid}`;
+    const printUrl = `/loan-statement/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
     await dispatch(getLoanStatement({ loanId, uid })).unwrap();
   };
 
   const handleOutrightSettlement = async (loanId, uid) => {
-    const printUrl = `/outright-settlement-sme/${loanId}/${uid}`;
+    const printUrl = `/outright-settlement/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
     await dispatch(getOutrightSettlement({ loanId, uid })).unwrap();
   };
@@ -164,12 +160,12 @@ const LoanHistory = () => {
       generateLoanApplicationId()
     ).unwrap();
     navigate(
-      `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}`
+      `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
     );
   };
 
   const handleDisbursementFile = async (loanId, uid) => {
-    const printUrl = `/disbursement-sme/${loanId}/${uid}`;
+    const printUrl = `/disbursement/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
     await dispatch(getDisbursementFile({ loanId, uid })).unwrap();
   };
@@ -177,7 +173,7 @@ const LoanHistory = () => {
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
-    { label: "Borrower Serial No.", value: "uniqueID" },
+    { label: "Unique ID", value: "uniqueID" },
   ];
 
   const columns = [
@@ -349,7 +345,7 @@ const LoanHistory = () => {
             </div>
           </CardInfo>
         </div>
-        <div className="bg-white p-3 shadow rounded-md my-5">
+        <div className="bg-white p-3 shadow-md border-border-gray-primary border rounded-md my-5">
           <div className="font-semibold text-xl mb-3">
             Verified Documents{" "}
             <span className="font-light text-xs">
@@ -458,10 +454,10 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="slhSearchBy"
+            inputName="plhSearchBy"
             inputOptions={searchOptions}
-            inputValue={slhSearchBy}
-            onChange={(e) => setSlhSearchBy(e.target.value)}
+            inputValue={plhSearchBy}
+            onChange={(e) => setPlhSearchBy(e.target.value)}
             disabled={false}
             isValidation={true}
           />
@@ -469,13 +465,15 @@ const LoanHistory = () => {
         <div className="w-[45%]">
           <InputText
             labelName="Enter Value"
-            inputName="slhSearchValue"
-            inputValue={slhSearchValue}
-            onChange={(e) => setSlhSearchValue(e.target.value)}
-            isValidation={true}
+            inputName="plhSearchValue"
+            inputValue={plhSearchValue}
+            onChange={(e) => setPlhSearchValue(e.target.value)}
+            required
             disabled={false}
+            isValidation={true}
           />
         </div>
+
         <div className="flex align-middle gap-5">
           <Button
             buttonName={"Search"}
