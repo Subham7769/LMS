@@ -164,6 +164,16 @@ const LoanHistory = () => {
     );
   };
 
+  const handleInitiateRefund = async (loanId, uid, uniqueID) => {
+    await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
+    const refundApplicationId = await dispatch(
+      generateLoanApplicationId()
+    ).unwrap();
+    navigate(
+      `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}`
+    );
+  };
+
   const handleDisbursementFile = async (loanId, uid) => {
     const printUrl = `/disbursement/${loanId}/${uid}`;
     window.open(printUrl, "_blank");
@@ -419,6 +429,24 @@ const LoanHistory = () => {
             </div>
           )}
           <div className="flex justify-end gap-2 px-5">
+            {(rowData.loanStatus === "ACTIVATED" ||
+              rowData.loanStatus === "CLOSED") && (
+              <div>
+                <Button
+                  buttonName={"Initiate Refund"}
+                  onClick={() =>
+                    handleInitiateRefund(
+                      rowData.loanId,
+                      rowData.uid,
+                      rowData.uniqueID
+                    )
+                  }
+                  rectangle={true}
+                  buttonIcon={ReceiptRefundIcon}
+                  buttonType="tertiary"
+                />
+              </div>
+            )}
             {rowData.loanStatus === "ACTIVATED" && (
               <div>
                 <Button
