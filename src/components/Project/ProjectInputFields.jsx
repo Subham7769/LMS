@@ -453,8 +453,8 @@ const ProjectInputFields = ({
               {/* Max. Payment Attempt */}
               <InputNumber
                 labelName={"Max Attempts"}
-                inputName={"maxPaymetAttemps"}
-                inputValue={projectData?.maxPaymetAttemps}
+                inputName={"maxPaymentAttempts"}
+                inputValue={projectData?.maxPaymentAttempts}
                 onChange={handleChange}
                 placeHolder={"2"}
                 isValidation={true}

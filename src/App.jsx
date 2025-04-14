@@ -350,6 +350,21 @@ const UploadRepayment = lazy(() =>
   import("./components/Los-Personal/Repayments/UploadRepayment")
 );
 
+//------------Refund-----------------
+const Refund = lazy(() =>
+  import("./components/Los-Personal/Refund/Refund")
+);
+const RefundApplication = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundApplication")
+);
+const ApproveRefunds = lazy(() =>
+  import("./components/Los-Personal/Refund/ApproveRefunds")
+);
+const RefundHistory = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundHistory")
+);
+
+
 // LOS-SME Imports
 const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
 const BorrowersSME = lazy(() =>
@@ -1077,6 +1092,29 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
         ],
+
+      },
+      {
+        path: "loan-origination-system/personal/refund",
+        element: <Refund />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "refund-application",
+            element: <RefundApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-refund",
+            element: <ApproveRefunds />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "refund-history",
+            element: <RefundHistory />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ]
       },
       // Accessing All Page Component with it's Child Components
       {
