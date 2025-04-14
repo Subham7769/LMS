@@ -413,7 +413,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     {
       labelName: "Account No.",
       inputName: "accountNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {

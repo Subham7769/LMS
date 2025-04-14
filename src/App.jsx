@@ -1092,7 +1092,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
         ],
-
       },
       {
         path: "loan-origination-system/personal/refund",
@@ -1101,6 +1100,16 @@ const routes = [
         children: [
           {
             path: "refund-application",
+            element: <RefundApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/new/:refundApplicationId",
+            element: <RefundApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/new/:refundApplicationId",
             element: <RefundApplication />,
             errorElement: <RouteErrorBoundary />,
           },
@@ -1114,7 +1123,7 @@ const routes = [
             element: <RefundHistory />,
             errorElement: <RouteErrorBoundary />,
           },
-        ]
+        ],
       },
       // Accessing All Page Component with it's Child Components
       {

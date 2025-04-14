@@ -373,7 +373,7 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "Account No.",
       inputName: "accountNo",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
