@@ -51,8 +51,8 @@ const AddUpdateBorrowerFields = ({
   );
   const location = useLocation();
 
-  const isUpdateBorrower = location.pathname.includes('update-borrower') ;
-  const isDraftBorrower = location.pathname.includes('update-borrower/draft') ;
+  const isUpdateBorrower = location.pathname.includes("update-borrower");
+  const isDraftBorrower = location.pathname.includes("update-borrower/draft");
 
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -66,12 +66,12 @@ const AddUpdateBorrowerFields = ({
     []
   );
   const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1); 
+  yesterday.setDate(yesterday.getDate() - 1);
   const [employerOptions, setEmployerOptions] = useState([]);
   // console.log(BorrowerData);
   const { menus } = useSelector((state) => state.sidebar);
   const [defaultAffordability, setDefaultAffordability] = useState([]);
-  
+
   useEffect(() => {
     const keysArray = [
       "title",
@@ -90,7 +90,7 @@ const AddUpdateBorrowerFields = ({
       "country",
       "email",
       "employer",
-      
+
       "workType",
       "occupation",
       "employeeNo",
@@ -136,24 +136,27 @@ const AddUpdateBorrowerFields = ({
       }));
       setEmployerOptions(options);
     }
-
   }, [allEmployerData]);
 
   useEffect(() => {
-
-    console.log(menus)
+    console.log(menus);
     //get the default affordability
-    const result = menus.find((menu) => menu.title === "Affordability")
-    ?.submenuItems?.find((submenuItem) => submenuItem.name === "CRITERIA_DEFAULT_TEMP");
-    console.log(result)
-    setDefaultAffordability(result
-    ? {
-        name: result.name,
-        value: result.href.split("/").pop(),
-      }
-    : {name:"",value:""});
+    const result = menus
+      .find((menu) => menu.title === "Affordability")
+      ?.submenuItems?.find(
+        (submenuItem) => submenuItem.name === "CRITERIA_DEFAULT_TEMP"
+      );
+    console.log(result);
+    setDefaultAffordability(
+      result
+        ? {
+            name: result.name,
+            value: result.href.split("/").pop(),
+          }
+        : { name: "", value: "" }
+    );
   }, [menus]);
-  
+
   useEffect(() => {
     setFilteredLocations1(
       locationOptions[BorrowerData.contactDetails.country] || []
@@ -170,7 +173,6 @@ const AddUpdateBorrowerFields = ({
     setFilteredBranchNameOptions(
       BranchNameOptions[BorrowerData.bankDetails.bankName] || []
     );
-    
   }, [
     BorrowerData.contactDetails.country,
     BorrowerData.nextOfKinDetails.kinCountry,
@@ -216,11 +218,13 @@ const AddUpdateBorrowerFields = ({
     );
   };
 
-  //Add new employer from the dropdown. 
+  //Add new employer from the dropdown.
   const handleNewEmployer = async (inputValue, onChange) => {
-    if(!defaultAffordability?.value){
-      toast.warning("Default Affordibility not found, cannot create new employer");
-      return ;
+    if (!defaultAffordability?.value) {
+      toast.warning(
+        "Default Affordibility not found, cannot create new employer"
+      );
+      return;
     }
     const employerData = {
       employerName: inputValue,
@@ -231,7 +235,7 @@ const AddUpdateBorrowerFields = ({
     // const state = store.getState();
     // const isValid = state.validation.isValid;
     // if (isValid) {
-    //  dispatch(addEmployerData(employerData)).unwrap();      
+    //  dispatch(addEmployerData(employerData)).unwrap();
     // }
     dispatch(addEmployerData(employerData)).unwrap();
     const newOption = { value: inputValue, label: inputValue };
@@ -363,7 +367,7 @@ const AddUpdateBorrowerFields = ({
       inputName: "dateOfBirth",
       type: "date",
       validation: true,
-      maxSelectableDate:yesterday,
+      maxSelectableDate: yesterday,
     },
     {
       labelName: "Place of Birth",
@@ -377,21 +381,21 @@ const AddUpdateBorrowerFields = ({
       labelName: "Mobile 1",
       inputName: "mobile1",
       type: "number",
-      maxLength:10,
+      maxLength: 10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "number",
-      maxLength:10,
+      maxLength: 10,
       validation: false,
     },
     {
       labelName: "Landline Phone",
       inputName: "landlinePhone",
       type: "text",
-      maxLength:10,
+      maxLength: 10,
       validation: false,
     },
     {
@@ -466,9 +470,9 @@ const AddUpdateBorrowerFields = ({
       type: "InputSelectCreatable",
       options: employerOptions,
       validation: true,
-      searchable: true,      
+      searchable: true,
       onCreateOption: handleNewEmployer,
-      setEmployerOptions:setEmployerOptions,
+      setEmployerOptions: setEmployerOptions,
     },
     {
       labelName: "Occupation",
@@ -518,67 +522,67 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Basic Pay",
       inputName: "basicPay",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Housing Allowance",
       inputName: "housingAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Transport Allowance",
       inputName: "transportAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Rural/Remote Hardship Allowance",
       inputName: "ruralHardshipAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Infectious Health Risk",
       inputName: "infectiousHealthRisk",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Health Shift Allowance",
       inputName: "healthShiftAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Interface Allowance",
       inputName: "interfaceAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Responsibility Allowance",
       inputName: "responsibilityAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Double Class Allowance",
       inputName: "doubleClassAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Acting Allowance",
       inputName: "actingAllowance",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Other Allowances",
       inputName: "otherAllowances",
-      type: "number",
+      type: "text",
       validation: false,
     },
   ];
@@ -586,13 +590,13 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Total Deductions on payslip",
       inputName: "totalDeductionsOnPayslip",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
       labelName: "Total deductions not on Payslip",
       inputName: "totalDeductionsNotOnPayslip",
-      type: "number",
+      type: "text",
       validation: false,
     },
   ];
@@ -614,7 +618,7 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Account No.",
       inputName: "accountNo",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -685,10 +689,15 @@ const AddUpdateBorrowerFields = ({
       labelName: "Mobile 1",
       inputName: "kinMobile1",
       type: "number",
-      maxLength:10,
+      maxLength: 10,
       validation: true,
     },
-    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number",maxLength:10 },
+    {
+      labelName: "Mobile 2",
+      inputName: "kinMobile2",
+      type: "number",
+      maxLength: 10,
+    },
     {
       labelName: "Email",
       inputName: "kinEmail",
@@ -787,39 +796,39 @@ const AddUpdateBorrowerFields = ({
     <>
       <Accordion
         heading={"Personal Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.personalDetails}
             config={personalDetailsConfig}
             sectionName={"personalDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         isOpen={true}
         error={isValidationFailed(validationError, personalDetailsConfig)}
       />
       <Accordion
         heading={"Contact Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.contactDetails}
             config={contactDetailsConfig}
             sectionName={"contactDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, contactDetailsConfig)}
       />
       <Accordion
         heading={"Employment Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.employmentDetails}
             config={employmentDetailsConfig}
             sectionName={"employmentDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, employmentDetailsConfig)}
       />
       <Accordion
@@ -828,29 +837,26 @@ const AddUpdateBorrowerFields = ({
           <>
             <Accordion
               heading={"Income on PaySlip"}
-              renderExpandedContent={() =>
+              renderExpandedContent={() => (
                 <DynamicForm
                   details={BorrowerData.incomeOnPaySlip}
                   config={incomeOnPaySlipConfig}
                   sectionName={"incomeOnPaySlip"}
                   handleInputChange={handleInputChange}
                 />
-              }
-              error={isValidationFailed(
-                validationError,
-                incomeOnPaySlipConfig
               )}
+              error={isValidationFailed(validationError, incomeOnPaySlipConfig)}
             />
             <Accordion
               heading={"Deduction"}
-              renderExpandedContent={() =>
+              renderExpandedContent={() => (
                 <DynamicForm
                   details={BorrowerData.deductionOnPaySlip}
                   config={deductionOnPaySlipConfig}
                   sectionName={"deductionOnPaySlip"}
                   handleInputChange={handleInputChange}
                 />
-              }
+              )}
               error={isValidationFailed(
                 validationError,
                 deductionOnPaySlipConfig
@@ -862,31 +868,31 @@ const AddUpdateBorrowerFields = ({
 
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.bankDetails}
             config={bankDetailsConfig}
             sectionName={"bankDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, bankDetailsConfig)}
       />
       <Accordion
         heading={"Next of Kin Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.nextOfKinDetails}
             config={nextOfKinConfig}
             sectionName={"nextOfKinDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, nextOfKinConfig)}
       />
       <Accordion
         heading={"Other Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.otherDetails}
             config={otherDetailsConfig}
@@ -895,7 +901,7 @@ const AddUpdateBorrowerFields = ({
             handleFileUploads={handleFileUploads}
             handleFileRemove={handleFileRemove}
           />
-        }
+        )}
         error={isValidationFailed(validationError, otherDetailsConfig)}
       />
     </>
