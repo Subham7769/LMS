@@ -975,6 +975,7 @@ const initialState = {
       loanInterestStr: "",
       loanProductId: "",
       loanCreationDate: "",
+      firstEmiDate: "",
       loanReleaseDate: "",
       repaymentTenure: 0,
       repaymentTenureType: "",

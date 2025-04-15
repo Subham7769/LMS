@@ -271,7 +271,8 @@ const AddLoanFields = ({ addLoanData }) => {
   }, [interestMethod]);
 
   const today = new Date();
-  const { loanCreationDate, loanReleaseDate } = addLoanData?.generalLoanDetails;
+  const { loanCreationDate, loanReleaseDate, loanProductId } =
+    addLoanData?.generalLoanDetails;
 
   // Ensure loanCreationDate is set to today if not selected
   useEffect(() => {
@@ -379,6 +380,13 @@ const AddLoanFields = ({ addLoanData }) => {
       minSelectableDate: loanCreationDate ? new Date(loanCreationDate) : today,
     },
     {
+      labelName: "First EMI Date",
+      inputName: "firstEmiDate",
+      type: "date",
+      validation: false,
+      disabled: loanProductId === "individu-allo-ans1-di14-188dds477cf6",
+    },
+    {
       labelName: "Branch",
       inputName: "branch",
       type: "select",
@@ -394,12 +402,6 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
       searchable: true,
     },
-    // {
-    //   labelName: "CO Name",
-    //   inputName: "lhacoName",
-    //   type: "text",
-    //   validation: false,
-    // },
   ];
 
   const validationError = useSelector(
