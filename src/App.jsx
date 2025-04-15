@@ -357,6 +357,9 @@ const Refund = lazy(() =>
 const RefundApplication = lazy(() =>
   import("./components/Los-Personal/Refund/RefundApplication")
 );
+const AddRefund = lazy(() =>
+  import("./components/Los-Personal/Refund/AddRefund")
+);
 const ApproveRefunds = lazy(() =>
   import("./components/Los-Personal/Refund/ApproveRefunds")
 );
@@ -1105,12 +1108,12 @@ const routes = [
           },
           {
             path: "add-refund/new/:refundApplicationId",
-            element: <RefundApplication />,
+            element: <AddRefund />,
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "add-refund/new/:refundApplicationId",
-            element: <RefundApplication />,
+            path: "add-refund/:refundApplicationId",
+            element: <AddRefund />,
             errorElement: <RouteErrorBoundary />,
           },
           {
