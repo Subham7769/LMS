@@ -271,8 +271,15 @@ const AddLoanFields = ({ addLoanData }) => {
   }, [interestMethod]);
 
   const today = new Date();
-  const { loanCreationDate, loanReleaseDate, loanProductId } =
+  const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =
     addLoanData?.generalLoanDetails;
+
+  // Helper to add months to a date
+  const addMonths = (date, months) => {
+    const result = new Date(date);
+    result.setMonth(result.getMonth() + months);
+    return result;
+  };
 
   // Ensure loanCreationDate is set to today if not selected
   useEffect(() => {
@@ -287,13 +294,20 @@ const AddLoanFields = ({ addLoanData }) => {
     }
   }, [loanCreationDate, dispatch]);
 
-  // Reset loanReleaseDate  if loanCreationDate changes
+  // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {
       dispatch(
         updateLoanField({
           section: "generalLoanDetails",
           field: "loanReleaseDate",
+          value: "",
+        })
+      );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
           value: "",
         })
       );
@@ -315,6 +329,20 @@ const AddLoanFields = ({ addLoanData }) => {
       );
     }
   }, [loanCreationDate, loanReleaseDate, dispatch]);
+
+  // Ensure firstEmiDate ≥ loanReleaseDate + 1 month
+  useEffect(() => {
+    const minFirstEmiDate = addMonths(new Date(loanReleaseDate), 1);
+    if (firstEmiDate && new Date(firstEmiDate) < minFirstEmiDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanReleaseDate, firstEmiDate, dispatch]);
 
   // All Fields Configuration
   const generalLoanDetailsConfig = [
@@ -393,6 +421,9 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "date",
       validation: false,
       disabled: loanProductId === "payrollb-acke-dloa-nsfa-432a5a477cf6",
+      minSelectableDate: loanReleaseDate
+        ? addMonths(new Date(loanReleaseDate), 1)
+        : today,
     },
     {
       labelName: "Branch",
