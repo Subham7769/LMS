@@ -317,9 +317,6 @@ const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
 const LoanHistory = lazy(() =>
   import("./components/Los-Personal/Loans/LoanHistory")
 );
-const LoanAgreement = lazy(() =>
-  import("./components/Los-Personal/Loans/LoanAgreement")
-);
 const LoanAgreementPrint = lazy(() =>
   import("./components/Los-Personal/Loans/LoanAgreementPrint")
 );
@@ -356,6 +353,9 @@ const Refund = lazy(() =>
 );
 const RefundApplication = lazy(() =>
   import("./components/Los-Personal/Refund/RefundApplication")
+);
+const AddRefund = lazy(() =>
+  import("./components/Los-Personal/Refund/AddRefund")
 );
 const ApproveRefunds = lazy(() =>
   import("./components/Los-Personal/Refund/ApproveRefunds")
@@ -1060,11 +1060,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "loan-agreement/:loanApplicationId/:userId",
-            element: <LoanAgreement />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
             path: "collateral-register",
             element: <CollateralRegister />,
             errorElement: <RouteErrorBoundary />,
@@ -1105,12 +1100,12 @@ const routes = [
           },
           {
             path: "add-refund/new/:refundApplicationId",
-            element: <RefundApplication />,
+            element: <AddRefund />,
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "add-refund/new/:refundApplicationId",
-            element: <RefundApplication />,
+            path: "add-refund/:refundApplicationId",
+            element: <AddRefund />,
             errorElement: <RouteErrorBoundary />,
           },
           {
