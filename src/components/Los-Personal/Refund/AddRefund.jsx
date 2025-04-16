@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import AddLoanFields from "./AddLoanFields";
+import AddLoanFields from "../Loans/AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
