@@ -384,7 +384,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "firstEmiDate",
       type: "date",
       validation: false,
-      disabled: loanProductId === "individu-allo-ans1-di14-188dds477cf6",
+      disabled: loanProductId !== "individu-allo-ans1-di14-188dds477cf6",
     },
     {
       labelName: "Branch",
