@@ -184,9 +184,9 @@ const AddLoanFields = ({ addLoanData }) => {
     const matchingTenure = selectedLoanProduct.interestEligibleTenure.find(
       (tenure) =>
         `${tenure.loanTenure} ${tenure.loanTenureType}` ===
-        selectedLoanDuration &&
+          selectedLoanDuration &&
         `${tenure.repaymentTenure} ${tenure.repaymentTenureType}` ===
-        selectedRepaymentTenure
+          selectedRepaymentTenure
     );
 
     return matchingTenure
@@ -277,36 +277,44 @@ const AddLoanFields = ({ addLoanData }) => {
   // Ensure loanCreationDate is set to today if not selected
   useEffect(() => {
     if (!loanCreationDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanCreationDate",
-        value: new Date().toISOString().split("T")[0], // Setting default to today
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanCreationDate",
+          value: new Date().toISOString().split("T")[0], // Setting default to today
+        })
+      );
     }
   }, [loanCreationDate, dispatch]);
 
   // Reset loanReleaseDate  if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanReleaseDate",
-        value: "",
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
     }
   }, [loanCreationDate, dispatch]);
 
   // Ensure loanReleaseDate ≥ loanCreationDate
   useEffect(() => {
-    if (loanReleaseDate && new Date(loanReleaseDate) < new Date(loanCreationDate)) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanReleaseDate",
-        value: "",
-      }));
+    if (
+      loanReleaseDate &&
+      new Date(loanReleaseDate) < new Date(loanCreationDate)
+    ) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
     }
   }, [loanCreationDate, loanReleaseDate, dispatch]);
-
 
   // All Fields Configuration
   const generalLoanDetailsConfig = [
@@ -384,7 +392,7 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "firstEmiDate",
       type: "date",
       validation: false,
-      disabled: loanProductId !== "individu-allo-ans1-di14-188dds477cf6",
+      disabled: loanProductId === "payrollb-acke-dloa-nsfa-432a5a477cf6",
     },
     {
       labelName: "Branch",
@@ -515,25 +523,20 @@ const AddLoanFields = ({ addLoanData }) => {
     </>
   );
 
-
-
   return (
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData?.generalLoanDetails}
             config={generalLoanDetailsConfig}
             sectionName={"generalLoanDetails"}
             handleInputChange={handleInputChange}
           />
-        }
-        isOpen={true}
-        error={isValidationFailed(
-          validationError,
-          generalLoanDetailsConfig
         )}
+        isOpen={true}
+        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
       />
       <Accordion
         heading={"Refinance Details"}
