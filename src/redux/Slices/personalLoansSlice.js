@@ -119,7 +119,9 @@ export const cloneLoanApplicationsByID = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_LOAN_CLONE_APPLICATION_BY_ID_PERSONAL}${loanApplicationId}`,
+        `${
+          import.meta.env.VITE_LOAN_CLONE_APPLICATION_BY_ID_PERSONAL
+        }${loanApplicationId}`,
         {
           method: "POST",
           headers: {
@@ -928,6 +930,32 @@ export const generateLoanApplicationId = createAsyncThunk(
   }
 );
 
+export const closeLoan = createAsyncThunk(
+  "personalLoans/closeLoan",
+  async (closeLoanPayload, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_CLOSE_VIA_WALLET}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(closeLoanPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to close loan");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getRefinanceDetails = createAsyncThunk(
   "personalLoans/getRefinanceDetails",
   async ({ loanId, uid, uniqueID }, { rejectWithValue }) => {
@@ -1550,6 +1578,19 @@ const personalLoansSlice = createSlice({
         state.disbursement = action.payload;
       })
       .addCase(getDisbursementFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(closeLoan.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(closeLoan.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Loan closed successfully!");
+      })
+      .addCase(closeLoan.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);

@@ -13,6 +13,7 @@ import {
   getDisbursementFile,
   getLoanStatement,
   getOutrightSettlement,
+  closeLoan,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -33,6 +34,8 @@ import {
   CurrencyDollarIcon,
   UserIcon,
   ReceiptRefundIcon,
+  ArrowPathIcon,
+  WalletIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
@@ -162,6 +165,15 @@ const LoanHistory = () => {
     navigate(
       `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
     );
+  };
+
+  const handleCloseLoan = async (loanId, uid) => {
+    const closeLoanPayload = {
+      loanId: loanId,
+      userId: uid,
+    };
+    await dispatch(closeLoan(closeLoanPayload)).unwrap();
+    handleReset();
   };
 
   const handleInitiateRefund = async (loanId, uid, uniqueID) => {
@@ -459,7 +471,14 @@ const LoanHistory = () => {
                     )
                   }
                   rectangle={true}
-                  buttonIcon={ReceiptRefundIcon}
+                  buttonIcon={ArrowPathIcon}
+                  buttonType="tertiary"
+                />
+                <Button
+                  buttonName={"Close Loan via Wallet"}
+                  onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
+                  rectangle={true}
+                  buttonIcon={WalletIcon}
                   buttonType="tertiary"
                 />
               </div>

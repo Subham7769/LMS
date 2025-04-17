@@ -45,7 +45,7 @@ const Button = ({
       <div className={`flex items-center justify-center ${loading ? "opacity-50" : "opacity-100"}`}>
         {ButtonIcon && <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
         {ButtonIcon ? (
-          <span>{buttonName}</span>
+          <span className="ml-2">{buttonName}</span>
         ) : (
           <span className="text-center w-full">{buttonName}</span>
         )}
