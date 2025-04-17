@@ -209,10 +209,11 @@ export const fetchList = createAsyncThunk(
 
     // Create a lookup map of loan schema IDs to names
     const loanSchemaMap = new Map(
-      loanschema.submenuItems.map((item) => [
-        item.href.split("/").pop(),
-        item.name,
-      ])
+      loanschema.submenuItems.map((item) => {
+        const match = item.href.match(/loan\/project\/([0-9a-fA-F-]{36})/);
+        const projectId = match ? match[1] : null;
+        return [projectId, item.name];
+      })
     );
 
     // Update submenuItems with correct loanSchema names

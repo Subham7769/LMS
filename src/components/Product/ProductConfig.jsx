@@ -71,7 +71,7 @@ const ProductConfig = () => {
       <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
         Loan Parameter
       </h2>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         <InputSelect
           labelName="Customer Type"
           inputOptions={tenureOptions}
@@ -135,7 +135,7 @@ const ProductConfig = () => {
       <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
         Work Flow
       </h2>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <InputSelect
           labelName="Approval Config"
           inputOptions={formateDataDropDown(

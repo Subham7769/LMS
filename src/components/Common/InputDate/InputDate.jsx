@@ -29,7 +29,7 @@ const InputDate = ({
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
   const { userData } = useSelector((state) => state.auth);
-    const roleName = userData?.roles[0]?.name;
+  const roleName = userData?.roles[0]?.name;
 
   const validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
   if (isValidation) {
@@ -48,9 +48,9 @@ const InputDate = ({
     <>
       {labelName && (
         <label
-          className={`block ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-sm font-semibold`}
+          className={`block text-sm font-medium ${
+            validationError[validationKey] ? "text-red-600" : "text-gray-600"
+          } px-1`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Field required" : labelName}{" "}
@@ -64,19 +64,19 @@ const InputDate = ({
             onChange({
               target: {
                 name: inputName,
-                value: date ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0] : "",
+                value: date
+                  ? new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                      .toISOString()
+                      .split("T")[0]
+                  : "",
               },
             })
           } // Store date as YYYY-MM-DD string
           onFocus={() => dispatch(setValidationError(validationKey))}
-          className={`block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 
+          className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
           ${showIcon ? "" : ""} 
-          ${
-            validationError[validationKey]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          sm:text-sm sm:leading-6`}
+          ${validationError[validationKey] ? "border-red-300" : ""} 
+          `}
           disabled={isDisabled}
           minDate={minSelectableDate}
           maxDate={maxSelectableDate}
@@ -88,7 +88,7 @@ const InputDate = ({
           toggleCalendarOnIconClick
           showIcon={showIcon}
           icon={
-            <CalendarDaysIcon className="mt-1 h-5 w-5" aria-hidden="true" />
+            <CalendarDaysIcon className="h-5 w-5" aria-hidden="true" />
           }
           popperClassName="text-xs"
         />

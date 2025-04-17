@@ -6,6 +6,7 @@ const ToggleSwitch = ({
   inputName,
   inputChecked,
   onChange,
+  disabled,
 }) => {
   return (
     <li className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700/60">
@@ -34,6 +35,7 @@ const ToggleSwitch = ({
             className="sr-only"
             checked={inputChecked}
             onChange={onChange}
+            disabled={disabled}
           />
           <label
             htmlFor={inputName}

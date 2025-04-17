@@ -10,9 +10,11 @@ import {
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
+import Tooltip from "../Tooltip/Tooltip";
 
 const InputNumber = ({
   labelName,
+  toolTipText,
   inputName,
   inputValue,
   inputValueMin,
@@ -109,17 +111,24 @@ const InputNumber = ({
 
   return (
     <div className="w-full">
-      {labelName && (
-        <label
-          className={`block ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-600"
-          } px-1 text-sm font-medium`}
-          htmlFor={inputName}
-        >
-          {validationError[validationKey] ? "Field required" : labelName}{" "}
-          {isValidation && <span className="text-red-600">*</span>}
-        </label>
-      )}
+      <div className="flex items-center justify-between">
+        {labelName && (
+          <label
+            className={`block ${
+              validationError[validationKey] ? "text-red-600" : "text-gray-600"
+            } px-1 text-sm font-medium`}
+            htmlFor={inputName}
+          >
+            {validationError[validationKey] ? "Field required" : labelName}{" "}
+            {isValidation && <span className="text-red-600">*</span>}
+          </label>
+        )}
+        {toolTipText && (
+          <Tooltip className="ml-2" bg="dark" size="lg" position="top left">
+            <div className="text-xs text-gray-200">{toolTipText}</div>
+          </Tooltip>
+        )}
+      </div>
       <div className="flex justify-center items-center relative">
         {/* Add the internal CSS to hide the arrows */}
         <style>

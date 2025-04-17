@@ -88,6 +88,17 @@ const ProjectPage = lazy(() => import("./pages/ProjectPage"));
 const CreateNewProject = lazy(() =>
   import("./components/Project/CreateNewProject")
 );
+const BasicDetails = lazy(() => import("./components/Project/BasicDetails"));
+const InterestCapping = lazy(() =>
+  import("./components/Project/InterestCapping")
+);
+const RollOver = lazy(() => import("./components/Project/RollOver"));
+const LatePenalty = lazy(() => import("./components/Project/LatePenalty"));
+const RecurringFees = lazy(() => import("./components/Project/RecurringFees"));
+const GracePeriod = lazy(() => import("./components/Project/GracePeriod"));
+const AdditionalSettings = lazy(() =>
+  import("./components/Project/AdditionalSettings")
+);
 
 // Product Imports
 const ProductPage = lazy(() => import("./pages/ProductPage"));
@@ -653,6 +664,43 @@ const routes = [
         path: "project/:projectId",
         element: <Project />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-details",
+            element: <BasicDetails />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-capping",
+            element: <InterestCapping />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "roll-over",
+            element: <RollOver />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "late-penalty",
+            element: <LatePenalty />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "recurring-fees",
+            element: <RecurringFees />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "grace-period",
+            element: <GracePeriod />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "additional-settings",
+            element: <AdditionalSettings />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "loan-product/:productType/:projectId/:loanProId",
@@ -800,6 +848,43 @@ const routes = [
         path: "project/newProject/:projectName",
         element: <CreateNewProject />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-details",
+            element: <BasicDetails />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-capping",
+            element: <InterestCapping />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "roll-over",
+            element: <RollOver />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "late-penalty",
+            element: <LatePenalty />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "recurring-fees",
+            element: <RecurringFees />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "grace-period",
+            element: <GracePeriod />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "additional-settings",
+            element: <AdditionalSettings />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "loan-product/newProduct/:productName",

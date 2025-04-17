@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
@@ -17,9 +17,18 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
-import { toast } from "react-toastify";
-import ProjectInputFields from "./ProjectInputFields";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import SectionSidebar from "../Common/Sidebar/SectionSidebar";
+import {
+  AdjustmentsHorizontalIcon,
+  BanknotesIcon,
+  CalculatorIcon,
+  ClockIcon,
+  CurrencyDollarIcon,
+  DocumentTextIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 const Project = () => {
   const [clientIdsString, setClientIdsString] = useState("");
@@ -74,9 +83,41 @@ const Project = () => {
     navigate("/loan/project");
   };
 
-  const addNoEditToast = () => {
-    toast.error("Cannot edit start date");
-  };
+  const basePath = `/loan/project/${projectId}`;
+
+  const navItems = [
+    {
+      label: "Basic Details",
+      path: "/basic-details",
+      ButtonIcon: DocumentTextIcon,
+    },
+    {
+      label: "Interest Capping",
+      path: "/interest-capping",
+      ButtonIcon: CalculatorIcon,
+    },
+    { label: "Roll Over", path: "/roll-over", ButtonIcon: BanknotesIcon },
+    {
+      label: "Late Penalty",
+      path: "/late-penalty",
+      ButtonIcon: ExclamationTriangleIcon,
+    },
+    {
+      label: "Recurring Fees",
+      path: "/recurring-fees",
+      ButtonIcon: CurrencyDollarIcon,
+    },
+    {
+      label: "Grace Period",
+      path: "/grace-period",
+      ButtonIcon: ClockIcon,
+    },
+    {
+      label: "Additional Settings",
+      path: "/additional-settings",
+      ButtonIcon: AdjustmentsHorizontalIcon,
+    },
+  ];
 
   return (
     <>
@@ -87,30 +128,38 @@ const Project = () => {
         handleDelete={handleDelete}
         loading={loading}
       />
-      <form className="flex flex-col gap-5">
-        <ProjectInputFields
-          projectData={projectData}
-          handleChange={handleChange}
-          addNoEditToast={addNoEditToast}
-          clientIdsString={clientIdsString}
-          setClientIdsString={setClientIdsString}
-          loading={loading}
-        />
-
-        {!hasViewOnlyAccess(roleName) && (
-          <div className="flex items-center justify-end gap-4 mt-2">
-            {!loading && (
-              <Button
-                buttonName={"Update"}
-                buttonIcon={CheckCircleIcon}
-                onClick={handleUpdate}
-                rectangle={true}
-                loading={loading}
+      <ContainerTile loading={loading}>
+        <div className="flex flex-col md:flex-row md:-mr-px">
+          <SectionSidebar navItems={navItems} basePath={basePath} />
+          <div className="flex-grow flex flex-col justify-between">
+            <div className="p-5">
+              <Outlet
+                context={{
+                  projectData,
+                  handleChange,
+                  clientIdsString,
+                  setClientIdsString,
+                }}
               />
-            )}
+            </div>
+            <div className="border-t border-gray-200 dark:border-gray-700/60 px-6 py-5">
+              {!hasViewOnlyAccess(roleName) && (
+                <div className="text-right">
+                  {!loading && (
+                    <Button
+                      buttonName={"Update"}
+                      buttonIcon={CheckCircleIcon}
+                      onClick={handleUpdate}
+                      buttonType={"primary"}
+                      loading={loading}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </form>
+        </div>
+      </ContainerTile>
     </>
   );
 };
