@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
-import AddLoanFields from "./AddLoanFields";
+import AddRefundFields from "./AddRefundFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import {
-  saveDraftLoanData,
-  submitLoan,
   getLoanApplicationsByID,
   fetchLoanProductData,
   setLoanApplicationId,
   setLoanBorrowerId,
-  getMaxPrincipalData,
-  getDocsByIdnUsage,
 } from "../../../redux/Slices/personalLoansSlice";
+import {
+  submitRefund,
+  saveDraftRefundData,
+  getDocsByIdnUsage,
+  setRefundApplicationId,
+} from "../../../redux/Slices/personalRefundSlice";
 import {
   clearValidationError,
   setFields,
@@ -20,63 +22,37 @@ import {
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
+import { getOpenLoans } from "../../../redux/Slices/personalRefundSlice";
 
 const AddRefund = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loanApplicationId, BorrowerId } = useParams();
+  const { refundApplicationId } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
-  const { addLoanData, loading, loanProductData } = useSelector(
-    (state) => state.personalLoans
-  );
-
-  // Decode the BorrowerId to restore its original value
-  const decodedBorrowerId = decodeURIComponent(BorrowerId);
-  // const isValid = useSelector((state) => state.validation.isValid);
+  const { refundData, loading, openLoans } = useSelector((state) => state.personalRefund);
 
   useEffect(() => {
-    if (!currentPath.includes("new")) {
-      dispatch(getLoanApplicationsByID(loanApplicationId));
+    if (openLoans.length < 1) {
+      dispatch(getOpenLoans());
     }
-    dispatch(fetchLoanProductData());
+    dispatch(setRefundApplicationId(refundApplicationId));
+  }, [dispatch, openLoans, refundApplicationId]);
+
+  useEffect(() => {
+
     const keysArray = [
-      "loanProductId",
-      "borrowerId",
-      "disbursedBy",
-      "loanReleaseDate",
-      "loanDurationStr",
-      "repaymentTenureStr",
-      "branch",
+      "loanId",
+      "refundAmount",
+      "causeOfRefund",
+      "relatedPaySlipMonth",
     ];
     dispatch(setFields(keysArray));
-    dispatch(setLoanApplicationId(loanApplicationId));
-    if (decodedBorrowerId !== "undefined") {
-      dispatch(setLoanBorrowerId(decodedBorrowerId));
-    }
-
     return () => {
       dispatch(clearValidationError());
     };
-  }, [dispatch, loanApplicationId, decodedBorrowerId]);
-
-  useEffect(() => {
-    if (addLoanData?.generalLoanDetails?.loanProductId) {
-      const selectedDynamicDoc = loanProductData.find(
-        (product) =>
-          product?.loanProductId ===
-          addLoanData?.generalLoanDetails?.loanProductId
-      );
-      dispatch(
-        getDocsByIdnUsage({
-          dynamicDocumentTempId: selectedDynamicDoc?.dynamicDocumentTempId,
-          usage: "BORROWER_OFFERS",
-        })
-      );
-    }
-  }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
+  }, [dispatch]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -96,68 +72,41 @@ const AddRefund = () => {
     return result;
   }
 
-  // console.log(addLoanData);
+  const handleDraft = async () => {
+    await dispatch(saveDraftRefundData(refundData)).unwrap();
+    navigate("/loan/loan-origination-system/personal/refund/refund-application");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ensure borrowerId is set to the sanitized uniqueID
-    const sanitizedUniqueID = sanitizeUid(
-      addLoanData.generalLoanDetails.uniqueID
-    );
-    const updatedLoanData = {
-      ...addLoanData,
-      generalLoanDetails: {
-        ...addLoanData.generalLoanDetails,
+    // Ensure borrowerId is set to sanitized uniqueID
+    const sanitizedUniqueID = sanitizeUid(refundData.refundDetails.borrowerId);
+    const updatedRefundData = {
+      ...refundData,
+      refundDetails: {
+        ...refundData.refundDetails,
         borrowerId: sanitizedUniqueID,
       },
     };
-    await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
+    await dispatch(validateForm(flattenToSimpleObject(updatedRefundData)));
     const state = store.getState();
     const isValid = state.validation.isValid;
     const submitPayload = {
-      ...updatedLoanData.generalLoanDetails,
-      documents: updatedLoanData.documents,
-      loanApplicationId: updatedLoanData.loanApplicationId,
-      refinanceDetails: updatedLoanData.refinanceDetails,
+      ...updatedRefundData.refundDetails,
+      documents: updatedRefundData.documents,
+      refundApplicationId: updatedRefundData.refundApplicationId,
     };
     if (isValid) {
-      await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
-      await dispatch(submitLoan(submitPayload)).unwrap();
-      navigate("/loan/loan-origination-system/personal/loans/loan-offers");
+      await dispatch(saveDraftRefundData(refundData)).unwrap();
+      await dispatch(submitRefund(submitPayload)).unwrap();
+      navigate("/loan/loan-origination-system/personal/refund/refund-application");
     }
   };
 
-  const handleDraft = async () => {
-    // Ensure borrowerId is set to the sanitized uniqueID
-    const sanitizedUniqueID = sanitizeUid(
-      addLoanData.generalLoanDetails.uniqueID
-    );
-    const updatedLoanData = {
-      ...addLoanData,
-      generalLoanDetails: {
-        ...addLoanData.generalLoanDetails,
-        borrowerId: sanitizedUniqueID,
-      },
-    };
-    await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
-    navigate("/loan/loan-origination-system/personal/loans/loan-application");
+  const handleCancel = () => {
+    navigate("/loan/loan-origination-system/personal/refund/refund-application");
   };
 
-  const handleCanel = async () => {
-    navigate("/loan/loan-origination-system/personal/loans/loan-application");
-  };
-
-  const getMaxPrincipal = async () => {
-    const maxPrincipalPayload = {
-      loanProductId: addLoanData.generalLoanDetails.loanProductId,
-      borrowerId: addLoanData.generalLoanDetails.uniqueID,
-      interestMethod: addLoanData.generalLoanDetails.interestMethod,
-      loanInterest: addLoanData.generalLoanDetails.loanInterest,
-      loanInterestType: addLoanData.generalLoanDetails.loanInterestType,
-      tenure: addLoanData.generalLoanDetails.repaymentTenure,
-      refinanceDetails: addLoanData.refinanceDetails,
-    };
-    await dispatch(getMaxPrincipalData(maxPrincipalPayload)).unwrap();
-  };
 
   if (loading) {
     return <ContainerTile loading={loading} />;
@@ -169,28 +118,16 @@ const AddRefund = () => {
         className={`border rounded-lg shadow-sm bg-white mb-3 hover:bg-indigo-50 px-4 py-4`}
       >
         <div className="text-gray-500 ">
-          Refund Application ID: {addLoanData?.loanApplicationId}
+          Refund Application ID: {refundApplicationId}
         </div>
       </div>
-      <AddLoanFields addLoanData={addLoanData} />
-      {/* Resuable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
-      <div className="flex justify-between mt-5 items-end">
-        <div className="text-xs text-text-light-tertiary flex items-center gap-1">
-          <InformationCircleIcon
-            className="-mt-0.5 h-5 w-5"
-            aria-hidden="true"
-          />
-          Loan Product, Borrower Id, Loan Duration & Repayment Tenure required
-          for fetching max principal Amount
-        </div>
+      <AddRefundFields
+        refundData={refundData}
+        openLoans={openLoans}
+        loanId={refundData.refundDetails.loanId} />
+      {/* Reusable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
+      <div className="flex justify-end mt-5 items-end">
         <div className="flex gap-x-5">
-          <Button
-            buttonName="Get Max Principal Amt"
-            onClick={getMaxPrincipal}
-            buttonType="tertiary"
-            rectangle={true}
-            disabled={!(addLoanData?.generalLoanDetails?.loanDuration && addLoanData?.generalLoanDetails?.repaymentTenureStr)}
-          />
           <Button
             buttonName="Save Draft"
             onClick={handleDraft}
@@ -200,7 +137,7 @@ const AddRefund = () => {
           <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
           <Button
             buttonName="Cancel"
-            onClick={handleCanel}
+            onClick={handleCancel}
             rectangle={true}
             buttonType="destructive"
           />

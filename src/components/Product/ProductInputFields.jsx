@@ -264,13 +264,24 @@ const ProductInputFields = ({ productData, handleChange }) => {
           isValidation={true}
         />
         <InputSelect
-          labelName="Document Config"
+          labelName="Loan Doc Config"
           inputOptions={formateDataDropDown(
             "/loan/document-config/",
             documentConfigDataInfo
           )}
           inputName="dynamicDocumentTempId"
           inputValue={productData?.dynamicDocumentTempId}
+          onChange={handleChange}
+          isValidation={true}
+        />
+        <InputSelect
+          labelName="Refund Doc Config"
+          inputOptions={formateDataDropDown(
+            "/loan/document-config/",
+            documentConfigDataInfo
+          )}
+          inputName="dynamicRefundDocTempId"
+          inputValue={productData?.dynamicRefundDocTempId}
           onChange={handleChange}
           isValidation={true}
         />
