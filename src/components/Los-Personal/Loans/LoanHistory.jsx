@@ -443,7 +443,7 @@ const LoanHistory = () => {
           <div className="flex justify-end gap-2 px-5">
             {(rowData.loanStatus === "ACTIVATED" ||
               rowData.loanStatus === "CLOSED") && (
-              <div>
+              <div className="hidden">
                 <Button
                   buttonName={"Initiate Refund"}
                   onClick={() =>
@@ -460,7 +460,7 @@ const LoanHistory = () => {
               </div>
             )}
             {rowData.loanStatus === "ACTIVATED" && (
-              <div>
+              <div className="flex gap-2">
                 <Button
                   buttonName={"Refinance Loan"}
                   onClick={() =>
