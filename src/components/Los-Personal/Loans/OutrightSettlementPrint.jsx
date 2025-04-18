@@ -34,7 +34,7 @@ const OutrightSettlementPrint = () => {
     if (!location.pathname.includes("loan-origination-system")) {
       const timeoutId = setTimeout(() => {
         window.print();
-      }, 2000);
+      }, 3000);
 
       // Cleanup to avoid potential memory leaks
       return () => clearTimeout(timeoutId);
@@ -87,7 +87,7 @@ const OutrightSettlementPrint = () => {
             <img src={longHornLogo} className="w-32" />
           </div>
           <div className="font-semibold text-center flex-1">
-            Loan Outright Setlement Quote
+            Loan Outright Settlement Quote
           </div>
         </div>
         {/* Table Wrapper for Scroll on Screen */}
