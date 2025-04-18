@@ -39,6 +39,7 @@ import {
 } from "../../../redux/Slices/validationSlice";
 
 import ViewBorrowerDetailsModal from "../Borrowers/ViewBorrowerDetailsModal";
+import { getPendingRefunds } from "../../../redux/Slices/personalRefundSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -51,8 +52,11 @@ function transformData(inputArray) {
 
 const ApproveRefunds = () => {
   const dispatch = useDispatch();
-  const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
+  const { approveLoans, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
+  const { approveRefund, loading, approveRefundTotalElements } = useSelector(
+    (state) => state.personalRefund
+  );
   const { userData, roleName } = useSelector((state) => state.auth);
   const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -80,7 +84,7 @@ const ApproveRefunds = () => {
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
-      getPendingLoans({
+      getPendingRefunds({
         page: currentPage,
         size: pageSize,
         getPayload: { roleNames: [roleName] },
@@ -113,7 +117,7 @@ const ApproveRefunds = () => {
     setPalSearchBy("");
     setPalSearchValue("");
     dispatch(
-      getPendingLoans({
+      getPendingRefunds({
         page: 0,
         size: pageSize,
         getPayload: { roleNames: [roleName] },
@@ -145,7 +149,7 @@ const ApproveRefunds = () => {
 
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
     await dispatch(
-      getPendingLoans({
+      getPendingRefunds({
         page: 0,
         size: 20,
         getPayload: { roleNames: [roleName] },
@@ -396,9 +400,9 @@ const ApproveRefunds = () => {
 
   useEffect(() => {
     const filteredApproveLoansDataFunction = () => {
-      if (!approveLoans) return [];
+      if (!approveRefund) return [];
 
-      const filteredData = approveLoans.filter(
+      const filteredData = approveRefund.filter(
         (item) =>
           // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
           !item?.loanActionDetailsList?.some(
@@ -412,7 +416,7 @@ const ApproveRefunds = () => {
     };
 
     setFilteredApproveLoansData(filteredApproveLoansDataFunction());
-  }, [approveLoans, roleName, userData]);
+  }, [approveRefund, roleName, userData]);
 
   return (
     <div className={`flex flex-col gap-3`}>

@@ -36,7 +36,7 @@ const AddLoans = () => {
   const decodedBorrowerId = decodeURIComponent(BorrowerId);
   // const isValid = useSelector((state) => state.validation.isValid);
 
-  console.log(BorrowerId);
+  // console.log(BorrowerId);
 
   useEffect(() => {
     if (!currentPath.includes("new")) {

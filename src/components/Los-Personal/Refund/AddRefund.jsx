@@ -4,16 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import {
-  getLoanApplicationsByID,
-  fetchLoanProductData,
-  setLoanApplicationId,
-  setLoanBorrowerId,
-} from "../../../redux/Slices/personalLoansSlice";
-import {
   submitRefund,
   saveDraftRefundData,
   getDocsByIdnUsage,
   setRefundApplicationId,
+  getRefundApplicationsByID,
 } from "../../../redux/Slices/personalRefundSlice";
 import {
   clearValidationError,
@@ -31,17 +26,18 @@ const AddRefund = () => {
   const { refundApplicationId } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
-  const { refundData, loading, openLoans } = useSelector((state) => state.personalRefund);
+  const { refundData, loading, openLoans } = useSelector(
+    (state) => state.personalRefund
+  );
 
   useEffect(() => {
     if (openLoans.length < 1) {
       dispatch(getOpenLoans());
     }
+    if (!currentPath.includes("new")) {
+      dispatch(getRefundApplicationsByID(refundApplicationId));
+    }
     dispatch(setRefundApplicationId(refundApplicationId));
-  }, [dispatch, openLoans, refundApplicationId]);
-
-  useEffect(() => {
-
     const keysArray = [
       "loanId",
       "refundAmount",
@@ -52,7 +48,7 @@ const AddRefund = () => {
     return () => {
       dispatch(clearValidationError());
     };
-  }, [dispatch]);
+  }, [dispatch, openLoans, refundApplicationId]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -73,19 +69,31 @@ const AddRefund = () => {
   }
 
   const handleDraft = async () => {
-    await dispatch(saveDraftRefundData(refundData)).unwrap();
-    navigate("/loan/loan-origination-system/personal/refund/refund-application");
+    const [loanId, userId] = refundData?.refundDetails?.loanId.split("@");
+    const draftPayload = {
+      ...refundData,
+      refundDetails: {
+        ...refundData.refundDetails,
+        loanId: loanId,
+      },
+    };
+    await dispatch(saveDraftRefundData(draftPayload)).unwrap();
+    navigate(
+      "/loan/loan-origination-system/personal/refund/refund-application"
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to sanitized uniqueID
     const sanitizedUniqueID = sanitizeUid(refundData.refundDetails.borrowerId);
+    const [loanId, userId] = refundData?.refundDetails?.loanId.split("@");
     const updatedRefundData = {
       ...refundData,
       refundDetails: {
         ...refundData.refundDetails,
         borrowerId: sanitizedUniqueID,
+        loanId: loanId,
       },
     };
     await dispatch(validateForm(flattenToSimpleObject(updatedRefundData)));
@@ -97,16 +105,19 @@ const AddRefund = () => {
       refundApplicationId: updatedRefundData.refundApplicationId,
     };
     if (isValid) {
-      await dispatch(saveDraftRefundData(refundData)).unwrap();
+      await dispatch(saveDraftRefundData(updatedRefundData)).unwrap();
       await dispatch(submitRefund(submitPayload)).unwrap();
-      navigate("/loan/loan-origination-system/personal/refund/refund-application");
+      navigate(
+        "/loan/loan-origination-system/personal/refund/refund-application"
+      );
     }
   };
 
   const handleCancel = () => {
-    navigate("/loan/loan-origination-system/personal/refund/refund-application");
+    navigate(
+      "/loan/loan-origination-system/personal/refund/refund-application"
+    );
   };
-
 
   if (loading) {
     return <ContainerTile loading={loading} />;
@@ -124,7 +135,8 @@ const AddRefund = () => {
       <AddRefundFields
         refundData={refundData}
         openLoans={openLoans}
-        loanId={refundData.refundDetails.loanId} />
+        loanId={refundData.refundDetails.loanId}
+      />
       {/* Reusable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
       <div className="flex justify-end mt-5 items-end">
         <div className="flex gap-x-5">

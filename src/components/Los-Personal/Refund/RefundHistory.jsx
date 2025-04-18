@@ -149,7 +149,7 @@ const RefundHistory = () => {
     return (
       <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
         <div className="grid grid-cols-2 gap-4">
-          {/* <CardInfo
+          <CardInfo
             cardIcon={UserIcon}
             cardTitle="Borrower Information"
             className={"bg-white border-border-gray-primary border"}
@@ -192,7 +192,7 @@ const RefundHistory = () => {
                 </div>
               </div>
             </div>
-          </CardInfo> */}
+          </CardInfo>
           <CardInfo
             cardIcon={CurrencyDollarIcon}
             cardTitle="Refund Information"
@@ -232,12 +232,12 @@ const RefundHistory = () => {
               ))}
           </div>
         </div>
-        {/* {rowData?.loanActionDetailsList && (
+        {rowData?.refundActionDetailsList && (
           <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
             <div className="font-semibold text-xl mb-3">
               Loan Action History
             </div>
-            {rowData?.loanActionDetailsList.map((action, index) => {
+            {rowData?.refundActionDetailsList.map((action, index) => {
               const actionKeys = Object.keys(action);
               let sentence = "";
 
@@ -269,7 +269,7 @@ const RefundHistory = () => {
               );
             })}
           </div>
-        )} */}
+        )}
         <div className="flex justify-between items-end">
           {rowData.documents.some(
             (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
@@ -278,7 +278,7 @@ const RefundHistory = () => {
           ) : (
             <div>
               <InputFile
-                placeholder="Upload Signed Agreement"
+                placeholder="Upload Signed Refund Request"
                 inputName={"signedAgreement"}
                 inputValue={signedAgreement}
                 onChange={(e) => handleFileChange(e, rowData.loanId)}

@@ -221,8 +221,6 @@ export const submitRefund = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to transfer");
       }
-      const responseData = await response.json();
-      return responseData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -243,8 +241,8 @@ export const uploadDocumentFile = createAsyncThunk(
       } = fileUploadParams;
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_FILE_UPLOAD_PERSONAL
-        }?refundApplicationId=${refundApplicationId}&documentKey=${documentKey}&verified=${verified}&borrowerType=${borrowerType}`,
+          import.meta.env.VITE_REFUND_FILE_UPLOAD_PERSONAL
+        }?refundApplicationId=${refundApplicationId}&documentKey=${documentKey}&verified=${verified}`,
         {
           method: "POST",
           headers: {
@@ -268,13 +266,13 @@ export const uploadDocumentFile = createAsyncThunk(
 
 export const getRefundApplicationsByID = createAsyncThunk(
   "personalRefund/getRefundApplicationsByID",
-  async (loanApplicationId, { rejectWithValue }) => {
+  async (refundApplicationId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
           import.meta.env.VITE_REFUND_READ_REFUND_APPLICATION_BY_ID_PERSONAL
-        }${loanApplicationId}`,
+        }${refundApplicationId}`,
         {
           method: "GET",
           headers: {
@@ -374,8 +372,36 @@ export const deleteDocumentFile = createAsyncThunk(
   }
 );
 
+export const getPendingRefunds = createAsyncThunk(
+  "personalRefund/getPendingRefunds",
+  async ({ page, size, getPayload }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_REFUND_READ_REFUND_PENDING_PERSONAL
+        }?pageNumber=${page}&pageSize=${size}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const getRefundistory = createAsyncThunk(
-  "personalLoans/getRefundistory",
+  "personalRefund/getRefundistory",
   async ({ page, size }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -403,7 +429,7 @@ export const getRefundistory = createAsyncThunk(
 );
 
 export const getRefundHistoryByField = createAsyncThunk(
-  "personalLoans/getRefundHistoryByField",
+  "personalRefund/getRefundHistoryByField",
   async ({ field, value }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -431,7 +457,7 @@ export const getRefundHistoryByField = createAsyncThunk(
 );
 
 export const uploadSignedRefundRequest = createAsyncThunk(
-  "personalLoans/uploadSignedRefundRequest",
+  "personalRefund/uploadSignedRefundRequest",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
       // const token = localStorage.getItem("authToken");
@@ -492,9 +518,12 @@ const personalRefundSlice = createSlice({
   initialState,
   reducers: {
     updateRefundField: (state, action) => {
-      const { section, field, value, type, checked } = action.payload;
+      const { section, field, value, type, checked, index } = action.payload;
       // If section is provided, update specific field in that section
-      if (section && state.refundData[section]) {
+      if (section === "documents") {
+        state.refundData.documents[index][field] =
+          type === "checkbox" ? checked : value;
+      } else if (section && state.refundData[section]) {
         state.refundData[section][field] =
           type === "checkbox" ? checked : value;
       } else {
@@ -631,6 +660,16 @@ const personalRefundSlice = createSlice({
       })
       .addCase(getRefundApplicationsByID.fulfilled, (state, action) => {
         state.loading = false;
+        const updatedRefundData = action.payload;
+        state.refundData = {
+          ...updatedRefundData,
+          refundDetails: {
+            ...updatedRefundData.refundDetails,
+            loanId:
+              `${updatedRefundData.refundDetails.loanId}@${updatedRefundData.refundDetails.borrowerId}` ||
+              "",
+          },
+        };
       })
       .addCase(getRefundApplicationsByID.rejected, (state, action) => {
         state.loading = false;
@@ -694,6 +733,20 @@ const personalRefundSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getPendingRefunds.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getPendingRefunds.fulfilled, (state, action) => {
+        state.loading = false;
+        state.approveRefund = action.payload.content;
+        state.approveRefundTotalElements = action.payload.totalElements;
+      })
+      .addCase(getPendingRefunds.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(getRefundistory.pending, (state) => {
         state.loading = true;

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
+import {
+  TrashIcon,
+  PencilIcon,
+  DocumentDuplicateIcon,
+} from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -46,7 +50,8 @@ const RefundApplication = () => {
   const [plaSearchValue, setPlaSearchValue] = useState("");
   const [plaSearchBy, setPlaSearchBy] = useState("");
   const navigate = useNavigate();
-  const { refundApplications, refundApplicationsTotalElements, loading } = useSelector((state) => state.personalRefund);
+  const { refundApplications, refundApplicationsTotalElements, loading } =
+    useSelector((state) => state.personalRefund);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
@@ -86,7 +91,10 @@ const RefundApplication = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getRefundApplicationByField({ field: plaSearchBy, value: plaSearchValue })
+        getRefundApplicationByField({
+          field: plaSearchBy,
+          value: plaSearchValue,
+        })
       );
     }
     // setPlaSearchBy("");
@@ -102,20 +110,24 @@ const RefundApplication = () => {
   const handleNewApplication = async () => {
     dispatch(resetRefundData());
     try {
-      const refundApplicationId = await dispatch(generateRefundApplicationId()).unwrap();
-      navigate(`/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}`);
+      const refundApplicationId = await dispatch(
+        generateRefundApplicationId()
+      ).unwrap();
+      navigate(
+        `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}`
+      );
     } catch (error) {
       console.error("Failed to generate loan application ID:", error);
     }
   };
 
   const handleEditApplication = async (rowData) => {
-    // navigate(
-    //   `/loan/loan-origination-system/personal/refund/add-loan/${rowData?.loanApplicationId}`
-    // );
-    // await dispatch(
-    //   getRefundApplicationsByID(rowData?.loanApplicationId)
-    // ).unwrap();
+    navigate(
+      `/loan/loan-origination-system/personal/refund/add-refund/${rowData?.refundApplicationId}`
+    );
+    await dispatch(
+      getRefundApplicationsByID(rowData?.refundApplicationId)
+    ).unwrap();
   };
 
   const handleRejectApplication = async (refundApplicationId) => {
@@ -123,38 +135,33 @@ const RefundApplication = () => {
     dispatch(getRefundApplications({ page: 0, size: 20 }));
   };
 
-
   const renderActionList = (rowData) => {
-    if (
-      rowData.status === "Completed" ||
-     
-      hasViewOnlyAccessGroup3(roleName)
-    ) {
+    if (rowData.status === "Completed" || hasViewOnlyAccessGroup3(roleName)) {
       return <div className="flex justify-center gap-4 px-5">-</div>;
     }
     return (
       <div className="flex justify-center gap-4 px-5">
-        {rowData.status !== "Submitted" && <Button
-          onClick={() => handleEditApplication(rowData)}
-          buttonIcon={PencilIcon}
-          circle={true}
-          className={`mt-4 h-fit self-center`}
-          buttonType="secondary"
-        />}
-{
-
-        rowData.status !== "Cancel" && <Button
-          onClick={() => handleRejectApplication(rowData.refundApplicationId)}
-          buttonIcon={TrashIcon}
-          circle={true}
-          className={`mt-4 h-fit self-center`}
-          buttonType="destructive"
-        />
-}
+        {rowData.status !== "Submitted" && (
+          <Button
+            onClick={() => handleEditApplication(rowData)}
+            buttonIcon={PencilIcon}
+            circle={true}
+            className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
+          />
+        )}
+        {rowData.status !== "Cancel" && (
+          <Button
+            onClick={() => handleRejectApplication(rowData.refundApplicationId)}
+            buttonIcon={TrashIcon}
+            circle={true}
+            className={`mt-4 h-fit self-center`}
+            buttonType="destructive"
+          />
+        )}
       </div>
     );
   };
-
 
   return (
     <div className={`flex flex-col gap-3`}>

@@ -10,9 +10,6 @@ import {
   uploadDocumentFile,
 } from "../../../redux/Slices/personalRefundSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  CreditCardIcon
-} from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
@@ -46,14 +43,16 @@ const AddRefundFields = ({ refundData, openLoans, loanId }) => {
 
   const handleInputChange = async (e, section, index) => {
     const { name, value, type, checked } = e.target;
-  
+
     if (name === "loanId") {
       const [loanId, userId] = value.split("@");
-  
+
       try {
-        const result = await dispatch(getRefundApplicationDetails({ userId, loanId })).unwrap();
+        const result = await dispatch(
+          getRefundApplicationDetails({ userId, loanId })
+        ).unwrap();
         const dynamicRefundDocTempId = result?.dynamicRefundDocTempId;
-  
+
         if (dynamicRefundDocTempId) {
           dispatch(
             getDocsByIdnUsage({
@@ -66,12 +65,11 @@ const AddRefundFields = ({ refundData, openLoans, loanId }) => {
         console.error("Failed to fetch refund application details", error);
       }
     }
-  
+
     dispatch(
       updateRefundField({ section, field: name, value, type, checked, index })
     );
   };
- 
 
   const handleFileChange = (e, section, index) => {
     const fileUploadParams = {
@@ -81,7 +79,7 @@ const AddRefundFields = ({ refundData, openLoans, loanId }) => {
       borrowerType: "PERSONAL_BORROWER",
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
-console.log(e.target)
+    console.log(e.target);
     const { name, value, type, checked, files } = e.target;
 
     if (files && files[0]) {
@@ -140,55 +138,34 @@ console.log(e.target)
   const requirements = (documents) => {
     return documents.map((document, index) => (
       <React.Fragment key={document.documentKey}>
-        {document.documentKey === "ATM_CARD" ? (
-          <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
-            <div>ATM Card</div>
-            <div className="flex gap-x-5 items-baseline">
-              <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
-              <div>
-                <InputCheckbox
-                  labelName={"Verified"}
-                  inputChecked={documents[index]?.verified}
-                  onChange={(e) => handleInputChange(e, "documents", index)}
-                  inputName="verified"
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <DocumentUploaderVerifier
-            label={convertToTitleCase(document.documentKey)}
-            inputFileName="docName"
-            inputFileValue={documents[index]?.docName}
-            onFileChange={(e) => handleFileChange(e, "documents", index)}
-            onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
-            checkboxName="verified"
-            checkboxChecked={documents[index]?.verified}
-            onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
-          />
-        )}
+        <DocumentUploaderVerifier
+          label={convertToTitleCase(document.documentKey)}
+          inputFileName="docName"
+          inputFileValue={documents[index]?.docName}
+          onFileChange={(e) => handleFileChange(e, "documents", index)}
+          onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
+          checkboxName="verified"
+          checkboxChecked={documents[index]?.verified}
+          onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
+        />
       </React.Fragment>
     ));
   };
-
 
   return (
     <>
       <Accordion
         heading={"Refund Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={refundData?.refundDetails}
             config={refundDetailsConfig}
             sectionName={"refundDetails"}
             handleInputChange={handleInputChange}
           />
-        }
-        isOpen={true}
-        error={isValidationFailed(
-          validationError,
-          refundDetailsConfig
         )}
+        isOpen={true}
+        error={isValidationFailed(validationError, refundDetailsConfig)}
       />
       <Accordion
         heading={"Requirement"}
