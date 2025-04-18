@@ -10,7 +10,7 @@ const Refund = () => {
 
   const tabs = [
     {
-      id: "add-bulk-repayment",
+      id: "refund-application",
       path: "/loan/loan-origination-system/personal/refund/refund-application",
       label: "Refund Application",
     },

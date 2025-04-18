@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getFullLoanDetails,
-  getLoanHistory,
-  getLoanHistoryByField,
-  getLoanAgreement,
-  uploadSignedLoanAgreement,
-  generateLoanApplicationId,
-  getRefinanceDetails,
-  getRepaymentHistory,
-  getDisbursementFile,
-  getLoanStatement,
-  getOutrightSettlement,
-} from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import InputFile from "../../Common/InputFile/InputFile";
 import Pagination from "../../Common/Pagination/Pagination";
-import FullLoanDetailModal from "../FullLoanDetailModal";
-import RepaymentHistoryModal from "../RepaymentHistoryModal";
-import { convertDate } from "../../../utils/convertDate";
 import { useNavigate, useParams } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "../Loans/ViewDocumentsModal";
@@ -35,36 +19,33 @@ import {
   ReceiptRefundIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { FiInfo } from "react-icons/fi";
-import convertToReadableString from "../../../utils/convertToReadableString";
 import {
   clearValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
+import {
+  getRefundHistoryByField,
+  getRefundistory,
+  uploadSignedRefundRequest,
+} from "../../../redux/Slices/personalRefundSlice";
+import calculateAging from "../../../utils/calculateAging";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
-    loanProduct: item?.loanProductName?.replace(/_/g, " "),
-    loanReleaseDate: convertDate(item?.loanReleaseDate),
+    aging: calculateAging(item?.creationDate),
   }));
 }
 
-const LoanHistory = () => {
+const RefundHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    loanHistory,
-    paymentHistory,
-    loading,
-    loanHistoryTotalElements,
-    fullLoanDetails,
-  } = useSelector((state) => state.personalLoans);
-  const [showModal, setShowModal] = useState(false);
+  const { refundHistory, refundHistoryTotalElements, loading } = useSelector(
+    (state) => state.personalRefund
+  );
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
-  const [showRepaymentModal, setRepaymentModal] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
   const [plhSearchValue, setPlhSearchValue] = useState("");
   const [plhSearchBy, setPlhSearchBy] = useState("");
@@ -83,10 +64,10 @@ const LoanHistory = () => {
   }, [dispatch]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    dispatch(getLoanHistory({ page: currentPage, size: pageSize }));
+    dispatch(getRefundistory({ page: currentPage, size: pageSize }));
   };
 
-  const loanHistoryData = transformData(loanHistory);
+  const refundHistoryData = transformData(refundHistory);
 
   const handleSearch = async () => {
     await dispatch(
@@ -96,7 +77,7 @@ const LoanHistory = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanHistoryByField({ field: plhSearchBy, value: plhSearchValue })
+        getRefundHistoryByField({ field: plhSearchBy, value: plhSearchValue })
       );
     }
     // setPlhSearchBy("");
@@ -106,29 +87,12 @@ const LoanHistory = () => {
   const handleReset = () => {
     setPlhSearchBy("");
     setPlhSearchValue("");
-    dispatch(getLoanHistory({ page: 0, size: pageSize }));
-    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    dispatch(getRefundistory({ page: 0, size: pageSize }));
+    navigate(`/loan/loan-origination-system/personal/refund/refund-history`);
   };
 
-  const handleFullLoanDetails = async (loanId, uid) => {
-    setShowModal(true);
-    await dispatch(getFullLoanDetails({ loanId, uid })).unwrap();
-  };
-
-  const handleRepaymentHistory = async (loanId) => {
-    setRepaymentModal(true);
-    await dispatch(getRepaymentHistory({ loanId })).unwrap();
-  };
-
-  const closeFullLoanDetailModal = () => {
-    setShowModal(false);
-  };
-  const closeRepaymentHistoryModal = () => {
-    setRepaymentModal(false);
-  };
-
-  const handleViewDocuments = (verifiedDocuments) => {
-    setDocumentsData(verifiedDocuments);
+  const handleViewDocuments = (documents) => {
+    setDocumentsData(documents);
     setDocumentsLoanModal(true);
   };
 
@@ -136,53 +100,25 @@ const LoanHistory = () => {
     setDocumentsLoanModal(false);
   };
 
-  const handleLoanAgreement = async (loanId, uid) => {
-    const printUrl = `/loan-agreement/${loanId}/${uid}`;
-    window.open(printUrl, "_blank");
-    await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
-  };
-
-  const handleLoanStatement = async (loanId, uid) => {
-    const printUrl = `/loan-statement/${loanId}/${uid}`;
-    window.open(printUrl, "_blank");
-    await dispatch(getLoanStatement({ loanId, uid })).unwrap();
-  };
-
-  const handleOutrightSettlement = async (loanId, uid) => {
-    const printUrl = `/outright-settlement/${loanId}/${uid}`;
-    window.open(printUrl, "_blank");
-    await dispatch(getOutrightSettlement({ loanId, uid })).unwrap();
-  };
-
-  const handleRefinanceLoan = async (loanId, uid, uniqueID) => {
-    await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
-    const loanApplicationId = await dispatch(
-      generateLoanApplicationId()
-    ).unwrap();
-    navigate(
-      `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
-    );
-  };
-
-  const handleDisbursementFile = async (loanId, uid) => {
-    const printUrl = `/disbursement/${loanId}/${uid}`;
-    window.open(printUrl, "_blank");
-    await dispatch(getDisbursementFile({ loanId, uid })).unwrap();
-  };
-
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
     { label: "Unique ID", value: "uniqueID" },
+    { label: "Refund Application ID", value: "refundApplicationId" },
   ];
 
   const columns = [
-    { label: "Loan ID", field: "loanId", copy: true },
-    { label: "Loan Product", field: "loanProduct" },
+    {
+      label: "Refund Application ID",
+      field: "refundApplicationId",
+      copy: true,
+    },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Loan Release Date", field: "loanReleaseDate" },
-    { label: "Principal Amount", field: "principalAmount" },
-    { label: "Loan Status", field: "loanStatus" },
+    { label: "Unique ID", field: "uniqueID" },
+    { label: "Loan ID", field: "loanId", copy: true },
+    { label: "Refund Amount", field: "refundAmount" },
+    { label: "Status", field: "status" },
+    { label: "Aging", field: "aging" },
   ];
 
   const handleFileChange = async (e, loanId) => {
@@ -196,7 +132,7 @@ const LoanHistory = () => {
       const formData = new FormData();
       formData.append("file", files[0]);
       await dispatch(
-        uploadSignedLoanAgreement({ formData, fileUploadParams })
+        uploadSignedRefundRequest({ formData, fileUploadParams })
       ).unwrap();
       handleReset();
     }
@@ -204,43 +140,12 @@ const LoanHistory = () => {
 
   const userNavigation = [
     {
-      name: "Loan Statement",
-      action: (rowData) => handleLoanStatement(rowData.loanId, rowData.uid),
-    },
-    {
-      name: "Outright Settlement",
-      action: (rowData) =>
-        handleOutrightSettlement(rowData.loanId, rowData.uid),
-    },
-    {
-      name: "Loan Agreement",
-      action: (rowData) => handleLoanAgreement(rowData.loanId, rowData.uid),
-    },
-    {
-      name: "Disbursement File",
-      action: (rowData) => handleDisbursementFile(rowData.loanId, rowData.uid),
-    },
-    {
       name: "Documents",
-      action: (rowData) => handleViewDocuments(rowData.verifiedDocuments),
+      action: (rowData) => handleViewDocuments(rowData.documents),
     },
-  ];
-
-  const excludedForPendingOrCanceled = [
-    "Loan Statement",
-    "Disbursement File",
-    "Outright Settlement",
   ];
 
   const renderExpandedRow = (rowData) => {
-    const { loanStatus } = rowData;
-
-    const filteredUserNavigation = userNavigation.filter((item) => {
-      if (["PENDING", "CANCELED"].includes(loanStatus)) {
-        return !excludedForPendingOrCanceled.includes(item.name);
-      }
-      return true;
-    });
     return (
       <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
         <div className="grid grid-cols-2 gap-4">
@@ -290,57 +195,20 @@ const LoanHistory = () => {
           </CardInfo>
           <CardInfo
             cardIcon={CurrencyDollarIcon}
-            cardTitle="Loan Information"
+            cardTitle="Refund Information"
             className={"bg-white border-border-gray-primary border"}
             colorText={"text-blue-primary"}
           >
             <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
               <div>
-                <div className="text-gray-500">Disbursed Amount</div>
-                <div className="font-semibold">{rowData?.disbursedAmount}</div>
+                <div className="text-gray-500">Cause of Refund</div>
+                <div className="font-semibold">{rowData?.causeOfRefund}</div>
               </div>
               <div>
-                <div className="text-gray-500">Interest Rate</div>
+                <div className="text-gray-500">Related PaySlip Month</div>
                 <div className="font-semibold">
-                  {rowData.loanInterest}% {rowData.interestMethod} per{" "}
-                  {rowData.perLoanInterest}
+                  {rowData.relatedPaySlipMonth}
                 </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Tenure</div>
-                <div className="font-semibold">
-                  {rowData.numberOfTenure} {rowData.perLoanDuration}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Monthly EMI</div>
-                <div className="font-semibold">{rowData.monthlyEMI}</div>
-              </div>
-              <div>
-                <div className="text-gray-500">First Payment</div>
-                <div className="font-semibold">
-                  {convertDate(rowData.firstEmiPayment)}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-5 flex-wrap">
-              <div
-                className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-                onClick={() =>
-                  handleFullLoanDetails(rowData.loanId, rowData.uid)
-                }
-              >
-                <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI
-                Schedule
-              </div>
-              <div
-                className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-                onClick={() => handleRepaymentHistory(rowData.loanId)}
-              >
-                <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment
-                History
               </div>
             </div>
           </CardInfo>
@@ -349,13 +217,12 @@ const LoanHistory = () => {
           <div className="font-semibold text-xl mb-3">
             Verified Documents{" "}
             <span className="font-light text-xs">
-              (
-              {rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
+              ({rowData?.documents?.filter((doc) => doc.verified).length}{" "}
               documents)
             </span>
           </div>
           <div className="flex gap-10">
-            {rowData?.verifiedDocuments
+            {rowData?.documents
               ?.filter((doc) => doc.verified) // Filter only verified documents
               .map((doc) => (
                 <div className="flex gap-1.5" key={doc.docId}>
@@ -365,12 +232,12 @@ const LoanHistory = () => {
               ))}
           </div>
         </div>
-        {rowData?.loanActionDetailsList && (
+        {rowData?.refundActionDetailsList && (
           <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
             <div className="font-semibold text-xl mb-3">
               Loan Action History
             </div>
-            {rowData?.loanActionDetailsList.map((action, index) => {
+            {rowData?.refundActionDetailsList.map((action, index) => {
               const actionKeys = Object.keys(action);
               let sentence = "";
 
@@ -404,14 +271,14 @@ const LoanHistory = () => {
           </div>
         )}
         <div className="flex justify-between items-end">
-          {rowData.verifiedDocuments.some(
+          {rowData.documents.some(
             (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
           ) ? (
             <div>&nbsp;</div>
           ) : (
             <div>
               <InputFile
-                placeholder="Upload Signed Agreement"
+                placeholder="Upload Signed Refund Request"
                 inputName={"signedAgreement"}
                 inputValue={signedAgreement}
                 onChange={(e) => handleFileChange(e, rowData.loanId)}
@@ -419,26 +286,9 @@ const LoanHistory = () => {
             </div>
           )}
           <div className="flex justify-end gap-2 px-5">
-            {rowData.loanStatus === "ACTIVATED" && (
-              <div>
-                <Button
-                  buttonName={"Refinance Loan"}
-                  onClick={() =>
-                    handleRefinanceLoan(
-                      rowData.loanId,
-                      rowData.uid,
-                      rowData.uniqueID
-                    )
-                  }
-                  rectangle={true}
-                  buttonIcon={ReceiptRefundIcon}
-                  buttonType="tertiary"
-                />
-              </div>
-            )}
             <div>
               <ActionOption
-                userNavigation={filteredUserNavigation}
+                userNavigation={userNavigation}
                 actionID={rowData}
               />
             </div>
@@ -493,29 +343,17 @@ const LoanHistory = () => {
       </ContainerTile>
       <ExpandableTable
         columns={columns}
-        data={loanHistoryData}
+        data={refundHistoryData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
       {decodedUniqueID === "undefined" && (
         <Pagination
-          totalElements={loanHistoryTotalElements}
+          totalElements={refundHistoryTotalElements}
           dispatcherFunction={dispatcherFunction}
           pageSize={pageSize}
         />
       )}
-      <FullLoanDetailModal
-        isOpen={showModal}
-        onClose={closeFullLoanDetailModal}
-        loanDetails={fullLoanDetails}
-        loading={loading}
-      />
-      <RepaymentHistoryModal
-        isOpen={showRepaymentModal}
-        onClose={closeRepaymentHistoryModal}
-        paymentHistory={paymentHistory}
-        loading={loading}
-      />
       <ViewDocumentsModal
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
@@ -525,4 +363,4 @@ const LoanHistory = () => {
   );
 };
 
-export default LoanHistory;
+export default RefundHistory;

@@ -42,15 +42,21 @@ const Button = ({
       `}
       disabled={disabled || loading} // Disable button when loading
     >
-      <div className={`flex items-center justify-center ${loading ? "opacity-50" : "opacity-100"}`}>
-        {ButtonIcon && <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
-        {ButtonIcon ? (
+      <div
+        className={`flex items-center justify-center ${
+          loading ? "opacity-50" : "opacity-100"
+        }`}
+      >
+        {ButtonIcon && (
+          <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+        )}
+        {buttonName && ButtonIcon ? (
           <span className="ml-2">{buttonName}</span>
         ) : (
-          <span className="text-center w-full">{buttonName}</span>
+          <span>{buttonName}</span>
         )}
       </div>
-  
+
       {/* Loader Overlay */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -78,7 +84,6 @@ const Button = ({
       )}
     </button>
   );
-  
 };
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used

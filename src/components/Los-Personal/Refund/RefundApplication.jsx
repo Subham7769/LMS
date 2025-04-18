@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
+import {
+  TrashIcon,
+  PencilIcon,
+  DocumentDuplicateIcon,
+} from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -11,15 +15,15 @@ import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { convertDate } from "../../../utils/convertDate";
 import Pagination from "../../Common/Pagination/Pagination";
 import {
-  generateLoanApplicationId,
-  getLoanApplications,
-  getLoanApplicationsByID,
-  cancelLoanApplicationsByID,
-  cloneLoanApplicationsByID,
-  getLoanApplicationByField,
-  resetAddLoanData,
-  deleteLoanOffers,
-} from "../../../redux/Slices/personalLoansSlice";
+  generateRefundApplicationId,
+  getRefundApplications,
+  getRefundApplicationsByID,
+  cancelRefundApplicationsByID,
+  cloneRefundApplicationsByID,
+  getRefundApplicationByField,
+  resetRefundData,
+  updateRefundField,
+} from "../../../redux/Slices/personalRefundSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 import store from "../../../redux/store";
@@ -30,12 +34,14 @@ import {
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
-    loanApplicationId: item?.loanApplicationId,
-    uniqueID: item?.generalLoanDetails?.uniqueID,
-    borrowerName: item?.borrowerName,
+    refundApplicationId: item?.refundApplicationId,
+    uniqueID: item?.refundDetails?.uniqueID,
+    borrowerId: item?.refundDetails?.borrowerId,
+    borrowerName: item?.refundDetails?.borrowerName,
     creationDate: convertDate(item?.creationDate),
     lastUpdate: item?.lastUpdate ? convertDate(item?.lastUpdate) : " - ",
     status: convertToTitleCase(item?.status),
+    refundAmount: item?.refundDetails?.refundAmount,
   }));
 }
 
@@ -44,8 +50,8 @@ const RefundApplication = () => {
   const [plaSearchValue, setPlaSearchValue] = useState("");
   const [plaSearchBy, setPlaSearchBy] = useState("");
   const navigate = useNavigate();
-  const { loanApplications, loading, loanApplicationsTotalElements } =
-    useSelector((state) => state.personalLoans);
+  const { refundApplications, refundApplicationsTotalElements, loading } =
+    useSelector((state) => state.personalRefund);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
@@ -57,24 +63,25 @@ const RefundApplication = () => {
   }, [dispatch]);
 
   const dispatcherFunction = (currentPage, pageSize) => {
-    dispatch(getLoanApplications({ page: currentPage, size: pageSize }));
+    dispatch(getRefundApplications({ page: currentPage, size: pageSize }));
   };
 
   const searchOptions = [
-    { label: "Loan Application Id", value: "loanApplicationId" },
+    { label: "Refund Application ID", value: "refundApplicationId" },
     { label: "Unique ID", value: "uniqueID" },
   ];
 
   const columns = [
-    { label: "Loan Application ID", field: "loanApplicationId" },
+    { label: "Refund Application ID", field: "refundApplicationId" },
     { label: "Borrower Name", field: "borrowerName" },
     { label: "Unique ID", field: "uniqueID" },
+    { label: "Refund Amount", field: "refundAmount" },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },
     { label: "Status", field: "status" },
   ];
 
-  const loanApplicationsData = transformData(loanApplications);
+  const refundApplicationsData = transformData(refundApplications);
 
   const handleSearch = async () => {
     await dispatch(
@@ -84,7 +91,10 @@ const RefundApplication = () => {
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanApplicationByField({ field: plaSearchBy, value: plaSearchValue })
+        getRefundApplicationByField({
+          field: plaSearchBy,
+          value: plaSearchValue,
+        })
       );
     }
     // setPlaSearchBy("");
@@ -94,17 +104,17 @@ const RefundApplication = () => {
   const handleReset = () => {
     setPlaSearchBy("");
     setPlaSearchValue("");
-    dispatch(getLoanApplications({ page: 0, size: 20 }));
+    dispatch(getRefundApplications({ page: 0, size: 20 }));
   };
 
   const handleNewApplication = async () => {
-    dispatch(resetAddLoanData());
+    dispatch(resetRefundData());
     try {
-      const loanApplicationId = await dispatch(
-        generateLoanApplicationId()
+      const refundApplicationId = await dispatch(
+        generateRefundApplicationId()
       ).unwrap();
       navigate(
-        `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
+        `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}`
       );
     } catch (error) {
       console.error("Failed to generate loan application ID:", error);
@@ -113,64 +123,46 @@ const RefundApplication = () => {
 
   const handleEditApplication = async (rowData) => {
     navigate(
-      `/loan/loan-origination-system/personal/loans/add-loan/${rowData?.loanApplicationId}`
+      `/loan/loan-origination-system/personal/refund/add-refund/${rowData?.refundApplicationId}`
     );
-    if (rowData.status === "Submitted" || rowData.status === "In Progress") {
-      await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
-    }
     await dispatch(
-      getLoanApplicationsByID(rowData?.loanApplicationId)
+      getRefundApplicationsByID(rowData?.refundApplicationId)
     ).unwrap();
   };
 
-  const handleRejectApplication = async (loanApplicationId) => {
-    await dispatch(cancelLoanApplicationsByID(loanApplicationId)).unwrap();
-    dispatch(getLoanApplications({ page: 0, size: 20 }));
+  const handleRejectApplication = async (refundApplicationId) => {
+    await dispatch(cancelRefundApplicationsByID(refundApplicationId)).unwrap();
+    dispatch(getRefundApplications({ page: 0, size: 20 }));
   };
 
-  const handleCloneLoanApplication = async (loanApplicationId) => {
-    await dispatch(cloneLoanApplicationsByID(loanApplicationId)).unwrap();
-    navigate(`/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}`)
-  }
-
   const renderActionList = (rowData) => {
-    if (
-      rowData.status === "Completed" ||
-      rowData.status === "Cancel" ||
-      hasViewOnlyAccessGroup3(roleName)
-    ) {
-      return <div className="flex justify-center gap-4 px-5">
-        <Button
-          onClick={() => handleCloneLoanApplication(rowData.loanApplicationId)}
-          buttonIcon={DocumentDuplicateIcon}
-          circle={true}
-          className={`mt-4 h-fit self-center`}
-          buttonType="secondary"
-          title={"Clone"}
-        />
-      </div>;
+    if (rowData.status === "Completed" || hasViewOnlyAccessGroup3(roleName)) {
+      return <div className="flex justify-center gap-4 px-5">-</div>;
     }
     return (
       <div className="flex justify-center gap-4 px-5">
-        <Button
-          onClick={() => handleEditApplication(rowData)}
-          buttonIcon={PencilIcon}
-          circle={true}
-          className={`mt-4 h-fit self-center`}
-          buttonType="secondary"
-        />
-        <Button
-          onClick={() => handleRejectApplication(rowData.loanApplicationId)}
-          buttonIcon={TrashIcon}
-          circle={true}
-          className={`mt-4 h-fit self-center`}
-          buttonType="destructive"
-        />
+        {rowData.status !== "Submitted" && (
+          <Button
+            onClick={() => handleEditApplication(rowData)}
+            buttonIcon={PencilIcon}
+            circle={true}
+            className={`mt-4 h-fit self-center`}
+            buttonType="secondary"
+          />
+        )}
+        {rowData.status !== "Cancel" && (
+          <Button
+            onClick={() => handleRejectApplication(rowData.refundApplicationId)}
+            buttonIcon={TrashIcon}
+            circle={true}
+            className={`mt-4 h-fit self-center`}
+            buttonType="destructive"
+          />
+        )}
       </div>
     );
   };
 
-  
   return (
     <div className={`flex flex-col gap-3`}>
       <div className="grid grid-cols-4 gap-5 items-center">
@@ -192,7 +184,7 @@ const RefundApplication = () => {
         <div className="w-[45%]">
           <InputSelect
             labelName="Search By"
-            inputName="plaSearchBy"
+            inputName="SearchBy"
             inputOptions={searchOptions}
             inputValue={plaSearchBy}
             onChange={(e) => setPlaSearchBy(e.target.value)}
@@ -230,12 +222,12 @@ const RefundApplication = () => {
       </ContainerTile>
       <ExpandableTable
         columns={columns}
-        data={loanApplicationsData}
+        data={refundApplicationsData}
         loading={loading}
         ListAction={renderActionList}
       />
       <Pagination
-        totalElements={loanApplicationsTotalElements}
+        totalElements={refundApplicationsTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
       />

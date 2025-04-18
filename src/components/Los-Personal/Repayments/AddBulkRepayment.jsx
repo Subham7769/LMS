@@ -37,9 +37,7 @@ const AddBulkRepayment = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // if (openLoans.length < 1) {
     dispatch(getOpenLoans());
-    // }
   }, [dispatch]);
 
   const addRow = () => {
