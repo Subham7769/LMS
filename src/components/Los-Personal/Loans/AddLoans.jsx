@@ -22,6 +22,7 @@ import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -78,23 +79,6 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    // console.log(result);
-    return result;
-  }
 
   // console.log(addLoanData);
   const handleSubmit = async (e) => {

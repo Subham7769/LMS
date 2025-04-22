@@ -19,6 +19,7 @@ import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
 import { getOpenLoans } from "../../../redux/Slices/personalRefundSlice";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const AddRefund = () => {
   const dispatch = useDispatch();
@@ -50,23 +51,6 @@ const AddRefund = () => {
     };
   }, [dispatch, openLoans, refundApplicationId]);
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    // console.log(result);
-    return result;
-  }
 
   const handleDraft = async () => {
     const [loanId, userId] = refundData?.refundDetails?.loanId.split("@");
