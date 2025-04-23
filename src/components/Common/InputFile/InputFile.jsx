@@ -127,7 +127,7 @@ const InputFile = ({
       }}
     >
       <label
-        className={`absolute -top-5 left-0 text-sm ${
+        className={`absolute -top-5 left-0 text-sm font-medium ${
           validationError[validationKey] ? "text-red-600" : "text-gray-500"
         }`}
       >

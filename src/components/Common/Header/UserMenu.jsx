@@ -62,7 +62,7 @@ const UserProfile = ({ align }) => {
     <div className="relative flex gap-2">
       <button
         ref={trigger}
-        className="relative flex justify-center items-center group p-1 text-text-light-tertiary"
+        className="relative flex justify-center items-center group p-1 text-gray-500"
         aria-haspopup="true"
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
@@ -82,7 +82,7 @@ const UserProfile = ({ align }) => {
           }  rounded-full text-xs text-white flex items-center justify-center`}
         ></span>
         <div className="flex items-center truncate">
-          <span className="truncate ml-2 text-sm font-medium dark:text-gray-100 group-hover:text-text-light-primary dark:group-hover:text-white transition-colors duration-200">
+          <span className="truncate ml-2 text-sm font-medium dark:text-gray-100 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-200">
             {localStorage.getItem("username")}
           </span>
           <ChevronDownIcon className="h-4 w-4 ml-1" />
@@ -119,7 +119,7 @@ const UserProfile = ({ align }) => {
               <li key={item.name}>
                 <Link
                   to={item.href}
-                  className="font-medium text-sm text-violet-quaternary hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3"
+                  className="font-medium text-sm text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3"
                   onClick={item.action}
                 >
                   <span>{item.name}</span>

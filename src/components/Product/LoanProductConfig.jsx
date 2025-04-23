@@ -20,7 +20,7 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { clearUpdateMap } from "../../redux/Slices/notificationSlice";
 import { fetchRoles } from "../../redux/Slices/userManagementSlice";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
-import ProductSidebar from "./ProductSidebar";
+import SectionSidebar from "../Common/Sidebar/SectionSidebar";
 import convertToTitleCase from "../../utils/convertToTitleCase";
 import { CheckIcon } from "../../assets/icons";
 import { toast } from "react-toastify";
@@ -146,7 +146,7 @@ const LoanProductConfig = () => {
       />
       <ContainerTile loading={loading}>
         <div className="flex flex-col md:flex-row md:-mr-px">
-          <ProductSidebar navItems={navItems} basePath={basePath} />
+          <SectionSidebar navItems={navItems} basePath={basePath} />
           <div className="flex-grow">
             <div className="p-5">
               <Outlet context={{ productData, handleChange }} />
@@ -156,7 +156,7 @@ const LoanProductConfig = () => {
                 <div className="text-right">
                   <Button
                     buttonIcon={CheckIcon}
-                    buttonName="Save"
+                    buttonName="Update"
                     onClick={handleSave}
                     rectangle={true}
                     buttonType={"primary"}

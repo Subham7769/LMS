@@ -40,30 +40,32 @@ const SelectAndAdd = ({
   onClick,
 }) => {
   return (
-
-        <div className="w-1/2 flex gap-4">
-          <div className="w-2/4">
-            <label htmlFor="entriesSelect" className="sr-only">
-              {ListName}
-            </label>
-            <Select
-              className="block w-full"
-              options={SelectOptions}
-              value={SelectedOption}
-              onChange={HandleChange}
-              isMulti={false}
-              isSearchable={false}
-              styles={customSelectStyles}
-            />
-          </div>
-          <div className="w-2/4">
-              <Button buttonIcon={PlusIcon} onClick={onClick} circle={true} buttonType="secondary" />
-          </div>
-        </div>
-
+    <div className="w-1/2 flex gap-4">
+      <div className="w-2/4">
+        <label htmlFor="entriesSelect" className="sr-only">
+          {ListName}
+        </label>
+        <Select
+          className="block w-full"
+          options={SelectOptions}
+          value={SelectedOption}
+          onChange={HandleChange}
+          isMulti={false}
+          isSearchable={false}
+          styles={customSelectStyles}
+        />
+      </div>
+      <div className="w-2/4">
+        <Button
+          buttonIcon={PlusIcon}
+          onClick={onClick}
+          circle={true}
+          buttonType="secondary"
+        />
+      </div>
+    </div>
   );
 };
-
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
 const WithErrorBoundary = (props) => {

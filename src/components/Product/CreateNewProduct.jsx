@@ -14,7 +14,6 @@ import {
   clearValidationError,
   validateForm,
 } from "../../redux/Slices/validationSlice";
-import ProductSidebar from "./ProductSidebar";
 import { CheckIcon } from "../../assets/icons";
 import { toast } from "react-toastify";
 import {
@@ -24,6 +23,7 @@ import {
   CpuChipIcon,
   EllipsisHorizontalCircleIcon,
 } from "@heroicons/react/24/outline";
+import SectionSidebar from "../Common/Sidebar/SectionSidebar";
 
 const CreateNewProduct = () => {
   const navigate = useNavigate();
@@ -131,7 +131,7 @@ const CreateNewProduct = () => {
       </h1>
       <ContainerTile loading={loading}>
         <div className="flex flex-col md:flex-row md:-mr-px">
-          <ProductSidebar navItems={navItems} basePath={basePath} />
+          <SectionSidebar navItems={navItems} basePath={basePath} />
           <div className="flex-grow">
             <div className="p-5">
               <Outlet context={{ productData, handleChange }} />

@@ -71,11 +71,11 @@ const HelpMenu = ({ align }) => {
   ];
 
   return (
-    <div className="relative inline-flex border-r pr-3 border-border-gray-secondary dark:border-gray-700/60">
+    <div className="relative inline-flex border-r pr-3 border-gray-200 dark:border-gray-700/60">
       <button
         ref={trigger}
-        className={`w-8 h-8 flex items-center justify-center hover:bg-background-light-primary dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full ${
-          dropdownOpen && "bg-background-light-primary dark:bg-gray-800"
+        className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full ${
+          dropdownOpen && "bg-gray-200 dark:bg-gray-800"
         }`}
         aria-haspopup="true"
         onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -110,10 +110,10 @@ const HelpMenu = ({ align }) => {
               <li key={item.name}>
                 <Link
                   to={item.href}
-                  className="font-medium text-sm text-violet-quaternary hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3"
+                  className="font-medium text-sm text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3"
                   onClick={item.action}
                 >
-                  <item.icon className="w-3 h-3 fill-current text-violet-quaternary shrink-0 mr-2" />
+                  <item.icon className="w-3 h-3 fill-current text-violet-500 shrink-0 mr-2" />
                   <span>{item.name}</span>
                 </Link>
               </li>

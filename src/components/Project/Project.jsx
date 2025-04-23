@@ -1,6 +1,5 @@
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { fetchProjectData } from "../../redux/Slices/sidebarSlice";
 import {
   fetchData,
@@ -24,6 +23,7 @@ import {
   AdjustmentsHorizontalIcon,
   BanknotesIcon,
   CalculatorIcon,
+  CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   DocumentTextIcon,
@@ -148,7 +148,7 @@ const Project = () => {
                   {!loading && (
                     <Button
                       buttonName={"Update"}
-                      buttonIcon={CheckCircleIcon}
+                      buttonIcon={CheckIcon}
                       onClick={handleUpdate}
                       buttonType={"primary"}
                       loading={loading}

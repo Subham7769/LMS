@@ -8,7 +8,6 @@ import {
   handleChangeInProjectData,
   createProject,
 } from "../../redux/Slices/projectSlice";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import {
   clearValidationError,
   validateForm,
@@ -21,6 +20,7 @@ import {
   AdjustmentsHorizontalIcon,
   BanknotesIcon,
   CalculatorIcon,
+  CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   DocumentTextIcon,
@@ -138,7 +138,7 @@ const CreateNewProject = () => {
               <div className="text-right">
                 {isLastPage ? (
                   <Button
-                    buttonIcon={CheckCircleIcon}
+                    buttonIcon={CheckIcon}
                     buttonName="Create"
                     onClick={createNewProjectFunction}
                     buttonType={"primary"}

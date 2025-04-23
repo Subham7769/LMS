@@ -8,7 +8,6 @@ import { loanTypeOptions, operatorOptions } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputDate from "../Common/InputDate/InputDate";
-import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputRange from "../Common/InputRange/InputRange";
 import { useLocation, useOutletContext } from "react-router-dom";

@@ -5,9 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleSidebar,
   setSubmenuStates,
-  fetchRACData,
   fetchDBRData,
-  fetchBEData,
   fetchProjectData,
   fetchProductData,
   fetchCreditScoreEqData,
@@ -321,7 +319,7 @@ const SideBar = () => {
         {/* Collapse Button */}
         <button
           onClick={handleToggleSidebar}
-          className={`hidden lg:block z-30 absolute right-2 top-56 bg-blue-500 h-16 w-4 rounded-full p-0`}
+          className={`hidden lg:block z-30 absolute right-2 top-56 bg-gray-800 h-16 w-4 rounded-full p-0`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -360,7 +358,7 @@ const SideBar = () => {
             <div key={sectionName} className={`${!open && "mb-2 "} `}>
               {menus.some((menu) => menu.sectionName === sectionName) && (
                 <h2
-                  className={`text-gray-secondary uppercase dark:text-gray-primary text-xs font-semibold ml-3 mb-3 ${
+                  className={`text-gray-400 uppercase dark:text-gray-500 text-xs font-semibold ml-3 mb-3 ${
                     !open && "hidden"
                   } ${sectionIndex !== 0 ? "mt-7" : ""}`}
                 >
@@ -380,7 +378,7 @@ const SideBar = () => {
                         index === menus.length - 1 && "mb-52"
                       } ${
                         pathname.includes(menu.href)
-                          ? "bg-violet-tertiary rounded-lg"
+                          ? "bg-violet-50 rounded-lg"
                           : ""
                       } `}
                     >
@@ -402,7 +400,7 @@ const SideBar = () => {
                             (isActive && !menu.openInNewTab) ||
                             pathname.includes(menu.href);
                           return `text-gray-500 ${
-                            isHighlighted ? "text-violet-quaternary" : ""
+                            isHighlighted ? "text-violet-500" : ""
                           }`;
                         }}
                       >
@@ -417,7 +415,7 @@ const SideBar = () => {
                             <IconComponent className="h-5 w-5 shrink-0" />
                           </span>
                           <span
-                            className={`text-sm ml-1 flex-1 transform duration-1000 ease-in-out text-text-light-primary ${
+                            className={`text-sm ml-1 flex-1 transform duration-1000 ease-in-out text-gray-800 ${
                               !open && "hidden"
                             }`}
                             onClick={() => handleToggleSidebarOnMobile(menu)}
@@ -440,7 +438,7 @@ const SideBar = () => {
                           {/* If create from Sidebar Using input box */}
                           {menu.createButton && (
                             <div>
-                              <li className="py-1 cursor-pointer rounded-md hover:text-text-light-secondary">
+                              <li className="py-1 cursor-pointer rounded-md hover:text-gray-700">
                                 <CreateNew
                                   placeholder={menu.placeholder}
                                   buttonName={menu.buttonName}
@@ -460,7 +458,7 @@ const SideBar = () => {
                                 className="text-gray-500/90"
                                 onClick={() => handleToggleSidebarOnMobile()}
                               >
-                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md hover:text-text-light-secondary ">
+                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md hover:text-gray-700 ">
                                   {submenuItem.name}
                                 </li>
                               </NavLink>
