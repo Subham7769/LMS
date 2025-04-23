@@ -9,6 +9,8 @@ import {
   getDocsByIdnUsage,
   setRefundApplicationId,
   getRefundApplicationsByID,
+  setLoanId,
+  getRefundApplicationDetails,
 } from "../../../redux/Slices/personalRefundSlice";
 import {
   clearValidationError,
@@ -23,7 +25,7 @@ import { getOpenLoans } from "../../../redux/Slices/personalRefundSlice";
 const AddRefund = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { refundApplicationId } = useParams();
+  const { refundApplicationId, loanId, uid } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
   const { refundData, loading, openLoans } = useSelector(
@@ -49,6 +51,35 @@ const AddRefund = () => {
       dispatch(clearValidationError());
     };
   }, [dispatch, openLoans, refundApplicationId]);
+
+  useEffect(() => {
+    const fetchRefundApplicationDetails = async () => {
+      if (loanId) {
+        dispatch(setLoanId(`${loanId}@${uid}`));
+
+        try {
+          const result = await dispatch(
+            getRefundApplicationDetails({ userId: uid, loanId })
+          ).unwrap();
+
+          const dynamicRefundDocTempId = result?.dynamicRefundDocTempId;
+
+          if (dynamicRefundDocTempId) {
+            dispatch(
+              getDocsByIdnUsage({
+                dynamicDocumentTempId: dynamicRefundDocTempId,
+                usage: "BORROWER_OFFERS",
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Failed to fetch refund application details", error);
+        }
+      }
+    };
+
+    fetchRefundApplicationDetails();
+  }, [loanId, uid, dispatch]);
 
   function flattenToSimpleObject(nestedObject) {
     const result = {};
@@ -107,9 +138,7 @@ const AddRefund = () => {
     if (isValid) {
       await dispatch(saveDraftRefundData(updatedRefundData)).unwrap();
       await dispatch(submitRefund(submitPayload)).unwrap();
-      navigate(
-        "/loan/loan-origination-system/personal/refund/refund-application"
-      );
+      navigate("/loan/loan-origination-system/personal/refund/approve-refund");
     }
   };
 
@@ -123,6 +152,8 @@ const AddRefund = () => {
     return <ContainerTile loading={loading} />;
   }
 
+  console.log(refundData);
+
   return (
     <>
       <div
@@ -132,11 +163,7 @@ const AddRefund = () => {
           Refund Application ID: {refundApplicationId}
         </div>
       </div>
-      <AddRefundFields
-        refundData={refundData}
-        openLoans={openLoans}
-        loanId={refundData.refundDetails.loanId}
-      />
+      <AddRefundFields refundData={refundData} openLoans={openLoans} />
       {/* Reusable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
       <div className="flex justify-end mt-5 items-end">
         <div className="flex gap-x-5">

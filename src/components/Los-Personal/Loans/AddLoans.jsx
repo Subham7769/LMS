@@ -163,6 +163,8 @@ const AddLoans = () => {
     return <ContainerTile loading={loading} />;
   }
 
+  console.log(addLoanData);
+
   return (
     <>
       <div

@@ -264,6 +264,32 @@ export const uploadDocumentFile = createAsyncThunk(
   }
 );
 
+export const deleteDocumentFile = createAsyncThunk(
+  "personalRefund/deleteDocumentFile",
+  async (fileDeleteParams, { rejectWithValue }) => {
+    // const token = localStorage.getItem("authToken");
+    const { docId, authToken } = fileDeleteParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getRefundApplicationsByID = createAsyncThunk(
   "personalRefund/getRefundApplicationsByID",
   async (refundApplicationId, { rejectWithValue }) => {
@@ -346,41 +372,71 @@ export const cloneRefundApplicationsByID = createAsyncThunk(
   }
 );
 
-export const deleteDocumentFile = createAsyncThunk(
-  "personalRefund/deleteDocumentFile",
-  async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken } = fileDeleteParams;
-    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
-
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${authToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to delete");
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 export const getPendingRefunds = createAsyncThunk(
   "personalRefund/getPendingRefunds",
-  async ({ page, size, getPayload }, { rejectWithValue }) => {
+  async ({ page, size }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
           import.meta.env.VITE_REFUND_READ_REFUND_PENDING_PERSONAL
         }?pageNumber=${page}&pageSize=${size}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getPendingRefundsByField = createAsyncThunk(
+  "personalRefund/getPendingRefundsByField",
+  async ({ fieldName, value }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_REFUND_READ_REFUND_PENDING_BY_FIELD_PERSONAL
+        }?fieldName=${fieldName}&value=${value}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getRefundForm = createAsyncThunk(
+  "personalRefund/getRefundForm",
+  async (refundProcessId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_REFUND_READ_REFUND_REQUEST_FORM
+        }${refundProcessId}/request-form`,
         {
           method: "GET",
           headers: {
@@ -428,6 +484,33 @@ export const getRefundistory = createAsyncThunk(
   }
 );
 
+export const approveRejectRefund = createAsyncThunk(
+  "personalRefund/approveRejectRefund",
+  async (approveRefundPayload, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_REFUND_APPROVE_PERSONAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(approveRefundPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to take action");
+      }
+      return approveRefundPayload.status;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getRefundHistoryByField = createAsyncThunk(
   "personalRefund/getRefundHistoryByField",
   async ({ field, value }, { rejectWithValue }) => {
@@ -461,11 +544,11 @@ export const uploadSignedRefundRequest = createAsyncThunk(
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
       // const token = localStorage.getItem("authToken");
-      const { loanId, authToken } = fileUploadParams;
+      const { refundProcessId, authToken } = fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_REFUND_SIGNED_REQUEST_UPLOAD
-        }${loanId}/signed-loan-refund-request`,
+        }${refundProcessId}/signed-loan-refund-request`,
         {
           method: "POST",
           headers: {
@@ -508,7 +591,7 @@ const initialState = {
   approveRefundTotalElements: 0,
   refundHistory: [],
   refundHistoryTotalElements: 0,
-  refundAgreementData: {},
+  refundFormData: {},
   error: null,
   loading: false,
 };
@@ -537,6 +620,9 @@ const personalRefundSlice = createSlice({
     setRefundApplicationId: (state, action) => {
       state.refundData.refundApplicationId = action.payload;
     },
+    setLoanId: (state, action) => {
+      state.refundData.refundDetails.loanId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -559,7 +645,7 @@ const personalRefundSlice = createSlice({
       })
       .addCase(getOpenLoans.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+        // console.log(action.payload);
         state.openLoans = action.payload.map((item) => ({
           label: `${item.loanId} ${item.userName}`,
           value: `${item.loanId}@${item.userId}`,
@@ -709,6 +795,19 @@ const personalRefundSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(deleteDocumentFile.pending, (state) => {
+        // state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        toast(`Document deleted Successfully`);
+      })
+      .addCase(deleteDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(cancelRefundApplicationsByID.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -744,6 +843,57 @@ const personalRefundSlice = createSlice({
         state.approveRefundTotalElements = action.payload.totalElements;
       })
       .addCase(getPendingRefunds.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getPendingRefundsByField.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getPendingRefundsByField.fulfilled, (state, action) => {
+        state.loading = false;
+
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+
+        // Check if loanId is null in each object and filter accordingly
+        state.approveRefund = payload.some((item) => item.loanId === null)
+          ? [] // Set to an empty array if any loanId is null
+          : payload;
+
+        // hide the pagination
+        state.approveRefundTotalElements = 0;
+      })
+      .addCase(getPendingRefundsByField.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(approveRejectRefund.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(approveRejectRefund.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success(`Refund ${action.payload.toLowerCase()} successfully`);
+      })
+      .addCase(approveRejectRefund.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error: ${action.payload}`);
+      })
+      .addCase(getRefundForm.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getRefundForm.fulfilled, (state, action) => {
+        state.loading = false;
+        state.refundFormData = action.payload;
+      })
+      .addCase(getRefundForm.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
@@ -801,7 +951,11 @@ const personalRefundSlice = createSlice({
   },
 });
 
-export const { updateRefundField, resetRefundData, setRefundApplicationId } =
-  personalRefundSlice.actions;
+export const {
+  updateRefundField,
+  resetRefundData,
+  setRefundApplicationId,
+  setLoanId,
+} = personalRefundSlice.actions;
 
 export default personalRefundSlice.reducer;

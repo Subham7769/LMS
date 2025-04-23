@@ -17,6 +17,7 @@ import {
   CurrencyDollarIcon,
   UserIcon,
   ReceiptRefundIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import {
@@ -31,6 +32,9 @@ import {
   uploadSignedRefundRequest,
 } from "../../../redux/Slices/personalRefundSlice";
 import calculateAging from "../../../utils/calculateAging";
+import { convertDate } from "../../../utils/convertDate";
+import convertToReadableString from "../../../utils/convertToReadableString";
+import ViewBorrowerDetailsModal from "../Borrowers/ViewBorrowerDetailsModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -50,6 +54,8 @@ const RefundHistory = () => {
   const [plhSearchValue, setPlhSearchValue] = useState("");
   const [plhSearchBy, setPlhSearchBy] = useState("");
   const [signedAgreement, setSignedAgreement] = useState("");
+  const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
+  const [selectedBorrowerData, setSelectedBorrowerData] = useState(null);
   const { uniqueID } = useParams();
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
@@ -100,6 +106,14 @@ const RefundHistory = () => {
     setDocumentsLoanModal(false);
   };
 
+  // Function to handle opening the modal
+  const handleViewProfile = (e, uid) => {
+    e.preventDefault();
+    // If you already have the uid, simply pass it on.
+    setSelectedBorrowerData(uid);
+    setIsViewPopupOpen(true);
+  };
+
   const searchOptions = [
     { label: "Borrower Name", value: "borrowerName" },
     { label: "Loan ID", value: "loanId" },
@@ -121,9 +135,9 @@ const RefundHistory = () => {
     { label: "Aging", field: "aging" },
   ];
 
-  const handleFileChange = async (e, loanId) => {
+  const handleFileChange = async (e, refundProcessId) => {
     const fileUploadParams = {
-      loanId: loanId,
+      refundProcessId: refundProcessId,
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
     setSignedAgreement(e.target.value);
@@ -149,12 +163,22 @@ const RefundHistory = () => {
     return (
       <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
         <div className="grid grid-cols-2 gap-4">
-          <CardInfo
-            cardIcon={UserIcon}
-            cardTitle="Borrower Information"
-            className={"bg-white border-border-gray-primary border"}
-            colorText={"text-blue-primary"}
-          >
+          <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
+            <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
+              <div className="text-xl font-semibold flex gap-2 items-center">
+                <UserCircleIcon
+                  className="-ml-0.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Borrower Information{" "}
+                <p
+                  className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
+                  onClick={(e) => handleViewProfile(e, rowData.borrowerId)}
+                >
+                  View Borrower Profile
+                </p>
+              </div>
+            </div>
             <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
               <div>
                 <div className="text-gray-500">Employment</div>
@@ -192,7 +216,7 @@ const RefundHistory = () => {
                 </div>
               </div>
             </div>
-          </CardInfo>
+          </div>
           <CardInfo
             cardIcon={CurrencyDollarIcon}
             cardTitle="Refund Information"
@@ -272,7 +296,8 @@ const RefundHistory = () => {
         )}
         <div className="flex justify-between items-end">
           {rowData.documents.some(
-            (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
+            (doc) =>
+              doc.documentKey === "SIGNED_LOAN_REFUND_REQUEST" && doc.verified
           ) ? (
             <div>&nbsp;</div>
           ) : (
@@ -281,7 +306,7 @@ const RefundHistory = () => {
                 placeholder="Upload Signed Refund Request"
                 inputName={"signedAgreement"}
                 inputValue={signedAgreement}
-                onChange={(e) => handleFileChange(e, rowData.loanId)}
+                onChange={(e) => handleFileChange(e, rowData.refundProcessId)}
               />
             </div>
           )}
@@ -359,6 +384,12 @@ const RefundHistory = () => {
         onClose={closeViewDocumentModal}
         documents={documentsData}
       />
+      {isViewPopupOpen && selectedBorrowerData && (
+        <ViewBorrowerDetailsModal
+          uid={selectedBorrowerData} // pass only the uid
+          onClose={() => setIsViewPopupOpen(false)}
+        />
+      )}
     </div>
   );
 };

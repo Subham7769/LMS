@@ -434,11 +434,11 @@ export const MenusInitial = [
         href: "/loan/loan-origination-system/personal/repayments/add-bulk-repayment",
         current: false,
       },
-      // {
-      //   name: "Refund",
-      //   href: "/loan/loan-origination-system/personal/refund/refund-application",
-      //   current: false,
-      // },
+      {
+        name: "Refund",
+        href: "/loan/loan-origination-system/personal/refund/refund-application",
+        current: false,
+      },
     ],
     isOpen: false,
   },

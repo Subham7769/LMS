@@ -177,12 +177,12 @@ const LoanHistory = () => {
   };
 
   const handleInitiateRefund = async (loanId, uid, uniqueID) => {
-    await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
+    // await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
     const refundApplicationId = await dispatch(
       generateLoanApplicationId()
     ).unwrap();
     navigate(
-      `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}`
+      `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}/${loanId}/${uid}`
     );
   };
 
@@ -443,7 +443,7 @@ const LoanHistory = () => {
           <div className="flex justify-end gap-2 px-5">
             {(rowData.loanStatus === "ACTIVATED" ||
               rowData.loanStatus === "CLOSED") && (
-              <div className="hidden">
+              <div className="">
                 <Button
                   buttonName={"Initiate Refund"}
                   onClick={() =>
@@ -459,7 +459,8 @@ const LoanHistory = () => {
                 />
               </div>
             )}
-            {rowData.loanStatus === "ACTIVATED" && (
+            {(rowData.loanStatus === "ACTIVATED" ||
+              rowData.loanStatus === "LATE") && (
               <div className="flex gap-2">
                 <Button
                   buttonName={"Refinance Loan"}

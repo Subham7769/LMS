@@ -146,7 +146,7 @@ const RefundApplication = () => {
             onClick={() => handleEditApplication(rowData)}
             buttonIcon={PencilIcon}
             circle={true}
-            className={`mt-4 h-fit self-center`}
+            className={``}
             buttonType="secondary"
           />
         )}
@@ -155,7 +155,7 @@ const RefundApplication = () => {
             onClick={() => handleRejectApplication(rowData.refundApplicationId)}
             buttonIcon={TrashIcon}
             circle={true}
-            className={`mt-4 h-fit self-center`}
+            className={``}
             buttonType="destructive"
           />
         )}
