@@ -16,6 +16,7 @@ import store from "../../../redux/store";
 import { useNavigate, useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject"; 
 
 const AddNewBorrowers = () => {
   // const isValid = useSelector((state) => state.validation.isValid);
@@ -41,23 +42,6 @@ const AddNewBorrowers = () => {
     );
   }
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    console.log(result);
-    return result;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
