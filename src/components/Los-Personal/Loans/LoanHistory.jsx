@@ -46,6 +46,7 @@ import {
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
+import { generateRefundApplicationId } from "../../../redux/Slices/personalRefundSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -176,10 +177,9 @@ const LoanHistory = () => {
     handleReset();
   };
 
-  const handleInitiateRefund = async (loanId, uid, uniqueID) => {
-    // await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
+  const handleInitiateRefund = async (loanId, uid) => {
     const refundApplicationId = await dispatch(
-      generateLoanApplicationId()
+      generateRefundApplicationId()
     ).unwrap();
     navigate(
       `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}/${loanId}/${uid}`
@@ -450,7 +450,6 @@ const LoanHistory = () => {
                     handleInitiateRefund(
                       rowData.loanId,
                       rowData.uid,
-                      rowData.uniqueID
                     )
                   }
                   rectangle={true}
