@@ -375,6 +375,6 @@ export const bankBranches = [
     bankName: "Zambia National Commercial Bank",
     branchName: "XAPIT Branch",
     branchCode: "010083",
-    sortCode: "01=00=83",
+    sortCode: "01-00-83",
   },
 ];
