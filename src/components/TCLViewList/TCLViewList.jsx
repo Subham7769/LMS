@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListTable from "../Common/ListTable/ListTable";
-import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 import { useNavigate, useParams } from "react-router-dom";
-import { TrashIcon, FolderPlusIcon } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import {
   fetchName,
@@ -22,29 +20,21 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import InputFile from "../Common/InputFile/InputFile";
 import InputSelect from "../Common/InputSelect/InputSelect";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { AddIcon, DeleteIcon } from "../../assets/icons";
 
 const TCLViewList = () => {
   const [fileSelectedOption, setFileSelectedOption] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  // const [tableData, setTableData] = useState([]);
   const [message, setMessage] = useState("");
   const { tclId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const fileInputRef = useRef(null);
-  const { itemName, data, tableData, loading, error, tableDataHistory } =
-    useSelector((state) => state.tcl);
+  const { itemName, data, tableData, loading } = useSelector(
+    (state) => state.tcl
+  );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [TCLFile, setTCLFile] = useState("");
-
-  const handleChange = (e) => {
-    setFileSelectedOption(e.target);
-    setMessage(""); // Reset message on selection change
-  };
-
-  console.log(fileSelectedOption);
 
   const handleDelete = async (index) => {
     const tclFileId = tableData[index].tclFileId;
@@ -79,29 +69,6 @@ const TCLViewList = () => {
         window.location.reload();
       })
       .catch((err) => console.error(err));
-  };
-
-  // Handle file input change
-  const handleFileChange1 = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  // Handle file upload
-  const handleFileUpload = async () => {
-    if (!selectedFile) {
-      setMessage("Please choose a file to upload.");
-      return;
-    }
-
-    dispatch(uploadTCLFile({ tclId, selectedFile }))
-      .unwrap()
-      .then((successMessage) => {
-        setMessage(successMessage);
-        setSelectedFile(null); // Clear the file input
-      })
-      .catch((errorMessage) => {
-        setMessage(errorMessage);
-      });
   };
 
   const handleFileChange = async (e, tclId) => {
@@ -147,7 +114,7 @@ const TCLViewList = () => {
   const ActionList = !hasViewOnlyAccess(roleName)
     ? [
         {
-          icon: TrashIcon,
+          icon: DeleteIcon,
           circle: true,
           action: handleDelete,
           type: "destructive",
@@ -158,10 +125,6 @@ const TCLViewList = () => {
   // Remove tclFileId from each item in tableData
   const tableDataWithoutId = tableData.map(({ tclFileId, ...rest }) => rest);
   // console.log(tableDataWithoutId);
-
-  const handleFileClick = () => {
-    fileInputRef.current.click();
-  };
 
   const TclViewListHeaderList = !hasViewOnlyAccess(roleName)
     ? [
@@ -194,10 +157,11 @@ const TCLViewList = () => {
         loading={loading}
       />
       <ContainerTile
-        className={"flex items-center justify-between p-5"}
         loading={loading}
+        className={"grid md:grid-cols-[75%_25%] gap-y-4 items-center pb-5"}
+        defaultClass={false}
       >
-        <div className="grid grid-cols-2 gap-x-5 w-1/2 items-end">
+        <div className="grid grid-cols-[80%_20%] md:grid-cols-2 gap-x-5 w-full items-end">
           <InputSelect
             labelName="Select TCL File"
             inputName="SelectedOption"
@@ -210,38 +174,45 @@ const TCLViewList = () => {
           />
           <div>
             <Button
-              buttonIcon={PlusIcon}
+              buttonIcon={AddIcon}
               onClick={addData}
               circle={true}
-              buttonType="secondary"
+              buttonType="primary"
             />
           </div>
         </div>
-        {!hasViewOnlyAccess(roleName) ? (
-          <div className="w-1/4">
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="w-full">
             <InputFile
-              labelName="Upload TCL File"
+              // labelName="Upload TCL File"
               placeholder="We accept only excel files here."
               inputName={"TCLFile"}
               inputValue={TCLFile}
               onChange={(e) => handleFileChange(e, tclId)}
             />
+            <a
+              href={"/assets/files/sample_file_tcl_list.csv"}
+              download="sample_file_tcl_list.csv"
+              className="flex text-xs italic mt-1 gap-x-2 items-end justify-end text-violet-500 hover:text-violet-600 hover:underline"
+            >
+              <ArrowDownTrayIcon className="h-5 w-5" /> Sample File
+            </a>
           </div>
-        ) : (
-          ""
         )}
       </ContainerTile>
       {/* Message */}
       {message && <div className="text-red-500">{message}</div>}
 
       {/* List */}
-      <ListTable
-        ListName={"TCL List"}
-        ListHeader={TclViewListHeaderList}
-        ListItem={tableDataWithoutId}
-        ListAction={ActionList}
-        loading={loading}
-      />
+      {tableData.length > 0 && (
+        <ListTable
+          ListName={"TCL List"}
+          ListHeader={TclViewListHeaderList}
+          ListItem={tableDataWithoutId}
+          ListAction={ActionList}
+          loading={loading}
+        />
+      )}
     </div>
   );
 };

@@ -106,82 +106,101 @@ const InputFile = ({
   };
 
   return (
-    <div
-      className={`relative border-2 border-dashed rounded-lg p-3 text-center transition-all ${
-        isDragging
-          ? "bg-indigo-50 border-indigo-500"
-          : fileNames.length
-          ? "bg-indigo-50 border-indigo-500"
-          : "bg-background-light-secondary hover:border-indigo-500 hover:bg-indigo-50"
-      }
-    ${validationError[validationKey] ? "border-red-600" : "border-gray-500"}`}
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsDragging(true);
-      }}
-      onDragLeave={() => setIsDragging(false)}
-      onDrop={handleDrop}
-      onFocus={() => {
-        dispatch(setValidationError(validationKey));
-        dispatch(setUpdateMap(inputName));
-      }}
-    >
-      <label
+    <div>
+      {labelName && (
+        <label
+          className={`text-sm font-medium ${
+            validationError[validationKey] ? "text-red-600" : "text-gray-500"
+          }`}
+          htmlFor={inputName}
+        >
+          {validationError[validationKey] ? "Field required" : labelName}{" "}
+          {isValidation && <span className="text-red-600">*</span>}
+        </label>
+      )}
+      <div
+        className={`relative border border-dashed bg-gray-200 rounded-sm p-3 text-center transition-all ${
+          isDragging
+            ? "bg-indigo-50 border-indigo-500"
+            : fileNames.length
+            ? "bg-indigo-50 border-indigo-500"
+            : "bg-background-light-secondary hover:border-indigo-500 hover:bg-indigo-50"
+        }
+    ${
+      validationError[validationKey]
+        ? "border-red-600"
+        : "border-gray-300 dark:border-gray-700/60"
+    }`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        onFocus={() => {
+          dispatch(setValidationError(validationKey));
+          dispatch(setUpdateMap(inputName));
+        }}
+      >
+        {/* <label
         className={`absolute -top-5 left-0 text-sm font-medium ${
           validationError[validationKey] ? "text-red-600" : "text-gray-500"
         }`}
       >
         {validationError[validationKey] ? "Field required" : labelName}{" "}
         {isValidation && <span className="text-red-600">*</span>}
-      </label>
+      </label> */}
 
-      {!fileNames.length && !isDragging && (
-        <>
-          <FiUpload className="mx-auto text-gray-400 mb-2" size={20} />
-          <span className="text-sm text-gray-500">{placeholder}</span>
-        </>
-      )}
+        {!fileNames.length && !isDragging && (
+          <>
+            <FiUpload className="mx-auto text-gray-400 mb-2" size={20} />
+            <span className="text-sm text-gray-500 dark:text-gray-400 italic">
+              {placeholder}
+            </span>
+          </>
+        )}
 
-      {isDragging && (
-        <>
-          <FiDownload className="mx-auto text-indigo-700 mb-2" size={20} />
-          <span className="text-sm text-indigo-700">
-            Drop your file here...
-          </span>
-        </>
-      )}
+        {isDragging && (
+          <>
+            <FiDownload className="mx-auto text-indigo-700 mb-2" size={20} />
+            <span className="text-sm text-indigo-700">
+              Drop your file here...
+            </span>
+          </>
+        )}
 
-      {fileNames.length > 0 && (
-        <div className="text-indigo-700 text-sm font-semibold">
-          {fileNames.map((fileName, index) => (
-            <div
-              key={index}
-              className="flex items-center flex-col justify-between"
-            >
-              <FiFile className="mr-2" size={20} />
-              <span className="truncate">{fileName}</span>
-            </div>
-          ))}
-        </div>
-      )}
+        {fileNames.length > 0 && (
+          <div className="text-indigo-700 text-sm font-semibold">
+            {fileNames.map((fileName, index) => (
+              <div
+                key={index}
+                className="flex items-center flex-col justify-between"
+              >
+                <FiFile className="mr-2" size={20} />
+                <span className="truncate">{fileName}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
-      {fileNames.length > 0 && (
-        <FiX
-          className="mx-auto text-white p-1 font-semibold absolute -top-4 -right-4 bg-red-500 rounded-lg cursor-pointer"
-          size={28}
-          onClick={handleClearFiles}
+        {fileNames.length > 0 && (
+          <FiX
+            className="mx-auto text-white p-1 font-semibold absolute -top-4 -right-4 bg-red-500 rounded-lg cursor-pointer"
+            size={28}
+            onClick={handleClearFiles}
+          />
+        )}
+        <input
+          type="file"
+          name={inputName}
+          ref={fileInputRef} // Attach the ref to the input
+          onChange={handleFileChange}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          accept={accept}
+          disabled={disabled}
+          multiple={multiple}
         />
-      )}
-      <input
-        type="file"
-        name={inputName}
-        ref={fileInputRef} // Attach the ref to the input
-        onChange={handleFileChange}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-        accept={accept}
-        disabled={disabled}
-        multiple={multiple}
-      />
+      </div>
     </div>
   );
 };

@@ -3329,84 +3329,6 @@ Overall, these changes improve the code by enhancing readability, maintainabilit
 
 ---
 
-&emsp;
-
-# SelectAndAdd Component
-
-This component handles the selection of a file and adding it to the list.
-
-```jsx
-import React from "react";
-import Select from "react-select";
-import { PlusIcon } from "@heroicons/react/20/solid";
-
-// Custom Styling
-const customSelectStyles = {
-  control: (provided) => ({
-    ...provided,
-    minHeight: "48px",
-    borderRadius: "0.375rem",
-    borderColor: "#D1D5DB",
-    boxShadow: "none",
-  }),
-  valueContainer: (provided) => ({
-    ...provided,
-    padding: "0 0.75rem",
-  }),
-  indicatorsContainer: (provided) => ({
-    ...provided,
-    height: "48px",
-  }),
-  dropdownIndicator: (provided) => ({
-    ...provided,
-    padding: "0 8px",
-  }),
-  clearIndicator: (provided) => ({
-    ...provided,
-    padding: "0 8px",
-  }),
-};
-
-const SelectAndAdd = ({
-  listName,
-  selectOptions,
-  selectedOption,
-  handleChange,
-  buttonName,
-  onClick,
-}) => {
-  return (
-    <div className="flex gap-4 bg-background-light-secondary p-10 rounded-xl">
-      <div className="w-2/4">
-        <label htmlFor="entriesSelect" className="sr-only">
-          {listName}
-        </label>
-        <Select
-          className="block w-full"
-          options={selectOptions}
-          value={selectedOption}
-          onChange={handleChange}
-          isMulti={false}
-          isSearchable={false}
-          styles={customSelectStyles}
-        />
-      </div>
-      <div className="flex justify-center items-center">
-        <button
-          onClick={onClick}
-          type="button"
-          className="flex justify-center items-center gap-x-1 w-48 rounded-md bg-green-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-        >
-          <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-          {buttonName}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default SelectAndAdd;
-```
 
 # TclComponent.jsx -> TCLViewList Component
 
@@ -3417,7 +3339,6 @@ import React, { useState } from "react";
 import { TclViewListData, TclViewListHeaderList } from "../../data/TclData";
 import Body from "../Common/Body/Body";
 import ListTable from "../Common/ListTable/ListTable";
-import SelectAndAdd from "../Common/SelectAndAdd/SelectAndAdd";
 
 const selectOptions = [
   { value: "Cash Loan TCL", label: "Cash Loan TCL" },
@@ -3466,14 +3387,6 @@ const TCLViewList = () => {
   return (
     <Body>
       {/* Select & Add to List */}
-      <SelectAndAdd
-        listName="Select TCL List"
-        selectOptions={selectOptions}
-        selectedOption={fileSelectedOption}
-        handleChange={handleChange}
-        buttonName="Add to List"
-        onClick={addData}
-      />
 
       {/* Message */}
       {message && <div className="mb-4 text-red-500">{message}</div>}

@@ -191,11 +191,11 @@ const ListTable = ({
       ) : (
         <div
           className={
-            "shadow-md bg-background-light-white border-border-gray-primary border p-5 rounded-xl mt-4"
+            "bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8"
           }
         >
           {Searchable && (
-            <div className="mb-5 w-full">
+            <div className="px-5 pt-4 w-full">
               <label htmlFor="search" className="sr-only">
                 Search
               </label>
@@ -219,27 +219,27 @@ const ListTable = ({
             </div>
           )}
 
-          <div className="sm:flex sm:items-center">
-            <div className={`sm:flex-auto text-${ListNameAlign}`}>
-              <h1 className="font-semibold leading-6 text-gray-900 mb-4">
-                {ListName}
-              </h1>
-            </div>
-          </div>
+          <header className="px-5 py-4">
+            <h2
+              className={`font-semibold text-gray-800 dark:text-gray-100 text-${ListNameAlign}`}
+            >
+              {ListName}
+            </h2>
+          </header>
 
-          <div className="flow-root overflow-hidden rounded-md border border-border-gray-primary">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-background-light-secondary">
-                <tr className={Divider ? "divide-x divide-gray-200" : ""}>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full dark:text-gray-300">
+              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
+                <tr>
                   {ListHeader.map((header, index) => (
                     <th
                       key={index}
                       scope="col"
-                      className={`w-1/${HeaderCellWidth} max-w-24`}
+                      className={`px-4 py-4 whitespace-nowrap`}
                       onClick={() => handleSort(toLowerCamelCase(header))}
                     >
                       {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
-                      <div className="p-3 text-center text-[12px] font-medium text-gray-900 uppercase tracking-wider cursor-pointer flex justify-center items-center">
+                      <div className="font-semibold text-left flex cursor-pointer items-center">
                         {header}
                         {getSortIcon(toLowerCamelCase(header))}
                       </div>
@@ -247,20 +247,12 @@ const ListTable = ({
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
                 {currentData.map((product, rowIndex) => (
-                  <tr
-                    className={`${
-                      rowIndex % 2 !== 0 ? "bg-background-light-tertiary" : ""
-                    } ${Divider ? "divide-x divide-gray-200" : ""}`}
-                    key={indexOfFirstItem + rowIndex}
-                  >
+                  <tr key={indexOfFirstItem + rowIndex}>
                     {Object.keys(product).map((key, idx) =>
                       key !== "href" ? (
-                        <td
-                          key={idx}
-                          className={`w-1/${HeaderCellWidth} text-center py-3 px-3 text-[14px] text-gray-500`}
-                        >
+                        <td key={idx} className={`px-4 py-4 whitespace-nowrap`}>
                           {product.href ? (
                             <Link className="w-full block" to={product.href}>
                               {product[key]}
@@ -290,9 +282,7 @@ const ListTable = ({
                       ) : null
                     )}
                     {ListHeader.includes("Actions") && (
-                      <td
-                        className={`flex justify-center gap-2 align-middle whitespace-nowrap text-center py-4 px-3 text-sm text-gray-500`}
-                      >
+                      <td className={`px-4 py-4 whitespace-nowrap flex gap-2`}>
                         {ListAction.map((item, buttonIndex) => (
                           <Button
                             buttonIcon={

@@ -26,7 +26,7 @@ const ProductPage = () => {
         ListItem={ProductList}
         Searchable={true}
         SearchBy={"name"}
-        Sortable={true} // New prop to enable/disable sorting
+        Sortable={false} // New prop to enable/disable sorting
       />
     </>
   );
