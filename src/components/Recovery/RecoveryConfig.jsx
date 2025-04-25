@@ -30,6 +30,8 @@ import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { toast } from "react-toastify";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import ToggleSwitch from "../Common/ToggleSwitch/ToggleSwitch";
+import { CheckIcon } from "../../assets/icons";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -129,6 +131,23 @@ const RecoveryConfig = () => {
     setIsEditingEquation(!isEditingEquation);
   };
 
+  const toolTip = () => (
+    <>
+      The Recovery Equation uses:
+      <ul className="list-disc ml-4">
+        <li>
+          <strong>w</strong>: Wallet
+        </li>
+        <li>
+          <strong>r</strong>: Repayment
+        </li>
+        <li>
+          <strong>d</strong>: Days Past Due
+        </li>
+      </ul>
+    </>
+  );
+
   return (
     <>
       <DynamicHeader
@@ -144,8 +163,8 @@ const RecoveryConfig = () => {
         onCreateClone={createCloneRecovery}
         initialName={itemName}
       />
-      <ContainerTile className=" flex flex-col gap-4 " loading={loading}>
-        <div className="grid grid-cols-3 gap-5">
+      <ContainerTile className="grid gap-y-4 p-5" loading={loading}>
+        <div className="grid md:grid-cols-2 gap-5">
           <div className="flex-1">
             <InputNumber
               labelName={"Tenure"}
@@ -167,102 +186,72 @@ const RecoveryConfig = () => {
               isValidation={true}
             />
           </div>
-          <div className="w-fit">
-
-            <InputCheckbox
-              labelName="RTN"
-              inputChecked={RTN}
-              onChange={() => setRTN(!RTN)}
-              inputName="refinancedWith"
-              upperLabel={true}
-            />
-          </div>
         </div>
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col space-x-2 2xl:w-[50%] w-[75%]">
-                {isEditingEquation && isEditingEquation ? (
-                  <InputTextArea
-                    labelName={"Recovery Equation"}
-                    inputName={"recoveryEquation"}
-                    rowCount={"3"}
-                    inputValue={data?.recoveryEquation}
-                    onChange={handleChangeWrapper}
-                    placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
-                    isValidation={true}
-                  />
-                ) : (
-                  <div className="flex items-center space-x-2 w-full">
-                    <InputText
-                      labelName={"Recovery Equation"}
-                      inputName="recoveryEquation"
-                      inputValue={data?.recoveryEquation}
-                      onChange={handleChangeWrapper}
-                      placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
-                      readOnly={true}
-                      isValidation={true}
-                    />
-                  </div>
-                )}
-              </div>
-              <div className="relative flex items-center justify-center gap-4 mt-4 group">
-                <FaInfoCircle className="text-gray-400" size={20} />
-                <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 bottom-full mb-2 whitespace-nowrap">
-                  The Recovery Equation uses:
-                  <ul className="list-disc ml-4">
-                    <li>
-                      <strong>w</strong>: Wallet
-                    </li>
-                    <li>
-                      <strong>r</strong>: Repayment
-                    </li>
-                    <li>
-                      <strong>d</strong>: Days Past Due
-                    </li>
-                  </ul>
-                </div>
-
-                {!hasViewOnlyAccess(roleName) ? (
-                  isEditingEquation ? (
-                    <Button
-                      buttonIcon={CheckCircleIcon}
-                      onClick={saveSettings}
-                      circle={true}
-                      buttonType="secondary"
-                    />
-                  ) : (
-                    <Button
-                      buttonIcon={PencilIcon}
-                      onClick={toggleEditEquation}
-                      circle={true}
-                      buttonType="secondary"
-                    />
-                  )
-                ) : (
-                  ""
-                )}
-              </div>
-            </div>
-            {isEditingEquation && (
-              <p className="text-red-500">
-                Clear the whole equation before you can assign a new equation
-              </p>
-            )}
-          </div>
-          {!hasViewOnlyAccess(roleName) ? (
-            <div className="text-right mt-5">
+        <div className="grid grid-cols-[80%_20%] md:grid-cols-[90%_10%] items-end">
+          {isEditingEquation && isEditingEquation ? (
+            <InputTextArea
+              labelName={"Recovery Equation"}
+              inputName={"recoveryEquation"}
+              rowCount={"3"}
+              inputValue={data?.recoveryEquation}
+              onChange={handleChangeWrapper}
+              placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
+              isValidation={true}
+              toolTipText={toolTip()}
+            />
+          ) : (
+            <InputText
+              labelName={"Recovery Equation"}
+              inputName="recoveryEquation"
+              inputValue={data?.recoveryEquation}
+              onChange={handleChangeWrapper}
+              placeHolder="( w > r ) * r + ( w < r ) * w * 0.5 ( d <= 20) * (( w > r ) * r + ( w < r ) * w * 0.5) + ( d > 20) * (( w > r ) * r + ( w < r ) * w )"
+              readOnly={true}
+              isValidation={true}
+              toolTipText={toolTip()}
+            />
+          )}
+          <div className="text-right">
+            {!hasViewOnlyAccess(roleName) && isEditingEquation ? (
               <Button
                 buttonIcon={CheckCircleIcon}
-                buttonName={"Update"}
-                onClick={handleUpdate}
-                rectangle={true}
+                onClick={saveSettings}
+                buttonType="secondary"
               />
-            </div>
-          ) : (
-            ""
+            ) : (
+              <Button
+                buttonIcon={PencilIcon}
+                onClick={toggleEditEquation}
+                buttonType="secondary"
+              />
+            )}
+          </div>
+          {isEditingEquation && (
+            <p className="text-red-500">
+              Clear the whole equation before you can assign a new equation
+            </p>
           )}
         </div>
+        <section>
+          <ul>
+            <ToggleSwitch
+              label="RTN"
+              description="Indicates whether the loan is RTN."
+              inputName="RTN"
+              inputChecked={RTN}
+              onChange={() => setRTN(!RTN)}
+            />
+          </ul>
+        </section>
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="text-right">
+            <Button
+              buttonIcon={CheckIcon}
+              buttonName={"Update"}
+              onClick={handleUpdate}
+            />
+          </div>
+        )}
       </ContainerTile>
     </>
   );

@@ -109,7 +109,7 @@ const InputFile = ({
     <div>
       {labelName && (
         <label
-          className={`text-sm font-medium ${
+          className={`text-sm font-medium mb-1 ${
             validationError[validationKey] ? "text-red-600" : "text-gray-500"
           }`}
           htmlFor={inputName}

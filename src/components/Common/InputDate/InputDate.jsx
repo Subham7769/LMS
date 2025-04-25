@@ -48,7 +48,7 @@ const InputDate = ({
     <>
       {labelName && (
         <label
-          className={`block text-sm font-medium ${
+          className={`block text-sm font-medium mb-1 ${
             validationError[validationKey] ? "text-red-600" : "text-gray-600"
           } px-1`}
           htmlFor={inputName}
@@ -87,9 +87,7 @@ const InputDate = ({
           todayButton="Today"
           toggleCalendarOnIconClick
           showIcon={showIcon}
-          icon={
-            <CalendarDaysIcon className="h-5 w-5" aria-hidden="true" />
-          }
+          icon={<CalendarDaysIcon className="h-5 w-5" aria-hidden="true" />}
           popperClassName="text-xs"
         />
       </div>

@@ -11,7 +11,6 @@ import {
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
-import { color } from "framer-motion";
 
 const InputSelect = ({
   labelName,
@@ -159,7 +158,7 @@ const InputSelect = ({
     >
       {labelName && (
         <label
-          className={`block text-sm font-medium ${
+          className={`block text-sm font-medium mb-1 ${
             validationError[validationKey] ? "text-red-600" : "text-gray-600"
           } px-1`}
           htmlFor={inputName}

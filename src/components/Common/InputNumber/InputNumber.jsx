@@ -116,7 +116,7 @@ const InputNumber = ({
           <label
             className={`block ${
               validationError[validationKey] ? "text-red-600" : "text-gray-600"
-            } px-1 text-sm font-medium`}
+            } px-1 text-sm font-medium mb-1`}
             htmlFor={inputName}
           >
             {validationError[validationKey] ? "Field required" : labelName}{" "}

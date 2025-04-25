@@ -158,7 +158,6 @@ const LoanProductConfig = () => {
                     buttonIcon={CheckIcon}
                     buttonName="Update"
                     onClick={handleSave}
-                    rectangle={true}
                     buttonType={"primary"}
                   />
                 </div>
