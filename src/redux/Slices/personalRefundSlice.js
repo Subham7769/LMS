@@ -326,7 +326,7 @@ export const cancelRefundApplicationsByID = createAsyncThunk(
       const response = await fetch(
         `${
           import.meta.env.VITE_REFUND_CANCEL_APPLICATION_BY_ID_PERSONAL
-        }${refundApplicationId}/status?status=CANCEL`,
+        }${refundApplicationId}/status?status=REJECTED`,
         {
           method: "PUT",
           headers: {
@@ -720,7 +720,7 @@ const personalRefundSlice = createSlice({
       .addCase(getRefundApplications.fulfilled, (state, action) => {
         state.loading = false;
         state.refundApplications = action.payload.content;
-        state.refundApplicationsTotalElements = action.payload.numberOfElements;
+        state.refundApplicationsTotalElements = action.payload.totalElements;
       })
       .addCase(getRefundApplications.rejected, (state, action) => {
         state.loading = false;
@@ -733,7 +733,15 @@ const personalRefundSlice = createSlice({
       })
       .addCase(getRefundApplicationByField.fulfilled, (state, action) => {
         state.loading = false;
-        state.refundApplications = action.payload;
+
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+        state.refundApplications = payload;
+
+        // hide the pagination
+        state.refundApplicationsTotalElements = 0;
       })
       .addCase(getRefundApplicationByField.rejected, (state, action) => {
         state.loading = false;

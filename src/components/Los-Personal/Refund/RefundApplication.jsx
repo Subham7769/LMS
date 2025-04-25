@@ -104,7 +104,7 @@ const RefundApplication = () => {
   const handleReset = () => {
     setPlaSearchBy("");
     setPlaSearchValue("");
-    dispatch(getRefundApplications({ page: 0, size: 20 }));
+    dispatch(getRefundApplications({ page: 0, size: 10 }));
   };
 
   const handleNewApplication = async () => {
@@ -136,7 +136,7 @@ const RefundApplication = () => {
   };
 
   const renderActionList = (rowData) => {
-    if (rowData.status === "Completed" || hasViewOnlyAccessGroup3(roleName)) {
+    if (rowData.status === "Approved" || hasViewOnlyAccessGroup3(roleName)) {
       return <div className="flex justify-center gap-4 px-5">-</div>;
     }
     return (
@@ -150,7 +150,7 @@ const RefundApplication = () => {
             buttonType="secondary"
           />
         )}
-        {rowData.status !== "Cancel" && (
+        {rowData.status !== "Rejected" && (
           <Button
             onClick={() => handleRejectApplication(rowData.refundApplicationId)}
             buttonIcon={TrashIcon}
