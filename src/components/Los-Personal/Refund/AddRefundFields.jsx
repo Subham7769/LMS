@@ -1,6 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
-
-import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
+import React from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
@@ -15,7 +13,7 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
-const AddRefundFields = ({ refundData, openLoans, loanId }) => {
+const AddRefundFields = ({ refundData, openLoans }) => {
   const dispatch = useDispatch();
 
   // Helper to calculate uploaded and verified documents
@@ -79,8 +77,12 @@ const AddRefundFields = ({ refundData, openLoans, loanId }) => {
       borrowerType: "PERSONAL_BORROWER",
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
-    console.log(e.target);
+    // console.log(e.target);
     const { name, value, type, checked, files } = e.target;
+
+    dispatch(
+      updateRefundField({ section, field: name, value, type, checked, index })
+    );
 
     if (files && files[0]) {
       const formData = new FormData();

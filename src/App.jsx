@@ -360,6 +360,9 @@ const AddRefund = lazy(() =>
 const ApproveRefunds = lazy(() =>
   import("./components/Los-Personal/Refund/ApproveRefunds")
 );
+const RefundFormPrint = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundFormPrint")
+);
 const RefundHistory = lazy(() =>
   import("./components/Los-Personal/Refund/RefundHistory")
 );
@@ -1104,6 +1107,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
+            path: "add-refund/new/:refundApplicationId/:loanId/:uid",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
             path: "add-refund/:refundApplicationId",
             element: <AddRefund />,
             errorElement: <RouteErrorBoundary />,
@@ -1352,6 +1360,11 @@ const routes = [
   {
     path: "/disbursement-sme/:loanApplicationId/:userId",
     element: <DisbursementFilePrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/refund-form/:refundProcessId",
+    element: <RefundFormPrint />,
     errorElement: <RouteErrorBoundary />,
   },
 

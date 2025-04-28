@@ -14,6 +14,7 @@ import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import { toast } from "react-toastify";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateCompany = () => {
   const { updateCompanyData, error, loading } = useSelector(
@@ -23,23 +24,6 @@ const UpdateCompany = () => {
   const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
-
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    return result;
-  }
 
   const handleDraftUpdate = async () => {
     const addDraftCompanyData = {

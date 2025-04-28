@@ -8,13 +8,12 @@ import {
   getLoanAgreement,
   getLoansByField,
   getPendingLoans,
+  rejectLoan,
 } from "../../../redux/Slices/personalLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
-import { useNavigate } from "react-router-dom";
-import LoanRejectModal from "./LoanRejectModal";
 import Pagination from "../../Common/Pagination/Pagination";
 import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -35,10 +34,11 @@ import ViewDocumentsModal from "./ViewDocumentsModal";
 import store from "../../../redux/store";
 import {
   clearValidationError,
+  updateValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
-
 import ViewBorrowerDetailsModal from "../Borrowers/ViewBorrowerDetailsModal";
+import RejectModal from "../RejectModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -54,6 +54,7 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
   const { userData, roleName } = useSelector((state) => state.auth);
+  const { validationError } = useSelector((state) => state.validation);
   const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
@@ -64,8 +65,7 @@ const ApproveLoans = () => {
   const [palSearchBy, setPalSearchBy] = useState("");
   const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
   const [selectedBorrowerData, setSelectedBorrowerData] = useState(null);
-
-  const navigate = useNavigate();
+  const [rejectionReason, setRejectionReason] = useState("");
 
   console.log(userData.username);
   // Pagination state
@@ -163,6 +163,38 @@ const ApproveLoans = () => {
 
   const closeRejectModal = () => {
     setShowModal(false);
+  };
+
+  const handleRejection = async (rowData) => {
+    const rejectLoanPayload = {
+      amount: rowData.principalAmount,
+      applicationStatus: "REJECTED",
+      loanId: rowData.loanId,
+      uid: rowData.uid,
+      rejectionReason: rejectionReason,
+      username: userData.username,
+      roleName: [roleName],
+    };
+    console.log(rejectLoanPayload);
+    let isValid = true;
+    if (rejectionReason === "") {
+      dispatch(
+        updateValidationError({ ...validationError, rejectionReason: true })
+      );
+      isValid = false;
+    }
+    if (isValid) {
+      await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
+      await dispatch(
+        getPendingLoans({
+          page: 0,
+          size: 20,
+          getPayload: { roleNames: [roleName] },
+        })
+      ).unwrap();
+      closeRejectModal();
+      setRejectionReason("");
+    }
   };
 
   const handleViewDocuments = (verifiedDocuments) => {
@@ -467,10 +499,13 @@ const ApproveLoans = () => {
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
       />
-      <LoanRejectModal
+      <RejectModal
         isOpen={showModal}
         onClose={closeRejectModal}
         userDetails={currentRowData}
+        handleRejection={handleRejection}
+        rejectionReason={rejectionReason}
+        setRejectionReason={setRejectionReason}
       />
       <FullLoanDetailModal
         isOpen={showLoanModal}

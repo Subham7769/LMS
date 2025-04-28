@@ -46,6 +46,7 @@ import {
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
+import { generateRefundApplicationId } from "../../../redux/Slices/personalRefundSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -176,13 +177,12 @@ const LoanHistory = () => {
     handleReset();
   };
 
-  const handleInitiateRefund = async (loanId, uid, uniqueID) => {
-    await dispatch(getRefinanceDetails({ loanId, uid, uniqueID })).unwrap();
+  const handleInitiateRefund = async (loanId, uid) => {
     const refundApplicationId = await dispatch(
-      generateLoanApplicationId()
+      generateRefundApplicationId()
     ).unwrap();
     navigate(
-      `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}`
+      `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}/${loanId}/${uid}`
     );
   };
 
@@ -443,14 +443,13 @@ const LoanHistory = () => {
           <div className="flex justify-end gap-2 px-5">
             {(rowData.loanStatus === "ACTIVATED" ||
               rowData.loanStatus === "CLOSED") && (
-              <div className="hidden">
+              <div className="">
                 <Button
                   buttonName={"Initiate Refund"}
                   onClick={() =>
                     handleInitiateRefund(
                       rowData.loanId,
                       rowData.uid,
-                      rowData.uniqueID
                     )
                   }
                   rectangle={true}
@@ -459,7 +458,8 @@ const LoanHistory = () => {
                 />
               </div>
             )}
-            {rowData.loanStatus === "ACTIVATED" && (
+            {(rowData.loanStatus === "ACTIVATED" ||
+              rowData.loanStatus === "LATE") && (
               <div className="flex gap-2">
                 <Button
                   buttonName={"Refinance Loan"}

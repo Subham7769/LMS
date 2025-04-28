@@ -2694,6 +2694,7 @@ export const districtOptions = {
     { value: "Lufwanyama", label: "Lufwanyama" },
     { value: "Masaiti", label: "Masaiti" },
     { value: "Mpongwe", label: "Mpongwe" },
+    { value: "Ndola", label: "Ndola" },
   ],
   Southern: [
     { value: "Chikankata ", label: "Chikankata " },
