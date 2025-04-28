@@ -48,7 +48,7 @@ const Button = ({
         }`}
       >
         {ButtonIcon && (
-          <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+          <ButtonIcon className="h-5 w-5" aria-hidden="true" />
         )}
         {buttonName && ButtonIcon ? (
           <span className="ml-2">{buttonName}</span>

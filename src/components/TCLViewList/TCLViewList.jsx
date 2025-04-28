@@ -127,13 +127,13 @@ const TCLViewList = () => {
   // actions to be executed in list
   const ActionList = !hasViewOnlyAccess(roleName)
     ? [
-        {
-          icon: TrashIcon,
-          circle: true,
-          action: handleDelete,
-          type: "destructive"
-        },
-      ]
+      {
+        icon: TrashIcon,
+        circle: true,
+        action: handleDelete,
+        type: "destructive"
+      },
+    ]
     : [];
 
   // Remove tclFileId from each item in tableData
@@ -146,24 +146,24 @@ const TCLViewList = () => {
 
   const TclViewListHeaderList = !hasViewOnlyAccess(roleName)
     ? [
-        "File Name",
-        "Min TCL",
-        "Avg TCL",
-        "Max TCL",
-        "Total User",
-        "Uploaded Date",
-        "Total Rows",
-        "Actions",
-      ] // Show "Actions" for non-viewers
+      "File Name",
+      "Min TCL",
+      "Avg TCL",
+      "Max TCL",
+      "Total User",
+      "Uploaded Date",
+      "Total Rows",
+      "Actions",
+    ] // Show "Actions" for non-viewers
     : [
-        "File Name",
-        "Min TCL",
-        "Avg TCL",
-        "Max TCL",
-        "Total User",
-        "Uploaded Date",
-        "Total Rows",
-      ];
+      "File Name",
+      "Min TCL",
+      "Avg TCL",
+      "Max TCL",
+      "Total User",
+      "Uploaded Date",
+      "Total Rows",
+    ];
 
   return (
     <div className="flex flex-col gap-5">
@@ -190,6 +190,13 @@ const TCLViewList = () => {
         />
         {!hasViewOnlyAccess(roleName) ? (
           <div className="w-3/4 flex justify-end items-center gap-5">
+            <a
+              href={"/assets/files/sample_file_tcl_list.csv"}
+              className="text-blue-600 underline"
+              download="sample_file_tcl_list.csv"
+            >
+              Click here to download a sample file.
+            </a>
             <input
               type="file"
               ref={fileInputRef}
