@@ -6,6 +6,7 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import { useSelector } from "react-redux";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon } from "../../assets/icons";
 
 const TagInput = ({
   inputSelectName,
@@ -34,7 +35,7 @@ const TagInput = ({
   const tagsGridCSS = `grid-cols-${tagsPerRow}`;
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
+      <div className="grid md:grid-cols-3 gap-5 items-end">
         {inputSelectName && productTypeOptions && (
           <InputSelect
             labelName={inputSelectLabel}
@@ -68,17 +69,15 @@ const TagInput = ({
             isIndex={isIndex2}
           />
         )}
-        {!hasViewOnlyAccess(roleName) ? (
-          <div className="">
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="text-right md:text-left">
             <Button
-              buttonIcon={PlusIcon}
+              buttonIcon={AddIcon}
               onClick={addTag}
-              circle={true}
+              buttonName="Add"
               buttonType="secondary"
             />
           </div>
-        ) : (
-          ""
         )}
       </div>
       <div className={`grid ${tagsGridCSS} gap-3 mt-3`}>

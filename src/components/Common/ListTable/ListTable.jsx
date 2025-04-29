@@ -1,35 +1,32 @@
 import React, { useState, useMemo, useEffect } from "react";
 import {
   MagnifyingGlassIcon,
-  CheckCircleIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
 } from "@heroicons/react/20/solid";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import InputNumber from "../InputNumber/InputNumber";
 import SectionErrorBoundary from "../../ErrorBoundary/SectionErrorBoundary";
+import { CheckIcon } from "../../../assets/icons";
+import PaginationClassic from "../Pagination/PaginationClassic";
 
 const ListTable = ({
   ListName,
   ListNameAlign = "left",
+  ListNameLength,
   ListHeader,
   ListItem,
   ListAction, // actions to be executed in list
   Searchable = false,
   SearchBy,
-  Divider = false,
   Sortable = false,
   Editable = false,
-  editAllFields = false,
   Paginated = true,
   PageSize = 10,
   handleEditableFields,
   loading,
   error,
 }) => {
-  const HeaderCellWidth = ListHeader.length + 1; // Calculate cell width based on header length
 
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [filteredData, setFilteredData] = useState(ListItem);
@@ -38,7 +35,6 @@ const ListTable = ({
   const [pageSize, setPageSize] = useState(PageSize);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
 
-  const totalPages = Math.ceil(filteredData.length / pageSize);
 
   useEffect(() => {
     setFilteredData(ListItem);
@@ -189,165 +185,156 @@ const ListTable = ({
           <p>Oops! Something went wrong. Please try again later.</p>
         </div>
       ) : (
-        <div
-          className={
-            "bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8"
-          }
-        >
-          {Searchable && (
-            <div className="px-5 pt-4 w-full">
-              <label htmlFor="search" className="sr-only">
-                Search
-              </label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <MagnifyingGlassIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
+        <>
+          <div
+            className={
+              "bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8"
+            }
+          >
+            {Searchable && (
+              <div className="px-5 pt-4 w-full">
+                <label htmlFor="search" className="sr-only">
+                  Search
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <MagnifyingGlassIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <input
+                    id="search"
+                    name="search"
+                    className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                    placeholder="Search"
+                    type="search"
+                    value={searchTerm}
+                    onChange={handleSearch}
                   />
                 </div>
-                <input
-                  id="search"
-                  name="search"
-                  className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                  placeholder="Search"
-                  type="search"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                />
               </div>
-            </div>
-          )}
+            )}
 
-          <header className="px-5 py-4">
-            <h2
-              className={`font-semibold text-gray-800 dark:text-gray-100 text-${ListNameAlign}`}
-            >
-              {ListName}
-            </h2>
-          </header>
+            {ListName && (
+              <header className="px-5 py-4">
+                <h2
+                  className={`font-semibold text-gray-800 dark:text-gray-100 text-${ListNameAlign}`}
+                >
+                  {ListName}{" "}
+                  <span className="text-gray-400 dark:text-gray-500 font-medium">
+                    {ListNameLength}
+                  </span>
+                </h2>
+              </header>
+            )}
 
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full dark:text-gray-300">
-              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
-                <tr>
-                  {ListHeader.map((header, index) => (
-                    <th
-                      key={index}
-                      scope="col"
-                      className={`px-4 py-4 whitespace-nowrap`}
-                      onClick={() => handleSort(toLowerCamelCase(header))}
-                    >
-                      {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
-                      <div className="font-semibold text-left flex cursor-pointer items-center">
-                        {header}
-                        {getSortIcon(toLowerCamelCase(header))}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-                {currentData.map((product, rowIndex) => (
-                  <tr key={indexOfFirstItem + rowIndex}>
-                    {Object.keys(product).map((key, idx) =>
-                      key !== "href" ? (
-                        <td key={idx} className={`px-4 py-4 whitespace-nowrap`}>
-                          {product.href ? (
-                            <Link className="w-full block" to={product.href}>
-                              {product[key]}
-                            </Link>
-                          ) : Editable ||
-                            editingRowIndex === indexOfFirstItem + rowIndex ? (
-                            <>
-                              <InputNumber
-                                inputName={key}
-                                inputValue={product[key]}
-                                onChange={(e) =>
-                                  handleEditableFields(
-                                    e,
-                                    indexOfFirstItem + rowIndex
-                                  )
-                                }
-                                placeHolder="3"
-                                isValidation={true}
-                              />
-                            </>
-                          ) : product[key] ? (
-                            product[key]
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                      ) : null
-                    )}
-                    {ListHeader.includes("Actions") && (
-                      <td className={`px-4 py-4 whitespace-nowrap flex gap-2`}>
-                        {ListAction.map((item, buttonIndex) => (
-                          <Button
-                            buttonIcon={
-                              ListAction.length > 1 && buttonIndex === 0
-                                ? editingRowIndex ===
-                                  indexOfFirstItem + rowIndex
-                                  ? CheckCircleIcon
-                                  : item.icon
-                                : item.icon // Ensure TrashIcon or any other icon shows correctly
-                            }
-                            onClick={
-                              () =>
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full dark:text-gray-300 ">
+                <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
+                  <tr>
+                    {ListHeader.map((header, index) => (
+                      <th
+                        key={index}
+                        scope="col"
+                        className={`px-4 py-4 whitespace-nowrap`}
+                        onClick={() => handleSort(toLowerCamelCase(header))}
+                      >
+                        {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
+                        <div className="flex cursor-pointer items-center">
+                          {header}
+                          {getSortIcon(toLowerCamelCase(header))}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
+                  {currentData.map((product, rowIndex) => (
+                    <tr key={indexOfFirstItem + rowIndex}>
+                      {Object.keys(product).map((key, idx) =>
+                        key !== "href" ? (
+                          <td
+                            key={idx}
+                            className={`px-4 py-4 whitespace-nowrap`}
+                          >
+                            {product.href ? (
+                              <Link className="w-full block" to={product.href}>
+                                {product[key]}
+                              </Link>
+                            ) : Editable ||
+                              editingRowIndex ===
+                                indexOfFirstItem + rowIndex ? (
+                              <>
+                                <InputNumber
+                                  inputName={key}
+                                  inputValue={product[key]}
+                                  onChange={(e) =>
+                                    handleEditableFields(
+                                      e,
+                                      indexOfFirstItem + rowIndex
+                                    )
+                                  }
+                                  placeHolder="3"
+                                  isValidation={true}
+                                />
+                              </>
+                            ) : product[key] ? (
+                              product[key]
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                        ) : null
+                      )}
+                      {ListHeader.includes("Actions") && (
+                        <td
+                          className={`px-4 py-4 whitespace-nowrap flex gap-2`}
+                        >
+                          {ListAction.map((item, buttonIndex) => (
+                            <Button
+                              buttonIcon={
                                 ListAction.length > 1 && buttonIndex === 0
                                   ? editingRowIndex ===
                                     indexOfFirstItem + rowIndex
-                                    ? item.action(indexOfFirstItem + rowIndex)
-                                    : toggleEdit(
-                                        indexOfFirstItem + rowIndex,
-                                        buttonIndex
-                                      )
-                                  : item.action(indexOfFirstItem + rowIndex) // Keep original action for the other button
-                            }
-                            circle={item.circle}
-                            key={buttonIndex} // Use key to uniquely identify each button
-                            buttonType={item.type}
-                          />
-                        ))}
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {/* Pagination Controls */}
-          {Paginated && totalPages > 1 && (
-            <div className="mt-6 flex justify-center items-center gap-5">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`flex items-center px-2 py-2 rounded-md ${
-                  currentPage === 1
-                    ? "bg-background-light-primary cursor-not-allowed"
-                    : "bg-indigo-500 text-white cursor-pointer"
-                }`}
-              >
-                <ChevronLeftIcon className="w-5 h-5" />
-              </button>
-              <span className="text-sm text-gray-700">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`flex items-center px-2 py-2 rounded-md ${
-                  currentPage === totalPages
-                    ? "bg-background-light-primary cursor-not-allowed"
-                    : "bg-indigo-500 text-white cursor-pointer"
-                }`}
-              >
-                <ChevronRightIcon className="w-5 h-5" />
-              </button>
+                                    ? CheckIcon
+                                    : item.icon
+                                  : item.icon // Ensure TrashIcon or any other icon shows correctly
+                              }
+                              onClick={
+                                () =>
+                                  ListAction.length > 1 && buttonIndex === 0
+                                    ? editingRowIndex ===
+                                      indexOfFirstItem + rowIndex
+                                      ? item.action(indexOfFirstItem + rowIndex)
+                                      : toggleEdit(
+                                          indexOfFirstItem + rowIndex,
+                                          buttonIndex
+                                        )
+                                    : item.action(indexOfFirstItem + rowIndex) // Keep original action for the other button
+                              }
+                              circle={item.circle}
+                              key={buttonIndex} // Use key to uniquely identify each button
+                              buttonType={item.type}
+                            />
+                          ))}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          </div>
+          {(currentData.length > 0 && Paginated) && (
+            <PaginationClassic
+              sortedItems={dataToRender}
+              itemsPerPage={PageSize}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
           )}
-        </div>
+        </>
       )}
     </>
   );

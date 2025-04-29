@@ -15,6 +15,7 @@ import Button from "../Common/Button/Button";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
 
 const RiskBasedPricingEquation = ({ loading, error }) => {
   const dispatch = useDispatch();
@@ -91,151 +92,159 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
 
   return (
     <>
-      <ContainerTile loading={loading} error={error}>
-        <div className=" text-center my-4 text-lg">
-          Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
-          (*Length of Service*C%) + (*Cities*D%)]
-        </div>
-        <table className="divide-y divide-gray-300 w-full">
-          <thead className="bg-gray-50">
-            <tr className="divide-x divide-gray-200">
-              <th className="py-3.5 px-2 text-center text-gray-900">A</th>
-              <th className="py-3.5 px-2 text-center text-gray-900">B</th>
-              <th className="py-3.5 px-2 text-center text-gray-900">C</th>
-              <th className="py-3.5 px-2 text-center text-gray-900">D</th>
-              {!hasViewOnlyAccess(roleName) ? (
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Action
-                </th>
-              ) : (
-                ""
-              )}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {!hasViewOnlyAccess(roleName) ? (
-              <tr className="divide-x divide-gray-200 text-center">
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"a_Weight"}
-                    inputValue={rules.a_Weight}
-                    onChange={handleRuleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"b_Weight"}
-                    inputValue={rules.b_Weight}
-                    onChange={handleRuleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"c_Weight"}
-                    inputValue={rules.c_Weight}
-                    onChange={handleRuleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"d_Weight"}
-                    inputValue={rules.d_Weight}
-                    onChange={handleRuleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                  />
-                </td>
-                <td>
-                  <Button
-                    buttonIcon={CheckCircleIcon}
-                    buttonName={"Add"}
-                    onClick={handleAddRBPE}
-                    rectangle={true}
-                    buttonType="secondary"
-                  />
-                </td>
-              </tr>
-            ) : (
-              ""
-            )}
-
-            {riskBasedPricingEquation?.rules?.map((item, index) => (
-              <tr
-                key={item.ruleName || index}
-                className="divide-x divide-gray-200 text-center"
-              >
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"a_Weight"}
-                    inputId={item.ruleName}
-                    inputValue={item.a_Weight}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                    isIndex={item.dataIndex}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"b_Weight"}
-                    inputId={item.ruleName}
-                    inputValue={item.b_Weight}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                    isIndex={item.dataIndex}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"c_Weight"}
-                    inputId={item.ruleName}
-                    inputValue={item.c_Weight}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                    isIndex={item.dataIndex}
-                  />
-                </td>
-                <td className="whitespace-nowrap py-4 px-5 text-gray-500">
-                  <InputNumber
-                    inputName={"d_Weight"}
-                    inputId={item.ruleName}
-                    inputValue={item.d_Weight}
-                    onChange={handleChange}
-                    placeHolder={"0.54"}
-                    isValidation={true}
-                    isIndex={item.dataIndex}
-                  />
-                </td>
+      <ContainerTile loading={loading} defaultClass={false}>
+        <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
+          <header className="px-5 py-4">
+            <h2 className="font-semibold text-gray-800 dark:text-gray-100">
+              Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
+              (*Length of Service*C%) + (*Cities*D%)]
+            </h2>
+          </header>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full dark:text-gray-300">
+              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
+                <tr className="">
+                  <th className="px-4 py-4 whitespace-nowrap text-left min-w-32">
+                    A
+                  </th>
+                  <th className="px-4 py-4 whitespace-nowrap text-left min-w-32">
+                    B
+                  </th>
+                  <th className="px-4 py-4 whitespace-nowrap text-left min-w-32">
+                    C
+                  </th>
+                  <th className="px-4 py-4 whitespace-nowrap text-left min-w-32">
+                    D
+                  </th>
+                  {!hasViewOnlyAccess(roleName) ? (
+                    <th className="px-4 py-4 whitespace-nowrap text-left">
+                      Action
+                    </th>
+                  ) : (
+                    ""
+                  )}
+                </tr>
+              </thead>
+              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
                 {!hasViewOnlyAccess(roleName) ? (
-                  <td className="py-4 flex gap-2 px-4">
-                    <Button
-                      buttonIcon={CheckCircleIcon}
-                      onClick={() => handleUpdateRBPE(index)}
-                      circle={true}
-                      buttonType="secondary"
-                    />
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() => handleDeleteRBPE(item.ruleName)}
-                      circle={true}
-                      buttonType="destructive"
-                    />
-                  </td>
+                  <tr className="">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"a_Weight"}
+                        inputValue={rules.a_Weight}
+                        onChange={handleRuleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"b_Weight"}
+                        inputValue={rules.b_Weight}
+                        onChange={handleRuleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"c_Weight"}
+                        inputValue={rules.c_Weight}
+                        onChange={handleRuleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"d_Weight"}
+                        inputValue={rules.d_Weight}
+                        onChange={handleRuleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <Button
+                        buttonIcon={AddIcon}
+                        buttonName={"Add"}
+                        onClick={handleAddRBPE}
+                        buttonType="secondary"
+                      />
+                    </td>
+                  </tr>
                 ) : (
                   ""
                 )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+                {riskBasedPricingEquation?.rules?.map((item, index) => (
+                  <tr key={item.ruleName || index} className="">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"a_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.a_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                        isIndex={item.dataIndex}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"b_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.b_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                        isIndex={item.dataIndex}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"c_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.c_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                        isIndex={item.dataIndex}
+                      />
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputNumber
+                        inputName={"d_Weight"}
+                        inputId={item.ruleName}
+                        inputValue={item.d_Weight}
+                        onChange={handleChange}
+                        placeHolder={"0.54"}
+                        isValidation={true}
+                        isIndex={item.dataIndex}
+                      />
+                    </td>
+                    {!hasViewOnlyAccess(roleName) ? (
+                      <td className="py-4 flex gap-2 px-4">
+                        <Button
+                          buttonIcon={CheckIcon}
+                          onClick={() => handleUpdateRBPE(index)}
+                          buttonType="secondary"
+                        />
+                        <Button
+                          buttonIcon={DeleteIcon}
+                          onClick={() => handleDeleteRBPE(item.ruleName)}
+                          buttonType="destructive"
+                        />
+                      </td>
+                    ) : (
+                      ""
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </ContainerTile>
     </>
   );

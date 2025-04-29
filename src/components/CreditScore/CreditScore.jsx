@@ -1,4 +1,3 @@
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,14 +24,8 @@ import {
 import store from "../../redux/store";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
-
-const options = [
-  { value: "==", label: "==" },
-  { value: "<", label: "<" },
-  { value: ">", label: ">" },
-  { value: "<=", label: "<=" },
-  { value: ">=", label: ">=" },
-];
+import { CheckIcon } from "../../assets/icons";
+import { operatorOptions } from "../../data/OptionsData";
 
 const CreditScore = () => {
   const { creditScoreId } = useParams();
@@ -97,6 +90,7 @@ const CreditScore = () => {
           Divider={true}
           loading={loading}
           error={error}
+          Paginated={false}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -115,6 +109,7 @@ const CreditScore = () => {
           Divider={true}
           loading={loading}
           error={error}
+          Paginated={false}
         />
         <ListTable
           ListName={"Residential Status Score"}
@@ -131,6 +126,7 @@ const CreditScore = () => {
           Divider={true}
           loading={loading}
           error={error}
+          Paginated={false}
         />
       </div>
       <div className="mb-6">
@@ -153,241 +149,200 @@ const CreditScore = () => {
           Divider={true}
           loading={loading}
           error={error}
+          Paginated={false}
         />
       </div>
-      <ContainerTile loading={loading} error={error}>
+      <ContainerTile loading={loading} className={"p-5"}>
         <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">
           Dependents Rules
         </h2>
-        <div className="grid grid-cols-3 gap-5 justify-between">
-          <div>
-            <div className="mb-3">
-              <SelectAndNumber
-                inputSelectName={"firstDependentsOperator"}
-                inputSelectOptions={options}
-                inputSelectValue={
-                  creditScoreData?.dependentsRules?.operators
-                    ?.firstDependentsOperator
-                }
-                onChangeSelect={handleChange}
-                disabledSelect={false}
-                hiddenSelect={false}
-                inputNumberName={"firstDependent"}
-                inputNumberId={
-                  creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
-                }
-                inputNumberValue={
-                  creditScoreData?.dependentsRules?.rules?.[0]?.firstDependent
-                }
-                onChangeNumber={handleChange}
-                placeHolderNumber={"4"}
-                isValidation={true}
-                isIndex={"0"}
-              />
-            </div>
-            <div className="mb-3">
-              <SelectAndNumber
-                inputSelectName={"firstDependentsOperator"}
-                inputSelectOptions={options}
-                inputSelectValue={
-                  creditScoreData?.dependentsRules?.operators
-                    ?.firstDependentsOperator
-                }
-                onChangeSelect={handleChange}
-                disabledSelect={false}
-                hiddenSelect={false}
-                inputNumberName={"firstDependent"}
-                inputNumberValue={
-                  creditScoreData?.dependentsRules?.rules?.[1]?.firstDependent
-                }
-                inputNumberId={
-                  creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
-                }
-                onChangeNumber={handleChange}
-                placeHolderNumber={"4"}
-                isValidation={true}
-                isIndex={"1"}
-              />
-            </div>
-            <div className="mb-3">
-              <SelectAndNumber
-                inputSelectName={"firstDependentsOperator"}
-                inputSelectOptions={options}
-                inputSelectValue={
-                  creditScoreData?.dependentsRules?.operators
-                    ?.firstDependentsOperator
-                }
-                onChangeSelect={handleChange}
-                disabledSelect={false}
-                hiddenSelect={false}
-                inputNumberName={"firstDependent"}
-                inputNumberValue={
-                  creditScoreData?.dependentsRules?.rules?.[2]?.firstDependent
-                }
-                inputNumberId={
-                  creditScoreData?.dependentsRules?.rules?.[2]?.ruleName
-                }
-                onChangeNumber={handleChange}
-                placeHolderNumber={"4"}
-                isValidation={true}
-                isIndex={"2"}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="mb-3">
-              <SelectAndNumber
-                inputSelectName={"secondDependentsOperator"}
-                inputSelectOptions={options}
-                inputSelectValue={
-                  creditScoreData?.dependentsRules?.operators
-                    ?.secondDependentsOperator
-                }
-                onChangeSelect={handleChange}
-                disabledSelect={false}
-                hiddenSelect={false}
-                inputNumberName={"secondDependent"}
-                inputNumberValue={
-                  creditScoreData?.dependentsRules?.rules[0]?.secondDependent
-                }
-                inputNumberId={
-                  creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
-                }
-                onChangeNumber={handleChange}
-                placeHolderNumber={"4"}
-                isValidation={true}
-                isIndex={"0"}
-                // showError={validationError[`secondDependent_0`]}
-                // onFocus={() =>
-                //   dispatch(
-                //     setValidationError({
-                //       ...validationError,
-                //       [`secondDependent_0`]: false,
-                //     })
-                //   )
-                // }
-              />
-            </div>
-            <div className="mb-3">
-              <SelectAndNumber
-                inputSelectName={"secondDependentsOperator"}
-                inputSelectOptions={options}
-                inputSelectValue={
-                  creditScoreData?.dependentsRules?.operators
-                    ?.secondDependentsOperator
-                }
-                onChangeSelect={handleChange}
-                disabledSelect={false}
-                hiddenSelect={false}
-                inputNumberName={"secondDependent"}
-                inputNumberValue={
-                  creditScoreData?.dependentsRules?.rules?.[1]?.secondDependent
-                }
-                inputNumberId={
-                  creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
-                }
-                onChangeNumber={handleChange}
-                placeHolderNumber={"4"}
-                isValidation={true}
-                isIndex={"1"}
-                // showError={validationError[`secondDependent_1`]}
-                // onFocus={() =>
-                //   dispatch(
-                //     setValidationError({
-                //       ...validationError,
-                //       [`secondDependent_1`]: false,
-                //     })
-                //   )
-                // }
-              />
-            </div>
-          </div>
-          <div>
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
-                Value:{" "}
-              </div>
-              <div>
-                <InputNumber
-                  inputName={"value"}
-                  inputId={
+        <div className="overflow-x-auto">
+          <div className="grid grid-cols-3 gap-5 justify-between min-w-[600px] sm:min-w-auto">
+            <div>
+              <div className="mb-3">
+                <SelectAndNumber
+                  inputSelectName={"firstDependentsOperator"}
+                  inputSelectOptions={operatorOptions}
+                  inputSelectValue={
+                    creditScoreData?.dependentsRules?.operators
+                      ?.firstDependentsOperator
+                  }
+                  onChangeSelect={handleChange}
+                  disabledSelect={false}
+                  hiddenSelect={false}
+                  inputNumberName={"firstDependent"}
+                  inputNumberId={
                     creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
                   }
-                  inputValue={
-                    creditScoreData?.dependentsRules?.rules?.[0]?.value
+                  inputNumberValue={
+                    creditScoreData?.dependentsRules?.rules?.[0]?.firstDependent
                   }
-                  onChange={handleChange}
-                  placeHolder={"0.54"}
+                  onChangeNumber={handleChange}
+                  placeHolderNumber={"4"}
                   isValidation={true}
                   isIndex={"0"}
-                  // showError={validationError[`value_0`]}
-                  // onFocus={() =>
-                  //   dispatch(
-                  //     setValidationError({
-                  //       ...validationError,
-                  //       [`value_0`]: false,
-                  //     })
-                  //   )
-                  // }
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2  gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
-                Value:{" "}
-              </div>
-              <div>
-                <InputNumber
-                  inputName={"value"}
-                  inputId={
+              <div className="mb-3">
+                <SelectAndNumber
+                  inputSelectName={"firstDependentsOperator"}
+                  inputSelectOptions={operatorOptions}
+                  inputSelectValue={
+                    creditScoreData?.dependentsRules?.operators
+                      ?.firstDependentsOperator
+                  }
+                  onChangeSelect={handleChange}
+                  disabledSelect={false}
+                  hiddenSelect={false}
+                  inputNumberName={"firstDependent"}
+                  inputNumberValue={
+                    creditScoreData?.dependentsRules?.rules?.[1]?.firstDependent
+                  }
+                  inputNumberId={
                     creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
                   }
-                  inputValue={
-                    creditScoreData?.dependentsRules?.rules?.[1]?.value
-                  }
-                  onChange={handleChange}
-                  placeHolder={"0.54"}
+                  onChangeNumber={handleChange}
+                  placeHolderNumber={"4"}
                   isValidation={true}
                   isIndex={"1"}
-                  // showError={validationError[`value_1`]}
-                  // onFocus={() =>
-                  //   dispatch(
-                  //     setValidationError({
-                  //       ...validationError,
-                  //       [`value_1`]: false,
-                  //     })
-                  //   )
-                  // }
+                />
+              </div>
+              <div className="mb-3">
+                <SelectAndNumber
+                  inputSelectName={"firstDependentsOperator"}
+                  inputSelectOptions={operatorOptions}
+                  inputSelectValue={
+                    creditScoreData?.dependentsRules?.operators
+                      ?.firstDependentsOperator
+                  }
+                  onChangeSelect={handleChange}
+                  disabledSelect={false}
+                  hiddenSelect={false}
+                  inputNumberName={"firstDependent"}
+                  inputNumberValue={
+                    creditScoreData?.dependentsRules?.rules?.[2]?.firstDependent
+                  }
+                  inputNumberId={
+                    creditScoreData?.dependentsRules?.rules?.[2]?.ruleName
+                  }
+                  onChangeNumber={handleChange}
+                  placeHolderNumber={"4"}
+                  isValidation={true}
+                  isIndex={"2"}
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
-                Value:{" "}
-              </div>
-              <div>
-                <InputNumber
-                  inputName={"value"}
-                  inputId={
-                    creditScoreData?.dependentsRules?.rules?.[2]?.ruleName
+            <div>
+              <div className="mb-3">
+                <SelectAndNumber
+                  inputSelectName={"secondDependentsOperator"}
+                  inputSelectOptions={operatorOptions}
+                  inputSelectValue={
+                    creditScoreData?.dependentsRules?.operators
+                      ?.secondDependentsOperator
                   }
-                  inputValue={
-                    creditScoreData?.dependentsRules?.rules?.[2]?.value
+                  onChangeSelect={handleChange}
+                  disabledSelect={false}
+                  hiddenSelect={false}
+                  inputNumberName={"secondDependent"}
+                  inputNumberValue={
+                    creditScoreData?.dependentsRules?.rules[0]?.secondDependent
                   }
-                  onChange={handleChange}
-                  placeHolder={"0.54"}
+                  inputNumberId={
+                    creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
+                  }
+                  onChangeNumber={handleChange}
+                  placeHolderNumber={"4"}
                   isValidation={true}
-                  isIndex={"2"}
-                  // showError={validationError[`value_2`]}
-                  // onFocus={() =>
-                  //   dispatch(
-                  //     setValidationError({
-                  //       ...validationError,
-                  //       [`value_2`]: false,
-                  //     })
-                  //   )
-                  // }
+                  isIndex={"0"}
                 />
+              </div>
+              <div className="mb-3">
+                <SelectAndNumber
+                  inputSelectName={"secondDependentsOperator"}
+                  inputSelectOptions={operatorOptions}
+                  inputSelectValue={
+                    creditScoreData?.dependentsRules?.operators
+                      ?.secondDependentsOperator
+                  }
+                  onChangeSelect={handleChange}
+                  disabledSelect={false}
+                  hiddenSelect={false}
+                  inputNumberName={"secondDependent"}
+                  inputNumberValue={
+                    creditScoreData?.dependentsRules?.rules?.[1]
+                      ?.secondDependent
+                  }
+                  inputNumberId={
+                    creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
+                  }
+                  onChangeNumber={handleChange}
+                  placeHolderNumber={"4"}
+                  isValidation={true}
+                  isIndex={"1"}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
+                  Value:{" "}
+                </div>
+                <div>
+                  <InputNumber
+                    inputName={"value"}
+                    inputId={
+                      creditScoreData?.dependentsRules?.rules?.[0]?.ruleName
+                    }
+                    inputValue={
+                      creditScoreData?.dependentsRules?.rules?.[0]?.value
+                    }
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                    isIndex={"0"}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2  gap-2 mb-3">
+                <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
+                  Value:{" "}
+                </div>
+                <div>
+                  <InputNumber
+                    inputName={"value"}
+                    inputId={
+                      creditScoreData?.dependentsRules?.rules?.[1]?.ruleName
+                    }
+                    inputValue={
+                      creditScoreData?.dependentsRules?.rules?.[1]?.value
+                    }
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                    isIndex={"1"}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
+                  Value:{" "}
+                </div>
+                <div>
+                  <InputNumber
+                    inputName={"value"}
+                    inputId={
+                      creditScoreData?.dependentsRules?.rules?.[2]?.ruleName
+                    }
+                    inputValue={
+                      creditScoreData?.dependentsRules?.rules?.[2]?.value
+                    }
+                    onChange={handleChange}
+                    placeHolder={"0.54"}
+                    isValidation={true}
+                    isIndex={"2"}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -396,10 +351,9 @@ const CreditScore = () => {
       {!hasViewOnlyAccess(roleName) && !loading ? (
         <div className="text-right mt-8">
           <Button
-            buttonIcon={CheckCircleIcon}
+            buttonIcon={CheckIcon}
             buttonName={"Update"}
             onClick={handleAddFields}
-            rectangle={true}
           />
         </div>
       ) : (

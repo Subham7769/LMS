@@ -124,7 +124,7 @@ const OccupationCard = ({ occupationData, loading, error }) => {
   };
 
   return (
-    <ContainerTile className={"w-full"} loading={loading} error={error}>
+    <ContainerTile className={"p-5"} loading={loading} error={error}>
       <div className="text-lg mb-3">Occupation</div>
       <TagInput
         formData={occupationFormData}

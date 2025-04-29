@@ -14,14 +14,6 @@ import {
   deleteRiskBasedPricingRule,
   updateRiskBasedPricingRules,
 } from "../../redux/Slices/rulePolicySlice";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-  PencilIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,21 +21,9 @@ import { useState } from "react";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
-
-const operatorOptions = [
-  { value: "==", label: "==" },
-  { value: "<", label: "<" },
-  { value: ">", label: ">" },
-  { value: "<=", label: "<=" },
-  { value: ">=", label: ">=" },
-];
-
-const options = [
-  { value: "DAILY", label: "DAILY" },
-  { value: "WEEKLY", label: "WEEKLY" },
-  { value: "MONTHLY", label: "MONTHLY" },
-  { value: "YEARLY", label: "YEARLY" },
-];
+import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
+import PaginationClassic from "../Common/Pagination/PaginationClassic";
+import { operatorOptions, options } from "../../data/OptionsData";
 
 const RiskBasedPricing = ({ loading, error }) => {
   const dispatch = useDispatch();
@@ -110,9 +90,7 @@ const RiskBasedPricing = ({ loading, error }) => {
   };
 
   const handlePageChange = (newPage) => {
-    // setCurrentPage(newPage);
     dispatch(setPage(newPage));
-    toast.warn(`You have switched to page: ${newPage}`);
   };
 
   const sortedItems = [...riskBasedPricing.riskBasedPricingRules].sort(
@@ -131,11 +109,6 @@ const RiskBasedPricing = ({ loading, error }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Determine total number of pages
-  const totalPages = Math.ceil(
-    riskBasedPricing.riskBasedPricingRules.length / itemsPerPage
-  );
 
   const handleAddFieldsRBP = async () => {
     const operators = riskBasedPricingInput.operators;
@@ -183,10 +156,9 @@ const RiskBasedPricing = ({ loading, error }) => {
 
   return (
     <>
-      <ContainerTile loading={loading} error={error}>
-        <div className="text-lg mb-4">Risk Based Pricing</div>
-        {!hasViewOnlyAccess(roleName) ? (
-          <div className="grid grid-cols-5 gap-8 my-5 items-end">
+      <ContainerTile loading={loading} className={"p-5"}>
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-8 mb-6 items-end">
             <SelectAndNumber
               labelName={"Minimum Risk Based Pricing"}
               inputSelectName={"firstRiskBasedPricingOperator"}
@@ -244,232 +216,228 @@ const RiskBasedPricing = ({ loading, error }) => {
               onChange={handleRiskBasedPricingChange}
               isValidation={true}
             />
-            <div>
+            <div className="text-right xl:text-left sm:col-span-2 xl:col-span-1">
               <Button
-                buttonIcon={PlusIcon}
+                buttonIcon={AddIcon}
+                buttonName="Add"
                 onClick={handleAddFieldsRBP}
-                circle={true}
                 buttonType="secondary"
               />
             </div>
           </div>
-        ) : (
-          ""
         )}
-        <table className="w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                onClick={() => handleSort("firstRiskBasedPricing")}
-              >
-                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  Minimum Risk Based Pricing{" "}
-                  {getSortIcon("firstRiskBasedPricing")}
-                </div>
-              </th>
-              <th
-                scope="col"
-                onClick={() => handleSort("secondRiskBasedPricing")}
-              >
-                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  Maximum Risk Based Pricing{" "}
-                  {getSortIcon("secondRiskBasedPricing")}
-                </div>
-              </th>
-              <th scope="col" onClick={() => handleSort("interestRate")}>
-                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  Simple Interest {getSortIcon("interestRate")}
-                </div>
-              </th>
-              <th scope="col" onClick={() => handleSort("interestPeriodType")}>
-                <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer flex">
-                  PER {getSortIcon("interestPeriodType")}
-                </div>
-              </th>
-              {!hasViewOnlyAccess(roleName) ? (
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
-              ) : (
-                ""
-              )}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
-                  No Data To Show Yet
-                </td>
-              </tr>
-            ) : (
-              currentItems.map((item, index) => (
-                <tr key={index}>
-                  <td className="p-4 whitespace-nowrap">
-                    {editingIndex === index ? (
-                      <SelectAndNumber
-                        inputSelectName={"firstRiskBasedPricingOperator"}
-                        inputSelectValue={
-                          riskBasedPricing?.operators
-                            ?.firstRiskBasedPricingOperator
-                        }
-                        inputSelectOptions={operatorOptions}
-                        onChangeSelect={(selectedOption) =>
-                          handleChangeRBP(selectedOption, index)
-                        }
-                        inputNumberName={"firstRiskBasedPricing"}
-                        inputNumberValue={item.firstRiskBasedPricing}
-                        onChangeNumber={(e) => handleChangeRBP(e, index)}
-                        placeHolder={"0.5"}
-                        isValidation={true}
-                        isIndex={item.dataIndex}
-                      />
-                    ) : (
-                      <div className="flex items-center justify-start ml-20 gap-5">
-                        <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {
-                            riskBasedPricing?.operators
-                              ?.firstRiskBasedPricingOperator
-                          }
-                        </span>
-                        <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.firstRiskBasedPricing}
-                        </span>
-                      </div>
-                    )}
-                  </td>
-                  <td className="p-4 whitespace-nowrap">
-                    {editingIndex === index ? (
-                      <SelectAndNumber
-                        inputSelectName={"secondRiskBasedPricingOperator"}
-                        inputSelectValue={
-                          riskBasedPricing?.operators
-                            ?.secondRiskBasedPricingOperator
-                        }
-                        inputSelectOptions={operatorOptions}
-                        onChangeSelect={(selectedOption) =>
-                          handleChangeRBP(selectedOption, index)
-                        }
-                        inputNumberName={"secondRiskBasedPricing"}
-                        inputNumberValue={item.secondRiskBasedPricing}
-                        onChangeNumber={(e) => handleChangeRBP(e, index)}
-                        placeHolder={"2"}
-                        isValidation={true}
-                        isIndex={item.dataIndex}
-                      />
-                    ) : (
-                      <div className="flex items-center justify-start ml-20 gap-5">
-                        <span className="block border-r pr-5 py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {
-                            riskBasedPricing?.operators
-                              ?.secondRiskBasedPricingOperator
-                          }
-                        </span>
-                        <span className="block py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                          {item.secondRiskBasedPricing}
-                        </span>
-                      </div>
-                    )}
-                  </td>
-                  <td className="p-4 whitespace-nowrap">
-                    {editingIndex === index ? (
-                      <InputNumber
-                        inputName={"interestRate"}
-                        inputValue={item.interestRate}
-                        onChange={(e) => handleChangeRBP(e, index)}
-                        placeHolder={"0.4"}
-                        isValidation={true}
-                        isIndex={item.dataIndex}
-                      />
-                    ) : (
-                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                        {item.interestRate}
-                      </span>
-                    )}
-                  </td>
-                  <td className="p-4 whitespace-nowrap">
-                    {editingIndex === index ? (
-                      <InputSelect
-                        inputOptions={options}
-                        inputName={"interestPeriodType"}
-                        inputValue={item?.interestPeriodType}
-                        onChange={(selectedOption) =>
-                          handleChangeRBP(selectedOption, index)
-                        }
-                      />
-                    ) : (
-                      <span className="block w-full py-1.5 text-gray-900 sm:text-sm sm:leading-6">
-                        {item.interestPeriodType}
-                      </span>
-                    )}
-                  </td>
-                  {!hasViewOnlyAccess(roleName) ? (
-                    <td className="p-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                      <button onClick={() => toggleEdit(index)} type="button">
-                        {editingIndex === index ? (
-                          <div className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">
-                            <CheckCircleIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-9 h-9 rounded-full bg-gray-500 p-2 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">
-                            <PencilIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleDeleteRBP(item.ruleName)}
-                        type="button"
-                        className="w-9 h-9 rounded-full bg-red-600 p-2 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </td>
-                  ) : (
-                    ""
+        <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
+          <header className="px-5 py-4">
+            <h2 className="font-semibold text-gray-800 dark:text-gray-100">
+              Risk Based Pricing{" "}
+              <span className="text-gray-400 dark:text-gray-500 font-medium">
+                {currentItems?.length}
+              </span>
+            </h2>
+          </header>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full dark:text-gray-300">
+              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
+                <tr>
+                  <th
+                    scope="col"
+                    onClick={() => handleSort("firstRiskBasedPricing")}
+                    className="px-4 py-4 whitespace-nowrap"
+                  >
+                    <div className="flex cursor-pointer items-center">
+                      Minimum Risk Based Pricing{" "}
+                      {getSortIcon("firstRiskBasedPricing")}
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    onClick={() => handleSort("secondRiskBasedPricing")}
+                    className="px-4 py-4 whitespace-nowrap"
+                  >
+                    <div className="flex cursor-pointer items-center">
+                      Maximum Risk Based Pricing{" "}
+                      {getSortIcon("secondRiskBasedPricing")}
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    onClick={() => handleSort("interestRate")}
+                    className="px-4 py-4 whitespace-nowrap"
+                  >
+                    <div className="flex cursor-pointer items-center">
+                      Simple Interest {getSortIcon("interestRate")}
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    onClick={() => handleSort("interestPeriodType")}
+                    className="px-4 py-4 whitespace-nowrap min-w-40"
+                  >
+                    <div className="flex cursor-pointer items-center">
+                      PER {getSortIcon("interestPeriodType")}
+                    </div>
+                  </th>
+                  {!hasViewOnlyAccess(roleName) && (
+                    <th
+                      scope="col"
+                      className="px-4 py-4 whitespace-nowrap text-left"
+                    >
+                      Actions
+                    </th>
                   )}
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-        {currentItems.length > 0 && (
-          <div className="mt-4 w-full flex justify-center gap-5 items-center">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === 1
-                  ? "bg-background-light-primary cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || currentItems.length === 0}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                currentPage === totalPages
-                  ? "bg-background-light-primary cursor-not-allowed"
-                  : "bg-indigo-600 text-white hover:bg-indigo-500"
-              }`}
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
+              </thead>
+              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
+                {currentItems.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
+                      No Data To Show Yet
+                    </td>
+                  </tr>
+                ) : (
+                  currentItems.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {editingIndex === index ? (
+                          <SelectAndNumber
+                            inputSelectName={"firstRiskBasedPricingOperator"}
+                            inputSelectValue={
+                              riskBasedPricing?.operators
+                                ?.firstRiskBasedPricingOperator
+                            }
+                            inputSelectOptions={operatorOptions}
+                            onChangeSelect={(selectedOption) =>
+                              handleChangeRBP(selectedOption, index)
+                            }
+                            inputNumberName={"firstRiskBasedPricing"}
+                            inputNumberValue={item.firstRiskBasedPricing}
+                            onChangeNumber={(e) => handleChangeRBP(e, index)}
+                            placeHolder={"0.5"}
+                            isValidation={true}
+                            isIndex={item.dataIndex}
+                          />
+                        ) : (
+                          <div className="flex items-center gap-5">
+                            <span className="block border-r pr-5 py-1.5">
+                              {
+                                riskBasedPricing?.operators
+                                  ?.firstRiskBasedPricingOperator
+                              }
+                            </span>
+                            <span className="block py-1.5">
+                              {item.firstRiskBasedPricing}
+                            </span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {editingIndex === index ? (
+                          <SelectAndNumber
+                            inputSelectName={"secondRiskBasedPricingOperator"}
+                            inputSelectValue={
+                              riskBasedPricing?.operators
+                                ?.secondRiskBasedPricingOperator
+                            }
+                            inputSelectOptions={operatorOptions}
+                            onChangeSelect={(selectedOption) =>
+                              handleChangeRBP(selectedOption, index)
+                            }
+                            inputNumberName={"secondRiskBasedPricing"}
+                            inputNumberValue={item.secondRiskBasedPricing}
+                            onChangeNumber={(e) => handleChangeRBP(e, index)}
+                            placeHolder={"2"}
+                            isValidation={true}
+                            isIndex={item.dataIndex}
+                          />
+                        ) : (
+                          <div className="flex items-center gap-5">
+                            <span className="block border-r pr-5 py-1.5">
+                              {
+                                riskBasedPricing?.operators
+                                  ?.secondRiskBasedPricingOperator
+                              }
+                            </span>
+                            <span className="block py-1.5">
+                              {item.secondRiskBasedPricing}
+                            </span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {editingIndex === index ? (
+                          <InputNumber
+                            inputName={"interestRate"}
+                            inputValue={item.interestRate}
+                            onChange={(e) => handleChangeRBP(e, index)}
+                            placeHolder={"0.4"}
+                            isValidation={true}
+                            isIndex={item.dataIndex}
+                          />
+                        ) : (
+                          <span>{item.interestRate}</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {editingIndex === index ? (
+                          <InputSelect
+                            inputOptions={options}
+                            inputName={"interestPeriodType"}
+                            inputValue={item?.interestPeriodType}
+                            onChange={(selectedOption) =>
+                              handleChangeRBP(selectedOption, index)
+                            }
+                          />
+                        ) : (
+                          <span>{item.interestPeriodType}</span>
+                        )}
+                      </td>
+                      {!hasViewOnlyAccess(roleName) && (
+                        <td className="px-4 py-4 whitespace-nowrap flex gap-2">
+                          <button
+                            onClick={() => toggleEdit(index)}
+                            type="button"
+                          >
+                            {editingIndex === index ? (
+                              <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-400 hover:text-violet-500 dark:text-violet-500 dark:hover:text-violet-400">
+                                <CheckIcon
+                                  className="h-4 w-4"
+                                  aria-hidden="true"
+                                />
+                              </div>
+                            ) : (
+                              <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
+                                <EditIcon
+                                  className="h-4 w-4"
+                                  aria-hidden="true"
+                                />
+                              </div>
+                            )}
+                          </button>
+                          <Button
+                            buttonIcon={DeleteIcon}
+                            onClick={() => handleDeleteRBP(item.ruleName)}
+                            buttonType="destructive"
+                            iconClassName="h-4 w-4"
+                          />
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
+        </div>
+        {currentItems.length > 0 && (
+          <PaginationClassic
+            sortedItems={sortedItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         )}
       </ContainerTile>
     </>

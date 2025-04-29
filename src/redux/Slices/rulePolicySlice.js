@@ -641,8 +641,8 @@ const initialState = {
   allRuleData: [],
   riskBasedPricingInput: {
     operators: {
-      firstRiskBasedPricingOperator: "",
-      secondRiskBasedPricingOperator: "",
+      firstRiskBasedPricingOperator: ">",
+      secondRiskBasedPricingOperator: "<",
     },
     riskBasedPricingRules: [
       {
@@ -1009,8 +1009,8 @@ const rulePolicySlice = createSlice({
         state.loading = false;
         state.riskBasedPricingInput = {
           operators: {
-            firstRiskBasedPricingOperator: "",
-            secondRiskBasedPricingOperator: "",
+            firstRiskBasedPricingOperator: ">",
+            secondRiskBasedPricingOperator: "<",
           },
           riskBasedPricingRules: [
             {
