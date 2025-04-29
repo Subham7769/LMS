@@ -20,7 +20,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
-import { getOpenLoans } from "../../../redux/Slices/personalRefundSlice";
 
 const AddRefund = () => {
   const dispatch = useDispatch();
@@ -33,9 +32,6 @@ const AddRefund = () => {
   );
 
   useEffect(() => {
-    if (openLoans.length < 1) {
-      dispatch(getOpenLoans());
-    }
     if (!currentPath.includes("new")) {
       dispatch(getRefundApplicationsByID(refundApplicationId));
     }
@@ -50,7 +46,7 @@ const AddRefund = () => {
     return () => {
       dispatch(clearValidationError());
     };
-  }, [dispatch, openLoans, refundApplicationId]);
+  }, [dispatch, refundApplicationId]);
 
   useEffect(() => {
     const fetchRefundApplicationDetails = async () => {

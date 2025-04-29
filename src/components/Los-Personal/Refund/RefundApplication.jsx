@@ -23,6 +23,7 @@ import {
   getRefundApplicationByField,
   resetRefundData,
   updateRefundField,
+  getOpenLoans,
 } from "../../../redux/Slices/personalRefundSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
@@ -50,13 +51,18 @@ const RefundApplication = () => {
   const [plaSearchValue, setPlaSearchValue] = useState("");
   const [plaSearchBy, setPlaSearchBy] = useState("");
   const navigate = useNavigate();
-  const { refundApplications, refundApplicationsTotalElements, loading } =
-    useSelector((state) => state.personalRefund);
+  const {
+    refundApplications,
+    refundApplicationsTotalElements,
+    openLoans,
+    loading,
+  } = useSelector((state) => state.personalRefund);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
+    dispatch(getOpenLoans());
     return () => {
       dispatch(clearValidationError());
     };
@@ -176,6 +182,7 @@ const RefundApplication = () => {
               buttonName="New Application"
               onClick={handleNewApplication}
               rectangle={true}
+              disabled={openLoans.length < 1}
             />
           )}
         </div>
