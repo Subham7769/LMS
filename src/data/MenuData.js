@@ -299,6 +299,16 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
+  {
+    title: "Product Testing KSA",
+    sectionName: "TESTING",
+    href: "/loan/product-testing-KSA",
+    icon: "HandRaisedIcon",
+    current: false,
+    submenu: false,
+    submenuItems: [],
+    isOpen: false,
+  },
   // {
   //   title: "Test Component",
   //   sectionName: "TESTING",

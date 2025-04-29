@@ -187,6 +187,15 @@ const EmploymentDetails = lazy(() =>
   import("./components/ProductTesting/TermLoan/EmploymentDetails")
 );
 
+// Product Testing KSA
+const ProductTestingKSA = lazy(() =>
+  import("./components/ProductTestingKSA/ProductTestingKSA")
+);
+const Step1Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step1/Step1Container")
+);
+
+
 // GlobalConfig Imports
 const LiabilitiesMatrix = lazy(() =>
   import("./components/GlobalConfig/LiabilitiesMatrix")
@@ -1242,6 +1251,18 @@ const routes = [
           },
         ],
       },
+      {
+        path: "product-testing-KSA",
+        element: <ProductTestingKSA />,
+        children: [
+          {
+            path: "create-account",
+            element: <Step1Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      
     ],
   },
 
