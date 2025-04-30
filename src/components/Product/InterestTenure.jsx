@@ -20,6 +20,7 @@ import store from "../../redux/store";
 import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 import convertToTitleCase from "../../utils/convertToTitleCase";
 import PaginationClassic from "../Common/Pagination/PaginationClassic";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
 
 const InterestTenure = () => {
   const { productData } = useOutletContext();
@@ -149,15 +150,15 @@ const InterestTenure = () => {
     toast.warn("Please click the save button to confirm changes");
   }
 
-  let columns = [
-    { label: "Simple Interest", key: "interestRate", sortable: false },
-    { label: "Loan Tenure", key: "LoanTenure", sortable: false },
-    { label: "Repayment Tenure", key: "RepaymentTenure", sortable: false },
+  let ListHeader = [
+    { name: "Simple Interest", sortKey: null },
+    { name: "Loan Tenure", sortKey: null },
+    { name: "Repayment Tenure", sortKey: null },
   ];
 
   // Conditionally add the "Actions" column if roleName has view only access
   if (!hasViewOnlyAccess(roleName)) {
-    columns.push({ label: "Actions", key: "actions", sortable: false });
+    ListHeader.push({ name: "Actions", sortKey: null });
   }
 
   return (
@@ -229,216 +230,170 @@ const InterestTenure = () => {
       <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
         Manage Existing Interest and Tenure
       </h2>
-      <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
-        <header className="px-5 py-4">
-          <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-            Eligible Tenure{" "}
-            <span className="text-gray-400 dark:text-gray-500 font-medium">
-              {productData?.interestEligibleTenure.length}
-            </span>
-          </h2>
-        </header>
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full dark:text-gray-300">
-            <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
-              <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    scope="col"
-                    onClick={
-                      column.sortable ? () => handleSort(column.key) : null
+      <ListTableClassic
+        ListName="Eligible Tenure"
+        ListNameLength={productData?.interestEligibleTenure.length}
+        ListHeader={ListHeader}
+        handleSort={handleSort}
+        getSortIcon={getSortIcon}
+      >
+        {currentItems?.map((item, index) => (
+          <tr key={index}>
+            <td className="px-4 py-4 whitespace-nowrap">
+              {editingIndex === index ? (
+                <div className="grid grid-cols-[40%_20%_40%] min-w-[225px] items-center text-center">
+                  <InputText
+                    inputName={"interestRate"}
+                    inputValue={item?.interestRate}
+                    onChange={(e) =>
+                      handleInterestChange(
+                        index,
+                        "interestRate",
+                        e.target.value
+                      )
                     }
-                    // className={column.sortable ? "cursor-pointer" : ""}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="font-semibold text-left">
-                      {column.label}{" "}
-                      {column.sortable && getSortIcon(column.key)}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-              {currentItems.length < 1 ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No Data To Show Yet
-                  </td>
-                </tr>
+                    placeHolder="2%"
+                    isValidation={true}
+                    isIndex={item?.dataIndex}
+                  />
+                  Per
+                  <InputSelect
+                    inputOptions={tenureTypeOptions}
+                    inputName={"interestPeriodType"}
+                    inputValue={item?.interestPeriodType}
+                    onChange={(selectedOption) =>
+                      handleInterestChange(
+                        index,
+                        "interestPeriodType",
+                        selectedOption
+                      )
+                    }
+                    isValidation={true}
+                    isIndex={item?.dataIndex}
+                  />
+                </div>
               ) : (
-                currentItems?.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <div className="grid grid-cols-[40%_20%_40%] min-w-[225px] items-center text-center">
-                          <InputText
-                            inputName={"interestRate"}
-                            inputValue={item?.interestRate}
-                            onChange={(e) =>
-                              handleInterestChange(
-                                index,
-                                "interestRate",
-                                e.target.value
-                              )
-                            }
-                            placeHolder="2%"
-                            isValidation={true}
-                            isIndex={item?.dataIndex}
-                          />
-                          Per
-                          <InputSelect
-                            inputOptions={tenureTypeOptions}
-                            inputName={"interestPeriodType"}
-                            inputValue={item?.interestPeriodType}
-                            onChange={(selectedOption) =>
-                              handleInterestChange(
-                                index,
-                                "interestPeriodType",
-                                selectedOption
-                              )
-                            }
-                            isValidation={true}
-                            isIndex={item?.dataIndex}
-                          />
-                        </div>
-                      ) : (
-                        <span className="">
-                          {item?.interestRate} Per{" "}
-                          {item?.interestPeriodType
-                            ? convertToTitleCase(item?.interestPeriodType)
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <div className="grid grid-cols-[30%_70%] min-w-[180px] gap-2 items-center">
-                          <InputNumber
-                            inputName={"loanTenure"}
-                            inputValue={item?.loanTenure}
-                            onChange={(e) =>
-                              handleInterestChange(
-                                index,
-                                "loanTenure",
-                                e.target.value
-                              )
-                            }
-                            placeHolder="3"
-                            isValidation={true}
-                            isIndex={item?.dataIndex}
-                          />
-                          <InputSelect
-                            inputOptions={tenureTypeOptions}
-                            inputName={"loanTenureType"}
-                            inputValue={item?.loanTenureType}
-                            onChange={(selectedOption) =>
-                              handleInterestChange(
-                                index,
-                                "loanTenureType",
-                                selectedOption
-                              )
-                            }
-                            isValidation={true}
-                            isIndex={item?.dataIndex}
-                          />
-                        </div>
-                      ) : (
-                        <span className="">
-                          {item?.loanTenure}{" "}
-                          {item?.loanTenureType
-                            ? convertToTitleCase(item?.loanTenureType)
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      {editingIndex === index ? (
-                        <div className="grid grid-cols-[30%_70%] min-w-[180px] gap-2 items-center">
-                          <InputNumber
-                            inputName={"repaymentTenure"}
-                            inputValue={item?.repaymentTenure}
-                            onChange={(e) =>
-                              handleInterestChange(
-                                index,
-                                "repaymentTenure",
-                                e.target.value
-                              )
-                            }
-                            placeHolder="3"
-                            isValidation={true}
-                            isIndex={item?.dataIndex}
-                          />
-                          <InputSelect
-                            inputOptions={tenureTypeOptions}
-                            inputName={"repaymentTenureType"}
-                            inputValue={item?.repaymentTenureType}
-                            onChange={(selectedOption) =>
-                              handleInterestChange(
-                                index,
-                                "repaymentTenureType",
-                                selectedOption
-                              )
-                            }
-                            isValidation={true}
-                            isIndex={item?.dataIndex}
-                          />
-                        </div>
-                      ) : (
-                        <span className="">
-                          {item?.repaymentTenure}{" "}
-                          {item?.repaymentTenureType
-                            ? convertToTitleCase(item?.repaymentTenureType)
-                            : ""}
-                        </span>
-                      )}
-                    </td>
-                    {!hasViewOnlyAccess(roleName) ? (
-                      <td className="px-4 py-4 whitespace-nowrap flex gap-2">
-                        <button
-                          onClick={() => {
-                            toggleEdit(index);
-                            dispatch(setUpdateMap("interestEligibleTenure"));
-                          }}
-                          type="button"
-                        >
-                          {editingIndex === index ? (
-                            <div
-                              // onClick={informUser}
-                              className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-400 hover:text-violet-500 dark:text-violet-500 dark:hover:text-violet-400"
-                            >
-                              <CheckIcon
-                                className="h-4 w-4"
-                                aria-hidden="true"
-                              />
-                            </div>
-                          ) : (
-                            <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
-                              <EditIcon className={"h-4 w-4"} />
-                            </div>
-                          )}
-                        </button>
-                        <Button
-                          buttonIcon={DeleteIcon}
-                          onClick={() => handleDelete(index)}
-                          buttonType="destructive"
-                          iconClassName="h-4 w-4"
-                        />
-                      </td>
-                    ) : (
-                      ""
-                    )}
-                  </tr>
-                ))
+                <span className="">
+                  {item?.interestRate} Per{" "}
+                  {item?.interestPeriodType
+                    ? convertToTitleCase(item?.interestPeriodType)
+                    : ""}
+                </span>
               )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </td>
+            <td className="px-4 py-4 whitespace-nowrap">
+              {editingIndex === index ? (
+                <div className="grid grid-cols-[30%_70%] min-w-[180px] gap-2 items-center">
+                  <InputNumber
+                    inputName={"loanTenure"}
+                    inputValue={item?.loanTenure}
+                    onChange={(e) =>
+                      handleInterestChange(index, "loanTenure", e.target.value)
+                    }
+                    placeHolder="3"
+                    isValidation={true}
+                    isIndex={item?.dataIndex}
+                  />
+                  <InputSelect
+                    inputOptions={tenureTypeOptions}
+                    inputName={"loanTenureType"}
+                    inputValue={item?.loanTenureType}
+                    onChange={(selectedOption) =>
+                      handleInterestChange(
+                        index,
+                        "loanTenureType",
+                        selectedOption
+                      )
+                    }
+                    isValidation={true}
+                    isIndex={item?.dataIndex}
+                  />
+                </div>
+              ) : (
+                <span className="">
+                  {item?.loanTenure}{" "}
+                  {item?.loanTenureType
+                    ? convertToTitleCase(item?.loanTenureType)
+                    : ""}
+                </span>
+              )}
+            </td>
+            <td className="px-4 py-4 whitespace-nowrap">
+              {editingIndex === index ? (
+                <div className="grid grid-cols-[30%_70%] min-w-[180px] gap-2 items-center">
+                  <InputNumber
+                    inputName={"repaymentTenure"}
+                    inputValue={item?.repaymentTenure}
+                    onChange={(e) =>
+                      handleInterestChange(
+                        index,
+                        "repaymentTenure",
+                        e.target.value
+                      )
+                    }
+                    placeHolder="3"
+                    isValidation={true}
+                    isIndex={item?.dataIndex}
+                  />
+                  <InputSelect
+                    inputOptions={tenureTypeOptions}
+                    inputName={"repaymentTenureType"}
+                    inputValue={item?.repaymentTenureType}
+                    onChange={(selectedOption) =>
+                      handleInterestChange(
+                        index,
+                        "repaymentTenureType",
+                        selectedOption
+                      )
+                    }
+                    isValidation={true}
+                    isIndex={item?.dataIndex}
+                  />
+                </div>
+              ) : (
+                <span className="">
+                  {item?.repaymentTenure}{" "}
+                  {item?.repaymentTenureType
+                    ? convertToTitleCase(item?.repaymentTenureType)
+                    : ""}
+                </span>
+              )}
+            </td>
+            {!hasViewOnlyAccess(roleName) ? (
+              <td className="px-4 py-4 whitespace-nowrap flex gap-2">
+                <button
+                  onClick={() => {
+                    toggleEdit(index);
+                    dispatch(setUpdateMap("interestEligibleTenure"));
+                  }}
+                  type="button"
+                >
+                  {editingIndex === index ? (
+                    <div
+                      // onClick={informUser}
+                      className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-400 hover:text-violet-500 dark:text-violet-500 dark:hover:text-violet-400"
+                    >
+                      <CheckIcon className="h-4 w-4" aria-hidden="true" />
+                    </div>
+                  ) : (
+                    <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
+                      <EditIcon className={"h-4 w-4"} />
+                    </div>
+                  )}
+                </button>
+                <Button
+                  buttonIcon={DeleteIcon}
+                  onClick={() => handleDelete(index)}
+                  buttonType="destructive"
+                  iconClassName="h-4 w-4"
+                />
+              </td>
+            ) : (
+              ""
+            )}
+          </tr>
+        ))}
+      </ListTableClassic>
       {currentItems.length > 0 && (
         <PaginationClassic
           sortedItems={sortedItems}

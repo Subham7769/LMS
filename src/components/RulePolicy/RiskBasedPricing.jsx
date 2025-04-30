@@ -24,6 +24,7 @@ import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 import PaginationClassic from "../Common/Pagination/PaginationClassic";
 import { operatorOptions, options } from "../../data/OptionsData";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
 
 const RiskBasedPricing = ({ loading, error }) => {
   const dispatch = useDispatch();
@@ -154,6 +155,17 @@ const RiskBasedPricing = ({ loading, error }) => {
     dispatch(fetchRulePolicyData(rulePolicyId));
   };
 
+  const ListHeader = [
+    { name: "Minimum Risk Based Pricing", sortKey: "firstRiskBasedPricing" },
+    { name: "Maximum Risk Based Pricing", sortKey: "secondRiskBasedPricing" },
+    { name: "Simple Interest", sortKey: "interestRate" },
+    { name: "Period", sortKey: "interestPeriodType" },
+  ];
+
+  if (!hasViewOnlyAccess(roleName)) {
+    ListHeader.push({ name: "Actions", sortKey: null });
+  }
+
   return (
     <>
       <ContainerTile loading={loading} className={"p-5"}>
@@ -226,211 +238,132 @@ const RiskBasedPricing = ({ loading, error }) => {
             </div>
           </div>
         )}
-        <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
-          <header className="px-5 py-4">
-            <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-              Risk Based Pricing{" "}
-              <span className="text-gray-400 dark:text-gray-500 font-medium">
-                {currentItems?.length}
-              </span>
-            </h2>
-          </header>
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full dark:text-gray-300">
-              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
-                <tr>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("firstRiskBasedPricing")}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      Minimum Risk Based Pricing{" "}
-                      {getSortIcon("firstRiskBasedPricing")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("secondRiskBasedPricing")}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      Maximum Risk Based Pricing{" "}
-                      {getSortIcon("secondRiskBasedPricing")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("interestRate")}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      Simple Interest {getSortIcon("interestRate")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("interestPeriodType")}
-                    className="px-4 py-4 whitespace-nowrap min-w-40"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      PER {getSortIcon("interestPeriodType")}
-                    </div>
-                  </th>
-                  {!hasViewOnlyAccess(roleName) && (
-                    <th
-                      scope="col"
-                      className="px-4 py-4 whitespace-nowrap text-left"
-                    >
-                      Actions
-                    </th>
-                  )}
-                </tr>
-              </thead>
-              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-                {currentItems.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
-                      No Data To Show Yet
-                    </td>
-                  </tr>
+        <ListTableClassic
+          ListName="Risk Based Pricing"
+          ListNameLength={currentItems.length}
+          ListHeader={ListHeader}
+          handleSort={handleSort}
+          getSortIcon={getSortIcon}
+        >
+          {currentItems.map((item, index) => (
+            <tr key={index}>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <SelectAndNumber
+                    inputSelectName={"firstRiskBasedPricingOperator"}
+                    inputSelectValue={
+                      riskBasedPricing?.operators?.firstRiskBasedPricingOperator
+                    }
+                    inputSelectOptions={operatorOptions}
+                    onChangeSelect={(selectedOption) =>
+                      handleChangeRBP(selectedOption, index)
+                    }
+                    inputNumberName={"firstRiskBasedPricing"}
+                    inputNumberValue={item.firstRiskBasedPricing}
+                    onChangeNumber={(e) => handleChangeRBP(e, index)}
+                    placeHolder={"0.5"}
+                    isValidation={true}
+                    isIndex={item.dataIndex}
+                  />
                 ) : (
-                  currentItems.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <SelectAndNumber
-                            inputSelectName={"firstRiskBasedPricingOperator"}
-                            inputSelectValue={
-                              riskBasedPricing?.operators
-                                ?.firstRiskBasedPricingOperator
-                            }
-                            inputSelectOptions={operatorOptions}
-                            onChangeSelect={(selectedOption) =>
-                              handleChangeRBP(selectedOption, index)
-                            }
-                            inputNumberName={"firstRiskBasedPricing"}
-                            inputNumberValue={item.firstRiskBasedPricing}
-                            onChangeNumber={(e) => handleChangeRBP(e, index)}
-                            placeHolder={"0.5"}
-                            isValidation={true}
-                            isIndex={item.dataIndex}
-                          />
-                        ) : (
-                          <div className="flex items-center gap-5">
-                            <span className="block border-r pr-5 py-1.5">
-                              {
-                                riskBasedPricing?.operators
-                                  ?.firstRiskBasedPricingOperator
-                              }
-                            </span>
-                            <span className="block py-1.5">
-                              {item.firstRiskBasedPricing}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <SelectAndNumber
-                            inputSelectName={"secondRiskBasedPricingOperator"}
-                            inputSelectValue={
-                              riskBasedPricing?.operators
-                                ?.secondRiskBasedPricingOperator
-                            }
-                            inputSelectOptions={operatorOptions}
-                            onChangeSelect={(selectedOption) =>
-                              handleChangeRBP(selectedOption, index)
-                            }
-                            inputNumberName={"secondRiskBasedPricing"}
-                            inputNumberValue={item.secondRiskBasedPricing}
-                            onChangeNumber={(e) => handleChangeRBP(e, index)}
-                            placeHolder={"2"}
-                            isValidation={true}
-                            isIndex={item.dataIndex}
-                          />
-                        ) : (
-                          <div className="flex items-center gap-5">
-                            <span className="block border-r pr-5 py-1.5">
-                              {
-                                riskBasedPricing?.operators
-                                  ?.secondRiskBasedPricingOperator
-                              }
-                            </span>
-                            <span className="block py-1.5">
-                              {item.secondRiskBasedPricing}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <InputNumber
-                            inputName={"interestRate"}
-                            inputValue={item.interestRate}
-                            onChange={(e) => handleChangeRBP(e, index)}
-                            placeHolder={"0.4"}
-                            isValidation={true}
-                            isIndex={item.dataIndex}
-                          />
-                        ) : (
-                          <span>{item.interestRate}</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <InputSelect
-                            inputOptions={options}
-                            inputName={"interestPeriodType"}
-                            inputValue={item?.interestPeriodType}
-                            onChange={(selectedOption) =>
-                              handleChangeRBP(selectedOption, index)
-                            }
-                          />
-                        ) : (
-                          <span>{item.interestPeriodType}</span>
-                        )}
-                      </td>
-                      {!hasViewOnlyAccess(roleName) && (
-                        <td className="px-4 py-4 whitespace-nowrap flex gap-2">
-                          <button
-                            onClick={() => toggleEdit(index)}
-                            type="button"
-                          >
-                            {editingIndex === index ? (
-                              <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-400 hover:text-violet-500 dark:text-violet-500 dark:hover:text-violet-400">
-                                <CheckIcon
-                                  className="h-4 w-4"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            ) : (
-                              <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
-                                <EditIcon
-                                  className="h-4 w-4"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            )}
-                          </button>
-                          <Button
-                            buttonIcon={DeleteIcon}
-                            onClick={() => handleDeleteRBP(item.ruleName)}
-                            buttonType="destructive"
-                            iconClassName="h-4 w-4"
-                          />
-                        </td>
-                      )}
-                    </tr>
-                  ))
+                  <div className="flex items-center gap-5">
+                    <span className="block border-r pr-5 py-1.5">
+                      {
+                        riskBasedPricing?.operators
+                          ?.firstRiskBasedPricingOperator
+                      }
+                    </span>
+                    <span className="block py-1.5">
+                      {item.firstRiskBasedPricing}
+                    </span>
+                  </div>
                 )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <SelectAndNumber
+                    inputSelectName={"secondRiskBasedPricingOperator"}
+                    inputSelectValue={
+                      riskBasedPricing?.operators
+                        ?.secondRiskBasedPricingOperator
+                    }
+                    inputSelectOptions={operatorOptions}
+                    onChangeSelect={(selectedOption) =>
+                      handleChangeRBP(selectedOption, index)
+                    }
+                    inputNumberName={"secondRiskBasedPricing"}
+                    inputNumberValue={item.secondRiskBasedPricing}
+                    onChangeNumber={(e) => handleChangeRBP(e, index)}
+                    placeHolder={"2"}
+                    isValidation={true}
+                    isIndex={item.dataIndex}
+                  />
+                ) : (
+                  <div className="flex items-center gap-5">
+                    <span className="block border-r pr-5 py-1.5">
+                      {
+                        riskBasedPricing?.operators
+                          ?.secondRiskBasedPricingOperator
+                      }
+                    </span>
+                    <span className="block py-1.5">
+                      {item.secondRiskBasedPricing}
+                    </span>
+                  </div>
+                )}
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <InputNumber
+                    inputName={"interestRate"}
+                    inputValue={item.interestRate}
+                    onChange={(e) => handleChangeRBP(e, index)}
+                    placeHolder={"0.4"}
+                    isValidation={true}
+                    isIndex={item.dataIndex}
+                  />
+                ) : (
+                  <span>{item.interestRate}</span>
+                )}
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <InputSelect
+                    inputOptions={options}
+                    inputName={"interestPeriodType"}
+                    inputValue={item?.interestPeriodType}
+                    onChange={(selectedOption) =>
+                      handleChangeRBP(selectedOption, index)
+                    }
+                  />
+                ) : (
+                  <span>{item.interestPeriodType}</span>
+                )}
+              </td>
+              {!hasViewOnlyAccess(roleName) && (
+                <td className="px-4 py-4 whitespace-nowrap flex gap-2">
+                  <button onClick={() => toggleEdit(index)} type="button">
+                    {editingIndex === index ? (
+                      <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-400 hover:text-violet-500 dark:text-violet-500 dark:hover:text-violet-400">
+                        <CheckIcon className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                    ) : (
+                      <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
+                        <EditIcon className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                    )}
+                  </button>
+                  <Button
+                    buttonIcon={DeleteIcon}
+                    onClick={() => handleDeleteRBP(item.ruleName)}
+                    buttonType="destructive"
+                    iconClassName="h-4 w-4"
+                  />
+                </td>
+              )}
+            </tr>
+          ))}
+        </ListTableClassic>
         {currentItems.length > 0 && (
           <PaginationClassic
             sortedItems={sortedItems}

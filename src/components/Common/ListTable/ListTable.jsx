@@ -1,7 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
@@ -27,14 +25,12 @@ const ListTable = ({
   loading,
   error,
 }) => {
-
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [filteredData, setFilteredData] = useState(ListItem);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PageSize);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
-
 
   useEffect(() => {
     setFilteredData(ListItem);
@@ -237,7 +233,7 @@ const ListTable = ({
                       <th
                         key={index}
                         scope="col"
-                        className={`px-4 py-4 whitespace-nowrap`}
+                        className={`px-4 py-4 whitespace-nowrap min-w-32`}
                         onClick={() => handleSort(toLowerCamelCase(header))}
                       >
                         {/* {false ? "demo" : (() => { throw new Error("Simulated Error"); })()}{ } */}
@@ -326,7 +322,7 @@ const ListTable = ({
               </table>
             </div>
           </div>
-          {(currentData.length > 0 && Paginated) && (
+          {currentData.length > 0 && Paginated && (
             <PaginationClassic
               sortedItems={dataToRender}
               itemsPerPage={PageSize}

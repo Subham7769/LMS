@@ -1,12 +1,4 @@
 import { useState } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-  PencilIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import SelectAndNumber from "../Common/SelectAndNumber/SelectAndNumber";
@@ -29,6 +21,7 @@ import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { operatorOptions } from "../../data/OptionsData";
 import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 import PaginationClassic from "../Common/Pagination/PaginationClassic";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
 
 const LengthofService = ({ loading }) => {
   const dispatch = useDispatch();
@@ -44,6 +37,7 @@ const LengthofService = ({ loading }) => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const navigate = useNavigate();
+
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -65,6 +59,7 @@ const LengthofService = ({ loading }) => {
     }
     return <FaSort className="ml-2" title="Sort Data" />;
   };
+
 
   const toggleEdit = async (index) => {
     const absoluteIndex = index + indexOfFirstItem;
@@ -159,6 +154,16 @@ const LengthofService = ({ loading }) => {
 
   // console.log(LOSInputList);
 
+  const ListHeader = [
+    { name: "Minimum Length Of Service", sortKey: "firstLengthOfService" },
+    { name: "Maximum Length Of Service", sortKey: "secondLengthOfService" },
+    { name: "Point", sortKey: "point" },
+  ];
+
+  if (!hasViewOnlyAccess(roleName)) {
+    ListHeader.push({ name: "Actions", sortKey: null });
+  }
+
   return (
     <>
       <ContainerTile loading={loading} className={"p-5"}>
@@ -216,188 +221,105 @@ const LengthofService = ({ loading }) => {
             </div>
           </div>
         )}
-        <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
-          <header className="px-5 py-4">
-            <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-              Length of Service{" "}
-              <span className="text-gray-400 dark:text-gray-500 font-medium">
-                {currentItems?.length}
-              </span>
-            </h2>
-          </header>
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full dark:text-gray-300">
-              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
-                <tr>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("firstLengthOfService")}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      Minimum Length Of Service{" "}
-                      {getSortIcon("firstLengthOfService")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("secondLengthOfService")}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      Maximum Length Of Service{" "}
-                      {getSortIcon("secondLengthOfService")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    onClick={() => handleSort("point")}
-                    className="px-4 py-4 whitespace-nowrap"
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      Point {getSortIcon("point")}
-                    </div>
-                  </th>
-                  {!hasViewOnlyAccess(roleName) && (
-                    <th
-                      scope="col"
-                      className="px-4 py-4 whitespace-nowrap text-left"
-                    >
-                      Actions
-                    </th>
-                  )}
-                </tr>
-              </thead>
-              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-                {currentItems.length < 1 ? (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
-                      No Data To Show Yet
-                    </td>
-                  </tr>
+        <ListTableClassic
+          ListName="Length of Service"
+          ListNameLength={currentItems.length}
+          ListHeader={ListHeader}
+          handleSort={handleSort}
+          getSortIcon={getSortIcon}
+        >
+          {currentItems.map((item, index) => (
+            <tr key={index}>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <SelectAndNumber
+                    inputSelectName={"firstLengthOfServiceOperator"}
+                    inputSelectValue={
+                      LOSInputList?.operators?.firstLengthOfServiceOperator
+                    }
+                    inputSelectOptions={operatorOptions}
+                    onChangeSelect={(selectedOption) =>
+                      handleChange(selectedOption, index)
+                    }
+                    inputNumberName={"firstLengthOfService"}
+                    inputNumberValue={item.firstLengthOfService}
+                    onChangeNumber={(e) => handleChange(e, index)}
+                    placeHolder={"0.5"}
+                    isValidation={true}
+                    isIndex={item.dataIndex}
+                  />
                 ) : (
-                  currentItems.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <SelectAndNumber
-                            inputSelectName={"firstLengthOfServiceOperator"}
-                            inputSelectValue={
-                              LOSInputList?.operators
-                                ?.firstLengthOfServiceOperator
-                            }
-                            inputSelectOptions={operatorOptions}
-                            onChangeSelect={(selectedOption) =>
-                              handleChange(selectedOption, index)
-                            }
-                            inputNumberName={"firstLengthOfService"}
-                            inputNumberValue={item.firstLengthOfService}
-                            onChangeNumber={(e) => handleChange(e, index)}
-                            placeHolder={"0.5"}
-                            isValidation={true}
-                            isIndex={item.dataIndex}
-                          />
-                        ) : (
-                          <div className="flex items-center gap-5">
-                            <span className="block border-r pr-5 py-1.5">
-                              {
-                                LOSInputList?.operators
-                                  ?.firstLengthOfServiceOperator
-                              }
-                            </span>
-                            <span className="block py-1.5">
-                              {item.firstLengthOfService}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <SelectAndNumber
-                            inputSelectName={"secondLengthOfServiceOperator"}
-                            inputSelectValue={
-                              LOSInputList?.operators
-                                ?.secondLengthOfServiceOperator
-                            }
-                            inputSelectOptions={operatorOptions}
-                            onChangeSelect={(selectedOption) =>
-                              handleChange(selectedOption, index)
-                            }
-                            inputNumberName={"secondLengthOfService"}
-                            inputNumberValue={item.secondLengthOfService}
-                            onChangeNumber={(e) => handleChange(e, index)}
-                            placeHolder={"0.5"}
-                            isValidation={true}
-                            isIndex={item.dataIndex}
-                          />
-                        ) : (
-                          <div className="flex items-center gap-5">
-                            <span className="block border-r pr-5 py-1.5">
-                              {
-                                LOSInputList?.operators
-                                  ?.secondLengthOfServiceOperator
-                              }
-                            </span>
-                            <span className="block py-1.5">
-                              {item.secondLengthOfService}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {editingIndex === index ? (
-                          <InputNumber
-                            inputName={"point"}
-                            inputValue={item.point}
-                            onChange={(e) => handleChange(e, index)}
-                            placeHolder={"0.4"}
-                            isValidation={true}
-                            isIndex={item.dataIndex}
-                          />
-                        ) : (
-                          <span>{item.point}</span>
-                        )}
-                      </td>
-                      {!hasViewOnlyAccess(roleName) && (
-                        <td className="px-4 py-4 whitespace-nowrap flex gap-2">
-                          <button
-                            onClick={() => toggleEdit(index)}
-                            type="button"
-                          >
-                            {editingIndex === index ? (
-                              <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-400 hover:text-violet-500 dark:text-violet-500 dark:hover:text-violet-400">
-                                <CheckIcon
-                                  className="h-4 w-4"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            ) : (
-                              <div className="cursor-pointer btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
-                                <EditIcon
-                                  className="h-4 w-4"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            )}
-                          </button>
-                          <Button
-                            buttonIcon={DeleteIcon}
-                            onClick={() => handleDelete(item.ruleName)}
-                            iconClassName="h-4 w-4"
-                            buttonType="destructive"
-                          />
-                        </td>
-                      )}
-                    </tr>
-                  ))
+                  <div className="flex items-center gap-5">
+                    <span className="block border-r pr-5 py-1.5">
+                      {LOSInputList?.operators?.firstLengthOfServiceOperator}
+                    </span>
+                    <span className="block py-1.5">
+                      {item.firstLengthOfService}
+                    </span>
+                  </div>
                 )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <SelectAndNumber
+                    inputSelectName={"secondLengthOfServiceOperator"}
+                    inputSelectValue={
+                      LOSInputList?.operators?.secondLengthOfServiceOperator
+                    }
+                    inputSelectOptions={operatorOptions}
+                    onChangeSelect={(selectedOption) =>
+                      handleChange(selectedOption, index)
+                    }
+                    inputNumberName={"secondLengthOfService"}
+                    inputNumberValue={item.secondLengthOfService}
+                    onChangeNumber={(e) => handleChange(e, index)}
+                    placeHolder={"0.5"}
+                    isValidation={true}
+                    isIndex={item.dataIndex}
+                  />
+                ) : (
+                  <div className="flex items-center gap-5">
+                    <span className="block border-r pr-5 py-1.5">
+                      {LOSInputList?.operators?.secondLengthOfServiceOperator}
+                    </span>
+                    <span className="block py-1.5">
+                      {item.secondLengthOfService}
+                    </span>
+                  </div>
+                )}
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap">
+                {editingIndex === index ? (
+                  <InputNumber
+                    inputName={"point"}
+                    inputValue={item.point}
+                    onChange={(e) => handleChange(e, index)}
+                    placeHolder={"0.4"}
+                    isValidation={true}
+                    isIndex={item.dataIndex}
+                  />
+                ) : (
+                  <span>{item.point}</span>
+                )}
+              </td>
+              {!hasViewOnlyAccess(roleName) && (
+                <td className="px-4 py-4 whitespace-nowrap flex gap-2">
+                  <Button
+                    buttonIcon={editingIndex === index ? CheckIcon : EditIcon}
+                    buttonType="secondary"
+                    onClick={() => toggleEdit(index)}
+                  />
+                  <Button
+                    buttonIcon={DeleteIcon}
+                    onClick={() => handleDelete(item.ruleName)}
+                    iconClassName="h-4 w-4"
+                    buttonType="destructive"
+                  />
+                </td>
+              )}
+            </tr>
+          ))}
+        </ListTableClassic>
         {currentItems.length > 0 && (
           <PaginationClassic
             sortedItems={sortedItems}

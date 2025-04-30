@@ -47,6 +47,7 @@ const PaginationClassic = ({
               disabled={currentPage === totalPages}
               buttonType="secondary"
               buttonName="Next -&gt;"
+              className="min-w-[100px]"
             />
           </li>
         </ul>
