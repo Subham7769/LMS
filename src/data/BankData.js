@@ -381,7 +381,7 @@ export const bankBranches = [
   },
   {
     bankName: "Zambia National Commercial Bank",
-    branchName: "Chirundu  Branch",
+    branchName: "Chirundu Branch",
     branchCode: "013582",
     sortCode: "01-35-82",
   },
