@@ -22,6 +22,7 @@ import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ const AddLoans = () => {
   }, [dispatch, loanApplicationId, decodedBorrowerId]);
 
   useEffect(() => {
-    if (addLoanData.generalLoanDetails.loanProductId) {
+    if (addLoanData?.generalLoanDetails?.loanProductId) {
       const selectedDynamicDoc = loanProductData.find(
         (product) =>
           product?.loanProductId ===
@@ -76,25 +77,8 @@ const AddLoans = () => {
         })
       );
     }
-  }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
+  }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    // console.log(result);
-    return result;
-  }
 
   // console.log(addLoanData);
   const handleSubmit = async (e) => {
@@ -163,6 +147,8 @@ const AddLoans = () => {
     return <ContainerTile loading={loading} />;
   }
 
+  console.log(addLoanData);
+
   return (
     <>
       <div
@@ -189,7 +175,7 @@ const AddLoans = () => {
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
-            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr)}
+            disabled={!(addLoanData?.generalLoanDetails?.loanDuration && addLoanData?.generalLoanDetails?.repaymentTenureStr)}
           />
           <Button
             buttonName="Save Draft"

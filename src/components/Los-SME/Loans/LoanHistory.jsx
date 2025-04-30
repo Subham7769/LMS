@@ -29,11 +29,14 @@ import {
   ReceiptRefundIcon,
   CurrencyDollarIcon,
   UserIcon,
+  WalletIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import {
+  closeLoan,
   getDisbursementFile,
   getLoanStatement,
   getOutrightSettlement,
@@ -166,6 +169,15 @@ const LoanHistory = () => {
     navigate(
       `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}`
     );
+  };
+
+  const handleCloseLoan = async (loanId, uid) => {
+    const closeLoanPayload = {
+      loanId: loanId,
+      userId: uid,
+    };
+    await dispatch(closeLoan(closeLoanPayload)).unwrap();
+    handleReset();
   };
 
   const handleDisbursementFile = async (loanId, uid) => {
@@ -435,7 +447,14 @@ const LoanHistory = () => {
                     )
                   }
                   rectangle={true}
-                  buttonIcon={ReceiptRefundIcon}
+                  buttonIcon={ArrowPathIcon}
+                  buttonType="tertiary"
+                />
+                <Button
+                  buttonName={"Close Loan via Wallet"}
+                  onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
+                  rectangle={true}
+                  buttonIcon={WalletIcon}
                   buttonType="tertiary"
                 />
               </div>

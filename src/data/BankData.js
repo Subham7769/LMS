@@ -108,6 +108,9 @@ export const BranchNameOptions = {
     { value: "Kitwe Branch", label: "Kitwe Branch" },
     { value: "Ndola Branch", label: "Ndola Branch" },
     { value: "Chipata Branch", label: "Chipata Branch" },
+    { value: "XAPIT Branch", label: "XAPIT Branch" },
+    { value: "Chirundu Branch", label: "Chirundu Branch" },
+    { value: "Lusaka City Market", label: "Lusaka City Market" },
   ],
 };
 
@@ -369,5 +372,23 @@ export const bankBranches = [
     branchName: "Chipata Branch",
     branchCode: "190005",
     sortCode: "19-00-05",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "XAPIT Branch",
+    branchCode: "010083",
+    sortCode: "01-00-83",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Chirundu  Branch",
+    branchCode: "013582",
+    sortCode: "01-35-82",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Lusaka City Market",
+    branchCode: "010074",
+    sortCode: "01-00-74",
   },
 ];

@@ -18,6 +18,7 @@ import {
   uploadRepayment,
   getOpenLoans,
   fetchClosingBalance,
+  resetAddBulkRepaymentData,
 } from "../../../redux/Slices/smeRepaymentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
@@ -71,6 +72,7 @@ const AddBulkRepayment = () => {
 
   const handleUploadRepayment = async () => {
     await dispatch(uploadRepayment({ draftRepaymentDTOList })).unwrap();
+    dispatch(resetAddBulkRepaymentData())
     navigate(`/loan/loan-origination-system/sme/repayments/approve-repayment`)
   };
 

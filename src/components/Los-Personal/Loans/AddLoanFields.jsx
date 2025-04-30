@@ -80,9 +80,9 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const handleFileChange = (e, section, index) => {
     const fileUploadParams = {
-      loanApplicationId: addLoanData.loanApplicationId,
-      documentKey: addLoanData.documents[index].documentKey,
-      verified: addLoanData.documents[index].verified,
+      loanApplicationId: addLoanData?.loanApplicationId,
+      documentKey: addLoanData?.documents[index].documentKey,
+      verified: addLoanData?.documents[index].verified,
       borrowerType: "PERSONAL_BORROWER",
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
@@ -184,9 +184,9 @@ const AddLoanFields = ({ addLoanData }) => {
     const matchingTenure = selectedLoanProduct.interestEligibleTenure.find(
       (tenure) =>
         `${tenure.loanTenure} ${tenure.loanTenureType}` ===
-        selectedLoanDuration &&
+          selectedLoanDuration &&
         `${tenure.repaymentTenure} ${tenure.repaymentTenureType}` ===
-        selectedRepaymentTenure
+          selectedRepaymentTenure
     );
 
     return matchingTenure
@@ -226,7 +226,7 @@ const AddLoanFields = ({ addLoanData }) => {
 
     const [loanInterest, loanInterestTypeStr] = loanInterestStr.split(" PER "); // Extract interest & type
     const loanInterestType = loanInterestTypeStr
-      ? loanInterestTypeStr.split(" ")[0]
+      ? loanInterestTypeStr?.split(" ")[0]
       : ""; // Extract only YEAR
 
     dispatch(
@@ -270,43 +270,79 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [interestMethod]);
 
-
   const today = new Date();
-  const { loanCreationDate, loanReleaseDate } = addLoanData.generalLoanDetails;
+  const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =
+    addLoanData?.generalLoanDetails;
+
+  // Helper to add months to a date
+  const addMonths = (date, months) => {
+    const result = new Date(date);
+    result.setMonth(result.getMonth() + months);
+    return result;
+  };
 
   // Ensure loanCreationDate is set to today if not selected
   useEffect(() => {
     if (!loanCreationDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanCreationDate",
-        value: new Date().toISOString().split("T")[0], // Setting default to today
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanCreationDate",
+          value: new Date().toISOString().split("T")[0], // Setting default to today
+        })
+      );
     }
   }, [loanCreationDate, dispatch]);
 
-  // Reset loanReleaseDate  if loanCreationDate changes
+  // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanReleaseDate",
-        value: "",
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
     }
   }, [loanCreationDate, dispatch]);
 
   // Ensure loanReleaseDate ≥ loanCreationDate
   useEffect(() => {
-    if (loanReleaseDate && new Date(loanReleaseDate) < new Date(loanCreationDate)) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanReleaseDate",
-        value: "",
-      }));
+    if (
+      loanReleaseDate &&
+      new Date(loanReleaseDate) < new Date(loanCreationDate)
+    ) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
     }
   }, [loanCreationDate, loanReleaseDate, dispatch]);
 
+  // Ensure firstEmiDate ≥ loanReleaseDate + 1 month
+  useEffect(() => {
+    const minFirstEmiDate = addMonths(new Date(loanReleaseDate), 1);
+    if (firstEmiDate && new Date(firstEmiDate) < minFirstEmiDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanReleaseDate, firstEmiDate, dispatch]);
 
   // All Fields Configuration
   const generalLoanDetailsConfig = [
@@ -380,6 +416,16 @@ const AddLoanFields = ({ addLoanData }) => {
       minSelectableDate: loanCreationDate ? new Date(loanCreationDate) : today,
     },
     {
+      labelName: "First EMI Date",
+      inputName: "firstEmiDate",
+      type: "date",
+      validation: false,
+      disabled: loanProductId === "payrollb-acke-dloa-nsfa-432a5a477cf6",
+      minSelectableDate: loanReleaseDate
+        ? addMonths(new Date(loanReleaseDate), 1)
+        : today,
+    },
+    {
       labelName: "Branch",
       inputName: "branch",
       type: "select",
@@ -395,12 +441,6 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
       searchable: true,
     },
-    // {
-    //   labelName: "CO Name",
-    //   inputName: "lhacoName",
-    //   type: "text",
-    //   validation: false,
-    // },
   ];
 
   const validationError = useSelector(
@@ -514,25 +554,20 @@ const AddLoanFields = ({ addLoanData }) => {
     </>
   );
 
-
-
   return (
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
-            details={addLoanData.generalLoanDetails}
+            details={addLoanData?.generalLoanDetails}
             config={generalLoanDetailsConfig}
             sectionName={"generalLoanDetails"}
             handleInputChange={handleInputChange}
           />
-        }
-        isOpen={true}
-        error={isValidationFailed(
-          validationError,
-          generalLoanDetailsConfig
         )}
+        isOpen={true}
+        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
       />
       <Accordion
         heading={"Refinance Details"}
@@ -542,10 +577,10 @@ const AddLoanFields = ({ addLoanData }) => {
       />
       <Accordion
         heading={"Requirement"}
-        renderExpandedContent={() => requirements(addLoanData.documents)}
+        renderExpandedContent={() => requirements(addLoanData?.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
-        <div>{`${uploadedCount} of ${addLoanData.documents.length} documents uploaded`}</div>
+        <div>{`${uploadedCount} of ${addLoanData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>
     </>

@@ -12,6 +12,7 @@ const Button = ({
   disabled = false,
   buttonType = "primary", // Default to "primary",
   loading = false,
+  title,
 }) => {
   const rectangleClass =
     "rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5";
@@ -30,6 +31,7 @@ const Button = ({
     <button
       type="button"
       onClick={onClick}
+      title={title}
       className={`
         ${rectangle ? rectangleClass : ""}
         ${circle ? circleClass : ""}
@@ -40,15 +42,21 @@ const Button = ({
       `}
       disabled={disabled || loading} // Disable button when loading
     >
-      <div className={`flex items-center justify-center ${loading ? "opacity-50" : "opacity-100"}`}>
-        {ButtonIcon && <ButtonIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
-        {ButtonIcon ? (
-          <span>{buttonName}</span>
+      <div
+        className={`flex items-center justify-center ${
+          loading ? "opacity-50" : "opacity-100"
+        }`}
+      >
+        {ButtonIcon && (
+          <ButtonIcon className="h-5 w-5" aria-hidden="true" />
+        )}
+        {buttonName && ButtonIcon ? (
+          <span className="ml-2">{buttonName}</span>
         ) : (
-          <span className="text-center w-full">{buttonName}</span>
+          <span>{buttonName}</span>
         )}
       </div>
-  
+
       {/* Loader Overlay */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -76,7 +84,6 @@ const Button = ({
       )}
     </button>
   );
-  
 };
 
 // Now wrap the entire component with ElementErrorBoundary where it's being used
