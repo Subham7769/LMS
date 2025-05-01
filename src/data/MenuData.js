@@ -302,7 +302,7 @@ export const MenusInitial = [
   {
     title: "Product Testing KSA",
     sectionName: "TESTING",
-    href: "/loan/product-testing-KSA",
+    href: "/loan/product-testing-KSA/create-account",
     icon: "HandRaisedIcon",
     current: false,
     submenu: false,
