@@ -122,7 +122,7 @@ const Employer = () => {
 
   return (
     <>
-      <ContainerTile loading={loading}>
+      <ContainerTile loading={loading} className={"p-5"}>
         <h2 className="mb-6">
           <b className="text-xl font-semibold">Employer</b>
           <div className="text-gray-600 text-sm">
@@ -240,6 +240,7 @@ const Employer = () => {
               </div>
             ))}
           </div>
+          {/* <ListTableClassic></ListTableClassic> */}
 
           <AddEmployerModal
             isOpen={showEmployerModal}

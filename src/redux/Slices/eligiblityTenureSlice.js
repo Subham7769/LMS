@@ -582,6 +582,7 @@ const eligiblityTenureSlice = createSlice({
               ruleName: "0",
               fieldType: "Employer",
               tenureValue: "",
+              tenureType: "MONTHS",
               tenure: [],
               tags: [],
             },

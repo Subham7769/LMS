@@ -24,6 +24,7 @@ import {
 import store from "../../redux/store";
 import convertToReadableString from "../../utils/convertToReadableString";
 import { hasViewOnlyAccess, hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { CheckIcon } from "../../assets/icons";
 
 const Affordability = () => {
   const { affordabilityCriteriaTempId } = useParams();
@@ -136,9 +137,9 @@ const Affordability = () => {
         onCreateClone={createCloneAffordability}
         initialName={itemName}
       />
-      <ContainerTile className={"mb-5"} loading={loading}>
+      <ContainerTile className={"p-5 mb-5"} loading={loading}>
         <div className="text-lg font-semibold mb-5">Income on Pay Slip</div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
           {Object.keys(incomeOnPaySlipFields).map((key) => (
             <div key={key}>
               <InputText
@@ -153,9 +154,9 @@ const Affordability = () => {
           ))}
         </div>
       </ContainerTile>
-      <ContainerTile loading={loading}>
+      <ContainerTile loading={loading} className={"p-5"}>
         <div className="text-lg font-semibold mb-5">Deductions</div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
           {Object.keys(deductionsOnPaySlipFields).map((key) => (
             <div key={key}>
               <InputText
@@ -173,10 +174,9 @@ const Affordability = () => {
       {!hasViewOnlyAccessGroup2(roleName) ? (
         <div className="text-right mt-5">
           <Button
-            buttonIcon={CheckCircleIcon}
+            buttonIcon={CheckIcon}
             buttonName={"Update"}
             onClick={handleUpdate}
-            rectangle={true}
           />
         </div>
       ) : (

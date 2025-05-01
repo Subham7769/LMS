@@ -135,6 +135,7 @@ const CityCard = ({ cityData, loading, error }) => {
         handleChange={handleChange}
         inputTextName={"city"}
         inputTextLabel={"Add City"}
+        buttonTagName={"Add"}
         addTag={addTag}
         deleteTag={deleteTag}
         inputNumberName={"points"}

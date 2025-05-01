@@ -5,7 +5,6 @@ import recoverySlice from "./Slices/recoverySlice";
 import tclSlice from "./Slices/tclSlice";
 import projectSlice from "./Slices/projectSlice";
 import productSlice from "./Slices/productSlice";
-import blockedEmployerSlice from "./Slices/blockedEmployerSlice";
 import dbrConfigSlice from "./Slices/dbrConfigSlice";
 import creditScoreSlice from "./Slices/creditScoreSlice";
 import customerCareSlice from "./Slices/customerCareSlice";
@@ -49,7 +48,6 @@ const store = configureStore({
     tcl: tclSlice,
     project: projectSlice,
     product: productSlice,
-    blockedEmployer: blockedEmployerSlice,
     dbrConfig: dbrConfigSlice,
     creditScore: creditScoreSlice,
     customerCare: customerCareSlice,

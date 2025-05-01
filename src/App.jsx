@@ -130,11 +130,6 @@ const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
 
-// BlockedEmployer Imports
-const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
-const BlockedEmployer = lazy(() =>
-  import("./components/BlockedEmployer/BlockedEmployer")
-);
 
 // CreditScore Imports
 const CreditScorePage = lazy(() => import("./pages/CreditScorePage"));
@@ -577,11 +572,6 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "blocked-employer",
-        element: <BlockedEmployerPage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
         path: "credit-score",
         element: <CreditScorePage />,
         errorElement: <RouteErrorBoundary />,
@@ -742,11 +732,6 @@ const routes = [
       {
         path: "dbr-config/:dbcTempId",
         element: <DebtBurdenConfig />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "blocked-employer/:blockEmployersTempId",
-        element: <BlockedEmployer />,
         errorElement: <RouteErrorBoundary />,
       },
       {

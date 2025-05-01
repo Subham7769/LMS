@@ -3,7 +3,6 @@ import { operatorOptions } from "../../data/OptionsData";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { TrashIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 import Button from "../Common/Button/Button";
 import CloneModal from "../Common/CloneModal/CloneModal";
@@ -37,10 +36,13 @@ import {
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { CheckIcon, DeleteIcon } from "../../assets/icons";
+import Banner2 from "../Common/Banner/Banner2";
 
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [banner2InfoOpen, setBanner2InfoOpen] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -188,7 +190,6 @@ const CreditScoreET = () => {
         handleClone={handleClone}
         handleDelete={() => onDeleteCSET(creditScoreETId)}
         loading={loading}
-        error={error}
       />
       <CloneModal
         isOpen={isModalOpen}
@@ -198,37 +199,61 @@ const CreditScoreET = () => {
         }
         initialName={creditScoreETName}
       />
-      {!hasViewOnlyAccess(roleName) ? (
-        <ContainerTile loading={loading} error={error}>
-          <div className="grid grid-cols-4 gap-2 mb-5 items-end">
-            <InputSelect
-              labelName={"Minimum Credit Score"}
-              inputName={"firstCreditScoreOperator"}
-              inputValue={newRangeData?.operators?.firstCreditScoreOperator}
-              inputOptions={operatorOptions}
-              onChange={handleChangeRange}
-            />
-            <InputNumber
-              inputName={"firstCreditScore"}
-              inputValue={newRangeData.rules?.[0]?.firstCreditScore}
-              onChange={handleChangeRange}
-              placeHolder="0"
-              isValidation={true}
-            />
-            <InputSelect
-              labelName={"Maximum Credit Score"}
-              inputName={"secondCreditScoreOperator"}
-              inputValue={newRangeData?.operators?.secondCreditScoreOperator}
-              inputOptions={operatorOptions}
-              onChange={handleChangeRange}
-            />
-            <InputNumber
-              inputName={"secondCreditScore"}
-              inputValue={newRangeData.rules?.[0]?.secondCreditScore}
-              onChange={handleChangeRange}
-              placeHolder="2"
-              isValidation={true}
-            />
+      {!hasViewOnlyAccess(roleName) && (
+        <ContainerTile className={"p-5"}>
+          <div className="grid md:grid-cols-2 gap-2 mb-5 items-end">
+            <div>
+              <div className={`block text-sm font-medium mb- px-1`}>
+                Minimum Credit Score
+              </div>
+              <div className="grid grid-cols-6 items-end">
+                <div className="col-span-2 xl:col-span-1">
+                  <InputSelect
+                    inputName={"firstCreditScoreOperator"}
+                    inputValue={
+                      newRangeData?.operators?.firstCreditScoreOperator
+                    }
+                    inputOptions={operatorOptions}
+                    onChange={handleChangeRange}
+                  />
+                </div>
+                <div className="col-span-4 xl:col-span-5">
+                  <InputNumber
+                    inputName={"firstCreditScore"}
+                    inputValue={newRangeData.rules?.[0]?.firstCreditScore}
+                    onChange={handleChangeRange}
+                    placeHolder="0"
+                    isValidation={true}
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className={`block text-sm font-medium mb- px-1`}>
+                Maximum Credit Score
+              </div>
+              <div className="grid grid-cols-6 items-end">
+                <div className="col-span-2 xl:col-span-1">
+                  <InputSelect
+                    inputName={"secondCreditScoreOperator"}
+                    inputValue={
+                      newRangeData?.operators?.secondCreditScoreOperator
+                    }
+                    inputOptions={operatorOptions}
+                    onChange={handleChangeRange}
+                  />
+                </div>
+                <div className="col-span-4 xl:col-span-5">
+                  <InputNumber
+                    inputName={"secondCreditScore"}
+                    inputValue={newRangeData.rules?.[0]?.secondCreditScore}
+                    onChange={handleChangeRange}
+                    placeHolder="2"
+                    isValidation={true}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <TagInput
             inputSelectName={"tenureType"}
@@ -248,98 +273,122 @@ const CreditScoreET = () => {
             <Button
               buttonName={"Add Range"}
               onClick={() => handleAddNewRange(creditScoreETId)}
-              rectangle={true}
+              buttonType="primary"
+              loading={loading}
             />
           </div>
         </ContainerTile>
-      ) : (
-        ""
       )}
 
-      {creditScoreET && (
-        <div className="flex flex-col gap-5 mt-5">
-          {creditScoreET?.rules?.map((rule, index) => {
-            return (
-              <ContainerTile key={index} loading={loading} error={error}>
-                <div className="grid grid-cols-4 gap-2 mb-5 items-end">
-                  <InputSelect
-                    labelName={"Minimum Credit Score"}
-                    inputName={"firstCreditScoreOperator"}
-                    inputValue={
-                      creditScoreET?.operators?.firstCreditScoreOperator
+      {creditScoreET &&
+        creditScoreET?.rules?.map((rule, index) => {
+          return (
+            <ContainerTile
+              key={index}
+              loading={loading}
+              className={"p-5 relative"}
+            >
+              <Banner2 open={true} className={"mb-4"}>
+                The following eligible tenures are applicable to borrowers whose
+                credit score lies in the range from {rule?.firstCreditScore} to{" "}
+                {rule?.secondCreditScore}
+              </Banner2>
+              <div className="grid md:grid-cols-2 gap-3 mb-5 items-end">
+                <div>
+                  <div className={`block text-sm font-medium mb- px-1`}>
+                    Minimum Credit Score
+                  </div>
+                  <div className="grid grid-cols-6 items-end">
+                    <div className="col-span-2 xl:col-span-1">
+                      <InputSelect
+                        inputName={"firstCreditScoreOperator"}
+                        inputValue={
+                          creditScoreET?.operators?.firstCreditScoreOperator
+                        }
+                        inputOptions={operatorOptions}
+                        onChange={(e) => handleChange(e, index)}
+                      />
+                    </div>
+                    <div className="col-span-4 xl:col-span-5">
+                      <InputNumber
+                        inputName={"firstCreditScore"}
+                        inputValue={rule?.firstCreditScore}
+                        onChange={(e) => handleChange(e, index)}
+                        placeHolder="0"
+                        isValidation={true}
+                        isIndex={rule?.dataIndex}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className={`block text-sm font-medium mb- px-1`}>
+                    Maximum Credit Score
+                  </div>
+                  <div className="grid grid-cols-6 items-end">
+                    <div className="col-span-2 xl:col-span-1">
+                      <InputSelect
+                        inputName={"secondCreditScoreOperator"}
+                        inputValue={
+                          creditScoreET?.operators?.secondCreditScoreOperator
+                        }
+                        inputOptions={operatorOptions}
+                        onChange={(e) => handleChange(e, index)}
+                      />
+                    </div>
+                    <div className="col-span-4 xl:col-span-5">
+                      <InputNumber
+                        inputName={"secondCreditScore"}
+                        inputValue={rule?.secondCreditScore}
+                        onChange={(e) => handleChange(e, index)}
+                        placeHolder="2"
+                        isValidation={true}
+                        isIndex={rule?.dataIndex}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <TagInput
+                inputSelectName={"tenureType"}
+                inputSelectLabel={"Tenure Type"}
+                formData={rule}
+                handleChange={(e) => handleChangeTenure(e, index)}
+                inputTextName={"tenureValue"}
+                inputTextLabel={"Eligible Tenure"}
+                inputTextPlaceholder={"MONTHS"}
+                addTag={() => handleAddTenure(index)}
+                deleteTag={(tag) => handleDelete(tag, index)}
+                isValidation={true}
+                isIndex={rule?.dataIndex}
+                orderReverse={true}
+                tagsPerRow={5}
+              />
+              <div className="text-gray-300 text-xs mt-3">
+                Rule Id: {rule.creditScoreEtTempId}
+              </div>
+              {!hasViewOnlyAccess(roleName) && (
+                <div className="flex gap-4 justify-end items-center mt-3">
+                  <Button
+                    buttonIcon={DeleteIcon}
+                    onClick={() =>
+                      DeleteRange({
+                        creditScoreETId,
+                        ruleName: rule.ruleName,
+                      })
                     }
-                    inputOptions={operatorOptions}
-                    onChange={(e) => handleChange(e, index)}
+                    buttonType="destructive"
                   />
-                  <InputNumber
-                    inputName={"firstCreditScore"}
-                    inputValue={rule?.firstCreditScore}
-                    onChange={(e) => handleChange(e, index)}
-                    placeHolder="0"
-                    isValidation={true}
-                    isIndex={rule?.dataIndex}
-                  />
-                  <InputSelect
-                    labelName={"Maximum Credit Score"}
-                    inputName={"secondCreditScoreOperator"}
-                    inputValue={
-                      creditScoreET?.operators?.secondCreditScoreOperator
-                    }
-                    inputOptions={operatorOptions}
-                    onChange={(e) => handleChange(e, index)}
-                  />
-                  <InputNumber
-                    inputName={"secondCreditScore"}
-                    inputValue={rule?.secondCreditScore}
-                    onChange={(e) => handleChange(e, index)}
-                    placeHolder="2"
-                    isValidation={true}
-                    isIndex={rule?.dataIndex}
+                  <Button
+                    buttonIcon={CheckIcon}
+                    onClick={() => handleSaveET(creditScoreETId, index)}
+                    buttonType="success"
                   />
                 </div>
-                <TagInput
-                  inputSelectName={"tenureType"}
-                  inputSelectLabel={"Tenure Type"}
-                  formData={rule}
-                  handleChange={(e) => handleChangeTenure(e, index)}
-                  inputTextName={"tenureValue"}
-                  inputTextLabel={"Eligible Tenure"}
-                  inputTextPlaceholder={"MONTHS"}
-                  addTag={() => handleAddTenure(index)}
-                  deleteTag={(tag) => handleDelete(tag, index)}
-                  isValidation={true}
-                  isIndex={rule?.dataIndex}
-                  orderReverse={true}
-                  tagsPerRow={5}
-                />
-                {!hasViewOnlyAccess(roleName) ? (
-                  <div className="flex gap-4 justify-end items-center mt-2">
-                    <Button
-                      buttonName={"Save"}
-                      onClick={() => handleSaveET(creditScoreETId, index)}
-                      rectangle={true}
-                      buttonType="secondary"
-                    />
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() =>
-                        DeleteRange({
-                          creditScoreETId,
-                          ruleName: rule.ruleName,
-                        })
-                      }
-                      circle={true}
-                      buttonType="destructive"
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
-              </ContainerTile>
-            );
-          })}
-        </div>
-      )}
+              )}
+            </ContainerTile>
+          );
+        })}
     </>
   );
 };

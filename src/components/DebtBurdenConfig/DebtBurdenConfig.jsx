@@ -306,6 +306,14 @@ const DebtBurdenConfig = () => {
               placeHolder="20000"
               isValidation={true}
             />
+            <InputSelect
+              labelName="Employer Retired"
+              inputName={`employerRetired`}
+              inputValue={dbrData?.employerRetired}
+              onChange={handleInputChange}
+              inputOptions={empOptions}
+              isValidation={true}
+            />
             <InputText
               labelName="Product Level"
               inputName={`productLevel`}
@@ -328,14 +336,6 @@ const DebtBurdenConfig = () => {
               inputValue={dbrData?.gdbrWithoutMTG}
               onChange={handleInputChange}
               placeHolder="65%"
-              isValidation={true}
-            />
-            <InputSelect
-              labelName="Employer Retired"
-              inputName={`employerRetired`}
-              inputValue={dbrData?.employerRetired}
-              onChange={handleInputChange}
-              inputOptions={empOptions}
               isValidation={true}
             />
             <InputText

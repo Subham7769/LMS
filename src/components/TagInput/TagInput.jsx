@@ -18,6 +18,7 @@ const TagInput = ({
   inputTextPlaceholder,
   formData,
   handleChange,
+  buttonTagName,
   addTag,
   deleteTag,
   productTypeOptions,
@@ -74,13 +75,15 @@ const TagInput = ({
             <Button
               buttonIcon={AddIcon}
               onClick={addTag}
-              buttonName="Add"
+              buttonName={buttonTagName}
               buttonType="secondary"
             />
           </div>
         )}
       </div>
-      <div className={`grid ${tagsGridCSS} gap-3 mt-3`}>
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 xl:${tagsGridCSS} gap-3 mt-5`}
+      >
         {formData.tags.map((tag, index) => (
           <div
             key={index}
@@ -130,11 +133,11 @@ const TagInput = ({
                       </>
                     ) : (
                       <>
-                        <div className="text-xs w-[65%] text-center">
+                        <div className="text-xs text-center">
                           {tag[inputSelectName]}
                         </div>
                         <div className="text-xs text-center">|</div>
-                        <div className="text-xs w-[34%] text-center">
+                        <div className="text-xs text-center">
                           {tag[inputNumberName]}
                         </div>
                       </>

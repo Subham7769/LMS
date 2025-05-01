@@ -34,44 +34,35 @@ const Button = ({
         ${className} 
         relative items-center justify-center inline-flex cursor-pointer
       `}
-      disabled={disabled || loading} // Disable button when loading
+      disabled={disabled || loading}
     >
-      <div
-        className={`flex items-center justify-center ${
-          loading ? "opacity-50" : "opacity-100"
-        }`}
-      >
-        {ButtonIcon && <ButtonIcon className={iconClassName} aria-hidden="true" />}
-        {buttonName && ButtonIcon ? (
-          <span className="ml-2">{buttonName}</span>
-        ) : (
-          <span>{buttonName}</span>
-        )}
-      </div>
-
       {/* Loader Overlay */}
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
+      {loading ? (
+        <div className="flex items-center justify-center">
           <svg
-            className="animate-spin h-5 w-5 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+            className="animate-spin fill-current shrink-0"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
           >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"
-            ></path>
+            <path d="M8 16a7.928 7.928 0 01-3.428-.77l.857-1.807A6.006 6.006 0 0014 8c0-3.309-2.691-6-6-6a6.006 6.006 0 00-5.422 8.572l-1.806.859A7.929 7.929 0 010 8c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z" />
           </svg>
+          <span className="ml-2">Loading</span>
+        </div>
+      ) : (
+        <div
+          className={`flex items-center justify-center ${
+            loading ? "opacity-50" : "opacity-100"
+          }`}
+        >
+          {ButtonIcon && (
+            <ButtonIcon className={iconClassName} aria-hidden="true" />
+          )}
+          {buttonName && ButtonIcon ? (
+            <span className="ml-2">{buttonName}</span>
+          ) : (
+            <span>{buttonName}</span>
+          )}
         </div>
       )}
     </button>
