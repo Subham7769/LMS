@@ -7,10 +7,10 @@ const Step1Welcome = ({onNext}) => {
     onNext();
   }
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md">
+    <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">Quara Financing</h1>
-        <button className="text-teal-600 font-medium">Register Account</button>
+        <h1 className="text-lg font-semibold">KSA Financing</h1>
+        <button className="text-teal-600 font-medium" onClick={GetStarted}>Register Account</button>
       </div>
 
       <p className="text-sm text-gray-500 mb-4">Step 1 of 4</p>
@@ -34,7 +34,7 @@ const Step1Welcome = ({onNext}) => {
         <div className="mx-auto w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mb-3">
           <span className="text-teal-600 text-xl">🧾</span>
         </div>
-        <h2 className="text-lg font-semibold">Welcome to Quara Financing</h2>
+        <h2 className="text-lg font-semibold">Welcome to KSA Financing</h2>
         <p className="text-sm text-gray-600 mb-6">
           Your path to Shariah-compliant financing solutions
         </p>

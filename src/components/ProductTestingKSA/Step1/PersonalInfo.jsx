@@ -31,11 +31,10 @@ const Step1PersonalInfo = ({onNext,onBack}) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md">
+    <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">Quara Financing</h1>
-        <button className="text-teal-600 font-medium">Register Account</button>
+        <h1 className="text-lg font-semibold">KSA Financing</h1>
       </div>
 
       {/* Progress */}
@@ -61,7 +60,7 @@ const Step1PersonalInfo = ({onNext,onBack}) => {
       {/* Form */}
       <h2 className="text-lg font-semibold mb-2">Create Your Account</h2>
       <p className="text-sm text-gray-600 mb-6">
-        Please enter your details to register with Quara
+        Please enter your details to register with KSA
       </p>
 
       <div className="space-y-4">
@@ -189,7 +188,7 @@ const Step1PersonalInfo = ({onNext,onBack}) => {
             className="mt-1 mr-2"
           />
           <label className="text-sm text-gray-600">
-            I agree to Quara’s{" "}
+            I agree to KSA's{" "}
             <span className="text-teal-600 underline cursor-pointer">
               Terms & Conditions
             </span>{" "}

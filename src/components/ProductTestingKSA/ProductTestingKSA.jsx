@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, Outlet } from "react-router-dom";
 import Tab from "../Common/Tab/Tab";
+import { ActiveTabProvider } from "./ActiveTabContext";  // Import the context
 
 const ProductTestingKSA = () => {
   const { userID } = useParams();
@@ -30,28 +31,30 @@ const ProductTestingKSA = () => {
   ];
 
   return (
-    <div className="mt-4">
-      {/* Tab Navigation */}
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-        <ul className="flex flex-wrap -mb-px">
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              id={tab.id}
-              label={tab.label}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              to={tab.to}
-            />
-          ))}
-        </ul>
-      </div>
-
-      {/* Content Rendering */}
+    <ActiveTabProvider setActiveTab={setActiveTab}>  {/* Wrap with provider */}
       <div className="mt-4">
-        <Outlet />
+        {/* Tab Navigation */}
+        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+          <ul className="flex flex-wrap -mb-px">
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.id}
+                id={tab.id}
+                label={tab.label}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                to={tab.to}
+              />
+            ))}
+          </ul>
+        </div>
+
+        {/* Content Rendering */}
+        <div className="mt-4">
+          <Outlet /> {/* Child components will now have access to setActiveTab */}
+        </div>
       </div>
-    </div>
+    </ActiveTabProvider>
   );
 };
 

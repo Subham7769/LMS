@@ -57,11 +57,10 @@ const Step1OtpVerification = ({onNext,onBack}) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md">
+    <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">Quara Financing</h1>
-        <button className="text-teal-600 font-medium">Register Account</button>
+        <h1 className="text-lg font-semibold">KSA Financing</h1>
       </div>
 
       {/* Progress */}

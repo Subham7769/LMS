@@ -194,6 +194,15 @@ const ProductTestingKSA = lazy(() =>
 const Step1Container = lazy(() =>
   import("./components/ProductTestingKSA/Step1/Step1Container")
 );
+const Step2Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step2/Step2Container")
+);
+const Step3Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step3/Step3Container")
+);
+const Step4Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step4/Step4Container")
+);
 
 
 // GlobalConfig Imports
@@ -1258,6 +1267,21 @@ const routes = [
           {
             path: "create-account",
             element: <Step1Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "pre-eligibility-check",
+            element: <Step2Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility-verification",
+            element: <Step3Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-application",
+            element: <Step4Container />,
             errorElement: <RouteErrorBoundary />,
           },
         ],

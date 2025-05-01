@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Step1Welcome from "./Step1Welcome";
-import Step1PersonalInfo from "./Step1PersonalInfo";
-import Step1OtpVerification from "./Step1OtpVerification";
-import Step1RegistrationSuccess from "./Step1RegistrationSuccess";
+import Welcome from "./Welcome";
+import PersonalInfo from "./PersonalInfo";
+import OtpVerification from "./OtpVerification";
+import RegistrationSuccess from "./RegistrationSuccess";
 
 const Step1Container = () => {
   const [subStep, setSubStep] = useState(0);
@@ -13,19 +13,19 @@ const Step1Container = () => {
   const renderSubStep = () => {
     switch (subStep) {
       case 0:
-        return <Step1Welcome onNext={next} />;
+        return <Welcome onNext={next} />;
       case 1:
-        return <Step1PersonalInfo onNext={next} onBack={back} />;
+        return <PersonalInfo onNext={next} onBack={back} />;
       case 2:
-        return <Step1OtpVerification onNext={next} onBack={back} />;
+        return <OtpVerification onNext={next} onBack={back} />;
       case 3:
-        return <Step1RegistrationSuccess onBack={back} />;
+        return <RegistrationSuccess onBack={back} />;
       default:
         return null;
     }
   };
 
-  return <div>{renderSubStep()}</div>;
+  return <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow border-2">{renderSubStep()}</div>;
 };
 
 export default Step1Container;
