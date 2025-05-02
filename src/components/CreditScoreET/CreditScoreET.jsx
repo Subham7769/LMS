@@ -98,12 +98,12 @@ const CreditScoreET = () => {
     const details = await dispatch(
       createCloneCSET({ creditScoreETId, cloneCSETName })
     ).unwrap();
-    navigate("/credit-score-eligible-tenure/" + details.creditScoreEtTempId);
+    navigate("/loan/eligible-tenure/" + details.creditScoreEtTempId);
   };
 
   const onDeleteCSET = async (creditScoreETId) => {
     await dispatch(handleDeleteCSET(creditScoreETId)).unwrap();
-    navigate("/credit-score-eligible-tenure");
+    navigate("/loan/eligible-tenure");
   };
 
   const DeleteRange = async ({ creditScoreETId, ruleName }) => {
@@ -200,7 +200,11 @@ const CreditScoreET = () => {
         initialName={creditScoreETName}
       />
       {!hasViewOnlyAccess(roleName) && (
-        <ContainerTile className={"p-5"}>
+        <ContainerTile
+          className={
+            "p-5 border-2 border-violet-400 dark:border-violet-500"
+          }
+        >
           <div className="grid md:grid-cols-2 gap-2 mb-5 items-end">
             <div>
               <div className={`block text-sm font-medium mb- px-1`}>
@@ -286,7 +290,9 @@ const CreditScoreET = () => {
             <ContainerTile
               key={index}
               loading={loading}
-              className={"p-5 relative"}
+              className={
+                "p-5 border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 transition"
+              }
             >
               <Banner2 open={true} className={"mb-4"}>
                 The following eligible tenures are applicable to borrowers whose

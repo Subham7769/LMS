@@ -562,7 +562,7 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "credit-score-eligible-tenure",
+        path: "eligible-tenure",
         element: <CreditScoreETPage />,
         errorElement: <RouteErrorBoundary />,
       },
@@ -725,7 +725,7 @@ const routes = [
         ],
       },
       {
-        path: "credit-score-eligible-tenure/:creditScoreETId",
+        path: "eligible-tenure/:creditScoreETId",
         element: <CreditScoreET />,
         errorElement: <RouteErrorBoundary />,
       },

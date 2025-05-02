@@ -174,7 +174,7 @@ export const MenusInitial = [
   {
     title: "Eligible Tenure",
     sectionName: "LOAN MANAGEMENT",
-    href: "/loan/credit-score-eligible-tenure",
+    href: "/loan/eligible-tenure",
     icon: "CalculatorIcon",
     current: false,
     submenu: true,
@@ -183,7 +183,7 @@ export const MenusInitial = [
     createFunction: "createNewCreditScoreET", //Create function
     buttonName: "Create New Tenure", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/credit-score-eligible-tenure/", // navigation
+    navigateSuccess: "/loan/eligible-tenure/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,

@@ -122,10 +122,6 @@ const InputSelect = ({
       display: "flex",
       backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
       color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
-      // overflow: "hidden",
-      // whiteSpace: "nowrap",
-      // height: "28px",
-      // alignItems: "center",
     }),
   };
 

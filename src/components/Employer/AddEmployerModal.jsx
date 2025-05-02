@@ -13,7 +13,7 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
   return (
     <>
       <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-        <div className="bg-white border border-red-600 p-8 rounded-xl w-1/3 relative shadow-lg transition-all duration-500 ease-in-out">
+        <div className="bg-white border border-red-600 p-8 rounded-xl w-3/4 xl:w-1/3 relative shadow-lg transition-all duration-500 ease-in-out">
           <div
             onClick={onClose}
             className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-2 right-2"
@@ -34,7 +34,7 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
               />
             </svg>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-5 mt-3">
+          <div className="grid md:grid-cols-2 gap-4 mb-5 mt-3">
             {/* <InputText
               labelName="Employer Name"
               inputName="employerName"

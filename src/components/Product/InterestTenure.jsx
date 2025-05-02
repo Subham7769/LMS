@@ -359,7 +359,7 @@ const InterestTenure = () => {
                 </span>
               )}
             </td>
-            {!hasViewOnlyAccess(roleName) ? (
+            {!hasViewOnlyAccess(roleName) && (
               <td className="px-4 py-4 whitespace-nowrap flex gap-2">
                 <button
                   onClick={() => {
@@ -388,9 +388,8 @@ const InterestTenure = () => {
                   iconClassName="h-4 w-4"
                 />
               </td>
-            ) : (
-              ""
-            )}
+            )
+            }
           </tr>
         ))}
       </ListTableClassic>

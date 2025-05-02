@@ -89,7 +89,7 @@ const Eligibility = () => {
         <InputSelect
           labelName="Eligible Tenure"
           inputOptions={formateDataDropDown(
-            "/loan/credit-score-eligible-tenure/",
+            "/loan/eligible-tenure/",
             CSETDataInfo
           )}
           inputName="creditScoreEtTempId"
