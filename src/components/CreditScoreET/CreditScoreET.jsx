@@ -96,12 +96,12 @@ const CreditScoreET = () => {
     const details = await dispatch(
       createCloneCSET({ creditScoreETId, cloneCSETName })
     ).unwrap();
-    navigate("/credit-score-eligible-tenure/" + details.creditScoreEtTempId);
+    navigate("/loan/credit-score-eligible-tenure/" + details.creditScoreEtTempId);
   };
 
   const onDeleteCSET = async (creditScoreETId) => {
     await dispatch(handleDeleteCSET(creditScoreETId)).unwrap();
-    navigate("/credit-score-eligible-tenure");
+    navigate("/loan/credit-score-eligible-tenure");
   };
 
   const DeleteRange = async ({ creditScoreETId, ruleName }) => {
