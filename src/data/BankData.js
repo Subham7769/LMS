@@ -305,8 +305,8 @@ export const bankBranches = [
   {
     bankName: "Stanbic Bank",
     branchName: "Lusaka Main Branch",
-    branchCode: "150001",
-    sortCode: "15-00-01",
+    branchCode: "040002",
+    sortCode: "04-00-02",
   },
   {
     bankName: "Stanbic Bank",
