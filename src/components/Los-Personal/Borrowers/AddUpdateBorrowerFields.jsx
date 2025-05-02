@@ -380,14 +380,14 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Mobile 1",
       inputName: "mobile1",
-      type: "number",
+      type: "text",
       maxLength: 10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
-      type: "number",
+      type: "text",
       maxLength: 10,
       validation: false,
     },
@@ -688,14 +688,14 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Mobile 1",
       inputName: "kinMobile1",
-      type: "number",
+      type: "text",
       maxLength: 10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "kinMobile2",
-      type: "number",
+      type: "text",
       maxLength: 10,
     },
     {
@@ -764,7 +764,7 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Credit Score",
       inputName: "creditScore",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
