@@ -83,6 +83,7 @@ export const BranchNameOptions = {
   ],
   "National Credit and Saving Bank": [
     { value: "Lusaka Main", label: "Lusaka Main" },
+    { value: "Cosmopolitan", label: "Cosmopolitan" },
   ],
   "Stanbic Bank": [
     { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
@@ -294,6 +295,12 @@ export const bankBranches = [
     branchName: "Lusaka Main",
     branchCode: "580010",
     sortCode: "58-00-10",
+  },
+  {
+    bankName: "National Credit and Saving Bank",
+    branchName: "Cosmopolitan",
+    branchCode: "580008",
+    sortCode: "58-00-08",
   },
   {
     bankName: "Stanbic Bank",

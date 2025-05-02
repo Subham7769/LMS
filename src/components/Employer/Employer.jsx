@@ -21,7 +21,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccess, hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { fetchAffordibilityData } from "../../redux/Slices/sidebarSlice";
 import { convertDate } from "../../utils/convertDate";
 import AddEmployerModal from "./AddEmployerModal";
@@ -141,7 +141,7 @@ const Employer = () => {
                 placeHolder="Search by employer name"
               />
             </div>
-            {!hasViewOnlyAccessGroup2(roleName) ? (
+            {!hasViewOnlyAccess(roleName) ? (
               <div>
                 <Button
                   buttonIcon={PlusIcon}
@@ -219,7 +219,7 @@ const Employer = () => {
                 <div className="text-gray-600">
                   {convertDate(empData?.creationDate)}
                 </div>
-                {!hasViewOnlyAccessGroup2(roleName) ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   <div className="flex items-center justify-center gap-4">
                     <Button
                       buttonIcon={CheckCircleIcon}
