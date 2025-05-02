@@ -75,7 +75,7 @@ export const BranchNameOptions = {
   "Indo-Zambia Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Kitwe Branch", label: "Kitwe Branch" },
-    { value: "Manda Hill Branch", label: "Manda Hill Branch" },
+    { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
   ],
   "Investrust Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
@@ -94,6 +94,7 @@ export const BranchNameOptions = {
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Manda Hill Branch", label: "Manda Hill Branch" },
     { value: "Livingstone Branch", label: "Livingstone Branch" },
+    { value: "Northend Branch", label: "Northend Branch" },
   ],
   "United Bank for Africa": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
@@ -112,6 +113,8 @@ export const BranchNameOptions = {
     { value: "XAPIT Branch", label: "XAPIT Branch" },
     { value: "Chirundu Branch", label: "Chirundu Branch" },
     { value: "Lusaka City Market", label: "Lusaka City Market" },
+    { value: "Kabwe", label: "Kabwe" },
+    { value: "Solwezi", label: "Solwezi" },
   ],
 };
 
@@ -279,6 +282,12 @@ export const bankBranches = [
     sortCode: "13-00-02",
   },
   {
+    bankName: "Indo-Zambia Bank",
+    branchName: "Lusaka Main Branch",
+    branchCode: "090001",
+    sortCode: "09-00-01",
+  },
+  {
     bankName: "Investrust Bank",
     branchName: "Cairo Road Branch",
     branchCode: "140001",
@@ -339,6 +348,12 @@ export const bankBranches = [
     sortCode: "16-00-03",
   },
   {
+    bankName: "Standard Chartered Bank",
+    branchName: "Northend Branch",
+    branchCode: "060043",
+    sortCode: "06-00-43",
+  },
+  {
     bankName: "United Bank for Africa",
     branchName: "Cairo Road Branch",
     branchCode: "170001",
@@ -397,5 +412,17 @@ export const bankBranches = [
     branchName: "Lusaka City Market",
     branchCode: "010074",
     sortCode: "01-00-74",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Kabwe",
+    branchCode: "010946",
+    sortCode: "01-09-46",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Solwezi",
+    branchCode: "012868",
+    sortCode: "01-28-68",
   },
 ];
