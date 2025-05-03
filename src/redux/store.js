@@ -38,6 +38,7 @@ import employerSlice from "./Slices/employerSlice.js";
 import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
 import documentConfigSlice from "./Slices/documentConfigSlice.js";
 import personalRefundSlice from "./Slices/personalRefundSlice.js";
+import productTestingKSASlice from "./Slices/ProductTestingKSA.js";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
 import AutoLogoutMiddleware from "./Middlewares/AutoLogoutMiddleware";
@@ -82,6 +83,7 @@ const store = configureStore({
     loanApproval: loanApprovalSlice,
     documentConfig: documentConfigSlice,
     personalRefund: personalRefundSlice,
+    productTestingKSA:productTestingKSASlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(AutoLogoutMiddleware, checkTokenMiddleware),

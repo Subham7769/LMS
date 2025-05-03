@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Download, UploadCloud, CheckCheck } from "lucide-react";
+import Stepper from "../../Common/Stepper/Stepper";
 
 const steps = [
   "Loan Offers",
@@ -17,39 +18,8 @@ const DigitalContract = ({ onNext }) => {
 
   return (
     <div className="space-y-6">
-      {/* Stepper Header */}
-      <div className="border rounded-xl p-6">
-        <h2 className="text-xl font-semibold mb-2">Loan Application</h2>
-        <div className="text-sm text-gray-600 mb-2">Step 2 of 5</div>
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-          <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "40%" }}></div>
-        </div>
-        <div className="flex justify-between items-center text-sm font-medium">
-          {steps.map((label, index) => (
-            <div
-              key={index}
-              className={`flex-1 text-center ${index === 1
-                ? "text-emerald-600 font-semibold"
-                : index < 1
-                  ? "text-gray-800"
-                  : "text-gray-400"
-                }`}
-            >
-              <div
-                className={`w-8 h-8 mx-auto mb-1 rounded-full flex items-center justify-center ${index === 1
-                  ? "bg-emerald-500 text-white"
-                  : index < 1
-                    ? "bg-gray-300 text-white"
-                    : "bg-gray-200 text-gray-500"
-                  }`}
-              >
-                {index + 1}
-              </div>
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Stepper */}
+      <Stepper title={"KSA Financing"} currentStep={2} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
       {/* Digital Contract Content */}
       <div className="space-y-6">

@@ -1,13 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useActiveTab } from "../ActiveTabContext";
+import { useDispatch } from "react-redux";
+import { validatePreEligibilityOtp } from "../../../redux/Slices/ProductTestingKSA";
 
-const Step1OtpVerification = ({onNext,onBack}) => {
+// API for OTP validation
+
+const Step1OtpVerification = ({ onNext, onBack }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [otpValues, setOtpValues] = useState(Array(6).fill(""));
   const inputsRef = useRef([]);
   const [secondsLeft, setSecondsLeft] = useState(180); // 3 minutes
-
+  const { userId } = useActiveTab();
+  console.log(...otpValues)
   // Countdown timer
   useEffect(() => {
     if (secondsLeft > 0) {
@@ -46,42 +54,22 @@ const Step1OtpVerification = ({onNext,onBack}) => {
     onBack()
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (otpValues.some((d) => d === "")) {
       alert("Please enter the full 6-digit code.");
       return;
     }
     const code = otpValues.join("");
     // TODO: verify OTP via API
+    await dispatch(validatePreEligibilityOtp({ userId, otp: otpValues.join("") }))
     onNext()
   };
 
   return (
     <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">KSA Financing</h1>
-      </div>
 
-      {/* Progress */}
-      <p className="text-sm text-gray-500 mb-4">Step 1 of 4</p>
-      <div className="w-full bg-gray-200 h-2 rounded-full mb-6">
-        <div className="bg-teal-600 h-2 rounded-full w-3/4" />
-      </div>
-
-      {/* Sub-step nav */}
-      <div className="flex justify-between mb-6">
-        {["Welcome", "Personal Info", "OTP Verification"].map((label, idx) => (
-          <span
-            key={idx}
-            className={`text-sm font-medium ${
-              idx === 2 ? "text-teal-600" : "text-gray-400"
-            }`}
-          >
-            {label}
-          </span>
-        ))}
-      </div>
+      {/* Stepper */}
+      <Stepper title={"KSA Financing"} currentStep={3} steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]} />
 
       {/* OTP Box */}
       <div className="text-center mb-6">

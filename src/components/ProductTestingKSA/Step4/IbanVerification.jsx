@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Info } from "lucide-react";
+import Stepper from "../../Common/Stepper/Stepper";
 
 const steps = [
   "Loan Offers",
@@ -17,41 +18,8 @@ const IBANVerification = ({ onNext }) => {
 
   return (
     <div className="space-y-6">
-      {/* Stepper Header */}
-      <div className="border rounded-xl p-6">
-        <h2 className="text-xl font-semibold mb-2">Loan Application</h2>
-        <div className="text-sm text-gray-600 mb-2">Step 4 of 5</div>
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-          <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "80%" }}></div>
-        </div>
-        <div className="flex justify-between items-center text-sm font-medium">
-          {steps.map((label, index) => (
-            <div
-              key={index}
-              className={`flex-1 text-center ${
-                index === 3
-                  ? "text-emerald-600 font-semibold"
-                  : index < 3
-                  ? "text-gray-800"
-                  : "text-gray-400"
-              }`}
-            >
-              <div
-                className={`w-8 h-8 mx-auto mb-1 rounded-full flex items-center justify-center ${
-                  index === 3
-                    ? "bg-emerald-500 text-white"
-                    : index < 3
-                    ? "bg-gray-300 text-white"
-                    : "bg-gray-200 text-gray-500"
-                }`}
-              >
-                {index + 1}
-              </div>
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Stepper */}
+      <Stepper title={"KSA Financing"} currentStep={4} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
       {/* IBAN Verification Content */}
       <div className="space-y-4">
@@ -92,9 +60,8 @@ const IBANVerification = ({ onNext }) => {
         <button
           onClick={onNext}
           disabled={!isValid}
-          className={`w-full py-2 rounded-md text-white font-semibold ${
-            isValid ? "bg-emerald-600 hover:bg-emerald-700" : "bg-gray-400 cursor-not-allowed"
-          }`}
+          className={`w-full py-2 rounded-md text-white font-semibold ${isValid ? "bg-emerald-600 hover:bg-emerald-700" : "bg-gray-400 cursor-not-allowed"
+            }`}
         >
           Verify & Continue
         </button>

@@ -1,60 +1,50 @@
 import React, { useState, useEffect } from "react";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useDispatch } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
+import { AMLStatusCheck, getBorrowerProfile } from "../../../redux/Slices/ProductTestingKSA";
+import { useSelector } from "react-redux";
+
+//API to get Borrower Profile
+
+// API for AML check
 
 const AMLVerification = ({ onNext }) => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    alias: "",
-    dob: "",
-    nationality: "",
-    nationalId: "",
-    address: "",
-  });
+  const { AMLUserDetails } = useSelector(state => state.productTestingKSA)
+
+  const dispatch = useDispatch();
+  const { userId } = useActiveTab();
 
   // Populate the data on component mount (simulate fetched data)
   useEffect(() => {
-    setFormData({
-      fullName: "Subham Jain",
-      alias: "SJ",
-      dob: "1996-03-15",
-      nationality: "Indian",
-      nationalId: "IND123456789",
-      address: "123 Gandhi Marg, Jaipur, Rajasthan, India",
-    });
+    dispatch(getBorrowerProfile({ userId }))
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("AML Data:", formData);
+    console.log("AML Data:", AMLUserDetails);
+    await dispatch(AMLStatusCheck({ userId }))
     onNext(); // Move to Salary Verification
   };
 
   return (
     <div className="mx-auto p-6 bg-white rounded-xl shadow-md">
       {/* Stepper */}
-      <div>
-        <p className="text-sm text-gray-500 mb-2">Step 1 of 4</p>
-        <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-          <div className="bg-teal-600 h-2 rounded-full w-1/4" />
-        </div>
-        <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-          {["AML Verification", "Salary Verification", "Credit History", "Completion"].map(
-            (step, idx) => (
-              <span key={idx} className={idx === 0 ? "text-teal-600" : ""}>
-                {step}
-              </span>
-            )
-          )}
-        </div>
-      </div>
+      <Stepper title={"KSA Financing"} currentStep={1} steps={["AML Verification", "Salary Verification", "Credit History", "Completion"]} />
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
+
+        <h2 className="text-lg font-semibold mb-2">Your Personal Details</h2>
+        <p className="text-sm text-gray-600 mb-6">
+          Please check your personal details
+        </p>
         <div>
           <label className="block text-sm font-medium text-gray-700">Full Name</label>
           <input
             type="text"
             name="fullName"
-            value={formData.fullName}
+            value={AMLUserDetails.firstNameEn + " " + AMLUserDetails.middleNameEn + " " + AMLUserDetails.lastNameEn}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -65,7 +55,7 @@ const AMLVerification = ({ onNext }) => {
           <input
             type="text"
             name="alias"
-            value={formData.alias}
+            value={AMLUserDetails.alias}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -76,7 +66,7 @@ const AMLVerification = ({ onNext }) => {
           <input
             type="date"
             name="dob"
-            value={formData.dob}
+            value={AMLUserDetails.dateOfBirth}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -87,7 +77,7 @@ const AMLVerification = ({ onNext }) => {
           <input
             type="text"
             name="nationality"
-            value={formData.nationality}
+            value={AMLUserDetails.nationality}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -98,7 +88,7 @@ const AMLVerification = ({ onNext }) => {
           <input
             type="text"
             name="nationalId"
-            value={formData.nationalId}
+            value={AMLUserDetails.idNumber}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -108,7 +98,15 @@ const AMLVerification = ({ onNext }) => {
           <label className="block text-sm font-medium text-gray-700">Address</label>
           <textarea
             name="address"
-            value={formData.address}
+            value={
+              `Building No: ${AMLUserDetails.residenceDetails?.buildingNumber || ""}, ` +
+              `Street: ${AMLUserDetails.residenceDetails?.streetName || ""}, ` +
+              `Neighborhood: ${AMLUserDetails.residenceDetails?.neighborhood || ""}, ` +
+              `City: ${AMLUserDetails.residenceDetails?.city || ""}, ` +
+              `P.O. Box: ${AMLUserDetails.residenceDetails?.postOfficeBox || ""}, ` +
+              `Additional No: ${AMLUserDetails.residenceDetails?.additionalNumbers || ""}, ` +
+              `Unit No: ${AMLUserDetails.residenceDetails?.unitNumber || ""}`
+            }
             disabled
             rows={2}
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"

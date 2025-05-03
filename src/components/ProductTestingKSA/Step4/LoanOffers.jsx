@@ -1,4 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Stepper from "../../Common/Stepper/Stepper";
+import { getLoanOffers } from "../../../redux/Slices/ProductTestingKSA";
+import { useDispatch } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
+
+// getCarbonLoanConfigurationAndSubmitLoan
+// 1st api- API for Max Loan amount check
+// pass amount in 2nd API
+// 2nd- API to return user's loan offers
+// 3rd- Hit API for Changed Amount (Not Created) it will return Transaction Id
+// 4th- Submit Loan API by Transaction Id will return Loan Id
+// Go Further using this Loan Id
+
 
 const loanOptions = [
     {
@@ -17,16 +30,12 @@ const loanOptions = [
     },
 ];
 
-const steps = [
-    "Loan Offers",
-    "Digital Contract",
-    "Promissory Note",
-    "IBAN Verification",
-    "Completion",
-];
 
 const LoanOffers = ({ onNext }) => {
     const [selectedOfferId, setSelectedOfferId] = useState(null);
+
+    const dispatch = useDispatch();
+    const { userId } = useActiveTab();
 
     const handleSelect = (id) => setSelectedOfferId(id);
     const handleContinue = () => {
@@ -35,28 +44,14 @@ const LoanOffers = ({ onNext }) => {
         }
     };
 
+    useEffect(() => {
+        dispatch(getLoanOffers({  userId })).unwrap();
+    }, [])
+
     return (
         <div className="space-y-6">
             {/* Stepper */}
-            <div>
-                <p className="text-sm text-gray-500 mb-2">Step 1 of 4</p>
-                <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-                    <div className="bg-teal-600 h-2 rounded-full w-1/4" />
-                </div>
-                <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-                    {["Loan Offers",
-                        "Digital Contract",
-                        "Promissory Note",
-                        "IBAN Verification",
-                        "Completion"].map(
-                            (step, idx) => (
-                                <span key={idx} className={idx === 0 ? "text-teal-600" : ""}>
-                                    {step}
-                                </span>
-                            )
-                        )}
-                </div>
-            </div>
+            <Stepper title={"KSA Financing"} currentStep={1} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
             {/* Offer Selection */}
             <div>

@@ -2,6 +2,8 @@ import React from "react";
 import { CheckCircle2 } from "lucide-react"; // npm install lucide-react
 import { useNavigate } from "react-router-dom";
 import { useActiveTab } from "../ActiveTabContext";
+import Stepper from "../../Common/Stepper/Stepper";
+// This API to get credit report from Simah after consent
 
 const Completion = ({
     amlCheck = true,
@@ -29,21 +31,7 @@ const Completion = ({
     return (
         <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-6">
             {/* Stepper */}
-            <div>
-                <p className="text-sm text-gray-500 mb-2">Step 3 of 4</p>
-                <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-                    <div className="bg-teal-600 h-2 rounded-full w-full" />
-                </div>
-                <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-                    {["Initial Details", "Loan Estimate", "Identity Verification", "Completion"].map(
-                        (step, idx) => (
-                            <span key={idx} className={idx === 3 ? "text-teal-600" : ""}>
-                                {step}
-                            </span>
-                        )
-                    )}
-                </div>
-            </div>
+            <Stepper title={"KSA Financing"} currentStep={4} steps={["AML Verification", "Salary Verification", "Credit History", "Completion"]} />
 
             {/* Checkmark Icon */}
             <div className="flex flex-col items-center space-y-2">

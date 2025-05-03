@@ -1,35 +1,24 @@
 import React from "react";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useSelector } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
+
+// API for Max Loan amount check
 
 const LoanEstimate = ({ onNext, onBack }) => {
-  // You can replace these static values with dynamic props later
-  const estimate = {
-    maxLoanAmount: 50000,
-    monthlyEMI: 1200,
-    loanPeriod: 48,
-  };
+    const { loanEstimate, loading, error } = useSelector(state => state.productTestingKSA)
+    const { userId } = useActiveTab();
 
   return (
     <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-4">
       {/* Stepper */}
-      <div>
-        <p className="text-sm text-gray-500 mb-2">Step 2 of 4</p>
-        <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-          <div className="bg-teal-600 h-2 rounded-full w-2/4" />
-        </div>
-        <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-          {["Initial Details", "Loan Estimate", "Identity Verification", "Completion"].map(
-            (step, idx) => (
-              <span key={idx} className={idx === 1 ? "text-teal-600" : ""}>
-                {step}
-              </span>
-            )
-          )}
-        </div>
-      </div>
+      <Stepper title={"KSA Financing"} currentStep={2} steps={["Initial Details", "Loan Estimate", "Identity Verification", "Completion"]} />
 
       {/* Form Section */}
       <h2 className="text-xl font-semibold mb-4">Loan Estimate</h2>
-
+      <p className="text-sm text-gray-600 mb-6">
+        Based on your salary details, you will be provided with a Loan Estimate for Pre-Eligibility check with KSA.
+      </p>
       <div className="space-y-3">
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -37,7 +26,7 @@ const LoanEstimate = ({ onNext, onBack }) => {
           </label>
           <input
             type="number"
-            value={estimate.maxLoanAmount}
+            value={loanEstimate.maxLoanAmount}
             readOnly
             className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700"
           />
@@ -49,7 +38,7 @@ const LoanEstimate = ({ onNext, onBack }) => {
           </label>
           <input
             type="number"
-            value={estimate.monthlyEMI}
+            value={loanEstimate.emiMonthlyPayment}
             readOnly
             className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700"
           />
@@ -61,7 +50,7 @@ const LoanEstimate = ({ onNext, onBack }) => {
           </label>
           <input
             type="number"
-            value={estimate.loanPeriod}
+            value={loanEstimate.tenure}
             readOnly
             className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700"
           />

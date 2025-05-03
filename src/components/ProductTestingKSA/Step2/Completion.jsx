@@ -2,6 +2,8 @@ import React from "react";
 import { CheckCircle2 } from "lucide-react"; // npm install lucide-react
 import { useNavigate } from "react-router-dom";
 import { useActiveTab } from "../ActiveTabContext";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useSelector } from "react-redux";
 
 const Completion = ({
     maxLoanAmount = "150,000 SAR",
@@ -12,6 +14,8 @@ const Completion = ({
 }) => {
     const navigate = useNavigate();
     const { setActiveTab } = useActiveTab();
+    const { loanEstimate, loading, error } = useSelector(state => state.productTestingKSA)
+
 
     const gotoEligibilityVerification = () => {
         setActiveTab("eligibility-verification"); // Set the active tab to "eligibility-verification"
@@ -21,21 +25,7 @@ const Completion = ({
     return (
         <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-6">
             {/* Stepper */}
-            <div>
-                <p className="text-sm text-gray-500 mb-2">Step 4 of 4</p>
-                <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-                    <div className="bg-teal-600 h-2 rounded-full w-full" />
-                </div>
-                <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-                    {["Initial Details", "Loan Estimate", "Identity Verification", "Completion"].map(
-                        (step, idx) => (
-                            <span key={idx} className={idx === 3 ? "text-teal-600" : ""}>
-                                {step}
-                            </span>
-                        )
-                    )}
-                </div>
-            </div>
+            <Stepper title={"KSA Financing"} currentStep={4} steps={["Initial Details", "Loan Estimate", "Identity Verification", "Completion"]} />
 
             {/* Checkmark Icon */}
             <div className="flex flex-col items-center space-y-2">
@@ -52,15 +42,15 @@ const Completion = ({
             <div className="grid grid-cols-1 gap-3 text-sm text-gray-700">
                 <div className="flex justify-between border-b py-2">
                     <span className="font-medium">Max Loan Amount</span>
-                    <span>{maxLoanAmount}</span>
+                    <span>{loanEstimate.maxLoanAmount}</span>
                 </div>
                 <div className="flex justify-between border-b py-2">
                     <span className="font-medium">Monthly Installment</span>
-                    <span>{monthlyInstallment}</span>
+                    <span>{loanEstimate.emiMonthlyPayment}</span>
                 </div>
                 <div className="flex justify-between border-b py-2">
                     <span className="font-medium">Loan Period</span>
-                    <span>{loanPeriod}</span>
+                    <span>{loanEstimate.tenure}</span>
                 </div>
             </div>
 

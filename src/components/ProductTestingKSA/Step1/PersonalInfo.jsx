@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import { User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useSelector } from "react-redux";
+import updateField, { generatePreEligibilityOtp } from "../../../redux/Slices/ProductTestingKSA";
+import { useDispatch } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
 
-const Step1PersonalInfo = ({onNext,onBack}) => {
+// API for OTP generation
+
+const Step1PersonalInfo = ({ onNext, onBack }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { setUserId } = useActiveTab();
+
   const [formData, setFormData] = useState({
     mobileNumber: "",
     nationality: "",
@@ -22,40 +32,21 @@ const Step1PersonalInfo = ({onNext,onBack}) => {
     }));
   };
 
-  const handleGetOtp = () => {
+  const handleGetOtp = async () => {
     if (!formData.agreed) {
       alert("Please agree to the Terms & Conditions before continuing.");
       return;
     }
+    setUserId(formData.nationalId)
+    await dispatch(generatePreEligibilityOtp(formData)).unwrap();
     onNext()
   };
 
   return (
     <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">KSA Financing</h1>
-      </div>
 
-      {/* Progress */}
-      <p className="text-sm text-gray-500 mb-4">Step 1 of 4</p>
-      <div className="w-full bg-gray-200 h-2 rounded-full mb-6">
-        <div className="bg-teal-600 h-2 rounded-full w-1/4" />
-      </div>
-
-      {/* Sub-step nav */}
-      <div className="flex justify-between mb-6">
-        {["Welcome", "Personal Info", "OTP Verification"].map((label, idx) => (
-          <span
-            key={idx}
-            className={`text-sm font-medium ${
-              idx === 1 ? "text-teal-600" : "text-gray-400"
-            }`}
-          >
-            {label}
-          </span>
-        ))}
-      </div>
+      {/* Stepper */}
+      <Stepper title={"KSA Financing"} currentStep={2} steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]} />
 
       {/* Form */}
       <h2 className="text-lg font-semibold mb-2">Create Your Account</h2>
@@ -201,8 +192,9 @@ const Step1PersonalInfo = ({onNext,onBack}) => {
 
         {/* Submit */}
         <button
+          disabled={!formData.agreed}
           onClick={handleGetOtp}
-          className="flex items-center justify-center w-full py-2 mt-4 text-white rounded-lg bg-teal-600 hover:bg-teal-700 transition"
+          className="flex items-center justify-center w-full py-2 mt-4 text-white rounded-lg bg-teal-600 hover:bg-teal-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           Get OTP
         </button>

@@ -1,35 +1,21 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
+import Stepper from "../../Common/Stepper/Stepper";
 
-const Step1Welcome = ({onNext}) => {
+const Step1Welcome = ({ onNext }) => {
 
-  const GetStarted = ()=>{
+  const GetStarted = () => {
     onNext();
   }
   return (
     <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">KSA Financing</h1>
+      <div className="flex justify-end items-center mb-4">
         <button className="text-teal-600 font-medium" onClick={GetStarted}>Register Account</button>
       </div>
 
-      <p className="text-sm text-gray-500 mb-4">Step 1 of 4</p>
-      <div className="w-full bg-gray-200 h-2 rounded-full mb-6">
-        <div className="bg-teal-600 h-2 rounded-full w-1/4" />
-      </div>
-
-      <div className="flex justify-between mb-4">
-        {["Welcome", "Personal Info", "OTP Verification"].map((step, idx) => (
-          <div
-            key={idx}
-            className={`text-sm font-medium ${idx === 0 ? "text-teal-600" : "text-gray-400"
-              }`}
-          >
-            {step}
-          </div>
-        ))}
-      </div>
-
+      {/* Stepper */}
+      <Stepper title={"KSA Financing"} currentStep={1} steps={["Welcome", "Personal Info", "OTP Verification","Completion"]} />
+      
       <div className="text-center mb-6">
         <div className="mx-auto w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mb-3">
           <span className="text-teal-600 text-xl">🧾</span>

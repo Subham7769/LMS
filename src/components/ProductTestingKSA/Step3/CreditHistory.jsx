@@ -1,7 +1,18 @@
 import React, { useState } from "react";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
+import { getCreditConsent } from "../../../redux/Slices/ProductTestingKSA";
+
+// This API to get credit report from Simah after consent
 
 const CreditHistory = ({ onNext }) => {
   const [consentGiven, setConsentGiven] = useState(false);
+  const { AMLUserDetails } = useSelector(state => state.productTestingKSA)
+
+  const dispatch = useDispatch();
+  const { userId } = useActiveTab();
 
   const creditCheckPoints = [
     "Current Loans",
@@ -11,10 +22,11 @@ const CreditHistory = ({ onNext }) => {
     "Outstanding Balances",
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (consentGiven) {
       console.log("User gave consent for SIMAH check");
+      await dispatch(getCreditConsent({userId}))
       onNext(); // Proceed to Completion
     }
   };
@@ -22,21 +34,7 @@ const CreditHistory = ({ onNext }) => {
   return (
     <div className="mx-auto p-6 bg-white rounded-xl shadow-md">
       {/* Stepper */}
-      <div>
-        <p className="text-sm text-gray-500 mb-2">Step 3 of 4</p>
-        <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-          <div className="bg-teal-600 h-2 rounded-full w-3/4" />
-        </div>
-        <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-          {["AML Verification", "Salary Verification", "Credit History", "Completion"].map(
-            (step, idx) => (
-              <span key={idx} className={idx === 2 ? "text-teal-600" : ""}>
-                {step}
-              </span>
-            )
-          )}
-        </div>
-      </div>
+      <Stepper title={"KSA Financing"} currentStep={3} steps={["AML Verification", "Salary Verification", "Credit History", "Completion"]} />
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Read-only Fields */}
@@ -44,7 +42,7 @@ const CreditHistory = ({ onNext }) => {
           <label className="block text-sm font-medium text-gray-700">Full Name</label>
           <input
             type="text"
-            value="Mohammed Al Saud"
+            value={AMLUserDetails.firstNameEn + " " + AMLUserDetails.middleNameEn + " " + AMLUserDetails.lastNameEn}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -54,7 +52,7 @@ const CreditHistory = ({ onNext }) => {
           <label className="block text-sm font-medium text-gray-700">National ID / Iqama</label>
           <input
             type="text"
-            value="1234567890"
+            value={AMLUserDetails.idNumber}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -64,7 +62,7 @@ const CreditHistory = ({ onNext }) => {
           <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
           <input
             type="date"
-            value="1990-01-01"
+            value={AMLUserDetails.dateOfBirth}
             disabled
             className="w-full mt-1 p-2 border rounded-md bg-gray-100"
           />
@@ -98,9 +96,8 @@ const CreditHistory = ({ onNext }) => {
 
         <button
           type="submit"
-          className={`w-full mt-4 py-2 rounded-md text-white transition ${
-            consentGiven ? "bg-teal-600 hover:bg-teal-700" : "bg-gray-400 cursor-not-allowed"
-          }`}
+          className={`w-full mt-4 py-2 rounded-md text-white transition ${consentGiven ? "bg-teal-600 hover:bg-teal-700" : "bg-gray-400 cursor-not-allowed"
+            }`}
           disabled={!consentGiven}
         >
           Continue

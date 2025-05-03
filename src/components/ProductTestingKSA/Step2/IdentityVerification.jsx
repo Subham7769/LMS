@@ -1,28 +1,26 @@
 import React from "react";
 import NAFATH from "../../../assets/image/NAFATH.jpeg";
+import Stepper from "../../Common/Stepper/Stepper";
+import { useDispatch } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
+import { verifyNafath } from "../../../redux/Slices/ProductTestingKSA";
 
 
 const IdentityVerification = ({ nationalId = "1234567890", onNext, onBack }) => {
   // Simulated URL for Nafath redirection
+  
+  const dispatch = useDispatch();
+  const { userId } = useActiveTab();
+
+  const handleSubmit = async() => {
+    await dispatch(verifyNafath({  nafathRandom: "11", userId })).unwrap();
+    onNext()
+  }
 
   return (
     <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-4">
       {/* Stepper */}
-      <div>
-        <p className="text-sm text-gray-500 mb-2">Step 3 of 4</p>
-        <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
-          <div className="bg-teal-600 h-2 rounded-full w-3/4" />
-        </div>
-        <div className="flex justify-between text-xs text-gray-400 font-medium mb-6">
-          {["Initial Details", "Loan Estimate", "Identity Verification", "Completion"].map(
-            (step, idx) => (
-              <span key={idx} className={idx === 2 ? "text-teal-600" : ""}>
-                {step}
-              </span>
-            )
-          )}
-        </div>
-      </div>
+      <Stepper title={"KSA Financing"} currentStep={3} steps={["Initial Details", "Loan Estimate", "Identity Verification", "Completion"]} />
 
       {/* Section Title */}
       <h2 className="text-xl font-semibold mb-2">Identity Verification</h2>
@@ -44,7 +42,7 @@ const IdentityVerification = ({ nationalId = "1234567890", onNext, onBack }) => 
       {/* QR Code */}
       <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-center">
         <img
-          src={NAFATH} 
+          src={NAFATH}
           alt="QR Code"
           className="w-32 h-32"
         />
@@ -62,7 +60,7 @@ const IdentityVerification = ({ nationalId = "1234567890", onNext, onBack }) => 
           Back
         </button>
         <button
-          onClick={onNext}
+          onClick={handleSubmit}
           className="bg-teal-600 text-white py-2 px-6 rounded-lg hover:bg-teal-700 transition"
         >
           Continue
