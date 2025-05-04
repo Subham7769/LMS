@@ -6,7 +6,7 @@ import { useActiveTab } from "../ActiveTabContext";
 import { verifyNafath } from "../../../redux/Slices/ProductTestingKSA";
 
 
-const IdentityVerification = ({ nationalId = "1234567890", onNext, onBack }) => {
+const IdentityVerification = ({ nationalId, onNext, onBack }) => {
   // Simulated URL for Nafath redirection
   
   const dispatch = useDispatch();
