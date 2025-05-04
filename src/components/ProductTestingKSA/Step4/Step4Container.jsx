@@ -4,6 +4,7 @@ import DigitalContract from "./DigitalContract";
 import PromissoryNote from "./PromissoryNote";
 import IbanVerification from "./IbanVerification";
 import LoanCompletion from "./LoanCompletion"; // You can use the existing completion component
+import SalaryDeclaration from "./SalaryDeclaration";
 
 const Step4Container = () => {
   const [step, setStep] = useState(0);
@@ -14,14 +15,16 @@ const Step4Container = () => {
   const renderStep = () => {
     switch (step) {
       case 0:
-        return <LoanOffers onNext={next} />;
+        return <SalaryDeclaration onNext={next} />;
       case 1:
-        return <DigitalContract onNext={next} onBack={back} />;
+        return <LoanOffers onNext={next} />;
       case 2:
-        return <PromissoryNote onNext={next} onBack={back} />;
+        return <DigitalContract onNext={next} onBack={back} />;
       case 3:
-        return <IbanVerification onNext={next} onBack={back} />;
+        return <PromissoryNote onNext={next} onBack={back} />;
       case 4:
+        return <IbanVerification onNext={next} onBack={back} />;
+      case 5:
         return <LoanCompletion onBack={back} />;
       default:
         return null;

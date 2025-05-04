@@ -103,6 +103,40 @@ export const checkFinanceEligibility = createAsyncThunk(
   }
 );
 
+export const updateMonthlyExpenses = createAsyncThunk(
+  "PreOffering/updateMonthlyExpenses",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_KSA_GET_PRE_OFFERING_EXPENSES_DECLARATION/{userId}/total-monthly-expenses
+      }`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Update expenses declaration failed"
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const verifyNafath = createAsyncThunk(
   "preEligibility/verifyNafath",
   async (payload, { rejectWithValue }) => {
