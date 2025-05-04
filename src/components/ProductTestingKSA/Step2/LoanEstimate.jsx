@@ -59,7 +59,7 @@ const LoanEstimate = ({ onNext, onBack }) => {
 
       <div className="flex justify-between mt-6">
         <button
-          onClick={onBack}
+          onClick={()=>{onBack()}}
           className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
         >
           Back

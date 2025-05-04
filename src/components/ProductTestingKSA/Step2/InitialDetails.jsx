@@ -24,7 +24,7 @@ const InitialDetails = ({ onNext }) => {
   const dispatch = useDispatch();
   const { userId } = useActiveTab();
 
-console.log(userId)
+  console.log(userId)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -33,7 +33,7 @@ console.log(userId)
     }));
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     console.log("Initial Details Submitted:", formData);
     await dispatch(checkFinanceEligibility({ ...formData, userId })).unwrap();
     onNext();
@@ -100,7 +100,7 @@ console.log(userId)
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Monthly Installments (SAR)
+            Monthly installments and obligations
           </label>
           <input
             type="number"

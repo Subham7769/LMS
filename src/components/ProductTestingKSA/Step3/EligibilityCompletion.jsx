@@ -3,17 +3,21 @@ import { CheckCircle2 } from "lucide-react"; // npm install lucide-react
 import { useNavigate } from "react-router-dom";
 import { useActiveTab } from "../ActiveTabContext";
 import Stepper from "../../Common/Stepper/Stepper";
+import { useSelector } from "react-redux";
 // This API to get credit report from Simah after consent
 
 const Completion = ({
     amlCheck = true,
     salaryVerification = true,
+    nafathVerification = true,
     creditCheck = true,
     onBack,
     onNext,
 }) => {
     const navigate = useNavigate();
     const { setActiveTab } = useActiveTab();
+    const { creditConsentData } = useSelector(state => state.productTestingKSA)
+
 
     const gotoLoanApplication = () => {
         setActiveTab("loan-application"); // Set the active tab to "loan-application"
@@ -21,12 +25,13 @@ const Completion = ({
     }
 
     // Determine results
-    const amlResult = amlCheck ? "Passed" : "Failed";
-    const salaryResult = salaryVerification ? "Verified" : "Not Verified";
-    const creditResult = creditCheck ? "Approved" : "Rejected";
+    const amlResult = creditConsentData.amlVerified ? "Passed" : "Failed";
+    const nafathResult = creditConsentData.salaryVerified ? "Verified" : "Not Verified";
+    const salaryResult = creditConsentData.salaryVerified ? "Verified" : "Not Verified";
+    const creditResult = creditConsentData.creditCheckVerified ? "Approved" : "Rejected";
 
     // Eligibility status
-    const isEligible = amlCheck && salaryVerification && creditCheck;
+    const isEligible = amlCheck && salaryVerification && creditCheck && nafathVerification;
 
     return (
         <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-6">
@@ -48,6 +53,10 @@ const Completion = ({
 
             {/* Eligibility Results */}
             <div className="space-y-3 text-sm text-gray-700">
+                <div className="flex justify-between border-b py-2">
+                    <span className="font-medium">Nafath Biometrics Verification</span>
+                    <span className={nafathVerification ? "text-green-600" : "text-red-600"}>{nafathResult}</span>
+                </div>
                 <div className="flex justify-between border-b py-2">
                     <span className="font-medium">AML Check</span>
                     <span className={amlCheck ? "text-green-600" : "text-red-600"}>{amlResult}</span>
@@ -76,7 +85,13 @@ const Completion = ({
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-between mt-6">
+                <button
+                    onClick={() => { onBack() }}
+                    className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+                >
+                    Back
+                </button>
                 <button
                     onClick={gotoLoanApplication}
                     className={`bg-teal-600 text-white py-2 px-6 rounded-lg hover:bg-teal-700 transition ${!isEligible ? "cursor-not-allowed opacity-50" : ""

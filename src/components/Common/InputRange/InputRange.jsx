@@ -76,6 +76,7 @@ const InputRange = ({
           min={min}
           max={max}
           onChange={onChangeRange}
+          disabled={disabled}
           renderTrack={({ props, children }) => (
             <div
               {...props}

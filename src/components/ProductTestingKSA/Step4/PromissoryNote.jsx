@@ -12,6 +12,8 @@ const steps = [
 
 const PromissoryNote = ({ onNext }) => {
   const [uploaded, setUploaded] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
+
 
   return (
     <div className="space-y-6">
@@ -21,10 +23,10 @@ const PromissoryNote = ({ onNext }) => {
       {/* Promissory Note Content */}
       <div className="space-y-6">
         <h2 className="text-xl font-semibold">Promissory Note</h2>
-        <p className="text-gray-600">Download, sign, and upload your promissory note</p>
+        {/* <p className="text-gray-600">Download, sign, and upload your promissory note</p> */}
 
         {/* Promissory Note Upload Box */}
-        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-4">
+        {/* <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-4">
           <div>
             <h3 className="font-medium text-gray-800 flex items-center gap-2">
               <Info className="w-4 h-4 text-blue-600" />
@@ -52,7 +54,7 @@ const PromissoryNote = ({ onNext }) => {
               {uploaded && <CheckCheck className="w-4 h-4 text-blue-700" />}
             </label>
           </div>
-          {/* Instruction Box */}
+
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md p-4 text-sm space-y-1">
             <p className="font-medium">Important information about the Promissory Note:</p>
             <ul className="list-disc list-inside">
@@ -62,13 +64,25 @@ const PromissoryNote = ({ onNext }) => {
               <li>Scan or take a clear photo of the signed document</li>
             </ul>
           </div>
-        </div>
+        </div> */}
 
-        {/* Continue Button */}
+        {/* Consent */}
+        <div className="flex items-start gap-2 mt-4">
+          <input
+            type="checkbox"
+            id="consent"
+            checked={consentGiven}
+            onChange={(e) => setConsentGiven(e.target.checked)}
+            className="mt-1"
+          />
+          <label htmlFor="consent" className="text-sm text-gray-700">
+          I consent to issue and sign the digital promissory note(s) through the Nafith platform, acknowledging its legal validity under Saudi Arabian law.
+          </label>
+        </div>
         <button
           onClick={onNext}
-          disabled={!uploaded}
-          className={`w-full py-2 rounded-md text-white font-semibold ${!uploaded ? "bg-gray-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"
+          // disabled={!consentGiven}
+          className={`w-full py-2 rounded-md text-white font-semibold ${!consentGiven ? "bg-gray-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"
             }`}
         >
           Continue

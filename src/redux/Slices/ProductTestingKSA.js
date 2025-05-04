@@ -8,7 +8,7 @@ export const generatePreEligibilityOtp = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const finalData = {
-        mobileNumber: formData.mobileNumber,
+        mobile: formData.mobile,
         nationality: formData.nationality,
         userId: formData.nationalId,
         dob: `${formData.day}-${formData.month}-${formData.year}`,
@@ -200,7 +200,7 @@ export const AMLStatusCheck = createAsyncThunk(
 
 export const getBorrowerSalaryDetails = createAsyncThunk(
   "preEligibility/getSalaryDetails",
-  async ({userId}, { rejectWithValue }) => {
+  async ({ userId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken"); // Assuming you're storing the token in localStorage
       const response = await fetch(
@@ -230,17 +230,17 @@ export const getBorrowerSalaryDetails = createAsyncThunk(
 );
 
 export const verifyBorrowerSalaryDetails = createAsyncThunk(
-  'preEligibility/verifySalary',
+  "preEligibility/verifySalary",
   async (userId, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
 
       const response = await fetch(
         `${import.meta.env.VITE_KSA_GET_PRE_ELIGIBILITY_SALARY_CHECK}`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(userId),
@@ -249,7 +249,7 @@ export const verifyBorrowerSalaryDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Salary verification failed');
+        throw new Error(errorData.message || "Salary verification failed");
       }
 
       const data = await response.json();
@@ -261,17 +261,19 @@ export const verifyBorrowerSalaryDetails = createAsyncThunk(
 );
 
 export const getCreditConsent = createAsyncThunk(
-  'borrower/getCreditConsent',
-  async ({userId}, { rejectWithValue }) => {
+  "borrower/getCreditConsent",
+  async ({ userId }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `${import.meta.env.VITE_KSA_GET_PRE_ELIGIBILITY_CREDIT_CHECK}/${userId}/credit-data`,
+        `${
+          import.meta.env.VITE_KSA_GET_PRE_ELIGIBILITY_CREDIT_CHECK
+        }/${userId}/credit-data`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -279,7 +281,7 @@ export const getCreditConsent = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch credit consent');
+        throw new Error(errorData.message || "Failed to fetch credit consent");
       }
 
       const data = await response.json();
@@ -292,18 +294,21 @@ export const getCreditConsent = createAsyncThunk(
 
 export const getLoanOffers = createAsyncThunk(
   "loanOffers/getLoanOffers",
-  async ({userId}, { rejectWithValue }) => {
+  async ({ offerData, userId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `${import.meta.env.VITE_KSA_GET_LOAN_OFFERS}/${userId}/loans/configurations`,
+        `${
+          import.meta.env.VITE_KSA_GET_LOAN_OFFERS
+        }/${userId}/loans/configurations`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(offerData),
         }
       );
 
@@ -319,6 +324,138 @@ export const getLoanOffers = createAsyncThunk(
     }
   }
 );
+
+export const selectLoanOffer = createAsyncThunk(
+  "loanOffers/selectLoanOffer",
+  async ({ userId, offerSelection }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_KSA_SELECT_LOAN_OFFER
+        }/${userId}/loan/offer/selection`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(offerSelection),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to submit selected loan offer"
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const submitLoanApplication = createAsyncThunk(
+  "loan/submitLoanApplication",
+  async ({ userId, contractNumber, transactionId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_KSA_SUBMIT_LOAN}/${userId}/loans`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ transactionId, contractNumber }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to submit loan application"
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const verifyIban = createAsyncThunk(
+  "preEligibility/verifyIban",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_KSA_VERIFY_IBAN}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "IBAN verification failed"
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchLoanDetails = createAsyncThunk(
+  "loan/fetchLoanDetails",
+  async ({ userId, loanId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_KSA_GET_LOAN_DETAILS}/borrowers/${userId}/loans/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch loan details");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 // Initial state
 const initialState = {
@@ -338,56 +475,58 @@ const initialState = {
     tenure: 0,
   },
   AMLUserDetails: {
-    "firstNameEn": "",
-    "middleNameEn": "",
-    "lastNameEn": "",
-    "firstNameAr": "",
-    "middleNameAr": "",
-    "lastNameAr": "",
-    "gender": "",
-    "dateOfBirth": "",
-    "idType": "",
-    "idNumber": "",
-    "idExpiryDate": "",
-    "occupation": "",
-    "nationality": "",
-    "nationalityId": null,
-    "residenceDetails": {
-      "buildingNumber": "",
-      "streetName": "",
-      "city": "",
-      "cityId": null,
-      "postOfficeBox": "",
-      "neighborhood": "",
-      "additionalNumbers": "",
-      "rent": false,
-      "unitNumber": "",
-      "region": "",
-      "homeOwnership": "",
-      "residentialType": ""
+    firstNameEn: "",
+    middleNameEn: "",
+    lastNameEn: "",
+    firstNameAr: "",
+    middleNameAr: "",
+    lastNameAr: "",
+    gender: "",
+    dateOfBirth: "",
+    idType: "",
+    idNumber: "",
+    idExpiryDate: "",
+    occupation: "",
+    nationality: "",
+    nationalityId: null,
+    residenceDetails: {
+      buildingNumber: "",
+      streetName: "",
+      city: "",
+      cityId: null,
+      postOfficeBox: "",
+      neighborhood: "",
+      additionalNumbers: "",
+      rent: false,
+      unitNumber: "",
+      region: "",
+      homeOwnership: "",
+      residentialType: "",
     },
-    "totalMonthlyExpenses": 0.0,
-    "maritalDetails": {
-      "maritalStatus": "",
-      "noOfDomesticWorkers": 0,
-      "noOfChildren": 0,
-      "totalDependent": 0,
-      "noOfDependentsInPrivateSchools": 0,
-      "noOfDependentsInPublicSchools": 0,
-      "breadWinner": false
+    totalMonthlyExpenses: 0.0,
+    maritalDetails: {
+      maritalStatus: "",
+      noOfDomesticWorkers: 0,
+      noOfChildren: 0,
+      totalDependent: 0,
+      noOfDependentsInPrivateSchools: 0,
+      noOfDependentsInPublicSchools: 0,
+      breadWinner: false,
     },
-    "registrationDate": ""
-  }
-  ,
+    registrationDate: "",
+  },
   preEligibilityCompletion: {},
   salaryDetails: {
     totalSalary: 0,
     salaryPeriod: "",
     employerName: "",
     fullName: "",
-    employeeId: ""
+    employeeId: "",
   },
-  loanOffers:{},
+  creditConsentData: {},
+  loanOffers: {},
+  submittedLoanResponse: {},
+  loanDetails:{},
   loading: false,
   error: null,
 };
@@ -406,6 +545,41 @@ const productTestingKSASlice = createSlice({
       } else if (section && state[section]) {
         state[section][field] = type === "checkbox" ? checked : value;
       }
+    },
+    updateOffer: (state, action) => {
+      const { selectedOfferId, amount } = action.payload;
+
+      function calculateEMI(principal, annualInterestRate, tenureInMonths) {
+        const monthlyRate = annualInterestRate / (12 * 100); // Annual to monthly rate (decimal)
+       
+        return (
+          (principal *
+            monthlyRate *
+            Math.pow(1 + monthlyRate, tenureInMonths)) /
+          (Math.pow(1 + monthlyRate, tenureInMonths) - 1)
+        );
+      }
+
+      state.loanOffers.dynamicCashLoanOffers =
+        state.loanOffers.dynamicCashLoanOffers.map((offer) => {
+          // if (offer.transactionId === selectedOfferId) {
+            return {
+              ...offer,
+              principalAmount: amount,
+              installmentSummaryResponse: offer.installmentSummaryResponse.map(
+                (summary) => ({
+                  ...summary,
+                  totalRequiredAmount: calculateEMI(
+                    amount,
+                    offer.annualInterestRatePercent,
+                    offer.durationInMonths
+                  ),
+                })
+              ),
+            };
+          // }
+          return offer;
+        });
     },
   },
   extraReducers: (builder) => {
@@ -521,7 +695,7 @@ const productTestingKSASlice = createSlice({
       })
       .addCase(verifyBorrowerSalaryDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Salary verification request failed.';
+        state.error = action.payload || "Salary verification request failed.";
       })
       .addCase(getCreditConsent.pending, (state) => {
         state.loading = true;
@@ -529,13 +703,12 @@ const productTestingKSASlice = createSlice({
       })
       .addCase(getCreditConsent.fulfilled, (state, action) => {
         state.loading = false;
-        // state.creditConsentData = action.payload;
+        state.creditConsentData = action.payload;
         toast.success("Credit check done successfully");
-
       })
       .addCase(getCreditConsent.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to fetch credit consent data.';
+        state.error = action.payload || "Failed to fetch credit consent data.";
       })
       .addCase(getLoanOffers.pending, (state) => {
         state.loading = true;
@@ -548,9 +721,47 @@ const productTestingKSASlice = createSlice({
       .addCase(getLoanOffers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error fetching loan offers";
+      })
+      .addCase(selectLoanOffer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(selectLoanOffer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.submittedLoanResponse = action.payload;
+      })
+      .addCase(selectLoanOffer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to select loan offer";
+      })
+      .addCase(submitLoanApplication.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(submitLoanApplication.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.submittedLoanResponse = action.payload;
+      })
+      .addCase(submitLoanApplication.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to submit loan application";
+      })
+      .addCase(verifyIban.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyIban.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("IBAN Verification done successfully");
+      })
+      .addCase(verifyIban.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { updateField } = productTestingKSASlice.actions;
+export const { updateField, updateOffer } = productTestingKSASlice.actions;
 export default productTestingKSASlice.reducer;

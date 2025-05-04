@@ -8,7 +8,7 @@ import { getBorrowerSalaryDetails, verifyBorrowerSalaryDetails } from "../../../
 
 // API for salary check
 
-const SalaryVerification = ({ onNext }) => {
+const SalaryVerification = ({ onNext,onBack }) => {
 
   const { salaryDetails } = useSelector(state => state.productTestingKSA)
 
@@ -25,7 +25,7 @@ const SalaryVerification = ({ onNext }) => {
   const disabled = true; // Set this to false if you want fields to be editable
 
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(verifyBorrowerSalaryDetails({ userId })).unwrap();
     onNext(); // move to Credit History
@@ -103,12 +103,20 @@ const SalaryVerification = ({ onNext }) => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full mt-4 bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition"
-        >
-          Continue
-        </button>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={() => { onBack() }}
+            className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="px-4 mt-4 bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition"
+          >
+            Continue
+          </button>
+        </div>
       </form>
     </div>
   );

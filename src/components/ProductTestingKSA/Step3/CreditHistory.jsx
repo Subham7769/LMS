@@ -7,7 +7,7 @@ import { getCreditConsent } from "../../../redux/Slices/ProductTestingKSA";
 
 // This API to get credit report from Simah after consent
 
-const CreditHistory = ({ onNext }) => {
+const CreditHistory = ({ onNext,onBack }) => {
   const [consentGiven, setConsentGiven] = useState(false);
   const { AMLUserDetails } = useSelector(state => state.productTestingKSA)
 
@@ -22,11 +22,11 @@ const CreditHistory = ({ onNext }) => {
     "Outstanding Balances",
   ];
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (consentGiven) {
       console.log("User gave consent for SIMAH check");
-      await dispatch(getCreditConsent({userId}))
+      await dispatch(getCreditConsent({ userId }))
       onNext(); // Proceed to Completion
     }
   };
@@ -94,14 +94,23 @@ const CreditHistory = ({ onNext }) => {
           </label>
         </div>
 
-        <button
-          type="submit"
-          className={`w-full mt-4 py-2 rounded-md text-white transition ${consentGiven ? "bg-teal-600 hover:bg-teal-700" : "bg-gray-400 cursor-not-allowed"
-            }`}
-          disabled={!consentGiven}
-        >
-          Continue
-        </button>
+
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={() => { onBack() }}
+            className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className={`px-4 mt-4 py-2 rounded-md text-white transition ${consentGiven ? "bg-teal-600 hover:bg-teal-700" : "bg-gray-400 cursor-not-allowed"
+              }`}
+            disabled={!consentGiven}
+          >
+            Continue
+          </button>
+        </div>
       </form>
     </div>
   );

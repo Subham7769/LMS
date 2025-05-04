@@ -13,8 +13,9 @@ const steps = [
 const DigitalContract = ({ onNext }) => {
   const [loanAgreementUploaded, setLoanAgreementUploaded] = useState(false);
   const [saleConsentUploaded, setSaleConsentUploaded] = useState(false);
-
-  const isContinueDisabled = !(loanAgreementUploaded && saleConsentUploaded);
+  const [consentGiven, setConsentGiven] = useState(false);
+  // const isContinueDisabled = !(loanAgreementUploaded && saleConsentUploaded);
+  const isContinueDisabled = !(consentGiven);
 
   return (
     <div className="space-y-6">
@@ -23,11 +24,11 @@ const DigitalContract = ({ onNext }) => {
 
       {/* Digital Contract Content */}
       <div className="space-y-6">
-        <h2 className="text-xl font-semibold">Digital Contract</h2>
-        <p className="text-gray-600">Download, sign, and upload your documents</p>
+        <h2 className="text-xl font-semibold">Digital Contract & Sale Consent</h2>
+        {/* <p className="text-gray-600">Download, sign, and upload your documents</p> */}
 
         {/* Loan Agreement */}
-        <div className="border border-gray-200 rounded-lg p-4 space-y-3 bg-gray-50">
+        {/* <div className="border border-gray-200 rounded-lg p-4 space-y-3 bg-gray-50">
           <h3 className="font-medium text-gray-800">Loan Agreement</h3>
           <p className="text-sm text-gray-600">This document outlines the terms and conditions of your loan</p>
           <div className=" flex flex-col gap-3 ">
@@ -53,10 +54,10 @@ const DigitalContract = ({ onNext }) => {
           <p className="text-xs text-gray-500">
             Please download the document, sign it, and upload the signed copy.
           </p>
-        </div>
+        </div> */}
 
         {/* Sale Consent */}
-        <div className="border border-gray-200 rounded-lg p-4 space-y-3 bg-gray-50">
+        {/* <div className="border border-gray-200 rounded-lg p-4 space-y-3 bg-gray-50">
           <h3 className="font-medium text-gray-800">Sale Consent Document</h3>
           <p className="text-sm text-gray-600">
             Assigns KSA as agent to sell commodity on your behalf to the broker as per Shariah financing
@@ -84,13 +85,28 @@ const DigitalContract = ({ onNext }) => {
           <p className="text-xs text-gray-500">
             This document is required for Shariah compliance.
           </p>
+        </div> */}
+
+        {/* Consent */}
+        <div className="flex items-start gap-2 mt-4">
+          <input
+            type="checkbox"
+            id="consent"
+            checked={consentGiven}
+            onChange={(e) => setConsentGiven(e.target.checked)}
+            className="mt-1"
+          />
+          <label htmlFor="consent" className="text-sm text-gray-700">
+            I authorize the digital signing of this document via Emdha and consent to using my digital signature, which holds the same legal validity as a handwritten one under Saudi Arabia’s Electronic Transactions Law.
+          </label>
         </div>
 
+
         {/* Reminder Note */}
-        <div className="bg-blue-50 text-blue-700 text-sm border border-blue-200 rounded-md p-3">
+        {/* <div className="bg-blue-50 text-blue-700 text-sm border border-blue-200 rounded-md p-3">
           <span className="font-medium">Please ensure</span> that all signed documents are clearly legible.
           Your signature should match the one on your ID.
-        </div>
+        </div> */}
 
         {/* Continue Button */}
         <button

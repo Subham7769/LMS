@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Info } from "lucide-react";
 import Stepper from "../../Common/Stepper/Stepper";
+import { useDispatch } from "react-redux";
+import { useActiveTab } from "../ActiveTabContext";
+import { verifyIban } from "../../../redux/Slices/ProductTestingKSA";
 
 const steps = [
   "Loan Offers",
@@ -11,11 +14,18 @@ const steps = [
 ];
 
 const IBANVerification = ({ onNext }) => {
-  const [iban, setIban] = useState("SA1234567890123456789012");
+  const [iban, setIban] = useState("SA1544778855885588559966");
   const [confirmed, setConfirmed] = useState(false);
+  const dispatch = useDispatch();
+  const { userId } = useActiveTab();
+  // ab0de322-63b0-41f9-b882-30bbe4107fd2
 
   const isValid = iban.startsWith("SA") && iban.length === 24 && confirmed;
 
+  const handleSubmit = async () => {
+    await dispatch(verifyIban({ "ibanNumber": iban, userId })).unwrap();
+    onNext()
+  }
   return (
     <div className="space-y-6">
       {/* Stepper */}
@@ -58,7 +68,7 @@ const IBANVerification = ({ onNext }) => {
 
         {/* Verify Button */}
         <button
-          onClick={onNext}
+          onClick={handleSubmit}
           disabled={!isValid}
           className={`w-full py-2 rounded-md text-white font-semibold ${isValid ? "bg-emerald-600 hover:bg-emerald-700" : "bg-gray-400 cursor-not-allowed"
             }`}

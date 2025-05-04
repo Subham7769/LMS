@@ -5,11 +5,11 @@ import { useActiveTab } from "../ActiveTabContext";
 import Stepper from "../../Common/Stepper/Stepper";
 import { useSelector } from "react-redux";
 
-const Step1RegistrationSuccess = () => {
+const Step1RegistrationSuccess = (onNext, onBack) => {
   const navigate = useNavigate();
-  const { setActiveTab} = useActiveTab();
-  const {registrationDetails} = useSelector(state => state.productTestingKSA)
-  
+  const { setActiveTab } = useActiveTab();
+  const { registrationDetails } = useSelector(state => state.productTestingKSA)
+
 
   const gotoPreEligibilityCheck = () => {
     setActiveTab("pre-eligibility-check"); // Set the active tab to "pre-eligibility-check"
@@ -58,13 +58,21 @@ const Step1RegistrationSuccess = () => {
           </div>
         </div>
 
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={() => { onBack() }}
+            className="text-gray-500 text-sm"
+          >
+            Back
+          </button>
+          <button
+            onClick={gotoPreEligibilityCheck}
+            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition"
+          >
+            Pre Eligibility Check
+          </button>
+        </div>
 
-        <button
-          onClick={gotoPreEligibilityCheck}
-          className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition"
-        >
-          Pre Eligibility Check
-        </button>
       </div>
     </div>
   );

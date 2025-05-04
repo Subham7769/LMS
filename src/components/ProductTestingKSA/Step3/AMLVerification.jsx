@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 // API for AML check
 
-const AMLVerification = ({ onNext }) => {
+const AMLVerification = ({ onNext, onBack }) => {
   const { AMLUserDetails } = useSelector(state => state.productTestingKSA)
 
   const dispatch = useDispatch();
@@ -113,12 +113,20 @@ const AMLVerification = ({ onNext }) => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full mt-4 bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition"
-        >
-          Continue
-        </button>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={() => { onBack() }}
+            className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="px-4 mt-4 bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition"
+          >
+            Continue
+          </button>
+        </div>
       </form>
     </div>
   );

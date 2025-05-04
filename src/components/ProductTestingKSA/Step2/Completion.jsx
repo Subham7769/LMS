@@ -55,8 +55,13 @@ const Completion = ({
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-center mt-6">
-
+            <div className="flex justify-between mt-6">
+                <button
+                    onClick={() => { onBack() }}
+                    className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+                >
+                    Back
+                </button>
                 <button
                     onClick={gotoEligibilityVerification}
                     className="bg-teal-600 text-white py-2 px-6 rounded-lg hover:bg-teal-700 transition"

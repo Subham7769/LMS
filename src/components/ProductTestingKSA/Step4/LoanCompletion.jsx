@@ -1,17 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CheckCircle, Info } from "lucide-react";
 import Stepper from "../../Common/Stepper/Stepper";
+import { useSelector } from "react-redux";
 // API to return full details of a given loan 
 
-const steps = [
-  "Loan Offers",
-  "Digital Contract",
-  "Promissory Note",
-  "IBAN Verification",
-  "Completion",
-];
 
 const CompletionStep = ({ onDashboard }) => {
+  const { submittedLoanResponse } = useSelector(state => state.productTestingKSA)
+
   return (
     <div className="space-y-6">
       {/* Stepper */}
@@ -31,11 +27,11 @@ const CompletionStep = ({ onDashboard }) => {
         <div className="grid grid-cols-2 gap-4 text-left bg-gray-50 p-4 rounded-lg">
           <div>
             <p className="text-sm text-gray-500">Loan Amount</p>
-            <p className="font-medium text-green-700 text-lg">50,000 SAR</p>
+            <p className="font-medium text-green-700 text-lg">{submittedLoanResponse.principalAmount}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Monthly Payment</p>
-            <p className="font-medium text-gray-700 text-lg">2,250 SAR</p>
+            <p className="font-medium text-gray-700 text-lg">{submittedLoanResponse.installmentSummaryResponse[0].installmentValue}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Disbursement Date</p>
@@ -43,7 +39,7 @@ const CompletionStep = ({ onDashboard }) => {
           </div>
           <div>
             <p className="text-sm text-gray-500">First Payment Due</p>
-            <p className="font-medium text-gray-700">May 29, 2025</p>
+            <p className="font-medium text-gray-700">{submittedLoanResponse.installmentSummaryResponse[0].installmentDate}</p>
           </div>
         </div>
 

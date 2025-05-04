@@ -15,7 +15,7 @@ const Step1PersonalInfo = ({ onNext, onBack }) => {
   const { setUserId } = useActiveTab();
 
   const [formData, setFormData] = useState({
-    mobileNumber: "",
+    mobile: "",
     nationality: "",
     nationalId: "",
     day: "",
@@ -64,9 +64,9 @@ const Step1PersonalInfo = ({ onNext, onBack }) => {
             <span className="px-3 py-2 text-sm bg-gray-100">+966</span>
             <input
               type="tel"
-              name="mobileNumber"
+              name="mobile"
               placeholder="5XXXXXXXX"
-              value={formData.mobileNumber}
+              value={formData.mobile}
               onChange={handleChange}
               className="flex-1 px-3 py-2 text-sm outline-none bg-transparent"
             />
