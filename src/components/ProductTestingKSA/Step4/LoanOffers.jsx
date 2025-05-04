@@ -37,7 +37,7 @@ const LoanOffers = ({ onNext }) => {
                     "loan_type": "PERSONAL_FINANCE",
                     "customer_type": "CONSUMER",
                     "amount": amount,
-                    "selectedTenure": SeletedOffer[0].durationInMonths,
+                    "selectedTenure": SeletedOffer[0]?.durationInMonths,
                 }
                 dispatch(selectLoanOffer({ offerSelection, userId })).unwrap();
             }
@@ -60,7 +60,7 @@ const LoanOffers = ({ onNext }) => {
         const offerData = {
             loan_type: "PERSONAL_FINANCE",
             customer_type: "CONSUMER",
-            amount: loanEstimate.maxLoanAmount,
+            amount: loanEstimate?.maxLoanAmount,
         }
         dispatch(getLoanOffers({ offerData, userId })).unwrap();
     }, [userId])
@@ -113,25 +113,25 @@ const LoanOffers = ({ onNext }) => {
 
             {loanOffers?.dynamicCashLoanOffers?.map((offer) => (
                 <label
-                    key={offer.id}
-                    className={`block border rounded-xl p-4 cursor-pointer transition ${selectedOfferId === offer.id ? "border-emerald-500 bg-emerald-50" : "border-gray-300"
+                    key={offer?.id}
+                    className={`block border rounded-xl p-4 cursor-pointer transition ${selectedOfferId === offer?.transactionId ? "border-emerald-500 bg-emerald-50" : "border-gray-300"
                         }`}
                 >
                     <div className="flex justify-between items-center">
                         <div>
-                            <h3 className="font-medium text-lg">Offer #{offer.transactionId}</h3>
+                            <h3 className="font-medium text-lg">Offer #{offer?.transactionId}</h3>
                             <div className="mt-2 space-y-1 text-sm text-gray-700">
-                                <p><strong>Amount:</strong> {offer.principalAmount}</p>
-                                <p><strong>Term:</strong> {offer.durationInMonths}</p>
-                                <p><strong>Monthly Payment:</strong> {offer.installmentSummaryResponse[0].totalRequiredAmount}</p>
-                                <p><strong>APR:</strong> {offer.annualInterestRatePercent}</p>
+                                <p><strong>Amount:</strong> {offer?.principalAmount}</p>
+                                <p><strong>Term:</strong> {offer?.durationInMonths}</p>
+                                <p><strong>Monthly Payment:</strong> {offer?.installmentSummaryResponse[0]?.totalRequiredAmount}</p>
+                                <p><strong>APR:</strong> {offer?.annualInterestRatePercent}</p>
                             </div>
                         </div>
                         <input
                             type="radio"
                             name="loanOffer"
-                            checked={selectedOfferId === offer.transactionId}
-                            onChange={() => handleSelect(offer.transactionId)}
+                            checked={selectedOfferId === offer?.transactionId}
+                            onChange={() => handleSelect(offer?.transactionId)}
                             className="w-5 h-5 accent-emerald-600"
                         />
                     </div>
