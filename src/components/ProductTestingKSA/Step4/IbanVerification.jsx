@@ -29,7 +29,7 @@ const IBANVerification = ({ onNext }) => {
   return (
     <div className="space-y-6">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={4} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={5} steps={["Self Declaration", "Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
       {/* IBAN Verification Content */}
       <div className="space-y-4">

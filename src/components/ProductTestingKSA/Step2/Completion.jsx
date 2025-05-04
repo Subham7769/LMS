@@ -25,7 +25,7 @@ const Completion = ({
     return (
         <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-6">
             {/* Stepper */}
-            <Stepper title={"KSA Financing"} currentStep={4} steps={["Initial Details", "Loan Estimate", "Identity Verification", "Completion"]} />
+            <Stepper title={"KSA Financing"} currentStep={2} steps={["Initial Details", "Completion"]} />
 
             {/* Checkmark Icon */}
             <div className="flex flex-col items-center space-y-2">

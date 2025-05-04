@@ -25,16 +25,16 @@ const CreditHistory = ({ onNext,onBack }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (consentGiven) {
-      console.log("User gave consent for SIMAH check");
-      await dispatch(getCreditConsent({ userId }))
+      await dispatch(getCreditConsent({ userId })).unwrap()
       onNext(); // Proceed to Completion
+      console.log("User gave consent for SIMAH check");
     }
   };
 
   return (
     <div className="mx-auto p-6 bg-white rounded-xl shadow-md">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={3} steps={["AML Verification", "Salary Verification", "Credit History", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={5} steps={["Identity Verification","Verification Code","AML Verification", "Salary Verification", "Credit History", "Completion"]} />
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Read-only Fields */}
@@ -98,7 +98,7 @@ const CreditHistory = ({ onNext,onBack }) => {
         <div className="flex justify-between mt-4">
           <button
             onClick={() => { onBack() }}
-            className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+            className=" text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
           >
             Back
           </button>

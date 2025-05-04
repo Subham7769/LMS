@@ -9,7 +9,7 @@ import SalaryDeclaration from "./SalaryDeclaration";
 const Step4Container = () => {
   const [step, setStep] = useState(0);
 
-  const next = () => setStep((prev) => Math.min(prev + 1, 4));
+  const next = () => setStep((prev) => Math.min(prev + 1, 5));
   const back = () => setStep((prev) => Math.max(prev - 1, 0));
 
   const renderStep = () => {
@@ -17,7 +17,7 @@ const Step4Container = () => {
       case 0:
         return <SalaryDeclaration onNext={next} />;
       case 1:
-        return <LoanOffers onNext={next} />;
+        return <LoanOffers onNext={next} onBack={back}/>;
       case 2:
         return <DigitalContract onNext={next} onBack={back} />;
       case 3:

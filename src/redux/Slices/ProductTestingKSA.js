@@ -105,20 +105,20 @@ export const checkFinanceEligibility = createAsyncThunk(
 
 export const updateMonthlyExpenses = createAsyncThunk(
   "PreOffering/updateMonthlyExpenses",
-  async (payload, { rejectWithValue }) => {
+  async ({formData,userId}, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `${import.meta.env.VITE_KSA_GET_PRE_OFFERING_EXPENSES_DECLARATION/{userId}/total-monthly-expenses
-      }`,
+        `${import.meta.env.VITE_KSA_GET_PRE_OFFERING_EXPENSES_DECLARATION}/${userId}/total-monthly-expenses`
+      ,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(formData),
         }
       );
 
@@ -795,7 +795,22 @@ const productTestingKSASlice = createSlice({
       .addCase(verifyIban.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(updateMonthlyExpenses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateMonthlyExpenses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        // state.monthlyExpensesData = action.payload; // Adjust if you're storing this elsewhere
+        toast.success("Monthly expenses updated successfully");
+      })
+      .addCase(updateMonthlyExpenses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update monthly expenses";
+        toast.error(`Error: ${action.payload}`);
+      })
   },
 });
 

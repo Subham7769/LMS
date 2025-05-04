@@ -42,7 +42,7 @@ const InitialDetails = ({ onNext }) => {
   return (
     <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-4">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={1} steps={["Initial Details", "Loan Estimate", "Identity Verification", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={1} steps={["Initial Details", "Completion"]} />
 
 
       <div className="space-y-3">

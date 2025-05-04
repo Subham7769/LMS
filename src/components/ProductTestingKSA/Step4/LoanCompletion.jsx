@@ -11,7 +11,7 @@ const CompletionStep = ({ onDashboard }) => {
   return (
     <div className="space-y-6">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={5} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={6} steps={["Self Declaration", "Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
       {/* Completion Message */}
       <div className="bg-white rounded-xl shadow-sm border p-6 text-center space-y-6">

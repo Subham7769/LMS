@@ -20,7 +20,7 @@ const IdentityVerification = ({  nationalId, onNext, onBack }) => {
   return (
     <div className="bg-white mx-auto p-6 rounded-xl shadow-md space-y-4">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={3} steps={["Initial Details", "Loan Estimate", "Identity Verification", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={1} steps={["Identity Verification","Verification Code","AML Verification", "Salary Verification", "Credit History", "Completion"]} />
 
       {/* Section Title */}
       <h2 className="text-xl font-semibold mb-2">Identity Verification</h2>

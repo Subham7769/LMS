@@ -28,8 +28,8 @@ const SalaryDeclaration = ({ onNext }) => {
   };
 
   const handleSubmit = async () => {
-//     console.log("Salary Declaration Submitted:", formData);
-//     await dispatch(updateMonthlyExpenses({ ...formData, userId })).unwrap();
+    //     console.log("Salary Declaration Submitted:", formData);
+    // await dispatch(updateMonthlyExpenses({ formData, userId })).unwrap();
     onNext();
   };
 
@@ -49,12 +49,7 @@ const SalaryDeclaration = ({ onNext }) => {
       <Stepper
         title="KSA Financing"
         currentStep={1}
-        steps={[
-          "Initial Details",
-          "Loan Estimate",
-          "Identity Verification",
-          "Completion",
-        ]}
+        steps={["Self Declaration", "Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]}
       />
 
       <div className="space-y-3">

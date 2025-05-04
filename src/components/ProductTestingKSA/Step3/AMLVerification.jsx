@@ -30,7 +30,7 @@ const AMLVerification = ({ onNext, onBack }) => {
   return (
     <div className="mx-auto p-6 bg-white rounded-xl shadow-md">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={1} steps={["AML Verification", "Salary Verification", "Credit History", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={3} steps={["Identity Verification","Verification Code","AML Verification", "Salary Verification", "Credit History", "Completion"]} />
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">

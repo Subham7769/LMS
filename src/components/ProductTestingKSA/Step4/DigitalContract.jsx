@@ -20,7 +20,7 @@ const DigitalContract = ({ onNext }) => {
   return (
     <div className="space-y-6">
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={2} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
+      <Stepper title={"KSA Financing"} currentStep={3} steps={["Self Declaration", "Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
       {/* Digital Contract Content */}
       <div className="space-y-6">

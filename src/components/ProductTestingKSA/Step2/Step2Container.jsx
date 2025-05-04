@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import InitialDetails from "./InitialDetails.jsx";
-import LoanEstimate from "./LoanEstimate";
-import IdentityVerification from "./IdentityVerification";
 import Completion from "./Completion";
 
 const PreEligibilityContainer = () => {
@@ -15,10 +13,6 @@ const PreEligibilityContainer = () => {
       case 0:
         return <InitialDetails onNext={next} />;
       case 1:
-        return <LoanEstimate onNext={next} onBack={back} />;
-      case 2:
-        return <IdentityVerification onNext={next} onBack={back} />;
-      case 3:
         return <Completion onBack={back} />;
       default:
         return null;

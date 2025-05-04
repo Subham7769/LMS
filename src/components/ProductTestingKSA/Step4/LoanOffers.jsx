@@ -85,7 +85,7 @@ const LoanOffers = ({ onNext }) => {
     return (
         <div className="space-y-6">
             {/* Stepper */}
-            <Stepper title={"KSA Financing"} currentStep={1} steps={["Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
+            <Stepper title={"KSA Financing"} currentStep={2} steps={["Self Declaration", "Loan Offers", "Digital Contract", "Promissory Note", "IBAN Verification", "Completion"]} />
 
             {/* Offer Selection */}
             <div>
@@ -94,7 +94,7 @@ const LoanOffers = ({ onNext }) => {
             </div>
 
             <InputRange
-                labelName={"Loan Amount Range"}
+                labelName={"Principle Loan Amount"}
                 labelNameMin={"Min"}
                 labelNameMax={"Max"}
                 inputNameMin="amount"
