@@ -28,8 +28,8 @@ const SalaryDeclaration = ({ onNext }) => {
   };
 
   const handleSubmit = async () => {
-    console.log("Salary Declaration Submitted:", formData);
-    await dispatch(updateMonthlyExpenses({ ...formData, userId })).unwrap();
+//     console.log("Salary Declaration Submitted:", formData);
+//     await dispatch(updateMonthlyExpenses({ ...formData, userId })).unwrap();
     onNext();
   };
 

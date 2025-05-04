@@ -6,12 +6,12 @@ import { useActiveTab } from "../ActiveTabContext";
 import { verifyNafath } from "../../../redux/Slices/ProductTestingKSA";
 
 
-const IdentityVerification = ({ nationalId, onNext, onBack }) => {
+const IdentityVerification = ({  nationalId, onNext, onBack }) => {
   // Simulated URL for Nafath redirection
   
   const dispatch = useDispatch();
-  const { userId } = useActiveTab();
-
+  const { userId} = useActiveTab();
+  
   const handleSubmit = async() => {
     await dispatch(verifyNafath({  nafathRandom: "11", userId })).unwrap();
     onNext()
@@ -33,7 +33,7 @@ const IdentityVerification = ({ nationalId, onNext, onBack }) => {
         <label className="block text-sm font-medium text-gray-700">National ID / Iqama</label>
         <input
           type="text"
-          value={nationalId}
+          value={userId}
           readOnly
           className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700"
         />
