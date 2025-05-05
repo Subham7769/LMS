@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 const CustomerAddress = () => {
   const { subID } = useParams();  // Extracting subID from the URL
-  const url = "/simah-recent-response";  // The URL endpoint
+  const url = "/creditTp-recent-response";  // The URL endpoint
   const dispatch = useDispatch();
   
   useEffect(() => {

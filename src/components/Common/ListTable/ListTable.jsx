@@ -186,7 +186,9 @@ const ListTable = ({
         </div>
       ) : error ? (
         <div className="flex flex-col gap-4 shadow-md bg-gray-100 border border-gray-300 rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
-          <p>Oops! Something went wrong. Please try again later.</p>
+          <p>
+            {error || `Oops! Something went wrong. Please try again later.`}
+          </p>
         </div>
       ) : (
         <div

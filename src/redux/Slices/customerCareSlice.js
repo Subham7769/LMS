@@ -61,7 +61,7 @@ export const fetchBorrowerData = createAsyncThunk(
       }
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("authToken");
-        return rejectWithValue({message:"Unauthorized"});
+        return rejectWithValue({ message: "Unauthorized" });
       }
       const data = await response.json();
       return data;
@@ -92,7 +92,7 @@ export const downloadClearanceLetter = createAsyncThunk(
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("authToken"); // Clear the token
           // You can redirect using another approach, but we can't call navigate directly here
-          return rejectWithValue({message:"Unauthorized"});
+          return rejectWithValue({ message: "Unauthorized" });
         }
       }
 
@@ -128,7 +128,7 @@ export const downloadFile = createAsyncThunk(
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("authToken");
           // Optionally navigate to login
-          return rejectWithValue({message:"Unauthorized"});
+          return rejectWithValue({ message: "Unauthorized" });
         }
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -171,19 +171,20 @@ const customerCareSlice = createSlice({
           state.paymentHistory = action.payload;
         } else if (url.includes("/rejection-history")) {
           state.rejectionHistory = action.payload;
-        } else if (url.includes("/simah-recent-response")) {
+        } else if (url.includes("/creditTp-recent-response")) {
           state.CreditBureauDetails = action.payload;
         } else {
           state.personalInfo = action.payload;
           console.log(action.payload);
         }
         state.loading = false;
+        state.error = false;
       })
       .addCase(fetchBorrowerData.rejected, (state, action) => {
         state.loading = false;
         console.error("fetchBorrowerData failed:", action.payload);
         state.error = action.payload;
-        toast.error(`Error : ${action.payload.message}`);
+        toast.error(`Error : ${action.payload}`);
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;
