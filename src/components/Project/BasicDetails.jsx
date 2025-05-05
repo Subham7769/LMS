@@ -69,6 +69,7 @@ const BasicDetails = () => {
           onChange={handleChange}
           isValidation={true}
           searchable={true}
+          isClearable={true}
         />
 
         {/* Location */}
@@ -80,6 +81,7 @@ const BasicDetails = () => {
           onChange={handleChange}
           isValidation={true}
           searchable={true}
+          isClearable={true}
         />
 
         {/* Loan Scheme Currency */}
@@ -91,6 +93,7 @@ const BasicDetails = () => {
           onChange={handleChange}
           isValidation={true}
           searchable={true}
+          isClearable
         />
 
         {/* Loan Scheme Type */}
@@ -175,9 +178,8 @@ const BasicDetails = () => {
         </div>
 
         {/* End Date */}
-        <div className="col-span-1 mt-5">
+        <div className="col-span-1 mt-6">
           <InputDate
-            labelName={""}
             inputName={"endDate"}
             inputValue={projectData?.endDate}
             onChange={handleChange}

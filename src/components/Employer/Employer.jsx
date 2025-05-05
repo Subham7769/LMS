@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -137,7 +132,7 @@ const Employer = () => {
 
   return (
     <>
-      <ContainerTile loading={loading} className={"p-5"}>
+      <ContainerTile loading={loading} className={"px-5 pt-5 pb-1"}>
         <div className="block md:flex justify-between items-center">
           <h2 className="mb-6">
             <b className="text-xl font-semibold">Employer</b>

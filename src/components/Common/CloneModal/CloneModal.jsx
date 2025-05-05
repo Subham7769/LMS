@@ -34,14 +34,16 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/50 backdrop-blur-sm">
-      <div className="bg-white flex flex-col p-5 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-white flex flex-col p-5 rounded-lg shadow-lg w-3/4 xl:w-1/3">
         <div>
           <label
             className={`${
               isValidationError ? "text-red-600" : "text-gray-700"
             } px-1 text-sm font-medium mb-1`}
           >
-            {isValidationError ? "Field required" : `Create Clone of ${initialName}`}
+            {isValidationError
+              ? "Field required"
+              : `Create Clone of ${initialName}`}
           </label>
           <input
             type="text"
@@ -58,21 +60,18 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
             autoFocus
           />
         </div>
-        <div className="flex gap-3 mt-5 justify-center md:justify-end">
+        <div className="flex gap-3 mt-5 justify-end">
           <Button
             buttonName={"Cancel"}
             onClick={() => {
               onClose();
               setCloneName("");
             }}
-            rectangle={true}
             buttonType="secondary"
           />
           <Button
             buttonName={"Create Clone"}
             onClick={handleCreateClone}
-            rectangle={true}
-            className={"self-end"}
           />
         </div>
       </div>

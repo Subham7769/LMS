@@ -42,7 +42,6 @@ import Banner2 from "../Common/Banner/Banner2";
 const CreditScoreET = () => {
   const { creditScoreETId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [banner2InfoOpen, setBanner2InfoOpen] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

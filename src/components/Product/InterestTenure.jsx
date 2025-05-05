@@ -166,7 +166,7 @@ const InterestTenure = () => {
       <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
         Interest Tenure
       </h2>
-      {!hasViewOnlyAccess(roleName) ? (
+      {!hasViewOnlyAccess(roleName) && (
         <>
           <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
             Add New Interest and Tenure
@@ -224,8 +224,6 @@ const InterestTenure = () => {
             </div>
           </div>
         </>
-      ) : (
-        ""
       )}
       <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
         Manage Existing Interest and Tenure
