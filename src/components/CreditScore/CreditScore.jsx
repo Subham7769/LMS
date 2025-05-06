@@ -16,6 +16,7 @@ import {
   ResidentialScoreHeaderList,
 } from "../../data/CreditScoreEqData";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import InputText from "../Common/InputText/InputText";
 import {
   clearValidationError,
   validateForm,
@@ -153,7 +154,7 @@ const CreditScore = () => {
         />
       </div>
       <ContainerTile loading={loading} className={"p-5"}>
-        <h2 className="font-semibold leading-6 text-gray-900 text-center mb-4">
+        <h2 className="font-semibold leading-6 text-gray-800 dark:text-gray-100 text-center mb-4">
           Dependents Rules
         </h2>
         <div className="overflow-x-auto">
@@ -285,8 +286,8 @@ const CreditScore = () => {
             </div>
             <div>
               <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
-                  Value:{" "}
+                <div className="text-center bg-gray-200 dark:bg-gray-700 rounded-md border dark:border-gray-700 pt-2 text-[14px]">
+                  Value :{" "}
                 </div>
                 <div>
                   <InputNumber
@@ -305,8 +306,8 @@ const CreditScore = () => {
                 </div>
               </div>
               <div className="grid grid-cols-2  gap-2 mb-3">
-                <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
-                  Value:{" "}
+                <div className="text-center bg-gray-200 dark:bg-gray-700 rounded-md border dark:border-gray-700 pt-2 text-[14px]">
+                  Value :{" "}
                 </div>
                 <div>
                   <InputNumber
@@ -325,8 +326,8 @@ const CreditScore = () => {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="text-center bg-gray-200 rounded-md border-2 pt-1 text-[14px]">
-                  Value:{" "}
+                <div className="text-center bg-gray-200 dark:bg-gray-700 rounded-md border dark:border-gray-700 pt-2 text-[14px]">
+                  Value :{" "}
                 </div>
                 <div>
                   <InputNumber

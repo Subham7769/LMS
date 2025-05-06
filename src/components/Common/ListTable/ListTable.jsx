@@ -171,20 +171,20 @@ const ListTable = ({
   return (
     <>
       {loading ? (
-        <div className="flex flex-col gap-4 shadow-md bg-background-light-secondary border border-border-gray-primary rounded-xl pb-8 pt-6 px-5 mt-3">
+        <div className="flex flex-col gap-4 shadow-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl pb-8 pt-6 px-5 mt-3">
           <ShimmerTable />
           <ShimmerTable />
           <ShimmerTable />
         </div>
       ) : error ? (
-        <div className="flex flex-col gap-4 shadow-md bg-background-light-secondary border border-border-gray-primary rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
+        <div className="flex flex-col gap-4 shadow-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl pb-8 pt-6 px-5 text-red-500 text-center">
           <p>Oops! Something went wrong. Please try again later.</p>
         </div>
       ) : (
         <>
           <div
             className={
-              "bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8"
+              "bg-white dark:bg-gray-800 shadow-md border dark:border-gray-800 rounded-xl relative mb-8"
             }
           >
             {Searchable && (
@@ -202,7 +202,7 @@ const ListTable = ({
                   <input
                     id="search"
                     name="search"
-                    className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                    className="form-input w-full rounded-md py-1.5 pl-10 pr-3"
                     placeholder="Search"
                     type="search"
                     value={searchTerm}

@@ -46,7 +46,7 @@ const InputRange = ({
   return (
     <div className="range-slider w-[100%]">
       <label
-        className="block text-gray-700 px-1 text-sm font-semibold"
+        className="block text-gray-700 px-1 text-sm font-semibold dark:text-gray-400"
         htmlFor={inputNameMax}
       >
         {labelName}

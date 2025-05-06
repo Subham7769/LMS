@@ -110,7 +110,9 @@ const InputFile = ({
       {labelName && (
         <label
           className={`text-sm font-medium mb-1 ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-500"
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-600 dark:text-gray-400"
           }`}
           htmlFor={inputName}
         >
@@ -119,12 +121,12 @@ const InputFile = ({
         </label>
       )}
       <div
-        className={`relative border border-dashed bg-gray-200 rounded-sm p-3 text-center transition-all ${
+        className={`relative border border-dashed  rounded-sm p-3 text-center transition-all ${
           isDragging
             ? "bg-indigo-50 border-indigo-500"
             : fileNames.length
             ? "bg-indigo-50 border-indigo-500"
-            : "bg-background-light-secondary hover:border-indigo-500 hover:bg-indigo-50"
+            : "bg-gray-200 dark:bg-gray-700/30 hover:border-indigo-500 hover:bg-indigo-50"
         }
     ${
       validationError[validationKey]

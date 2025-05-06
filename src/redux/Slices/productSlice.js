@@ -242,6 +242,7 @@ const productInitialState = {
     disableRac: false,
     oneSettleLoan: false,
     advanceDiscount: false,
+    notApplyInsuranceLevyDeduction: false,
     eligibleCustomerType: "",
     fee: "",
     interestEligibleTenure: [],

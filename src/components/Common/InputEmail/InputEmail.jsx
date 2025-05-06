@@ -48,8 +48,11 @@ const InputEmail = ({
     <div className="w-full">
       {labelName && (
         <label
-          className={`block ${validationError[validationKey] ? "text-red-600" : "text-gray-700"
-            } px-1 text-sm font-semibold`}
+          className={`block ${
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-600 dark:text-gray-400"
+          } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Invalid email format" : labelName}{" "}
@@ -66,9 +69,10 @@ const InputEmail = ({
         placeholder={placeHolder}
         disabled={disabled}
         className={`block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
-          ${validationError[validationKey]
-            ? "ring-red-600 focus:ring-red-600"
-            : "ring-gray-300 focus:ring-indigo-600"
+          ${
+            validationError[validationKey]
+              ? "ring-red-600 focus:ring-red-600"
+              : "ring-gray-300 focus:ring-indigo-600"
           } 
           sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
         required

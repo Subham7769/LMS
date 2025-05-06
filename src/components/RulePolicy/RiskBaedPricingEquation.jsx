@@ -93,7 +93,7 @@ const RiskBasedPricingEquation = ({ loading, error }) => {
   return (
     <>
       <ContainerTile loading={loading} defaultClass={false}>
-        <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
+        <div className="bg-white dark:bg-gray-800 shadow-md border dark:border-gray-700 rounded-xl relative mb-8">
           <header className="px-5 py-4">
             <h2 className="font-semibold text-gray-800 dark:text-gray-100">
               Risk Based Pricing = [(Credit Score*A%) + (Employment Sector*B%) +
