@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 
 const ActionOption = ({ userNavigation, actionID }) => {
@@ -9,13 +10,12 @@ const ActionOption = ({ userNavigation, actionID }) => {
   return (
     <>
       <Menu as="div" className="relative">
-        <div className="flex items-center justify-center gap-2">
-          <Menu.Button className="relative flex justify-center items-center rounded-md p-2 bg-green-500 text-white" onClick={(event) => event.stopPropagation()}>
-            <span>OPTIONS</span>
-            <ChevronDownIcon
-              aria-hidden="true"
-              className="-mr-1 h-4 w-4"
-            />
+        <div className="">
+          <Menu.Button
+            className="relative "
+            onClick={(event) => event.stopPropagation()}
+          >
+            <EllipsisHorizontalIcon aria-hidden="true" className="h-7 w-7" />
           </Menu.Button>
         </div>
         <Transition
@@ -32,10 +32,11 @@ const ActionOption = ({ userNavigation, actionID }) => {
                 {({ active }) => (
                   <Link
                     to={item.href}
-                    className={`block px-4 py-2 text-sm ${active
-                      ? "bg-background-light-secondary text-gray-700"
-                      : "text-gray-700"
-                      }`}
+                    className={`block px-4 py-2 text-sm ${
+                      active
+                        ? "bg-background-light-secondary text-gray-700"
+                        : "text-gray-700"
+                    }`}
                     onClick={() => item?.action(actionID)}
                   >
                     {item?.name}
