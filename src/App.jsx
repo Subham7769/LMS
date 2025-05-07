@@ -478,7 +478,7 @@ const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
 const CustomerLoanApplication = React.lazy(() =>
-  import("./components/B2CCustomer/LoanApplication")
+  import("./components/B2CCustomer/CustomerLoanApplication")
 );
 const Onboarding01 = React.lazy(() =>
   import("./components/B2CCustomer/Onboarding/Onboarding01")
@@ -1483,22 +1483,7 @@ const routes = [
         path: "loan-application",
         element: <CustomerLoanApplication />,
         errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-application/step01",
-        element: <Onboarding01 />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-application/step02",
-        element: <Onboarding02 />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-application/step03",
-        element: <Onboarding03 />,
-        errorElement: <RouteErrorBoundary />,
-      },
+      }
     ],
   },
 

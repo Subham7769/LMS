@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Outlet,Link } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Header from "../Common/Header/Header";
 import Footer from "../Common/Footer/Footer";
 import SideBar from "../Common/Sidebar/Sidebar";
@@ -73,7 +73,8 @@ const AppLayoutB2C = () => {
                 </div>
               </div>
             </div>
-
+            
+            {/* Outlet */}
             <Outlet />
           </div>
         </div>

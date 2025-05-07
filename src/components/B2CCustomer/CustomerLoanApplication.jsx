@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
-//import HoverButton from "../Common/HoverButton/HoverButton";
-import { PlusIcon } from "@heroicons/react/24/outline";
 import { TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
-import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputText from "../Common/InputText/InputText";
-import Button from "../Common//Button/Button";
+import Button from "../Common/Button/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
-import Pagination from "../Common/Pagination/Pagination";
 import { convertDate } from "../../utils/convertDate";
+import { ActiveTabProvider } from "./ActiveTabContext";  // Import the context
+
 
 import {
   generateLoanApplicationId,
@@ -45,7 +40,7 @@ function transformData(inputArray) {
   }));
 }
 
-const LoanApplication = () => {
+const CustomerLoanApplication = () => {
   const dispatch = useDispatch();
   const [plaSearchValue, setPlaSearchValue] = useState("");
   const [plaSearchBy, setPlaSearchBy] = useState("");
@@ -161,26 +156,31 @@ const LoanApplication = () => {
       </div>
     );
   };
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({});
 
-  const nextStep = (data) => {
-    setFormData(prev => ({ ...prev, ...data }));
-    setStep(prev => prev + 1);
+
+  const [subStep, setSubStep] = useState(0);
+
+  const next = () => setSubStep((prev) => Math.min(prev + 1, 3));
+  const back = () => setSubStep((prev) => Math.max(prev - 1, 0));
+
+  const renderSubStep = () => {
+    switch (subStep) {
+      case 0:
+        return <Onboarding01 onNext={next} />;
+      case 1:
+        return <Onboarding02 onNext={next} onBack={back} />;
+      case 2:
+        return <Onboarding03 onNext={next} onBack={back} />;
+      case 3:
+        return <LoanOffer onBack={back} />;
+      default:
+        return null;
+    }
   };
-  const prevStep = () => {
-    setStep(prev => Math.max(prev - 1, 1));
-  };
-  const steps = {
-    1: <Onboarding01 onNext={nextStep} defaultData={formData} />,
-    2: <Onboarding02 onNext={nextStep} onBack={prevStep} defaultData={formData} />,
-    3: <Onboarding03 onNext={nextStep} onBack={prevStep} defaultData={formData} />,
-    4: <LoanOffer onBack={prevStep} formData={formData} />,
-  };
-  
-  
-  return <>{steps[step]}</>;
+
+
+  return <ActiveTabProvider >{renderSubStep()}</ActiveTabProvider>;
 
 };
 
-export default LoanApplication;
+export default CustomerLoanApplication;

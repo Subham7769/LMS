@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect  } from "react";
-import OnboardingImage from "../images/onboarding-image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchLoanProductData

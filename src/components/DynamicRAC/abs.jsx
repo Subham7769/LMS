@@ -57,7 +57,6 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { arrayMove } from "@dnd-kit/sortable";
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -340,6 +339,8 @@ const DynamicRAC = () => {
     );
   };
 
+
+
   // Draggable
   const DraggableRule = ({ rule, sectionId, sectionName, racId, roleName, handleSaveDynamicRAC }) => {
     const isDragDisabled = roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName);
@@ -484,7 +485,7 @@ const DynamicRAC = () => {
   }
 
   // Header
-  const HeaderBox = ({ roleName, section, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
+  const HeaderBox = ({ roleName, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection, section }) => {
     return (
       <div className="flex justify-between items-center p-5 bg-white border-b">
         <div className="flex justify-center align-middle">
@@ -659,7 +660,7 @@ const DynamicRAC = () => {
                             section.size === "half" ? "col-span-2" : "col-span-1"
                             }`}
                         >
-                          {/* HeaderBox */}
+                          {/* Header */}
                           <HeaderBox
                             roleName={roleName}
                             section={section}
@@ -669,6 +670,43 @@ const DynamicRAC = () => {
                             handleAddRule={handleAddRule}
                             handleDeleteSection={handleDeleteSection}
                           />
+                          <div className="flex justify-between items-center p-5 bg-white border-b">
+                            <div className="flex justify-center align-middle">
+                              <EllipsisVerticalIcon className="h-7 text-gray-500" />
+                              <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
+                              <DynamicName
+                                initialName={section.sectionName}
+                                onSave={(name) =>
+                                  dispatch(updateSection({ sectionId: section.sectionId, name }))
+                                }
+                                editable={roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)}
+                              />
+                            </div>
+                            {(roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
+                              <div className="flex justify-between items-center gap-5 hover:cursor-pointer">
+                                <div
+                                  className={"flex text-blue-500"}
+                                  onClick={() => handleUseTemplate(section.sectionId, section.sectionName)}
+                                >
+                                  <ArrowUpOnSquareIcon className="h-5 w-5" />
+                                  <p>Use Template</p>
+                                </div>
+                                <div
+                                  className={"flex text-blue-500"}
+                                  onClick={() => handleAddRule(section.sectionId, section.sectionName)}
+                                >
+                                  <PlusIcon className="h-5 w-5" />
+                                  <p>Add Rule</p>
+                                </div>
+
+                                <TrashIcon
+                                  onClick={() => handleDeleteSection({ racId, sectionId: section.sectionId })}
+                                  className="h-5 w-5 hover:text-red-500"
+                                />
+                              </div>
+                            )}
+                          </div>
+
                           {/* Add Criteria Box */}
                           {section?.rules?.length < 1 ? (
                             <CriteriaBox
