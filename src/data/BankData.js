@@ -115,6 +115,7 @@ export const BranchNameOptions = {
     { value: "Lusaka City Market", label: "Lusaka City Market" },
     { value: "Kabwe", label: "Kabwe" },
     { value: "Solwezi", label: "Solwezi" },
+    { value: "Luanshya", label: "Luanshya" },
   ],
 };
 
@@ -424,5 +425,11 @@ export const bankBranches = [
     branchName: "Solwezi",
     branchCode: "012868",
     sortCode: "01-28-68",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Luanshya",
+    branchCode: "010763",
+    sortCode: "01-07-63",
   },
 ];
