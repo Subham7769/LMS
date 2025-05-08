@@ -12,6 +12,7 @@ import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateDirectorFields from "./AddUpdateDirectorFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateDirector = () => {
   const {companyId,updateDirectorData, error, loading } = useSelector(
@@ -22,22 +23,7 @@ const UpdateDirector = () => {
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
 
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    return result;
-  }
   console.log(updateDirectorData);
 
   const handleUpdate = async (uid) => {

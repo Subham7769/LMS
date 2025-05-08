@@ -55,6 +55,13 @@ const Options = () => {
             inputChecked={productData?.advanceDiscount}
             onChange={handleChange}
           />
+          <ToggleSwitch
+            label="Exclude Insurance Levy Deduction"
+            description="Do not apply insurance levy deductions for this product."
+            inputName="notApplyInsuranceLevyDeduction"
+            inputChecked={productData?.notApplyInsuranceLevyDeduction}
+            onChange={handleChange}
+          />
         </ul>
       </section>
       {/* Newly added fields */}

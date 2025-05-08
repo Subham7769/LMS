@@ -10,6 +10,7 @@ const Button = ({
   buttonType = "primary", // Default to "primary",
   iconClassName = "h-4 w-4",
   loading = false,
+  title,
 }) => {
   const buttonTypeClass = {
     primary:
@@ -28,6 +29,7 @@ const Button = ({
     <button
       type="button"
       onClick={onClick}
+      title={title}
       className={`
         disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-white dark:disabled:bg-gray-800 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:cursor-not-allowed
         ${buttonTypeClass[buttonType] || buttonTypeClass.primary}

@@ -234,6 +234,7 @@ const productInitialState = {
   productData: {
     approvalsConfigurationsTempId: "",
     dynamicDocumentTempId: null,
+    dynamicRefundDocTempId:null,
     loanProductId: "",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
@@ -242,6 +243,7 @@ const productInitialState = {
     disableRac: false,
     oneSettleLoan: false,
     advanceDiscount: false,
+    notApplyInsuranceLevyDeduction: false,
     eligibleCustomerType: "",
     fee: "",
     interestEligibleTenure: [],

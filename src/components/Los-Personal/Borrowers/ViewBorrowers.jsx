@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { accountStatusOptions } from "../../../data/LosData";
+import { accountStatusOptionsPersonal } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
@@ -268,7 +268,7 @@ const ViewBorrowers = () => {
                 <InputSelect
                   labelName={"Account Status"}
                   inputName={"accountStatus"}
-                  inputOptions={accountStatusOptions}
+                  inputOptions={accountStatusOptionsPersonal}
                   inputValue={currentStatus}
                   onChange={(e) => setCurrentStatus(e.target.value)}
                   disabled={false}
@@ -578,7 +578,7 @@ const ViewBorrowers = () => {
     ];
 
     return (
-      <div className="flex justify-center align-middle gap-4 px-5">
+      <div className="">
         <ActionOption
           userNavigation={userNavigation}
           actionID={rowData.uniqueID}

@@ -18,12 +18,14 @@ import {
   updateDraftBorrowerStatus,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
 
 const AddBorrowers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
   const { userData } = useSelector((state) => state.auth);
@@ -112,6 +114,7 @@ const AddBorrowers = () => {
   const handleResetSearchBy = () => {
     setSearchBy("");
     setSearchValue("");
+    setCurrentPage(0);
     dispatch(fetchDraftedPersonalBorrowers({ page: 0, size: pageSize }));
   };
 
@@ -191,11 +194,10 @@ const AddBorrowers = () => {
     }
 
     return (
-      <div className="flex justify-center gap-4 px-5">
+      <div className="flex gap-4">
         <Button
           onClick={() => handleEditApplication(rowData.borrowerProfileDraftId)}
-          buttonIcon={PencilIcon}
-          circle={true}
+          buttonIcon={EditIcon}
           className={`mt-4 h-fit self-center`}
           buttonType="secondary"
         />
@@ -203,8 +205,7 @@ const AddBorrowers = () => {
           onClick={() =>
             handleRejectApplication(rowData.borrowerProfileDraftId)
           }
-          buttonIcon={TrashIcon}
-          circle={true}
+          buttonIcon={DeleteIcon}
           className={`mt-4 h-fit self-center`}
           buttonType="destructive"
         />
@@ -226,26 +227,29 @@ const AddBorrowers = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Draft Borrower</div>
-        <div></div>
-        <div></div>
+    <>
+      <div className="grid grid-cols-2 gap-5 items-center mb-5">
+        <div className="mb-4 sm:mb-0">
+          <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
+            Draft Borrowers
+          </h1>
+        </div>
         <div className="flex justify-end gap-2 h-12">
           <Button
-            buttonIcon={PlusIcon}
+            buttonIcon={AddIcon}
             buttonName="Add New Borrower"
             onClick={() =>
               navigate(
                 "/loan/loan-origination-system/personal/borrowers/add-new-borrower"
               )
             }
-            rectangle={true}
           />
         </div>
       </div>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="searchBy"
@@ -255,7 +259,7 @@ const AddBorrowers = () => {
             disabled={false}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="searchValue"
@@ -266,7 +270,7 @@ const AddBorrowers = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle justify-end gap-5">
           <Button
             buttonName={"Search"}
             onClick={SearchBorrowerByFieldSearch}
@@ -288,13 +292,17 @@ const AddBorrowers = () => {
         data={transformFlattenData}
         loading={loading}
         ListAction={ListAction}
+        ListName="List of draft borrowers"
+        ListNameLength={draftedBorrowerDataTotalElements}
       />
       <Pagination
         totalElements={draftedBorrowerDataTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
-    </div>
+    </>
   );
 };
 

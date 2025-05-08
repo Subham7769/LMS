@@ -22,6 +22,7 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 const AddDirector = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const navigate = useNavigate();
@@ -41,23 +42,6 @@ const AddDirector = () => {
   }, [dispatch]);
 
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    console.log(result);
-    return result;
-  }
 
   const handleSubmitNewDirector = async (e) => {
     e.preventDefault();

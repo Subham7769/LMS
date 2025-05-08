@@ -105,10 +105,10 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                 : <span className="mr-2">{""}</span>
                 {loanDetails.totalAmount}
               </div>
-              <div>Loan Status</div>
+              <div>Wallet Balance</div>
               <div className="font-bold text-black">
                 : <span className="mr-2">{""}</span>
-                {loanDetails.carbonLoanStatus}
+                {loanDetails.walletBalance}
               </div>
             </div>
             <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-border-gray-primary">

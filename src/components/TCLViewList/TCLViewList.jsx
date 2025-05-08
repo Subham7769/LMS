@@ -128,24 +128,24 @@ const TCLViewList = () => {
 
   const TclViewListHeaderList = !hasViewOnlyAccess(roleName)
     ? [
-        "File Name",
-        "Min TCL",
-        "Avg TCL",
-        "Max TCL",
-        "Total User",
-        "Uploaded Date",
-        "Total Rows",
-        "Actions",
-      ] // Show "Actions" for non-viewers
+      "File Name",
+      "Min TCL",
+      "Avg TCL",
+      "Max TCL",
+      "Total User",
+      "Uploaded Date",
+      "Total Rows",
+      "Actions",
+    ] // Show "Actions" for non-viewers
     : [
-        "File Name",
-        "Min TCL",
-        "Avg TCL",
-        "Max TCL",
-        "Total User",
-        "Uploaded Date",
-        "Total Rows",
-      ];
+      "File Name",
+      "Min TCL",
+      "Avg TCL",
+      "Max TCL",
+      "Total User",
+      "Uploaded Date",
+      "Total Rows",
+    ];
 
   return (
     <div className="flex flex-col ">

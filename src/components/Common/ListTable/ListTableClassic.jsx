@@ -10,7 +10,7 @@ const ListTableClassic = ({
 }) => {
   return (
     <>
-      <div className="bg-white dark:bg-gray-800 shadow-md border rounded-xl relative mb-8">
+      <div className="bg-white dark:bg-gray-800 shadow-md border dark:border-gray-700 rounded-xl relative mb-8">
         {ListName && (
           <header className="px-5 py-4">
             <h2 className={`font-semibold text-gray-800 dark:text-gray-100`}>
@@ -38,9 +38,7 @@ const ListTableClassic = ({
                         : undefined
                     }
                   >
-                    <div
-                      className={`flex items-center`}
-                    >
+                    <div className={`flex items-center`}>
                       {column.name}
                       {column.sortKey && getSortIcon(column.sortKey)}
                     </div>

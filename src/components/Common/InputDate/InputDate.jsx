@@ -49,7 +49,9 @@ const InputDate = ({
       {labelName && (
         <label
           className={`block text-sm font-medium mb-1 ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-600"
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-600 dark:text-gray-400"
           } px-1`}
           htmlFor={inputName}
         >
@@ -73,7 +75,7 @@ const InputDate = ({
             })
           } // Store date as YYYY-MM-DD string
           onFocus={() => dispatch(setValidationError(validationKey))}
-          className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
+          className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-500 disabled:cursor-not-allowed 
           ${showIcon ? "" : ""} 
           ${validationError[validationKey] ? "border-red-300" : ""} 
           `}

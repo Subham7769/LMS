@@ -115,7 +115,9 @@ const InputNumber = ({
         {labelName && (
           <label
             className={`block ${
-              validationError[validationKey] ? "text-red-600" : "text-gray-600"
+              validationError[validationKey]
+                ? "text-red-600"
+                : "text-gray-600 dark:text-gray-400"
             } px-1 text-sm font-medium mb-1`}
             htmlFor={inputName}
           >
@@ -162,7 +164,7 @@ const InputNumber = ({
           style={{
             appearance: "none", // General rule for most modern browsers
           }}
-          className={`form-input  w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
+          className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
             ${validationError[validationKey] ? "border-red-300" : ""} 
             `}
           required

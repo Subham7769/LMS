@@ -37,7 +37,7 @@ function Tooltip({ children, className, bg, size, position }) {
       case "light":
         return "bg-white text-gray-600 border-gray-200";
       case "dark":
-        return "bg-gray-800 text-gray-100 border-gray-700/60";
+        return "bg-gray-800 dark:bg-gray-700 text-gray-100 border-gray-700/60";
       default:
         return "text-gray-600 bg-white dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700/60";
     }

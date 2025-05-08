@@ -61,7 +61,9 @@ const InputTextArea = ({
         {labelName && (
           <label
             className={`block ${
-              validationError[validationKey] ? "text-red-600" : "text-gray-700"
+              validationError[validationKey]
+                ? "text-red-600"
+                : "text-gray-700 dark:text-gray-400"
             } px-1 text-sm font-medium mb-1`}
             htmlFor={inputName}
           >

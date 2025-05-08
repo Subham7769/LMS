@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import { useDispatch } from "react-redux";
@@ -43,6 +43,22 @@ const SelectAndNumber = ({
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.classList.contains("dark")
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   if (inputSelectValue === null || inputSelectValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
@@ -100,24 +116,31 @@ const SelectAndNumber = ({
           : "0.875rem", // Change font size
       fontFamily: "inherit", // Set font to inherit
       padding: "8px 12px",
-      backgroundColor: "#fff",
-      color: state.isSelected ? "#8e51ff" : "#4a5565",
+      backgroundColor: isDarkMode
+        ? "#1f2937" // Tailwind's gray-800
+        : "#fff",
+      color: isDarkMode ? "#bfc4cd" : state.isSelected ? "#8e51ff" : "#4a5565",
       fontWeight: 500,
-      borderBottom: "1px solid #e2e8f0",
+      borderBottom: isDarkMode ? "1px solid #374151" : "1px solid #e2e8f0",
       "&:hover": {
-        backgroundColor: "#f9fafb",
-        color: state.isSelected ? "#8e51ff" : "#4a5565",
+        backgroundColor: isDarkMode ? "#242e3c" : "#f9fafb",
+        color: isDarkMode
+          ? "#bfc4cd"
+          : state.isSelected
+          ? "#8e51ff"
+          : "#4a5565",
       },
     }),
     control: (provided) => ({
       ...provided,
-      border: "1px solid #e5e7eb",
+      backgroundColor: isDarkMode ? "#1f2937" : "#fff",
+      border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
       padding: 0,
       boxShadow: "none",
       height: 28,
       borderRadius: "0.5rem",
       "&:hover": {
-        border: "1px solid #aaa",
+        border: isDarkMode ? "1px solid #4b5563" : "1px solid #aaa",
       },
     }),
     menu: (provided) => ({
@@ -126,7 +149,8 @@ const SelectAndNumber = ({
       boxShadow:
         "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // Tailwind's shadow-lg
       borderRadius: "0.5rem", // Optional: match rounded-lg
-      border: "1px solid #e5e7eb",
+      border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+      backgroundColor: isDarkMode ? "#1f2937" : "#fff",
     }),
     placeholder: (provided) => ({
       ...provided,
@@ -163,10 +187,6 @@ const SelectAndNumber = ({
       display: "flex",
       backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
       color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
-      // overflow: "hidden",
-      // whiteSpace: "nowrap",
-      // height: "28px",
-      // alignItems: "center",
     }),
   };
 
@@ -213,7 +233,7 @@ const SelectAndNumber = ({
             validationError[validationKey1] ||
             validationError[validationKey2]
               ? "text-red-600"
-              : "text-gray-700"
+              : "text-gray-600 dark:text-gray-400"
           } px-1`}
           htmlFor={inputSelectName}
         >

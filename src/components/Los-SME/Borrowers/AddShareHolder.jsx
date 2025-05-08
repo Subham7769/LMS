@@ -21,6 +21,7 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 import { useNavigate } from "react-router-dom";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
@@ -36,23 +37,6 @@ const AddShareHolder = () => {
   } = useSelector((state) => state.smeBorrowers);
   const loanOfficer = localStorage.getItem("username");
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    console.log(result);
-    return result;
-  }
 
   useEffect(() => {
     dispatch(fetchAllCompanyBorrowers())
