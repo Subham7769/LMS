@@ -39,11 +39,13 @@ const RuleComponent = ({
   sectionId,
   sectionName,
   handleSaveDynamicRAC,
+  showRuleModal,
+  setShowRuleModal,
+  isEditMode,
+  setIsEditMode
 }) => {
   const dispatch = useDispatch();
   const { roleName } = useSelector((state) => state.auth);
-  const [showRuleModal, setShowRuleModal] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [reviewComment, setReviewComment] = useState("");
 
   const handleRemoveRule = async (sectionId, dynamicRacRuleId) => {

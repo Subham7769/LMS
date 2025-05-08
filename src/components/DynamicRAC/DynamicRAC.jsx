@@ -50,13 +50,11 @@ import {
   closestCenter,
   useDroppable,
   useDraggable,
-} from "@dnd-kit/core";
-import {
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
 const DynamicRAC = () => {
@@ -66,7 +64,8 @@ const DynamicRAC = () => {
   const fileInputRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
-  const [showRuleModal, setRuleModal] = useState(false);
+  const [showRuleModal, setShowRuleModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [templateModal, setTemplateModal] = useState(false);
   const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
@@ -174,28 +173,58 @@ const DynamicRAC = () => {
     }
   };
 
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
+  const onDragEnd = (event) => {
+    const { active, over } = event;
 
-    const { source, destination } = result;
+    if (!over || active.id === over.id) return;
 
-    // console.log("Source: ", source);
-    // console.log("Destination: ", destination);
+    console.log("active: ", event.active);
+    console.log("over: ", event.over);
     // console.log("Sections before update: ", sections);
+
+    const activeId = active.id; //Rule
+    const overId = over.id; //DroppableSection
 
     const newSections = [...sections]; // Clone sections array
 
-    if (source.droppableId === destination.droppableId) {
-      // Reordering within the same section
-      const sectionIndex = newSections.findIndex(
-        (s) => s.sectionId === source.droppableId
+    // Find the section and index where the dragged rule came from
+    let sourceSectionIndex = -1;
+    let sourceIndex = -1;
+    let destSectionIndex = -1;
+    let destIndex = -1;
+
+    newSections.forEach((section, sectionIdx) => {
+      const ruleIdx = section.rules.findIndex((rule) => rule.dynamicRacRuleId === activeId);
+      if (ruleIdx !== -1) {
+        sourceSectionIndex = sectionIdx;
+        sourceIndex = ruleIdx;
+      }
+    });
+
+    newSections.forEach((section, sectionIdx) => {
+      const ruleIdx = section.rules.findIndex((rule) => rule.dynamicRacRuleId === overId);
+      if (ruleIdx !== -1) {
+        destSectionIndex = sectionIdx;
+        destIndex = ruleIdx;
+      }
+    });
+
+    // If drop target is a section with no items
+    if (destIndex === -1) {
+      destSectionIndex = newSections.findIndex(
+        (section) => section.sectionId === overId
       );
+      destIndex = 0;
+    }
 
-      if (sectionIndex === -1) return; // Validate section index
+    if (sourceSectionIndex === -1 || destSectionIndex === -1) return;
 
+    // Reordering within the same section
+    if (sourceSectionIndex === destSectionIndex) {
+      const sectionIndex = sourceSectionIndex;
       const newRules = Array.from(newSections[sectionIndex].rules); // Clone rules
-      const [reorderedField] = newRules.splice(source.index, 1); // Remove from old position
-      newRules.splice(destination.index, 0, reorderedField); // Insert at new position
+      const [reorderedField] = newRules.splice(sourceIndex, 1); // Remove from old position
+      newRules.splice(destIndex, 0, reorderedField); // Insert at new position
 
       newSections[sectionIndex] = {
         ...newSections[sectionIndex],
@@ -206,30 +235,14 @@ const DynamicRAC = () => {
       dispatch(setSection({ newSections }));
     } else {
       // Moving field between different sections
-      const sourceSectionIndex = newSections.findIndex(
-        (s) => s.sectionId === source.droppableId
-      );
-      const destSectionIndex = newSections.findIndex(
-        (s) => s.sectionId === destination.droppableId
-      );
-
-      if (sourceSectionIndex === -1 || destSectionIndex === -1) return; // Validate indices
-
-      // Clone source and destination rules
       const sourceRules = Array.from(
         newSections[sourceSectionIndex]?.rules || []
       );
       const destRules = Array.from(newSections[destSectionIndex]?.rules || []);
 
-      if (sourceRules.length === 0 || source.index >= sourceRules.length)
-        return; // Validate source field
+      const [movedField] = sourceRules.splice(sourceIndex, 1);
 
-      // Remove field from source
-      const [movedField] = sourceRules.splice(source.index, 1);
-      console.log(movedField);
-
-      // Insert field into destination
-      destRules.splice(destination.index, 0, {
+      destRules.splice(destIndex, 0, {
         ...movedField,
         isModified: false,
       });
@@ -297,6 +310,7 @@ const DynamicRAC = () => {
   };
 
   const handleUpdateName = (racId, newName) => {
+    console.log("handleUpdateName")
     dispatch(updateRacConfigName({ newName }));
     dispatch(updateRacName({ racId, newName })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
@@ -313,7 +327,7 @@ const DynamicRAC = () => {
   const handleAddRule = (sectionId, sectionName) => {
     setSelectedSectionId(sectionId); // Update sectionId first
     setSelectedSectionName(sectionName); // Update sectionId first
-    setTimeout(() => setRuleModal(true), 0); // Open modal after state updates
+    setTimeout(() => setShowRuleModal(true), 0); // Open modal after state updates
   };
 
   const handleUseTemplate = (sectionId, sectionName) => {
@@ -334,7 +348,6 @@ const DynamicRAC = () => {
 
     return (
       <div ref={setNodeRef} className="border rounded-md p-4 bg-white">
-        <div className="font-semibold">{section.sectionName}</div>
         {children}
       </div>
     );
@@ -345,11 +358,11 @@ const DynamicRAC = () => {
     const isDragDisabled = roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName);
 
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-      id: rule.dynamicRacRuleId,
       disabled: isDragDisabled,
+      id: rule.dynamicRacRuleId,
       data: {
         rule,
-        sourceSectionId: rule.sectionId, // renamed for clarity
+        sourceSectionId: sectionId, // renamed for clarity
       },
     });
 
@@ -377,6 +390,10 @@ const DynamicRAC = () => {
           sectionId={sectionId}
           sectionName={sectionName}
           handleSaveDynamicRAC={handleSaveDynamicRAC}
+          showRuleModal={showRuleModal}
+          setShowRuleModal={setShowRuleModal}
+          isEditMode={isEditMode}
+          setIsEditMode={setIsEditMode}
         />
       </div>
     );
@@ -484,7 +501,7 @@ const DynamicRAC = () => {
   }
 
   // Header
-  const HeaderBox = ({ roleName, section, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
+  const HeaderBox = ({ roleName, section,dispatch, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
     return (
       <div className="flex justify-between items-center p-5 bg-white border-b">
         <div className="flex justify-center align-middle">
@@ -541,12 +558,12 @@ const DynamicRAC = () => {
             onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
             initialName={name}
           />
-          <ViewRuleModal
+          {/* <ViewRuleModal
             isOpen={showRuleModal}
-            onClose={() => setRuleModal(false)}
+            onClose={() => setShowRuleModal(false)}
             sectionId={selectedSectionId}
             sectionName={selectedSectionName}
-          />
+          /> */}
           <ViewTemplateModal
             isOpen={templateModal}
             onClose={() => setTemplateModal(false)}
@@ -663,6 +680,7 @@ const DynamicRAC = () => {
                           <HeaderBox
                             roleName={roleName}
                             section={section}
+                            dispatch={dispatch}
                             updateSection={updateSection}
                             EditorRolesDynamicRac={EditorRolesDynamicRac}
                             handleUseTemplate={handleUseTemplate}

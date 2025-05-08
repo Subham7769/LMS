@@ -604,6 +604,7 @@ const dynamicRacSlice = createSlice({
     },
     setCurrentRule(state, action) {
       const { sectionId, dynamicRacRuleId } = action.payload;
+      console.log("setCurrentRule");
       state.racConfig.sections = state.racConfig.sections.map((section) => {
         if (section.sectionId === sectionId) {
           return {

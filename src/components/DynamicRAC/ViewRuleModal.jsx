@@ -11,8 +11,10 @@ const ViewRuleModal = ({
   rule,
   sectionName,
 }) => {
+  console.log(isOpen)
   if (!isOpen) return null;
 
+console.log(rule)
   return (
     <>
       <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
