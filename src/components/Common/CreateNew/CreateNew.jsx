@@ -45,7 +45,7 @@ const CreateNew = ({
       setName(value);
     }
   };
-  
+
   function dispatchType(menuTitle) {
     switch (menuTitle) {
       case "RAC":
@@ -113,14 +113,14 @@ const CreateNew = ({
         onBlur={handleBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        className="placeholder:text-xs text-xs focus:ring-1 focus:ring-inset focus:ring-blue-primary w-11/12 rounded-sm text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-0 px-1 -mx-2"
+        className="form-input text-xs"
         placeholder={placeholder}
         autoFocus
       />
     </div>
   ) : (
     <div
-      className="text-gray-500/90 pl-[3.25rem] pr-3 w-full text-sm flex items-center justify-between cursor-pointer rounded-md hover:text-text-light-secondary"
+      className="text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 pl-[3.25rem] pr-3 w-full text-sm flex items-center justify-between cursor-pointer rounded-md"
       onClick={() => {
         editable ? setEditing(!isEditing) : navigate(navigateSuccess);
       }}

@@ -578,7 +578,7 @@ const ViewBorrowers = () => {
     ];
 
     return (
-      <div className="flex justify-center align-middle gap-4 px-5">
+      <div className="">
         <ActionOption
           userNavigation={userNavigation}
           actionID={rowData.uniqueID}

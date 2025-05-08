@@ -196,7 +196,7 @@ const NotificationWindow = () => {
   return (
     <div className="relative" ref={notificationRef}>
       <button
-        className="p-2 rounded-full hover:bg-background-light-primary transition-colors duration-200 relative"
+        className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200 relative"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle notifications"
         aria-expanded={isOpen}
@@ -212,7 +212,7 @@ const NotificationWindow = () => {
       {isOpen && (
         <div className="absolute -right-48 lg:-right-20 mt-2 w-[80vw] lg:w-96 max-w-[96vw] bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right z-50">
           <div className="p-4 py-3 ">
-            <h2 className="text-xs font-semibold text-text-light-quaternary uppercase">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase">
               Notifications
             </h2>
           </div>
@@ -220,9 +220,9 @@ const NotificationWindow = () => {
           <div className="max-h-[60vh] overflow-y-auto">
             {loading ? (
               <div className="flex flex-col gap-3 animate-pulse px-5 py-3">
-                <div className="h-4 bg-background-light-primary rounded w-full"></div>
-                <div className="h-4 bg-background-light-primary rounded w-3/4"></div>
-                <div className="h-4 bg-background-light-primary rounded w-1/3"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
               </div>
             ) : error ? (
               <div className="text-red-500 text-center py-4">

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
@@ -24,6 +23,7 @@ import {
 import store from "../../redux/store";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { CheckIcon } from "../../assets/icons";
 
 const ProductGroup = () => {
   const dispatch = useDispatch();
@@ -118,8 +118,8 @@ const ProductGroup = () => {
         handleNameUpdate={handleUpdatePGName}
         loading={loading}
       />
-      <ContainerTile loading={loading}>
-        <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
+      <ContainerTile loading={loading} className={"pt-5"}>
+        <div className="mt-5 grid grid-cols-3 gap-4 mb-2 px-5">
           <InputNumber
             labelName="Percentage from Equated Installments"
             inputName="percentageFromEmi"
@@ -142,7 +142,7 @@ const ProductGroup = () => {
             isValidation={true}
           />
         </div>
-        <div className="border-b pb-4 mb-2">
+        <div className="border-b pb-5 px-5">
           <TagInput
             formData={productGroupData}
             handleChange={handleTagInputChange}
@@ -155,20 +155,17 @@ const ProductGroup = () => {
             inputNumberLabel={"Max Product Limit"}
             isValidation2={true}
             isValidation3={true}
-            tagsPerRow={3}
+            tagsPerRow={2}
           />
         </div>
-        {!hasViewOnlyAccess(roleName) ? (
-          <div className="text-center md:text-right mt-5">
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="text-center md:text-right p-5">
             <Button
-              buttonIcon={CheckCircleIcon}
+              buttonIcon={CheckIcon}
               buttonName="Save"
-              rectangle={true}
               onClick={handleUpdate}
             />
           </div>
-        ) : (
-          ""
         )}
       </ContainerTile>
     </>

@@ -34,7 +34,9 @@ const InputRadio = ({
       {labelName && (
         <label
           className={`px-1 text-sm font-semibold mb-2 ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-700 dark:text-gray-400"
           }`}
         >
           {validationError[validationKey] ? "Field required" : labelName}
@@ -45,7 +47,9 @@ const InputRadio = ({
           <label
             key={index}
             className={`flex items-center gap-2 cursor-pointer ${
-              validationError[validationKey] ? "text-red-600" : "text-gray-700"
+              validationError[validationKey]
+                ? "text-red-600"
+                : "text-gray-700 dark:text-gray-400"
             }`}
           >
             <input

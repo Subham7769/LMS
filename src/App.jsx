@@ -88,6 +88,17 @@ const ProjectPage = lazy(() => import("./pages/ProjectPage"));
 const CreateNewProject = lazy(() =>
   import("./components/Project/CreateNewProject")
 );
+const BasicDetails = lazy(() => import("./components/Project/BasicDetails"));
+const InterestCapping = lazy(() =>
+  import("./components/Project/InterestCapping")
+);
+const RollOver = lazy(() => import("./components/Project/RollOver"));
+const LatePenalty = lazy(() => import("./components/Project/LatePenalty"));
+const RecurringFees = lazy(() => import("./components/Project/RecurringFees"));
+const GracePeriod = lazy(() => import("./components/Project/GracePeriod"));
+const AdditionalSettings = lazy(() =>
+  import("./components/Project/AdditionalSettings")
+);
 
 // Product Imports
 const ProductPage = lazy(() => import("./pages/ProductPage"));
@@ -98,9 +109,14 @@ const LoanProductConfig = lazy(() =>
   import("./components/Product/LoanProductConfig")
 );
 const ProductConfig = lazy(() => import("./components/Product/ProductConfig"));
+const ProductEligibility = lazy(() =>
+  import("./components/Product/Eligibility")
+);
 const UpfrontFee = lazy(() => import("./components/Product/UpfrontFee"));
 const Options = lazy(() => import("./components/Product/Options"));
-const InterestTenure = lazy(() => import("./components/Product/InterestTenure"));
+const InterestTenure = lazy(() =>
+  import("./components/Product/InterestTenure")
+);
 
 // CreditScoreET Imports
 const CreditScoreETPage = lazy(() => import("./pages/CreditScoreETPage"));
@@ -114,11 +130,6 @@ const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
 
-// BlockedEmployer Imports
-const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
-const BlockedEmployer = lazy(() =>
-  import("./components/BlockedEmployer/BlockedEmployer")
-);
 
 // CreditScore Imports
 const CreditScorePage = lazy(() => import("./pages/CreditScorePage"));
@@ -484,11 +495,18 @@ const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
 const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
-const CustomerLoanApplication = React.lazy(() => import("./components/B2CCustomer/LoanApplication"));
-const Onboarding01 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding01"));
-const Onboarding02 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding02"));
-const Onboarding03 = React.lazy(() => import("./components/B2CCustomer/Onboarding/Onboarding03"));
-
+const CustomerLoanApplication = React.lazy(() =>
+  import("./components/B2CCustomer/LoanApplication")
+);
+const Onboarding01 = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/Onboarding01")
+);
+const Onboarding02 = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/Onboarding02")
+);
+const Onboarding03 = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/Onboarding03")
+);
 
 const routes = [
   // Accessing All Main Components
@@ -562,18 +580,13 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "credit-score-eligible-tenure",
+        path: "eligible-tenure",
         element: <CreditScoreETPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
         path: "dbr-config",
         element: <DebtBurdenPage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "blocked-employer",
-        element: <BlockedEmployerPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -659,6 +672,43 @@ const routes = [
         path: "project/:projectId",
         element: <Project />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-details",
+            element: <BasicDetails />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-capping",
+            element: <InterestCapping />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "roll-over",
+            element: <RollOver />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "late-penalty",
+            element: <LatePenalty />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "recurring-fees",
+            element: <RecurringFees />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "grace-period",
+            element: <GracePeriod />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "additional-settings",
+            element: <AdditionalSettings />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "loan-product/:productType/:projectId/:loanProId",
@@ -668,6 +718,11 @@ const routes = [
           {
             path: "product-config",
             element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility",
+            element: <ProductEligibility />,
             errorElement: <RouteErrorBoundary />,
           },
           {
@@ -688,18 +743,13 @@ const routes = [
         ],
       },
       {
-        path: "credit-score-eligible-tenure/:creditScoreETId",
+        path: "eligible-tenure/:creditScoreETId",
         element: <CreditScoreET />,
         errorElement: <RouteErrorBoundary />,
       },
       {
         path: "dbr-config/:dbcTempId",
         element: <DebtBurdenConfig />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "blocked-employer/:blockEmployersTempId",
-        element: <BlockedEmployer />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -801,11 +851,75 @@ const routes = [
         path: "project/newProject/:projectName",
         element: <CreateNewProject />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-details",
+            element: <BasicDetails />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-capping",
+            element: <InterestCapping />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "roll-over",
+            element: <RollOver />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "late-penalty",
+            element: <LatePenalty />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "recurring-fees",
+            element: <RecurringFees />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "grace-period",
+            element: <GracePeriod />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "additional-settings",
+            element: <AdditionalSettings />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "loan-product/newProduct/:productName",
         element: <CreateNewProduct />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "product-config",
+            element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility",
+            element: <ProductEligibility />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upfront-fee",
+            element: <UpfrontFee />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "options",
+            element: <Options />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-tenure",
+            element: <InterestTenure />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "reporting-config/newConfig/:RCName",
@@ -1408,43 +1522,43 @@ const routes = [
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
- 
-  //Lead Capture, Customer loan application Route
- {
-  path: "/customer",
-  element: (
-    <PageErrorBoundary>
-      <ProtectedRoute>
-        <AppLayoutB2C />
-      </ProtectedRoute>
-    </PageErrorBoundary>
-  ),
-  children: [
-    {
-      path: "loan-application",
-      element: <CustomerLoanApplication />,
-      errorElement: <RouteErrorBoundary />,
-    },
-    {
-      path: "loan-application/step01",
-      element: <Onboarding01 />,
-      errorElement: <RouteErrorBoundary />,
-    },
-    {
-      path: "loan-application/step02",
-      element: <Onboarding02 />,
-      errorElement: <RouteErrorBoundary />,
-    },
-    {
-      path: "loan-application/step03",
-      element: <Onboarding03 />,
-      errorElement: <RouteErrorBoundary />,
-    },            
-  ],
-},
 
-// Catch-All Route for 404 Page Not Found
-{ path: "*", element: <PageNotFound /> },
+  //Lead Capture, Customer loan application Route
+  {
+    path: "/customer",
+    element: (
+      <PageErrorBoundary>
+        <ProtectedRoute>
+          <AppLayoutB2C />
+        </ProtectedRoute>
+      </PageErrorBoundary>
+    ),
+    children: [
+      {
+        path: "loan-application",
+        element: <CustomerLoanApplication />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-application/step01",
+        element: <Onboarding01 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-application/step02",
+        element: <Onboarding02 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-application/step03",
+        element: <Onboarding03 />,
+        errorElement: <RouteErrorBoundary />,
+      },
+    ],
+  },
+
+  // Catch-All Route for 404 Page Not Found
+  { path: "*", element: <PageNotFound /> },
 ];
 
 const appRouter = createBrowserRouter(routes);

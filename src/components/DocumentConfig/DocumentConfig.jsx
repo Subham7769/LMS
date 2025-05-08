@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -32,6 +27,8 @@ import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { fetchDocumentConfigData } from "../../redux/Slices/sidebarSlice";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { borrowerTypeOptions, eligibiltyOptions } from "../../data/OptionsData";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
 
 const DocumentConfig = () => {
   const { dynamicDocumentTempId } = useParams();
@@ -119,6 +116,17 @@ const DocumentConfig = () => {
     }
   };
 
+  let ListHeader = [
+    { name: "Document Key Name", sortKey: null },
+    { name: "Borrower Type", sortKey: null },
+    { name: "Usage", sortKey: null },
+  ];
+  
+    // Conditionally add the "Actions" column if roleName has view only access
+    if (!hasViewOnlyAccess(roleName)) {
+      ListHeader.push({ name: "Actions", sortKey: null });
+    }
+
   return (
     <>
       <DynamicHeader
@@ -134,69 +142,58 @@ const DocumentConfig = () => {
         onCreateClone={createCloneDocumentConfig}
         initialName={itemName}
       />
-      <ContainerTile loading={loading}>
+      <ContainerTile loading={loading} className={"px-5 pt-5 pb-1"}>
         {!hasViewOnlyAccess(roleName) && (
-          <div className="grid grid-cols-4 gap-4 items-end mb-4">
-            <InputText
-              labelName="Document Key Name"
-              inputName="documentKeyName"
-              inputValue={addDocumentConfigData?.documentKeyName}
-              onChange={handleInputChange}
-              placeHolder="PAY_SLIP"
-              isValidation={true}
-            />
-            <InputSelect
-              labelName="Borrower Type"
-              inputOptions={borrowerTypeOptions}
-              inputName="borrowerType"
-              inputValue={addDocumentConfigData?.borrowerType}
-              onChange={handleInputChange}
-              isValidation={true}
-            />
-            <InputSelect
-              labelName="Usage"
-              inputOptions={eligibiltyOptions}
-              inputName="usage"
-              inputValue={addDocumentConfigData?.usage}
-              onChange={handleInputChange}
-              isValidation={true}
-            />
-            <div>
-              <Button
-                buttonIcon={PlusIcon}
-                buttonName="Add"
-                onClick={handleAdd}
-                rectangle={true}
+          <>
+            <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
+              Add New Documents
+            </h2>
+            <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 items-end mb-6">
+              <InputText
+                labelName="Document Key Name"
+                inputName="documentKeyName"
+                inputValue={addDocumentConfigData?.documentKeyName}
+                onChange={handleInputChange}
+                placeHolder="PAY_SLIP"
+                isValidation={true}
               />
+              <InputSelect
+                labelName="Borrower Type"
+                inputOptions={borrowerTypeOptions}
+                inputName="borrowerType"
+                inputValue={addDocumentConfigData?.borrowerType}
+                onChange={handleInputChange}
+                isValidation={true}
+              />
+              <InputSelect
+                labelName="Usage"
+                inputOptions={eligibiltyOptions}
+                inputName="usage"
+                inputValue={addDocumentConfigData?.usage}
+                onChange={handleInputChange}
+                isValidation={true}
+              />
+              <div className="text-right md:text-left">
+                <Button
+                  buttonIcon={AddIcon}
+                  buttonName="Add"
+                  onClick={handleAdd}
+                />
+              </div>
             </div>
-          </div>
+          </>
         )}
-        {documentConfigData.length > 0 && (
-          <div className="shadow-md border border-border-gray-primary rounded-md text-center bg-white">
-            <div className="grid grid-cols-4 items-end mb-4 bg-background-light-secondary px-5">
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Document Key Name
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Borrower Type
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Usage
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </div>
-            </div>
-            {documentConfigData?.map((docData, index) => (
-              <div
-                key={docData.dynamicDocumentId}
-                className={`grid grid-cols-4 gap-4 items-center pb-3 px-5 mb-3 
-                ${
-                  index !== documentConfigData.length - 1
-                    ? "border-b border-border-gray-primary"
-                    : ""
-                }`}
-              >
+        <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold mb-3">
+          Manage Existing Documents and their Usage
+        </h2>
+        <ListTableClassic
+          ListName="List of Documents"
+          ListNameLength={documentConfigData?.length}
+          ListHeader={ListHeader}
+        >
+          {documentConfigData?.map((docData, index) => (
+            <tr key={docData.dynamicDocumentId}>
+              <td className="px-4 py-4 whitespace-nowrap min-w-52">
                 <InputText
                   inputName="documentKeyName"
                   id={docData?.dynamicDocumentId}
@@ -206,6 +203,8 @@ const DocumentConfig = () => {
                   isValidation={true}
                   isIndex={docData.dataIndex}
                 />
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap min-w-64">
                 <InputSelect
                   inputOptions={borrowerTypeOptions}
                   id={docData?.dynamicDocumentId}
@@ -213,6 +212,8 @@ const DocumentConfig = () => {
                   inputValue={docData?.borrowerType}
                   onChange={(e) => handleChange(e, docData?.dynamicDocumentId)}
                 />
+              </td>
+              <td className="px-4 py-4 whitespace-nowrap min-w-60">
                 <InputSelect
                   inputOptions={eligibiltyOptions}
                   id={docData?.dynamicDocumentId}
@@ -220,38 +221,33 @@ const DocumentConfig = () => {
                   inputValue={docData?.usage}
                   onChange={(e) => handleChange(e, docData?.dynamicDocumentId)}
                 />
-                {!hasViewOnlyAccess(roleName) ? (
-                  <div className="flex items-center justify-center gap-4">
-                    <Button
-                      buttonIcon={CheckCircleIcon}
-                      onClick={() =>
-                        handleSave(docData?.dynamicDocumentId, index)
-                      }
-                      circle={true}
-                      buttonType="secondary"
-                    />
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() =>
-                        dispatch(
-                          deleteConfig({
-                            dynamicDocumentId: docData?.dynamicDocumentId,
-                            dynamicDocumentTempId:
-                              docData?.dynamicDocumentTempId,
-                          })
-                        )
-                      }
-                      circle={true}
-                      buttonType="destructive"
-                    />
-                  </div>
-                ) : (
-                  "-"
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+              </td>
+              {!hasViewOnlyAccess(roleName) && (
+                <td className="px-4 py-4 whitespace-nowrap flex gap-2">
+                  <Button
+                    buttonIcon={CheckIcon}
+                    onClick={() =>
+                      handleSave(docData?.dynamicDocumentId, index)
+                    }
+                    buttonType="success"
+                  />
+                  <Button
+                    buttonIcon={DeleteIcon}
+                    onClick={() =>
+                      dispatch(
+                        deleteConfig({
+                          dynamicDocumentId: docData?.dynamicDocumentId,
+                          dynamicDocumentTempId: docData?.dynamicDocumentTempId,
+                        })
+                      )
+                    }
+                    buttonType="destructive"
+                  />
+                </td>
+              )}
+            </tr>
+          ))}
+        </ListTableClassic>
       </ContainerTile>
     </>
   );

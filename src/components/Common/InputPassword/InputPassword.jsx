@@ -33,7 +33,9 @@ const InputPassword = ({
       {labelName && (
         <label
           className={`block ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-600 dark:text-gray-400"
           } px-1 text-sm font-semibold`}
           htmlFor={inputName}
         >

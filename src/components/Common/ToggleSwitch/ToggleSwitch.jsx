@@ -6,6 +6,7 @@ const ToggleSwitch = ({
   inputName,
   inputChecked,
   onChange,
+  disabled,
 }) => {
   return (
     <li className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700/60">
@@ -34,10 +35,11 @@ const ToggleSwitch = ({
             className="sr-only"
             checked={inputChecked}
             onChange={onChange}
+            disabled={disabled}
           />
           <label
             htmlFor={inputName}
-            className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+            className="block overflow-hidden h-6 rounded-full bg-gray-300 dark:bg-gray-700 cursor-pointer"
           >
             <span
               className={`dot absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition ${

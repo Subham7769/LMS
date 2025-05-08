@@ -124,13 +124,14 @@ const OccupationCard = ({ occupationData, loading, error }) => {
   };
 
   return (
-    <ContainerTile className={"w-full"} loading={loading} error={error}>
+    <ContainerTile className={"p-5"} loading={loading}>
       <div className="text-lg mb-3">Occupation</div>
       <TagInput
         formData={occupationFormData}
         handleChange={handleChange}
         inputTextName={"occupation"}
         inputTextLabel={"Add Occupation"}
+        buttonTagName={"Add"}
         addTag={addTag}
         deleteTag={deleteTag}
         inputNumberName={"occpoints"}

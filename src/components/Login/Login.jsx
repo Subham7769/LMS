@@ -21,6 +21,7 @@ import {
   resetError,
   setRole,
 } from "../../redux/Slices/authSlice";
+import { LogoIcon } from "../../assets/icons";
 
 const Login = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -174,8 +175,8 @@ const Login = () => {
     const { name, value } = e.target;
     dispatch(updateDataField({ name, value }));
   };
-  const InputStyle =
-    "mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6";
+
+  const InputStyle = "form-input w-full";
 
   return (
     <div className="min-h-screen flex flex-row-reverse items-center justify-center bg-white relative">
@@ -200,16 +201,16 @@ const Login = () => {
         {/* Header */}
         <div className="absolute top-3 left-0">
           {/* Logo */}
-          <BoltIcon className={`h-8 w-auto ml-5 text-indigo-500`} />
+          <LogoIcon className={`h-8 w-auto ml-5 fill-violet-500`} />
         </div>
-        <h2 className="text-3xl font-bold text-text-light-primary mb-6 ">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 ">
           {isSignup === "Login"
             ? "Welcome back!"
             : isSignup === "Signup"
             ? "Create an Account"
             : "Reset Your Password"}
         </h2>
-        <form className="border-b border-border-gray-secondary pb-6">
+        <form className="border-b border-gray-100 pb-6">
           {isSignup === "Signup" && (
             <div className="mb-4">
               <label
@@ -322,7 +323,7 @@ const Login = () => {
           )}
           {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
           <div className="flex justify-between items-center">
-            <div className="">
+            <div className="text-sm text-gray-600 ">
               {isSignup === "Login" && (
                 <p>
                   <button
@@ -331,7 +332,7 @@ const Login = () => {
                       dispatch(resetError());
                       dispatch(setButtonText("Set New Password"));
                     }}
-                    className="text-gray-primary hover:no-underline underline"
+                    className="hover:no-underline underline"
                   >
                     Forgot password?
                   </button>
@@ -345,7 +346,7 @@ const Login = () => {
                       dispatch(resetError());
                       dispatch(setButtonText("Login"));
                     }}
-                    className="text-gray-primary hover:no-underline underline"
+                    className="hover:no-underline underline"
                   >
                     Back To Login
                   </button>
@@ -364,7 +365,7 @@ const Login = () => {
                   resetPassword(email, newPassword, confirmPassword);
                 }
               }}
-              className="py-2 px-4 bg-black text-white font-semibold rounded-md shadow hover:bg-text-light-primary focus:outline-none"
+              className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white ml-3 cursor-pointer"
             >
               {isSignup === "Login" &&
                 buttonText !== "Validating User" &&
@@ -396,9 +397,9 @@ const Login = () => {
             </button>
           </div>
         </form>
-        <div className="mt-6">
+        <div className="mt-6 text-gray-600 text-sm">
           {isSignup === "Login" && (
-            <p className="text-gray-primary">
+            <p className="">
               Don't have an account?{" "}
               <button
                 onClick={() => {
@@ -406,14 +407,14 @@ const Login = () => {
                   dispatch(resetError());
                   dispatch(setButtonText("Sign Up"));
                 }}
-                className="text-indigo-600 hover:text-indigo-500 font-semibold"
+                className="font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400"
               >
                 Sign up
               </button>
             </p>
           )}
           {isSignup === "Signup" && (
-            <p className="text-gray-primary">
+            <p className="">
               Already have an account?{" "}
               <button
                 onClick={() => {
@@ -421,7 +422,7 @@ const Login = () => {
                   dispatch(resetError());
                   dispatch(setButtonText("Login"));
                 }}
-                className="text-indigo-600 hover:text-indigo-500 font-semibold"
+                className="font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400"
               >
                 Login
               </button>

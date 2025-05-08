@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -27,6 +22,8 @@ import { convertDate } from "../../utils/convertDate";
 import AddEmployerModal from "./AddEmployerModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
 
 const Employer = () => {
   const dispatch = useDispatch();
@@ -120,19 +117,44 @@ const Employer = () => {
     emp?.employerName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  let ListHeader = [
+    { name: "Employer Name", sortKey: null },
+    { name: "Affordability Criteria", sortKey: null },
+    { name: "Day of Month", sortKey: null },
+    { name: "Which Month ?", sortKey: null },
+    { name: "Creation Date", sortKey: null },
+  ];
+  
+    // Conditionally add the "Actions" column if roleName has view only access
+    if (!hasViewOnlyAccess(roleName)) {
+      ListHeader.push({ name: "Actions", sortKey: null });
+    }
+
   return (
     <>
-      <ContainerTile loading={loading}>
-        <h2 className="mb-6">
-          <b className="text-xl font-semibold">Employer</b>
-          <div className="text-gray-600 text-sm">
-            Manage employers and their affordability criteria
-          </div>
-        </h2>
+      <ContainerTile loading={loading} className={"px-5 pt-5 pb-1"}>
+        <div className="block md:flex justify-between items-center">
+          <h2 className="mb-6">
+            <b className="text-xl font-semibold">Employer</b>
+            <div className="text-gray-600 text-sm">
+              Manage employers and their affordability criteria
+            </div>
+          </h2>
+          {!hasViewOnlyAccess(roleName) && (
+            <div className="text-right">
+              <Button
+                buttonIcon={AddIcon}
+                buttonName={"Add Employer"}
+                onClick={handleAddEmployer}
+                buttonType="primary"
+              />
+            </div>
+          )}
+        </div>
         <div className="flex flex-col gap-5">
           {/* Search Bar */}
-          <div className="flex items-end justify-between">
-            <div className="w-1/3">
+          <div className="flex flex-col gap-5">
+            <div className="">
               <InputText
                 labelName="Search Employer"
                 inputName="searchEmployer"
@@ -141,105 +163,74 @@ const Employer = () => {
                 placeHolder="Search by employer name"
               />
             </div>
-            {!hasViewOnlyAccess(roleName) ? (
-              <div>
-                <Button
-                  buttonIcon={PlusIcon}
-                  buttonName={"Add Employer"}
-                  onClick={handleAddEmployer}
-                  rectangle={true}
-                />
-              </div>
-            ) : null}
           </div>
-
-          {/* Employer Data Table */}
-          <div className="shadow-md border border-border-gray-primary rounded-md text-center bg-white">
-            <div className="grid grid-cols-6 items-end mb-4 bg-background-light-secondary px-5">
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Employer Name
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Affordability Criteria
-              </div>
-
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Day of Month
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Which Month ?
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Creation Date
-              </div>
-              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </div>
-            </div>
+          <ListTableClassic
+            ListName="List of Employers"
+            ListNameLength={filteredEmployers?.length}
+            ListHeader={ListHeader}
+          >
             {filteredEmployers?.map((empData, index) => (
-              <div
-                key={empData.employerId}
-                className={`grid grid-cols-6 gap-4 items-center pb-3 px-5 mb-3 
-                ${index !== filteredEmployers.length - 1
-                    ? "border-b border-border-gray-primary"
-                    : ""
-                  }`}
-              >
-                <InputText
-                  inputName="employerName"
-                  id={`employer_${empData?.employerId}`}
-                  inputValue={empData?.employerName}
-                  onChange={(e) => handleChange(e, empData?.employerId)}
-                  placeHolder="Infosys"
-                  isValidation={true}
-                  isIndex={empData.dataIndex}
-                />
-                <InputSelect
-                  inputOptions={affordabilityOptions}
-                  id={`affordability_${empData?.employerId}`}
-                  inputName="affordabilityCriteriaTempId"
-                  inputValue={empData?.affordabilityCriteriaTempId}
-                  onChange={(e) => handleChange(e, empData?.employerId)}
-                />
-
-                <InputSelect
-                  inputOptions={daysOfMonth}
-                  id={`firstEmiDay_${empData?.employerId}`}
-                  inputName="firstEmiDay"
-                  inputValue={empData?.firstEmiDay}
-                  onChange={(e) => handleChange(e, empData?.employerId)}
-                />
-                <InputSelect
-                  inputOptions={upcomingMonths}
-                  id={`moratoriumMonths_${empData?.employerId}`}
-                  inputName="moratoriumMonths"
-                  inputValue={empData?.moratoriumMonths}
-                  onChange={(e) => handleChange(e, empData?.employerId)}
-                />
-                <div className="text-gray-600">
-                  {convertDate(empData?.creationDate)}
-                </div>
-                {!hasViewOnlyAccess(roleName) ? (
-                  <div className="flex items-center justify-center gap-4">
+              <tr key={index}>
+                <td className="px-4 py-4 whitespace-nowrap min-w-40">
+                  <InputText
+                    inputName="employerName"
+                    id={`employer_${empData?.employerId}`}
+                    inputValue={empData?.employerName}
+                    onChange={(e) => handleChange(e, empData?.employerId)}
+                    placeHolder="Infosys"
+                    isValidation={true}
+                    isIndex={empData.dataIndex}
+                  />
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap min-w-72">
+                  <InputSelect
+                    inputOptions={affordabilityOptions}
+                    id={`affordability_${empData?.employerId}`}
+                    inputName="affordabilityCriteriaTempId"
+                    inputValue={empData?.affordabilityCriteriaTempId}
+                    onChange={(e) => handleChange(e, empData?.employerId)}
+                  />
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap min-w-36">
+                  <InputSelect
+                    inputOptions={daysOfMonth}
+                    id={`firstEmiDay_${empData?.employerId}`}
+                    inputName="firstEmiDay"
+                    inputValue={empData?.firstEmiDay}
+                    onChange={(e) => handleChange(e, empData?.employerId)}
+                  />
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap min-w-48">
+                  <InputSelect
+                    inputOptions={upcomingMonths}
+                    id={`moratoriumMonths_${empData?.employerId}`}
+                    inputName="moratoriumMonths"
+                    inputValue={empData?.moratoriumMonths}
+                    onChange={(e) => handleChange(e, empData?.employerId)}
+                  />
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap">
+                  <div className="text-gray-600">
+                    {convertDate(empData?.creationDate)}
+                  </div>
+                </td>
+                {!hasViewOnlyAccess(roleName) && (
+                  <td className="px-4 py-4 whitespace-nowrap flex gap-2">
                     <Button
-                      buttonIcon={CheckCircleIcon}
+                      buttonIcon={CheckIcon}
                       onClick={() => handleSave(empData?.employerId, index)}
-                      circle={true}
-                      buttonType="secondary"
+                      buttonType="success"
                     />
                     <Button
-                      buttonIcon={TrashIcon}
+                      buttonIcon={DeleteIcon}
                       onClick={() => handleDelete(empData?.employerId)}
-                      circle={true}
                       buttonType="destructive"
                     />
-                  </div>
-                ) : (
-                  "-"
+                  </td>
                 )}
-              </div>
+              </tr>
             ))}
-          </div>
+          </ListTableClassic>
 
           <AddEmployerModal
             isOpen={showEmployerModal}

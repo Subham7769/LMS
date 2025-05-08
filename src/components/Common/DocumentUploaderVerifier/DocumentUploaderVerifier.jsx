@@ -22,14 +22,16 @@ const DocumentUploaderVerifier = ({
           onChange={onFileChange}
           onDelete={onFileDelete}
         />
-        <div>
-          <InputCheckbox
-            labelName={"Verified"}
-            inputChecked={checkboxChecked}
-            onChange={onCheckboxChange}
-            inputName={checkboxName}
-          />
-        </div>
+        {checkboxName && (
+          <div>
+            <InputCheckbox
+              labelName={"Verified"}
+              inputChecked={checkboxChecked}
+              onChange={onCheckboxChange}
+              inputName={checkboxName}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -165,7 +165,7 @@ export const fetchProjectData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, projectId }) => ({
         name,
-        href: "/loan/project/" + projectId,
+        href: "/loan/project/" + projectId + "/basic-details",
       }));
     };
     try {
@@ -214,7 +214,7 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, creditScoreEtTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/loan/credit-score-eligible-tenure/" + creditScoreEtTempId,
+        href: "/loan/eligible-tenure/" + creditScoreEtTempId,
       }));
     };
     try {

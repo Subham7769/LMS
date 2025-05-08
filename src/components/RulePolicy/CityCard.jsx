@@ -126,7 +126,7 @@ const CityCard = ({ cityData, loading, error }) => {
   };
 
   return (
-    <ContainerTile className={"w-full"} loading={loading} error={error}>
+    <ContainerTile className={"p-5"} loading={loading}>
       <div className="flex items-center justify-between mb-3">
         <div className="text-lg">City</div>
       </div>
@@ -135,6 +135,7 @@ const CityCard = ({ cityData, loading, error }) => {
         handleChange={handleChange}
         inputTextName={"city"}
         inputTextLabel={"Add City"}
+        buttonTagName={"Add"}
         addTag={addTag}
         deleteTag={deleteTag}
         inputNumberName={"points"}

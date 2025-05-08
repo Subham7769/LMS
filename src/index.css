@@ -3,6 +3,13 @@
 @import "tailwindcss";
 @import "./additional-styles/utility-patterns.css" layer(components);
 
+@plugin "@tailwindcss/forms" {
+  strategy: base;
+}
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant sidebar-expanded (&:is(.sidebar-expanded *));
+
 @theme {
   --shadow-sm: 0 1px 1px 0 rgb(0 0 0 / 0.05), 0 1px 2px 0 rgb(0 0 0 / 0.02);
 
@@ -269,7 +276,7 @@ input:focus {
   -webkit-overflow-scrolling: touch;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
@@ -282,7 +289,7 @@ input:focus {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #6366f1;
-}
+} */
 
 @media print {
   body {
@@ -328,3 +335,17 @@ input:focus {
     border-color: var(--color-gray-200, currentColor);
   }
 }
+
+@layer utilities {
+  .menu-active-gradient {
+    /* Light mode */
+    --tw-gradient-from: rgb(132 112 255 / 0.12);
+    --tw-gradient-to: rgb(132 112 255 / 0.04);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+    background-image: linear-gradient(135deg, var(--tw-gradient-stops));
+
+    /* Dark mode overrides */
+    @apply dark:[--tw-gradient-from:rgb(132_112_255_/_0.24)] dark:[--tw-gradient-to:rgb(132_112_255_/_0)] dark:[--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)];
+  }
+}
+

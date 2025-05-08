@@ -1,30 +1,28 @@
 import React from "react";
-import { TrashIcon } from "@heroicons/react/20/solid";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 
 const Button = ({
   buttonIcon: ButtonIcon,
   buttonName,
   onClick,
-  rectangle = false,
-  circle = false,
   className,
   disabled = false,
   buttonType = "primary", // Default to "primary",
+  iconClassName = "h-4 w-4",
   loading = false,
   title,
 }) => {
-  const rectangleClass =
-    "rounded-md inline-flex items-center px-2.5 py-1.5 gap-x-1.5";
-  const circleClass = "rounded-full h-9 w-9 p-2 px-2.5";
   const buttonTypeClass = {
     primary:
-      "bg-green-500 hover:bg-green-600 focus-visible:outline-green-500 text-white shadow-sm",
+      "btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white",
     secondary:
-      "bg-gray-500 hover:bg-gray-600 focus-visible:outline-gray-500 text-white shadow-sm",
-    tertiary: "bg-white shadow-md hover:shadow text-blue-600 border",
+      "btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-800 dark:text-gray-300",
+    tertiary:
+      "btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-violet-500",
     destructive:
-      "bg-red-500 hover:bg-red-600 focus-visible:outline-red-500 text-white",
+      "btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-red-500",
+    success:
+      "btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-green-500",
   };
 
   return (
@@ -33,53 +31,40 @@ const Button = ({
       onClick={onClick}
       title={title}
       className={`
-        ${rectangle ? rectangleClass : ""}
-        ${circle ? circleClass : ""}
-        disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-background-light-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+        disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-white dark:disabled:bg-gray-800 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:cursor-not-allowed
         ${buttonTypeClass[buttonType] || buttonTypeClass.primary}
         ${className} 
-        relative flex items-center justify-center
+        relative items-center justify-center inline-flex cursor-pointer
       `}
-      disabled={disabled || loading} // Disable button when loading
+      disabled={disabled || loading}
     >
-      <div
-        className={`flex items-center justify-center ${
-          loading ? "opacity-50" : "opacity-100"
-        }`}
-      >
-        {ButtonIcon && (
-          <ButtonIcon className="h-5 w-5" aria-hidden="true" />
-        )}
-        {buttonName && ButtonIcon ? (
-          <span className="ml-2">{buttonName}</span>
-        ) : (
-          <span>{buttonName}</span>
-        )}
-      </div>
-
       {/* Loader Overlay */}
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
+      {loading ? (
+        <div className="flex items-center justify-center">
           <svg
-            className="animate-spin h-5 w-5 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+            className="animate-spin fill-current shrink-0"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
           >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"
-            ></path>
+            <path d="M8 16a7.928 7.928 0 01-3.428-.77l.857-1.807A6.006 6.006 0 0014 8c0-3.309-2.691-6-6-6a6.006 6.006 0 00-5.422 8.572l-1.806.859A7.929 7.929 0 010 8c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z" />
           </svg>
+          <span className="ml-2">Loading</span>
+        </div>
+      ) : (
+        <div
+          className={`flex items-center justify-center ${
+            loading ? "opacity-50" : "opacity-100"
+          }`}
+        >
+          {ButtonIcon && (
+            <ButtonIcon className={iconClassName} aria-hidden="true" />
+          )}
+          {buttonName && ButtonIcon ? (
+            <span className="ml-2">{buttonName}</span>
+          ) : (
+            <span>{buttonName}</span>
+          )}
         </div>
       )}
     </button>

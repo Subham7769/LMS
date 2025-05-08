@@ -62,14 +62,45 @@ export const fetchData = createAsyncThunk(
   }
 );
 
+// export const uploadTCLFile = createAsyncThunk(
+//   "tcl/uploadTCLFile",
+//   async ({ tclId, selectedFile }, { rejectWithValue, dispatch }) => {
+//     const formData = new FormData();
+//     formData.append("file", selectedFile);
+
+//     try {
+//       const token = localStorage.getItem("authToken");
+//       const response = await fetch(
+//         `${import.meta.env.VITE_TCL_UPLOAD_URL}${tclId}`,
+//         {
+//           method: "POST",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: formData,
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error("Failed to upload file");
+//       }
+
+//       // Dispatch to fetch updated data after successful upload
+//       dispatch(fetchData(tclId));
+
+//       return "File uploaded successfully!";
+//     } catch (error) {
+//       return rejectWithValue("Error uploading file. Please try again.");
+//     }
+//   }
+// );
+
 export const uploadTCLFile = createAsyncThunk(
   "tcl/uploadTCLFile",
-  async ({ tclId, selectedFile }, { rejectWithValue, dispatch }) => {
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
+  async ({ formData, fileUploadParams }, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("authToken");
+      const { tclId } = fileUploadParams;
       const response = await fetch(
         `${import.meta.env.VITE_TCL_UPLOAD_URL}${tclId}`,
         {
@@ -82,15 +113,13 @@ export const uploadTCLFile = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Failed to upload file");
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
       }
-
-      // Dispatch to fetch updated data after successful upload
       dispatch(fetchData(tclId));
-
       return "File uploaded successfully!";
     } catch (error) {
-      return rejectWithValue("Error uploading file. Please try again.");
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -101,7 +130,7 @@ export const addTCLData = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        `${import.meta.env.VITE_TCL_FILE_ADD_DATA}${fileSelectedOption.value}`,
+        `${import.meta.env.VITE_TCL_FILE_ADD_DATA}${fileSelectedOption}`,
         {
           method: "GET",
           headers: {
@@ -370,6 +399,7 @@ const tclSlice = createSlice({
         toast.success("File deleted successfully");
       })
       .addCase(deleteTCLFile.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.error.message;
         toast.error(`API Error : ${action.payload}`);
       })

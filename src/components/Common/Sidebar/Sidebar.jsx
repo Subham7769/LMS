@@ -5,9 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleSidebar,
   setSubmenuStates,
-  fetchRACData,
   fetchDBRData,
-  fetchBEData,
   fetchProjectData,
   fetchProductData,
   fetchCreditScoreEqData,
@@ -314,14 +312,14 @@ const SideBar = () => {
         aria-hidden="true"
       ></div>
       <div
-        className={`z-40 absolute top-0 left-0 -mr-1 lg:relative overflow-y-auto h-screen no-scrollbar lg:bg-gray-100 flex transform duration-1000 ease-in-out ${
+        className={`z-40 absolute top-0 left-0 -mr-1 lg:relative overflow-y-auto h-screen no-scrollbar lg:bg-gray-100 dark:lg:bg-gray-900/90 flex transform duration-1000 ease-in-out ${
           open ? "w-[17rem]" : "lg:w-14 w-0"
         }`}
       >
         {/* Collapse Button */}
         <button
           onClick={handleToggleSidebar}
-          className={`hidden lg:block z-30 absolute right-2 top-56 bg-blue-500 h-16 w-4 rounded-full p-0`}
+          className={`hidden lg:block z-30 absolute right-2 top-56 bg-gray-800 dark:border border-gray-400 h-16 w-4 rounded-full p-0`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -343,7 +341,7 @@ const SideBar = () => {
         <ul
           className={`pt-4 border-r h-auto ${
             open ? "w-64 px-4" : "lg:w-10 w-0 pl-1 pr-2"
-          } overflow-y-auto no-scrollbar border-gray-200 bg-white transition-all duration-1000 ease-in-out`}
+          } overflow-y-auto no-scrollbar border-gray-200 dark:border-gray-800  bg-white dark:bg-gray-800 transition-[width,padding] duration-1000 ease-in-out`}
         >
           <div className="w-full flex shrink-0 items-center justify-between lg:w-1/3">
             <LogoIcon
@@ -360,7 +358,7 @@ const SideBar = () => {
             <div key={sectionName} className={`${!open && "mb-2 "} `}>
               {menus.some((menu) => menu.sectionName === sectionName) && (
                 <h2
-                  className={`text-gray-secondary uppercase dark:text-gray-primary text-xs font-semibold ml-3 mb-3 ${
+                  className={`text-gray-400 uppercase dark:text-gray-500 text-xs font-semibold ml-3 mb-3 ${
                     !open && "hidden"
                   } ${sectionIndex !== 0 ? "mt-7" : ""}`}
                 >
@@ -380,7 +378,7 @@ const SideBar = () => {
                         index === menus.length - 1 && "mb-52"
                       } ${
                         pathname.includes(menu.href)
-                          ? "bg-violet-tertiary rounded-lg"
+                          ? "menu-active-gradient rounded-lg"
                           : ""
                       } `}
                     >
@@ -401,8 +399,8 @@ const SideBar = () => {
                           const isHighlighted =
                             (isActive && !menu.openInNewTab) ||
                             pathname.includes(menu.href);
-                          return `text-gray-500 ${
-                            isHighlighted ? "text-violet-quaternary" : ""
+                          return `text-gray-400 dark:text-gray-500 ${
+                            isHighlighted ? "text-violet-500" : ""
                           }`;
                         }}
                       >
@@ -417,7 +415,7 @@ const SideBar = () => {
                             <IconComponent className="h-5 w-5 shrink-0" />
                           </span>
                           <span
-                            className={`text-sm ml-1 flex-1 transform duration-1000 ease-in-out text-text-light-primary ${
+                            className={`text-sm ml-1 flex-1 transform duration-1000 ease-in-out text-gray-800 dark:text-gray-100 ${
                               !open && "hidden"
                             }`}
                             onClick={() => handleToggleSidebarOnMobile(menu)}
@@ -440,7 +438,7 @@ const SideBar = () => {
                           {/* If create from Sidebar Using input box */}
                           {menu.createButton && (
                             <div>
-                              <li className="py-1 cursor-pointer rounded-md hover:text-text-light-secondary">
+                              <li className="py-1 cursor-pointer rounded-md">
                                 <CreateNew
                                   placeholder={menu.placeholder}
                                   buttonName={menu.buttonName}
@@ -457,10 +455,10 @@ const SideBar = () => {
                             <div key={submenuItem.name}>
                               <NavLink
                                 to={submenuItem.href}
-                                className="text-gray-500/90"
+                                className="text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                                 onClick={() => handleToggleSidebarOnMobile()}
                               >
-                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md hover:text-text-light-secondary ">
+                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md ">
                                   {submenuItem.name}
                                 </li>
                               </NavLink>

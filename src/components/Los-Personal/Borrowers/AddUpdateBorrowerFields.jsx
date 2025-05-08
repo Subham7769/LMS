@@ -381,14 +381,14 @@ const AddUpdateBorrowerFields = ({
       labelName: "Mobile 1",
       inputName: "mobile1",
       type: "text",
-      maxLength: 10,
+      maxLength:10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "text",
-      maxLength: 10,
+      maxLength:10,
       validation: false,
     },
     {

@@ -1,9 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputSelect from "../Common/InputSelect/InputSelect";
@@ -38,6 +33,8 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import { fetchLoanApprovalData } from "../../redux/Slices/sidebarSlice";
 import { toast } from "react-toastify";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
+import Banner2 from "../Common/Banner/Banner2";
 
 const LoanApproval = () => {
   const { approvalsConfigurationsTempId } = useParams();
@@ -185,13 +182,14 @@ const LoanApproval = () => {
         onCreateClone={createCloneLoanApproval}
         initialName={itemName}
       />
-      <div className="flex flex-col gap-5">
-        {!hasViewOnlyAccess(roleName) ? (
+      <div className="flex flex-col">
+        {!hasViewOnlyAccess(roleName) && (
           <ContainerTile
             loading={loading}
+            className={"p-5 border-2 border-violet-400 dark:border-violet-500"}
             // error={error}
           >
-            <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end mb-4">
               <InputNumber
                 labelName="Minimum"
                 inputName="minimum"
@@ -208,27 +206,30 @@ const LoanApproval = () => {
                 placeHolder="10000"
                 isValidation={true}
               />
-              <Button
-                buttonIcon={PlusIcon}
-                onClick={handleAddRoles}
-                circle={true}
-                buttonType="secondary"
-              />
+              <div className="text-right col-span-2 md:col-span-1 md:text-left">
+                <Button
+                  buttonIcon={AddIcon}
+                  onClick={handleAddRoles}
+                  buttonType="secondary"
+                />
+              </div>
             </div>
             {addLoanapprovalData.approvalRoles.map((addRole, index) => (
               <div
                 key={index}
-                className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-2"
+                className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-2"
               >
-                <InputSelect
-                  labelName="Select Role"
-                  inputOptions={roleOptions}
-                  inputName="roleName"
-                  inputValue={addRole?.roleName}
-                  onChange={(e) => handleInputChange(e, index)}
-                  isValidation={true}
-                />
-                <div className="flex gap-10 pb-2">
+                <div className="">
+                  <InputSelect
+                    labelName="Select Role"
+                    inputOptions={roleOptions}
+                    inputName="roleName"
+                    inputValue={addRole?.roleName}
+                    onChange={(e) => handleInputChange(e, index)}
+                    isValidation={true}
+                  />
+                </div>
+                <div className="grid grid-cols-[40%_40%_20%] md:col-span-2 md:grid-cols-4 gap-4">
                   <InputCheckbox
                     labelName="Final Approve"
                     inputChecked={addRole?.finalApprove}
@@ -241,48 +242,40 @@ const LoanApproval = () => {
                     onChange={(e) => handleInputChange(e, index)}
                     inputName="reject"
                   />
+                  <div>
+                    <Button
+                      buttonIcon={DeleteIcon}
+                      onClick={() => handleDeleteRoles(index)}
+                      buttonType="destructive"
+                    />
+                  </div>
                 </div>
-                <Button
-                  buttonIcon={TrashIcon}
-                  onClick={() => handleDeleteRoles(index)}
-                  circle={true}
-                  buttonType="destructive"
-                />
               </div>
             ))}
-            <div className="text-right">
+            <div className="text-right mt-5">
               <Button
-                buttonIcon={CheckCircleIcon}
+                buttonIcon={CheckIcon}
                 buttonName="Add"
                 onClick={handleAdd}
                 rectangle={true}
               />
             </div>
           </ContainerTile>
-        ) : (
-          ""
         )}
         {loanapprovalData[0]?.loanCriteriaRangeRolesList?.map(
           (loanData, index) => (
             <ContainerTile
-              className={"relative"}
+              className={"relative p-5"}
               loading={loading}
               error={error}
               key={"Loan" + index}
             >
-              <div className="absolute right-3 top-3 text-right">
-                {!hasViewOnlyAccess(roleName) ? (
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => deleteApprover(index)}
-                    circle={true}
-                    buttonType="destructive"
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-              <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-4">
+              <Banner2 open={true} className={"mb-4"}>
+                The following roles can perform action on loans ranging from{" "}
+                {loanData?.minimum} to {loanData?.maximum}
+              </Banner2>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end mb-4">
                 <InputNumber
                   labelName="Minimum"
                   inputName="minimum"
@@ -300,18 +293,19 @@ const LoanApproval = () => {
                   isValidation={true}
                 />
                 {!hasViewOnlyAccess(roleName) && (
-                  <Button
-                    buttonIcon={PlusIcon}
-                    onClick={() => handleAddRolesExisting(index)}
-                    circle={true}
-                    buttonType="secondary"
-                  />
+                  <div className="text-right col-span-2 md:col-span-1 md:text-left">
+                    <Button
+                      buttonIcon={AddIcon}
+                      onClick={() => handleAddRolesExisting(index)}
+                      buttonType="secondary"
+                    />
+                  </div>
                 )}
               </div>
               {loanData.approvalRoles.map((addRole, idx) => (
                 <div
                   key={idx}
-                  className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end mb-2"
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-4 border-b border-dashed border-gray-200 dark:border-gray-700 pb-4 md:border-0 md:pb-0 md:mb-2"
                 >
                   <InputSelect
                     labelName="Select Role"
@@ -321,7 +315,7 @@ const LoanApproval = () => {
                     onChange={(e) => handleChange(e, index, idx)}
                     isValidation={true}
                   />
-                  <div className="flex gap-10 pb-2">
+                  <div className="grid grid-cols-[40%_40%_20%] md:col-span-2 md:grid-cols-4 gap-4">
                     <InputCheckbox
                       labelName="Final Approve"
                       inputChecked={addRole?.finalApprove}
@@ -334,17 +328,28 @@ const LoanApproval = () => {
                       onChange={(e) => handleChange(e, index, idx)}
                       inputName="reject"
                     />
+                    {!hasViewOnlyAccess(roleName) && (
+                      <div>
+                        <Button
+                          buttonIcon={DeleteIcon}
+                          onClick={() => handleDeleteRolesExisting(index, idx)}
+                          buttonType="destructive"
+                        />
+                      </div>
+                    )}
                   </div>
-                  {!hasViewOnlyAccess(roleName) && (
-                    <Button
-                      buttonIcon={TrashIcon}
-                      onClick={() => handleDeleteRolesExisting(index, idx)}
-                      circle={true}
-                      buttonType="destructive"
-                    />
-                  )}
                 </div>
               ))}
+              <div className="text-right mt-5">
+                {!hasViewOnlyAccess(roleName) && (
+                  <Button
+                    buttonIcon={DeleteIcon}
+                    buttonName="Delete Criteria"
+                    onClick={() => deleteApprover(index)}
+                    buttonType="destructive"
+                  />
+                )}
+              </div>
             </ContainerTile>
           )
         )}
@@ -352,10 +357,9 @@ const LoanApproval = () => {
           loanapprovalData[0]?.loanCriteriaRangeRolesList.length > 0 && (
             <div className="text-right">
               <Button
-                buttonIcon={CheckCircleIcon}
+                buttonIcon={CheckIcon}
                 buttonName="Update"
                 onClick={handleUpdate}
-                rectangle={true}
               />
             </div>
           )}
