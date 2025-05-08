@@ -54,6 +54,7 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
+  DragOverlay,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
@@ -62,6 +63,7 @@ const DynamicRAC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [activeRule, setActiveRule] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
@@ -501,7 +503,7 @@ const DynamicRAC = () => {
   }
 
   // Header
-  const HeaderBox = ({ roleName, section,dispatch, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
+  const HeaderBox = ({ roleName, section, dispatch, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
     return (
       <div className="flex justify-between items-center p-5 bg-white border-b">
         <div className="flex justify-center align-middle">
@@ -651,7 +653,15 @@ const DynamicRAC = () => {
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
-                onDragEnd={onDragEnd}
+                onDragStart={(event) => {
+                  console.log(event.active.data.current.rule)
+                  setActiveRule(event.active.data.current.rule);
+                }}
+                onDragEnd={(event) => {
+                  setActiveRule(null); // Clear overlay after drop
+                  onDragEnd(event);    // Your existing handler
+                }}
+                onDragCancel={() => setActiveRule(null)}
               >
                 <div className="flex flex-col justify-center gap-3">
                   {/* Add first Section Box */}
@@ -710,6 +720,26 @@ const DynamicRAC = () => {
                     ))
                   )}
                 </div>
+
+                {/* DragOverlay here, outside the section render loop */}
+                <DragOverlay>
+                  {activeRule ? (
+                    <div className="px-3 bg-white border rounded-md shadow-md p-2">
+                      <RuleComponent
+                        rule={activeRule}
+                        racId={racId}
+                        dynamicRacRuleId={activeRule.dynamicRacRuleId}
+                        sectionId={activeRule.sectionId}
+                        sectionName={activeRule.sectionName}
+                        handleSaveDynamicRAC={handleSaveDynamicRAC}
+                        isEditMode={false}
+                        setIsEditMode={() => { }}
+                        showRuleModal={false}
+                        setShowRuleModal={() => { }}
+                      />
+                    </div>
+                  ) : null}
+                </DragOverlay>
               </DndContext>
 
             </div>
