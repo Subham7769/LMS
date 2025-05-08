@@ -19,6 +19,7 @@ import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { nanoid } from "nanoid";
 import { draftBorrowerInfo } from "../../../redux/Slices/personalBorrowersSlice";
 import { toast } from "react-toastify";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateBorrower = () => {
   const { updateBorrowerData, error, loading } = useSelector(
@@ -37,22 +38,6 @@ const UpdateBorrower = () => {
     }
   }, [dispatch, uid]);
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    return result;
-  }
 
   const handleDraftUpdate = async () => {
     try {

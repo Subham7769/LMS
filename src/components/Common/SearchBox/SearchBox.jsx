@@ -14,7 +14,7 @@ import SearchView from "./SearchView";
 
 const SearchBox = () => {
   const location = useLocation();
-  const [borrowerID, setBorrowerID] = useState("7777777");
+  const [borrowerID, setBorrowerID] = useState("A85677655");
   const [borrowerNotFound, setBorrowerNotFound] = useState(false);
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const dispatch = useDispatch();

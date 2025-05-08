@@ -12,6 +12,7 @@ import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateShareholder = () => {
   const { companyId,updateShareholderData, error, loading } = useSelector(
@@ -22,23 +23,6 @@ const UpdateShareholder = () => {
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
 
-
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    return result;
-  }
   console.log(updateShareholderData)
 
   const handleUpdate = async (uid) => {

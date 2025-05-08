@@ -452,6 +452,9 @@ const smeRepaymentsSlice = createSlice({
       const { rowIndex, fieldName, value } = action.payload;
       state.draftRepaymentDTOList[rowIndex][fieldName] = value;
     },
+    resetAddBulkRepaymentData: (state) => {
+      state.draftRepaymentDTOList=initialState.draftRepaymentDTOList;
+    },
     addBulkRepaymentRow: (state) => {
       const newRow = {
         loan: "",
@@ -663,6 +666,7 @@ const smeRepaymentsSlice = createSlice({
 export const {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
+  resetAddBulkRepaymentData,
   removeBulkRepaymentRow,
   setRepaymentData,
   updateRepaymentData,

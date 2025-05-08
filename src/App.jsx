@@ -319,9 +319,6 @@ const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
 const LoanHistory = lazy(() =>
   import("./components/Los-Personal/Loans/LoanHistory")
 );
-const LoanAgreement = lazy(() =>
-  import("./components/Los-Personal/Loans/LoanAgreement")
-);
 const LoanAgreementPrint = lazy(() =>
   import("./components/Los-Personal/Loans/LoanAgreementPrint")
 );
@@ -351,6 +348,27 @@ const ApproveRepayment = lazy(() =>
 const UploadRepayment = lazy(() =>
   import("./components/Los-Personal/Repayments/UploadRepayment")
 );
+
+//------------Refund-----------------
+const Refund = lazy(() =>
+  import("./components/Los-Personal/Refund/Refund")
+);
+const RefundApplication = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundApplication")
+);
+const AddRefund = lazy(() =>
+  import("./components/Los-Personal/Refund/AddRefund")
+);
+const ApproveRefunds = lazy(() =>
+  import("./components/Los-Personal/Refund/ApproveRefunds")
+);
+const RefundFormPrint = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundFormPrint")
+);
+const RefundHistory = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundHistory")
+);
+
 
 // LOS-SME Imports
 const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
@@ -1069,11 +1087,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "loan-agreement/:loanApplicationId/:userId",
-            element: <LoanAgreement />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
             path: "collateral-register",
             element: <CollateralRegister />,
             errorElement: <RouteErrorBoundary />,
@@ -1098,6 +1111,43 @@ const routes = [
           {
             path: "approve-repayment",
             element: <ApproveRepayment />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "loan-origination-system/personal/refund",
+        element: <Refund />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "refund-application",
+            element: <RefundApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/new/:refundApplicationId",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/new/:refundApplicationId/:loanId/:uid",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/:refundApplicationId",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-refund",
+            element: <ApproveRefunds />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "refund-history",
+            element: <RefundHistory />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -1334,6 +1384,11 @@ const routes = [
   {
     path: "/disbursement-sme/:loanApplicationId/:userId",
     element: <DisbursementFilePrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/refund-form/:refundProcessId",
+    element: <RefundFormPrint />,
     errorElement: <RouteErrorBoundary />,
   },
 

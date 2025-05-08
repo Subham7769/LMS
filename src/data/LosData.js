@@ -264,7 +264,17 @@ export const uniqueIDType = [
   // { value: "VOTER ID", label: "VOTER ID" },
   // { value: "SOCIAL SECURITY NUMBER", label: "SOCIAL SECURITY NUMBER" },
 ];
-export const accountStatusOptions = [
+export const accountStatusOptionsPersonal = [
+  { value: "ACTIVE", label: "ACTIVE" },
+  { value: "DEACTIVATED", label: "DEACTIVATE" },
+  { value: "DEFAULTER", label: "DEFAULTER" },
+  { value: "SETTLED", label: "SETTLED" },
+  { value: "DECEASED", label: "DECEASED" },
+  { value: "SHORT_PAYMENT", label: "SHORT PAYMENT" },
+  { value: "NEW_THIRDPARTY", label: "NEW THIRD PARTY" },
+  { value: "RETIRED_ON_MEDICAL_GROUNDS", label: "RETIRED ON MEDICAL GROUNDS" },
+];
+export const accountStatusOptionsSME = [
   { value: "ACTIVE", label: "ACTIVE" },
   { value: "DEACTIVATED", label: "DEACTIVATE" },
   { value: "DEFAULTER", label: "DEFAULTER" },

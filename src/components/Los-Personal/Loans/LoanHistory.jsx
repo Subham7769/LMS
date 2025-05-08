@@ -13,6 +13,7 @@ import {
   getDisbursementFile,
   getLoanStatement,
   getOutrightSettlement,
+  closeLoan,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -33,6 +34,8 @@ import {
   CurrencyDollarIcon,
   UserIcon,
   ReceiptRefundIcon,
+  ArrowPathIcon,
+  WalletIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
@@ -43,6 +46,7 @@ import {
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
+import { generateRefundApplicationId } from "../../../redux/Slices/personalRefundSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -162,6 +166,24 @@ const LoanHistory = () => {
     ).unwrap();
     navigate(
       `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
+    );
+  };
+
+  const handleCloseLoan = async (loanId, uid) => {
+    const closeLoanPayload = {
+      loanId: loanId,
+      userId: uid,
+    };
+    await dispatch(closeLoan(closeLoanPayload)).unwrap();
+    handleReset();
+  };
+
+  const handleInitiateRefund = async (loanId, uid) => {
+    const refundApplicationId = await dispatch(
+      generateRefundApplicationId()
+    ).unwrap();
+    navigate(
+      `/loan/loan-origination-system/personal/refund/add-refund/new/${refundApplicationId}/${loanId}/${uid}`
     );
   };
 
@@ -420,8 +442,26 @@ const LoanHistory = () => {
             </div>
           )}
           <div className="flex justify-end gap-2 px-5">
-            {rowData.loanStatus === "ACTIVATED" && (
-              <div>
+            {(rowData.loanStatus === "ACTIVATED" ||
+              rowData.loanStatus === "CLOSED") && (
+              <div className="">
+                <Button
+                  buttonName={"Initiate Refund"}
+                  onClick={() =>
+                    handleInitiateRefund(
+                      rowData.loanId,
+                      rowData.uid,
+                    )
+                  }
+                  rectangle={true}
+                  buttonIcon={ReceiptRefundIcon}
+                  buttonType="tertiary"
+                />
+              </div>
+            )}
+            {(rowData.loanStatus === "ACTIVATED" ||
+              rowData.loanStatus === "LATE") && (
+              <div className="flex gap-2">
                 <Button
                   buttonName={"Refinance Loan"}
                   onClick={() =>
@@ -432,7 +472,14 @@ const LoanHistory = () => {
                     )
                   }
                   rectangle={true}
-                  buttonIcon={ReceiptRefundIcon}
+                  buttonIcon={ArrowPathIcon}
+                  buttonType="tertiary"
+                />
+                <Button
+                  buttonName={"Close Loan via Wallet"}
+                  onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
+                  rectangle={true}
+                  buttonIcon={WalletIcon}
                   buttonType="tertiary"
                 />
               </div>

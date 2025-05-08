@@ -270,14 +270,14 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     {
       labelName: "Mobile 1",
       inputName: "mobile1",
-      type: "number",
+      type: "text",
       validation: true,
       maxLength:10,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
-      type: "number",
+      type: "text",
       validation: false,
       maxLength:10,
     },
@@ -413,7 +413,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     {
       labelName: "Account No.",
       inputName: "accountNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
@@ -482,11 +482,11 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     {
       labelName: "Mobile 1",
       inputName: "kinMobile1",
-      type: "number",
+      type: "text",
       validation: false,
       maxLength:10,
     },
-    { labelName: "Mobile 2", inputName: "kinMobile2", type: "number",maxLength:10, },
+    { labelName: "Mobile 2", inputName: "kinMobile2", type: "text",maxLength:10, },
     {
       labelName: "Email",
       inputName: "kinEmail",
