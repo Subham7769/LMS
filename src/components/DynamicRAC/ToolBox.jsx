@@ -30,13 +30,13 @@ import {
 } from "../../redux/Slices/dynamicRacSlice";
 import getConditionForOperators from "./getConditionForOperators";
 
-const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
+const Toolbox = ({ sectionId, sectionName, onClose, isEditMode }) => {
   const { racId } = useParams();
   const dispatch = useDispatch();
-  const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
-  const { sections } = racConfig;
+  const { currentRule, optionsList } = useSelector((state) => state.dynamicRac);
   const userName = localStorage.getItem("username");
-  const { firstOperator, secondOperator, numberCriteriaRangeList } = rule || {};
+  const { firstOperator, secondOperator, numberCriteriaRangeList } = currentRule || {};
+
 
   const initialState = {
     fieldType: "",
@@ -83,10 +83,10 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
   const initialMaxValue = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
 
   const [equalValue, setEqualValue] = useState(0);
-  const [minValue, setMinValue] = useState(rule ? minimum : initialMinValue);
-  const [maxValue, setMaxValue] = useState(rule ? maximum : initialMaxValue);
+  const [minValue, setMinValue] = useState(currentRule ? minimum : initialMinValue);
+  const [maxValue, setMaxValue] = useState(currentRule ? maximum : initialMaxValue);
   const [condition, setCondition] = useState(
-    rule
+    currentRule
       ? getConditionForOperators(
         firstOperator,
         secondOperator,
@@ -95,13 +95,19 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
       )
       : ""
   );
-  const [ruleConfig, setRuleConfig] = useState(
-    isEditMode ? rule : initialState
-  );
+  const [ruleConfig, setRuleConfig] = useState(initialState);
+
+  useEffect(() => {
+    if (isEditMode && currentRule) {
+      setRuleConfig(currentRule);
+    } else {
+      setRuleConfig(initialState);
+    }
+  }, [currentRule, isEditMode]);
 
   useEffect(() => {
     // Update condition whenever any of the values change
-    if (rule) {
+    if (currentRule) {
       const newCondition = getConditionForOperators(
         firstOperator,
         secondOperator,
@@ -114,16 +120,16 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
   useEffect(() => {
     if (condition === "Less than" || condition === "Less than or equal to") {
-      setMaxValue(rule ? maximum : 0); // Reset maxValue when condition is set
+      setMaxValue(currentRule ? maximum : 0); // Reset maxValue when condition is set
       setMinValue(initialMinValue);
     } else if (
       condition === "Greater than" ||
       condition === "Greater than or equal to"
     ) {
-      setMinValue(rule ? minimum : 0); // Reset minValue when condition is set
+      setMinValue(currentRule ? minimum : 0); // Reset minValue when condition is set
       setMaxValue(initialMaxValue);
     } else if (condition === "Equal to") {
-      setEqualValue(rule ? minimum : 0);
+      setEqualValue(currentRule ? minimum : 0);
     }
   }, [condition]);
 
@@ -279,13 +285,13 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     }
   };
 
-  const handleSave = async (rule, ruleConfig) => {
+  const handleSave = async (currentRule, ruleConfig) => {
     if (ruleConfig.fieldType == "NUMBER") {
       if (condition === "Equal to") {
         // Add Rule
         await dispatch(
           updateRuleById({
-            dynamicRacRuleId: rule.dynamicRacRuleId,
+            dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig: {
               ...ruleConfig,
               numberCriteriaRangeList: [
@@ -301,7 +307,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
       } else if (condition === "Between") {
         await dispatch(
           updateRuleById({
-            dynamicRacRuleId: rule.dynamicRacRuleId,
+            dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig,
           })
         ).unwrap();
@@ -309,7 +315,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         // update Rule
         await dispatch(
           updateRuleById({
-            dynamicRacRuleId: rule.dynamicRacRuleId,
+            dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig: {
               ...ruleConfig,
               numberCriteriaRangeList: [
@@ -326,7 +332,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     } else {
       await dispatch(
         updateRuleById({
-          dynamicRacRuleId: rule.dynamicRacRuleId,
+          dynamicRacRuleId: currentRule.dynamicRacRuleId,
           ruleConfig,
         })
       ).unwrap();
@@ -337,6 +343,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
     // After fetching the option list, fetch the Decision Engine details
     await dispatch(fetchDynamicRacDetails(racId));
+    onClose();
   };
 
   const handleStringInputChange = (newValues) => {
@@ -567,7 +574,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           <InputCheckbox
             labelName="REGISTRATION"
             inputChecked={
-              ruleConfig.usageList.find(
+              ruleConfig?.usageList?.find(
                 (item) => item.ruleUsage === "REGISTRATION"
               )?.used || false
             }
@@ -579,7 +586,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           <InputCheckbox
             labelName="ELIGIBILITY"
             inputChecked={
-              ruleConfig.usageList.find(
+              ruleConfig?.usageList?.find(
                 (item) => item.ruleUsage === "ELIGIBILITY"
               )?.used || false
             }
@@ -591,7 +598,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           <InputCheckbox
             labelName="BORROWER_OFFERS"
             inputChecked={
-              ruleConfig.usageList.find(
+              ruleConfig?.usageList?.find(
                 (item) => item.ruleUsage === "BORROWER_OFFERS"
               )?.used || false
             }
@@ -608,7 +615,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
             <Button
               buttonIcon={ArchiveBoxArrowDownIcon}
               buttonName="Save"
-              onClick={() => handleSave(rule, ruleConfig)}
+              onClick={() => handleSave(currentRule, ruleConfig)}
               rectangle={true}
             />
           </div>

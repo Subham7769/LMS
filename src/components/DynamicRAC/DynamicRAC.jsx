@@ -372,7 +372,7 @@ const DynamicRAC = () => {
         : undefined,
       background: "white",
       padding: "8px",
-      opacity: isDragging ? 0.5 : 1,
+      opacity: isDragging ? 0.7 : 1,
       cursor: isDragDisabled ? "not-allowed" : "grab",
     };
 
@@ -558,12 +558,6 @@ const DynamicRAC = () => {
             onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
             initialName={name}
           />
-          {/* <ViewRuleModal
-            isOpen={showRuleModal}
-            onClose={() => setShowRuleModal(false)}
-            sectionId={selectedSectionId}
-            sectionName={selectedSectionName}
-          /> */}
           <ViewTemplateModal
             isOpen={templateModal}
             onClose={() => setTemplateModal(false)}

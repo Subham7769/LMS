@@ -413,6 +413,7 @@ const RuleComponent = ({
       </div>
     </Accordion>)
   }
+  
 
   return (
     <>
@@ -422,7 +423,6 @@ const RuleComponent = ({
         onClose={cancelEdit}
         sectionId={sectionId}
         sectionName={sectionName}
-        rule={rule}
       />
       {/* Maker UI View Rule with Actions*/}
       {(roleName == "ROLE_MAKER_ADMIN") && (

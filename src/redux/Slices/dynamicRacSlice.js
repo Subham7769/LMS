@@ -611,7 +611,7 @@ const dynamicRacSlice = createSlice({
             ...section,
             rules: section.rules.map((rule) => {
               if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                state.currentRule = { ...state.currentRule, ...rule };
+                state.currentRule = { ...state.currentRule, ...rule };//setting Current Rule
               }
               return rule;
             }),

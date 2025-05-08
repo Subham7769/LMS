@@ -2,19 +2,21 @@ import React from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Toolbox from "./ToolBox";
 import convertToReadableString from "../../utils/convertToReadableString";
+import { useSelector } from "react-redux";
 
 const ViewRuleModal = ({
   isOpen,
   isEditMode = false,
   onClose,
   sectionId,
-  rule,
   sectionName,
 }) => {
-  console.log(isOpen)
+
+  const { currentRule } = useSelector((state) => state.dynamicRac);
+
+
   if (!isOpen) return null;
 
-console.log(rule)
   return (
     <>
       <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
@@ -26,7 +28,7 @@ console.log(rule)
           >
             <p className={"font-semibold text-2xl"}>
               {convertToReadableString(
-                isEditMode ? `Edit ${rule.name} Rule` : "Add New Rule"
+                isEditMode ? `Edit ${currentRule.name} Rule` : "Add New Rule"
               )}
             </p>
             <XMarkIcon
@@ -38,7 +40,6 @@ console.log(rule)
             sectionId={sectionId}
             sectionName={sectionName}
             onClose={onClose}
-            rule={rule}
             isEditMode={isEditMode}
           />
         </div>
