@@ -1142,7 +1142,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getDocsByIdnUsage.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
@@ -1244,7 +1244,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadSignedLoanAgreement.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
       })
       .addCase(uploadSignedLoanAgreement.fulfilled, (state, action) => {
         state.loading = false;
@@ -1256,7 +1256,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
       })
       .addCase(uploadDocumentFile.fulfilled, (state, action) => {
         state.loading = false;
@@ -1275,7 +1275,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(deleteDocumentFile.fulfilled, (state, action) => {
@@ -1288,7 +1288,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(downloadDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(downloadDocumentFile.fulfilled, (state, action) => {
@@ -1301,7 +1301,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(previewDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(previewDocumentFile.fulfilled, (state, action) => {
@@ -1326,7 +1326,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getMaxPrincipalData.pending, (state) => {
-        // state.loading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(getMaxPrincipalData.fulfilled, (state, action) => {

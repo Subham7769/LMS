@@ -473,6 +473,7 @@ const AddUpdateBorrowerFields = ({
       searchable: true,
       onCreateOption: handleNewEmployer,
       setEmployerOptions: setEmployerOptions,
+      clearable: true,
     },
     {
       labelName: "Occupation",

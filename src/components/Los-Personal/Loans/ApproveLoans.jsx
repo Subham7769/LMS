@@ -66,6 +66,7 @@ const ApproveLoans = () => {
   const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
   const [selectedBorrowerData, setSelectedBorrowerData] = useState(null);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
 
   console.log(userData.username);
   // Pagination state
@@ -112,6 +113,7 @@ const ApproveLoans = () => {
   const handleReset = () => {
     setPalSearchBy("");
     setPalSearchValue("");
+    setCurrentPage(0);
     dispatch(
       getPendingLoans({
         page: 0,
@@ -448,8 +450,10 @@ const ApproveLoans = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="palSearchBy"
@@ -460,7 +464,7 @@ const ApproveLoans = () => {
             isValidation={true}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="palSearchValue"
@@ -471,7 +475,7 @@ const ApproveLoans = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
@@ -493,11 +497,15 @@ const ApproveLoans = () => {
         data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
+        ListName="List of pending loans"
+        ListNameLength={approveLoansTotalElements}
       />
       <Pagination
         totalElements={approveLoansTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
       <RejectModal
         isOpen={showModal}

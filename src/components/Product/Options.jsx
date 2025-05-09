@@ -56,8 +56,8 @@ const Options = () => {
             onChange={handleChange}
           />
           <ToggleSwitch
-            label="Exclude Insurance Levy Deduction"
-            description="Do not apply insurance levy deductions for this product."
+            label="Exclude Insurance levy from disbursement"
+            description="Exclude insurance levy from disbursed amount calculations"
             inputName="notApplyInsuranceLevyDeduction"
             inputChecked={productData?.notApplyInsuranceLevyDeduction}
             onChange={handleChange}

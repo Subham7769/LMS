@@ -113,8 +113,8 @@ const LoanOffers = () => {
 
   return (
     <>
-      <ContainerTile className={"mb-5 bg-gray-50"} loading={loading}>
-        <div className="grid grid-cols-3 gap-5 items-end">
+      <ContainerTile className={"p-5"} loading={loading}>
+        <div className="grid sm:grid-cols-3 gap-5 items-end">
           <InputSelect
             labelName={"Loan Product"}
             inputName="loanProductId"
@@ -132,7 +132,7 @@ const LoanOffers = () => {
             disabled={false}
             isValidation={true}
           />
-          <div>
+          <div className="text-right sm:text-left">
             <Button
               buttonName="Get Offers"
               onClick={handleGetOffers}

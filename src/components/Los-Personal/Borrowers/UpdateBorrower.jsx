@@ -142,18 +142,16 @@ const UpdateBorrower = () => {
         handleFileReset={resetBorrowerFile}
         handleFileUpload={uploadBorrowerPhotoFile}
       />
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
+      <div className="flex justify-end gap-5 col-span-4">
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
-          rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          buttonType={"destructive"}
           loading={loading}
         />
         {uid && <Button
           buttonName="Update"
           onClick={() => handleUpdateBorrower(uid)}
-          rectangle={true}
           loading={loading}
         />}
         {borrowerProfileDraftId && (

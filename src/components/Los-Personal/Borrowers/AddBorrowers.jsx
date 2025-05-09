@@ -217,13 +217,6 @@ const AddBorrowers = () => {
     dispatch(
       fetchDraftedPersonalBorrowers({ page: currentPage, size: pageSize })
     );
-    // dispatch(
-    //   fetchAllCompanyBorrowersListByLoanOfficer({
-    //     page: currentPage,
-    //     size: pageSize,
-    //     loanOfficer,
-    //   })
-    // );
   };
 
   return (

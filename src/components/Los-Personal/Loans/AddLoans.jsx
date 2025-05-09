@@ -19,7 +19,6 @@ import {
 } from "../../../redux/Slices/validationSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
@@ -143,54 +142,54 @@ const AddLoans = () => {
     await dispatch(getMaxPrincipalData(maxPrincipalPayload)).unwrap();
   };
 
-  if (loading) {
-    return <ContainerTile loading={loading} />;
-  }
+  // if (loading) {
+  //   return <ContainerTile loading={loading} />;
+  // }
 
   console.log(addLoanData);
 
   return (
     <>
       <div
-        className={`border rounded-lg shadow-sm bg-white mb-3 hover:bg-indigo-50 px-4 py-4`}
+        className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4`}
       >
-        <div className="text-gray-500 ">
+        <div className="text-gray-500 dark:text-gray-300">
           Loan Application ID: {addLoanData?.loanApplicationId}
         </div>
       </div>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Resuable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
-      <div className="flex justify-between mt-5 items-end">
-        <div className="text-xs text-text-light-tertiary flex items-center gap-1">
-          <InformationCircleIcon
-            className="-mt-0.5 h-5 w-5"
-            aria-hidden="true"
-          />
-          Loan Product, Borrower Id, Loan Duration & Repayment Tenure required
-          for fetching max principal Amount
-        </div>
-        <div className="flex gap-x-5">
+      <div className="text-xs text-text-light-tertiary flex gap-1 my-2">
+        <InformationCircleIcon className="-mt-0.5 h-5 w-5" aria-hidden="true" />
+        Loan Product, Borrower Id, Loan Duration & Repayment Tenure required for
+        fetching max principal Amount
+      </div>
+      <div className="grid grid-cols-2 md:flex justify-end gap-5 ">
           <Button
             buttonName="Get Max Principal Amt"
             onClick={getMaxPrincipal}
             buttonType="tertiary"
-            rectangle={true}
-            disabled={!(addLoanData?.generalLoanDetails?.loanDuration && addLoanData?.generalLoanDetails?.repaymentTenureStr)}
+            loading={loading}
+            disabled={
+              !(
+                addLoanData?.generalLoanDetails?.loanDuration &&
+                addLoanData?.generalLoanDetails?.repaymentTenureStr
+              )
+            }
           />
           <Button
             buttonName="Save Draft"
             onClick={handleDraft}
             buttonType="secondary"
-            rectangle={true}
+            loading={loading}
           />
-          <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
+          <Button buttonName="Submit" onClick={handleSubmit} loading={loading} />
           <Button
             buttonName="Cancel"
             onClick={handleCanel}
-            rectangle={true}
+            loading={loading}
             buttonType="destructive"
           />
-        </div>
       </div>
     </>
   );

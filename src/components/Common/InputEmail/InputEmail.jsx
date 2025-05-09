@@ -35,7 +35,6 @@ const InputEmail = ({
   const handleBlur = () => {
     // Check if the input value matches the email pattern
     if (inputValue) {
-
       if (!emailRegex.test(inputValue)) {
         dispatch(setValidationErrorTrue(validationKey));
       } else {
@@ -52,7 +51,7 @@ const InputEmail = ({
             validationError[validationKey]
               ? "text-red-600"
               : "text-gray-600 dark:text-gray-400"
-          } px-1 text-sm font-semibold`}
+          } px-1 text-sm font-medium mb-1`}
           htmlFor={inputName}
         >
           {validationError[validationKey] ? "Invalid email format" : labelName}{" "}
@@ -68,13 +67,9 @@ const InputEmail = ({
         onFocus={() => dispatch(setValidationError(validationKey))} // Call onFocus to reset the error state
         placeholder={placeHolder}
         disabled={disabled}
-        className={`block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
-          ${
-            validationError[validationKey]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
+        className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
+          ${validationError[validationKey] ? "border-red-300" : ""} 
+          `}
         required
         readOnly={readOnly}
       />

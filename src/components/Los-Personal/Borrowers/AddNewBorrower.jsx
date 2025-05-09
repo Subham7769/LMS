@@ -92,12 +92,11 @@ const AddNewBorrowers = () => {
         handleFileReset={resetBorrowerFile}
         handleFileUpload={uploadBorrowerPhotoFile}
       />
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
+      <div className="flex justify-end gap-5 col-span-4">
 
         <Button
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}
-          rectangle={true}
           buttonType="destructive"
           loading={loading}
         />
@@ -105,20 +104,17 @@ const AddNewBorrowers = () => {
           buttonName="Cancel"
           onClick={handleCancel}
           buttonType="destructive"
-          rectangle={true}
           loading={loading}
         />
         <Button
           buttonName="Save Draft"
           onClick={handleDraft}
-          rectangle={true}
           buttonType={"secondary"}
           loading={loading}
         />
         <Button
           buttonName="Submit"
           onClick={handleSubmit}
-          rectangle={true}
           loading={loading}
         />
       </div>

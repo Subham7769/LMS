@@ -53,29 +53,13 @@ const Loans = () => {
   }, [location, tabs]);
 
   return (
-    <div className="mt-4">
+    <>
       {/* Tab Navigation */}
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-5">
-        <ul className="flex flex-wrap -mb-px">
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              id={tab.id}
-              label={tab.label}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              to={tab.path}
-            />
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-4">
-        <Suspense fallback={<LoadingState />}>
-          <Outlet />
-        </Suspense>
-      </div>
-    </div>
+      <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Suspense fallback={<LoadingState />}>
+        <Outlet />
+      </Suspense>
+    </>
   );
 };
 

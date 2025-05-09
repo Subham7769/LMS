@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
+import { DocumentDuplicateIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -27,6 +26,7 @@ import {
   clearValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -49,6 +49,7 @@ const LoanApplication = () => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     return () => {
@@ -66,9 +67,9 @@ const LoanApplication = () => {
   ];
 
   const columns = [
-    { label: "Loan Application ID", field: "loanApplicationId" },
+    { label: "Loan Application ID", field: "loanApplicationId", copy: true },
     { label: "Borrower Name", field: "borrowerName" },
-    { label: "Unique ID", field: "uniqueID" },
+    { label: "Unique ID", field: "uniqueID", copy: true },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },
     { label: "Status", field: "status" },
@@ -94,6 +95,7 @@ const LoanApplication = () => {
   const handleReset = () => {
     setPlaSearchBy("");
     setPlaSearchValue("");
+    setCurrentPage(0);
     dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
@@ -139,7 +141,7 @@ const LoanApplication = () => {
       rowData.status === "Cancel" ||
       hasViewOnlyAccessGroup3(roleName)
     ) {
-      return <div className="flex justify-center gap-4 px-5">
+      return <div className="flex gap-4 ">
         <Button
           onClick={() => handleCloneLoanApplication(rowData.loanApplicationId)}
           buttonIcon={DocumentDuplicateIcon}
@@ -151,18 +153,16 @@ const LoanApplication = () => {
       </div>;
     }
     return (
-      <div className="flex justify-center gap-4 px-5">
+      <div className="flex gap-4 ">
         <Button
           onClick={() => handleEditApplication(rowData)}
-          buttonIcon={PencilIcon}
-          circle={true}
+          buttonIcon={EditIcon}
           className={`mt-4 h-fit self-center`}
           buttonType="secondary"
         />
         <Button
           onClick={() => handleRejectApplication(rowData.loanApplicationId)}
-          buttonIcon={TrashIcon}
-          circle={true}
+          buttonIcon={DeleteIcon}
           className={`mt-4 h-fit self-center`}
           buttonType="destructive"
         />
@@ -173,23 +173,24 @@ const LoanApplication = () => {
   
   return (
     <div className={`flex flex-col gap-3`}>
-      <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Loan Applications</div>
-        <div></div>
-        <div></div>
+      <div className="grid grid-cols-2 gap-5 items-center">
+        <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
+          Loan Applications
+        </h1>
         <div className="flex justify-end gap-2 h-12">
           {!hasViewOnlyAccessGroup3(roleName) && (
             <Button
-              buttonIcon={PlusIcon}
+              buttonIcon={AddIcon}
               buttonName="New Application"
               onClick={handleNewApplication}
-              rectangle={true}
             />
           )}
         </div>
       </div>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="plaSearchBy"
@@ -200,7 +201,7 @@ const LoanApplication = () => {
             isValidation={true}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="plaSearchValue"
@@ -211,7 +212,7 @@ const LoanApplication = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
@@ -233,11 +234,15 @@ const LoanApplication = () => {
         data={loanApplicationsData}
         loading={loading}
         ListAction={renderActionList}
+        ListName="List of draft loan applications"
+        ListNameLength={loanApplicationsTotalElements}
       />
       <Pagination
         totalElements={loanApplicationsTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
     </div>
   );

@@ -12,7 +12,7 @@ import InputSelectCreatable from "../InputSelectCreatable/InputSelectCreatable";
 const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFileUploads, handleFileRemove }) => {
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
             {config.map((field, index) => {
                 switch (field.type) {
                     case "text":
@@ -117,21 +117,26 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                         );
                     case "InputSelectCreatable":
                         return (
-                            <InputSelectCreatable
-                                key={index}
-                                labelName={field.labelName}
-                                inputName={field.inputName}
-                                inputOptions={field.options}
-                                inputValue={details[field.inputName] || ""}
-                                onChange={(e) => handleInputChange(e, sectionName)}
-                                isValidation={field.validation || false}
-                                searchable={field.searchable || false}
-                                setInputOptions={field.setEmployerOptions}
-                                onCreateOption={field.onCreateOption
-                                    ? (inputValue) => field.onCreateOption(inputValue, (e) => handleInputChange(e, sectionName))
-                                    : null
-                                }
-                            />
+                          <InputSelectCreatable
+                            key={index}
+                            labelName={field.labelName}
+                            inputName={field.inputName}
+                            inputOptions={field.options}
+                            inputValue={details[field.inputName] || ""}
+                            onChange={(e) => handleInputChange(e, sectionName)}
+                            isValidation={field.validation || false}
+                            isClearable={field.clearable || false}
+                            searchable={field.searchable || false}
+                            setInputOptions={field.setEmployerOptions}
+                            onCreateOption={
+                              field.onCreateOption
+                                ? (inputValue) =>
+                                    field.onCreateOption(inputValue, (e) =>
+                                      handleInputChange(e, sectionName)
+                                    )
+                                : null
+                            }
+                          />
                         );
                     default:
                         return null;

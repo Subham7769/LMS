@@ -23,10 +23,10 @@ const ExpandableTable = ({
   const ShimmerTable = () => {
     return (
       <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
       </div>
     );
   };
@@ -90,7 +90,10 @@ const ExpandableTable = ({
             ) : data.length > 0 ? (
               data.map((rowData, index) => (
                 <React.Fragment key={index}>
-                  <tr onClick={() => handleExpand(index)}>
+                  <tr
+                    className=""
+                    onClick={() => handleExpand(index)}
+                  >
                     {columns.map((col, index) => {
                       const getStatusClass = (status) => {
                         const normalizedStatus = status?.toLowerCase();
@@ -106,7 +109,8 @@ const ExpandableTable = ({
                           late: "bg-yellow-500/20 text-yellow-700",
                           submitted: "bg-violet-500/20 text-violet-700",
                           "roll overed": "bg-violet-500/20 text-violet-700",
-                          closed: "bg-gray-500/20 text-gray-700",
+                          closed:
+                            "bg-gray-400/20 text-gray-500 dark:text-gray-400",
                           frozen: "bg-blue-500/20 text-blue-700",
                           cancel: "bg-red-500/20 text-red-700",
                           unpaid: "bg-yellow-500/20 text-yellow-700",
@@ -141,7 +145,7 @@ const ExpandableTable = ({
                       return (
                         <td key={index} className={`max-w-28 break-words p-4 `}>
                           <span
-                            className={`inline-block min-w-24 rounded-full font-medium px-2.5 py-0.5 ${cellClass}`}
+                            className={`inline-block min-w-24 rounded-full font-medium py-0.5 ${cellClass}`}
                           >
                             {col.field.toLowerCase() === "aging" &&
                             rowData[col.field] !== undefined ? (
@@ -160,7 +164,7 @@ const ExpandableTable = ({
                                       {rowData[col.field]}
                                     </div>
                                     <ClipboardDocumentListIcon
-                                      className="h-5 w-5 cursor-pointer text-gray-500 hover:text-black"
+                                      className="h-5 w-5 cursor-pointer text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         copyToClipboard(rowData[col.field]);
@@ -197,7 +201,7 @@ const ExpandableTable = ({
                             e.stopPropagation();
                             handleExpand(index);
                           }}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
                           aria-label={
                             expandedRow === index
                               ? "Collapse row"
