@@ -30,6 +30,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { viewPhoto } from "../../redux/Slices/personalBorrowersSlice";
 import ViewPhotoModal from "../Los-Personal/Borrowers/ViewPhotoModal";
+import toPascalCase from "../../utils/toPascalCase";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
@@ -42,7 +43,7 @@ const PersonalInfo = () => {
     (state) => state.customerCare
   );
 
-  console.log(personalInfo);
+
   function flattenToSimpleObjectArray(filteredBorrowers) {
     return filteredBorrowers.map((borrower) => {
       const result = {};
@@ -96,11 +97,11 @@ const PersonalInfo = () => {
     personalInfo?.companyBorrowerProfile,
   ]);
 
-  console.log(flattenData);
+
+  console.log(personalInfo.personalDetails.uniqueID);
 
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
-
   const handleViewPhoto = async (photoId) => {
     const filePreviewParams = {
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
@@ -126,7 +127,6 @@ const PersonalInfo = () => {
   };
 
   const renderExpandedRowPersonal = (rowData) => {
-    console.log(rowData);
     return (
       <div className="space-y-2 text-sm text-gray-600 p-5 relative">
         {rowData ? (
@@ -174,7 +174,7 @@ const PersonalInfo = () => {
                     />
                     <CardInfoRow
                       icon={WindowIcon}
-                      label={rowData.uniqueIDType}
+                      label={toPascalCase(rowData.uniqueIDType)}
                       value={rowData.uniqueID}
                     />
                   </div>
@@ -800,7 +800,7 @@ const PersonalInfo = () => {
             src="https://lmscarbon.com/assets/index.png"
             alt=""
           /> */}
-          <div className="text-xl font-semibold">Borrower Id: {subID}</div>
+          <div className="text-xl font-semibold">Borrower Id: {"j"}</div>
         </ContainerTile>
         <>
           {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (

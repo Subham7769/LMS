@@ -349,7 +349,7 @@ const ProductInputFields = ({ productData, handleChange }) => {
       <div>
         <span className="p-2 py-1 block w-fit bg-gray-200 rounded-t-md">Options</span>
         <div className="border-t-2 py-2">
-          <div className="grid grid-cols-5 gap-5 items-end py-2 ">
+          <div className="grid grid-cols-6 gap-5 items-end py-2 ">
             <InputCheckbox
               labelName="Overdraft"
               inputChecked={productData?.overdraft}
@@ -380,6 +380,12 @@ const ProductInputFields = ({ productData, handleChange }) => {
               inputChecked={productData?.advanceDiscount}
               onChange={handleChange}
               inputName="advanceDiscount"
+            />
+            <InputCheckbox
+              labelName="Exclude Insurance Levy Deduction"
+              inputChecked={productData?.notApplyInsuranceLevyDeduction}
+              onChange={handleChange}
+              inputName="notApplyInsuranceLevyDeduction"
             />
           </div>
           {/* Newly added fields */}
