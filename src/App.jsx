@@ -29,7 +29,8 @@ const SupportPage = lazy(() => import("./pages/SupportPage"));
 
 // Misc. Imports
 const Login = lazy(() => import("./components/Login/Login"));
-const HomePage = lazy(() => import("./pages/HomePage"));
+//const HomePage = lazy(() => import("./pages/HomePage"));
+const HomePage = lazy(() => import("./components/Dashboard/Dashboard"));
 const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 const LoadingState = lazy(() =>
   import("./components/LoadingState/LoadingState")
