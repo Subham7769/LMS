@@ -145,7 +145,7 @@ const UploadRepayment = () => {
                   How to convert Excel file to CSV
                 </h4>
                 {/* List */}
-                <div className={`flex gap-5 text-sm`}>
+                <div className={`xl:flex gap-5 text-sm`}>
                   <ul
                     style={{ listStyleType: "disc", paddingLeft: "20px" }}
                     className={`text-sm`}
@@ -170,16 +170,16 @@ const UploadRepayment = () => {
                     </li>
                   </ul>
                   {/* Images */}
-                  <div className="flex flex-1 gap-2">
+                  <div className="grid sm:flex flex-1 gap-2">
                     <img
                       src={save_as_csv}
                       alt=""
-                      className="w-[35%] h-full shadow-md bg-background-light-secondary border border-border-gray-primary rounded-sm"
+                      className="sm:w-[35%] h-full shadow-md bg-gray-100 border border-gray-300 rounded-sm"
                     />
                     <img
                       src={save_as_csv2}
                       alt=""
-                      className="w-[65%] h-full shadow-md bg-background-light-secondary border border-border-gray-primary rounded-sm"
+                      className="sm:w-[65%] h-full shadow-md bg-gray-100 border border-gray-300 rounded-sm"
                     />
                   </div>
                 </div>
@@ -192,9 +192,9 @@ const UploadRepayment = () => {
               </h2>
               <div className="flex flex-col gap-3 text-sm rounded-lg">
                 {/* Table 1 */}
-                <div className="flex flex-col gap-4 border border-border-gray-primary bg-white rounded-lg overflow-hidden">
+                <div className="flex flex-col gap-4 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
                   {/* Table Header */}
-                  <div className="flex font-bold text-sm bg-gray-50">
+                  <div className="flex font-bold text-sm bg-gray-50 dark:bg-gray-900/20">
                     <div className="w-[40%] p-2 py-3 border-b border-gray-600">
                       Required Columns
                     </div>
@@ -205,33 +205,39 @@ const UploadRepayment = () => {
 
                   {/* Table Row 1 */}
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">Amount</div>
-                    <div className="w-[60%] p-2 border-b">
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
+                      Amount
+                    </div>
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
                       Numbers or Decimals only
                     </div>
                   </div>
 
                   {/* Table Row 2 */}
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
                       Collection Method
                     </div>
-                    <div className="w-[60%] p-2 border-b">
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
                       Cash / ATM / Cheque / Paypal / Online Transfer
                     </div>
                   </div>
 
                   {/* Table Row 3 */}
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">Collection Date</div>
-                    <div className="w-[60%] p-2 border-b">dd/mm/yyyy</div>
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
+                      Collection Date
+                    </div>
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
+                      dd/mm/yyyy
+                    </div>
                   </div>
 
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
                       Loan Unique Number
                     </div>
-                    <div className="w-[60%] p-2 border-b">
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
                       Unique Loan Number. If you don't enter a loan unique
                       number, a Loan column will be added in Step 2 so you can
                       select the corresponding loan for each repayment.
@@ -239,22 +245,30 @@ const UploadRepayment = () => {
                   </div>
 
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">Collected By</div>
-                    <div className="w-[60%] p-2 border-b">Tahseen Jamal</div>
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
+                      Collected By
+                    </div>
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
+                      Tahseen Jamal
+                    </div>
                   </div>
 
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
                       Description (Optional)
                     </div>
-                    <div className="w-[60%] p-2 border-b">Any</div>
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
+                      Any
+                    </div>
                   </div>
 
                   <div className="flex">
-                    <div className="w-[40%] p-2 border-b">
+                    <div className="w-[40%] p-2 border-b dark:border-gray-700/60">
                       Destination of Funds for Repayment Amount (Optional)
                     </div>
-                    <div className="w-[60%] p-2 border-b">Cash</div>
+                    <div className="w-[60%] p-2 border-b dark:border-gray-700/60">
+                      Cash
+                    </div>
                   </div>
                 </div>
               </div>
@@ -272,9 +286,9 @@ const UploadRepayment = () => {
                 Option 1: Recalculate Schedule
               </h2>
               {/* Table 2 */}
-              <div className="flex flex-col gap-4 border border-border-gray-primary bg-white rounded-lg overflow-hidden text-sm">
+              <div className="flex flex-col gap-4 border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg overflow-hidden text-sm">
                 {/* Table Header */}
-                <div className="flex font-bold text-sm bg-gray-50">
+                <div className="flex font-bold text-sm bg-gray-50 dark:bg-gray-900/20">
                   <div className="w-[40%] p-2 py-3 border-b border-gray-600">
                     Required Columns
                   </div>
@@ -284,18 +298,22 @@ const UploadRepayment = () => {
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
                     Recalculate remaining schedule with balance principal amount
                   </div>
-                  <div className="w-[60%] p-2 border-b">Yes / No</div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
+                    Yes / No
+                  </div>
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
                     Adjust interest on a pro-rata basis until the Collection
                     Date selected above
                   </div>
-                  <div className="w-[60%] p-2 border-b">Yes / No</div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
+                    Yes / No
+                  </div>
                 </div>
               </div>
 
@@ -303,9 +321,9 @@ const UploadRepayment = () => {
                 Option 2: Manual Composition
               </h2>
               {/* Table 3 */}
-              <div className="flex flex-col gap-4 border border-border-gray-primary bg-white rounded-lg overflow-hidden text-sm">
+              <div className="flex flex-col gap-4 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-sm">
                 {/* Table Header */}
-                <div className="flex font-bold text-sm bg-gray-50">
+                <div className="flex font-bold text-sm bg-gray-50 dark:bg-gray-900/20">
                   <div className="w-[40%] p-2 py-3 border-b border-gray-600">
                     Required Columns
                   </div>
@@ -315,36 +333,46 @@ const UploadRepayment = () => {
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
                     Allocate repayment amount manually based on the below value
                   </div>
-                  <div className="w-[60%] p-2 border-b">Yes / No</div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
+                    Yes / No
+                  </div>
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">Principal Amount</div>
-                  <div className="w-[60%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
+                    Principal Amount
+                  </div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
                     Numbers or Decimals only
                   </div>
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">Interest Amount</div>
-                  <div className="w-[60%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
+                    Interest Amount
+                  </div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
                     Numbers or Decimals only
                   </div>
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">Fees Amount</div>
-                  <div className="w-[60%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
+                    Fees Amount
+                  </div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
                     Numbers or Decimals only
                   </div>
                 </div>
 
                 <div className="flex">
-                  <div className="w-[40%] p-2 border-b">Penalty Amount</div>
-                  <div className="w-[60%] p-2 border-b">
+                  <div className="w-[40%] p-2 border-b border-gray-700/60">
+                    Penalty Amount
+                  </div>
+                  <div className="w-[60%] p-2 border-b border-gray-700/60">
                     Numbers or Decimals only
                     <br />
                     (If you specify an amount for Principal, Interest, Fees, or
@@ -365,15 +393,15 @@ const UploadRepayment = () => {
         heading={"Upload Repayment CSV File"}
         renderExpandedContent={() => (
           <div className="flex flex-col gap-5">
-            <div className={`grid grid-cols-2 gap-5`}>
+            <div className={`grid md:grid-cols-2 gap-5`}>
               {/* Tips */}
-              <div className="rounded-lg border-gray-50 shadow-md bg-white p-5 text-sm">
+              <div className="rounded-lg shadow-md bg-white dark:bg-gray-800 p-5 text-sm">
                 <h2 className="font-bold text-lg mb-2">Tips</h2>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>
                     <a
                       href={"/assets/files/sample_file_bulk_repayments.csv"}
-                      className="text-blue-600 underline"
+                      className="text-violet-600 underline"
                       download="sample_file_bulk_repayments.csv"
                     >
                       Click here to download a sample file.
@@ -400,7 +428,7 @@ const UploadRepayment = () => {
               </div>
 
               {/* Options */}
-              <div className="flex flex-col gap-3 rounded-lg border-gray-50 shadow-md bg-white text-sm p-5">
+              <div className="flex flex-col gap-3 rounded-lg shadow-md bg-white dark:bg-gray-800 text-sm p-5">
                 <h2 className="font-bold text-lg mb-2">
                   Select the columns available in your repayments file.
                 </h2>
@@ -508,7 +536,7 @@ const UploadRepayment = () => {
                     />
                   </div>
                 </div> */}
-                <div className="flex flex-col gap-3 rounded-lg border-gray-50 shadow-md bg-white p-5 py-8">
+                <div className="flex flex-col gap-3 rounded-lg shadow-md bg-white dark:bg-gray-800 p-5 py-8">
                   <InputFile
                     labelName="Loan File (.csv)"
                     inputName="loanFiles"
@@ -522,9 +550,8 @@ const UploadRepayment = () => {
             <div className="flex justify-end gap-5 px-5 ">
               <Button
                 buttonName={"Reset"}
-                onClick={() => { }}
-                rectangle={true}
-                className={`bg-red-500 hover:bg-red-600 h-fit self-center`}
+                onClick={() => {}}
+                buttonType="secondary"
               />
               {/* <Button
                 buttonName={"Proceed"}
@@ -538,8 +565,6 @@ const UploadRepayment = () => {
               <Button
                 buttonName={"Submit"}
                 onClick={() => dispatch(uploadFile({ fileData }))}
-                rectangle={true}
-                className={`h-fit self-center disabled:bg-gray-500`}
                 disabled={!repaymentData.length > 0}
               />
             </div>
@@ -554,7 +579,7 @@ const UploadRepayment = () => {
         renderExpandedContent={() => (
           <div className="flex flex-col ">
             {repaymentFileHistory.map((fileHistory) => (
-              <div className="flex flex-col gap-3 mb-5 border-b-2 p-5 relative">
+              <div className="flex flex-col gap-3 mb-5 border-b-2 dark:border-gray-600 p-5 relative">
                 <h2>{fileHistory.fileName}</h2>
                 <p className="text-sm text-gray-500">
                   {new Date(fileHistory.uploadDate).toISOString().split("T")[0]}
@@ -575,8 +600,8 @@ const UploadRepayment = () => {
                         )
                       }
                     >
-                      <DocumentArrowDownIcon className="h-5 w-5 text-indigo-500 hover:cursor-pointer" />
-                      <div className="text-indigo-500  text-sm">
+                      <DocumentArrowDownIcon className="h-5 w-5 text-violet-500 hover:cursor-pointer" />
+                      <div className="text-violet-500  text-sm">
                         Download Accepted Records
                       </div>
                     </div>
@@ -596,18 +621,19 @@ const UploadRepayment = () => {
                         )
                       }
                     >
-                      <DocumentArrowDownIcon className="h-5 w-5 text-indigo-500 hover:cursor-pointer" />
-                      <a className="text-indigo-500  text-sm">
+                      <DocumentArrowDownIcon className="h-5 w-5 text-violet-500 hover:cursor-pointer" />
+                      <a className="text-violet-500  text-sm">
                         Download Rejected Records
                       </a>
                     </div>
                   </div>
                 </div>
                 <div
-                  className={`absolute top-1/2 right-1 font-semibold translate-x-[-50%] translate-y-[-50%] px-2 py-1 rounded-lg ${fileHistory.status === "DONE_SUCCESSFULLY"
-                      ? "bg-green-100 text-green-500"
-                      : "bg-red-100 text-red-500"
-                    }`}
+                  className={`w-fit sm:absolute sm:top-1/2 sm:right-1 font-semibold sm:translate-x-[-50%] sm:translate-y-[-50%] px-2 py-1 rounded-lg ${
+                    fileHistory.status === "DONE_SUCCESSFULLY"
+                      ? "bg-green-500/20 text-green-700"
+                      : "bg-red-500/20 text-red-700"
+                  }`}
                 >
                   {fileHistory.status === "DONE_SUCCESSFULLY"
                     ? "Success"
@@ -654,7 +680,7 @@ const UploadRepayment = () => {
           </ContainerTile>
           <div
             className={
-              "shadow-md bg-background-light-secondary border-border-gray-primary border p-5 rounded-xl mt-4 "
+              "shadow-md bg-gray-100 border-gray-300 border p-5 rounded-xl mt-4 "
             }
           >
             <div className="flow-root overflow-hidden">
@@ -671,8 +697,9 @@ const UploadRepayment = () => {
                       {columnArray.map((column, index) => (
                         <th
                           key={index}
-                          className={`w-1/${columnArray.length + 1
-                            } max-w-24 text-center py-3 px-2`}
+                          className={`w-1/${
+                            columnArray.length + 1
+                          } max-w-24 text-center py-3 px-2`}
                         >
                           <InputSelect
                             inputName={column}
@@ -697,8 +724,9 @@ const UploadRepayment = () => {
                         {Object.entries(rowData).map(([key, value]) => (
                           <td
                             key={key}
-                            className={`w-1/${Object.keys(rowData).length
-                              } text-center py-3 px-1 text-[14px] text-gray-500`}
+                            className={`w-1/${
+                              Object.keys(rowData).length
+                            } text-center py-3 px-1 text-[14px] text-gray-500`}
                           >
                             <InputText
                               inputName={key}

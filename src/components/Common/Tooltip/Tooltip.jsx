@@ -11,9 +11,11 @@ function Tooltip({ children, className, bg, size, position }) {
       case "left":
         return "right-full top-1/2 -translate-y-1/2";
       case "bottom":
-        return "top-full left-1/2 -translate-x-1/2";
+        return "top-full left-1/2 -translate-x-full xl:-translate-x-1/2";
       case "top left":
         return "bottom-full right-full";
+      case "bottom left":
+        return "top-full right-full";
       default:
         return "bottom-full left-1/2 -translate-x-1/2";
     }
@@ -79,6 +81,7 @@ function Tooltip({ children, className, bg, size, position }) {
           <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
         </svg>
       </button>
+      
       <div className={`z-10 absolute ${positionOuterClasses(position)}`}>
         <Transition
           show={tooltipOpen}

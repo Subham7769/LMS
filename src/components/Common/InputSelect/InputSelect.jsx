@@ -95,7 +95,7 @@ const InputSelect = ({
       ...provided,
       backgroundColor: isDarkMode ? "#1f2937" : "#fff",
       color: isDarkMode ? "#f3f4f6" : "#1f2937",
-      
+
       border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
       padding: 0,
       boxShadow: "none",
@@ -150,6 +150,7 @@ const InputSelect = ({
       backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
       color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
     }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Ensure dropdown is on top
   };
 
   let validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
@@ -182,7 +183,9 @@ const InputSelect = ({
       {labelName && (
         <label
           className={`block text-sm font-medium mb-1 ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-600 dark:text-gray-400"
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-600 dark:text-gray-400"
           } px-1`}
           htmlFor={inputName}
         >
@@ -254,6 +257,7 @@ const InputSelect = ({
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}
+        menuPortalTarget={document.body} // Render dropdown outside of overflow
       />
     </div>
   );

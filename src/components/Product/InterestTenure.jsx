@@ -237,7 +237,7 @@ const InterestTenure = () => {
       >
         {currentItems?.map((item, index) => (
           <tr key={index}>
-            <td className="px-4 py-4 whitespace-nowrap">
+            <td className="p-4 whitespace-nowrap">
               {editingIndex === index ? (
                 <div className="grid grid-cols-[40%_20%_40%] min-w-[225px] items-center text-center">
                   <InputText
@@ -279,7 +279,7 @@ const InterestTenure = () => {
                 </span>
               )}
             </td>
-            <td className="px-4 py-4 whitespace-nowrap">
+            <td className="p-4 whitespace-nowrap">
               {editingIndex === index ? (
                 <div className="grid grid-cols-[30%_70%] min-w-[180px] gap-2 items-center">
                   <InputNumber
@@ -316,7 +316,7 @@ const InterestTenure = () => {
                 </span>
               )}
             </td>
-            <td className="px-4 py-4 whitespace-nowrap">
+            <td className="p-4 whitespace-nowrap">
               {editingIndex === index ? (
                 <div className="grid grid-cols-[30%_70%] min-w-[180px] gap-2 items-center">
                   <InputNumber

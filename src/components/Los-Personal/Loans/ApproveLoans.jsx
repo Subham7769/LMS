@@ -238,33 +238,33 @@ const ApproveLoans = () => {
   ];
 
   const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+    <div className="border-y-2 dark:border-gray-500 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
-          <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
+        <div className="shadow-md p-3 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60">
+          <div className="flex justify-between items-baseline mb-3 text-sky-800 dark:text-sky-500">
             <div className="text-xl font-semibold flex gap-2 items-center">
               <UserCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
               Borrower Information{" "}
               <p
-                className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
+                className="text-[10px] text-gray-600 dark:text-gray-300 -mb-2 cursor-pointer underline"
                 onClick={(e) => handleViewProfile(e, rowData.uid)}
               >
                 View Borrower Profile
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Employment</div>
+              <div className="">Employment</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.employerName}
               </div>
-              <div className="text-gray-500 font-light text-xs">
+              <div className=" font-light text-xs">
                 {rowData?.borrowerDetails?.employmentDuration}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Monthly Income</div>
+              <div className="">Monthly Income</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.monthlyIncome}
               </div>
@@ -272,19 +272,19 @@ const ApproveLoans = () => {
           </div>
           <div className="grid grid-cols-3">
             <div>
-              <div className="text-gray-500">Credit Score</div>
+              <div className="">Credit Score</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.creditScore}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Active Loans</div>
+              <div className="">Active Loans</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.activeLoans}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Payment History</div>
+              <div className="">Payment History</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.paymentHistory}
               </div>
@@ -294,49 +294,51 @@ const ApproveLoans = () => {
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Disbursed Amount</div>
+              <div className="">Disbursed Amount</div>
               <div className="font-semibold">{rowData?.disbursedAmount}</div>
             </div>
             <div>
-              <div className="text-gray-500">Interest Rate</div>
+              <div className="">Interest Rate</div>
               <div className="font-semibold">
                 {rowData.loanInterest}% {rowData.interestMethod} per{" "}
                 {rowData.perLoanInterest}
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-3 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Tenure</div>
+              <div className="">Tenure</div>
               <div className="font-semibold">
                 {rowData.numberOfTenure} {rowData.perLoanDuration}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Monthly EMI</div>
+              <div className="">Monthly EMI</div>
               <div className="font-semibold">{rowData.monthlyEMI}</div>
             </div>
             <div>
-              <div className="text-gray-500">First Payment</div>
+              <div className="">First Payment</div>
               <div className="font-semibold">
                 {convertDate(rowData.firstEmiPayment)}
               </div>
             </div>
           </div>
           <div
-            className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+            className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
             onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
           >
             <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
           </div>
         </CardInfo>
       </div>
-      <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
+      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
@@ -355,7 +357,7 @@ const ApproveLoans = () => {
         </div>
       </div>
       {rowData?.loanActionDetailsList && (
-        <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
           <div className="font-semibold text-xl mb-3">Loan Action History</div>
           {rowData?.loanActionDetailsList.map((action, index) => {
             const actionKeys = Object.keys(action);
@@ -383,7 +385,7 @@ const ApproveLoans = () => {
             });
 
             return (
-              <div key={index} className="border-b pb-2 mb-2">
+              <div key={index} className="border-b dark:border-gray-500 pb-2 mb-2">
                 <p>{sentence}</p>
               </div>
             );

@@ -12,9 +12,9 @@ const ExpandableTable = ({
   data,
   renderExpandedRow = null,
   ListAction = null,
-  ActionId = null,
+  defaultClass = true,
   loading = false,
-  error = false,
+  className,
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const handleExpand = (id) => {
@@ -40,19 +40,16 @@ const ExpandableTable = ({
     }
   };
 
-  const centerAlignedFields = ["uniqueid", "userid", "emino", "aging"];
-  // ${
-  //   centerAlignedFields.includes(
-  //     col.field.toLowerCase()
-  //   )
-  //     ? "text-center"
-  //     : typeof rowData[col.field] === "number"
-  //     ? "text-right"
-  //     : "text-center"
-  // }
+  const centerAlignedFields = ["status", "loanstatus", "aging"];
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-md border dark:border-gray-700 rounded-xl relative mb-8">
+    <div
+      className={`${
+        defaultClass
+          ? "bg-white dark:bg-gray-800 shadow-md border dark:border-gray-700 rounded-xl relative mb-8"
+          : className
+      }`}
+    >
       {ListName && (
         <header className="px-5 py-4">
           <h2 className={`font-semibold text-gray-800 dark:text-gray-100`}>
@@ -90,10 +87,7 @@ const ExpandableTable = ({
             ) : data.length > 0 ? (
               data.map((rowData, index) => (
                 <React.Fragment key={index}>
-                  <tr
-                    className=""
-                    onClick={() => handleExpand(index)}
-                  >
+                  <tr className="" onClick={() => handleExpand(index)}>
                     {columns.map((col, index) => {
                       const getStatusClass = (status) => {
                         const normalizedStatus = status?.toLowerCase();
@@ -143,20 +137,26 @@ const ExpandableTable = ({
                         : "";
 
                       return (
-                        <td key={index} className={`max-w-28 break-words p-4 `}>
+                        <td key={index} className={`max-w-28 break-words p-4`}>
                           <span
-                            className={`inline-block min-w-24 rounded-full font-medium py-0.5 ${cellClass}`}
+                            className={`inline-block min-w-24 rounded-full font-medium py-0.5 ${cellClass} ${
+                              centerAlignedFields.includes(
+                                col.field.toLowerCase()
+                              )
+                                ? "text-center"
+                                : ""
+                            }`}
                           >
                             {col.field.toLowerCase() === "aging" &&
                             rowData[col.field] !== undefined ? (
                               `${rowData[col.field]} Days`
                             ) : rowData[col.field] ? (
-                              <div
-                                className="flex items-center justify-center gap-2"
-                                title={rowData[col.field]}
-                              >
+                              <div>
                                 {rowData[col.field] && col.copy ? (
-                                  <>
+                                  <div
+                                    className="flex items-center gap-2"
+                                    title={rowData[col.field]}
+                                  >
                                     {/* Shortened display value */}
                                     <div
                                       className={`whitespace-nowrap overflow-hidden text-ellipsis w-[75px]`}
@@ -170,7 +170,7 @@ const ExpandableTable = ({
                                         copyToClipboard(rowData[col.field]);
                                       }}
                                     />
-                                  </>
+                                  </div>
                                 ) : centerAlignedFields.includes(
                                     col.field.toLowerCase()
                                   ) ? (

@@ -190,8 +190,8 @@ export const loanOfficer = [
 export const ApproveRepaymentColumns = [
   { label: "Amount", field: "amount" },
   { label: "Collection Date", field: "collectionDate" },
-  { label: "User Id", field: "userId" },
-  { label: "Loan Id", field: "loan" },
+  { label: "User Id", field: "userId", copy: true },
+  { label: "Loan Id", field: "loan", copy: true },
   { label: "Collected By", field: "collectionBy" },
   { label: "Method", field: "method" },
   { label: "Accounting", field: "accounting" },

@@ -42,7 +42,6 @@ const LoanOffers = () => {
     loanConfigData,
     loanOfferFields,
     loading,
-    error,
   } = useSelector((state) => state.personalLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
@@ -99,14 +98,14 @@ const LoanOffers = () => {
 
   const InfoRow = ({ label, value }) => (
     <div className="mb-1.5">
-      <div className="text-gray-600">{label}:</div>
+      <div>{label}:</div>
       <div className="font-semibold text-lg">{value}</div>
     </div>
   );
 
   const InfoRow2 = ({ label, value }) => (
     <div className="mb-2">
-      <div className="text-gray-500">{label}:</div>
+      <div>{label}:</div>
       <div className="font-semibold text-lg">{value} %</div>
     </div>
   );
@@ -149,7 +148,7 @@ const LoanOffers = () => {
         <div className="flex flex-col gap-5 mt-4">
           <div className="text-center">
             <div className="text-xl font-semibold ">Your Loan Offer</div>
-            <div className="text-gray-500">
+            <div>
               Let's review the details of your{" "}
               {
                 loanProductOptions.find(
@@ -159,23 +158,25 @@ const LoanOffers = () => {
               offer
             </div>
           </div>
-          <div className="text-right -mt-14">
-            <div className="text-gray-500 text-xs">Applied Schema</div>
+          <div className="text-right xl:-mt-14">
+            <div className=" text-xs">Applied Schema</div>
             <div className="text-sm">
               {loanConfigData?.dynamicCashLoanOffers[0]?.schema}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid md:grid-cols-2 gap-5">
             {/* Meet Our Borrower */}
             <CardInfo
               cardTitle="Meet Our Borrower"
               cardIcon={UserIcon}
-              colorText={"text-blue-primary"}
-              colorBG={"bg-background-light-white"}
-              numberBG={"bg-blue-secondary"}
+              colorText={"text-sky-700"}
+              colorBG={"bg-white dark:bg-gray-800"}
+              numberBG={"bg-sky-700/20"}
               cardNumber="1"
               loading={loading}
-              className={"border border-border-gray-primary"}
+              className={
+                "border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 transition"
+              }
             >
               <div className="font-semibold text-[15px] mb-2">
                 {borrowerData?.personalDetails?.title}{" "}
@@ -202,15 +203,17 @@ const LoanOffers = () => {
             <CardInfo
               cardTitle="Available Loan Range"
               cardIcon={CogIcon}
-              colorText={"text-green-primary"}
-              colorBG={"bg-background-light-white"}
-              numberBG={"bg-green-secondary"}
+              colorText={"text-green-700"}
+              colorBG={"bg-white dark:bg-gray-800"}
+              numberBG={"bg-green-700/20"}
               cardNumber="2"
               loading={loading}
-              className={"border border-border-gray-primary"}
+              className={
+                "border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 transition"
+              }
             >
               <div className="text-[14px]">
-                <div className="text-gray-500">Loan Range:</div>
+                <div className="">Loan Range:</div>
                 <div className="font-semibold text-lg mb-2">
                   {formatNumber(
                     loanConfigData?.cashLoanStats?.minLoanProductAmount.toFixed(
@@ -224,16 +227,16 @@ const LoanOffers = () => {
                     )
                   )}
                 </div>
-                <div className="text-gray-500">Duration Range:</div>
+                <div className="">Duration Range:</div>
                 <div className="font-semibold text-lg">
                   {loanConfigData?.cashLoanStats?.minEligibleDuration} -{" "}
                   {loanConfigData?.cashLoanStats?.maxEligibleDuration} days
                 </div>
-                <div className="text-gray-500 mb-2">
+                <div className=" mb-2">
                   ({loanConfigData?.cashLoanStats?.minEligibleDurationMonths} -{" "}
                   {loanConfigData?.cashLoanStats?.maxLoanDurationMonths} months)
                 </div>
-                <div className="text-gray-500">Average Installments: </div>
+                <div className="">Average Installments: </div>
                 <div className="font-semibold text-lg">
                   {loanConfigData?.dynamicCashLoanOffers[0]?.instalmentsNumber.toFixed(
                     2
@@ -244,17 +247,19 @@ const LoanOffers = () => {
           </div>
           {loanConfigData?.dynamicCashLoanOffers?.map((ci, index) => (
             <React.Fragment key={index}>
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid md:grid-cols-2 gap-5">
                 {/* Interest Rates */}
                 <CardInfo
                   cardTitle="Interest Rates"
                   cardIcon={CalculatorIcon}
-                  colorText={"text-violet-primary"}
-                  colorBG={"bg-background-light-white"}
-                  numberBG={"bg-violet-secondary"}
+                  colorText={"text-violet-700"}
+                  colorBG={"bg-white dark:bg-gray-800"}
+                  numberBG={"bg-violet-700/20"}
                   cardNumber="3"
                   loading={loading}
-                  className={"border border-border-gray-primary"}
+                  className={
+                    "border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 transition"
+                  }
                 >
                   <div className="text-[14px]">
                     <InfoRow2
@@ -269,13 +274,13 @@ const LoanOffers = () => {
                       label="Daily Rate"
                       value={ci?.dailyInterestRatePercentWithoutFee}
                     />
-                    <div className="border-t border-border-gray-primary pt-2">
-                      <div className="text-gray-500">Monthly Flat Rate</div>
+                    <div className="border-t border-gray-200 dark:border-gray-600 pt-2">
+                      <div className="">Monthly Flat Rate</div>
                       <div className="flex gap-x-2 items-baseline">
                         <div className="font-semibold text-lg">
                           {ci?.monthlyFlatRatePercent}%
                         </div>
-                        <div className="text-gray-500">
+                        <div className="">
                           (daily: {ci?.loanFlatRate}%, annual:{" "}
                           {ci?.annualFlatRatePercent}%)
                         </div>
@@ -288,58 +293,56 @@ const LoanOffers = () => {
                 <CardInfo
                   cardTitle="Financial Breakdown"
                   cardIcon={CalculatorIcon}
-                  colorText={"text-orange-primary"}
-                  colorBG={"bg-background-light-white"}
-                  numberBG={"bg-orange-secondary"}
+                  colorText={"text-yellow-700"}
+                  colorBG={"bg-white dark:bg-gray-800"}
+                  numberBG={"bg-yellow-700/20"}
                   cardNumber="4"
                   loading={loading}
-                  className={"border border-border-gray-primary"}
+                  className={
+                    "border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 transition"
+                  }
                 >
                   <div className="text-[14px]">
-                    <div className="text-gray-500">Principal Amount:</div>
+                    <div className="">Principal Amount:</div>
                     <div className="flex items-baseline gap-x-2">
                       <div className="font-semibold text-lg mb-2">
                         {formatNumber(ci?.principalAmount.toFixed(2))}
                       </div>
-                      <div className="text-gray-500">
+                      <div className="">
                         (Disbursed Amt:{" "}
                         {formatNumber(ci?.disbursedAmount.toFixed(2))})
                       </div>
                     </div>
-                    <div className="text-gray-500">Total Interest:</div>
+                    <div className="">Total Interest:</div>
                     <div className="font-semibold text-lg mb-2">
                       {formatNumber(ci?.totalInterestAmount.toFixed(2))}
                     </div>
-                    <div className="text-gray-500">
-                      Total Admin Fee (or Service Fee):
-                    </div>
+                    <div className="">Total Admin Fee (or Service Fee):</div>
                     <div className="flex items-baseline gap-x-2">
                       <div className="font-semibold text-lg mb-2">
                         {ci?.serviceFee.toFixed(2)}
                       </div>
-                      <div className="text-gray-500">
+                      <div className="">
                         (tax: {ci?.serviceFeeTax.toFixed(2)})
                       </div>
                     </div>
-                    <div className="text-gray-500">Application Fee:</div>
+                    <div className="">Application Fee:</div>
                     <div className="flex items-baseline gap-x-2">
                       <div className="font-semibold text-lg mb-2">
                         {ci?.applicationFees.toFixed(2)}
                       </div>
-                      <div className="text-gray-500">
-                        (CRB: {ci?.crbCharge.toFixed(2)})
-                      </div>
+                      <div className="">(CRB: {ci?.crbCharge.toFixed(2)})</div>
                     </div>
-                    <div className="text-gray-500">Insurance Fee:</div>
+                    <div className="">Insurance Fee:</div>
                     <div className="flex items-baseline gap-x-2">
                       <div className="font-semibold text-lg mb-2">
                         {ci?.insuranceFee.toFixed(2)}
                       </div>
-                      <div className="text-gray-500">
+                      <div className="">
                         (Levy: {ci?.insuranceLevy.toFixed(2)})
                       </div>
                     </div>
-                    <div className="border-t border-border-gray-primary pt-2 text-blue-600">
+                    <div className="border-t border-gray-200 dark:border-gray-600  pt-2 text-sky-700">
                       <div className="font-semibold">Total Loan Amount:</div>
                       <div className="font-bold text-lg">
                         {formatNumber(ci?.totalLoanAmount.toFixed(2))}
@@ -351,24 +354,26 @@ const LoanOffers = () => {
               <CardInfo
                 cardTitle="Final Offer Summary"
                 className={
-                  "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
+                  "border-2 border-blue-300 dark:border-blue-500 rounded-xl shadow-md px-4 pb-5"
                 }
                 cardIcon={CurrencyDollarIcon}
-                colorText={"text-blue-primary"}
+                colorText={"text-sky-700"}
                 loading={loading}
-                colorBG={"bg-background-light-white"}
+                colorBG={"bg-white dark:bg-gray-800"}
               >
                 <div
-                  className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5"}
+                  className={
+                    "shadow-md bg-sky-700/20 rounded-xl pb-8 pt-6 px-5"
+                  }
                 >
-                  <div className="grid grid-cols-5 gap-4 items-center">
+                  <div className="grid md:grid-cols-5 gap-4 items-center">
                     <div className="text-[14px]">
-                      <div className="text-gray-500">Total Loan Amount</div>
-                      <div className="font-semibold text-lg text-blue-600">
+                      <div className="">Total Loan Amount</div>
+                      <div className="font-semibold text-lg text-sky-700">
                         {formatNumber(ci?.totalLoanAmount.toFixed(2))}
                       </div>
                       <div
-                        className="cursor-pointer text-blue-600 hover:underline"
+                        className="cursor-pointer text-sky-700 hover:underline"
                         onClick={() =>
                           handleInstallmentModal(ci?.installmentSummaryResponse)
                         }
@@ -377,7 +382,7 @@ const LoanOffers = () => {
                       </div>
                     </div>
                     <div className="text-[14px]">
-                      <div className="text-gray-500">Monthly EMI</div>
+                      <div className="">Monthly EMI</div>
                       <div className="font-semibold text-lg">
                         {formatNumber(
                           ci?.installmentSummaryResponse[0]?.totalRequiredAmount.toFixed(
@@ -387,22 +392,22 @@ const LoanOffers = () => {
                       </div>
                     </div>
                     <div className="text-[14px]">
-                      <div className="text-gray-500">Tenure</div>
+                      <div className="">Tenure</div>
                       <div className="font-semibold text-lg">
                         {ci?.durationInMonths} Months
                       </div>
-                      <div className="text-gray-500">({ci?.duration} Days)</div>
+                      <div className="">({ci?.duration} Days)</div>
                     </div>
                     <div className="text-[14px]">
-                      <div className="text-gray-500">Interest Rate</div>
+                      <div className="">Interest Rate</div>
                       <div className="font-semibold text-lg">
                         {ci?.monthlyInterestRatePercent}% Monthly
                       </div>
-                      <div className="text-gray-500">
+                      <div className="">
                         ({ci?.annualInterestRatePercent}% APR)
                       </div>
                     </div>
-                    <div className="text-center">
+                    <div className="md:text-center">
                       {!hasViewOnlyAccessGroup3(roleName) && (
                         <Button
                           buttonName="Proceed"
@@ -414,11 +419,9 @@ const LoanOffers = () => {
                   </div>
                 </div>
               </CardInfo>
-              <div>
-                <div className="text-center text-gray-500">
-                  Loan Summary Id : {ci?.transactionId}
-                </div>
-                <div className="text-center text-gray-500">
+              <div className="text-center text-xs">
+                <div>Loan Summary Id : {ci?.transactionId}</div>
+                <div>
                   Loan Application Id : {loanConfigData?.loanApplicationId}
                 </div>
               </div>

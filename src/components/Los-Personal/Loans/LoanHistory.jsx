@@ -258,8 +258,8 @@ const LoanHistory = () => {
   ];
 
   const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
-      <div className="grid md:grid-cols-2 gap-4">
+    <div className=" border-y-2 py-5 px-2">
+      <div className="grid grid-cols-2 gap-4">
         <CardInfo
           cardIcon={UserIcon}
           cardTitle="Borrower Information"
@@ -347,13 +347,13 @@ const LoanHistory = () => {
           </div>
           <div className="flex gap-5 flex-wrap">
             <div
-              className="text-sky-600 font-semibold cursor-pointer flex gap-2"
+              className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
               onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
             >
               <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
             </div>
             <div
-              className="text-sky-600 font-semibold cursor-pointer flex gap-2"
+              className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
               onClick={() => handleRepaymentHistory(rowData.loanId)}
             >
               <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment
@@ -362,7 +362,7 @@ const LoanHistory = () => {
           </div>
         </CardInfo>
       </div>
-      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-sm my-5">
+      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
         <div className="font-semibold text-xl mb-3 ">
           Verified Documents{" "}
           <span className="font-light text-xs">
@@ -382,7 +382,7 @@ const LoanHistory = () => {
         </div>
       </div>
       {rowData?.loanActionDetailsList && (
-        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-sm p-3 my-5 ">
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
           <div className="font-semibold text-xl mb-3">Loan Action History</div>
           {rowData?.loanActionDetailsList.map((action, index) => {
             const actionKeys = Object.keys(action);
@@ -410,7 +410,10 @@ const LoanHistory = () => {
             });
 
             return (
-              <div key={index} className="border-b pb-2 mb-2">
+              <div
+                key={index}
+                className="border-b dark:border-gray-500 pb-2 mb-2"
+              >
                 <p>{sentence}</p>
               </div>
             );

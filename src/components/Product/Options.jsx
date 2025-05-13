@@ -66,47 +66,52 @@ const Options = () => {
       </section>
       {/* Newly added fields */}
       {productData?.overdraft && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end ">
-          <InputNumber
-            labelName="Max. Overdraft Principle Limit"
-            inputName="maxOverdraftPrincipalLimit"
-            inputValue={productData?.maxOverdraftPrincipalLimit}
-            onChange={handleChange}
-            placeHolder="3"
-          />
+        <>
+          <h2 className="text-xl leading-snug text-gray-800 dark:text-gray-100 font-bold my-3">
+            Overdraft Details
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-end ">
+            <InputNumber
+              labelName="Max. Overdraft Principle Limit"
+              inputName="maxOverdraftPrincipalLimit"
+              inputValue={productData?.maxOverdraftPrincipalLimit}
+              onChange={handleChange}
+              placeHolder="3"
+            />
 
-          <InputNumber
-            labelName="Min. Overdraft Principle Limit"
-            inputName="minOverdraftPrincipalLimit"
-            inputValue={productData?.minOverdraftPrincipalLimit}
-            onChange={handleChange}
-            placeHolder="3"
-          />
+            <InputNumber
+              labelName="Min. Overdraft Principle Limit"
+              inputName="minOverdraftPrincipalLimit"
+              inputValue={productData?.minOverdraftPrincipalLimit}
+              onChange={handleChange}
+              placeHolder="3"
+            />
 
-          <InputText
-            labelName="Annual Fee"
-            inputName="annualFee"
-            inputValue={productData?.annualFee}
-            onChange={handleChange}
-            placeHolder="3"
-          />
+            <InputText
+              labelName="Annual Fee"
+              inputName="annualFee"
+              inputValue={productData?.annualFee}
+              onChange={handleChange}
+              placeHolder="3"
+            />
 
-          <InputNumber
-            labelName="Overdraft Product Period"
-            inputName="overdraftProductPeriod"
-            inputValue={productData?.overdraftProductPeriod}
-            onChange={handleChange}
-            placeHolder="3"
-          />
+            <InputNumber
+              labelName="Overdraft Product Period"
+              inputName="overdraftProductPeriod"
+              inputValue={productData?.overdraftProductPeriod}
+              onChange={handleChange}
+              placeHolder="3"
+            />
 
-          <InputNumber
-            labelName="Overdraft Payment Principle Percentage"
-            inputName="overDraftPaymentPrinciplePercentage"
-            inputValue={productData?.overDraftPaymentPrinciplePercentage}
-            onChange={handleChange}
-            placeHolder="3"
-          />
-        </div>
+            <InputNumber
+              labelName="Overdraft Payment Principle Percentage"
+              inputName="overDraftPaymentPrinciplePercentage"
+              inputValue={productData?.overDraftPaymentPrinciplePercentage}
+              onChange={handleChange}
+              placeHolder="3"
+            />
+          </div>
+        </>
       )}
     </>
   );

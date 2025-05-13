@@ -33,12 +33,14 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/50 backdrop-blur-sm">
-      <div className="bg-white flex flex-col p-5 rounded-lg shadow-lg w-3/4 xl:w-1/3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
+      <div className="bg-white dark:bg-gray-800 flex flex-col p-5 rounded-lg shadow-lg w-3/4 xl:w-1/3">
         <div>
           <label
             className={`${
-              isValidationError ? "text-red-600" : "text-gray-700"
+              isValidationError
+                ? "text-red-600"
+                : "text-gray-600 dark:text-gray-400"
             } px-1 text-sm font-medium mb-1`}
           >
             {isValidationError
@@ -69,10 +71,7 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
             }}
             buttonType="secondary"
           />
-          <Button
-            buttonName={"Create Clone"}
-            onClick={handleCreateClone}
-          />
+          <Button buttonName={"Create Clone"} onClick={handleCreateClone} />
         </div>
       </div>
     </div>

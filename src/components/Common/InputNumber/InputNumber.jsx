@@ -15,6 +15,7 @@ import Tooltip from "../Tooltip/Tooltip";
 const InputNumber = ({
   labelName,
   toolTipText,
+  toolTipPosition = "top left",
   inputName,
   inputValue,
   inputValueMin,
@@ -126,8 +127,13 @@ const InputNumber = ({
           </label>
         )}
         {toolTipText && (
-          <Tooltip className="ml-2" bg="dark" size="lg" position="top left">
-            <div className="text-xs text-gray-200">{toolTipText}</div>
+          <Tooltip
+            className="ml-2"
+            bg="dark"
+            size="lg"
+            position={toolTipPosition}
+          >
+            <div className="text-xs">{toolTipText}</div>
           </Tooltip>
         )}
       </div>

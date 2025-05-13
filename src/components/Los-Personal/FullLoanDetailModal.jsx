@@ -1,16 +1,19 @@
-import { XCircleIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import {
+  XCircleIcon,
+  CalendarIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
 import { convertDate } from "../../utils/convertDate";
 import { toast } from "react-toastify";
-import { loanStatusOptions } from "../../data/OptionsData";
 
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -20,8 +23,8 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
 
   if (loading) {
     return (
-      <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-        <div className="bg-white border  p-8 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
+      <div className="fixed z-50 inset-0 bg-gray-900/30 backdrop-blur-sm flex justify-center items-center">
+        <div className="bg-white dark:bg-gray-800 p-5 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
           <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
             <ShimmerTable />
             <ShimmerTable />
@@ -63,22 +66,20 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="relative bg-white flex flex-col w-3/4 rounded-lg shadow-lg p-4">
-          <div
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
+        <div className="relative bg-white dark:bg-gray-800 flex flex-col w-3/4 rounded-lg shadow-lg p-4">
+          <XMarkIcon
             onClick={onClose}
-            className="h-9 w-9 z-20 cursor-pointer rounded-full text-white absolute -top-3 -right-3 self-end"
-          >
-            <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)" />
-          </div>
+            className="absolute top-1 right-1 h-6 w-6 cursor-pointer text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+          />
           <div className="text-xl font-semibold flex gap-x-2 items-center">
             <CalendarIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
             EMI Schedule Details
           </div>
-          <div className="grid grid-cols-3 gap-5 my-3 shadow bg-background-light-secondary rounded-lg py-3 px-5 text-sm">
-            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-border-gray-primary">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 my-3 shadow bg-gray-100 dark:bg-gray-700/60 rounded-lg py-3 px-5 text-sm">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2 md:border-r border-gray-300 dark:border-gray-600">
               <div>Loan Id</div>
-              <div className="font-bold text-black flex w-[120px] items-center">
+              <div className="font-bold flex w-[120px] items-center">
                 : <span className="mr-2">{""}</span>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
                   {loanDetails.loanId}
@@ -90,7 +91,7 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="h-5 w-5 text-black"
+                    className="h-5 w-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -101,46 +102,46 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
                 </button>
               </div>
               <div>Total Amount</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {loanDetails.totalAmount}
               </div>
               <div>Wallet Balance</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {loanDetails.walletBalance}
               </div>
             </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2 border-r border-border-gray-primary">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2 xl:border-r border-gray-300 dark:border-gray-600">
               <div>Remaining Principal</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {loanDetails.remainingPrincipal}
               </div>
               <div>Remaining Interest</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {loanDetails.remainingInterest}
               </div>
               <div>Closing Amount</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {loanDetails.xcClosingAmount}
               </div>
             </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2">
               <div>Total Outstanding</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {loanDetails.totalOutstanding}
               </div>
               <div>Release Date</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {convertDate(loanDetails?.releaseDate)}
               </div>
               <div>Due Date</div>
-              <div className="font-bold text-black">
+              <div className="font-bold">
                 : <span className="mr-2">{""}</span>
                 {convertDate(nextDueDate)}
               </div>
