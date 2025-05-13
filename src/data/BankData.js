@@ -95,6 +95,7 @@ export const BranchNameOptions = {
     { value: "Manda Hill Branch", label: "Manda Hill Branch" },
     { value: "Livingstone Branch", label: "Livingstone Branch" },
     { value: "Northend Branch", label: "Northend Branch" },
+    { value: "Lusaka Main", label: "Lusaka Main" },
   ],
   "United Bank for Africa": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
@@ -353,6 +354,12 @@ export const bankBranches = [
     branchName: "Northend Branch",
     branchCode: "060043",
     sortCode: "06-00-43",
+  },
+  {
+    bankName: "Standard Chartered Bank",
+    branchName: "Lusaka Main",
+    branchCode: "060017",
+    sortCode: "06-00-17",
   },
   {
     bankName: "United Bank for Africa",
