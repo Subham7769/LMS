@@ -748,9 +748,9 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Plot Vehicle No",
+      labelName: "Plot / Vehicle No",
       inputName: "plotVehicleNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
