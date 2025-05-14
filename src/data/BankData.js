@@ -270,13 +270,13 @@ export const bankBranches = [
     bankName: "First National Bank",
     branchName: "Manda Hill Branch",
     branchCode: "260014",
-    sortCode: "12-00-03",
+    sortCode: "26-00-14",
   },
   {
     bankName: "First National Bank",
     branchName: "Acacia park",
     branchCode: "260001",
-    sortCode: "12-00-03",
+    sortCode: "26-00-01",
   },
   {
     bankName: "Indo-Zambia Bank",
