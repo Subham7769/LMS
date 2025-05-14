@@ -71,6 +71,7 @@ export const BranchNameOptions = {
     { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
     { value: "Arcades Branch", label: "Arcades Branch" },
     { value: "Manda Hill Branch", label: "Manda Hill Branch" },
+    { value: "Acacia park", label: "Acacia park" },
   ],
   "Indo-Zambia Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
@@ -268,8 +269,14 @@ export const bankBranches = [
   {
     bankName: "First National Bank",
     branchName: "Manda Hill Branch",
-    branchCode: "120003",
-    sortCode: "12-00-03",
+    branchCode: "260014",
+    sortCode: "26-00-14",
+  },
+  {
+    bankName: "First National Bank",
+    branchName: "Acacia park",
+    branchCode: "260001",
+    sortCode: "26-00-01",
   },
   {
     bankName: "Indo-Zambia Bank",

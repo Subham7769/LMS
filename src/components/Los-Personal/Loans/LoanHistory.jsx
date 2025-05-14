@@ -36,6 +36,7 @@ import {
   ReceiptRefundIcon,
   ArrowPathIcon,
   WalletIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
@@ -366,6 +367,39 @@ const LoanHistory = () => {
               </div>
             </div>
           </CardInfo>
+          <div className="col-span-2">
+
+            {rowData?.refinanceDetails && <CardInfo
+              cardIcon={BanknotesIcon}
+              cardTitle="Refinancing Details"
+              className={"bg-white border-border-gray-primary border"}
+              colorText={"text-blue-primary"}
+            >
+
+              {rowData?.refinanceDetails.map((refinance) => (
+                <div className="grid grid-cols-4 pb-3">
+                  <div>
+                    <div className="text-gray-500">Loan Id</div>
+                    <div className="font-semibold">{refinance.loanId}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500">Refinancing Entity</div>
+                    <div className="font-semibold"> {refinance.name}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500">Refinance Amount</div>
+                    <div className="font-semibold"> {refinance.refinanceAmount}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500">Installment On PaySlip</div>
+                    <div className="font-semibold"> {refinance.installmentOnPaySlip}</div>
+                  </div>
+                </div>
+              ))
+              }
+
+            </CardInfo>}
+          </div>
         </div>
         <div className="bg-white p-3 shadow-md border-border-gray-primary border rounded-md my-5">
           <div className="font-semibold text-xl mb-3">
@@ -443,46 +477,46 @@ const LoanHistory = () => {
           <div className="flex justify-end gap-2 px-5">
             {(rowData.loanStatus === "ACTIVATED" ||
               rowData.loanStatus === "CLOSED") && (
-              <div className="">
-                <Button
-                  buttonName={"Initiate Refund"}
-                  onClick={() =>
-                    handleInitiateRefund(
-                      rowData.loanId,
-                      rowData.uid,
-                    )
-                  }
-                  rectangle={true}
-                  buttonIcon={ReceiptRefundIcon}
-                  buttonType="tertiary"
-                />
-              </div>
-            )}
+                <div className="">
+                  <Button
+                    buttonName={"Initiate Refund"}
+                    onClick={() =>
+                      handleInitiateRefund(
+                        rowData.loanId,
+                        rowData.uid,
+                      )
+                    }
+                    rectangle={true}
+                    buttonIcon={ReceiptRefundIcon}
+                    buttonType="tertiary"
+                  />
+                </div>
+              )}
             {(rowData.loanStatus === "ACTIVATED" ||
               rowData.loanStatus === "LATE") && (
-              <div className="flex gap-2">
-                <Button
-                  buttonName={"Refinance Loan"}
-                  onClick={() =>
-                    handleRefinanceLoan(
-                      rowData.loanId,
-                      rowData.uid,
-                      rowData.uniqueID
-                    )
-                  }
-                  rectangle={true}
-                  buttonIcon={ArrowPathIcon}
-                  buttonType="tertiary"
-                />
-                <Button
-                  buttonName={"Close Loan via Wallet"}
-                  onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
-                  rectangle={true}
-                  buttonIcon={WalletIcon}
-                  buttonType="tertiary"
-                />
-              </div>
-            )}
+                <div className="flex gap-2">
+                  <Button
+                    buttonName={"Refinance Loan"}
+                    onClick={() =>
+                      handleRefinanceLoan(
+                        rowData.loanId,
+                        rowData.uid,
+                        rowData.uniqueID
+                      )
+                    }
+                    rectangle={true}
+                    buttonIcon={ArrowPathIcon}
+                    buttonType="tertiary"
+                  />
+                  <Button
+                    buttonName={"Close Loan via Wallet"}
+                    onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
+                    rectangle={true}
+                    buttonIcon={WalletIcon}
+                    buttonType="tertiary"
+                  />
+                </div>
+              )}
             <div>
               <ActionOption
                 userNavigation={filteredUserNavigation}

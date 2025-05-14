@@ -7,7 +7,10 @@ import {
 import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
-import {removeSlashes} from "../../utils/removeSlashes";
+import { removeSlashes } from "../../utils/removeSlashes";
+import Button from "../Common/Button/Button";
+import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import exportToExcel from "../../utils/exportToExcel";
 
 const LedgerListTable = ({
   ListName,
@@ -52,9 +55,9 @@ const LedgerListTable = ({
 
   useEffect(() => {
     var borrowerIdQueryWithoutSlash = "";
-    if(borrowerIdQuery !== false)
+    if (borrowerIdQuery !== false)
       borrowerIdQueryWithoutSlash = removeSlashes(borrowerIdQuery)
-      
+
     setFilteredData(
       ListItem.filter((entry) =>
         entry.userId.toString().includes(borrowerIdQueryWithoutSlash)
@@ -170,6 +173,35 @@ const LedgerListTable = ({
     );
   };
 
+  // Define the mapping for Account data excel file fields
+  const accountExportMapping = {
+    date: "Date",
+    entryId: "Entry ID",
+    entryName: "Entry Name",
+    loanId: "Loan ID",
+    borrowerId: "Borrower ID",
+    debitAmount: "Debit Amount",
+    creditAmount: "Credit Amount",
+  };
+
+  console.log(currentData)
+
+  const flattenAccountEntries = (data) => {
+    return data.flatMap((item) => {
+      const { userId, loanId, accounts } = item;
+
+      return accounts.map((account) => ({
+        date: new Date(account.transactionDate).toLocaleDateString(),
+        entryId: account.entryId,
+        entryName: account.entryName,
+        loanId: loanId,
+        borrowerId: userId,
+        debitAmount: account.debitValue === 0 ? "" : account.debitValue,
+        creditAmount: account.creditValue === 0 ? "" : account.creditValue,
+      }));
+    });
+  };
+
   return (
     <>
       {loading ? (
@@ -185,45 +217,63 @@ const LedgerListTable = ({
       ) : (
         <div className="bg-white border shadow-md py-10 rounded-xl flex flex-col items-center w-full">
           <div className="px-4 sm:px-6 lg:px-8 w-full">
-            {/* Search */}
-            <div className="flex gap-4 mb-5 w-1/2">
-              <div className="">
-                <label htmlFor="search" className="sr-only">
-                  Search by Borrower ID
-                </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <MagnifyingGlassIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
+            {/* Header Box */}
+            <div className="flex justify-between items-center mb-5">
+              {/* Search */}
+              <div className="flex gap-4 mb-5 w-1/2">
+                <div className="">
+                  <label htmlFor="search" className="sr-only">
+                    Search by Borrower ID
+                  </label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <MagnifyingGlassIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <input
+                      id="search"
+                      type="search"
+                      name="search"
+                      className="block w-full h-[50px] rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                      placeholder="Enter Borrower ID"
+                      value={borrowerIdQuery}
+                      onChange={(e) => setBorrowerIdQuery(e.target.value)}
                     />
                   </div>
-                  <input
-                    id="search"
-                    type="search"
-                    name="search"
-                    className="block w-full h-[50px] rounded-md border-0 bg-white py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                    placeholder="Enter Borrower ID"
-                    value={borrowerIdQuery}
-                    onChange={(e) => setBorrowerIdQuery(e.target.value)}
+                </div>
+                <div className="w-40">
+                  <label htmlFor="entriesSelect" className="sr-only">
+                    Entries Per Page
+                  </label>
+                  <Select
+                    id="entriesSelect"
+                    options={selectOptions}
+                    defaultValue={{ value: 10, label: "10 entries" }}
+                    onChange={handlePageSizeChange}
+                    className="block w-full"
+                    styles={customSelectStyles}
+                    isSearchable={false}
+                    isMulti={false}
                   />
                 </div>
               </div>
-              <div className="w-40">
-                <label htmlFor="entriesSelect" className="sr-only">
-                  Entries Per Page
-                </label>
-                <Select
-                  id="entriesSelect"
-                  options={selectOptions}
-                  defaultValue={{ value: 10, label: "10 entries" }}
-                  onChange={handlePageSizeChange}
-                  className="block w-full"
-                  styles={customSelectStyles}
-                  isSearchable={false}
-                  isMulti={false}
+              {/* Download Links */}
+              {/* ListItem or currentData */}
+              {currentData.length > 0 && <div className="flex justify-end">
+                <Button
+                  buttonName={"Export Excel"}
+                  onClick={() => {
+                    const flatData = flattenAccountEntries(currentData)
+                    exportToExcel(flatData, accountExportMapping, "General_Ledger_Data.xlsx")
+                  }
+                  }
+                  rectangle={true}
+                  buttonIcon={DocumentArrowDownIcon}
+                // buttonType="tertiary"
                 />
-              </div>
+              </div>}
             </div>
 
             {/* Table Name */}
@@ -258,11 +308,10 @@ const LedgerListTable = ({
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`flex items-center px-2 py-2 rounded-md ${
-                  currentPage === 1
-                    ? "bg-background-light-primary cursor-not-allowed"
-                    : "bg-indigo-500 text-white cursor-pointer"
-                }`}
+                className={`flex items-center px-2 py-2 rounded-md ${currentPage === 1
+                  ? "bg-background-light-primary cursor-not-allowed"
+                  : "bg-indigo-500 text-white cursor-pointer"
+                  }`}
               >
                 <ChevronLeftIcon className="w-5 h-5" />
               </button>
@@ -272,11 +321,10 @@ const LedgerListTable = ({
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`flex items-center px-2 py-2 rounded-md ${
-                  currentPage === totalPages
-                    ? "bg-background-light-primary cursor-not-allowed"
-                    : "bg-indigo-500 text-white cursor-pointer"
-                }`}
+                className={`flex items-center px-2 py-2 rounded-md ${currentPage === totalPages
+                  ? "bg-background-light-primary cursor-not-allowed"
+                  : "bg-indigo-500 text-white cursor-pointer"
+                  }`}
               >
                 <ChevronRightIcon className="w-5 h-5" />
               </button>

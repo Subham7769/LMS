@@ -18,10 +18,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { ArchiveBoxIcon, CalendarIcon, EnvelopeIcon, HomeIcon, MapPinIcon, PhoneIcon, PlusIcon, UserCircleIcon, WindowIcon } from "@heroicons/react/24/outline";
 import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 import { useNavigate } from "react-router-dom";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
+import CardInfo from "../../Common/CardInfo/CardInfo";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
@@ -117,77 +119,74 @@ const AddShareHolder = () => {
                   <div className="grid grid-cols-[80%_20%] gap-4 px-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                       {/* Shareholder Personal Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Personal Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
+                      <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
+                        <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
+                          <div
+                            onClick={(e) => handleViewPhoto(e, shareholder.personalDetails.customerPhotoId)}
+                            className={`${shareholder.personalDetails.customerPhotoId && "cursor-pointer"}`}
+                            title={"View Client Photo"}
+                          >
+                            <UserCircleIcon
+                              className="-ml-0.5 h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </div>
+                          Personal Details{" "}
+                          {/* {shareholder.personalDetails.customerPhotoId && (
+                            <p
+                              className="text-[9px] text-gray-600 -mb-2 cursor-pointer underline"
+                              onClick={(e) =>
+                                handleViewPhoto(e, shareholder.personalDetails.customerPhotoId)
+                              }
+                            >
+                              View Client Photo
+                            </p>
+                          )} */}
+                        </div>
+                        <div className="space-y-2 flex flex-col gap-5 p-3">
                           <p>
-                            <strong>Name:</strong>{" "}
-                            {shareholder.personalDetails.title}{" "}
-                            {shareholder.personalDetails.firstName}{" "}
-                            {shareholder.personalDetails.surname}{" "}
-                            {shareholder.personalDetails.otherName}
+                            {[
+                              shareholder.personalDetails.title,
+                              shareholder.personalDetails.firstName,
+                              shareholder.personalDetails.surname,
+                              shareholder.personalDetails.otherName,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}{" "}
+                            is a {shareholder.personalDetails.age}-year-old {shareholder.personalDetails.nationality} national.
+                            They are {shareholder.personalDetails.maritalStatus} and identify as{" "}
+                            {shareholder.personalDetails.gender}.
                           </p>
-                          <p>
-                            <strong>Unique Id Type:</strong>{" "}
-                            {shareholder.personalDetails.uniqueIDType}
-                          </p>
-                          <p>
-                            <strong>Unique ID:</strong>{" "}
-                            {shareholder.personalDetails.uniqueID}
-                          </p>
-                          <p>
-                            <strong>Gender:</strong>{" "}
-                            {shareholder.personalDetails.gender}
-                          </p>
-                          <p>
-                            <strong>Marital Status:</strong>{" "}
-                            {shareholder.personalDetails.maritalStatus}
-                          </p>
-                          <p>
-                            <strong>nationality:</strong>{" "}
-                            {shareholder.personalDetails.nationality}
-                          </p>
-                          <p>
-                            <strong>Date of Birth:</strong>{" "}
-                            {shareholder.personalDetails.dateOfBirth}
-                          </p>
-                          <p>
-                            <strong>Age:</strong>{" "}
-                            {shareholder.personalDetails.age}
-                          </p>
-                          <p>
-                            <strong>Place of Birth:</strong>{" "}
-                            {shareholder.personalDetails.placeOfBirth}
-                          </p>
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={CalendarIcon}
+                              label="Born"
+                              value={shareholder.personalDetails.dateOfBirth}
+                            />
+                            <CardInfoRow
+                              icon={MapPinIcon}
+                              label="Place"
+                              value={shareholder.personalDetails.placeOfBirth}
+                            />
+                            <CardInfoRow
+                              icon={WindowIcon}
+                              label={shareholder.personalDetails.uniqueIDType}
+                              value={shareholder.personalDetails.uniqueID}
+                            />
+                          </div>
                         </div>
                       </div>
 
                       {/*Shareholder Contact Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Contact Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
+                      <CardInfo
+                        cardTitle="Contact Details"
+                        cardIcon={HomeIcon}
+                        colorBG={"bg-green-tertiary"}
+                        colorText={"text-green-primary"}
+                      >
+                        <div className="space-y-2 flex flex-col gap-5 p-3">
                           <p>
-                            <strong>Mobile 1:</strong>{" "}
-                            {shareholder.contactDetails.mobile1}
-                          </p>
-                          <p>
-                            <strong>Mobile 2:</strong>{" "}
-                            {shareholder.contactDetails.mobile2}
-                          </p>
-                          <p>
-                            <strong>Landline:</strong>{" "}
-                            {shareholder.contactDetails.landlinePhone}
-                          </p>
-                          <p>
-                            <strong>Email:</strong>{" "}
-                            {shareholder.contactDetails.email}
-                          </p>
-                          <p>
-                            <strong>Address:</strong>{" "}
+                            Currently residing in{" "}
                             {[
                               shareholder.contactDetails.houseNumber,
                               shareholder.contactDetails.street,
@@ -199,12 +198,26 @@ const AddShareHolder = () => {
                               .filter(Boolean)
                               .join(", ")}
                           </p>
-                          <p>
-                            <strong>Post Box:</strong>{" "}
-                            {shareholder.contactDetails.postBox}
-                          </p>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={PhoneIcon}
+                              label="Mobile"
+                              value={shareholder.contactDetails.mobile1}
+                            />
+                            <CardInfoRow
+                              icon={EnvelopeIcon}
+                              label="Email"
+                              value={shareholder.contactDetails.email}
+                            />
+                            <CardInfoRow
+                              icon={ArchiveBoxIcon}
+                              label="Post Box"
+                              value={shareholder.contactDetails.postBox}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      </CardInfo>
                     </div>
                     {/*Shareholder Actions */}
                     <div className="flex justify-start gap-5 flex-col mt-4">

@@ -733,7 +733,7 @@ const ViewCompany = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                             {/* Shareholder Personal Details */}
                             <CardInfo
-                              cardTitle="Shareholder Personal Details"
+                              cardTitle="Personal Details"
                               cardIcon={UserIcon}
                               colorText={"text-blue-primary"}
                               colorBG={"bg-blue-tertiary"}
@@ -779,7 +779,7 @@ const ViewCompany = () => {
 
                             {/*Shareholder Contact Details */}
                             <CardInfo
-                              cardTitle="Shareholder Contact Details"
+                              cardTitle="Contact Details"
                               cardIcon={PhoneIcon}
                               colorText={"text-green-primary"}
                               colorBG={"bg-green-tertiary"}

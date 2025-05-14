@@ -68,7 +68,7 @@ const LoanOffers = () => {
       createdBy: userName,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
-    navigate(`/loan/loan-origination-system/personal/loans/approve-loans`);
+    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
 
   const handleChange = (e) => {

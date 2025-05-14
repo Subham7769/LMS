@@ -79,7 +79,7 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-
+console.log(addLoanData)
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to the sanitized uniqueID
@@ -137,7 +137,7 @@ const AddLoans = () => {
   const getMaxPrincipal = async () => {
     const maxPrincipalPayload = {
       loanProductId: addLoanData.generalLoanDetails.loanProductId,
-      borrowerId: addLoanData.generalLoanDetails.borrowerId,
+      borrowerId: addLoanData.generalLoanDetails.uniqueID,
       interestMethod: addLoanData.generalLoanDetails.interestMethod,
       loanInterest: addLoanData.generalLoanDetails.loanInterest,
       loanInterestType: addLoanData.generalLoanDetails.loanInterestType,

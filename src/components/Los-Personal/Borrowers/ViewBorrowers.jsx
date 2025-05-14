@@ -25,6 +25,7 @@ import {
   EnvelopeIcon,
   PhoneIcon,
   UserIcon,
+  UsersIcon,
   ArchiveBoxIcon,
   HomeIcon,
   PlusIcon,
@@ -34,6 +35,10 @@ import {
   CalendarIcon,
   PencilIcon,
   XMarkIcon,
+  DocumentMinusIcon,
+  EqualsIcon,
+  DocumentIcon,
+  BanknotesIcon
 } from "@heroicons/react/24/outline";
 import { Menu, Transition } from "@headlessui/react";
 import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
@@ -96,15 +101,15 @@ const ViewBorrowers = () => {
       console.log(borrower);
       matchesSearchValue = searchValue
         ? [
-            personalDetails.firstName,
-            personalDetails.surname,
-            personalDetails.otherName,
-            personalDetails.uniqueID,
-            borrower.customerId,
-            contactDetails.mobile1,
-          ].some((field) =>
-            field?.toLowerCase().includes(searchValue.toLowerCase())
-          )
+          personalDetails.firstName,
+          personalDetails.surname,
+          personalDetails.otherName,
+          personalDetails.uniqueID,
+          borrower.customerId,
+          contactDetails.mobile1,
+        ].some((field) =>
+          field?.toLowerCase().includes(searchValue.toLowerCase())
+        )
         : true;
 
       return matchesSearchValue;
@@ -298,7 +303,11 @@ const ViewBorrowers = () => {
         </>
       );
     };
-
+    console.log(rowData)
+    const totalSalaryNoDeductions = rowData.basicPay + rowData.housingAllowance + rowData.transportAllowance 
+  + rowData.ruralHardshipAllowance + rowData.infectiousHealthRisk + rowData.healthShiftAllowance 
+  + rowData.interfaceAllowance + rowData.responsibilityAllowance + rowData.doubleClassAllowance 
+  + rowData.actingAllowance + rowData.otherAllowances;
     return (
       <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5 relative">
         {rowData ? (
@@ -434,18 +443,49 @@ const ViewBorrowers = () => {
                 </div>
               </CardInfo>
 
+              {/* Salary Details */}
+              <CardInfo
+                cardTitle="Salary Details"
+                cardIcon={BanknotesIcon}
+                colorBG={"bg-orange-tertiary"}
+                colorText={"text-orange-primary"}
+              >
+                <div className="space-y-2 flex flex-col  p-3">
+                  <p className="mb-5">
+                    The salary includes a Basic Pay of {rowData.basicPay}, along with a Housing Allowance of {rowData.housingAllowance} and a Transport Allowance of {rowData.transportAllowance}.
+                    <br/>Total Salary is <strong>{totalSalaryNoDeductions}</strong> /-
+                  </p>
+                  <b>Total Deductions</b>
+                  <div className="grid grid-cols-2 gap-4 ">
+                    <CardInfoRow
+                      icon={DocumentMinusIcon}
+                      label={"On Payslip"}
+                      value={rowData.totalDeductionsOnPayslip}
+                    />
+                    <CardInfoRow
+                      icon={DocumentIcon}
+                      label="Not on Payslip"
+                      value={rowData.totalDeductionsNotOnPayslip}
+                    />
+
+                  </div>
+                </div>
+              </CardInfo>
+
               {/* Banking Details */}
               <CardInfo
                 cardTitle="Financial Profile"
                 cardIcon={BuildingOffice2Icon}
-                colorBG={"bg-orange-tertiary"}
-                colorText={"text-orange-primary"}
+                colorBG={"bg-green-tertiary"}
+                colorText={"text-green-primary"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3">
                   <p>
-                    Maintain a {rowData.accountType} account with{" "}
-                    {rowData.bankName}.
+                    Maintains a {rowData.accountType} account with {rowData.bankName}.
+                    They have a credit score of {rowData.creditScore}, and are borrowing for {rowData.reasonForBorrowing} purpose.
+                    The repayment source is {rowData.sourceOfRepayment}.
                   </p>
+
                   <div className="grid grid-cols-2 gap-4">
                     <CardInfoRow
                       icon={WindowIcon}
@@ -468,6 +508,53 @@ const ViewBorrowers = () => {
                       icon={WindowIcon}
                       label={"Sort Code"}
                       value={rowData.sortCode}
+                    />
+                  </div>
+                </div>
+              </CardInfo>
+
+              {/* next of kin Details */}
+              <CardInfo
+                cardTitle="Next of kin Details"
+                cardIcon={UsersIcon}
+                colorBG={"bg-blue-tertiary"}
+                colorText={"text-blue-primary"}
+              >
+                <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <p>
+                    {rowData.kinTitle} {rowData.kinOtherName} {rowData.kinSurname}, the {rowData.kinRelationship} of the applicant.
+                    They works as a <strong>{rowData.kinOccupation}</strong> at <strong>{rowData.kinEmployer}</strong>.
+                    
+                  </p>
+                  <p>
+                    Currently residing in{" "}
+                    {[
+                      rowData.kinHouseNo,
+                      rowData.kinStreet,
+                      rowData.kinResidentialArea,
+                      rowData.kinProvince,
+                      rowData.kinDistrict,
+                      rowData.kinCountry,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <CardInfoRow
+                      icon={PhoneIcon}
+                      label="Mobile"
+                      value={rowData.kinMobile1}
+                    />
+                    <CardInfoRow
+                      icon={EnvelopeIcon}
+                      label="Email"
+                      value={rowData.kinEmail}
+                    />
+                    <CardInfoRow
+                      icon={WindowIcon}
+                      label="NRC"
+                      value={rowData.kinNrcNo}
                     />
                   </div>
                 </div>

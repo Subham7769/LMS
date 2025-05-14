@@ -1394,7 +1394,7 @@ const personalLoansSlice = createSlice({
       })
       .addCase(handleProceed.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan submittted successfully");
+        toast.success("Loan submitted successfully. Awaiting approval from the next step approver.");
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
