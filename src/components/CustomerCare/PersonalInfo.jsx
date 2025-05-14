@@ -98,10 +98,9 @@ const PersonalInfo = () => {
   ]);
 
 
-  console.log(personalInfo.personalDetails.uniqueID);
-
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
+
   const handleViewPhoto = async (photoId) => {
     const filePreviewParams = {
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
@@ -786,22 +785,24 @@ const PersonalInfo = () => {
       </div>
     );
   };
-
+console.log(personalInfo)
   return (
     <>
       <div className="flex flex-col gap-2">
-        <ContainerTile
-          className="flex items-center gap-2"
-          loading={loading}
-          // error={error}
-        >
+
           {/* <img
             className="rounded-full w-12"
             src="https://lmscarbon.com/assets/index.png"
             alt=""
           /> */}
-          <div className="text-xl font-semibold">Borrower Id: {"j"}</div>
-        </ContainerTile>
+          <div className="flex justify-between items-center w-full bg-indigo-50 p-3 rounded-lg">
+
+            <div className="text-xl font-semibold p-3 rounded-lg">Customer Id: {personalInfo.customerId}</div>
+            {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" && <div className="text-xl font-semibold p-3 rounded-lg ">Borrower Id: {personalInfo.borrowerProfile.personalDetails.uniqueID}</div>}
+            {personalInfo.borrowerProfileType === "COMPANY_BORROWER" && <div className="text-xl font-semibold p-3 rounded-lg">Unique Id: {personalInfo.companyBorrowerProfile.companyDetails.companyUniqueId}</div>}
+
+          </div>
+
         <>
           {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (
             <>{renderExpandedRowPersonal(...transformFlattenData)}</>

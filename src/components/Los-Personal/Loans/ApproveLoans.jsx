@@ -27,6 +27,7 @@ import {
   UserIcon,
   UserCircleIcon,
   XMarkIcon,
+  BanknotesIcon
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
@@ -235,8 +236,9 @@ const ApproveLoans = () => {
     { label: "Aging", field: "aging" },
   ];
 
-  const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+  const renderExpandedRow = (rowData) => {
+    console.log(rowData)
+    return (<div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
         <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
           <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
@@ -333,6 +335,39 @@ const ApproveLoans = () => {
             <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
           </div>
         </CardInfo>
+        <div className="col-span-2">
+
+          {rowData?.refinanceDetails && <CardInfo
+            cardIcon={BanknotesIcon}
+            cardTitle="Refinancing Details"
+            className={"bg-white border-border-gray-primary border"}
+            colorText={"text-blue-primary"}
+          >
+
+            {rowData?.refinanceDetails.map((refinance) => (
+              <div className="grid grid-cols-4 pb-3">
+                <div>
+                  <div className="text-gray-500">Loan Id</div>
+                  <div className="font-semibold">{refinance.loanId}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Refinancing Entity</div>
+                  <div className="font-semibold"> {refinance.name}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Refinance Amount</div>
+                  <div className="font-semibold"> {refinance.refinanceAmount}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Installment On PaySlip</div>
+                  <div className="font-semibold"> {refinance.installmentOnPaySlip}</div>
+                </div>
+              </div>
+            ))
+            }
+
+          </CardInfo>}
+        </div>
       </div>
       <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
         <div className="font-semibold text-xl mb-3">
@@ -423,8 +458,8 @@ const ApproveLoans = () => {
           </>
         )}
       </div>
-    </div>
-  );
+    </div>)
+  };
 
   useEffect(() => {
     const filteredApproveLoansDataFunction = () => {
