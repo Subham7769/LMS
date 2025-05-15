@@ -170,14 +170,14 @@ const Employer = () => {
                 Which Month ?
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Creation Date
+                 Creation Date
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+                 Actions
               </div>
             </div>
-            {filteredEmployers?.map((empData, index) => (
-              <div
+            {filteredEmployers?.map((empData, index) => ( 
+              <div 
                 key={empData.employerId}
                 className={`grid grid-cols-6 gap-4 items-center pb-3 px-5 mb-3 
                 ${index !== filteredEmployers.length - 1
