@@ -87,7 +87,7 @@ const TagInput = ({
         {formData.tags.map((tag, index) => (
           <div
             key={index}
-            className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
+            className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
           >
             <div className="flex-1 flex justify-between align-middle">
               <>

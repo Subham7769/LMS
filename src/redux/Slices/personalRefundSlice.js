@@ -231,7 +231,7 @@ export const uploadDocumentFile = createAsyncThunk(
   "personalRefund/uploadDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("authToken");
       const {
         refundApplicationId,
         documentKey,
@@ -246,7 +246,7 @@ export const uploadDocumentFile = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -267,8 +267,8 @@ export const uploadDocumentFile = createAsyncThunk(
 export const deleteDocumentFile = createAsyncThunk(
   "personalRefund/deleteDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken } = fileDeleteParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = fileDeleteParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
 
     try {
@@ -276,7 +276,7 @@ export const deleteDocumentFile = createAsyncThunk(
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -543,8 +543,8 @@ export const uploadSignedRefundRequest = createAsyncThunk(
   "personalRefund/uploadSignedRefundRequest",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const { refundProcessId, authToken } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { refundProcessId } = fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_REFUND_SIGNED_REQUEST_UPLOAD
@@ -552,7 +552,7 @@ export const uploadSignedRefundRequest = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -683,7 +683,7 @@ const personalRefundSlice = createSlice({
         };
       })
       .addCase(getDocsByIdnUsage.pending, (state) => {
-        // state.loading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
@@ -785,7 +785,7 @@ const personalRefundSlice = createSlice({
         toast.error(`Error: ${action.payload}`);
       })
       .addCase(uploadDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true;
       })
       .addCase(uploadDocumentFile.fulfilled, (state, action) => {
         state.loading = false;
@@ -804,7 +804,7 @@ const personalRefundSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(deleteDocumentFile.fulfilled, (state, action) => {

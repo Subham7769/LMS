@@ -24,9 +24,7 @@ import {
   CheckCircleIcon,
   NewspaperIcon,
   CurrencyDollarIcon,
-  UserIcon,
   UserCircleIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
@@ -481,14 +479,12 @@ const ApproveLoans = () => {
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleReset}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />

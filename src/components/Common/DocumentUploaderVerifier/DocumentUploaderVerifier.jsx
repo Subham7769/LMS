@@ -13,9 +13,9 @@ const DocumentUploaderVerifier = ({
   onCheckboxChange,
 }) => {
   return (
-    <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
-      <div>{label}</div>
-      <div className="flex gap-x-5 items-center">
+    <div className="md:flex justify-between items-center border-b border-gray-300 dark:border-gray-600 mb-3 pb-3">
+      <div className="mb-1 md:mb-0">{label}</div>
+      <div className="flex gap-x-5 items-center justify-between">
         <InputFile
           inputName={inputFileName}
           inputValue={inputFileValue}

@@ -32,6 +32,7 @@ import {
   clearValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -60,6 +61,7 @@ const RefundApplication = () => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     dispatch(getOpenLoans());
@@ -78,7 +80,7 @@ const RefundApplication = () => {
   ];
 
   const columns = [
-    { label: "Refund Application ID", field: "refundApplicationId" },
+    { label: "Refund App. ID", field: "refundApplicationId" },
     { label: "Borrower Name", field: "borrowerName" },
     { label: "Unique ID", field: "uniqueID" },
     { label: "Refund Amount", field: "refundAmount" },
@@ -110,6 +112,7 @@ const RefundApplication = () => {
   const handleReset = () => {
     setPlaSearchBy("");
     setPlaSearchValue("");
+    setCurrentPage(0);
     dispatch(getRefundApplications({ page: 0, size: 10 }));
   };
 
@@ -143,15 +146,14 @@ const RefundApplication = () => {
 
   const renderActionList = (rowData) => {
     if (rowData.status === "Approved" || hasViewOnlyAccessGroup3(roleName)) {
-      return <div className="flex justify-center gap-4 px-5">-</div>;
+      return <div className="flex gap-4 px-5">-</div>;
     }
     return (
-      <div className="flex justify-center gap-4 px-5">
+      <div className="flex gap-4 ">
         {rowData.status !== "Submitted" && (
           <Button
             onClick={() => handleEditApplication(rowData)}
-            buttonIcon={PencilIcon}
-            circle={true}
+            buttonIcon={EditIcon}
             className={``}
             buttonType="secondary"
           />
@@ -159,8 +161,7 @@ const RefundApplication = () => {
         {rowData.status !== "Rejected" && (
           <Button
             onClick={() => handleRejectApplication(rowData.refundApplicationId)}
-            buttonIcon={TrashIcon}
-            circle={true}
+            buttonIcon={DeleteIcon}
             className={``}
             buttonType="destructive"
           />
@@ -171,24 +172,25 @@ const RefundApplication = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Refund Applications</div>
-        <div></div>
-        <div></div>
+      <div className="grid grid-cols-2 gap-5 items-center">
+        <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
+          Refund Applications
+        </h1>
         <div className="flex justify-end gap-2 h-12">
           {!hasViewOnlyAccessGroup3(roleName) && (
             <Button
-              buttonIcon={PlusIcon}
+              buttonIcon={AddIcon}
               buttonName="New Application"
               onClick={handleNewApplication}
-              rectangle={true}
               disabled={openLoans.length < 1}
             />
           )}
         </div>
       </div>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="SearchBy"
@@ -199,7 +201,7 @@ const RefundApplication = () => {
             isValidation={true}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="plaSearchValue"
@@ -210,7 +212,7 @@ const RefundApplication = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
@@ -232,11 +234,15 @@ const RefundApplication = () => {
         data={refundApplicationsData}
         loading={loading}
         ListAction={renderActionList}
+        ListName="List of draft refund applications"
+        ListNameLength={refundApplicationsTotalElements}
       />
       <Pagination
         totalElements={refundApplicationsTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
     </div>
   );

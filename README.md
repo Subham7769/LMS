@@ -2945,7 +2945,7 @@ const Ledger = () => {
           disabled={currentPage === 1}
           className={`flex items-center px-4 py-2 rounded-md ${
             currentPage === 1
-              ? "bg-background-light-primary cursor-not-allowed"
+              ? "bg-gray-200 cursor-not-allowed"
               : "bg-indigo-500 text-white cursor-pointer"
           }`}
         >
@@ -2959,7 +2959,7 @@ const Ledger = () => {
           disabled={currentPage === totalPages}
           className={`flex items-center px-4 py-2 rounded-md ${
             currentPage === totalPages
-              ? "bg-background-light-primary cursor-not-allowed"
+              ? "bg-gray-200 cursor-not-allowed"
               : "bg-indigo-500 text-white cursor-pointer"
           }`}
         >
@@ -3218,7 +3218,7 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
             disabled={currentPage === 1}
             className={`flex items-center px-4 py-2 rounded-md ${
               currentPage === 1
-                ? "bg-background-light-primary cursor-not-allowed"
+                ? "bg-gray-200 cursor-not-allowed"
                 : "bg-indigo-500 text-white cursor-pointer"
             }`}
           >
@@ -3232,7 +3232,7 @@ const LedgerListTable = ({ ListName, ListHeader, ListItem }) => {
             disabled={currentPage === totalPages}
             className={`flex items-center px-4 py-2 rounded-md ${
               currentPage === totalPages
-                ? "bg-background-light-primary cursor-not-allowed"
+                ? "bg-gray-200 cursor-not-allowed"
                 : "bg-indigo-500 text-white cursor-pointer"
             }`}
           >
@@ -3328,7 +3328,6 @@ export const HeaderList = [
 Overall, these changes improve the code by enhancing readability, maintainability, and reusability while maintaining the core functionality of displaying and paginating ledger entries.
 
 ---
-
 
 # TclComponent.jsx -> TCLViewList Component
 

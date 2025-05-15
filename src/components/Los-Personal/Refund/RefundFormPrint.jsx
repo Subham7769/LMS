@@ -6,17 +6,16 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useLocation, useParams } from "react-router-dom";
 import longHornLogo from "../../../assets/image/longhorn-logo.png";
-import formatNumber from "../../../utils/formatNumber";
 import { getRefundForm } from "../../../redux/Slices/personalRefundSlice";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -35,7 +34,7 @@ const RefundFormPrint = () => {
     if (!location.pathname.includes("loan-origination-system")) {
       const timeoutId = setTimeout(() => {
         window.print();
-      }, 1500);
+      }, 2000);
 
       // Cleanup to avoid potential memory leaks
       return () => clearTimeout(timeoutId);
@@ -148,7 +147,7 @@ const RefundFormPrint = () => {
             <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
               CUSTOMER CONTACT DETAILS
             </div>
-            <div className="grid grid-cols-[45%,55%] ">
+            <div className="grid grid-cols-[45%_55%] ">
               <div className="border-r border-border-gray-primary">
                 {Object.keys(customerContactDetails).map((key) => (
                   <div

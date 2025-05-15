@@ -97,7 +97,6 @@ const LoanHistory = () => {
     await dispatch(
       validateForm({ plhSearchBy: plhSearchBy, plhSearchValue: plhSearchValue })
     );
-    console.log(searchBy + "----" + searchValue);
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {

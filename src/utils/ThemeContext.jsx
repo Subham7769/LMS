@@ -29,8 +29,6 @@ export default function ThemeProvider({children}) {
       document.documentElement.classList.remove("transition-none");
     }, 100);
 
-    console.log("Applying Theme:", theme);
-
     return () => clearTimeout(transitionTimeout);
   }, [theme]);
 

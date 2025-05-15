@@ -809,7 +809,7 @@ const AddUpdateBorrowerFields = ({
         error={isValidationFailed(validationError, personalDetailsConfig)}
       />
       <Accordion
-        heading={"Contact Details"}
+        heading={"Contact Preferences"}
         renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.contactDetails}
@@ -821,7 +821,7 @@ const AddUpdateBorrowerFields = ({
         error={isValidationFailed(validationError, contactDetailsConfig)}
       />
       <Accordion
-        heading={"Employment Details"}
+        heading={"Professional Status"}
         renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.employmentDetails}
@@ -833,7 +833,7 @@ const AddUpdateBorrowerFields = ({
         error={isValidationFailed(validationError, employmentDetailsConfig)}
       />
       <Accordion
-        heading={`Salary Details`}
+        heading={`Earnings Data`}
         renderExpandedContent={() => (
           <>
             <Accordion
@@ -868,7 +868,7 @@ const AddUpdateBorrowerFields = ({
       />
 
       <Accordion
-        heading={"Bank Details"}
+        heading={"Financial Accounts"}
         renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.bankDetails}
@@ -880,7 +880,7 @@ const AddUpdateBorrowerFields = ({
         error={isValidationFailed(validationError, bankDetailsConfig)}
       />
       <Accordion
-        heading={"Next of Kin Details"}
+        heading={"Family Reference"}
         renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.nextOfKinDetails}
@@ -892,7 +892,7 @@ const AddUpdateBorrowerFields = ({
         error={isValidationFailed(validationError, nextOfKinConfig)}
       />
       <Accordion
-        heading={"Other Details"}
+        heading={"Miscellaneous Information"}
         renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.otherDetails}

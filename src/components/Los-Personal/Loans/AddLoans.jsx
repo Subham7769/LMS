@@ -142,12 +142,6 @@ const AddLoans = () => {
     await dispatch(getMaxPrincipalData(maxPrincipalPayload)).unwrap();
   };
 
-  // if (loading) {
-  //   return <ContainerTile loading={loading} />;
-  // }
-
-  console.log(addLoanData);
-
   return (
     <>
       <div

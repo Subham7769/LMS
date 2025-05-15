@@ -228,7 +228,7 @@ const ServerConfig = () => {
                   (key, bindingIndex) => (
                     <div
                       key={bindingIndex}
-                      className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
+                      className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
                     >
                       {/* Display the key */}
                       <div>
@@ -342,7 +342,7 @@ const ServerConfig = () => {
                   Object.keys(scData.bindings).map((key, bindingIndex) => (
                     <div
                       key={bindingIndex}
-                      className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
+                      className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
                     >
                       {/* Display the key */}
                       <div>

@@ -27,18 +27,18 @@ const LoanAgreementPrint = () => {
   );
   const location = useLocation();
 
-  // useEffect(() => {
-  //   dispatch(getLoanAgreement({ loanId: loanApplicationId, uid: userId }));
+  useEffect(() => {
+    dispatch(getLoanAgreement({ loanId: loanApplicationId, uid: userId }));
 
-  //   if (!location.pathname.includes("loan-origination-system")) {
-  //     const timeoutId = setTimeout(() => {
-  //       window.print();
-  //     }, 1500);
+    if (!location.pathname.includes("loan-origination-system")) {
+      const timeoutId = setTimeout(() => {
+        window.print();
+      }, 1500);
 
-  //     // Cleanup to avoid potential memory leaks
-  //     return () => clearTimeout(timeoutId);
-  //   }
-  // }, [dispatch, loanApplicationId, userId, location.pathname]);
+      // Cleanup to avoid potential memory leaks
+      return () => clearTimeout(timeoutId);
+    }
+  }, [dispatch, loanApplicationId, userId, location.pathname]);
 
   const {
     personalDetails = {},

@@ -11,6 +11,7 @@ import {
   getRefundApplicationsByID,
   setLoanId,
   getRefundApplicationDetails,
+  getOpenLoans,
 } from "../../../redux/Slices/personalRefundSlice";
 import {
   clearValidationError,
@@ -36,6 +37,7 @@ const AddRefund = () => {
       dispatch(getRefundApplicationsByID(refundApplicationId));
     }
     dispatch(setRefundApplicationId(refundApplicationId));
+    dispatch(getOpenLoans());
     const keysArray = [
       "loanId",
       "refundAmount",
@@ -144,18 +146,16 @@ const AddRefund = () => {
     );
   };
 
-  if (loading) {
-    return <ContainerTile loading={loading} />;
-  }
-
-  console.log(refundData);
+  // if (loading) {
+  //   return <ContainerTile loading={loading} />;
+  // }
 
   return (
     <>
       <div
-        className={`border rounded-lg shadow-sm bg-white mb-3 hover:bg-indigo-50 px-4 py-4`}
+        className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4`}
       >
-        <div className="text-gray-500 ">
+        <div className="text-gray-500 dark:text-gray-300">
           Refund Application ID: {refundApplicationId}
         </div>
       </div>
@@ -167,13 +167,13 @@ const AddRefund = () => {
             buttonName="Save Draft"
             onClick={handleDraft}
             buttonType="secondary"
-            rectangle={true}
+            loading={loading}
           />
-          <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
+          <Button buttonName="Submit" onClick={handleSubmit} loading={loading} />
           <Button
             buttonName="Cancel"
             onClick={handleCancel}
-            rectangle={true}
+            loading={loading}
             buttonType="destructive"
           />
         </div>

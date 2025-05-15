@@ -54,9 +54,11 @@ const ExpandableTable = ({
         <header className="px-5 py-4">
           <h2 className={`font-semibold text-gray-800 dark:text-gray-100`}>
             {ListName}{" "}
-            <span className="text-gray-400 dark:text-gray-500 font-medium">
-              {ListNameLength}
-            </span>
+            {ListNameLength > 0 && (
+              <span className="text-gray-400 dark:text-gray-500 font-medium">
+                {ListNameLength}
+              </span>
+            )}
           </h2>
         </header>
       )}
@@ -87,7 +89,8 @@ const ExpandableTable = ({
             ) : data.length > 0 ? (
               data.map((rowData, index) => (
                 <React.Fragment key={index}>
-                  <tr className="" onClick={() => handleExpand(index)}>
+                  {/* onClick={() => handleExpand(index)} */}
+                  <tr className="">
                     {columns.map((col, index) => {
                       const getStatusClass = (status) => {
                         const normalizedStatus = status?.toLowerCase();

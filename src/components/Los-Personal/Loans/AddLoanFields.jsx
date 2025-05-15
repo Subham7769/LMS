@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import Button from "../../Common/Button/Button";
-import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
+// import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
@@ -579,7 +579,7 @@ const AddLoanFields = ({ addLoanData }) => {
         heading={"Requirement"}
         renderExpandedContent={() => requirements(addLoanData?.documents)}
       />
-      <div className="flex justify-between bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded rounded-lg shadow-sm py-2 text-sm px-5">
+      <div className="flex justify-between bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm py-2 text-sm px-5">
         <div>{`${uploadedCount} of ${addLoanData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>

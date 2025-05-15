@@ -7,7 +7,7 @@ import {
 import Select from "react-select";
 import { convertDate } from "../../utils/convertDate";
 import SectionErrorBoundary from "../ErrorBoundary/SectionErrorBoundary";
-import {removeSlashes} from "../../utils/removeSlashes";
+import { removeSlashes } from "../../utils/removeSlashes";
 
 const LedgerListTable = ({
   ListName,
@@ -52,9 +52,9 @@ const LedgerListTable = ({
 
   useEffect(() => {
     var borrowerIdQueryWithoutSlash = "";
-    if(borrowerIdQuery !== false)
-      borrowerIdQueryWithoutSlash = removeSlashes(borrowerIdQuery)
-      
+    if (borrowerIdQuery !== false)
+      borrowerIdQueryWithoutSlash = removeSlashes(borrowerIdQuery);
+
     setFilteredData(
       ListItem.filter((entry) =>
         entry.userId.toString().includes(borrowerIdQueryWithoutSlash)
@@ -162,10 +162,10 @@ const LedgerListTable = ({
   const ShimmerTable = () => {
     return (
       <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
       </div>
     );
   };
@@ -260,7 +260,7 @@ const LedgerListTable = ({
                 disabled={currentPage === 1}
                 className={`flex items-center px-2 py-2 rounded-md ${
                   currentPage === 1
-                    ? "bg-background-light-primary cursor-not-allowed"
+                    ? "bg-gray-200 cursor-not-allowed"
                     : "bg-indigo-500 text-white cursor-pointer"
                 }`}
               >
@@ -274,7 +274,7 @@ const LedgerListTable = ({
                 disabled={currentPage === totalPages}
                 className={`flex items-center px-2 py-2 rounded-md ${
                   currentPage === totalPages
-                    ? "bg-background-light-primary cursor-not-allowed"
+                    ? "bg-gray-200 cursor-not-allowed"
                     : "bg-indigo-500 text-white cursor-pointer"
                 }`}
               >

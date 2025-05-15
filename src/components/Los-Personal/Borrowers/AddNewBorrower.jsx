@@ -103,7 +103,7 @@ const AddNewBorrowers = () => {
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
-          buttonType="destructive"
+          buttonType="secondary"
           loading={loading}
         />
         <Button

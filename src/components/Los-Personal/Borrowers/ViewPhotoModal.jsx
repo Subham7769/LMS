@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -33,9 +33,9 @@ const ViewPhotoModal = ({ isOpen, onClose, photoData }) => {
 
   return (
     <>
-<div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-      <div className="bg-white border border-red-600 p-6 rounded-xl w-1/3 max-h-[80vh] relative shadow-lg flex flex-col justify-center items-center">
-        {/* Close Button */}
+      <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
+        <div className="bg-white border border-red-600 p-6 rounded-xl w-1/3 max-h-[80vh] relative shadow-lg flex flex-col justify-center items-center">
+          {/* Close Button */}
           {/* Close Button */}
           <div
             onClick={onClose}
