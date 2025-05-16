@@ -15,14 +15,10 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
-import {
-  BankNameOptions,
-  BranchNameOptions,
-  bankBranches,
-} from "../../../data/BankData";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 import { useLocation } from "react-router-dom";
+import { fetchAllBank } from "../../../redux/Slices/bankSlice";
 
 const AddUpdateCompanyBorrowerFields = ({
   BorrowerData,
@@ -31,44 +27,27 @@ const AddUpdateCompanyBorrowerFields = ({
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [bankName, setBankName] = useState(null);
+  const [branchName, setBranchName] = useState(null);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
     []
   );
   const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
     []
   );
-  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
-    []
-  );
   const location = useLocation();
+  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } = useSelector((state) => state.bank);
 
   const isUpdateCompany = location.pathname.includes('update-company');
   const isDraftCompany = location.pathname.includes('update-company/draft');
-
   const loanOfficer = localStorage.getItem("username");
+
+  // Fetch all Banks Data
   useEffect(() => {
-    setFilteredLocations1(
-      locationOptions[BorrowerData.companyDetails.countryOfRegistration] || []
-    );
-    setFilteredLocations2(
-      locationOptions[BorrowerData.companyContactDetails.country] || []
-    );
-    setFilteredDistrictLocations1(
-      districtOptions[BorrowerData.companyDetails.province] || []
-    );
-    setFilteredDistrictLocations2(
-      districtOptions[BorrowerData.companyContactDetails.province] || []
-    );
-    setFilteredBranchNameOptions(
-      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
-    );
-  }, [
-    BorrowerData.companyDetails.countryOfRegistration,
-    BorrowerData.companyContactDetails.country,
-    BorrowerData.companyDetails.province,
-    BorrowerData.companyContactDetails.province,
-    BorrowerData.bankDetails.bankName,
-  ]);
+    // if (bankOptions.length) {
+    dispatch(fetchAllBank());
+    // }
+  }, [])
 
   useEffect(() => {
     const keysArray = [
@@ -120,12 +99,44 @@ const AddUpdateCompanyBorrowerFields = ({
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    setFilteredLocations1(
+      locationOptions[BorrowerData.companyDetails.countryOfRegistration] || []
+    );
+    setFilteredLocations2(
+      locationOptions[BorrowerData.companyContactDetails.country] || []
+    );
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.companyDetails.province] || []
+    );
+    setFilteredDistrictLocations2(
+      districtOptions[BorrowerData.companyContactDetails.province] || []
+    );
+  }, [
+    BorrowerData.companyDetails.countryOfRegistration,
+    BorrowerData.companyContactDetails.country,
+    BorrowerData.companyDetails.province,
+    BorrowerData.companyContactDetails.province,
+    BorrowerData.bankDetails.bankName,
+  ]);
+
   const handleInputChange = (e, section, index) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, label, checked } = e.target;
+    console.log(e.target)
+    if (name === "bankName") {
+      setBankName(value)
+
+    }
+    else if (name === "branch") {
+      setBranchName(value)
+
+    }
+
     // Use section to update the correct part of the state
     dispatch(
       handleChangeReducer({ section, field: name, value, type, checked, index })
     );
+
   };
 
   const handleFileUpload = (e, section) => {
@@ -140,11 +151,19 @@ const AddUpdateCompanyBorrowerFields = ({
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
+        field: "branch",
+        value: "",
+      })
+    );
+  
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
         field: "branchCode",
         value: "",
       })
     );
-
+  
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
@@ -157,31 +176,22 @@ const AddUpdateCompanyBorrowerFields = ({
   useEffect(() => {
     if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
       return;
-
-    const branch = bankBranches.find(
-      (b) =>
-        b.bankName === BorrowerData.bankDetails.bankName &&
-        b.branchName === BorrowerData.bankDetails.branch
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "branchCode",
+        value: sortCodeBranchCodeOptions[branchName]?.branchCode,
+      })
     );
 
-    if (branch) {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branchCode",
-          value: branch.branchCode,
-        })
-      );
-
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "sortCode",
-          value: branch.sortCode,
-        })
-      );
-    }
-  }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "sortCode",
+        value: sortCodeBranchCodeOptions[branchName]?.sortCode,
+      })
+    );
+  }, [BorrowerData.bankDetails.branch]);
 
   //   All Fields Configuration
   const companyDetailsConfig = [
@@ -360,7 +370,7 @@ const AddUpdateCompanyBorrowerFields = ({
       labelName: "Name of Bank",
       inputName: "bankName",
       type: "select",
-      options: BankNameOptions,
+      options: bankOptions,
       validation: true,
       searchable: true,
     },
@@ -387,7 +397,7 @@ const AddUpdateCompanyBorrowerFields = ({
       labelName: "Branch",
       inputName: "branch",
       type: "select",
-      options: filteredBranchNameOptions,
+      options: bankBranchOptions[bankName],
       validation: true,
       searchable: true,
     },

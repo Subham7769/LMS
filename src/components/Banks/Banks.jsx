@@ -28,12 +28,11 @@ import AddBankBranchModal from "./AddBankBranchModal";
 
 const Banks = () => {
   const dispatch = useDispatch();
-  const { bankData, allBanksData, loading, error } = useSelector(
+  const { allBanksData,bankOptions,bankBranchOptions,sortCodeBranchCodeOptions, loading, error } = useSelector(
     (state) => state.bank
   );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
-  const [bankOptions, setBankOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddBankModal, setShowAddBankModal] = useState(false);
   const [showAddBankBranchModal, setShowAddBankBranchModal] = useState(false);
@@ -46,17 +45,9 @@ const Banks = () => {
     };
   }, [dispatch]);
 
-  console.log(allBanksData)
-
-  useEffect(() => {
-    if (allBanksData?.length) {
-      const options = allBanksData.map(({ bankId, bankName }) => ({
-        value: bankId,
-        label: bankName,
-      }));
-      setBankOptions(options);
-    }
-  }, [allBanksData]);
+  console.log("bankOptions- ",bankOptions)
+  // console.log("bankBranchOptions- ",bankBranchOptions)
+  // console.log("sortCodeBranchCodeOptions- ",sortCodeBranchCodeOptions)
 
   const handleInputChange = (e, section) => {
     const { name, value } = e.target;
