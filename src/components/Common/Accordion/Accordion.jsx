@@ -43,7 +43,7 @@ const Accordion = ({
               )}
             </div>
 
-            {headerAction()}
+            {headerAction && headerAction()}
 
           </div>
         )}
