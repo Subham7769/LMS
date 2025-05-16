@@ -165,9 +165,11 @@ const ServerConfig = () => {
 
   return (
     <>
+    <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">Server Configuration</h2>
+    
       {!hasViewOnlyAccessGroup2(roleName) ? (
-        <ContainerTile loading={loading} error={error} className="mb-5">
-          <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+        <ContainerTile loading={loading} error={error} className={"p-5 mb-5"}>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
             <InputText
               labelName="Server Name"
               inputName="name"
@@ -194,7 +196,7 @@ const ServerConfig = () => {
             />
           </div>
           {/* Bindings Section */}
-          <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+          <div className="flex sm:flex-row lg:grid lg:grid-cols-3 gap-2 mb-5 items-end pt-2">
             <InputText
               labelName="Header Key"
               inputName="bindingKey"
@@ -211,15 +213,18 @@ const ServerConfig = () => {
               placeHolder="Enter value"
               isValidation={true}
             />
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={() => handleAddBindingNew()}
-              circle={true}
-              buttonType="secondary"
-            />
+            <div className="flex gap-4 justify-start items-center">
+              <Button
+                buttonIcon={PlusIcon}
+                onClick={() => handleAddBindingNew()}
+                circle={true}
+                buttonType="secondary"
+              />
+            </div>
           </div>
           {/* Display existing bindings with new design */}
           <div className="grid grid-cols-1 gap-2 mb-5 items-center">
+<<<<<<< Updated upstream
             <div className="grid grid-cols-4 gap-2 mb-5 items-center">
               {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
                 <p>No bindings added</p>
@@ -247,12 +252,42 @@ const ServerConfig = () => {
                           aria-hidden="true"
                         />
                       </div>
+=======
+            {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
+              <p>No bindings added</p>
+            ) : (
+              <div className="flex flex-col sm:flex-row lg:grid grid-cols-4 gap-2 mb-5 lg:items-center">
+                {Object.keys(newServerConfigData.bindings).map((key, bindingIndex) => (
+                  <div
+                    key={bindingIndex}
+                    className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
+                  >
+                    {/* Display the key */}
+                    <div>
+                      <b>{key}</b>
+>>>>>>> Stashed changes
                     </div>
-                  )
-                )
-              )}
-            </div>
+
+                    {/* Separator */}
+                    <div>|</div>
+
+                    {/* Display the value */}
+                    <div>{newServerConfigData.bindings[key]}</div>
+
+                    {/* Delete icon */}
+                    <div>
+                      <XCircleIcon
+                        onClick={() => handleRemoveBindingNew(key)}
+                        className="block h-5 w-5 cursor-pointer text-gray-900"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+
 
           <div className="flex gap-4 justify-end items-center">
             <Button
@@ -274,7 +309,7 @@ const ServerConfig = () => {
           <ContainerTile
             loading={loading}
             error={error}
-            className="mb-5"
+            className={"p-5 mb-5"}
             key={index}
           >
             <div className="mb-4 flex items-center justify-between">
@@ -290,7 +325,7 @@ const ServerConfig = () => {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
               <InputText
                 labelName="Service IP"
                 inputName="serviceIp"
@@ -307,7 +342,7 @@ const ServerConfig = () => {
               />
             </div>
             {/* Bindings Section */}
-            <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+            <div className="flex sm:flex-row lg:grid lg:grid-cols-3 gap-2 mb-5 items-end pt-2">
               <InputText
                 labelName="Header Key"
                 inputName="bindingKey"
@@ -326,20 +361,22 @@ const ServerConfig = () => {
                 }
                 placeHolder="Enter value"
               />
-              <Button
-                buttonIcon={PlusIcon}
-                onClick={() => handleAddBinding(index)}
-                circle={true}
-                buttonType="secondary"
-              />
+              <div className="flex gap-4 justify-start items-center">
+                <Button
+                  buttonIcon={PlusIcon}
+                  onClick={() => handleAddBinding(index)}
+                  circle={true}
+                  buttonType="secondary"
+                />
+              </div>
             </div>
             {/* Display existing bindings with new design */}
             <div className="grid grid-cols-1 gap-2 mb-5 items-center">
-              <div className="grid grid-cols-4 gap-2 mb-5 items-center">
                 {Object.keys(scData?.bindings || {}).length === 0 ? (
                   <p>No bindings added</p>
                 ) : (
-                  Object.keys(scData.bindings).map((key, bindingIndex) => (
+                  <div className="flex flex-col sm:flex-row lg:grid grid-cols-4 gap-2 mb-5 lg:items-center">
+                  {Object.keys(scData.bindings).map((key, bindingIndex) => (
                     <div
                       key={bindingIndex}
                       className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
@@ -362,9 +399,9 @@ const ServerConfig = () => {
                         />
                       </div>
                     </div>
-                  ))
-                )}
+                  ))}
               </div>
+              )}
             </div>
             {!hasViewOnlyAccessGroup2(roleName) && (
               <div className="flex gap-4 justify-end items-center">

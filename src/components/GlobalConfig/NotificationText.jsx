@@ -58,8 +58,9 @@ const NotificationText = () => {
         loading={loading}
         // error={error}
         key={"notification"+index}
+        className={"p-5 mb-5"}
         >
-          <div key={notificationData.id} className="flex flex-col gap-y-6 ">
+          <div key={notificationData.id} className="flex flex-col gap-y-2 ">
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputText
                 labelName="Notification Type"
@@ -97,7 +98,7 @@ const NotificationText = () => {
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5 items-end">
               <InputTextarea
                 labelName="Notification Message En"
-                rowCount={2}
+                rowCount={3}
                 inputName="notificationMessageEn"
                 inputId={notificationData?.id}
                 inputValue={notificationData?.notificationMessageEn}
@@ -116,7 +117,7 @@ const NotificationText = () => {
               />
               <InputTextarea
                 labelName="Notification Message Hi"
-                rowCount={2}
+                rowCount={3}
                 inputName="notificationMessageAr"
                 inputId={notificationData?.id}
                 inputValue={notificationData?.notificationMessageAr}
@@ -135,7 +136,7 @@ const NotificationText = () => {
               />
               <InputTextarea
                 labelName="Notification Description"
-                rowCount={2}
+                rowCount={3}
                 inputName="notificationDescription"
                 inputId={`notificationDescription_${notificationData?.id}`}
                 inputValue={notificationData?.notificationDescription}
@@ -146,6 +147,7 @@ const NotificationText = () => {
                 <div>
                   <Button
                     buttonIcon={CheckCircleIcon}
+                    buttonType="secondary"
                     onClick={() => handleSave(notificationData?.id, index)}
                     circle={true}
                   />

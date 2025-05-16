@@ -14,7 +14,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 
 const AppConfig = () => {
   const dispatch = useDispatch();
-  const { appConfig } = useSelector((state) => state.appConfig);
+  const { appConfig,loading } = useSelector((state) => state.appConfig);
   const { roleName } = useSelector((state) => state.auth);
 
 
@@ -34,8 +34,12 @@ const AppConfig = () => {
 
 
   return (
-    <ContainerTile>
-      <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+    <>
+    <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">Application Configuration</h2>
+    
+    <ContainerTile className={"p-5 mb-5"} loading={loading}>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         <InputSelect
           labelName="Currency Symbol"
           inputOptions={currencySymbolOptions}
@@ -98,6 +102,7 @@ const AppConfig = () => {
         />
       </div>
     </ContainerTile>
+    </>
   )
 }
 

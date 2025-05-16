@@ -23,6 +23,8 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,12 @@ const RiskGradeMatrix = () => {
   );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+
+  let ListHeader = [
+    { name: "From", sortKey: null },
+    { name: "To", sortKey: null },
+    { name: "Risk Grade", sortKey: null },
+  ];
 
   useEffect(() => {
     dispatch(fetchRiskGrades());
@@ -45,7 +53,7 @@ const RiskGradeMatrix = () => {
     const isValid = state.validation.isValid;
     console.log(isValid);
     if (isValid) {
-      dispatch(addRiskGrade(newRiskGradeForm))
+      dispatch(addRiskGrade(newRiskGradeForm));
     }
   };
 
@@ -56,13 +64,18 @@ const RiskGradeMatrix = () => {
     console.log(isValid);
     if (isValid) {
       const itemToUpdate = allRiskGradeData.find((item) => item.id === id);
-      dispatch(updateRiskGrade(itemToUpdate))
+      dispatch(updateRiskGrade(itemToUpdate));
     }
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteRiskGrade(id))
+    dispatch(deleteRiskGrade(id));
   };
+
+  // Conditionally add the "Actions" column if roleName has view only access
+  if (!hasViewOnlyAccess(roleName)) {
+    ListHeader.push({ name: "Actions", sortKey: null });
+  }
 
   return (
     <>
@@ -79,6 +92,7 @@ const RiskGradeMatrix = () => {
           <ContainerTile
             loading={loading}
             // error={error}
+            className={"p-5 mb-5"}
           >
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
               <InputNumber
@@ -132,7 +146,7 @@ const RiskGradeMatrix = () => {
                 placeHolder="R1"
                 isValidation={true}
               />
-              <div className="mt-4">
+              <div className="flex items-end">
                 <Button
                   onClick={handleAddFields}
                   buttonIcon={PlusIcon}
@@ -145,85 +159,99 @@ const RiskGradeMatrix = () => {
           ""
         )}
 
-        {allRiskGradeData.map((riskGradingData, index) => (
-          <ContainerTile
-            loading={loading}
-            error={error}
-            key={"RiskGrade" + index}
-          >
-            <div
-              key={riskGradingData.id}
-              className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4"
-            >
-              <InputNumber
-                labelName="From"
-                inputName="from"
-                inputValue={riskGradingData.from}
-                onChange={(e) =>
-                  dispatch(
-                    handleRiskGradeExistingInputChange({
-                      id: riskGradingData.id,
-                      name: e.target.name,
-                      value: e.target.value,
-                    })
-                  )
-                }
-                isValidation={true}
-                isIndex={riskGradingData.dataIndex}
-              />
-              <InputNumber
-                labelName="To"
-                inputName="to"
-                inputValue={riskGradingData.to}
-                onChange={(e) =>
-                  dispatch(
-                    handleRiskGradeExistingInputChange({
-                      id: riskGradingData.id,
-                      name: e.target.name,
-                      value: e.target.value,
-                    })
-                  )
-                }
-                isValidation={true}
-                isIndex={riskGradingData.dataIndex}
-              />
-              <InputText
-                labelName="Risk Grade"
-                inputName="grade"
-                inputValue={riskGradingData.grade}
-                onChange={(e) =>
-                  dispatch(
-                    handleRiskGradeExistingInputChange({
-                      id: riskGradingData.id,
-                      name: e.target.name,
-                      value: e.target.value,
-                    })
-                  )
-                }
-                isValidation={true}
-                isIndex={riskGradingData.dataIndex}
-              />
+        <ListTableClassic
+          ListName="Risk Grades"
+          ListNameLength={allRiskGradeData.length}
+          ListHeader={ListHeader}
+        >
+          {allRiskGradeData.map((riskGradingData, index) => (
+            <tr key={"RiskGrade" + index} className="align-top">
+              {/* From */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-36">
+                <InputNumber
+                  labelName=""
+                  inputName="from"
+                  inputValue={riskGradingData.from}
+                  onChange={(e) =>
+                    dispatch(
+                      handleRiskGradeExistingInputChange({
+                        id: riskGradingData.id,
+                        name: e.target.name,
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                  isValidation={true}
+                  isIndex={riskGradingData.dataIndex}
+                />
+              </td>
+
+              {/* To */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-36">
+                <InputNumber
+                  labelName=""
+                  inputName="to"
+                  inputValue={riskGradingData.to}
+                  onChange={(e) =>
+                    dispatch(
+                      handleRiskGradeExistingInputChange({
+                        id: riskGradingData.id,
+                        name: e.target.name,
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                  isValidation={true}
+                  isIndex={riskGradingData.dataIndex}
+                />
+              </td>
+
+              {/* Risk Grade */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-36">
+                <InputText
+                  labelName=""
+                  inputName="grade"
+                  inputValue={riskGradingData.grade}
+                  onChange={(e) =>
+                    dispatch(
+                      handleRiskGradeExistingInputChange({
+                        id: riskGradingData.id,
+                        name: e.target.name,
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                  isValidation={true}
+                  isIndex={riskGradingData.dataIndex}
+                />
+              </td>
+
+              {/* Actions */}
               {!hasViewOnlyAccessGroup2(roleName) ? (
-                <div className="flex items-center gap-2 mt-4">
-                  <Button
-                    onClick={() => handleSave(riskGradingData.id, index)}
-                    buttonIcon={CheckCircleIcon}
-                    circle={true}
-                    buttonType="secondary"
-                  />
-                  <Button
-                    onClick={() => handleDelete(riskGradingData.id)}
-                    buttonIcon={TrashIcon}
-                    circle={true}
-                    buttonType="destructive"
-                  />
-                </div>
+                <td className="px-4 py-4 whitespace-nowrap min-w-32">
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleSave(riskGradingData.id, index)}
+                      buttonIcon={CheckCircleIcon}
+                      circle={true}
+                      buttonType="secondary"
+                    />
+                    <Button
+                      onClick={() => handleDelete(riskGradingData.id)}
+                      buttonIcon={TrashIcon}
+                      circle={true}
+                      buttonType="destructive"
+                    />
+                  </div>
+                </td>
               ) : (
-                ""
+                <td className="px-4 py-4 whitespace-nowrap text-gray-400">
+                  View Only
+                </td>
               )}
-            </div>
-          </ContainerTile>
-        ))}
+            </tr>
+          ))}
+        </ListTableClassic>
       </div>
     </>
   );
