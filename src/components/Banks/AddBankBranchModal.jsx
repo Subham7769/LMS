@@ -1,14 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
+import { useDispatch } from "react-redux";
+import { addBankBranch } from "../../redux/Slices/bankSlice";
 
-const AddBankBranchModal = ({ isOpen, onClose, bankData, handleInputChange, handleAddFields, bankOptions, setBankOptions }) => {
+const AddBankBranchModal = ({ isOpen, onClose, currentBankId }) => {
+  const [branchName, setBranchName] = useState("");
+  const [branchCode, setBranchCode] = useState("");
+  const [sortCode, setSortCode] = useState("");
+  const dispatch = useDispatch();
 
   if (!isOpen) return null;
+
+
+  const AddBankBranch = async () => {
+    await dispatch(addBankBranch({
+      "bankId": currentBankId,
+      branchCode,
+      branchName,
+      sortCode
+    })).unwrap();
+    onClose();
+  }
 
   return (
     <>
@@ -34,26 +48,26 @@ const AddBankBranchModal = ({ isOpen, onClose, bankData, handleInputChange, hand
               />
             </svg>
           </div>
-          <div className="mb-5 mt-3">
+          <div className="grid grid-cols-3 gap-5 mb-5 mt-3">
             <InputText
               labelName="Branch Name"
               inputName="branchName"
-              inputValue={bankBranchDetailsList?.branchName}
-              onChange={(e) => handleInputChange(e, "bankBranchDetailsList")}
+              inputValue={branchName}
+              onChange={(e) => setBranchName(e.target.value)}
               isValidation={true}
             />
             <InputText
               labelName="Branch Code"
               inputName="branchCode"
-              inputValue={bankBranchDetailsList?.branchCode}
-              onChange={(e) => handleInputChange(e, "bankBranchDetailsList")}
+              inputValue={branchCode}
+              onChange={(e) => setBranchCode(e.target.value)}
               isValidation={true}
             />
             <InputText
               labelName="Sort Code"
               inputName="sortCode"
-              inputValue={bankBranchDetailsList?.sortCode}
-              onChange={(e) => handleInputChange(e, "bankBranchDetailsList")}
+              inputValue={sortCode}
+              onChange={(e) => setSortCode(e.target.value)}
               isValidation={true}
             />
           </div>
@@ -61,7 +75,7 @@ const AddBankBranchModal = ({ isOpen, onClose, bankData, handleInputChange, hand
             <Button
               buttonIcon={CheckCircleIcon}
               buttonName={"Add Branch"}
-              onClick={handleAddFields}
+              onClick={AddBankBranch}
               rectangle={true}
             />
           </div>

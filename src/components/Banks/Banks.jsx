@@ -10,10 +10,9 @@ import Accordion from "../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setBankData,
-  handleChangeBankData,
   handleChangeBankBranch,
   fetchAllBank,
-  addBankData,
+  deleteBank,
   updateBankBranch,
   deleteBankBranch,
 } from "../../redux/Slices/bankSlice";
@@ -25,6 +24,7 @@ import store from "../../redux/store";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import AddBankModal from "./AddBankModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import AddBankBranchModal from "./AddBankBranchModal";
 
 const Banks = () => {
   const dispatch = useDispatch();
@@ -36,6 +36,8 @@ const Banks = () => {
   const [bankOptions, setBankOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddBankModal, setShowAddBankModal] = useState(false);
+  const [showAddBankBranchModal, setShowAddBankBranchModal] = useState(false);
+  const [currentBankId, setCurrentBankId] = useState(null);
 
   useEffect(() => {
     dispatch(fetchAllBank());
@@ -61,16 +63,6 @@ const Banks = () => {
     dispatch(setBankData({ name, value, section }));
   };
 
-  const handleAddFields = async () => {
-    await dispatch(validateForm(bankData));
-    const state = store.getState();
-    const isValid = state.validation.isValid;
-    if (isValid) {
-      dispatch(addBankData(bankData)).unwrap();
-    }
-    setShowAddBankModal(false);
-  };
-
   const handleChangeBranch = (e, branchId, bankId) => {
     const { name, value } = e.target;
     if (!hasViewOnlyAccess(roleName)) {
@@ -94,12 +86,27 @@ const Banks = () => {
     await dispatch(fetchAllBank()).unwrap();
   };
 
+  const handleDeleteBank = async (e, bankId) => {
+    e.stopPropagation();
+    await dispatch(deleteBank({ bankId })).unwrap();
+  };
+
   const handleAddBank = () => {
     setShowAddBankModal(true);
   };
 
   const closeAddBankModal = () => {
     setShowAddBankModal(false);
+  };
+
+  const handleAddBankBranch = (e,bankId) => {
+    e.stopPropagation();
+    setCurrentBankId(bankId)
+    setShowAddBankBranchModal(true);
+  };
+
+  const closeAddBankBranchModal = () => {
+    setShowAddBankBranchModal(false);
   };
 
   // **Filter banks based on search term**
@@ -147,10 +154,20 @@ const Banks = () => {
                   key={bankIndex}
                   heading={`${bankData.bankName}`}
                   headerAction={() => (
-                    <div
-                      className="text-sm text-blue-500 hover:text-blue-700 cursor-pointer flex items-center "
-                      onClick={() => handleUpdateBranch(branch.branchId, bankData.bankId, branchIndex, bankIndex)}>
-                      <PlusIcon className="h-4 w-4" /> Add Branch
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="text-sm text-blue-500 hover:text-blue-700 cursor-pointer flex items-center "
+                        onClick={(e) => handleAddBankBranch(e,bankData.bankId)}>
+                        <PlusIcon className="h-4 w-4" /> Add Branch
+                      </div>
+                      {!hasViewOnlyAccess(roleName) ? (
+                        <div
+                          title="Delete Bank"
+                          className="text-sm text-red-500 hover:text-red-700 cursor-pointer flex items-center "
+                          onClick={(e) => handleDeleteBank(e, bankData.bankId)}>
+                          <TrashIcon className="h-4 w-4" />
+                        </div>
+                      ) : null}
                     </div>
                   )}
                   renderExpandedContent={() => (
@@ -231,11 +248,11 @@ const Banks = () => {
           <AddBankModal
             isOpen={showAddBankModal}
             onClose={closeAddBankModal}
-            bankData={bankData}
-            handleInputChange={handleInputChange}
-            handleAddFields={handleAddFields}
-            bankOptions={bankOptions}
-            setBankOptions={setBankOptions}
+          />
+          <AddBankBranchModal
+            currentBankId={currentBankId}
+            isOpen={showAddBankBranchModal}
+            onClose={closeAddBankBranchModal}
           />
         </div>
       </ContainerTile>

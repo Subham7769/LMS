@@ -7,13 +7,16 @@ export const fetchAllBank = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     try {
-      const response = await fetch(`${import.meta.env.VITE_BANKS_READ_ALL_BANKS}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BANKS_READ_ALL_BANKS}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to get item");
@@ -26,19 +29,22 @@ export const fetchAllBank = createAsyncThunk(
   }
 );
 
-export const addBankData = createAsyncThunk(
-  "bank/addBankData",
-  async (bankData, { dispatch, rejectWithValue }) => {
+export const addBank = createAsyncThunk(
+  "bank/addBank",
+  async ({ bankName }, { dispatch, rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     try {
-      const response = await fetch(`${import.meta.env.VITE_EMPLOYER_ADD}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(bankData),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BANKS_CREATE_NEW_BANK}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ bankName }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -54,9 +60,72 @@ export const addBankData = createAsyncThunk(
   }
 );
 
+export const deleteBank = createAsyncThunk(
+  "bank/deleteBank",
+  async ({ bankId }, { dispatch, rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BANKS_DELETE_BANKS}${bankId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete item");
+      }
+
+      // Fetch the updated data after deletion
+      dispatch(fetchAllBank());
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const addBankBranch = createAsyncThunk(
+  "bank/addBankBranch",
+  async (
+    { bankId, branchCode, branchName, sortCode },
+    { dispatch, rejectWithValue }
+  ) => {
+    const token = localStorage.getItem("authToken");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BANKS_CREATE_NEW_BANK_BRANCH}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ bankId, branchCode, branchName, sortCode }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to add item");
+      }
+
+      // Fetch the updated data after successful addition
+      dispatch(fetchAllBank());
+      // Reset the form after adding
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 export const updateBankBranch = createAsyncThunk(
   "bank/updateBankBranch",
-  async ({  updatedBankBranch, branchId}, { dispatch, rejectWithValue }) => {
+  async ({ updatedBankBranch, branchId }, { dispatch, rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
 
     try {
@@ -86,12 +155,14 @@ export const updateBankBranch = createAsyncThunk(
 
 export const deleteBankBranch = createAsyncThunk(
   "bank/deleteBankBranch",
-  async ({branchId, bankId}, { dispatch, rejectWithValue }) => {
+  async ({ branchId, bankId }, { dispatch, rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BANKS_DELETE_BANK_BRANCH}${bankId}/branches/${branchId}`,
+        `${
+          import.meta.env.VITE_BANKS_DELETE_BANK_BRANCH
+        }${bankId}/branches/${branchId}`,
         {
           method: "DELETE",
           headers: {
@@ -119,7 +190,7 @@ const InitialState = {
   bankData: {
     bankName: "",
   },
-  bankBranchDetailsList:{
+  bankBranchDetailsList: {
     branchName: "",
     branchCode: "",
     sortCode: "",
@@ -151,10 +222,11 @@ export const bankSlice = createSlice({
       state.allBanksData = updatedData;
     },
     handleChangeBankBranch: (state, action) => {
-      const { name, value,branchId,bankId } = action.payload;
+      const { name, value, branchId, bankId } = action.payload;
       const updatedData = state.allBanksData.map((bank) => {
         if (bank.bankId === bankId) {
-          return { ...bank,
+          return {
+            ...bank,
             bankBranchDetailsList: bank.bankBranchDetailsList.map((branch) => {
               if (branch.branchId === branchId) {
                 return { ...branch, [name]: value };
@@ -182,15 +254,37 @@ export const bankSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
-      .addCase(addBankData.pending, (state) => {
+      .addCase(addBank.pending, (state) => {
         state.loading = true;
       })
-      .addCase(addBankData.fulfilled, (state) => {
+      .addCase(addBank.fulfilled, (state) => {
         state.loading = false;
-        state.bankData = InitialState.bankData;
-        toast.success("Added Successfully");
+        toast.success("Bank Added Successfully");
       })
-      .addCase(addBankData.rejected, (state, action) => {
+      .addCase(addBank.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(deleteBank.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(deleteBank.fulfilled, (state) => {
+        state.loading = false;
+        toast.success("Bank Deleted Successfully");
+      })
+      .addCase(deleteBank.rejected, (state, action) => {
+        state.loading = false;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(addBankBranch.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addBankBranch.fulfilled, (state) => {
+        state.loading = false;
+        toast.success("Bank Branch Added Successfully");
+      })
+      .addCase(addBankBranch.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -208,7 +302,7 @@ export const bankSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteBankBranch.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(deleteBankBranch.fulfilled, (state) => {
         state.loading = false;
@@ -222,5 +316,6 @@ export const bankSlice = createSlice({
   },
 });
 
-export const { setBankData, handleChangeBankData,handleChangeBankBranch } = bankSlice.actions;
+export const { setBankData, handleChangeBankData, handleChangeBankBranch } =
+  bankSlice.actions;
 export default bankSlice.reducer;

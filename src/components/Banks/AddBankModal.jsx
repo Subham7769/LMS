@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
-import InputSelect from "../Common/InputSelect/InputSelect";
-import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
+import {
+  addBank,
+  fetchAllBank
+} from "../../redux/Slices/bankSlice";
+import { useDispatch } from "react-redux";
 
-const AddBankModal = ({ isOpen, onClose, bankData, handleInputChange, handleAddFields, bankOptions, setBankOptions }) => {
+const AddBankModal = ({ isOpen, onClose }) => {
+  const [bankName, setBankName] = useState("")
+  const dispatch = useDispatch();
+
+  const AddBank = async () => {
+    await dispatch(addBank({ bankName })).unwrap();
+    onClose();
+  }
 
   if (!isOpen) return null;
 
@@ -35,22 +44,19 @@ const AddBankModal = ({ isOpen, onClose, bankData, handleInputChange, handleAddF
             </svg>
           </div>
           <div className="mb-5 mt-3">
-            <InputSelectCreatable
+            <InputText
               labelName="Bank Name"
-              inputOptions={bankOptions}
               inputName="bankName"
-              inputValue={bankData?.bankName}
-              onChange={(e) => handleInputChange(e)}
+              inputValue={bankName}
+              onChange={(e) => setBankName(e.target.value)}
               isValidation={true}
-              searchable={true}
-              setInputOptions={setBankOptions}
             />
           </div>
           <div className="text-right">
             <Button
               buttonIcon={CheckCircleIcon}
               buttonName={"Add Bank"}
-              onClick={handleAddFields}
+              onClick={AddBank}
               rectangle={true}
             />
           </div>
