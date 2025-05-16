@@ -39,7 +39,6 @@ const ServerConfig = () => {
     };
   }, [dispatch]);
 
-  // Function to handle changes to the binding inputs
   const handleBindingChange = (index, key, value) => {
     setBindingData((prev) => ({
       ...prev,
@@ -50,7 +49,6 @@ const ServerConfig = () => {
     }));
   };
 
-  // Function to add a binding
   const handleAddBinding = (index) => {
     const { bindingKey, bindingValue } = bindingData[index] || {};
     if (bindingKey && bindingValue) {
@@ -67,7 +65,6 @@ const ServerConfig = () => {
         })
       );
 
-      // Clear the local state for the added index
       setBindingData((prev) => ({
         ...prev,
         [index]: { bindingKey: "", bindingValue: "" },
@@ -104,8 +101,6 @@ const ServerConfig = () => {
     dispatch(updateServerConfigField({ name, value, index }));
   };
 
-  // ------------------------- Functions for creating new Server -----------------------------
-
   const handleAddBindingNew = () => {
     if (bindingKey && bindingValue) {
       const updatedBindings = {
@@ -120,7 +115,6 @@ const ServerConfig = () => {
         })
       );
 
-      // Clear input fields after adding
       setBindingKey("");
       setBindingValue("");
     } else {
@@ -128,7 +122,6 @@ const ServerConfig = () => {
     }
   };
 
-  // Function to remove a binding
   const handleRemoveBindingNew = (key) => {
     const updatedBindings = { ...newServerConfigData.bindings };
     delete updatedBindings[key];
@@ -149,7 +142,7 @@ const ServerConfig = () => {
     const isValid2 = Object.keys(newServerConfigData.bindings || {}).length > 0;
 
     if (!isValid2) {
-      toast.warn("Add atleast 1 bindings");
+      toast.warn("Add at least 1 binding");
     }
 
     if (isValid && isValid2) {
@@ -165,16 +158,18 @@ const ServerConfig = () => {
 
   return (
     <>
-    <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">Server Configuration</h2>
-    
-      {!hasViewOnlyAccessGroup2(roleName) ? (
+      <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
+        Server Configuration
+      </h2>
+
+      {!hasViewOnlyAccessGroup2(roleName) && (
         <ContainerTile loading={loading} error={error} className={"p-5 mb-5"}>
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
             <InputText
               labelName="Server Name"
               inputName="name"
               inputValue={newServerConfigData?.name}
-              onChange={(e) => handleChangeNew(e)}
+              onChange={handleChangeNew}
               placeHolder="ELK"
               isValidation={true}
             />
@@ -182,7 +177,7 @@ const ServerConfig = () => {
               labelName="Service IP"
               inputName="serviceIp"
               inputValue={newServerConfigData?.serviceIp}
-              onChange={(e) => handleChangeNew(e)}
+              onChange={handleChangeNew}
               placeHolder="xxx.xxx.xxx.xxx"
               isValidation={true}
             />
@@ -190,12 +185,12 @@ const ServerConfig = () => {
               labelName="Service Port"
               inputName="servicePort"
               inputValue={newServerConfigData?.servicePort}
-              onChange={(e) => handleChangeNew(e)}
+              onChange={handleChangeNew}
               placeHolder="e.g., 8080"
               isValidation={true}
             />
           </div>
-          {/* Bindings Section */}
+
           <div className="flex sm:flex-row lg:grid lg:grid-cols-3 gap-2 mb-5 items-end pt-2">
             <InputText
               labelName="Header Key"
@@ -216,35 +211,29 @@ const ServerConfig = () => {
             <div className="flex gap-4 justify-start items-center">
               <Button
                 buttonIcon={PlusIcon}
-                onClick={() => handleAddBindingNew()}
+                onClick={handleAddBindingNew}
                 circle={true}
                 buttonType="secondary"
               />
             </div>
           </div>
-          {/* Display existing bindings with new design */}
+
           <div className="grid grid-cols-1 gap-2 mb-5 items-center">
-<<<<<<< Updated upstream
-            <div className="grid grid-cols-4 gap-2 mb-5 items-center">
-              {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
-                <p>No bindings added</p>
-              ) : (
-                Object.keys(newServerConfigData.bindings).map(
+            {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
+              <p>No bindings added</p>
+            ) : (
+              <div className="grid grid-cols-4 gap-2 mb-5 items-center">
+                {Object.keys(newServerConfigData.bindings).map(
                   (key, bindingIndex) => (
                     <div
                       key={bindingIndex}
                       className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
                     >
-                      {/* Display the key */}
                       <div>
                         <b>{key}</b>
                       </div>
-
-                      {/* Display the value */}
                       <div>|</div>
                       <div>{newServerConfigData.bindings[key]}</div>
-
-                      {/* Delete icon */}
                       <div>
                         <XCircleIcon
                           onClick={() => handleRemoveBindingNew(key)}
@@ -252,42 +241,12 @@ const ServerConfig = () => {
                           aria-hidden="true"
                         />
                       </div>
-=======
-            {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
-              <p>No bindings added</p>
-            ) : (
-              <div className="flex flex-col sm:flex-row lg:grid grid-cols-4 gap-2 mb-5 lg:items-center">
-                {Object.keys(newServerConfigData.bindings).map((key, bindingIndex) => (
-                  <div
-                    key={bindingIndex}
-                    className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
-                  >
-                    {/* Display the key */}
-                    <div>
-                      <b>{key}</b>
->>>>>>> Stashed changes
                     </div>
-
-                    {/* Separator */}
-                    <div>|</div>
-
-                    {/* Display the value */}
-                    <div>{newServerConfigData.bindings[key]}</div>
-
-                    {/* Delete icon */}
-                    <div>
-                      <XCircleIcon
-                        onClick={() => handleRemoveBindingNew(key)}
-                        className="block h-5 w-5 cursor-pointer text-gray-900"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             )}
           </div>
-
 
           <div className="flex gap-4 justify-end items-center">
             <Button
@@ -297,11 +256,7 @@ const ServerConfig = () => {
             />
           </div>
         </ContainerTile>
-      ) : (
-        ""
       )}
-
-      {/* -------------------- Existing Servers ---------------------------------- */}
 
       {serverConfigData.map((scData, index) => {
         const localBindings = bindingData[index] || {};
@@ -341,7 +296,7 @@ const ServerConfig = () => {
                 placeHolder="e.g., 8080"
               />
             </div>
-            {/* Bindings Section */}
+
             <div className="flex sm:flex-row lg:grid lg:grid-cols-3 gap-2 mb-5 items-end pt-2">
               <InputText
                 labelName="Header Key"
@@ -370,27 +325,22 @@ const ServerConfig = () => {
                 />
               </div>
             </div>
-            {/* Display existing bindings with new design */}
+
             <div className="grid grid-cols-1 gap-2 mb-5 items-center">
-                {Object.keys(scData?.bindings || {}).length === 0 ? (
-                  <p>No bindings added</p>
-                ) : (
-                  <div className="flex flex-col sm:flex-row lg:grid grid-cols-4 gap-2 mb-5 lg:items-center">
+              {Object.keys(scData?.bindings || {}).length === 0 ? (
+                <p>No bindings added</p>
+              ) : (
+                <div className="grid grid-cols-4 gap-2 mb-5 items-center">
                   {Object.keys(scData.bindings).map((key, bindingIndex) => (
                     <div
                       key={bindingIndex}
                       className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex justify-between items-center cursor-auto text-sm"
                     >
-                      {/* Display the key */}
                       <div>
                         <b>{key}</b>
                       </div>
-
-                      {/* Display the value */}
                       <div>|</div>
                       <div>{scData.bindings[key]}</div>
-
-                      {/* Delete icon */}
                       <div>
                         <XCircleIcon
                           onClick={() => handleRemoveBinding(key, index)}
@@ -400,9 +350,10 @@ const ServerConfig = () => {
                       </div>
                     </div>
                   ))}
-              </div>
+                </div>
               )}
             </div>
+
             {!hasViewOnlyAccessGroup2(roleName) && (
               <div className="flex gap-4 justify-end items-center">
                 <Button
