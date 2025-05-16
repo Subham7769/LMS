@@ -9,6 +9,7 @@ const Accordion = ({
   error = false,
   isOpen = false,
   headerComponent,
+  headerAction,
   children,
 }) => {
   const [isExpanded, setIsExpanded] = useState(isOpen);
@@ -22,9 +23,8 @@ const Accordion = ({
       className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3`}
     >
       <div
-        className={`flex justify-between items-center px-4 py-4 cursor-pointer ${
-          error ? `border-l-4 border-l-red-500 rounded-lg` : ""
-        }`}
+        className={`flex justify-between items-center px-4 py-4 cursor-pointer ${error ? `border-l-4 border-l-red-500 rounded-lg` : ""
+          }`}
         onClick={toggleExpand}
       >
         {/* Heading Text */}

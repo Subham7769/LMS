@@ -34,6 +34,7 @@ import smeLoansSlice from "./Slices/smeLoansSlice";
 import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";
 import affordabilitySlice from "./Slices/affordabilitySlice.js";
 import employerSlice from "./Slices/employerSlice.js";
+import bankSlice from "./Slices/bankSlice.js";
 import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
 import documentConfigSlice from "./Slices/documentConfigSlice.js";
 import personalRefundSlice from "./Slices/personalRefundSlice.js";
@@ -77,6 +78,7 @@ const store = configureStore({
     smeRepayments: smeRepaymentsSlice,
     affordability: affordabilitySlice,
     employer: employerSlice,
+    bank: bankSlice,
     loanApproval: loanApprovalSlice,
     documentConfig: documentConfigSlice,
     personalRefund: personalRefundSlice,

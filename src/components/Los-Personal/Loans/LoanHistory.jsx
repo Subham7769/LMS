@@ -36,6 +36,7 @@ import {
   ReceiptRefundIcon,
   ArrowPathIcon,
   WalletIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import convertToReadableString from "../../../utils/convertToReadableString";

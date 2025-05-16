@@ -54,6 +54,7 @@ import {
   CubeTransparentIcon,
   CpuChipIcon,
   ArrowLeftIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -122,6 +123,7 @@ const SideBar = () => {
     WrenchScrewdriverIcon,
     CubeTransparentIcon,
     CpuChipIcon,
+    BanknotesIcon,
   };
 
   const functionMapping = {

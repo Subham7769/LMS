@@ -79,7 +79,7 @@ export const fetchBorrowerData = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_PAYMENY_HISTORY_READ}${subID}${url}`,
+        `${import.meta.env.VITE_PAYMENT_HISTORY_READ}${subID}${url}`,
         {
           method: "GET",
           headers: {

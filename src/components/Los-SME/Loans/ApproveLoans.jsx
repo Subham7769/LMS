@@ -25,6 +25,7 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
@@ -295,6 +296,31 @@ const ApproveLoans = () => {
             <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
           </div>
         </CardInfo>
+        <div className="col-span-2">
+
+          {rowData?.refinanceDetails && <CardInfo
+            cardIcon={BanknotesIcon}
+            cardTitle="Refinancing Details"
+            className={"bg-white border-border-gray-primary border"}
+            colorText={"text-blue-primary"}
+          >
+
+            {rowData?.refinanceDetails.map((refinance) => (
+              <div className="grid grid-cols-4 pb-3">
+                <div>
+                  <div className="text-gray-500">Loan Id</div>
+                  <div className="font-semibold">{refinance.loanId}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Refinance Amount</div>
+                  <div className="font-semibold"> {refinance.refinanceAmount}</div>
+                </div>
+              </div>
+            ))
+            }
+
+          </CardInfo>}
+        </div>
       </div>
       <div className="bg-white p-3 shadow border-border-gray-primary border rounded-md my-5">
         <div className="font-semibold text-xl mb-3">

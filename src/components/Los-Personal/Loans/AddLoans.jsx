@@ -32,7 +32,7 @@ const AddLoans = () => {
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.personalLoans
   );
-
+console.log(addLoanData)
   // Decode the BorrowerId to restore its original value
   const decodedBorrowerId = decodeURIComponent(BorrowerId);
   // const isValid = useSelector((state) => state.validation.isValid);

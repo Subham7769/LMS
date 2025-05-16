@@ -67,6 +67,9 @@ const Affordability = lazy(() =>
 // Employer Imports
 const Employer = lazy(() => import("./components/Employer/Employer"));
 
+// Banks Imports
+const Banks = lazy(() => import("./components/Banks/Banks"));
+
 // Approval Config Imports
 const LoanApprovalPage = lazy(() => import("./pages/LoanApprovalPage"));
 const LoanApproval = lazy(() =>
@@ -771,6 +774,11 @@ const routes = [
       {
         path: "employer",
         element: <Employer />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "banks",
+        element: <Banks />,
         errorElement: <RouteErrorBoundary />,
       },
       {

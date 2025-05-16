@@ -265,6 +265,7 @@ const productInitialState = {
     interestMethod: "",
     insuranceFee: "",
     insuranceLevy: "",
+    notApplyInsuranceLevyDeduction:false,
   },
   loading: false,
   error: null,
