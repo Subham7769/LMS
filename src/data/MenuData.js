@@ -232,6 +232,13 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "Banks",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/banks",
+    icon: "BanknotesIcon",
+    current: false,
+  },
+  {
     title: "Approval Config",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/loan-approval",

@@ -13,10 +13,10 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
   return (
     <>
       <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-        <div className="bg-white border border-red-600 p-8 rounded-xl w-1/3 relative shadow-lg transition-all duration-500 ease-in-out">
+        <div className="bg-white border border-red-600 p-8 rounded-xl w-1/2 relative shadow-lg transition-all duration-500 ease-in-out">
           <div
             onClick={onClose}
-            className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-2 right-2"
+            className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-1 right-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
