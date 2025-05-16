@@ -466,7 +466,7 @@ const AddUpdateCompanyBorrowerFields = ({
     <>
       <Accordion
         heading={"General Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           // companyDetails(BorrowerData.companyDetails)
           <DynamicForm
             details={BorrowerData.companyDetails}
@@ -474,43 +474,40 @@ const AddUpdateCompanyBorrowerFields = ({
             sectionName={"companyDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         isOpen={true}
         error={isValidationFailed(validationError, companyDetailsConfig)}
       />
 
       <Accordion
-        heading={"Contact Details"}
-        renderExpandedContent={() =>
+        heading={"Contact Preferences"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.companyContactDetails}
             config={companyContactDetailsConfig}
             sectionName={"companyContactDetails"}
             handleInputChange={handleInputChange}
           />
-        }
-        error={isValidationFailed(
-          validationError,
-          companyContactDetailsConfig
         )}
+        error={isValidationFailed(validationError, companyContactDetailsConfig)}
       />
 
       <Accordion
-        heading={"Bank Details"}
-        renderExpandedContent={() =>
+        heading={"Financial Accounts"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.bankDetails}
             config={bankDetailsConfig}
             sectionName={"bankDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, bankDetailsConfig)}
       />
 
       <Accordion
-        heading={"Other Details"}
-        renderExpandedContent={() =>
+        heading={"Miscellaneous Information"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.companyOtherDetails}
             config={companyOtherDetailsConfig}
@@ -518,11 +515,8 @@ const AddUpdateCompanyBorrowerFields = ({
             handleInputChange={handleInputChange}
             handleFileUploads={handleFileUpload}
           />
-        }
-        error={isValidationFailed(
-          validationError,
-          companyOtherDetailsConfig
         )}
+        error={isValidationFailed(validationError, companyOtherDetailsConfig)}
       />
     </>
   );

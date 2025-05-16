@@ -15,6 +15,8 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import Pagination from "../../Common/Pagination/Pagination";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 const AddCompany = () => {
   const dispatch = useDispatch();
@@ -22,13 +24,13 @@ const AddCompany = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
   const [filteredBorrowers, setFilteredBorrowers] = useState([]);
 
   const {
     addCompanyData,
     allDraftedCompanies,
     allDraftedBorrowersTotalElements,
-    error,
     loading,
   } = useSelector((state) => state.smeBorrowers);
 
@@ -118,20 +120,10 @@ const AddCompany = () => {
   };
 
   const handleResetSearchBy = () => {
-    if (searchBy || searchValue) {
-      setSearchBy("");
-      setSearchValue("");
-      const transformedData = allDraftedCompanies.map((item) => {
-        const { companyBorrowerProfileDraft, ...allOther } = item;
-        return {
-          ...allOther,
-          ...companyBorrowerProfileDraft,
-        };
-      });
-      setFilteredBorrowers(transformedData);
-    } else {
-      dispatch(fetchDraftedCompanyBorrowers({ page: 0, size: pageSize }));
-    }
+    setSearchBy("");
+    setSearchValue("");
+    setCurrentPage(0);
+    dispatch(fetchDraftedCompanyBorrowers({ page: 0, size: pageSize }));
   };
 
   const personalDetailsColumns = [
@@ -167,10 +159,21 @@ const AddCompany = () => {
     });
   }
 
+  function transformData(inputArray) {
+    return inputArray.map((item) => ({
+      ...item,
+      status: convertToTitleCase(item?.status),
+    }));
+  }
+
+  const flattenData = flattenToSimpleObjectArray(filteredBorrowers);
+
+  const transformFlattenData = transformData(flattenData);
+
   const ListAction = (rowData) => {
     // if (rowData.status === "Completed" || rowData.status === "Cancel" || hasViewOnlyAccessGroup3(roleName)) {
-    if (rowData.status === "COMPLETED" || rowData.status === "CANCEL") {
-      return <div className="py-6">-</div>;
+    if (rowData.status === "Completed" || rowData.status === "Cancel") {
+      return <div className="px-6">-</div>;
     }
 
     const handleEditApplication = (borrowerProfileDraftId) => {
@@ -191,11 +194,10 @@ const AddCompany = () => {
     };
 
     return (
-      <div className="flex justify-center gap-4 px-5">
+      <div className="flex gap-4">
         <Button
           onClick={() => handleEditApplication(rowData.borrowerProfileDraftId)}
-          buttonIcon={PencilIcon}
-          circle={true}
+          buttonIcon={EditIcon}
           className={`mt-4 h-fit self-center`}
           buttonType="secondary"
         />
@@ -203,7 +205,7 @@ const AddCompany = () => {
           onClick={() =>
             handleRejectApplication(rowData.borrowerProfileDraftId)
           }
-          buttonIcon={TrashIcon}
+          buttonIcon={DeleteIcon}
           circle={true}
           className={`mt-4 h-fit self-center`}
           buttonType="destructive"
@@ -219,26 +221,29 @@ const AddCompany = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-4 gap-5 items-center">
-        <div className="text-xl font-semibold">Draft Company</div>
-        <div></div>
-        <div></div>
+    <>
+      <div className="grid grid-cols-2 gap-5 items-center mb-5">
+        <div className="mb-4 sm:mb-0">
+          <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
+            Draft Company
+          </h1>
+        </div>
         <div className="flex justify-end gap-2 h-12">
           <Button
-            buttonIcon={PlusIcon}
+            buttonIcon={AddIcon}
             buttonName="Add New Company"
             onClick={() =>
               navigate(
                 "/loan/loan-origination-system/sme/borrowers/add-new-company"
               )
             }
-            rectangle={true}
           />
         </div>
       </div>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="searchBy"
@@ -248,7 +253,7 @@ const AddCompany = () => {
             disabled={false}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%] mb-2">
           <InputText
             labelName="Enter Value"
             inputName="searchValue"
@@ -259,18 +264,16 @@ const AddCompany = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle justify-end gap-5">
           <Button
             buttonName={"Search"}
             onClick={SearchBorrowerByFieldSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />
@@ -278,16 +281,20 @@ const AddCompany = () => {
       </ContainerTile>
       <ExpandableTable
         columns={personalDetailsColumns}
-        data={flattenToSimpleObjectArray(filteredBorrowers)}
+        data={transformFlattenData}
         loading={loading}
         ListAction={ListAction}
+        ListName="List of draft company borrowers"
+        ListNameLength={allDraftedBorrowersTotalElements}
       />
       <Pagination
         totalElements={allDraftedBorrowersTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
-    </div>
+    </>
   );
 };
 

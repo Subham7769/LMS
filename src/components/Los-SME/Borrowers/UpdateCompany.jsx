@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from "react";
+import React from "react";
 import Button from "../../Common/Button/Button";
 import {
   handleChangeUpdateCompanyField,
@@ -146,26 +146,23 @@ const UpdateCompany = () => {
         BorrowerData={updateCompanyData}
         handleChangeReducer={handleChangeUpdateCompanyField}
       />
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
+      <div className="flex justify-end gap-5 col-span-4">
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
-          rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          buttonType="destructive"
           loading={loading}
         />
         {borrowerProfileDraftId && (<>
           <Button
             buttonName="Update Draft"
             onClick={handleDraftUpdate}
-            rectangle={true}
             buttonType={"secondary"}
             loading={loading}
           />
           <Button
             buttonName="Submit"
             onClick={handleSubmit}
-            rectangle={true}
             loading={loading}
           />
         </>
@@ -173,7 +170,6 @@ const UpdateCompany = () => {
         {uid && <Button
           buttonName="Update"
           onClick={() => handleBorrowerUpdate(uid)}
-          rectangle={true}
         />}
       </div>
     </>

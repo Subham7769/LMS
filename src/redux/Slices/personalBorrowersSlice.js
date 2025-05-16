@@ -343,7 +343,7 @@ export const changeBorrowerStatus = createAsyncThunk(
       const response = await fetch(
         `${
           import.meta.env.VITE_BORROWERS_CHANGE_STATUS_PERSONAL_BORROWER
-        }/${uid}/status/${newStatus}`,
+        }${uid}/status/${newStatus}`,
         {
           method: "PUT",
           headers: {

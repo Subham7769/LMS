@@ -38,7 +38,6 @@ import {
   WalletIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import {
   clearValidationError,
@@ -53,6 +52,7 @@ function transformData(inputArray) {
     ...item,
     loanProduct: item?.loanProductName?.replace(/_/g, " "),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
+    loanStatus: convertToTitleCase(item?.loanStatus),
   }));
 }
 

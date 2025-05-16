@@ -57,17 +57,15 @@ const UpdateDirector = () => {
         BorrowerData={updateDirectorData}
         handleChangeReducer={handleChangeUpdateDirectorField}
       />
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
+      <div className="flex justify-end gap-5 col-span-4">
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
-          rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          buttonType="destructive"
         />
         <Button
           buttonName="Update"
           onClick={() => handleUpdate(uid)}
-          rectangle={true}
         />
       </div>
     </>

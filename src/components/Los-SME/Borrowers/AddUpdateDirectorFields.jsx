@@ -567,63 +567,63 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     <>
       <Accordion
         heading={"Personal Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.personalDetails}
             config={personalDetailsConfig}
             sectionName={"personalDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         isOpen={true}
         error={isValidationFailed(validationError, personalDetailsConfig)}
       />
       <Accordion
-        heading={"Contact Details"}
-        renderExpandedContent={() =>
+        heading={"Contact Preferences"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.contactDetails}
             config={contactDetailsConfig}
             sectionName={"contactDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, contactDetailsConfig)}
       />
       <Accordion
-        heading={"Employment Details"}
-        renderExpandedContent={() =>
+        heading={"Professional Status"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.employmentDetails}
             config={employmentDetailsConfig}
             sectionName={"employmentDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, employmentDetailsConfig)}
       />
       <Accordion
-        heading={"Bank Details"}
-        renderExpandedContent={() =>
+        heading={"Financial Accounts"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.bankDetails}
             config={bankDetailsConfig}
             sectionName={"bankDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, bankDetailsConfig)}
       />
       <Accordion
-        heading={"Next of Kin Details"}
-        renderExpandedContent={() =>
+        heading={"Family Reference"}
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.nextOfKinDetails}
             config={nextOfKinConfig}
             sectionName={"nextOfKinDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, nextOfKinConfig)}
       />
       {/* <Accordion

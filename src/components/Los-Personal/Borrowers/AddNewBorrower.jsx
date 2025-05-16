@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetBorrowerData,
@@ -93,7 +93,6 @@ const AddNewBorrowers = () => {
         handleFileUpload={uploadBorrowerPhotoFile}
       />
       <div className="flex justify-end gap-5 col-span-4">
-
         <Button
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}

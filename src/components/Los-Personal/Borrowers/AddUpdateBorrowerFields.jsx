@@ -28,14 +28,9 @@ import {
 } from "../../../data/BankData";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
-
 import {
-  setEmployerData,
-  handleChangeEmployerData,
   fetchEmployerData,
   addEmployerData,
-  updateEmployerData,
-  deleteEmployerData,
 } from "../../../redux/Slices/employerSlice";
 import { useLocation } from "react-router-dom";
 
@@ -46,7 +41,7 @@ const AddUpdateBorrowerFields = ({
   handleFileUpload,
 }) => {
   const dispatch = useDispatch();
-  const { employerData, allEmployerData, loading, error } = useSelector(
+  const { allEmployerData } = useSelector(
     (state) => state.employer
   );
   const location = useLocation();
@@ -381,14 +376,14 @@ const AddUpdateBorrowerFields = ({
       labelName: "Mobile 1",
       inputName: "mobile1",
       type: "text",
-      maxLength:10,
+      maxLength: 10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "text",
-      maxLength:10,
+      maxLength: 10,
       validation: false,
     },
     {

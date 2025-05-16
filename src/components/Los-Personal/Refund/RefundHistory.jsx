@@ -11,12 +11,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "../Loans/ViewDocumentsModal";
 import {
-  CalendarDaysIcon,
   CheckCircleIcon,
-  NewspaperIcon,
   CurrencyDollarIcon,
-  UserIcon,
-  ReceiptRefundIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -25,7 +21,6 @@ import {
   validateForm,
 } from "../../../redux/Slices/validationSlice";
 import store from "../../../redux/store";
-import ActionOption from "../../Common/ActionOptions/ActionOption";
 import {
   getRefundHistoryByField,
   getRefundistory,
@@ -40,6 +35,7 @@ function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     aging: calculateAging(item?.creationDate),
+    status: convertToTitleCase(item?.status),
   }));
 }
 

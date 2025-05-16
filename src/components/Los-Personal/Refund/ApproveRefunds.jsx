@@ -37,6 +37,7 @@ function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     aging: calculateAging(item?.creationDate),
+    status: convertToTitleCase(item?.status),
   }));
 }
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Common/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -35,7 +34,6 @@ const AddBorrowers = () => {
     addBorrowerData,
     draftedBorrowerData,
     draftedBorrowerDataTotalElements,
-    error,
     loading,
   } = useSelector((state) => state.personalBorrowers);
 
@@ -267,14 +265,12 @@ const AddBorrowers = () => {
           <Button
             buttonName={"Search"}
             onClick={SearchBorrowerByFieldSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />

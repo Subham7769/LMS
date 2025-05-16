@@ -40,7 +40,7 @@ const ExpandableTable = ({
     }
   };
 
-  const centerAlignedFields = ["status", "loanstatus", "aging"];
+  const centerAlignedFields = ["lmsuserstatus", "status", "loanstatus", "aging"];
 
   return (
     <div
@@ -95,29 +95,29 @@ const ExpandableTable = ({
                       const getStatusClass = (status) => {
                         const normalizedStatus = status?.toLowerCase();
                         const statusClasses = {
-                          in_progress: "bg-yellow-500/20 text-yellow-700",
-                          pending: "bg-yellow-500/20 text-yellow-700",
-                          new: "bg-yellow-500/20 text-yellow-700",
-                          rejected: "bg-red-500/20 text-red-700",
-                          defaulter: "bg-red-500/20 text-red-700",
-                          defaulted: "bg-red-500/20 text-red-700",
-                          "in progress": "bg-yellow-500/20 text-yellow-700",
-                          deactivated: "bg-yellow-500/20 text-yellow-700",
-                          late: "bg-yellow-500/20 text-yellow-700",
-                          submitted: "bg-violet-500/20 text-violet-700",
-                          "roll overed": "bg-violet-500/20 text-violet-700",
+                          in_progress: "bg-yellow-500/20 text-yellow-700 px-2",
+                          pending: "bg-yellow-500/20 text-yellow-700 px-2",
+                          new: "bg-yellow-500/20 text-yellow-700 px-2",
+                          rejected: "bg-red-500/20 text-red-700 px-2",
+                          defaulter: "bg-red-500/20 text-red-700 px-2",
+                          defaulted: "bg-red-500/20 text-red-700 px-2",
+                          "in progress": "bg-yellow-500/20 text-yellow-700 px-2",
+                          deactivated: "bg-yellow-500/20 text-yellow-700 px-2",
+                          late: "bg-yellow-500/20 text-yellow-700 px-2",
+                          submitted: "bg-violet-500/20 text-violet-700 px-2",
+                          "roll overed": "bg-violet-500/20 text-violet-700 px-2",
                           closed:
-                            "bg-gray-400/20 text-gray-500 dark:text-gray-400",
-                          frozen: "bg-blue-500/20 text-blue-700",
-                          cancel: "bg-red-500/20 text-red-700",
-                          unpaid: "bg-yellow-500/20 text-yellow-700",
+                            "bg-gray-400/20 text-gray-500 dark:text-gray-400 px-2",
+                          frozen: "bg-blue-500/20 text-blue-700 px-2",
+                          cancel: "bg-red-500/20 text-red-700 px-2",
+                          unpaid: "bg-yellow-500/20 text-yellow-700 px-2",
                         };
 
                         // Default class for unknown statuses
                         return (
                           Object.entries(statusClasses).find(([key]) =>
                             normalizedStatus?.includes(key)
-                          )?.[1] || "bg-green-500/20 text-green-700"
+                          )?.[1] || "bg-green-500/20 text-green-700 px-2"
                         );
                       };
 

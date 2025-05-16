@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Button from "../../Common/Button/Button";
 import {
   updateBorrowerUpdateField,
@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateBorrower = () => {
-  const { updateBorrowerData, error, loading } = useSelector(
+  const { updateBorrowerData, loading } = useSelector(
     (state) => state.personalBorrowers
   );
   const dispatch = useDispatch();

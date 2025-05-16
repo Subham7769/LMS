@@ -27,16 +27,12 @@ import {
   UserIcon,
   ArchiveBoxIcon,
   HomeIcon,
-  PlusIcon,
   BriefcaseIcon,
   WindowIcon,
   MapPinIcon,
   CalendarIcon,
-  PencilIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Menu, Transition } from "@headlessui/react";
-import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
 import {
   generateLoanApplicationId,
   getLoanHistoryByField,
@@ -46,6 +42,7 @@ import ViewPhotoModal from "./ViewPhotoModal";
 import { viewPhoto } from "../../../redux/Slices/personalBorrowersSlice";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 import { EditIcon } from "../../../assets/icons";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -95,7 +92,6 @@ const ViewBorrowers = () => {
       const personalDetails = borrower.borrowerProfile?.personalDetails || {};
       const contactDetails = borrower.borrowerProfile?.contactDetails || {};
       let matchesSearchValue = "";
-      console.log(borrower);
       matchesSearchValue = searchValue
         ? [
             personalDetails.firstName,
@@ -162,6 +158,7 @@ const ViewBorrowers = () => {
       fullName: `${item?.title} ${item?.firstName} ${item?.surname} ${item?.otherName}`,
       dateOfBirth: convertDate(item?.dateOfBirth),
       workStartDate: convertDate(item?.workStartDate),
+      lmsUserStatus: convertToTitleCase(item?.lmsUserStatus),
     }));
   }
 

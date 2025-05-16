@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Button from "../../Common/Button/Button";
-import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   setCompanyId,
@@ -11,7 +10,6 @@ import {
   addDirectorInfo,
   fetchAllCompanyBorrowers,
   fetchCompanyDetails,
-  setUpdateDirector,
   setUpdateExistingDirector,
   deleteDirectorInfo,
 } from "../../../redux/Slices/smeBorrowersSlice";
@@ -23,6 +21,7 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { AddIcon } from "../../../assets/icons";
 const AddDirector = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const navigate = useNavigate();
@@ -40,8 +39,6 @@ const AddDirector = () => {
   useEffect(() => {
       dispatch(fetchAllCompanyBorrowers());
   }, [dispatch]);
-
-
 
   const handleSubmitNewDirector = async (e) => {
     e.preventDefault();
@@ -82,23 +79,24 @@ const AddDirector = () => {
 
   return (
     <>
-      <div className="mb-4 grid grid-cols-4 gap-5 items-center">
-        <InputSelect
-          labelName={"Company"}
-          inputName={"companyId"}
-          inputOptions={allCompanies}
-          inputValue={companyId}
-          onChange={changeCompany}
-          disabled={false}
-        />
-        <div></div>
-        <div></div>
-        <div className="flex justify-end gap-2 h-[90%]">
+      <div className="mb-4 md:flex justify-between items-center">
+        <div className="min-w-72 mb-2 md:mb-0">
+          <InputSelect
+            labelName={"Company"}
+            inputName={"companyId"}
+            inputOptions={allCompanies}
+            inputValue={companyId}
+            onChange={changeCompany}
+            disabled={false}
+          />
+        </div>
+        <div className="">
           {directorsKycDetails.length < 1 && (
-            <HoverButton
-              icon={PlusIcon}
-              text="Add Director"
+            <Button
+              buttonIcon={AddIcon}
+              buttonName="Add Director"
               onClick={() => dispatch(addDirector({ loanOfficer }))}
+              buttonType="secondary"
             />
           )}
         </div>
@@ -110,7 +108,7 @@ const AddDirector = () => {
           {existingDirectorDetails.map((director, index) => (
             <>
               <Accordion
-              key={index}
+                key={index}
                 heading={`${director.personalDetails.title} 
                       ${director.personalDetails.firstName} 
                       ${director.personalDetails.surname} 
@@ -412,17 +410,15 @@ const AddDirector = () => {
                       BorrowerData={Data}
                       handleChangeReducer={handleChangeAddDirectorField}
                     />
-                    <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
+                    <div className="flex justify-end gap-5 col-span-4 mt-4">
                       <Button
                         buttonName="Reset"
                         onClick={() => dispatch(resetDirector({ index }))}
-                        rectangle={true}
-                        className={"bg-red-500 hover:bg-red-600"}
+                        buttonType="destructive"
                       />
                       <Button
                         buttonName="Submit"
                         onClick={handleSubmitNewDirector}
-                        rectangle={true}
                         disabled={!companyId}
                       />
                     </div>

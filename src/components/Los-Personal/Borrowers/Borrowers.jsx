@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useState } from "react";
-import { Outlet, Link, useLocation, useParams } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import LoadingState from "../../LoadingState/LoadingState";
 import Tab from "../../Common/Tab/Tab";
 
@@ -19,9 +19,6 @@ const Borrowers = () => {
       path: "/loan/loan-origination-system/personal/borrowers/view-borrower",
       label: "View Borrower",
     },
-    // { id: "update-borrower", path: "/loan/loan-origination-system/personal/borrowers/update-borrower/:uid", label: "Update Borrower" },
-    // { id: "add-borrower-group", path: "/borrowers/add-borrower-group", label: "Add Borrower Group" },
-    // { id: "view-borrower-group", path: "/borrowers/view-borrower-group", label: "View Borrower Group" },
   ];
 
   // Update activeTab based on the current route
@@ -34,9 +31,7 @@ const Borrowers = () => {
 
   return (
     <>
-      {/* Tab Navigation */}
       <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-      {/* Content Rendering */}
       <Suspense fallback={<LoadingState />}>
         <Outlet />
       </Suspense>

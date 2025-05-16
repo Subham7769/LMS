@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetCompanyData,
@@ -18,7 +18,7 @@ import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 const AddNewCompany = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { addCompanyData, error, loading } = useSelector(
+  const { addCompanyData, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   // console.log(addCompanyData)
@@ -82,30 +82,26 @@ const AddNewCompany = () => {
         BorrowerData={addCompanyData}
         handleChangeReducer={handleChangeAddCompanyField}
       />
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
+      <div className="flex justify-end gap-5 col-span-4">
         <Button
           buttonName="Reset"
           onClick={() => dispatch(resetCompanyData())}
-          rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          buttonType="destructive"
         />
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
           buttonType="destructive"
-          rectangle={true}
           loading={loading}
         />
         <Button
           buttonName="Save Draft"
           onClick={handleDraft}
-          rectangle={true}
           buttonType={"secondary"}
         />
         <Button
           buttonName="Submit"
           onClick={handleSubmit}
-          rectangle={true}
           loading={loading}
         />
 
