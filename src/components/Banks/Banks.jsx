@@ -88,7 +88,12 @@ const Banks = () => {
 
   const handleDeleteBank = async (e, bankId) => {
     e.stopPropagation();
-    await dispatch(deleteBank({ bankId })).unwrap();
+  
+    const confirmDelete = window.confirm("Are you sure you want to delete this bank?");
+    
+    if (confirmDelete) {
+      await dispatch(deleteBank({ bankId })).unwrap();
+    }
   };
 
   const handleAddBank = () => {
