@@ -21,7 +21,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { hasViewOnlyAccessGroup4 } from "../../utils/roleUtils";
 import AddBankModal from "./AddBankModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import AddBankBranchModal from "./AddBankBranchModal";
@@ -56,7 +56,7 @@ const Banks = () => {
 
   const handleChangeBranch = (e, branchId, bankId) => {
     const { name, value } = e.target;
-    if (!hasViewOnlyAccess(roleName)) {
+    if (!hasViewOnlyAccessGroup4(roleName)) {
       dispatch(handleChangeBankBranch({ name, value, branchId, bankId }));
     }
   };
@@ -129,9 +129,10 @@ const Banks = () => {
                 inputValue={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeHolder="Search by bank name"
+                disabled={false}
               />
             </div>
-            {!hasViewOnlyAccess(roleName) ? (
+            {!hasViewOnlyAccessGroup4(roleName) ? (
               <div>
                 <Button
                   buttonIcon={PlusIcon}
@@ -153,14 +154,16 @@ const Banks = () => {
                     <div className="flex items-center gap-2">
                       <div
                         className="text-sm text-blue-500 hover:text-blue-700 cursor-pointer flex items-center "
-                        onClick={(e) => handleAddBankBranch(e,bankData.bankId)}>
+                        onClick={(e) => handleAddBankBranch(e, bankData.bankId)}
+                      >
                         <PlusIcon className="h-4 w-4" /> Add Branch
                       </div>
-                      {!hasViewOnlyAccess(roleName) ? (
+                      {!hasViewOnlyAccessGroup4(roleName) ? (
                         <div
                           title="Delete Bank"
                           className="text-sm text-red-500 hover:text-red-700 cursor-pointer flex items-center "
-                          onClick={(e) => handleDeleteBank(e, bankData.bankId)}>
+                          onClick={(e) => handleDeleteBank(e, bankData.bankId)}
+                        >
                           <TrashIcon className="h-4 w-4" />
                         </div>
                       ) : null}
@@ -183,57 +186,93 @@ const Banks = () => {
                         </div>
                       </div>
                       <div>
-                        {bankData?.bankBranchDetailsList?.map((branch, branchIndex) => (
-                          <div className="grid grid-cols-4 items-end mb-4 gap-5 px-5">
-                            <InputText
-                              inputName="branchName"
-                              id={`branch_${branch.branchName}`}
-                              inputValue={branch.branchName}
-                              onChange={(e) => handleChangeBranch(e, branch.branchId, bankData.bankId)}
-                              placeHolder="ABC"
-                              isValidation={true}
-                              isIndex={branchIndex}
-                            />
-                            <InputText
-                              inputName="branchCode"
-                              id={`branch_${branch.branchCode}`}
-                              inputValue={branch.branchCode}
-                              onChange={(e) => handleChangeBranch(e, branch.branchId, bankData.bankId)}
-                              placeHolder="123456"
-                              isValidation={true}
-                              isIndex={branchIndex}
-                            />
-                            <InputText
-                              inputName="sortCode"
-                              id={`branch_${branch.sortCode}`}
-                              inputValue={branch.sortCode}
-                              onChange={(e) => handleChangeBranch(e, branch.branchId, bankData.bankId)}
-                              placeHolder="00-00-00"
-                              isValidation={true}
-                              isIndex={branchIndex}
-                            />
+                        {bankData?.bankBranchDetailsList?.map(
+                          (branch, branchIndex) => (
+                            <div className="grid grid-cols-4 items-end mb-4 gap-5 px-5">
+                              <InputText
+                                inputName="branchName"
+                                id={`branch_${branch.branchName}`}
+                                inputValue={branch.branchName}
+                                onChange={(e) =>
+                                  handleChangeBranch(
+                                    e,
+                                    branch.branchId,
+                                    bankData.bankId
+                                  )
+                                }
+                                placeHolder="ABC"
+                                isValidation={true}
+                                isIndex={branchIndex}
+                                disabled={false}
+                              />
+                              <InputText
+                                inputName="branchCode"
+                                id={`branch_${branch.branchCode}`}
+                                inputValue={branch.branchCode}
+                                onChange={(e) =>
+                                  handleChangeBranch(
+                                    e,
+                                    branch.branchId,
+                                    bankData.bankId
+                                  )
+                                }
+                                placeHolder="123456"
+                                isValidation={true}
+                                isIndex={branchIndex}
+                                disabled={false}
+                              />
+                              <InputText
+                                inputName="sortCode"
+                                id={`branch_${branch.sortCode}`}
+                                inputValue={branch.sortCode}
+                                onChange={(e) =>
+                                  handleChangeBranch(
+                                    e,
+                                    branch.branchId,
+                                    bankData.bankId
+                                  )
+                                }
+                                placeHolder="00-00-00"
+                                isValidation={true}
+                                isIndex={branchIndex}
+                                disabled={false}
+                              />
 
-                            {!hasViewOnlyAccess(roleName) ? (
-                              <div className="flex items-center justify-center gap-4">
-                                <Button
-                                  buttonIcon={CheckCircleIcon}
-                                  onClick={() => handleUpdateBranch(branch.branchId, bankData.bankId, branchIndex, bankIndex)}
-                                  circle={true}
-                                  buttonType="secondary"
-                                />
-                                <Button
-                                  buttonIcon={TrashIcon}
-                                  onClick={() => handleDelete(branch.branchId, bankData.bankId, branchIndex, bankIndex)}
-                                  circle={true}
-                                  buttonType="destructive"
-                                />
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </div>
-
-                        ))}
+                              {!hasViewOnlyAccessGroup4(roleName) ? (
+                                <div className="flex items-center justify-center gap-4">
+                                  <Button
+                                    buttonIcon={CheckCircleIcon}
+                                    onClick={() =>
+                                      handleUpdateBranch(
+                                        branch.branchId,
+                                        bankData.bankId,
+                                        branchIndex,
+                                        bankIndex
+                                      )
+                                    }
+                                    circle={true}
+                                    buttonType="secondary"
+                                  />
+                                  <Button
+                                    buttonIcon={TrashIcon}
+                                    onClick={() =>
+                                      handleDelete(
+                                        branch.branchId,
+                                        bankData.bankId,
+                                        branchIndex,
+                                        bankIndex
+                                      )
+                                    }
+                                    circle={true}
+                                    buttonType="destructive"
+                                  />
+                                </div>
+                              ) : (
+                                "-"
+                              )}
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   )}
@@ -241,10 +280,7 @@ const Banks = () => {
               </>
             ))}
           </div>
-          <AddBankModal
-            isOpen={showAddBankModal}
-            onClose={closeAddBankModal}
-          />
+          <AddBankModal isOpen={showAddBankModal} onClose={closeAddBankModal} />
           <AddBankBranchModal
             currentBankId={currentBankId}
             isOpen={showAddBankBranchModal}
