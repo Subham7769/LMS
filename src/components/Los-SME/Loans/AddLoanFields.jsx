@@ -27,7 +27,6 @@ const AddLoanFields = ({ addLoanData }) => {
   const [filteredProvinces2, setFilteredProvinces2] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
 
-
   useEffect(() => {
     setFilteredProvinces1(
       locationOptions[addLoanData.offTakerDetails.country] || []
@@ -138,12 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
 
+  console.log(selectedLoanProduct);
+
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
     if (!selectedLoanProduct) return [];
 
     const uniqueLoanTenure = new Set();
-
     return selectedLoanProduct.interestEligibleTenure
       .filter((tenure) => {
         const combinedValue = `${tenure.loanTenure} ${tenure.loanTenureType}`;
@@ -165,13 +165,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -214,9 +214,9 @@ const AddLoanFields = ({ addLoanData }) => {
     const matchingTenure = selectedLoanProduct.interestEligibleTenure.find(
       (tenure) =>
         `${tenure.loanTenure} ${tenure.loanTenureType}` ===
-        selectedLoanDuration &&
+          selectedLoanDuration &&
         `${tenure.repaymentTenure} ${tenure.repaymentTenureType}` ===
-        selectedRepaymentTenure
+          selectedRepaymentTenure
     );
 
     return matchingTenure
@@ -284,24 +284,25 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [loanInterestStr]);
 
-  const interestMethod = useMemo(() => {
-    return selectedLoanProduct?.interestMethod || "";
-  }, [selectedLoanProduct]);
+  // const interestMethod = useMemo(() => {
+  //   return selectedLoanProduct?.interestMethod || "";
+  // }, [selectedLoanProduct]);
 
   useEffect(() => {
-    if (!interestMethod) return;
+    if (!selectedLoanProduct) return;
 
     dispatch(
       updateLoanField({
         section: "generalLoanDetails",
         field: "interestMethod",
-        value: interestMethod,
+        value: selectedLoanProduct?.interestMethod,
       })
     );
-  }, [interestMethod]);
+  }, [selectedLoanProduct]);
 
   const today = new Date();
-  const { loanCreationDate, loanReleaseDate, firstEmiDate } = addLoanData.generalLoanDetails;
+  const { loanCreationDate, loanReleaseDate, firstEmiDate } =
+    addLoanData.generalLoanDetails;
 
   // Helper to add months to a date
   const addMonths = (date, months) => {
@@ -312,37 +313,48 @@ const AddLoanFields = ({ addLoanData }) => {
   // Ensure loanCreationDate is set to today if not selected
   useEffect(() => {
     if (!loanCreationDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanCreationDate",
-        value: new Date().toISOString().split("T")[0], // Setting default to today
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanCreationDate",
+          value: new Date().toISOString().split("T")[0], // Setting default to today
+        })
+      );
     }
   }, [loanCreationDate, dispatch]);
   // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
   useEffect(() => {
     if (loanCreationDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanReleaseDate",
-        value: "",
-      }));
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "firstEmiDate",
-        value: "",
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
     }
   }, [loanCreationDate, dispatch]);
 
   // Ensure loanReleaseDate ≥ loanCreationDate
   useEffect(() => {
-    if (loanReleaseDate && new Date(loanReleaseDate) < new Date(loanCreationDate)) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "loanReleaseDate",
-        value: "",
-      }));
+    if (
+      loanReleaseDate &&
+      new Date(loanReleaseDate) < new Date(loanCreationDate)
+    ) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
     }
   }, [loanCreationDate, loanReleaseDate, dispatch]);
 
@@ -350,11 +362,13 @@ const AddLoanFields = ({ addLoanData }) => {
   useEffect(() => {
     const minFirstEmiDate = addMonths(new Date(loanReleaseDate), 1);
     if (firstEmiDate && new Date(firstEmiDate) < minFirstEmiDate) {
-      dispatch(updateLoanField({
-        section: "generalLoanDetails",
-        field: "firstEmiDate",
-        value: "",
-      }));
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
     }
   }, [loanReleaseDate, firstEmiDate, dispatch]);
 
@@ -431,7 +445,9 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "First EMI Date",
       inputName: "firstEmiDate",
       type: "date",
-      minSelectableDate: loanReleaseDate ? addMonths(new Date(loanReleaseDate), 1) : today,
+      minSelectableDate: loanReleaseDate
+        ? addMonths(new Date(loanReleaseDate), 1)
+        : today,
     },
     {
       labelName: "Reason for Borrowing",
@@ -834,80 +850,77 @@ const AddLoanFields = ({ addLoanData }) => {
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData.generalLoanDetails}
             config={generalLoanDetailsConfig}
             sectionName={"generalLoanDetails"}
             handleInputChange={handleInputChange}
           />
-        }
-        isOpen={true}
-        error={isValidationFailed(
-          validationError,
-          generalLoanDetailsConfig
         )}
+        isOpen={true}
+        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
       />
       <Accordion
         heading={"Profoma Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData.proformaDetails}
             config={proformaDetailsConfig}
             sectionName={"proformaDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, proformaDetailsConfig)}
       />
       <Accordion
         heading={"Off-Taker Details"}
         subHeading="(applicable to IDF and POF)"
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData.offTakerDetails}
             config={offTakerConfig}
             sectionName={"offTakerDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, offTakerConfig)}
       />
       <Accordion
         heading={"Supplier Details"}
         subHeading="(Not applicable to IDF)"
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData.supplierDetails}
             config={supplierDetailsConfig}
             sectionName={"supplierDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, supplierDetailsConfig)}
       />
       <Accordion
         heading={"Collateral Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData.collateralDetails}
             config={collateralDetailsConfig}
             sectionName={"collateralDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, collateralDetailsConfig)}
       />
       <Accordion
         heading={"Loan Officer's Findings"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={addLoanData.lhaDetails}
             config={lhaDetailsConfig}
             sectionName={"lhaDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, lhaDetailsConfig)}
       />
       <Accordion

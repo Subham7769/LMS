@@ -1171,13 +1171,26 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
         state.loading = false;
-        state.addLoanData.documents = action.payload.map((doc) => ({
-          docName: "",
-          docId: "",
-          verified: false,
-          documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
-        }));
-      })
+      
+        // If the payload is an empty array, retain the existing documents
+        if (Array.isArray(action.payload) && action.payload.length === 0) {
+          return;
+        }
+      
+        state.addLoanData.documents = action.payload.map((doc) => {
+          // Find matching document from existing state based on documentKeyName
+          const existingDoc = state.addLoanData.documents.find(
+            (d) => d.documentKey === doc.documentKeyName
+          );
+      
+          return {
+            docName: existingDoc ? existingDoc.docName : "",
+            docId: existingDoc ? existingDoc.docId : "",
+            verified: existingDoc ? existingDoc.verified : false,
+            documentKey: doc.documentKeyName, // Use documentKeyName from the API response
+          };
+        });
+      })      
       .addCase(getDocsByIdnUsage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -1389,7 +1402,9 @@ const smeLoansSlice = createSlice({
       })
       .addCase(handleProceed.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan submitted successfully. Awaiting approval from the next step approver.");
+        toast.success(
+          "Loan submitted successfully. Awaiting approval from the next step approver."
+        );
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;

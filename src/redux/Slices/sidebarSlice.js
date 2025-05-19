@@ -449,6 +449,7 @@ const ROLE_LOAN_OFFICER = [
   "Recovery",
   "Affordability",
   "Employer",
+  "Banks",
   "Approval Config",
   "Document Config",
   "TCL",
@@ -465,6 +466,7 @@ const ROLE_LOAN_OFFICER = [
   "Reports",
   "SME Loans",
   "Personal Loans",
+  "Banks"
 ];
 
 const initialState = {

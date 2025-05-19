@@ -55,6 +55,7 @@ const AddBankBranchModal = ({ isOpen, onClose, currentBankId }) => {
               inputValue={branchName}
               onChange={(e) => setBranchName(e.target.value)}
               isValidation={true}
+              disabled={false}
             />
             <InputText
               labelName="Branch Code"
@@ -62,6 +63,7 @@ const AddBankBranchModal = ({ isOpen, onClose, currentBankId }) => {
               inputValue={branchCode}
               onChange={(e) => setBranchCode(e.target.value)}
               isValidation={true}
+              disabled={false}
             />
             <InputText
               labelName="Sort Code"
@@ -69,6 +71,7 @@ const AddBankBranchModal = ({ isOpen, onClose, currentBankId }) => {
               inputValue={sortCode}
               onChange={(e) => setSortCode(e.target.value)}
               isValidation={true}
+              disabled={false}
             />
           </div>
           <div className="text-right">
