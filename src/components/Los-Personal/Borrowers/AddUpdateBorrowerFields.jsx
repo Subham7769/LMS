@@ -21,11 +21,6 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
-import {
-  BankNameOptions,
-  BranchNameOptions,
-  bankBranches,
-} from "../../../data/BankData";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 import {
@@ -33,6 +28,7 @@ import {
   addEmployerData,
 } from "../../../redux/Slices/employerSlice";
 import { useLocation } from "react-router-dom";
+import { fetchAllBank } from "../../../redux/Slices/bankSlice";
 
 const AddUpdateBorrowerFields = ({
   BorrowerData,
@@ -45,27 +41,35 @@ const AddUpdateBorrowerFields = ({
     (state) => state.employer
   );
   const location = useLocation();
+  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } = useSelector((state) => state.bank);
 
   const isUpdateBorrower = location.pathname.includes("update-borrower");
   const isDraftBorrower = location.pathname.includes("update-borrower/draft");
 
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [bankName, setBankName] = useState(null);
+  const [branchName, setBranchName] = useState(null);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
     []
   );
   const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
     []
   );
-  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
-    []
-  );
+
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const [employerOptions, setEmployerOptions] = useState([]);
-  // console.log(BorrowerData);
+  console.log(BorrowerData.bankDetails);
   const { menus } = useSelector((state) => state.sidebar);
   const [defaultAffordability, setDefaultAffordability] = useState([]);
+
+    // Fetch all Banks Data
+    useEffect(() => {
+      // if (bankOptions.length) {
+      dispatch(fetchAllBank());
+      // }
+    }, [])
 
   useEffect(() => {
     const keysArray = [
@@ -145,9 +149,9 @@ const AddUpdateBorrowerFields = ({
     setDefaultAffordability(
       result
         ? {
-            name: result.name,
-            value: result.href.split("/").pop(),
-          }
+          name: result.name,
+          value: result.href.split("/").pop(),
+        }
         : { name: "", value: "" }
     );
   }, [menus]);
@@ -165,9 +169,6 @@ const AddUpdateBorrowerFields = ({
     setFilteredDistrictLocations2(
       districtOptions[BorrowerData.nextOfKinDetails.kinProvince] || []
     );
-    setFilteredBranchNameOptions(
-      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
-    );
   }, [
     BorrowerData.contactDetails.country,
     BorrowerData.nextOfKinDetails.kinCountry,
@@ -176,12 +177,23 @@ const AddUpdateBorrowerFields = ({
     BorrowerData.bankDetails.bankName,
   ]);
 
-  const handleInputChange = (e, section) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (e, section, index) => {
+    const { name, value, type, label, checked } = e.target;
+    console.log(e.target)
+    if (name === "bankName") {
+      setBankName(value)
+
+    }
+    else if (name === "branch") {
+      setBranchName(value)
+
+    }
+
     // Use section to update the correct part of the state
     dispatch(
-      handleChangeReducer({ section, field: name, value, type, checked })
+      handleChangeReducer({ section, field: name, value, type, checked, index })
     );
+
   };
 
   const handleFileUploads = (e) => {
@@ -251,11 +263,19 @@ const AddUpdateBorrowerFields = ({
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
+        field: "branch",
+        value: "",
+      })
+    );
+  
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
         field: "branchCode",
         value: "",
       })
     );
-
+  
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
@@ -268,31 +288,22 @@ const AddUpdateBorrowerFields = ({
   useEffect(() => {
     if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
       return;
-
-    const branch = bankBranches.find(
-      (b) =>
-        b.bankName === BorrowerData.bankDetails.bankName &&
-        b.branchName === BorrowerData.bankDetails.branch
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "branchCode",
+        value: sortCodeBranchCodeOptions[branchName]?.branchCode,
+      })
     );
 
-    if (branch) {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branchCode",
-          value: branch.branchCode,
-        })
-      );
-
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "sortCode",
-          value: branch.sortCode,
-        })
-      );
-    }
-  }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
+    dispatch(
+      handleChangeReducer({
+        section: "bankDetails",
+        field: "sortCode",
+        value: sortCodeBranchCodeOptions[branchName]?.sortCode,
+      })
+    );
+  }, [BorrowerData.bankDetails.branch]);
 
   //   All Fields Configuration
   const personalDetailsConfig = [
@@ -601,7 +612,7 @@ const AddUpdateBorrowerFields = ({
       labelName: "Name of Bank",
       inputName: "bankName",
       type: "select",
-      options: BankNameOptions,
+      options: bankOptions,
       validation: true,
       searchable: true,
     },
@@ -628,7 +639,7 @@ const AddUpdateBorrowerFields = ({
       labelName: "Branch",
       inputName: "branch",
       type: "select",
-      options: filteredBranchNameOptions,
+      options: bankBranchOptions[bankName],
       validation: true,
       searchable: true,
     },

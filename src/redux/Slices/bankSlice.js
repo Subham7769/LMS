@@ -187,14 +187,9 @@ export const deleteBankBranch = createAsyncThunk(
 
 const InitialState = {
   allBanksData: [],
-  bankData: {
-    bankName: "",
-  },
-  bankBranchDetailsList: {
-    branchName: "",
-    branchCode: "",
-    sortCode: "",
-  },
+  bankOptions: [],
+  bankBranchOptions: [],
+  sortCodeBranchCodeOptions: [],
   loading: false,
   error: null,
 };
@@ -203,14 +198,6 @@ export const bankSlice = createSlice({
   name: "bank",
   initialState: InitialState,
   reducers: {
-    setBankData: (state, action) => {
-      const { name, value, section } = action.payload;
-      if (section === "bankBranchDetailsList") {
-        state.bankData[section][name] = value;
-      } else {
-        state.bankData[name] = value;
-      }
-    },
     handleChangeBankData: (state, action) => {
       const { id, name, value } = action.payload;
       const updatedData = state.allBanksData.map((item) => {
@@ -248,6 +235,41 @@ export const bankSlice = createSlice({
       .addCase(fetchAllBank.fulfilled, (state, action) => {
         state.loading = false;
         state.allBanksData = action.payload;
+
+        // Bank Option Creation
+        state.bankOptions = action.payload.map((bank) => ({
+          label: bank.bankName,
+          value: bank.bankName,
+        }));
+
+        // Branch options creation
+        const BranchArray = action.payload.map((bank) => {
+          const bankMappedBranches = {
+            [bank.bankName]: bank.bankBranchDetailsList.map((branch) => ({
+              label: branch.branchName,
+              value: branch.branchName,
+            })),
+          };
+          return bankMappedBranches;
+        });
+        state.bankBranchOptions = Object.assign({}, ...BranchArray);
+
+        // Sort code Branch Code options Creation
+        const SortCodeBranchCodeArray = action.payload.map((bank) => {
+          const branchMappedSortCodeBranchCodes = bank.bankBranchDetailsList.reduce((acc, branch) => {
+            acc[branch.branchName] = {
+              sortCode: branch.sortCode,
+              branchCode: branch.branchCode,
+            };
+            return acc;
+          }, {});
+        
+          return {
+            ...branchMappedSortCodeBranchCodes,
+          };
+        });
+        state.sortCodeBranchCodeOptions = Object.assign({}, ...SortCodeBranchCodeArray);
+
       })
       .addCase(fetchAllBank.rejected, (state, action) => {
         state.loading = false;
