@@ -254,21 +254,21 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [loanInterestStr]);
 
-  const interestMethod = useMemo(() => {
-    return selectedLoanProduct?.interestMethod || "";
-  }, [selectedLoanProduct]);
+  // const interestMethod = useMemo(() => {
+  //   return selectedLoanProduct?.interestMethod || "";
+  // }, [selectedLoanProduct]);
 
   useEffect(() => {
-    if (!interestMethod) return;
-
-    dispatch(
-      updateLoanField({
-        section: "generalLoanDetails",
-        field: "interestMethod",
-        value: interestMethod,
-      })
-    );
-  }, [interestMethod]);
+      if (!selectedLoanProduct) return;
+  
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "interestMethod",
+          value: selectedLoanProduct?.interestMethod,
+        })
+      );
+    }, [selectedLoanProduct]);
 
   const today = new Date();
   const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =

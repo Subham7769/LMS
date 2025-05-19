@@ -64,22 +64,25 @@ const AddLoans = () => {
   }, [dispatch, loanApplicationId, decodedBorrowerId]);
 
   useEffect(() => {
+    // console.log(loanProductData);
     if (addLoanData.generalLoanDetails.loanProductId) {
       const selectedDynamicDoc = loanProductData.find(
         (product) =>
           product?.loanProductId ===
           addLoanData?.generalLoanDetails?.loanProductId
       );
+      // console.log(selectedDynamicDoc);
       dispatch(
         getDocsByIdnUsage({
-          dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
+          dynamicDocumentTempId: selectedDynamicDoc?.dynamicDocumentTempId,
           usage: "BORROWER_OFFERS",
         })
       );
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-console.log(addLoanData)
+  // console.log(addLoanData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to the sanitized uniqueID
@@ -176,7 +179,12 @@ console.log(addLoanData)
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
-            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr) }
+            disabled={
+              !(
+                addLoanData.generalLoanDetails.loanDuration &&
+                addLoanData.generalLoanDetails.repaymentTenureStr
+              )
+            }
           />
           <Button
             buttonName="Save Draft"
