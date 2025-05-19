@@ -23,6 +23,7 @@ import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { toast } from "react-toastify";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const AddLoans = () => {
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.personalLoans
   );
-console.log(addLoanData)
+  console.log(addLoanData);
   // Decode the BorrowerId to restore its original value
   const decodedBorrowerId = decodeURIComponent(BorrowerId);
   // const isValid = useSelector((state) => state.validation.isValid);
@@ -79,7 +80,6 @@ console.log(addLoanData)
     }
   }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
 
-
   // console.log(addLoanData);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,6 +112,9 @@ console.log(addLoanData)
 
   const handleDraft = async () => {
     // Ensure borrowerId is set to the sanitized uniqueID
+    if (!addLoanData?.generalLoanDetails?.uniqueID) {
+      toast.error("Please enter a valid Borrower Unique ID ");
+    }
     const sanitizedUniqueID = sanitizeUid(
       addLoanData.generalLoanDetails.uniqueID
     );
@@ -175,7 +178,12 @@ console.log(addLoanData)
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
-            disabled={!(addLoanData?.generalLoanDetails?.loanDuration && addLoanData?.generalLoanDetails?.repaymentTenureStr)}
+            disabled={
+              !(
+                addLoanData?.generalLoanDetails?.loanDuration &&
+                addLoanData?.generalLoanDetails?.repaymentTenureStr
+              )
+            }
           />
           <Button
             buttonName="Save Draft"
