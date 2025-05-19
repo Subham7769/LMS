@@ -465,6 +465,7 @@ const ROLE_LOAN_OFFICER = [
   "Reports",
   "SME Loans",
   "Personal Loans",
+  "Banks"
 ];
 
 const initialState = {
