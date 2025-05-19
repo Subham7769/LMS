@@ -108,6 +108,8 @@ const AddLoanFields = ({ addLoanData }) => {
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
 
+  console.log(selectedLoanProduct);
+
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
     if (!selectedLoanProduct) return [];
@@ -135,13 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "interestMethod",
+          value: selectedLoanProduct?.interestMethod,
+        })
+      );
 
     const uniqueRepaymentTenure = new Set();
 

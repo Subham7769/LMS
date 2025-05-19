@@ -165,13 +165,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
