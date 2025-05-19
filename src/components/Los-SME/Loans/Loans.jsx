@@ -12,7 +12,7 @@ const Loans = () => {
     {
       id: "loan-application",
       path: "/loan/loan-origination-system/sme/loans/loan-application",
-      label: "Loan Application",
+      label: "Asset Financing Application",
     },
     // {
     //   id: "add-loan",
@@ -20,19 +20,24 @@ const Loans = () => {
     //   label: "Add Loan",
     // },
     {
+      id: "inspection-verification",
+      path: "/loan/loan-origination-system/sme/loans/inspection-verification",
+      label: "Inspection & Verification",
+    },
+    {
       id: "loan-offers",
       path: "/loan/loan-origination-system/sme/loans/loan-offers",
-      label: "Loan Offers",
+      label: "Equipment financing offer",
     },
     {
       id: "approve-loans",
       path: "/loan/loan-origination-system/sme/loans/approve-loans",
-      label: "Approve Loans",
+      label: "Financing Approval",
     },
     {
       id: "loan-history",
       path: "/loan/loan-origination-system/sme/loans/loan-history",
-      label: "Loan History",
+      label: "Portfolio Management",
     },
     // {
     //   id: "collateral-register",

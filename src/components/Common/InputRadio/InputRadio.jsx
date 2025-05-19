@@ -6,8 +6,8 @@ import { addFields, setValidationError } from "../../../redux/Slices/validationS
 const InputRadio = ({
   labelName,
   inputName,
-  selectedValue, // Renamed for clarity
-  options,
+  inputValue, // Renamed for clarity
+  inputOptions,
   onChange,
   isValidation = false,
 }) => {
@@ -41,7 +41,7 @@ const InputRadio = ({
         </label>
       )}
       <div className="flex flex-wrap gap-4">
-        {options.map((option, index) => (
+        {inputOptions.map((option, index) => (
           <label
             key={index}
             className={`flex items-center gap-2 cursor-pointer ${
@@ -52,7 +52,7 @@ const InputRadio = ({
               type="radio"
               name={inputName}
               value={option.value} // Set each option's value
-              checked={selectedValue === option.value} // Ensure the correct radio is selected
+              checked={inputValue === option.value} // Ensure the correct radio is selected
               onChange={onChange}
               className={`form-radio ${
                 validationError[validationKey]
@@ -72,13 +72,13 @@ const InputRadio = ({
 InputRadio.propTypes = {
   labelName: PropTypes.string,
   inputName: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(
+  inputOptions: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
     })
   ).isRequired,
-  selectedValue: PropTypes.string.isRequired,
+  inputValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   isValidation: PropTypes.bool,
 };

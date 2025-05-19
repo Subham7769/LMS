@@ -410,8 +410,8 @@ const UploadRepayment = () => {
                     <div className="flex justify-center">
                       <InputRadio
                         inputName={"loanId"}
-                        selectedValue={selectedColumns.loanId}
-                        options={yesNoOptions}
+                        inputValue={selectedColumns.loanId}
+                        inputOptions={yesNoOptions}
                         onChange={handleChange}
                       />
                     </div>
@@ -421,8 +421,8 @@ const UploadRepayment = () => {
                     <div className="flex justify-center">
                       <InputRadio
                         inputName={"collectionMethod"}
-                        selectedValue={selectedColumns.collectionMethod}
-                        options={yesNoOptions}
+                        inputValue={selectedColumns.collectionMethod}
+                        inputOptions={yesNoOptions}
                         onChange={handleChange}
                       />
                     </div>
@@ -432,8 +432,8 @@ const UploadRepayment = () => {
                     <div className="flex justify-center">
                       <InputRadio
                         inputName={"collectionBy"}
-                        selectedValue={selectedColumns.collectionBy}
-                        options={yesNoOptions}
+                        inputValue={selectedColumns.collectionBy}
+                        inputOptions={yesNoOptions}
                         onChange={handleChange}
                       />
                     </div>
@@ -450,7 +450,7 @@ const UploadRepayment = () => {
                   <div className="flex justify-center">
                     <InputRadio
                       inputName={"Save options on this page"}
-                      options={yesNoOptions}
+                      inputOptions={yesNoOptions}
                       onChange={() => {}}
                     />
                   </div>
@@ -473,7 +473,7 @@ const UploadRepayment = () => {
                   <div className="flex justify-center">
                     <InputRadio
                       inputName={"Save options on this page"}
-                      options={yesNoOptions}
+                      inputOptions={yesNoOptions}
                       onChange={() => {}}
                     />
                   </div>
@@ -642,8 +642,8 @@ const UploadRepayment = () => {
                 <div className="flex justify-center">
                   <InputRadio
                     inputName={"saveHeadersOption"}
-                    selectedValue={saveHeadersOption} // Updated prop name
-                    options={yesNoOptions}
+                    inputValue={saveHeadersOption} // Updated prop name
+                    inputOptions={yesNoOptions}
                     onChange={(e) => {
                       setSaveHeadersOption(e.target.value);
                     }}

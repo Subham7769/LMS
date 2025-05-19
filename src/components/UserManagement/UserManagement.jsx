@@ -17,6 +17,7 @@ const UserManagement = ({ role }) => {
   const { allUsersInfo, loading, selectedUserData, isModalOpen, error } =
     useSelector((state) => state.userManagement);
 
+    console.log(allUsersInfo)
   useEffect(() => {
     dispatch(fetchUsers());
     return () => {

@@ -917,6 +917,20 @@ const initialState = {
       postalAddress: "",
       province: "",
     },
+    equipmentVendorDetails: {
+      vendorContactPerson: "",
+      deliveryTimeframe: "",
+      installationRequirements: "",
+      maintenanceContractIncluded: "",
+      warrantyDetails: "",
+      warrantyDetails: "",
+    },
+    verificationWorkflow: {
+      verificationStatus: "",
+      VerificationNotes: "",
+      verificationDate: "",
+      toBeVerifiedBy: "",
+    },
     collateralDetails: {
       contactPerson: "",
       collateralType: "",
@@ -938,6 +952,29 @@ const initialState = {
     },
     documents: [],
     loanApplicationId: "",
+  },
+  inspectionVerification: {
+    inspectionBasics: {
+      loanApplicationId: "",
+      inspectionType: "", 
+      inspectionDate: "",
+      inspector: "",
+      overallStatus: "",
+    },
+    equipmentIdentification: {
+      makeModelVerified: false,
+      serialNumber: "",
+      serialNumberMatches: false,
+      yearOfManufacture: "",
+      equipmentPhoto: null    
+    },
+    conditionAssessment: {},
+    keySystemsCheck: {},
+    operationalVerification: {},
+    valueImpactFactors: {},
+    documentationCheck: {},
+    documents: [],
+    verificationOutcome: {},
   },
   approveLoans: [],
   approveLoansTotalElements: 0,
@@ -1389,7 +1426,9 @@ const smeLoansSlice = createSlice({
       })
       .addCase(handleProceed.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan submitted successfully. Awaiting approval from the next step approver.");
+        toast.success(
+          "Loan submitted successfully. Awaiting approval from the next step approver."
+        );
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;

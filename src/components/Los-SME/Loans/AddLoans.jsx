@@ -79,7 +79,8 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-console.log(addLoanData)
+console.log(addLoanData.equipmentVendorDetails)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to the sanitized uniqueID

@@ -199,8 +199,21 @@ export const ApproveRepaymentColumns = [
 ];
 
 export const yesNoOptions = [
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" }
+  { label: "Yes", value: "Yes" },
+  { label: "No", value: "No" }
+];
+
+export const inspectionTypeOptions = [
+  { label: "Pre-Funding", value: "Pre-Funding" },
+  { label: "Delivery", value: "Delivery" },
+  { label: "Post-Installation", value: "Post-Installation" }
+];
+
+export const overallStatusOptions = [
+  { label: "Pending", value: "Pending" },
+  { label: "In Progress", value: "In Progress" },
+  { label: "Completed", value: "Completed" },
+  { label: "Failed", value: "Failed" }
 ];
 
 
@@ -222,6 +235,12 @@ export const repaymentOptions = [
   { label: "Destination of Funds for Repayment Amount", value: "destinationFundsRepayment" }
 ];
 
+export const verificationStatus = [
+  { value: "PENDING", label: "PENDING" },
+  { value: "SCHEDULED", label: "SCHEDULED" },
+  { value: "COMPLETED", label: "COMPLETED" },
+  { value: "DECLINED", label: "DECLINED" },
+];
 
 export const maritalStatus = [
   { value: "SINGLE", label: "SINGLE" },

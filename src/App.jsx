@@ -409,6 +409,9 @@ const LoansSME = lazy(() => import("./components/Los-SME/Loans/Loans"));
 const LoanOffersSME = lazy(() =>
   import("./components/Los-SME/Loans/LoanOffers")
 );
+const InspectionVerification = lazy(() =>
+  import("./components/Los-SME/Loans/InspectionVerification")
+);
 const ApproveLoansSME = lazy(() =>
   import("./components/Los-SME/Loans/ApproveLoans")
 );
@@ -887,6 +890,11 @@ const routes = [
           {
             path: "loan-offers",
             element: <LoanOffersSME />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "inspection-verification",
+            element: <InspectionVerification />,
             errorElement: <RouteErrorBoundary />,
           },
           {

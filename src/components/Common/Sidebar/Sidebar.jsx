@@ -298,9 +298,8 @@ const SideBar = () => {
 
   return (
     <div
-      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-background-light-tertiary flex pl-1 transform duration-1000 ease-in-out ${
-        open ? "w-56" : "w-14"
-      }`}
+      className={`-mr-1 relative overflow-y-auto h-screen scrollbar-none bg-background-light-tertiary flex pl-1 transform duration-1000 ease-in-out ${open ? "w-56" : "w-14"
+        }`}
     >
       {/* Collapse Button */}
       <button
@@ -309,9 +308,8 @@ const SideBar = () => {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4 text-white transition-transform duration-300 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`h-4 w-4 text-white transition-transform duration-300 ${open ? "rotate-180" : ""
+            }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -325,17 +323,15 @@ const SideBar = () => {
         </svg>
       </button>
       <ul
-        className={`pt-2 pr-1 border-r h-auto ${
-          open ? "w-52" : "w-10"
-        } overflow-y-auto scrollbar-none border-gray-200 bg-white`}
+        className={`pt-2 pr-1 border-r h-auto ${open ? "w-52" : "w-10"
+          } overflow-y-auto scrollbar-none border-gray-200 bg-white`}
       >
         {allSectionName.map((sectionName, sectionIndex) => (
           <div key={sectionName} className={`${!open && "mb-2 "} `}>
             {menus.some((menu) => menu.sectionName === sectionName) && (
               <h2
-                className={`text-gray-500 text-xs font-semibold ml-4 ${
-                  !open && "hidden"
-                } ${sectionIndex !== 0 ? "mt-7" : ""}`}
+                className={`text-gray-500 text-xs font-semibold ml-4 ${!open && "hidden"
+                  } ${sectionIndex !== 0 ? "mt-7" : ""}`}
               >
                 {sectionName}
               </h2>
@@ -352,18 +348,18 @@ const SideBar = () => {
                     className={`${index === menus.length - 1 && "mb-52"}`}
                   >
                     <NavLink to={menu.openInNewTab ? "#" : menu.href} end
-                                  onClick={(e) => {
-                                    if (menu.openInNewTab) {
-                                      e.preventDefault();
-                                      window.open(menu.href, "_blank");
-                                    }
-                                  }}
+                      onClick={(e) => {
+                        if (menu.openInNewTab) {
+                          e.preventDefault();
+                          window.open(menu.href, "_blank");
+                        }
+                      }}
 
-                            target={menu.openInNewTab ? "_blank" : undefined}
-                            rel={menu.openInNewTab ? "noopener noreferrer" : undefined} 
-                            className={({ isActive }) =>
-                              `text-gray-500 ${isActive && !menu.openInNewTab ? "text-blue-primary" : ""}`
-                            }>
+                      target={menu.openInNewTab ? "_blank" : undefined}
+                      rel={menu.openInNewTab ? "noopener noreferrer" : undefined}
+                      className={({ isActive }) =>
+                        `text-gray-500 ${isActive && !menu.openInNewTab ? "text-blue-primary" : ""}`
+                      }>
                       <li
                         onClick={() => handleToggleSubmenu(index)}
                         className="group w-full text-sm flex items-center justify-center gap-x-2 cursor-pointer p-2 py-1.5 rounded-md hover:bg-background-light-secondary hover:text-blue-primary"
@@ -375,17 +371,15 @@ const SideBar = () => {
                           <IconComponent className="h-5 w-5 shrink-0" />
                         </span>
                         <span
-                          className={`text-sm flex-1 transform duration-1000 ease-in-out ${
-                            !open && "hidden"
-                          }`}
+                          className={`text-sm flex-1 transform duration-1000 ease-in-out ${!open && "hidden"
+                            }`}
                         >
                           {menu.title}
                         </span>
                         {menu.submenu && open && (
                           <ChevronRightIcon
-                            className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${
-                              submenuStates[index]?.isOpen ? "rotate-90" : ""
-                            }`}
+                            className={`text-sm text-gray-400 h-5 w-5 shrink-0 ${submenuStates[index]?.isOpen ? "rotate-90" : ""
+                              }`}
                             onClick={() => handleToggleSubmenu(index)}
                           />
                         )}

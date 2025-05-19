@@ -7,6 +7,8 @@ import InputSelect from "../InputSelect/InputSelect";
 import InputFile from "../InputFile/InputFile";
 import InputTextArea from "../InputTextArea/InputTextArea";
 import InputSelectCreatable from "../InputSelectCreatable/InputSelectCreatable";
+import InputRadio from '../InputRadio/InputRadio';
+import InputCheckbox from '../InputCheckbox/InputCheckbox';
 
 
 const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFileUploads, handleFileRemove }) => {
@@ -26,7 +28,7 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 placeHolder={`Enter ${field.labelName}`}
                                 isValidation={field.validation || false}
                                 disabled={field.disabled || false}
-                                maxLength={field.maxLength || null }
+                                maxLength={field.maxLength || null}
                             />
                         );
                     case "number":
@@ -44,7 +46,7 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 }
                                 isValidation={field.validation || false}
                                 disabled={field.disabled || false}
-                                maxLength={field.maxLength || null }
+                                maxLength={field.maxLength || null}
                             />
                         );
                     case "select":
@@ -112,6 +114,29 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 inputValue={details[field.inputName] || ""}
                                 onChange={(e) => handleInputChange(e, sectionName)}
                                 rowCount={field.rowCount || 3}
+                                isValidation={field.validation || false}
+                            />
+                        );
+                    case "radio":
+                        return (
+                            <InputRadio
+                                key={index}
+                                labelName={field.labelName}
+                                inputName={field.inputName}
+                                inputOptions={field.options}
+                                inputValue={details[field.inputName] || ""}
+                                onChange={(e) => handleInputChange(e, sectionName)}
+                                isValidation={field.validation || false}
+                            />
+                        );
+                    case "checkbox":
+                        return (
+                            <InputCheckbox
+                                key={index}
+                                labelName={field.labelName}
+                                inputName={field.inputName}
+                                inputChecked={details[field.inputName] || ""}
+                                onChange={(e) => handleInputChange(e, sectionName)}
                                 isValidation={field.validation || false}
                             />
                         );
