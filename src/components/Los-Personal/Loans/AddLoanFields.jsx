@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
 import Button from "../../Common/Button/Button";
-// import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
+import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,

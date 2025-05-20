@@ -239,229 +239,249 @@ const ApproveLoans = () => {
 
   const renderExpandedRow = (rowData) => {
     console.log(rowData)
-    return (<div className="text-sm text-gray-600 border-y-2 py-5 px-2">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="shadow-md p-3 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60">
-          <div className="flex justify-between items-baseline mb-3 text-sky-800 dark:text-sky-500">
-            <div className="text-xl font-semibold flex gap-2 items-center">
-              <UserCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-              Borrower Information{" "}
-              <p
-                className="text-[10px] text-gray-600 dark:text-gray-300 -mb-2 cursor-pointer underline"
-                onClick={(e) => handleViewProfile(e, rowData.uid)}
-              >
-                View Borrower Profile
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
-            <div>
-              <div className="">Employment</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.employerName}
-              </div>
-              <div className=" font-light text-xs">
-                {rowData?.borrowerDetails?.employmentDuration}
+    return (
+      <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="shadow-md p-3 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60">
+            <div className="flex justify-between items-baseline mb-3 text-sky-800 dark:text-sky-500">
+              <div className="text-xl font-semibold flex gap-2 items-center">
+                <UserCircleIcon
+                  className="-ml-0.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Borrower Information{" "}
+                <p
+                  className="text-[10px] text-gray-600 dark:text-gray-300 -mb-2 cursor-pointer underline"
+                  onClick={(e) => handleViewProfile(e, rowData.uid)}
+                >
+                  View Borrower Profile
+                </p>
               </div>
             </div>
-            <div>
-              <div className="">Monthly Income</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.monthlyIncome}
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3">
-            <div>
-              <div className="">Credit Score</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.creditScore}
-              </div>
-            </div>
-            <div>
-              <div className="">Active Loans</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.activeLoans}
-              </div>
-            </div>
-            <div>
-              <div className="">Payment History</div>
-              <div className="font-semibold">
-                {rowData?.borrowerDetails?.paymentHistory}
-              </div>
-            </div>
-          </div>
-        </div>
-        <CardInfo
-          cardIcon={CurrencyDollarIcon}
-          cardTitle="Loan Information"
-          className={
-            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
-          }
-          colorText={"text-sky-800 dark:text-sky-500"}
-        >
-          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
-            <div>
-              <div className="">Disbursed Amount</div>
-              <div className="font-semibold">{rowData?.disbursedAmount}</div>
-            </div>
-            <div>
-              <div className="">Interest Rate</div>
-              <div className="font-semibold">
-                {rowData.loanInterest}% {rowData.interestMethod} per{" "}
-                {rowData.perLoanInterest}
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
-            <div>
-              <div className="">Tenure</div>
-              <div className="font-semibold">
-                {rowData.numberOfTenure} {rowData.perLoanDuration}
-              </div>
-            </div>
-            <div>
-              <div className="">Monthly EMI</div>
-              <div className="font-semibold">{rowData.monthlyEMI}</div>
-            </div>
-            <div>
-              <div className="">First Payment</div>
-              <div className="font-semibold">
-                {convertDate(rowData.firstEmiPayment)}
-              </div>
-            </div>
-          </div>
-          <div
-            className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
-            onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
-          >
-            <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
-          </div>
-        </CardInfo>
-        <div className="col-span-2">
-
-          {rowData?.refinanceDetails && <CardInfo
-            cardIcon={BanknotesIcon}
-            cardTitle="Refinancing Details"
-            className={"bg-white border-border-gray-primary border"}
-            colorText={"text-blue-primary"}
-          >
-
-            {rowData?.refinanceDetails.map((refinance) => (
-              <div className="grid grid-cols-4 pb-3">
-                <div>
-                  <div className="text-gray-500">Loan Id</div>
-                  <div className="font-semibold">{refinance.loanId}</div>
+            <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
+              <div>
+                <div className="">Employment</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.employerName}
                 </div>
-                <div>
-                  <div className="text-gray-500">Refinancing Entity</div>
-                  <div className="font-semibold"> {refinance.name}</div>
-                </div>
-                <div>
-                  <div className="text-gray-500">Refinance Amount</div>
-                  <div className="font-semibold"> {refinance.refinanceAmount}</div>
-                </div>
-                <div>
-                  <div className="text-gray-500">Installment On PaySlip</div>
-                  <div className="font-semibold"> {refinance.installmentOnPaySlip}</div>
+                <div className=" font-light text-xs">
+                  {rowData?.borrowerDetails?.employmentDuration}
                 </div>
               </div>
-            ))
+              <div>
+                <div className="">Monthly Income</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.monthlyIncome}
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3">
+              <div>
+                <div className="">Credit Score</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.creditScore}
+                </div>
+              </div>
+              <div>
+                <div className="">Active Loans</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.activeLoans}
+                </div>
+              </div>
+              <div>
+                <div className="">Payment History</div>
+                <div className="font-semibold">
+                  {rowData?.borrowerDetails?.paymentHistory}
+                </div>
+              </div>
+            </div>
+          </div>
+          <CardInfo
+            cardIcon={CurrencyDollarIcon}
+            cardTitle="Loan Information"
+            className={
+              "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
             }
-
-          </CardInfo>}
-        </div>
-      </div>
-      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
-        <div className="font-semibold text-xl mb-3">
-          Verified Documents{" "}
-          <span className="font-light text-xs">
-            ({rowData?.verifiedDocuments?.length} documents)
-          </span>
-        </div>
-        <div className="flex gap-10">
-          {rowData?.verifiedDocuments
-            ?.filter((doc) => doc.verified) // Filter only verified documents
-            .map((doc) => (
-              <div className="flex gap-1.5" key={doc.docId}>
-                <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
-                {convertToTitleCase(doc.documentKey)}
+            colorText={"text-sky-800 dark:text-sky-500"}
+          >
+            <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
+              <div>
+                <div className="">Disbursed Amount</div>
+                <div className="font-semibold">{rowData?.disbursedAmount}</div>
               </div>
-            ))}
-        </div>
-      </div>
-      {rowData?.loanActionDetailsList && (
-        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
-          <div className="font-semibold text-xl mb-3">Loan Action History</div>
-          {rowData?.loanActionDetailsList.map((action, index) => {
-            const actionKeys = Object.keys(action);
-            let sentence = "";
-
-            actionKeys.forEach((key) => {
-              if (key.includes("By")) {
-                const role = convertToTitleCase(action[key]);
-
-                // Finding the corresponding date key dynamically
-                const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
-                const dateKey = actionKeys.find(
-                  (k) =>
-                    k.toLowerCase().includes(baseKey) &&
-                    k.toLowerCase().includes("date")
-                );
-
-                const formattedDate = dateKey
-                  ? `on ${convertDate(new Date(action[dateKey]))}`
-                  : "";
-                sentence = `Loan has been ${convertToReadableString(
-                  key.replace("By", "")
-                )} By ${role} ${formattedDate}`;
-              }
-            });
-
-            return (
-              <div key={index} className="border-b dark:border-gray-500 pb-2 mb-2">
-                <p>{sentence}</p>
+              <div>
+                <div className="">Interest Rate</div>
+                <div className="font-semibold">
+                  {rowData.loanInterest}% {rowData.interestMethod} per{" "}
+                  {rowData.perLoanInterest}
+                </div>
               </div>
-            );
-          })}
+            </div>
+            <div className="grid grid-cols-3 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
+              <div>
+                <div className="">Tenure</div>
+                <div className="font-semibold">
+                  {rowData.numberOfTenure} {rowData.perLoanDuration}
+                </div>
+              </div>
+              <div>
+                <div className="">Monthly EMI</div>
+                <div className="font-semibold">{rowData.monthlyEMI}</div>
+              </div>
+              <div>
+                <div className="">First Payment</div>
+                <div className="font-semibold">
+                  {convertDate(rowData.firstEmiPayment)}
+                </div>
+              </div>
+            </div>
+            <div
+              className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
+              onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+            >
+              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+            </div>
+          </CardInfo>
+          <div className="col-span-2">
+            {rowData?.refinanceDetails && (
+              <CardInfo
+                cardIcon={BanknotesIcon}
+                cardTitle="Refinancing Details"
+                className={
+                  "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+                }
+                colorText={"text-sky-800 dark:text-sky-500"}
+              >
+                {rowData?.refinanceDetails.map((refinance) => (
+                  <div className="grid grid-cols-4 pb-3">
+                    <div>
+                      <div className="text-gray-500">Loan Id</div>
+                      <div className="font-semibold">{refinance.loanId}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-500">Refinancing Entity</div>
+                      <div className="font-semibold"> {refinance.name}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-500">Refinance Amount</div>
+                      <div className="font-semibold">
+                        {" "}
+                        {refinance.refinanceAmount}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-gray-500">
+                        Installment On PaySlip
+                      </div>
+                      <div className="font-semibold">
+                        {" "}
+                        {refinance.installmentOnPaySlip}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardInfo>
+            )}
+          </div>
         </div>
-      )}
-      <div className="w-full flex justify-end gap-2 px-5">
-        <Button
-          buttonName={"View Loan Agreement"}
-          onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
-          rectangle={true}
-          buttonIcon={NewspaperIcon}
-          buttonType="tertiary"
-        />
-        <Button
-          buttonName={"View Documents"}
-          onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
-          rectangle={true}
-          buttonIcon={FiInfo}
-          buttonType="tertiary"
-        />
-        {rowData?.rolePermissions?.reject && (
-          <>
-            <Button
-              buttonName={"Reject"}
-              onClick={() => handleReject(rowData)}
-              rectangle={true}
-              buttonIcon={FiXCircle}
-              buttonType="destructive"
-            />
-            <Button
-              buttonName={
-                rowData?.rolePermissions?.finalApprove ? "Approve" : "Recommend"
-              }
-              onClick={() => handleApprove(rowData)}
-              rectangle={true}
-              buttonIcon={FiCheckCircle}
-            />
-          </>
+        <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
+          <div className="font-semibold text-xl mb-3">
+            Verified Documents{" "}
+            <span className="font-light text-xs">
+              ({rowData?.verifiedDocuments?.length} documents)
+            </span>
+          </div>
+          <div className="flex gap-10">
+            {rowData?.verifiedDocuments
+              ?.filter((doc) => doc.verified) // Filter only verified documents
+              .map((doc) => (
+                <div className="flex gap-1.5" key={doc.docId}>
+                  <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
+                  {convertToTitleCase(doc.documentKey)}
+                </div>
+              ))}
+          </div>
+        </div>
+        {rowData?.loanActionDetailsList && (
+          <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
+            <div className="font-semibold text-xl mb-3">
+              Loan Action History
+            </div>
+            {rowData?.loanActionDetailsList.map((action, index) => {
+              const actionKeys = Object.keys(action);
+              let sentence = "";
+
+              actionKeys.forEach((key) => {
+                if (key.includes("By")) {
+                  const role = convertToTitleCase(action[key]);
+
+                  // Finding the corresponding date key dynamically
+                  const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
+                  const dateKey = actionKeys.find(
+                    (k) =>
+                      k.toLowerCase().includes(baseKey) &&
+                      k.toLowerCase().includes("date")
+                  );
+
+                  const formattedDate = dateKey
+                    ? `on ${convertDate(new Date(action[dateKey]))}`
+                    : "";
+                  sentence = `Loan has been ${convertToReadableString(
+                    key.replace("By", "")
+                  )} By ${role} ${formattedDate}`;
+                }
+              });
+
+              return (
+                <div
+                  key={index}
+                  className="border-b dark:border-gray-500 pb-2 mb-2"
+                >
+                  <p>{sentence}</p>
+                </div>
+              );
+            })}
+          </div>
         )}
+        <div className="w-full flex justify-end gap-2 px-5">
+          <Button
+            buttonName={"View Loan Agreement"}
+            onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
+            rectangle={true}
+            buttonIcon={NewspaperIcon}
+            buttonType="tertiary"
+          />
+          <Button
+            buttonName={"View Documents"}
+            onClick={() => handleViewDocuments(rowData.verifiedDocuments)}
+            rectangle={true}
+            buttonIcon={FiInfo}
+            buttonType="tertiary"
+          />
+          {rowData?.rolePermissions?.reject && (
+            <>
+              <Button
+                buttonName={"Reject"}
+                onClick={() => handleReject(rowData)}
+                rectangle={true}
+                buttonIcon={FiXCircle}
+                buttonType="destructive"
+              />
+              <Button
+                buttonName={
+                  rowData?.rolePermissions?.finalApprove
+                    ? "Approve"
+                    : "Recommend"
+                }
+                onClick={() => handleApprove(rowData)}
+                rectangle={true}
+                buttonIcon={FiCheckCircle}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>)
+    );
   };
 
   useEffect(() => {

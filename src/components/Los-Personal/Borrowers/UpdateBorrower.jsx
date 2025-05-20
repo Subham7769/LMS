@@ -29,8 +29,8 @@ const UpdateBorrower = () => {
   const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
 
-  console.log(uid)
-  console.log(Object.keys(updateBorrowerData).length === 0)
+  console.log(uid);
+  console.log(Object.keys(updateBorrowerData).length === 0);
 
   useEffect(() => {
     if (uid && Object.keys(updateBorrowerData).length === 0) {
@@ -38,16 +38,19 @@ const UpdateBorrower = () => {
     }
   }, [dispatch, uid]);
 
-
   const handleDraftUpdate = async () => {
     try {
       const addDraftBorrowerData = {
         borrowerType: "PERSONAL_BORROWER",
-        borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
+        borrowerProfileDraftId: borrowerProfileDraftId
+          ? borrowerProfileDraftId
+          : nanoid(),
         personalBorrowerProfileDraft: { ...updateBorrowerData },
       };
-      if (addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails.firstName !== "") {
-
+      if (
+        addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails
+          .firstName !== ""
+      ) {
         // Wait for draftBorrowerInfo to complete successfully
         await dispatch(draftBorrowerInfo(addDraftBorrowerData)).unwrap();
 
@@ -61,7 +64,9 @@ const UpdateBorrower = () => {
         );
 
         // Navigate to the new borrower page
-        navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
+        navigate(
+          `/loan/loan-origination-system/personal/borrowers/add-borrower`
+        );
 
         // Reset borrower data
         dispatch(resetUpdateBorrowerData());
@@ -85,13 +90,6 @@ const UpdateBorrower = () => {
       await dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
       ).unwrap();
-      dispatch(
-        fetchAllBorrowersByType({
-          page: 0,
-          size: 20,
-          borrowerType: "PERSONAL_BORROWER",
-        })
-      );
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
       );
@@ -111,9 +109,9 @@ const UpdateBorrower = () => {
     if (isValid) {
       let addBorrowerData = {};
       if (borrowerProfileDraftId) {
-        addBorrowerData = { ...updateBorrowerData, borrowerProfileDraftId }
+        addBorrowerData = { ...updateBorrowerData, borrowerProfileDraftId };
       } else {
-        addBorrowerData = updateBorrowerData
+        addBorrowerData = updateBorrowerData;
       }
       dispatch(registerBorrower(addBorrowerData))
         .unwrap()
@@ -149,11 +147,13 @@ const UpdateBorrower = () => {
           buttonType={"destructive"}
           loading={loading}
         />
-        {uid && <Button
-          buttonName="Update"
-          onClick={() => handleUpdateBorrower(uid)}
-          loading={loading}
-        />}
+        {uid && (
+          <Button
+            buttonName="Update"
+            onClick={() => handleUpdateBorrower(uid)}
+            loading={loading}
+          />
+        )}
         {borrowerProfileDraftId && (
           <>
             <Button
@@ -170,8 +170,7 @@ const UpdateBorrower = () => {
               loading={loading}
             />
           </>
-        )
-        }
+        )}
       </div>
     </>
   );

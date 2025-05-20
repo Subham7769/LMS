@@ -245,10 +245,12 @@ export const bankSlice = createSlice({
         // Branch options creation
         const BranchArray = action.payload.map((bank) => {
           const bankMappedBranches = {
-            [bank.bankName]: bank.bankBranchDetailsList.map((branch) => ({
-              label: branch.branchName,
-              value: branch.branchName,
-            })),
+            [bank.bankName]: (bank.bankBranchDetailsList ?? []).map(
+              (branch) => ({
+                label: branch.branchName,
+                value: branch.branchName,
+              })
+            ),
           };
           return bankMappedBranches;
         });
@@ -256,21 +258,26 @@ export const bankSlice = createSlice({
 
         // Sort code Branch Code options Creation
         const SortCodeBranchCodeArray = action.payload.map((bank) => {
-          const branchMappedSortCodeBranchCodes = bank.bankBranchDetailsList.reduce((acc, branch) => {
+          const branchMappedSortCodeBranchCodes = (
+            bank.bankBranchDetailsList ?? []
+          ).reduce((acc, branch) => {
             acc[branch.branchName] = {
               sortCode: branch.sortCode,
               branchCode: branch.branchCode,
             };
             return acc;
           }, {});
-        
+
           return {
             ...branchMappedSortCodeBranchCodes,
           };
         });
-        state.sortCodeBranchCodeOptions = Object.assign({}, ...SortCodeBranchCodeArray);
-
+        state.sortCodeBranchCodeOptions = Object.assign(
+          {},
+          ...SortCodeBranchCodeArray
+        );
       })
+
       .addCase(fetchAllBank.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

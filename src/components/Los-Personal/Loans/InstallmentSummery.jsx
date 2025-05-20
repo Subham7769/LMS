@@ -105,10 +105,6 @@ const InstallmentSummery = ({ onClose, installmentConfigData }) => {
               columns={columns}
               data={dataWithEmiNo}
               renderExpandedRow={renderExpandedRow}
-              defaultClass={false}
-              className={
-                "bg-white dark:bg-gray-800 shadow-md border border-gray-300 dark:border-gray-700 rounded relative"
-              }
             />
           </div>
           <div className="hidden xl:block">

@@ -10,7 +10,6 @@ import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  fetchAllCompanyBorrowersByLoanOfficer,
   fetchAllCompanyBorrowersByType,
   changeCompanyBorrowerStatus,
   fetchCompanyBorrowerByField,
@@ -28,19 +27,14 @@ import {
   PhoneIcon,
   UserIcon,
   ArchiveBoxIcon,
-  HomeIcon,
-  PlusIcon,
   BriefcaseIcon,
   WindowIcon,
   MapPinIcon,
   CalendarIcon,
-  UserCircleIcon,
   BanknotesIcon,
-  PencilIcon,
   XMarkIcon,
   UsersIcon,
   DocumentTextIcon,
-  ClockIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
 import {
@@ -51,6 +45,7 @@ import {
 import { convertDate } from "../../../utils/convertDate";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 import { toast } from "react-toastify";
+import { EditIcon } from "../../../assets/icons";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -65,7 +60,7 @@ const ViewCompany = () => {
 
   // Pagination state & Functionality
   const [pageSize, setPageSize] = useState(10);
-  const loanOfficer = localStorage.getItem("username");
+  const [currentPage, setCurrentPage] = useState(0);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(
@@ -133,12 +128,13 @@ const ViewCompany = () => {
     if (searchBy || searchValue) {
       setSearchBy("");
       setSearchValue("");
+      setCurrentPage(0);
       setFilteredBorrowers(allBorrowersData); // Reset to original data
     } else {
       dispatch(
         fetchAllCompanyBorrowersByType({
           page: 0,
-          size: 20,
+          size: 10,
           borrowerType: "COMPANY_BORROWER",
         })
       );
@@ -249,11 +245,11 @@ const ViewCompany = () => {
 
       return (
         <>
-          <div className="fixed inset-0 z-20 flex items-center justify-center bg-stone-200/10 backdrop-blur-sm">
-            <div className="relative w-1/3 p-8 bg-white border border-red-600 rounded-xl shadow-lg transition-all duration-500 ease-in-out">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm">
+            <div className="relative w-3/4 xl:w-1/3 p-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg transition-all duration-500 ease-in-out">
               <XMarkIcon
                 onClick={onClose}
-                className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
+                className="absolute top-1 right-1 h-6 w-6 cursor-pointer"
               />
               <div className="flex justify-start gap-5 flex-col mt-4">
                 <InputSelect
@@ -267,8 +263,7 @@ const ViewCompany = () => {
                 <Button
                   buttonName={"Change Status"}
                   onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
-                  className={"bg-red-500 hover:bg-red-600"}
-                  rectangle={true}
+                  buttonType="tertiary"
                 />
                 {/* OR Separator with horizontal line */}
                 <div className="relative flex items-center my-2">
@@ -280,8 +275,6 @@ const ViewCompany = () => {
                 <Button
                   buttonName={"Edit"}
                   onClick={() => handleEdit(rowData.uid)}
-                  className={"text-center"}
-                  rectangle={true}
                 />
               </div>
             </div>
@@ -329,7 +322,7 @@ const ViewCompany = () => {
     };
 
     return (
-      <div className="space-y-2 text-sm text-gray-600 border-y-2 py-2">
+      <div className="space-y-2 text-sm text-gray-600 border-y-2 dark:border-gray-600 p-5 relative">
         <Accordion
           heading={"Company Details"}
           renderExpandedContent={() => (
@@ -339,11 +332,11 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Company Overview"
                   cardIcon={BuildingOffice2Icon}
-                  colorText={"text-blue-primary"}
-                  colorBG={"bg-blue-tertiary"}
+                  colorText={"text-sky-700 "}
+                  colorBG={"bg-sky-500/20"}
                   coloredBG={true}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <p>
                       {rowData.companyName} is a {rowData.natureOfCompany}{" "}
                       company operating in the {rowData.industry}.
@@ -377,10 +370,10 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Contact Information"
                   cardIcon={PhoneIcon}
-                  colorText={"text-green-primary"}
-                  colorBG={"bg-green-tertiary"}
+                  colorText={"text-green-700"}
+                  colorBG={"bg-green-500/20"}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <div className="grid grid-cols-2 gap-4">
                       <CardInfoRow
                         icon={PhoneIcon}
@@ -420,10 +413,10 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Financial Profile"
                   cardIcon={BuildingOffice2Icon}
-                  colorText={"text-violet-primary"}
-                  colorBG={"bg-violet-tertiary"}
+                  colorText={"text-violet-700"}
+                  colorBG={"bg-violet-500/20"}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <div className="grid grid-cols-2 gap-4">
                       <CardInfoRow
                         icon={BuildingOffice2Icon}
@@ -463,10 +456,10 @@ const ViewCompany = () => {
                 <CardInfo
                   cardTitle="Other Details"
                   cardIcon={BriefcaseIcon}
-                  colorText={"text-orange-primary"}
-                  colorBG={"bg-orange-tertiary"}
+                  colorText={"text-yellow-700"}
+                  colorBG={"bg-yellow-500/20"}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <div className="grid grid-cols-1 gap-4">
                       <CardInfoRow
                         icon={DocumentTextIcon}
@@ -498,13 +491,12 @@ const ViewCompany = () => {
                 </CardInfo>
               </div>
               {/* Actions */}
-              <div className="absolute top-0 right-0">
-                <button
-                  className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
+              <div className="absolute -top-3 -right-3">
+                <Button
+                  buttonIcon={EditIcon}
                   onClick={() => setEditModal(true)}
-                >
-                  <PencilIcon className="h-5 w-5 text-gray-500" />
-                </button>
+                  buttonType="secondary"
+                />
               </div>
               <ViewEditModal
                 isOpen={showEditModal}
@@ -532,10 +524,10 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Personal Details"
                             cardIcon={UserIcon}
-                            colorText={"text-blue-primary"}
-                            colorBG={"bg-blue-tertiary"}
+                            colorText={"text-sky-700"}
+                            colorBG={"bg-sky-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 {[
                                   director.personalDetails.title,
@@ -575,10 +567,10 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Contact Details"
                             cardIcon={PhoneIcon}
-                            colorText={"text-green-primary"}
-                            colorBG={"bg-green-tertiary"}
+                            colorText={"text-green-700"}
+                            colorBG={"bg-green-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 Currently residing in{" "}
                                 {[
@@ -617,10 +609,10 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Employment Details"
                             cardIcon={BriefcaseIcon}
-                            colorText={"text-violet-primary"}
-                            colorBG={"bg-violet-tertiary"}
+                            colorText={"text-violet-700"}
+                            colorBG={"bg-violet-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 Working as a{" "}
                                 {director.employmentDetails.occupation} at{" "}
@@ -653,10 +645,10 @@ const ViewCompany = () => {
                           <CardInfo
                             cardTitle="Banking Details"
                             cardIcon={BuildingOffice2Icon}
-                            colorText={"text-orange-primary"}
-                            colorBG={"bg-orange-tertiary"}
+                            colorText={"text-yellow-700"}
+                            colorBG={"bg-yellow-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 Maintain a {director.bankDetails.accountType}{" "}
                                 account with {director.bankDetails.bankName}.
@@ -693,18 +685,17 @@ const ViewCompany = () => {
                           </CardInfo>
                         </div>
                         {/*Director Actions */}
-                        <div className="absolute top-0 right-0">
-                          <button
-                            className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
+                        <div className="absolute -top-3 -right-3">
+                          <Button
+                            buttonIcon={EditIcon}
                             onClick={() =>
                               handleEditDirector(
                                 rowData.uid,
                                 director.personalDetails.uniqueID
                               )
                             }
-                          >
-                            <PencilIcon className="h-5 w-5 text-gray-500" />
-                          </button>
+                            buttonType="secondary"
+                          />
                         </div>
                       </div>
                     )}
@@ -735,10 +726,10 @@ const ViewCompany = () => {
                             <CardInfo
                               cardTitle="Personal Details"
                               cardIcon={UserIcon}
-                              colorText={"text-blue-primary"}
-                              colorBG={"bg-blue-tertiary"}
+                              colorText={"text-sky-700"}
+                              colorBG={"bg-sky-500/20"}
                             >
-                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                                 <p>
                                   <b>
                                     {shareholder.personalDetails.title}{" "}
@@ -781,10 +772,10 @@ const ViewCompany = () => {
                             <CardInfo
                               cardTitle="Contact Details"
                               cardIcon={PhoneIcon}
-                              colorText={"text-green-primary"}
-                              colorBG={"bg-green-tertiary"}
+                              colorText={"text-green-700"}
+                              colorBG={"bg-green-500/20"}
                             >
-                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                                 <div className="grid grid-cols-2 gap-4">
                                   <CardInfoRow
                                     icon={PhoneIcon}
@@ -821,18 +812,17 @@ const ViewCompany = () => {
                             </CardInfo>
                           </div>
                           {/*Shareholder Actions */}
-                          <div className="absolute top-0 right-0">
-                            <button
-                              className="relative flex rounded-full p-1 bg-white border-2 border-indigo-500 hover:bg-background-light-secondary transition-colors duration-200"
+                          <div className="absolute -top-3 -right-3">
+                            <Button
+                              buttonIcon={EditIcon}
                               onClick={() =>
                                 handleEditShareholder(
                                   rowData.uid,
                                   shareholder.personalDetails.uniqueID
                                 )
                               }
-                            >
-                              <PencilIcon className="h-5 w-5 text-gray-500" />
-                            </button>
+                              buttonType="secondary"
+                            />
                           </div>
                         </div>
                       )}
@@ -928,10 +918,11 @@ const ViewCompany = () => {
     ];
 
     return (
-      <div className="flex justify-center align-middle gap-4 px-5">
+      <div className="">
         <ActionOption
           userNavigation={userNavigation}
           actionID={rowData.companyUniqueId}
+          align={"right"}
         />
       </div>
     );
@@ -939,8 +930,10 @@ const ViewCompany = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="searchBy"
@@ -950,7 +943,7 @@ const ViewCompany = () => {
             disabled={false}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="searchValue"
@@ -961,20 +954,18 @@ const ViewCompany = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle justify-end gap-5">
           <Button
             buttonName={"Search"}
             onClick={SearchBorrowerByFieldSearch}
-            rectangle={true}
-            className={`mt-4 h-fit self-center`}
             buttonType="secondary"
+            className={`mt-4 h-fit self-center`}
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
-            rectangle={true}
+            buttonType="500/20"
             className={`mt-4 h-fit self-center`}
-            buttonType="tertiary"
           />
         </div>
       </ContainerTile>
@@ -991,6 +982,8 @@ const ViewCompany = () => {
         totalElements={allBorrowersTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
     </div>
   );

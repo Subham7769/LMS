@@ -145,7 +145,6 @@ const LoanApplication = () => {
         <Button
           onClick={() => handleCloneLoanApplication(rowData.loanApplicationId)}
           buttonIcon={DocumentDuplicateIcon}
-          circle={true}
           className={`mt-4 h-fit self-center`}
           buttonType="secondary"
           title={"Clone"}
@@ -216,14 +215,12 @@ const LoanApplication = () => {
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleReset}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />

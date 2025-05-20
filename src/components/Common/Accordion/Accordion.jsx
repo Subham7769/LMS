@@ -23,23 +23,30 @@ const Accordion = ({
       className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3`}
     >
       <div
-        className={`flex justify-between items-center px-4 py-4 cursor-pointer ${error ? `border-l-4 border-l-red-500 rounded-lg` : ""
-          }`}
+        className={`flex justify-between items-center px-4 py-4 cursor-pointer ${
+          error ? `border-l-4 border-l-red-500 rounded-lg` : ""
+        }`}
         onClick={toggleExpand}
       >
         {/* Heading Text */}
         {!headerComponent && (
-          <div className="flex gap-2 justify-start items-center ">
-            {Icon && <Icon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
-            <span className="font-medium text-gray-800 dark:text-gray-100">
-              {heading}
-            </span>
-            <span className="text-xs text-gray-600">{subHeading}</span>
-            {error && (
-              <span className="text-xs text-red-500 px-2 py-1 bg-red-50 rounded-lg">
-                Contains Error
+          <div className="flex justify-between items center w-full pr-3">
+            <div className="flex gap-2 justify-start items-center ">
+              {Icon && <Icon className="-ml-0.5 h-5 w-5" aria-hidden="true" />}
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                {heading}
               </span>
-            )}
+              <span className="text-xs text-gray-600 dark:text-gray-400">
+                {subHeading}
+              </span>
+              {error && (
+                <span className="text-xs text-red-500 px-2 py-1 bg-red-50 rounded-lg">
+                  Contains Error
+                </span>
+              )}
+            </div>
+
+            {headerAction && headerAction()}
           </div>
         )}
 

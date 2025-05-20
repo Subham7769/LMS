@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
@@ -82,23 +83,24 @@ const AddShareHolder = () => {
 
   return (
     <>
-      <div className="mb-4 grid grid-cols-4 gap-5 items-center">
-        <InputSelect
-          labelName={"Company"}
-          inputName={"companyId"}
-          inputOptions={allCompanies}
-          inputValue={companyId}
-          onChange={changeCompany}
-          disabled={false}
-        />
-        <div></div>
-        <div></div>
-        <div className="flex justify-end gap-2 h-[90%]">
+      <div className="mb-4 md:flex justify-between items-center">
+        <div className="min-w-72 mb-2 md:mb-0">
+          <InputSelect
+            labelName={"Company"}
+            inputName={"companyId"}
+            inputOptions={allCompanies}
+            inputValue={companyId}
+            onChange={changeCompany}
+            disabled={false}
+          />
+        </div>
+        <div className="">
           {shareHolderDetails.length < 1 && (
-            <HoverButton
-              icon={PlusIcon}
-              text="Add Shareholder"
+            <Button
+              buttonIcon={AddIcon}
+              buttonName="Add Shareholder"
               onClick={() => dispatch(addShareholder({ loanOfficer }))}
+              buttonType="secondary"
             />
           )}
         </div>
@@ -116,14 +118,22 @@ const AddShareHolder = () => {
                       ${shareholder.personalDetails.surname} 
                       ${shareholder.personalDetails.otherName}`}
                 renderExpandedContent={() => (
-                  <div className="grid grid-cols-[80%_20%] gap-4 px-5">
+                  <div className="relative">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                       {/* Shareholder Personal Details */}
-                      <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
-                        <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
+                      <div className="shadow-md p-3 rounded-md bg-sky-500/20">
+                        <div className="mb-3 text-sky-700 text-xl font-semibold flex gap-2 items-center">
                           <div
-                            onClick={(e) => handleViewPhoto(e, shareholder.personalDetails.customerPhotoId)}
-                            className={`${shareholder.personalDetails.customerPhotoId && "cursor-pointer"}`}
+                            onClick={(e) =>
+                              handleViewPhoto(
+                                e,
+                                shareholder.personalDetails.customerPhotoId
+                              )
+                            }
+                            className={`${
+                              shareholder.personalDetails.customerPhotoId &&
+                              "cursor-pointer"
+                            }`}
                             title={"View Client Photo"}
                           >
                             <UserCircleIcon
@@ -143,7 +153,7 @@ const AddShareHolder = () => {
                             </p>
                           )} */}
                         </div>
-                        <div className="space-y-2 flex flex-col gap-5 p-3">
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                           <p>
                             {[
                               shareholder.personalDetails.title,
@@ -153,9 +163,11 @@ const AddShareHolder = () => {
                             ]
                               .filter(Boolean)
                               .join(" ")}{" "}
-                            is a {shareholder.personalDetails.age}-year-old {shareholder.personalDetails.nationality} national.
-                            They are {shareholder.personalDetails.maritalStatus} and identify as{" "}
-                            {shareholder.personalDetails.gender}.
+                            is a {shareholder.personalDetails.age}-year-old{" "}
+                            {shareholder.personalDetails.nationality} national.
+                            They are {shareholder.personalDetails.maritalStatus}{" "}
+                            and identify as {shareholder.personalDetails.gender}
+                            .
                           </p>
                           <div className="grid grid-cols-2 gap-4">
                             <CardInfoRow
@@ -181,10 +193,10 @@ const AddShareHolder = () => {
                       <CardInfo
                         cardTitle="Contact Details"
                         cardIcon={HomeIcon}
-                        colorBG={"bg-green-tertiary"}
-                        colorText={"text-green-primary"}
+                        colorBG={"bg-green-500/20"}
+                        colorText={"text-green-700"}
                       >
-                        <div className="space-y-2 flex flex-col gap-5 p-3">
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                           <p>
                             Currently residing in{" "}
                             {[
@@ -220,29 +232,29 @@ const AddShareHolder = () => {
                       </CardInfo>
                     </div>
                     {/*Shareholder Actions */}
-                    <div className="flex justify-start gap-5 flex-col mt-4">
-                      <Button
-                        buttonName={"Edit"}
-                        onClick={() =>
-                          handleEditShareholder(
-                            shareholder.uid,
-                            shareholder.personalDetails.uniqueID
-                          )
-                        }
-                        className={"text-center"}
-                        rectangle={true}
-                      />
-                      <Button
-                        buttonName={"Delete"}
-                        onClick={() =>
-                          handleDeleteShareholder(
-                            shareholder.uid,
-                            shareholder.personalDetails.uniqueID
-                          )
-                        }
-                        className={"text-center bg-red-500 hover:bg-red-600"}
-                        rectangle={true}
-                      />
+                    <div className="absolute -top-4 -right-4">
+                      <div className="flex gap-2">
+                        <Button
+                          buttonIcon={EditIcon}
+                          onClick={() =>
+                            handleEditShareholder(
+                              shareholder.uid,
+                              shareholder.personalDetails.uniqueID
+                            )
+                          }
+                          buttonType="secondary"
+                        />
+                        <Button
+                          buttonIcon={DeleteIcon}
+                          onClick={() =>
+                            handleDeleteShareholder(
+                              shareholder.uid,
+                              shareholder.personalDetails.uniqueID
+                            )
+                          }
+                          buttonType="destructive"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}

@@ -135,19 +135,18 @@ const LoanOffers = () => {
             <Button
               buttonName="Get Offers"
               onClick={handleGetOffers}
-              rectangle={true}
             />
           </div>
         </div>
       </ContainerTile>
-      {loanConfigData?.message === "No loan offers in cache" ? (
-        <ContainerTile loading={loading} className={"bg-gray-50"}>
-          <div className="text-center">No loan offers available</div>
+      {loanConfigData?.message ? (
+        <ContainerTile loading={loading} className={"p-5"}>
+          <div className="text-center">{loanConfigData.message}</div>
         </ContainerTile>
       ) : Object.keys(loanConfigData || {}).length > 0 ? (
         <div className="flex flex-col gap-5 mt-4">
           <div className="text-center">
-            <div className="text-xl font-semibold ">Your Loan Offer</div>
+            <div className="text-xl font-semibold">Your Loan Offer</div>
             <div>
               Let's review the details of your{" "}
               {
@@ -354,7 +353,7 @@ const LoanOffers = () => {
               <CardInfo
                 cardTitle="Final Offer Summary"
                 className={
-                  "border-2 border-blue-300 dark:border-blue-500 rounded-xl shadow-md px-4 pb-5"
+                  "border-2 border-sky-300 dark:border-sky-500 rounded-xl shadow-md px-4 pb-5"
                 }
                 cardIcon={CurrencyDollarIcon}
                 colorText={"text-sky-700"}

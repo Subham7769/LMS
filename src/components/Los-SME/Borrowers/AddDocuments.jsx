@@ -273,18 +273,17 @@ const AddDocuments = () => {
 
   return (
     <>
-      <div className="mb-4 grid grid-cols-4 gap-5 items-center">
-        <InputSelect
-          labelName={"Company"}
-          inputName={"companyId"}
-          inputOptions={allCompanies}
-          inputValue={companyId}
-          onChange={changeCompany}
-          disabled={false}
-        />
-        <div></div>
-        <div></div>
-        <div></div>
+      <div className="mb-4 md:flex justify-between items-center">
+        <div className="min-w-72 mb-2 md:mb-0">
+          <InputSelect
+            labelName={"Company"}
+            inputName={"companyId"}
+            inputOptions={allCompanies}
+            inputValue={companyId}
+            onChange={changeCompany}
+            disabled={false}
+          />
+        </div>
       </div>
       {companyId && (
         <div className=" flex flex-col mb-6">
@@ -311,12 +310,12 @@ const AddDocuments = () => {
                       (${director?.personalDetails?.uniqueID})
                       `}
                 renderExpandedContent={() => (
-                  <div className="px-5">
+                  <>
                     {directorDocumentRequirements(
                       director?.documents,
                       director?.personalDetails?.uniqueID
                     )}
-                  </div>
+                  </>
                 )}
               />
             </>

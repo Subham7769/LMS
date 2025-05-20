@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { accountStatusOptionsPersonal } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
@@ -34,7 +34,6 @@ import {
   CalendarIcon,
   XMarkIcon,
   DocumentMinusIcon,
-  EqualsIcon,
   DocumentIcon,
   BanknotesIcon
 } from "@heroicons/react/24/outline";
@@ -293,8 +292,6 @@ const ViewBorrowers = () => {
                 <Button
                   buttonName={"Edit"}
                   onClick={() => handleEdit(rowData.uid)}
-                  className={"text-center"}
-                  rectangle={true}
                 />
               </div>
             </div>
@@ -308,7 +305,7 @@ const ViewBorrowers = () => {
   + rowData.interfaceAllowance + rowData.responsibilityAllowance + rowData.doubleClassAllowance 
   + rowData.actingAllowance + rowData.otherAllowances;
     return (
-      <div className="space-y-2 text-sm text-gray-600 border-y-2 p-5 relative">
+      <div className="space-y-2 text-sm text-gray-600 border-y-2 dark:border-gray-600 p-5 relative">
         {rowData ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
@@ -328,7 +325,7 @@ const ViewBorrowers = () => {
                   Personal Details{" "}
                   {rowData.customerPhotoId && (
                     <p
-                      className="text-[9px] text-gray-600 -mb-2 cursor-pointer underline"
+                      className="text-[9px] text-gray-600 dark:text-gray-400 -mb-2 cursor-pointer underline"
                       onClick={(e) =>
                         handleViewPhoto(e, rowData.customerPhotoId)
                       }
@@ -446,13 +443,19 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Salary Details"
                 cardIcon={BanknotesIcon}
-                colorBG={"bg-orange-tertiary"}
-                colorText={"text-orange-primary"}
+                colorBG={"bg-yellow-500/20"}
+                colorText={"text-yellow-700"}
               >
-                <div className="space-y-2 flex flex-col  p-3">
+                <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p className="mb-5">
-                    The salary includes a Basic Pay of {rowData.basicPay}, along with a Housing Allowance of {rowData.housingAllowance} and a Transport Allowance of {rowData.transportAllowance}.
-                    <br/>Total Salary is <strong>{totalSalaryNoDeductions}</strong> /-
+                    The salary includes a Basic Pay of {rowData.basicPay}, along
+                    with a Housing Allowance of {rowData.housingAllowance} and a
+                    Transport Allowance of {rowData.transportAllowance}.
+                    <br />
+                    Total Salary is <strong>
+                      {totalSalaryNoDeductions}
+                    </strong>{" "}
+                    /-
                   </p>
                   <b>Total Deductions</b>
                   <div className="grid grid-cols-2 gap-4 ">
@@ -466,7 +469,6 @@ const ViewBorrowers = () => {
                       label="Not on Payslip"
                       value={rowData.totalDeductionsNotOnPayslip}
                     />
-
                   </div>
                 </div>
               </CardInfo>
@@ -475,14 +477,16 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Financial Profile"
                 cardIcon={BuildingOffice2Icon}
-                colorBG={"bg-yellow-500/20"}
-                colorText={"text-yellow-700"}
+                colorBG={"bg-red-500/20"}
+                colorText={"text-red-700"}
               >
                 <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p>
-                    Maintains a {rowData.accountType} account with {rowData.bankName}.
-                    They have a credit score of {rowData.creditScore}, and are borrowing for {rowData.reasonForBorrowing} purpose.
-                    The repayment source is {rowData.sourceOfRepayment}.
+                    Maintains a {rowData.accountType} account with{" "}
+                    {rowData.bankName}. They have a credit score of{" "}
+                    {rowData.creditScore}, and are borrowing for{" "}
+                    {rowData.reasonForBorrowing} purpose. The repayment source
+                    is {rowData.sourceOfRepayment}.
                   </p>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -516,14 +520,16 @@ const ViewBorrowers = () => {
               <CardInfo
                 cardTitle="Next of kin Details"
                 cardIcon={UsersIcon}
-                colorBG={"bg-blue-tertiary"}
-                colorText={"text-blue-primary"}
+                colorBG={"bg-blue-500/20"}
+                colorText={"text-blue-700"}
               >
-                <div className="space-y-2 flex flex-col gap-5 p-3">
+                <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p>
-                    {rowData.kinTitle} {rowData.kinOtherName} {rowData.kinSurname}, the {rowData.kinRelationship} of the applicant.
-                    They works as a <strong>{rowData.kinOccupation}</strong> at <strong>{rowData.kinEmployer}</strong>.
-                    
+                    {rowData.kinTitle} {rowData.kinOtherName}{" "}
+                    {rowData.kinSurname}, the {rowData.kinRelationship} of the
+                    applicant. They works as a{" "}
+                    <strong>{rowData.kinOccupation}</strong> at{" "}
+                    <strong>{rowData.kinEmployer}</strong>.
                   </p>
                   <p>
                     Currently residing in{" "}
@@ -662,6 +668,7 @@ const ViewBorrowers = () => {
         <ActionOption
           userNavigation={userNavigation}
           actionID={rowData.uniqueID}
+          align={"right"}
         />
       </div>
     );
@@ -697,14 +704,12 @@ const ViewBorrowers = () => {
           <Button
             buttonName={"Search"}
             onClick={SearchBorrowerByFieldSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleResetSearchBy}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />
