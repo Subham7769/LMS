@@ -1125,8 +1125,11 @@ const personalLoansSlice = createSlice({
       })
       .addCase(getLoanApplications.fulfilled, (state, action) => {
         state.loading = false;
-        state.loanApplications = action.payload.content;
-        state.loanApplicationsTotalElements = action.payload.totalElements;
+        const filteredLoans = action.payload.content.filter(
+          (loan) => loan.status !== "CANCEL"
+        );
+        state.loanApplications = filteredLoans;
+        state.loanApplicationsTotalElements = filteredLoans.length;
       })
       .addCase(getLoanApplications.rejected, (state, action) => {
         state.loading = false;
