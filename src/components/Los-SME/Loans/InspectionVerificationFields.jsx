@@ -2,16 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
-  updateLoanField,
+  updateInspectionVerificationField,
   uploadDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
-import { yesNoOptions,verificationStatus, inspectionTypeOptions, overallStatusOptions } from "../../../data/LosData";
+import { yesNoOptions, verificationStatus, inspectionTypeOptions, overallStatusOptions, overallConditionOptions, usageLevelOptions } from "../../../data/LosData";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
+import { currencyOptions } from "../../../data/CountryData";
 
 const InspectionVerificationFields = ({ inspectionVerification }) => {
   const dispatch = useDispatch();
@@ -44,27 +45,8 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
 
   const handleInputChange = (e, section, index) => {
     const { name, value, type, checked } = e.target;
-
-    if (name === "repaymentTenureStr") {
-      const [repaymentTenure, repaymentTenureType] = value.split(" "); // Extract number & type
-      dispatch(
-        updateLoanField({
-          section: "generalLoanDetails",
-          field: "repaymentTenure",
-          value: repaymentTenure ? parseInt(repaymentTenure, 10) : null, // Convert to number
-        })
-      );
-      dispatch(
-        updateLoanField({
-          section: "generalLoanDetails",
-          field: "repaymentTenureType",
-          value: repaymentTenureType || "",
-        })
-      );
-    }
-
     dispatch(
-      updateLoanField({ section, field: name, value, type, checked, index })
+      updateInspectionVerificationField({ section, field: name, value, type, checked, index })
     );
   };
 
@@ -80,7 +62,7 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
     const { name, value, type, checked, files } = e.target;
 
     dispatch(
-      updateLoanField({ section, field: name, value, type, checked, index })
+      updateInspectionVerificationField({ section, field: name, value, type, checked, index })
     );
 
     if (files && files[0]) {
@@ -132,6 +114,224 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
     }
   ];
 
+  const equipmentIdentificationConfig = [
+    {
+      labelName: "Make/Model Verification",
+      type: "select",
+      inputName: "makeModelVerified",
+      options: yesNoOptions,
+    },
+    {
+      labelName: "Serial Number/VIN",
+      type: "text",
+      inputName: "serialNumber",
+      placeholder: "Enter Serial Number or VIN",
+    },
+    {
+      labelName: "Serial Number Matches Application",
+      type: "select",
+      inputName: "serialNumberMatches",
+      options: yesNoOptions,
+    },
+    {
+      labelName: "Year of Manufacture",
+      type: "text",
+      inputName: "yearOfManufacture",
+      placeholder: "Enter Year of Manufacture",
+    },
+    {
+      labelName: "Equipment Photo",
+      inputName: "equipmentPhoto",
+      type: "file",
+      validation: false,
+      accept: "image/*",
+    },
+  ];
+
+  const conditionAssessmentConfig = [
+    {
+      labelName: "Overall Condition Rating",
+      inputName: "overallConditionRating",
+      validation: false,
+      type: "rangeCondition",
+      inputLevels: ["Poor", "Fair", "Good", "Excellent"],
+    },
+    {
+      labelName: "Hour Meter/Odometer Reading",
+      inputName: "hourMeterReading",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Usage Level Assessment",
+      inputName: "usageLevelAssessment",
+      type: "select",
+      options: usageLevelOptions,
+      validation: false,
+    },
+    {
+      labelName: "Hour Meter Photo",
+      inputName: "hourMeterPhoto",
+      type: "file",
+      validation: false,
+      accept: "image/*",
+    },
+  ];
+
+  const keySystemsCheckConfig = [
+    {
+      type: "rangeCondition",
+      labelName: "Engine Condition",
+      inputName: "engineCondition",
+      inputLevels: ["1", "2", "3", "4", "5"],
+      validation: false,
+    },
+    {
+      type: "rangeCondition",
+      labelName: "Hydraulic System",
+      inputName: "hydraulicSystem",
+      inputLevels: ["1", "2", "3", "4", "5"],
+      validation: false,
+    },
+    {
+      type: "rangeCondition",
+      labelName: "Electrical Systems",
+      inputName: "electricalSystems",
+      inputLevels: ["1", "2", "3", "4", "5"],
+      validation: false,
+    },
+    {
+      type: "rangeCondition",
+      labelName: "Structural Integrity",
+      inputName: "structuralIntegrity",
+      inputLevels: ["1", "2", "3", "4", "5"],
+      validation: false,
+    },
+    {
+      type: "rangeCondition",
+      labelName: "Attachments Condition",
+      inputName: "attachmentsCondition",
+      inputLevels: ["1", "2", "3", "4", "5"],
+      validation: false,
+    },
+  ];
+
+  const operationalVerificationConfig = [
+    {
+      labelName: "Start-up Test Performed",
+      inputName: "startupTestPerformed",
+      type: "select",
+      options: yesNoOptions,
+      validation: true,
+    },
+    {
+      labelName: "Equipment Fully Operational",
+      inputName: "equipmentFullyOperational",
+      type: "select",
+      options: yesNoOptions, 
+      validation: true,
+    },
+    {
+      labelName: "Any Unusual Noises/Vibrations",
+      inputName: "unusualNoisesVibrations",
+      type: "select", 
+      options: yesNoOptions,
+      validation: true,
+    },
+    {
+      labelName: "Operational Test Video",
+      inputName: "operationalTestVideo",
+      type: "file", // Optional upload
+      validation: false,
+    },
+  ];
+
+  const valueImpactFactorsConfig = [
+    {
+      labelName: "Verified Equipment Value",
+      inputName: "verifiedEquipmentValue",
+      type: "select",
+      options: currencyOptions,
+      validation: true,
+    },
+    {
+      labelName: "Value Variance from Application",
+      inputName: "valueVariancePercentage",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Critical Issues Identified",
+      inputName: "criticalIssuesIdentified",
+      type: "select", 
+      options: yesNoOptions,
+      validation: false,
+    },
+    {
+      labelName: "Critical Issues Description",
+      inputName: "criticalIssuesDescription",
+      type: "textarea",
+      conditionalField: "criticalIssuesIdentified", // show only when true
+      validation: false,
+    },
+  ];
+
+  const documentationCheckConfig = [
+    {
+      labelName: "Title/Ownership Verification",
+      inputName: "titleOwnershipVerified",
+      type: "select", 
+      options: yesNoOptions,
+      validation: false,
+    },
+    {
+      labelName: "Warranty Documentation",
+      inputName: "warrantyDocumentationAvailable",
+      type: "select", 
+      options: yesNoOptions,
+      validation: false,
+    },
+    {
+      labelName: "Insurance Requirements Met",
+      inputName: "insuranceRequirementsMet",
+      type: "select", 
+      options: yesNoOptions,
+      validation: false,
+    },
+  ];
+
+  const verificationOutcomeConfig = [
+    {
+      labelName: "Funding Recommendation",
+      inputName: "fundingRecommendation",
+      type: "select",
+      options: [
+        { label: "Approve", value: "approve" },
+        { label: "Conditional", value: "conditional" },
+        { label: "Decline", value: "decline" },
+      ],
+      validation: false,
+    },
+    {
+      labelName: "Condition Requirements",
+      inputName: "conditionRequirements",
+      type: "textarea",
+      validation: false,
+    },
+    {
+      labelName: "Inspector Comments",
+      inputName: "inspectorComments",
+      type: "textarea",
+      validation: false,
+    },
+    {
+      labelName: "Digital Signature",
+      inputName: "digitalSignature",
+      type: "textarea",
+      validation: true,
+    },
+  ];
+
   const validationError = useSelector((state) => state.validation.validationError);
 
   const handleDeleteDocument = (docId) => {
@@ -178,7 +378,125 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
           inspectionBasicsConfig
         )}
       />
-     
+
+      <Accordion
+        heading={"Equipment Identification"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.equipmentIdentification}
+            config={equipmentIdentificationConfig}
+            sectionName={"equipmentIdentification"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+
+      <Accordion
+        heading={"Condition Assessment"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.conditionAssessment}
+            config={conditionAssessmentConfig}
+            sectionName={"conditionAssessment"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+
+      <Accordion
+        heading={"Key Systems Check"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.keySystemsCheck}
+            config={keySystemsCheckConfig}
+            sectionName={"keySystemsCheck"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+      <Accordion
+        heading={"Operational Verification"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.operationalVerification}
+            config={operationalVerificationConfig}
+            sectionName={"operationalVerification"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+      <Accordion
+        heading={"Value Impact Factors"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.valueImpactFactors}
+            config={valueImpactFactorsConfig}
+            sectionName={"valueImpactFactors"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+
+      <Accordion
+        heading={"Documentation Check"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.documentationCheck}
+            config={documentationCheckConfig}
+            sectionName={"documentationCheck"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+
+      <Accordion
+        heading={"Verification Outcome"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={inspectionVerification.verificationOutcome}
+            config={verificationOutcomeConfig}
+            sectionName={"verificationOutcome"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        isOpen={false}
+        error={isValidationFailed(
+          validationError,
+          inspectionBasicsConfig
+        )}
+      />
+
+
       <Accordion
         heading={"Required Documents"}
         renderExpandedContent={() => requiredDocuments(inspectionVerification.documents)}

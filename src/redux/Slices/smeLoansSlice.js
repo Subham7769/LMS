@@ -843,6 +843,7 @@ export const getRefinanceDetails = createAsyncThunk(
   }
 );
 
+
 const initialState = {
   borrowerData: {},
   loanApplications: [],
@@ -923,7 +924,7 @@ const initialState = {
       installationRequirements: "",
       maintenanceContractIncluded: "",
       warrantyDetails: "",
-      warrantyDetails: "",
+      tradeInDetails: "",
     },
     verificationWorkflow: {
       verificationStatus: "",
@@ -956,7 +957,7 @@ const initialState = {
   inspectionVerification: {
     inspectionBasics: {
       loanApplicationId: "",
-      inspectionType: "", 
+      inspectionType: "",
       inspectionDate: "",
       inspector: "",
       overallStatus: "",
@@ -966,15 +967,45 @@ const initialState = {
       serialNumber: "",
       serialNumberMatches: false,
       yearOfManufacture: "",
-      equipmentPhoto: null    
+      equipmentPhoto: null,
     },
-    conditionAssessment: {},
-    keySystemsCheck: {},
-    operationalVerification: {},
-    valueImpactFactors: {},
-    documentationCheck: {},
+    conditionAssessment: {
+      overallConditionRating: "",
+      hourMeterReading: "",
+      hourMeterPhoto: null,
+      usageLevelAssessment: "",
+    },
+    keySystemsCheck: {
+      engineCondition: "",
+      hydraulicSystem: "",
+      electricalSystems: "",
+      structuralIntegrity: "",
+      attachmentsCondition: "",
+    },
+    operationalVerification: {
+      startupTestPerformed: false,
+      equipmentFullyOperational: false,
+      unusualNoisesVibrations: false,
+      operationalTestVideo: null,
+    },
+    valueImpactFactors: {
+      verifiedEquipmentValue: "",
+      valueVariancePercentage: "",
+      criticalIssuesIdentified: false,
+      criticalIssuesDescription: "",
+    },
+    documentationCheck: {
+      titleOwnershipVerified: false,
+      warrantyDocumentationAvailable: false,
+      insuranceRequirementsMet: false,
+    },
     documents: [],
-    verificationOutcome: {},
+    verificationOutcome: {
+      fundingRecommendation: "",
+      conditionRequirements: "",
+      inspectorComments: "",
+      digitalSignature: null,
+    },
   },
   approveLoans: [],
   approveLoansTotalElements: 0,
@@ -1145,6 +1176,23 @@ const smeLoansSlice = createSlice({
         };
       }
     },
+    updateInspectionVerificationField: (state, action) => {
+      const { section, field, value, type, checked, index } = action.payload;
+      // If section is provided, update specific field in that section
+      if (section === "documents") {
+        state.inspectionVerification.documents[index][field] =
+          type === "checkbox" ? checked : value;
+      } else if (section && state.inspectionVerification[section]) {
+        state.inspectionVerification[section][field] =
+          type === "checkbox" ? checked : value;
+      } else {
+        // If no section, update directly in inspectionVerification
+        state.inspectionVerification = {
+          ...state.inspectionVerification,
+          [field]: value,
+        };
+      }
+    },
     updateLoanOfferFields: (state, action) => {
       const { name, value } = action.payload;
       state.loanOfferFields[name] = value; // Dynamically update the field in loanConfigFields
@@ -1208,12 +1256,25 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
         state.loading = false;
-        state.addLoanData.documents = action.payload.map((doc) => ({
-          docName: "",
-          docId: "",
-          verified: false,
-          documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
-        }));
+ 
+        // If the payload is an empty array, retain the existing documents
+        if (Array.isArray(action.payload) && action.payload.length === 0) {
+          return;
+        }
+ 
+        state.addLoanData.documents = action.payload.map((doc) => {
+          // Find matching document from existing state based on documentKeyName
+          const existingDoc = state.addLoanData.documents.find(
+            (d) => d.documentKey === doc.documentKeyName
+          );
+ 
+          return {
+            docName: existingDoc ? existingDoc.docName : "",
+            docId: existingDoc ? existingDoc.docId : "",
+            verified: existingDoc ? existingDoc.verified : false,
+            documentKey: doc.documentKeyName, // Use documentKeyName from the API response
+          };
+        });
       })
       .addCase(getDocsByIdnUsage.rejected, (state, action) => {
         state.loading = false;
@@ -1601,6 +1662,7 @@ const smeLoansSlice = createSlice({
 export const {
   resetAddLoanData,
   updateLoanField,
+  updateInspectionVerificationField,
   updateLoanOfferFields,
   resetLoanOfferFields,
   setLoanApplicationId,

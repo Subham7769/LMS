@@ -23,6 +23,7 @@ import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { toast } from "react-toastify";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -79,7 +80,7 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-console.log(addLoanData.equipmentVendorDetails)
+  console.log(addLoanData.equipmentVendorDetails)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,6 +95,7 @@ console.log(addLoanData.equipmentVendorDetails)
         borrowerId: sanitizedUniqueID,
       },
     };
+    console.log(updatedLoanData)
     await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
     // console.log(updatedLoanData);
     const state = store.getState();
@@ -116,9 +118,12 @@ console.log(addLoanData.equipmentVendorDetails)
   };
 
   const handleDraft = async () => {
+    if (!addLoanData?.generalLoanDetails?.uniqueID) {
+      toast.error("Please enter a valid Borrower Serial No. ");
+    }
     // Ensure borrowerId is set to the sanitized uniqueID
     const sanitizedUniqueID = sanitizeUid(
-      addLoanData.generalLoanDetails.uniqueID
+      addLoanData?.generalLoanDetails?.uniqueID
     );
     const updatedLoanData = {
       ...addLoanData,
@@ -127,6 +132,7 @@ console.log(addLoanData.equipmentVendorDetails)
         borrowerId: sanitizedUniqueID,
       },
     };
+    console.log(addLoanData)
     await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
     navigate("/loan/loan-origination-system/sme/loans/loan-application");
   };
@@ -177,7 +183,7 @@ console.log(addLoanData.equipmentVendorDetails)
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
-            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr) }
+            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr)}
           />
           <Button
             buttonName="Save Draft"

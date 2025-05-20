@@ -9,6 +9,7 @@ import InputTextArea from "../InputTextArea/InputTextArea";
 import InputSelectCreatable from "../InputSelectCreatable/InputSelectCreatable";
 import InputRadio from '../InputRadio/InputRadio';
 import InputCheckbox from '../InputCheckbox/InputCheckbox';
+import InputRangeCondition from '../InputRangeCondition/InputRangeCondition';
 
 
 const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFileUploads, handleFileRemove }) => {
@@ -136,6 +137,17 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                                 labelName={field.labelName}
                                 inputName={field.inputName}
                                 inputChecked={details[field.inputName] || ""}
+                                onChange={(e) => handleInputChange(e, sectionName)}
+                                isValidation={field.validation || false}
+                            />
+                        );
+                    case "rangeCondition":
+                        return (
+                            <InputRangeCondition
+                                labelName={field.labelName}
+                                inputName={field.inputName}
+                                inputValue={details[field.inputName] || ""}
+                                inputLevels={field.inputLevels}
                                 onChange={(e) => handleInputChange(e, sectionName)}
                                 isValidation={field.validation || false}
                             />

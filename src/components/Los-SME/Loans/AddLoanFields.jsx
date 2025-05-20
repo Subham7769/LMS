@@ -7,7 +7,7 @@ import {
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
-import { yesNoOptions,verificationStatus } from "../../../data/LosData";
+import { yesNoOptions, verificationStatus } from "../../../data/LosData";
 
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -167,13 +167,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -727,7 +727,7 @@ const AddLoanFields = ({ addLoanData }) => {
     },
     {
       labelName: "Trade-in details",
-      inputName: "warrantyDetails",
+      inputName: "tradeInDetails",
       type: "text",
       validation: false,
     },
@@ -917,7 +917,7 @@ const AddLoanFields = ({ addLoanData }) => {
           generalLoanDetailsConfig
         )}
       />
-      <Accordion
+      {/* <Accordion
         heading={"Profoma Details"}
         renderExpandedContent={() =>
           <DynamicForm
@@ -941,8 +941,8 @@ const AddLoanFields = ({ addLoanData }) => {
           />
         }
         error={isValidationFailed(validationError, offTakerConfig)}
-      />
-      <Accordion
+      /> */}
+      {/* <Accordion
         heading={"Supplier Details"}
         subHeading="(Not applicable to IDF)"
         renderExpandedContent={() =>
@@ -954,7 +954,7 @@ const AddLoanFields = ({ addLoanData }) => {
           />
         }
         error={isValidationFailed(validationError, supplierDetailsConfig)}
-      />
+      /> */}
       <Accordion
         heading={"Equipment Vendor Details"}
         renderExpandedContent={() =>

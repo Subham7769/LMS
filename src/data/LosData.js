@@ -216,6 +216,26 @@ export const overallStatusOptions = [
   { label: "Failed", value: "Failed" }
 ];
 
+export const verificationStatus = [
+  { value: "PENDING", label: "PENDING" },
+  { value: "SCHEDULED", label: "SCHEDULED" },
+  { value: "COMPLETED", label: "COMPLETED" },
+  { value: "DECLINED", label: "DECLINED" },
+];
+
+export const overallConditionOptions = [
+  { value: "Excellent", label: "Excellent" },
+  { value: "Good", label: "Good" },
+  { value: "Fair", label: "Fair" },
+  { value: "Poor", label: "Poor" },
+];
+
+export const usageLevelOptions = [
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+  { value: "Excessive", label: "Excessive" },
+];
 
 export const repaymentOptions = [
   { label: "Ignore", value: "ignore" },
@@ -235,12 +255,6 @@ export const repaymentOptions = [
   { label: "Destination of Funds for Repayment Amount", value: "destinationFundsRepayment" }
 ];
 
-export const verificationStatus = [
-  { value: "PENDING", label: "PENDING" },
-  { value: "SCHEDULED", label: "SCHEDULED" },
-  { value: "COMPLETED", label: "COMPLETED" },
-  { value: "DECLINED", label: "DECLINED" },
-];
 
 export const maritalStatus = [
   { value: "SINGLE", label: "SINGLE" },

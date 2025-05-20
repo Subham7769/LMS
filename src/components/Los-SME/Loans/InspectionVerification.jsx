@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
-import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputText from "../../Common/InputText/InputText";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import {
+  fetchLoanProductData,
+  getLoanOffers,
+  resetLoanOfferFields,
   saveDraftLoanData,
   submitLoan,
-  getLoanApplicationsByID,
-  fetchLoanProductData,
-  setLoanApplicationId,
-  setLoanBorrowerId,
-  getMaxPrincipalData,
-  getDocsByIdnUsage,
+  updateLoanOfferFields,
 } from "../../../redux/Slices/smeLoansSlice";
 import {
   clearValidationError,
@@ -20,10 +19,9 @@ import {
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { sanitizeUid } from "../../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import InspectionVerificationFields from "./InspectionVerificationFields";
+import { sanitizeUid } from "../../../utils/sanitizeUid";
 
 const InspectionVerification = () => {
   const dispatch = useDispatch();
@@ -31,7 +29,8 @@ const InspectionVerification = () => {
   const { loanApplicationId, BorrowerId } = useParams();
   const location = useLocation();
   const currentPath = location.pathname;
-  const { addLoanData, inspectionVerification, loading, loanProductData } = useSelector(
+
+  const { addLoanData, loanProductOptions, loanOfferFields, inspectionVerification, loading, loanProductData } = useSelector(
     (state) => state.smeLoans
   );
   // Decode the BorrowerId to restore its original value
@@ -63,11 +62,18 @@ const InspectionVerification = () => {
   //     dispatch(clearValidationError());
   //   };
   // }, [dispatch, loanApplicationId, decodedBorrowerId]);
+  useEffect(() => {
+    dispatch(fetchLoanProductData());
+    return () => {
+      dispatch(clearValidationError());
+      dispatch(resetLoanOfferFields());
+    };
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedLoanData={};
+    const updatedLoanData = {};
 
     await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
     // console.log(updatedLoanData);
@@ -96,34 +102,61 @@ const InspectionVerification = () => {
     return <ContainerTile loading={loading} />;
   }
 
+
+  const handleGetOffers = async () => {
+    await dispatch(validateForm(loanOfferFields));
+    const state = store.getState();
+    const isValid = state.validation.isValid;
+    if (isValid) {
+      dispatch(getLoanOffers(loanOfferFields));
+      dispatch(fetchBorrowerById(sanitizeUid(loanOfferFields?.uid)));
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // Dispatch the action to update the state
+    dispatch(updateLoanOfferFields({ name, value }));
+  };
+
   return (
     <>
-      <div
-        className={`border rounded-lg shadow-sm bg-gray-50 mb-3 hover:bg-indigo-50 px-4 py-4`}
-      >
-        <div className="text-gray-500">
-          Loan Application ID: {"1234657899"}
-        </div>
-      </div>
-      <InspectionVerificationFields inspectionVerification={inspectionVerification} />
-      {/* Reusable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
-      <div className="flex justify-end mt-5 items-end">
-        <div className="flex gap-x-5">
-          <Button
-            buttonName="Save Draft"
-            onClick={handleDraft}
-            buttonType="secondary"
-            rectangle={true}
+      <ContainerTile className={"mb-5 bg-gray-50"} loading={loading}>
+        <div className="grid grid-cols-3 gap-5 items-end">
+          <InputSelect
+            labelName={"Loan Product"}
+            inputName="loanProductId"
+            inputOptions={loanProductOptions}
+            inputValue={loanOfferFields.loanProductId}
+            onChange={handleChange}
+            disabled={false}
+            isValidation={true}
           />
+          <InputText
+            labelName={"Borrower Serial No."}
+            inputName="uid"
+            inputValue={loanOfferFields.uid}
+            onChange={handleChange}
+            disabled={false}
+            isValidation={true}
+          />
+          <div>
+            <Button
+              buttonName="Get Verification data"
+              onClick={handleGetOffers}
+              rectangle={true}
+            />
+          </div>
+        </div>
+      </ContainerTile>
+      {/* {inspectionVerification?.inspectionBasics?.loanApplicationId && <> */}
+      {true && <>
+        <InspectionVerificationFields inspectionVerification={inspectionVerification} />
+        <div className="flex justify-end mt-5 gap-x-5">
           <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
-          <Button
-            buttonName="Cancel"
-            onClick={handleCancel}
-            rectangle={true}
-            buttonType="destructive"
-          />
         </div>
-      </div>
+      </>
+      }
     </>
   );
 };

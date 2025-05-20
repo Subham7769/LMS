@@ -21,7 +21,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { hasViewOnlyAccessGroup4 } from "../../utils/roleUtils";
 import AddBankModal from "./AddBankModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import AddBankBranchModal from "./AddBankBranchModal";
@@ -56,7 +56,7 @@ const Banks = () => {
 
   const handleChangeBranch = (e, branchId, bankId) => {
     const { name, value } = e.target;
-    if (!hasViewOnlyAccess(roleName)) {
+    if (!hasViewOnlyAccessGroup4(roleName)) {
       dispatch(handleChangeBankBranch({ name, value, branchId, bankId }));
     }
   };
@@ -129,9 +129,10 @@ const Banks = () => {
                 inputValue={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeHolder="Search by bank name"
+                disabled={false}
               />
             </div>
-            {!hasViewOnlyAccess(roleName) ? (
+            {!hasViewOnlyAccessGroup4(roleName) ? (
               <div>
                 <Button
                   buttonIcon={PlusIcon}
@@ -156,7 +157,7 @@ const Banks = () => {
                         onClick={(e) => handleAddBankBranch(e,bankData.bankId)}>
                         <PlusIcon className="h-4 w-4" /> Add Branch
                       </div>
-                      {!hasViewOnlyAccess(roleName) ? (
+                      {!hasViewOnlyAccessGroup4(roleName) ? (
                         <div
                           title="Delete Bank"
                           className="text-sm text-red-500 hover:text-red-700 cursor-pointer flex items-center "
@@ -193,6 +194,7 @@ const Banks = () => {
                               placeHolder="ABC"
                               isValidation={true}
                               isIndex={branchIndex}
+                              disabled={false}
                             />
                             <InputText
                               inputName="branchCode"
@@ -202,6 +204,7 @@ const Banks = () => {
                               placeHolder="123456"
                               isValidation={true}
                               isIndex={branchIndex}
+                              disabled={false}
                             />
                             <InputText
                               inputName="sortCode"
@@ -211,9 +214,10 @@ const Banks = () => {
                               placeHolder="00-00-00"
                               isValidation={true}
                               isIndex={branchIndex}
+                              disabled={false}
                             />
 
-                            {!hasViewOnlyAccess(roleName) ? (
+                            {!hasViewOnlyAccessGroup4(roleName) ? (
                               <div className="flex items-center justify-center gap-4">
                                 <Button
                                   buttonIcon={CheckCircleIcon}
