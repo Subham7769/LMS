@@ -108,6 +108,8 @@ const AddLoanFields = ({ addLoanData }) => {
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
 
+  console.log(selectedLoanProduct);
+
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
     if (!selectedLoanProduct) return [];
@@ -135,13 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "interestMethod",
+          value: selectedLoanProduct?.interestMethod,
+        })
+      );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -254,21 +256,21 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [loanInterestStr]);
 
-  const interestMethod = useMemo(() => {
-    return selectedLoanProduct?.interestMethod || "";
-  }, [selectedLoanProduct]);
+  // const interestMethod = useMemo(() => {
+  //   return selectedLoanProduct?.interestMethod || "";
+  // }, [selectedLoanProduct]);
 
   useEffect(() => {
-    if (!interestMethod) return;
-
-    dispatch(
-      updateLoanField({
-        section: "generalLoanDetails",
-        field: "interestMethod",
-        value: interestMethod,
-      })
-    );
-  }, [interestMethod]);
+      if (!selectedLoanProduct) return;
+  
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "interestMethod",
+          value: selectedLoanProduct?.interestMethod,
+        })
+      );
+    }, [selectedLoanProduct]);
 
   const today = new Date();
   const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =

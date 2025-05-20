@@ -65,6 +65,7 @@ const LoanApplication = () => {
   const searchOptions = [
     { label: "Loan Application Id", value: "loanApplicationId" },
     { label: "Borrower Serial No.", value: "uniqueID" },
+    { label: "Status", value: "status" },
   ];
 
   const columns = [
@@ -79,14 +80,20 @@ const LoanApplication = () => {
   const loanApplicationsData = transformData(loanApplications);
 
   const handleSearch = async () => {
+    let normalizedValue = slaSearchBy;
+
+    if (slaSearchBy === "status" && typeof slaSearchBy === "string") {
+      normalizedValue = slaSearchBy.trim().toUpperCase().replace(/\s+/g, "_");
+    }
+
     await dispatch(
-      validateForm({ slaSearchBy: slaSearchBy, slaSearchValue: slaSearchValue })
+      validateForm({ slaSearchBy: slaSearchBy, slaSearchValue: normalizedValue })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanApplicationByField({ field: slaSearchBy, value: slaSearchValue })
+        getLoanApplicationByField({ field: slaSearchBy, value: normalizedValue })
       );
     }
     // setSlaSearchBy("");
