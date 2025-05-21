@@ -41,7 +41,7 @@ const InputRangeCondition = ({
           {labelName}
         </label>
       )}
-      <div className="flex justify-between gap-3 border border-gray-300 px-1 rounded-md">
+      <div className="flex justify-between flex-wrap gap-3 border border-gray-300 px-1 rounded-md">
         {inputLevels.map((level, index) => {
           const isSelected = level === inputValue;
           const color = colors[index];

@@ -259,6 +259,43 @@ export const uploadDocumentFile = createAsyncThunk(
   }
 );
 
+export const uploadInspectionVerificationDocumentFile = createAsyncThunk(
+  "smeLoans/uploadInspectionVerificationDocumentFile",
+  async ({ formData, fileUploadParams }, { rejectWithValue }) => {
+    try {
+      // const token = localStorage.getItem("authToken");
+      const {
+        loanApplicationId,
+        documentKey,
+        verified,
+        borrowerType,
+        authToken,
+      } = fileUploadParams;
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_FILE_UPLOAD_COMPANY
+        }?loanApplicationId=${loanApplicationId}&documentKey=${documentKey}&verified=${verified}&borrowerType=${borrowerType}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const deleteDocumentFile = createAsyncThunk(
   "smeLoans/deleteDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
@@ -843,6 +880,64 @@ export const getRefinanceDetails = createAsyncThunk(
   }
 );
 
+export const getInspectionVerificationDetails = createAsyncThunk(
+  "smeLoans/getInspectionVerificationDetails",
+  async ({ borrowerSerialNo, loanProductId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const url = `${import.meta.env.VITE_LOAN_READ_INSPECTION_VERIFICATION_DETAILS}?borrowerSerialNo=${borrowerSerialNo}&loanProductId=${loanProductId}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch inspection verification");
+      }
+
+      const responseData = await response.json();
+      return { responseData, borrowerSerialNo, loanProductId };
+    } catch (error) {
+      return rejectWithValue(error?.message || "Unexpected error occurred");
+    }
+  }
+);
+
+export const submitInspectionVerification = createAsyncThunk(
+  "loan/submitInspectionVerification",
+  async (submitPayload, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_LOAN_CREATE_INSPECTION_VERIFICATION_DETAILS}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(submitPayload),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to submit inspection verification");
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Something went wrong");
+    }
+  }
+);
+
 
 const initialState = {
   borrowerData: {},
@@ -1201,6 +1296,9 @@ const smeLoansSlice = createSlice({
       state.loanOfferFields = initialState.loanOfferFields;
       state.loanConfigData = {};
     },
+    resetInspectionVerificationFields: (state, action) => {
+      state.inspectionVerification = initialState.inspectionVerification;
+    },
     setLoanApplicationId: (state, action) => {
       state.addLoanData.loanApplicationId = action.payload;
     },
@@ -1384,6 +1482,25 @@ const smeLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(uploadInspectionVerificationDocumentFile.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(uploadInspectionVerificationDocumentFile.fulfilled, (state, action) => {
+        state.loading = false;
+        const { docId, documentKey } = action.payload;
+        state.inspectionVerification.documents = state.inspectionVerification.documents.map(
+          (doc) =>
+            doc.documentKey === documentKey
+              ? { ...doc, docId } // Update the matching document
+              : doc // Keep other documents unchanged
+        );
+        toast.success("File uploaded successfully");
+      })
+      .addCase(uploadInspectionVerificationDocumentFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(deleteDocumentFile.pending, (state) => {
         // state.loading = true;
         state.error = null;
@@ -1449,7 +1566,7 @@ const smeLoansSlice = createSlice({
         state.loanOfferFields.uid =
           state.addLoanData.generalLoanDetails.uniqueID;
         state.addLoanData = initialState.addLoanData;
-        toast.success("Offer generated successfully");
+        // toast.success("Offer generated successfully");
       })
       .addCase(submitLoan.rejected, (state, action) => {
         state.loading = false;
@@ -1655,6 +1772,35 @@ const smeLoansSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(getInspectionVerificationDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getInspectionVerificationDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload)
+        state.inspectionVerification = action.payload.responseData[0];
+        state.error = null;
+      })
+      .addCase(getInspectionVerificationDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch inspection verification details";
+      })
+      .addCase(submitInspectionVerification.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(submitInspectionVerification.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.data = action.payload;
+        toast.success(`Inspection Verification Submitted.`);
+
+        state.error = null;
+      })
+      .addCase(submitInspectionVerification.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -1662,6 +1808,7 @@ const smeLoansSlice = createSlice({
 export const {
   resetAddLoanData,
   updateLoanField,
+  resetInspectionVerificationFields,
   updateInspectionVerificationField,
   updateLoanOfferFields,
   resetLoanOfferFields,

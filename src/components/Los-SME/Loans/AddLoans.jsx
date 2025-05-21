@@ -113,7 +113,7 @@ const AddLoans = () => {
     if (isValid) {
       await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
-      navigate("/loan/loan-origination-system/sme/loans/loan-offers");
+      navigate("/loan/loan-origination-system/sme/loans/inspection-verification");
     }
   };
 

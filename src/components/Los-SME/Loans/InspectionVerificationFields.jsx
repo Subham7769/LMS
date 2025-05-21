@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
-  updateInspectionVerificationField,
-  uploadDocumentFile,
+  uploadInspectionVerificationDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
@@ -14,11 +13,9 @@ import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 import { currencyOptions } from "../../../data/CountryData";
 
-const InspectionVerificationFields = ({ inspectionVerification }) => {
+const InspectionVerificationFields = ({ inspectionVerification, handleFileReset, handleFileUpload, handleChangeReducer }) => {
   const dispatch = useDispatch();
-  const { loanProductOptions, loanProductData } = useSelector(
-    (state) => state.smeLoans
-  );
+  const { loanProductOptions, loanProductData } = useSelector((state) => state.smeLoans);
 
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
@@ -43,37 +40,6 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
 
   const { uploadedCount, verifiedCount } = calculateDocumentStats();
 
-  const handleInputChange = (e, section, index) => {
-    const { name, value, type, checked } = e.target;
-    dispatch(
-      updateInspectionVerificationField({ section, field: name, value, type, checked, index })
-    );
-  };
-
-  const handleFileChange = (e, section, index) => {
-    const fileUploadParams = {
-      loanApplicationId: inspectionVerification.loanApplicationId,
-      documentKey: inspectionVerification.documents[index].documentKey,
-      verified: inspectionVerification.documents[index].verified,
-      borrowerType: "COMPANY_BORROWER",
-      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
-    };
-
-    const { name, value, type, checked, files } = e.target;
-
-    dispatch(
-      updateInspectionVerificationField({ section, field: name, value, type, checked, index })
-    );
-
-    if (files && files[0]) {
-      const formData = new FormData();
-      formData.append("file", files[0]);
-
-      // Dispatch the upload action with the FormData
-      // console.log(fileUploadParams);
-      dispatch(uploadDocumentFile({ formData, fileUploadParams }));
-    }
-  };
 
   // All Fields Configuration
   const inspectionBasicsConfig = [
@@ -228,13 +194,13 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
       labelName: "Equipment Fully Operational",
       inputName: "equipmentFullyOperational",
       type: "select",
-      options: yesNoOptions, 
+      options: yesNoOptions,
       validation: true,
     },
     {
       labelName: "Any Unusual Noises/Vibrations",
       inputName: "unusualNoisesVibrations",
-      type: "select", 
+      type: "select",
       options: yesNoOptions,
       validation: true,
     },
@@ -263,7 +229,7 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
     {
       labelName: "Critical Issues Identified",
       inputName: "criticalIssuesIdentified",
-      type: "select", 
+      type: "select",
       options: yesNoOptions,
       validation: false,
     },
@@ -280,21 +246,21 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
     {
       labelName: "Title/Ownership Verification",
       inputName: "titleOwnershipVerified",
-      type: "select", 
+      type: "select",
       options: yesNoOptions,
       validation: false,
     },
     {
       labelName: "Warranty Documentation",
       inputName: "warrantyDocumentationAvailable",
-      type: "select", 
+      type: "select",
       options: yesNoOptions,
       validation: false,
     },
     {
       labelName: "Insurance Requirements Met",
       inputName: "insuranceRequirementsMet",
-      type: "select", 
+      type: "select",
       options: yesNoOptions,
       validation: false,
     },
@@ -334,15 +300,6 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
 
   const validationError = useSelector((state) => state.validation.validationError);
 
-  const handleDeleteDocument = (docId) => {
-    if (!docId) return;
-    const fileDeleteParams = {
-      docId: docId,
-      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
-    };
-    dispatch(deleteDocumentFile(fileDeleteParams));
-  };
-
   const requiredDocuments = (documents) => {
     return documents.map((document, index) => (
       <React.Fragment key={document.documentKey}>
@@ -358,6 +315,77 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
         />
       </React.Fragment>
     ));
+  };
+
+
+  const handleInputChange = (e, section, index) => {
+    const { name, value, type, checked } = e.target;
+    dispatch(
+      handleChangeReducer({ section, field: name, value, type, checked, index })
+    );
+  };
+
+  const handleFileChange = (e, section, index) => {
+    const fileUploadParams = {
+      loanApplicationId: inspectionVerification.inspectionBasics.loanApplicationId,
+      documentKey: inspectionVerification.documents[index].documentKey,
+      verified: inspectionVerification.documents[index].verified,
+      borrowerType: "COMPANY_BORROWER",
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+
+    const { name, value, type, checked, files } = e.target;
+
+    dispatch(
+      handleChangeReducer({ section, field: name, value, type, checked, index })
+    );
+
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      // Dispatch the upload action with the FormData
+      // console.log(fileUploadParams);
+      dispatch(uploadInspectionVerificationDocumentFile({ formData, fileUploadParams }));
+    }
+  };
+
+  const handleDeleteDocument = (docId) => {
+    if (!docId) return;
+    const fileDeleteParams = {
+      docId: docId,
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+    dispatch(deleteDocumentFile(fileDeleteParams));
+  };
+
+  const handleFileUploads = (e) => {
+    const { files } = e.target;
+
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      // Dispatch the upload action with the FormData
+      // dispatch(
+      //   handleFileUpload({
+      //     formData,
+      //     authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+      //   })
+      // );
+    }
+  };
+
+  const handleFileRemove = (section) => {
+    console.log("customerPhotoId remove");
+    // dispatch(
+    //   handleFileReset({
+    //     section,
+    //     field: "customerPhotoId",
+    //     value: "",
+    //     type: "file",
+    //   })
+    // );
   };
 
   return (
@@ -387,6 +415,8 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
             config={equipmentIdentificationConfig}
             sectionName={"equipmentIdentification"}
             handleInputChange={handleInputChange}
+            handleFileUploads={handleFileUploads}
+            handleFileRemove={handleFileRemove}
           />
         }
         isOpen={false}
@@ -404,6 +434,8 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
             config={conditionAssessmentConfig}
             sectionName={"conditionAssessment"}
             handleInputChange={handleInputChange}
+            handleFileUploads={handleFileUploads}
+            handleFileRemove={handleFileRemove}
           />
         }
         isOpen={false}
@@ -437,6 +469,8 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
             config={operationalVerificationConfig}
             sectionName={"operationalVerification"}
             handleInputChange={handleInputChange}
+            handleFileUploads={handleFileUploads}
+            handleFileRemove={handleFileRemove}
           />
         }
         isOpen={false}
@@ -495,7 +529,6 @@ const InspectionVerificationFields = ({ inspectionVerification }) => {
           inspectionBasicsConfig
         )}
       />
-
 
       <Accordion
         heading={"Required Documents"}

@@ -5,111 +5,70 @@ import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import {
+  deleteDocumentFile,
   fetchLoanProductData,
-  getLoanOffers,
+  getInspectionVerificationDetails,
+  resetInspectionVerificationFields,
   resetLoanOfferFields,
-  saveDraftLoanData,
-  submitLoan,
+  submitInspectionVerification,
+  updateInspectionVerificationField,
+  updateLoanField,
   updateLoanOfferFields,
 } from "../../../redux/Slices/smeLoansSlice";
 import {
   clearValidationError,
   setFields,
 } from "../../../redux/Slices/validationSlice";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import InspectionVerificationFields from "./InspectionVerificationFields";
-import { sanitizeUid } from "../../../utils/sanitizeUid";
+
 
 const InspectionVerification = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loanApplicationId, BorrowerId } = useParams();
-  const location = useLocation();
-  const currentPath = location.pathname;
 
-  const { addLoanData, loanProductOptions, loanOfferFields, inspectionVerification, loading, loanProductData } = useSelector(
+  const { loanProductOptions, loanOfferFields, inspectionVerification, loading, loanProductData } = useSelector(
     (state) => state.smeLoans
   );
-  // Decode the BorrowerId to restore its original value
-  const decodedBorrowerId = decodeURIComponent(BorrowerId);
-  // const isValid = useSelector((state) => state.validation.isValid);
 
-  // console.log(BorrowerId);
-
-  // useEffect(() => {
-  //   if (!currentPath.includes("inspection-verification")) {
-  //     dispatch(getLoanApplicationsByID(loanApplicationId));
-  //   }
-  //   dispatch(fetchLoanProductData());
-  //   const keysArray = [
-  //     "loanProductId",
-  //     "borrowerId",
-  //     "disbursedBy",
-  //     "loanReleaseDate",
-  //     "loanDurationStr",
-  //     "repaymentTenureStr",
-  //     "branch",
-  //   ];
-  //   dispatch(setFields(keysArray));
-  //   dispatch(setLoanApplicationId(loanApplicationId));
-  //   if (decodedBorrowerId != "undefined") {
-  //     dispatch(setLoanBorrowerId(decodedBorrowerId));
-  //   }
-  //   return () => {
-  //     dispatch(clearValidationError());
-  //   };
-  // }, [dispatch, loanApplicationId, decodedBorrowerId]);
   useEffect(() => {
     dispatch(fetchLoanProductData());
     return () => {
       dispatch(clearValidationError());
-      dispatch(resetLoanOfferFields());
+      // dispatch(resetLoanOfferFields());
+      dispatch(resetInspectionVerificationFields())
+
     };
   }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const updatedLoanData = {};
-
-    await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
-    // console.log(updatedLoanData);
+    await dispatch(validateForm(flattenToSimpleObject(inspectionVerification)));
     const state = store.getState();
     const isValid = state.validation.isValid;
-    const submitPayload = {};
+    const { uid, loanProductId } = loanOfferFields
+    const submitPayload = {
+      ...inspectionVerification,
+      "borrowerSerial": uid,
+      "loanProductId": loanProductId,
+    };
     if (isValid) {
-      await dispatch(saveDraftLoanData(submitPayload)).unwrap();
-      await dispatch(submitLoan(submitPayload)).unwrap();
+      await dispatch(submitInspectionVerification(submitPayload)).unwrap();
       navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
   };
 
-  const handleDraft = async () => {
-    const updatedLoanData = {};
-    await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
-    navigate("/loan/loan-origination-system/sme/loans/loan-application");
-  };
-
-  const handleCancel = async () => {
-    navigate("/loan/loan-origination-system/sme/loans/loan-application");
-  };
-
-
-  if (loading) {
-    return <ContainerTile loading={loading} />;
-  }
-
-
-  const handleGetOffers = async () => {
+  const handleGetVerificationData = async () => {
     await dispatch(validateForm(loanOfferFields));
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
-      dispatch(getLoanOffers(loanOfferFields));
-      dispatch(fetchBorrowerById(sanitizeUid(loanOfferFields?.uid)));
+      const { uid, loanProductId } = loanOfferFields
+
+      dispatch(getInspectionVerificationDetails({ borrowerSerialNo: uid, loanProductId }));
     }
   };
 
@@ -118,6 +77,10 @@ const InspectionVerification = () => {
     // Dispatch the action to update the state
     dispatch(updateLoanOfferFields({ name, value }));
   };
+
+  if (loading) {
+    return <ContainerTile loading={loading} />;
+  }
 
   return (
     <>
@@ -143,15 +106,14 @@ const InspectionVerification = () => {
           <div>
             <Button
               buttonName="Get Verification data"
-              onClick={handleGetOffers}
+              onClick={handleGetVerificationData}
               rectangle={true}
             />
           </div>
         </div>
       </ContainerTile>
-      {/* {inspectionVerification?.inspectionBasics?.loanApplicationId && <> */}
-      {true && <>
-        <InspectionVerificationFields inspectionVerification={inspectionVerification} />
+      {inspectionVerification?.inspectionBasics?.loanApplicationId && <>
+        <InspectionVerificationFields inspectionVerification={inspectionVerification} handleChangeReducer={updateInspectionVerificationField} />
         <div className="flex justify-end mt-5 gap-x-5">
           <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />
         </div>
