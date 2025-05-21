@@ -30,13 +30,11 @@ import ViewDocumentsModal from "./ViewDocumentsModal";
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
-  NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
   ReceiptRefundIcon,
   ArrowPathIcon,
   WalletIcon,
-  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import convertToReadableString from "../../../utils/convertToReadableString";
@@ -258,7 +256,7 @@ const LoanHistory = () => {
   ];
 
   const renderExpandedRow = (rowData) => (
-    <div className=" border-y-2 py-5 px-2">
+    <div className="border-y-2 dark:border-gray-600 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
         <CardInfo
           cardIcon={UserIcon}
@@ -436,8 +434,8 @@ const LoanHistory = () => {
           </div>
         )}
         <div className="flex justify-end gap-2 px-5">
-          {(rowData.loanStatus === "ACTIVATED" ||
-            rowData.loanStatus === "CLOSED") && (
+          {(rowData.loanStatus === "Activated" ||
+            rowData.loanStatus === "Closed") && (
             <div className="">
               <Button
                 buttonName={"Initiate Refund"}
@@ -449,8 +447,8 @@ const LoanHistory = () => {
               />
             </div>
           )}
-          {(rowData.loanStatus === "ACTIVATED" ||
-            rowData.loanStatus === "LATE") && (
+          {(rowData.loanStatus === "Activated" ||
+            rowData.loanStatus === "Late") && (
             <div className="flex gap-2">
               <Button
                 buttonName={"Refinance Loan"}
@@ -481,7 +479,7 @@ const LoanHistory = () => {
   const ListAction = (rowData) => {
     const { loanStatus } = rowData;
     const filteredUserNavigation = userNavigation.filter((item) => {
-      if (["PENDING", "CANCELED"].includes(loanStatus)) {
+      if (["Pending", "Canceled"].includes(loanStatus)) {
         return !excludedForPendingOrCanceled.includes(item.name);
       }
       return true;

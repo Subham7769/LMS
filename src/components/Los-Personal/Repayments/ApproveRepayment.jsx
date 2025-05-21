@@ -204,24 +204,28 @@ const ApproveRepayment = () => {
           cardIcon={ClockIcon}
           colorText={"text-sky-800 dark:text-sky-500"}
         >
-          {rowData.paymentsData.slice(-3).map((payment) => (
-            <div className="flex justify-between mb-2 border-b border-gray-300 pb-3 text-gray-800 dark:text-gray-100">
-              <div>
-                <div className="font-semibold">
-                  {convertDate(payment.paymentDate)}
+          {rowData?.paymentsData?.length > 0 ? (
+            rowData?.paymentsData.slice(-3).map((payment) => (
+              <div className="flex justify-between mb-2 border-b border-gray-300 pb-3 text-gray-800 dark:text-gray-100">
+                <div>
+                  <div className="font-semibold">
+                    {convertDate(payment.paymentDate)}
+                  </div>
+                  <div className="font-light">{payment.paymentType}</div>
                 </div>
-                <div className="font-light">{payment.paymentType}</div>
+                <div className="text-right">
+                  <div className="font-semibold">{payment.paymentAmount}</div>
+                  <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs">
+                    {payment.paymentStatus}
+                  </div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="font-semibold">
-                  {payment.paymentAmount}
-                </div>
-                <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs">
-                  {payment.paymentStatus}
-                </div>
-              </div>
+            ))
+          ) : (
+            <div className="text-gray-800 dark:text-gray-100">
+              No recent payments available
             </div>
-          ))}
+          )}
         </CardInfo>
       </div>
       <div className="w-full flex justify-end gap-2 px-5 mt-5">
@@ -253,53 +257,11 @@ const ApproveRepayment = () => {
     </div>
   );
 
-  const applyFilters = () => {
-    const filtered = approveRepaymentData.filter((repayment) => {
-      let matchesSearchValue = "";
-      if (searchBy) {
-        matchesSearchValue = searchValue
-          ? repayment[searchBy]
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase())
-          : true;
-      } else {
-        matchesSearchValue = searchValue
-          ? [
-            repayment.userId,
-            repayment.loan,
-            repayment.collectionBy,
-            repayment.accounting,
-            repayment.method,
-            repayment.transactionId,
-            repayment.installmentId,
-            repayment.requestId,
-          ].some((field) =>
-            field?.toLowerCase().includes(searchValue.toLowerCase())
-          )
-          : true;
-      }
-
-      return matchesSearchValue;
-    });
-
-    setFilteredRepayments(filtered);
-  };
-
-  // Trigger Filtering on Search Value Change
-  useEffect(() => {
-    applyFilters();
-  }, [searchValue]);
-
-  const handleSearchFilter = (term) => {
-    setSearchValue(term);
-  };
-
   const handleResetSearchBy = () => {
     setSearchBy("");
     setSearchValue("");
     setCurrentPage(0);
     dispatch(getRepayments({ pageNumber: 0, pageSize: 20 }));
-    
   };
 
   const handleFullLoanDetails = async (loanId, uid) => {
@@ -313,10 +275,10 @@ const ApproveRepayment = () => {
 
   const searchOptions = [
     { label: "User Id", value: "userId" },
-    { label: "Loan Id", value: "loan" },
-    { label: "Collection By", value: "collectionBy" },
+    { label: "Loan Id", value: "loanId" },
+    { label: "Collection By", value: "reconciliationMethod" },
     { label: "Accounting", value: "accounting" },
-    { label: "Method", value: "method" },
+    { label: "Method", value: "repaymentOriginator" },
     { label: "Transaction Id", value: "transactionId" },
     { label: "Installment Id", value: "installmentId" },
     { label: "Request Id", value: "requestId" },
@@ -324,20 +286,20 @@ const ApproveRepayment = () => {
 
   const SearchRepaymentByFieldSearch = () => {
     dispatch(fetchRepaymentByField({ field: searchBy, value: searchValue }));
-    setSearchBy("");
-    setSearchValue("");
+    // setSearchBy("");
+    // setSearchValue("");
   };
 
-    // Define the mapping for repayment data excel file fields
-    const repaymentMapping = {
-      amount: "Amount",
-      collectionDate: "Collection Date",
-      "borrowerProfile.userId": "User ID",
-      loan: "Loan Id",
-      collectionBy: "Collected By",
-      method: "Method",
-      accounting: "Accounting",
-    };
+  // Define the mapping for repayment data excel file fields
+  const repaymentMapping = {
+    amount: "Amount",
+    collectionDate: "Collection Date",
+    "borrowerProfile.userId": "User ID",
+    loan: "Loan Id",
+    collectionBy: "Collected By",
+    method: "Method",
+    accounting: "Accounting",
+  };
 
   return (
     <div className={`flex flex-col gap-3`}>
@@ -359,7 +321,7 @@ const ApproveRepayment = () => {
             labelName="Enter Value"
             inputName="searchValue"
             inputValue={searchValue}
-            onChange={(e) => handleSearchFilter(e.target.value)}
+            onChange={(e) => setSearchValue(e.target.value)}
             required
             disabled={false}
           />

@@ -34,15 +34,12 @@ const Repayments = () => {
   }, [location, tabs]);
 
   return (
-    <div className="mt-4">
-      {/* Tab Navigation */}
+    <>
       <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="mt-4">
         <Suspense fallback={<LoadingState />}>
           <Outlet />
         </Suspense>
-      </div>
-    </div>
+    </>
   );
 };
 

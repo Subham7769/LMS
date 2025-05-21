@@ -411,7 +411,6 @@ const LoanOffers = () => {
                         <Button
                           buttonName="Proceed"
                           onClick={() => SubmitProceed(ci.transactionId, index)}
-                          rectangle={true}
                         />
                       )}
                     </div>

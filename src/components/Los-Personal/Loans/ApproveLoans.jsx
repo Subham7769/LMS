@@ -25,7 +25,6 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
-  XMarkIcon,
   BanknotesIcon
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
@@ -68,7 +67,6 @@ const ApproveLoans = () => {
   const [rejectionReason, setRejectionReason] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
 
-  console.log(userData.username);
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
@@ -190,7 +188,7 @@ const ApproveLoans = () => {
       await dispatch(
         getPendingLoans({
           page: 0,
-          size: 20,
+          size: 10,
           getPayload: { roleNames: [roleName] },
         })
       ).unwrap();
@@ -238,9 +236,8 @@ const ApproveLoans = () => {
   ];
 
   const renderExpandedRow = (rowData) => {
-    console.log(rowData)
     return (
-      <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+      <div className="text-sm border-y-2 dark:border-gray-600 py-5 px-2">
         <div className="grid grid-cols-2 gap-4">
           <div className="shadow-md p-3 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60">
             <div className="flex justify-between items-baseline mb-3 text-sky-800 dark:text-sky-500">
@@ -343,45 +340,44 @@ const ApproveLoans = () => {
             </div>
           </CardInfo>
           <div className="col-span-2">
-            {rowData?.refinanceDetails && (
-              <CardInfo
-                cardIcon={BanknotesIcon}
-                cardTitle="Refinancing Details"
-                className={
-                  "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
-                }
-                colorText={"text-sky-800 dark:text-sky-500"}
-              >
-                {rowData?.refinanceDetails.map((refinance) => (
-                  <div className="grid grid-cols-4 pb-3">
-                    <div>
-                      <div className="text-gray-500">Loan Id</div>
-                      <div className="font-semibold">{refinance.loanId}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-500">Refinancing Entity</div>
-                      <div className="font-semibold"> {refinance.name}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-500">Refinance Amount</div>
-                      <div className="font-semibold">
-                        {" "}
-                        {refinance.refinanceAmount}
+            {rowData?.refinanceDetails &&
+              rowData?.refinanceDetails[0].loanId && (
+                <CardInfo
+                  cardIcon={BanknotesIcon}
+                  cardTitle="Refinancing Details"
+                  className={
+                    "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+                  }
+                  colorText={"text-sky-800 dark:text-sky-500"}
+                >
+                  {rowData?.refinanceDetails.map((refinance) => (
+                    <div className="grid grid-cols-4 pb-3">
+                      <div>
+                        <div className="">Loan Id</div>
+                        <div className="font-semibold">{refinance.loanId}</div>
+                      </div>
+                      <div>
+                        <div className="">Refinancing Entity</div>
+                        <div className="font-semibold"> {refinance.name}</div>
+                      </div>
+                      <div>
+                        <div className="">Refinance Amount</div>
+                        <div className="font-semibold">
+                          {" "}
+                          {refinance.refinanceAmount}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="">Installment On PaySlip</div>
+                        <div className="font-semibold">
+                          {" "}
+                          {refinance.installmentOnPaySlip}
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <div className="text-gray-500">
-                        Installment On PaySlip
-                      </div>
-                      <div className="font-semibold">
-                        {" "}
-                        {refinance.installmentOnPaySlip}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </CardInfo>
-            )}
+                  ))}
+                </CardInfo>
+              )}
           </div>
         </div>
         <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
@@ -476,6 +472,7 @@ const ApproveLoans = () => {
                 onClick={() => handleApprove(rowData)}
                 rectangle={true}
                 buttonIcon={FiCheckCircle}
+                buttonType="success"
               />
             </>
           )}

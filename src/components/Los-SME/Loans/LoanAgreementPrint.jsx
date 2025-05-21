@@ -79,7 +79,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             BUSINESS DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(businessDetails).map((key) => (
                 <div
@@ -105,7 +105,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             CONTACT DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(contactDetails).map((key) => (
                 <div
@@ -131,7 +131,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             PROFOMA DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(profomaDetails).map((key) => (
                 <div
@@ -161,7 +161,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             OFF-TAKER DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(offTakerDetails).map((key) => (
                 <div
@@ -186,7 +186,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             SUPPLIER DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(supplierDetails).map((key) => (
                 <div
@@ -211,7 +211,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             GENERAL DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(generalLoanDetails).map((key) => (
                 <div
@@ -241,7 +241,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             COLLATERAL DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(collateralDetails).map((key) => (
                 <div
@@ -266,7 +266,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             BANKING DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(bankingDetails).map((key) => (
                 <div
@@ -291,7 +291,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             LOAN OFFICER’S FINDINGS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
+          <div className="grid grid-cols-[40%_60%] mb-5">
             <div className="border-r border-border-gray-primary">
               {Object.keys(loanOfficerFinding).map((key) => (
                 <div
@@ -414,7 +414,7 @@ const LoanAgreementPrint = () => {
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
             MANAGEMENT CREDIT COMMITTEE’S DECISION
           </div>
-          <div className="grid grid-cols-[40%,60%]">
+          <div className="grid grid-cols-[40%_60%]">
             <div className="border-r border-border-gray-primary border-b pl-1 pt-1">
               Approved
             </div>

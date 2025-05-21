@@ -618,7 +618,19 @@ const personalRepaymentsSlice = createSlice({
       })
       .addCase(fetchRepaymentByField.fulfilled, (state, action) => {
         state.loading = false;
-        state.approveRepaymentData = action.payload;
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+
+        // Check if loanId is null in each object and filter accordingly
+        state.approveRepaymentData = payload.some(
+          (item) => item.loanId === null
+        )
+          ? [] // Set to an empty array if any loanId is null
+          : payload;
+
+        // hide the pagination
+        state.approveRepaymentTotalElements = 0;
       })
       .addCase(fetchRepaymentByField.rejected, (state, action) => {
         state.loading = false;
