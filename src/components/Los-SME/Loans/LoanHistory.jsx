@@ -220,15 +220,15 @@ const LoanHistory = () => {
   };
 
   const userNavigation = [
-    {
-      name: "Loan Statement",
-      action: (rowData) => handleLoanStatement(rowData.loanId, rowData.uid),
-    },
-    {
-      name: "Outright Settlement",
-      action: (rowData) =>
-        handleOutrightSettlement(rowData.loanId, rowData.uid),
-    },
+    // {
+    //   name: "Loan Statement",
+    //   action: (rowData) => handleLoanStatement(rowData.loanId, rowData.uid),
+    // },
+    // {
+    //   name: "Outright Settlement",
+    //   action: (rowData) =>
+    //     handleOutrightSettlement(rowData.loanId, rowData.uid),
+    // },
     {
       name: "Loan Agreement",
       action: (rowData) => handleLoanAgreement(rowData.loanId, rowData.uid),

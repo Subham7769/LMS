@@ -297,10 +297,10 @@ const ApproveRepayment = () => {
 
   const searchOptions = [
     { label: "User Id", value: "userId" },
-    { label: "Loan Id", value: "loan" },
-    { label: "Collection By", value: "collectionBy" },
+    { label: "Loan Id", value: "loanId" },
+    { label: "Collection By", value: "reconciliationMethod" },
     { label: "Accounting", value: "accounting" },
-    { label: "Method", value: "method" },
+    { label: "Method", value: "repaymentOriginator" },
     { label: "Transaction Id", value: "transactionId" },
     { label: "Installment Id", value: "installmentId" },
     { label: "Request Id", value: "requestId" },

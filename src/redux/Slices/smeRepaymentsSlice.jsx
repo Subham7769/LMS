@@ -234,8 +234,7 @@ export const fetchRepaymentByField = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env
-            .VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER
+          import.meta.env.VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_COMPANY_BORROWER
         }?fieldName=${field}&value=${value}`,
         {
           method: "GET",
@@ -464,6 +463,9 @@ const smeRepaymentsSlice = createSlice({
         collectionBy: "",
         description: "",
         accounting: "",
+        userId: "",
+        repaymentType: "COMPANY",
+        payAll: false,
       };
       state.draftRepaymentDTOList.push(newRow);
     },
