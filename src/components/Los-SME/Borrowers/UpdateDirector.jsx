@@ -48,7 +48,7 @@ const UpdateDirector = () => {
 
   const handleCancel = () => {
     dispatch(resetUpdateDirectorData());
-    navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
+    navigate(`/loan/loan-origination-system/sme/borrowers/add-director`);
   };
 
   return (
