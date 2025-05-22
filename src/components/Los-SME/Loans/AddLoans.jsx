@@ -23,7 +23,6 @@ import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
-import { toast } from "react-toastify";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -80,8 +79,7 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-  console.log(addLoanData.equipmentVendorDetails)
-
+console.log(addLoanData)
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to the sanitized uniqueID
@@ -95,7 +93,6 @@ const AddLoans = () => {
         borrowerId: sanitizedUniqueID,
       },
     };
-    console.log(updatedLoanData)
     await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
     // console.log(updatedLoanData);
     const state = store.getState();
@@ -113,17 +110,14 @@ const AddLoans = () => {
     if (isValid) {
       await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
-      navigate("/loan/loan-origination-system/sme/loans/inspection-verification");
+      navigate("/loan/loan-origination-system/sme/loans/loan-offers");
     }
   };
 
   const handleDraft = async () => {
-    if (!addLoanData?.generalLoanDetails?.uniqueID) {
-      toast.error("Please enter a valid Borrower Serial No. ");
-    }
     // Ensure borrowerId is set to the sanitized uniqueID
     const sanitizedUniqueID = sanitizeUid(
-      addLoanData?.generalLoanDetails?.uniqueID
+      addLoanData.generalLoanDetails.uniqueID
     );
     const updatedLoanData = {
       ...addLoanData,
@@ -132,7 +126,6 @@ const AddLoans = () => {
         borrowerId: sanitizedUniqueID,
       },
     };
-    console.log(addLoanData)
     await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
     navigate("/loan/loan-origination-system/sme/loans/loan-application");
   };
@@ -183,7 +176,7 @@ const AddLoans = () => {
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
-            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr)}
+            disabled={!(addLoanData.generalLoanDetails.loanDuration && addLoanData.generalLoanDetails.repaymentTenureStr) }
           />
           <Button
             buttonName="Save Draft"

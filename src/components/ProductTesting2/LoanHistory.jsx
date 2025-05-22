@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getFullLoanDetails,
@@ -9,18 +9,16 @@ import {
   generateLoanApplicationId,
   getRefinanceDetails,
   getRepaymentHistory,
-} from "../../../redux/Slices/smeLoansSlice";
-import Button from "../../Common/Button/Button";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputText from "../../Common/InputText/InputText";
-import InputFile from "../../Common/InputFile/InputFile";
-import Pagination from "../../Common/Pagination/Pagination";
-import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
-import RepaymentHistoryModal from "../../Los-Personal/RepaymentHistoryModal";
-import { convertDate } from "../../../utils/convertDate";
+} from "../../redux/Slices/smeLoansSlice";
+import Button from "../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import InputFile from "../Common/InputFile/InputFile";
+import Pagination from "../Common/Pagination/Pagination";
+import { convertDate } from "../../utils/convertDate";
 import { useNavigate, useParams } from "react-router-dom";
-import CardInfo from "../../Common/CardInfo/CardInfo";
+import CardInfo from "../Common/CardInfo/CardInfo";
 import ViewDocumentsModal from "./ViewDocumentsModal";
 import {
   CalendarDaysIcon,
@@ -33,22 +31,24 @@ import {
   ArrowPathIcon,
   BanknotesIcon,
 } from "@heroicons/react/24/outline";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 import { FiInfo } from "react-icons/fi";
-import convertToReadableString from "../../../utils/convertToReadableString";
+import convertToReadableString from "../../utils/convertToReadableString";
 import {
   closeLoan,
   getDisbursementFile,
   getLoanStatement,
   getOutrightSettlement,
   uploadSignedLoanAgreement,
-} from "../../../redux/Slices/personalLoansSlice";
+} from "../../redux/Slices/personalLoansSlice";
 import {
   clearValidationError,
   validateForm,
-} from "../../../redux/Slices/validationSlice";
-import store from "../../../redux/store";
-import ActionOption from "../../Common/ActionOptions/ActionOption";
+} from "../../redux/Slices/validationSlice";
+import store from "../../redux/store";
+import ActionOption from "../Common/ActionOptions/ActionOption";
+import FullLoanDetailModal from "../Los-Personal/FullLoanDetailModal";
+import RepaymentHistoryModal from "../Los-Personal/RepaymentHistoryModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({

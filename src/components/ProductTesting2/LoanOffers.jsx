@@ -1,9 +1,9 @@
 import InstallmentSummery from "./InstallmentSummery";
 import React, { useEffect, useState } from "react";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Button from "../../Common/Button/Button";
+import Button from "../Common/Button/Button";
 import {
   fetchBorrowerById,
   fetchLoanProductData,
@@ -11,24 +11,24 @@ import {
   handleProceed,
   resetLoanOfferFields,
   updateLoanOfferFields,
-} from "../../../redux/Slices/smeLoansSlice";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputText from "../../Common/InputText/InputText";
+} from "../../redux/Slices/smeLoansSlice";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
 import {
   UserIcon,
   CogIcon,
   CalculatorIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
-import formatNumber from "../../../utils/formatNumber";
-import CardInfo from "../../Common/CardInfo/CardInfo";
-import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
-import { sanitizeUid } from "../../../utils/sanitizeUid";
-import store from "../../../redux/store";
+import formatNumber from "../../utils/formatNumber";
+import CardInfo from "../Common/CardInfo/CardInfo";
+import { hasViewOnlyAccessGroup3 } from "../../utils/roleUtils";
+import { sanitizeUid } from "../../utils/sanitizeUid";
+import store from "../../redux/store";
 import {
   clearValidationError,
   validateForm,
-} from "../../../redux/Slices/validationSlice";
+} from "../../redux/Slices/validationSlice";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,7 +47,7 @@ const LoanOffers = () => {
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const userName = userData?.username;
-  
+
   useEffect(() => {
     dispatch(fetchLoanProductData());
     return () => {
@@ -64,7 +64,7 @@ const LoanOffers = () => {
       createdBy: userName,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
-    navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
+    navigate(`/loan/product-testing2/loan-history`);
   };
 
   const handleChange = (e) => {
@@ -106,7 +106,7 @@ const LoanOffers = () => {
       <div className="font-semibold text-lg">{value} %</div>
     </div>
   );
-
+console.log(loanConfigData?.dynamicCashLoanOffers)
   return (
     <>
       <ContainerTile className={"mb-5 bg-gray-50"} loading={loading}>
@@ -361,9 +361,9 @@ const LoanOffers = () => {
                 loading={loading}
               >
                 <div
-                  className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5"}
+                  className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5 text-center"}
                 >
-                  <div className="grid grid-cols-5 gap-4 items-center">
+                  <div className="grid grid-cols-6 gap-4 items-center">
                     <div className="text-[14px]">
                       <div className="text-gray-500">Total Loan Amount</div>
                       <div className="font-semibold text-lg text-blue-600">
@@ -403,6 +403,20 @@ const LoanOffers = () => {
                       <div className="text-gray-500">
                         ({ci?.annualInterestRatePercent}% APR)
                       </div>
+
+                    </div>
+                    <div className="text-[14px]">
+                      <div className="text-gray-500">TermSheet</div>
+                      <div className="font-semibold text-lg">
+                        <a
+                          href={"/assets/files/Term_Sheet_Commercial_Asset_Financing.pdf"}
+                          className="text-blue-600 underline"
+                          download="Term_Sheet_Commercial_Asset_Financing.pdf"
+                        >
+                          Download
+                        </a>
+                      </div>
+
                     </div>
                     <div className="text-center">
                       {!hasViewOnlyAccessGroup3(roleName) && (
@@ -414,6 +428,7 @@ const LoanOffers = () => {
                       )}
                     </div>
                   </div>
+
                 </div>
               </CardInfo>
               <div>

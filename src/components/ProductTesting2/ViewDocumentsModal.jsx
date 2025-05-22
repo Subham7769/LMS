@@ -1,8 +1,8 @@
 import React from "react";
-import Button from "../../Common/Button/Button";
+import Button from "../Common/Button/Button";
 import { useDispatch } from "react-redux";
-import { downloadDocumentFile, previewDocumentFile } from "../../../redux/Slices/smeLoansSlice";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { downloadDocumentFile, previewDocumentFile } from "../../redux/Slices/smeLoansSlice";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 import { ArrowDownTrayIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {

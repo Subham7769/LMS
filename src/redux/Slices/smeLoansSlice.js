@@ -1435,6 +1435,7 @@ const smeLoansSlice = createSlice({
       .addCase(fetchLoanProductData.fulfilled, (state, action) => {
         state.loading = false;
         state.loanProductData = action.payload;
+        console.log(action.payload)
         const updatedLoanProductOptions = action.payload
           .filter((item) => item.eligibleCustomerType === "CORPORATE")
           .map((item) => ({

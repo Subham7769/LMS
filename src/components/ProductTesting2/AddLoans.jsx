@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../../Common/Button/Button";
-import { validateForm } from "../../../redux/Slices/validationSlice";
+import Button from "../Common/Button/Button";
+import { validateForm } from "../../redux/Slices/validationSlice";
 import {
   saveDraftLoanData,
   submitLoan,
@@ -12,17 +12,17 @@ import {
   setLoanBorrowerId,
   getMaxPrincipalData,
   getDocsByIdnUsage,
-} from "../../../redux/Slices/smeLoansSlice";
+} from "../../redux/Slices/smeLoansSlice";
 import {
   clearValidationError,
   setFields,
-} from "../../../redux/Slices/validationSlice";
+} from "../../redux/Slices/validationSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import store from "../../../redux/store";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
+import store from "../../redux/store";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { sanitizeUid } from "../../../utils/sanitizeUid";
-import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { sanitizeUid } from "../../utils/sanitizeUid";
+import flattenToSimpleObject from "../../utils/flattenToSimpleObject";
 import { toast } from "react-toastify";
 
 const AddLoans = () => {
@@ -80,7 +80,7 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-  console.log(addLoanData.equipmentVendorDetails)
+  console.log(addLoanData)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -109,11 +109,13 @@ const AddLoans = () => {
       offTakerDetails: updatedLoanData.offTakerDetails,
       proformaDetails: updatedLoanData.proformaDetails,
       supplierDetails: updatedLoanData.supplierDetails,
+      verificationWorkflow: updatedLoanData.verificationWorkflow,
+      equipmentVendorDetails: updatedLoanData.equipmentVendorDetails,
     };
     if (isValid) {
       await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
-      navigate("/loan/loan-origination-system/sme/loans/inspection-verification");
+      navigate("/loan/product-testing2/inspection-verification");
     }
   };
 
@@ -134,11 +136,11 @@ const AddLoans = () => {
     };
     console.log(addLoanData)
     await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
-    navigate("/loan/loan-origination-system/sme/loans/loan-application");
+    navigate("/loan/product-testing2/loan-application");
   };
 
   const handleCanel = async () => {
-    navigate("/loan/loan-origination-system/sme/loans/loan-application");
+    navigate("/loan/product-testing2/loan-application");
   };
 
   const getMaxPrincipal = async () => {

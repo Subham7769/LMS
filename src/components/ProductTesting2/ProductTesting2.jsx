@@ -1,9 +1,9 @@
 import React, { useState, Suspense, useEffect } from "react";
-import LoadingState from "../../LoadingState/LoadingState";
-import Tab from "../../Common/Tab/Tab";
+import LoadingState from "../LoadingState/LoadingState";
+import Tab from "../Common/Tab/Tab";
 import { Outlet, useLocation } from "react-router-dom";
 
-const Loans = () => {
+const ProductTesting2 = () => {
   const [activeTab, setActiveTab] = useState("loan-application");
   const location = useLocation();
   const currentPath = location.pathname;
@@ -11,32 +11,32 @@ const Loans = () => {
   const tabs = [
     {
       id: "loan-application",
-      path: "/loan/loan-origination-system/sme/loans/loan-application",
+      path: "loan-application",
       label: "Asset Financing Application",
     },
     // {
     //   id: "add-loan",
-    //   path: "/loan/loan-origination-system/sme/loans/add-loan",
+    //   path: "add-loan",
     //   label: "Add Loan",
     // },
     {
       id: "inspection-verification",
-      path: "/loan/loan-origination-system/sme/loans/inspection-verification",
+      path: "inspection-verification",
       label: "Inspection & Verification",
     },
     {
       id: "loan-offers",
-      path: "/loan/loan-origination-system/sme/loans/loan-offers",
+      path: "loan-offers",
       label: "Equipment financing offer",
     },
     {
       id: "approve-loans",
-      path: "/loan/loan-origination-system/sme/loans/approve-loans",
+      path: "approve-loans",
       label: "Financing Approval",
     },
     {
       id: "loan-history",
-      path: "/loan/loan-origination-system/sme/loans/loan-history",
+      path: "loan-history",
       label: "Portfolio Management",
     },
     // {
@@ -84,4 +84,4 @@ const Loans = () => {
   );
 };
 
-export default Loans;
+export default ProductTesting2;

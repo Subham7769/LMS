@@ -1,10 +1,10 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { XCircleIcon, CalendarIcon } from "@heroicons/react/24/outline";
-import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";
-import { convertDate } from "../../../utils/convertDate";
-import formatNumber from "../../../utils/formatNumber";
+import { convertDate } from "../../utils/convertDate";
+import formatNumber from "../../utils/formatNumber";
 
 const InstallmentSummery = ({ onClose, installmentConfigData }) => {
   const { loanConfigData } = useSelector((state) => state.smeLoans);

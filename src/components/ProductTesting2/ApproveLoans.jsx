@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
 import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,18 +8,17 @@ import {
   getLoanAgreement,
   getLoansByField,
   getPendingLoans,
-} from "../../../redux/Slices/smeLoansSlice";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputText from "../../Common/InputText/InputText";
-import Button from "../../Common/Button/Button";
-import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
+} from "../../redux/Slices/smeLoansSlice";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import Button from "../Common/Button/Button";
+import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import { useNavigate } from "react-router-dom";
 import LoanRejectModal from "./LoanRejectModal";
-import Pagination from "../../Common/Pagination/Pagination";
-import { convertDate } from "../../../utils/convertDate";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
-import FullLoanDetailModal from "../../Los-Personal/FullLoanDetailModal";
+import Pagination from "../Common/Pagination/Pagination";
+import { convertDate } from "../../utils/convertDate";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -28,15 +27,16 @@ import {
   UserIcon,
   BanknotesIcon,
 } from "@heroicons/react/24/outline";
-import CardInfo from "../../Common/CardInfo/CardInfo";
-import calculateAging from "../../../utils/calculateAging";
+import CardInfo from "../Common/CardInfo/CardInfo";
+import calculateAging from "../../utils/calculateAging";
 import ViewDocumentsModal from "./ViewDocumentsModal";
-import convertToReadableString from "../../../utils/convertToReadableString";
-import store from "../../../redux/store";
+import convertToReadableString from "../../utils/convertToReadableString";
+import store from "../../redux/store";
 import {
   clearValidationError,
   validateForm,
-} from "../../../redux/Slices/validationSlice";
+} from "../../redux/Slices/validationSlice";
+import FullLoanDetailModal from "../Los-Personal/FullLoanDetailModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -61,11 +61,11 @@ const ApproveLoans = () => {
   const [salSearchValue, setSalSearchValue] = useState("");
   const [salSearchBy, setSalSearchBy] = useState("");
   const navigate = useNavigate();
+  const [isDownPaymentPaid, setIsDownPaymentPaid] = useState(null);
 
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
-
   useEffect(() => {
     return () => {
       dispatch(clearValidationError());
@@ -146,11 +146,13 @@ const ApproveLoans = () => {
     // if (rowData?.rolePermissions?.finalApprove) {
     //   navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
     // }
+    setIsDownPaymentPaid(null)
   };
 
   const handleReject = async (rowData) => {
     setCurrentRowData(rowData);
     setShowModal(true); // Show modal
+    setIsDownPaymentPaid(null)
   };
 
   const closeRejectModal = () => {
@@ -207,9 +209,8 @@ const ApproveLoans = () => {
     setFilteredApproveLoansData(filteredApproveLoansDataFunction());
   }, [approveLoans, roleName, userData]);
 
-  const [isDownPaymentPaid, setIsDownPaymentPaid] = useState(null);
   const renderExpandedRow = (rowData) => {
-
+    console.log(rowData)
     return (<div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
         <CardInfo
@@ -382,15 +383,16 @@ const ApproveLoans = () => {
         </div>
       )}
       <div className="w-full flex justify-end gap-2 px-5">
-        <div className="flex items-center mb-3">
-
-          <InputCheckbox
-            labelName={"Is Down Payment Paid?"}
-            inputName={"isDownPaymentPaid"}
-            inputChecked={isDownPaymentPaid}
-            onChange={(e) => setIsDownPaymentPaid(e.target.checked)}
-          />
-        </div>
+        {rowData.loanProductName.toLowerCase().includes("asset") &&
+          <div className="flex items-center mb-3">
+            <InputCheckbox
+              labelName={"Is Down Payment Paid?"}
+              inputName={"isDownPaymentPaid"}
+              inputChecked={isDownPaymentPaid}
+              onChange={(e) => setIsDownPaymentPaid(e.target.checked)}
+            />
+          </div>
+        }
         <Button
           buttonName={"View Loan Agreement"}
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
@@ -421,7 +423,7 @@ const ApproveLoans = () => {
               onClick={() => handleApprove(rowData)}
               rectangle={true}
               buttonIcon={FiCheckCircle}
-              disabled={!isDownPaymentPaid}
+              disabled={rowData.loanProductName.toLowerCase().includes("asset") ? !isDownPaymentPaid : false}
             />
           </>
         )}

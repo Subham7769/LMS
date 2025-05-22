@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../../Common/Button/Button";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputText from "../../Common/InputText/InputText";
-import { validateForm } from "../../../redux/Slices/validationSlice";
+import Button from "../Common/Button/Button";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import { validateForm } from "../../redux/Slices/validationSlice";
 import {
   deleteDocumentFile,
   fetchLoanProductData,
@@ -14,21 +14,22 @@ import {
   updateInspectionVerificationField,
   updateLoanField,
   updateLoanOfferFields,
-} from "../../../redux/Slices/smeLoansSlice";
+} from "../../redux/Slices/smeLoansSlice";
 import {
   clearValidationError,
   setFields,
-} from "../../../redux/Slices/validationSlice";
-import { useNavigate } from "react-router-dom";
-import store from "../../../redux/store";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+} from "../../redux/Slices/validationSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import store from "../../redux/store";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import flattenToSimpleObject from "../../utils/flattenToSimpleObject";
 import InspectionVerificationFields from "./InspectionVerificationFields";
 
 
 const InspectionVerification = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {loanApplicationId} = useParams()
 
   const { loanProductOptions, loanOfferFields, inspectionVerification, loading, loanProductData } = useSelector(
     (state) => state.smeLoans
@@ -57,7 +58,7 @@ const InspectionVerification = () => {
     };
     if (isValid) {
       await dispatch(submitInspectionVerification(submitPayload)).unwrap();
-      navigate("/loan/loan-origination-system/sme/loans/loan-offers");
+      navigate("/loan/product-testing2/loan-offers");
     }
   };
 
@@ -112,7 +113,7 @@ const InspectionVerification = () => {
           </div>
         </div>
       </ContainerTile>
-      {inspectionVerification?.inspectionBasics?.loanApplicationId && <>
+      {inspectionVerification?.loanProductId && <>
         <InspectionVerificationFields inspectionVerification={inspectionVerification} handleChangeReducer={updateInspectionVerificationField} />
         <div className="flex justify-end mt-5 gap-x-5">
           <Button buttonName="Submit" onClick={handleSubmit} rectangle={true} />

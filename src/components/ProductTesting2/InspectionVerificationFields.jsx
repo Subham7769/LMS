@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Accordion from "../../Common/Accordion/Accordion";
+import Accordion from "../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
   uploadInspectionVerificationDocumentFile,
-} from "../../../redux/Slices/smeLoansSlice";
+} from "../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
-import { yesNoOptions, verificationStatus, inspectionTypeOptions, overallStatusOptions, overallConditionOptions, usageLevelOptions } from "../../../data/LosData";
-import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
-import DynamicForm from "../../Common/DynamicForm/DynamicForm";
-import { isValidationFailed } from "../../../utils/isValidationFailed";
-import { currencyOptions } from "../../../data/CountryData";
+import { sectorOptions, lhaBranchOptions } from "../../data/OptionsData";
+import { yesNoOptions, verificationStatus, inspectionTypeOptions, overallStatusOptions, overallConditionOptions, usageLevelOptions } from "../../data/LosData";
+import DocumentUploaderVerifier from "../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
+import convertToTitleCase from "../../utils/convertToTitleCase";
+import DynamicForm from "../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../utils/isValidationFailed";
+import { currencyOptions } from "../../data/CountryData";
 
 const InspectionVerificationFields = ({ inspectionVerification, handleFileReset, handleFileUpload, handleChangeReducer }) => {
   const dispatch = useDispatch();

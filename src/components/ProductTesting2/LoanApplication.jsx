@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import HoverButton from "../../Common/HoverButton/HoverButton";
+import HoverButton from "../Common/HoverButton/HoverButton";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
-import ContainerTile from "../../Common/ContainerTile/ContainerTile";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputText from "../../Common/InputText/InputText";
-import Button from "../../Common/Button/Button";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import InputSelect from "../Common/InputSelect/InputSelect";
+import InputText from "../Common/InputText/InputText";
+import Button from "../Common/Button/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
-import { convertDate } from "../../../utils/convertDate";
-import Pagination from "../../Common/Pagination/Pagination";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
+import { convertDate } from "../../utils/convertDate";
+import Pagination from "../Common/Pagination/Pagination";
 import {
   generateLoanApplicationId,
   getLoanApplications,
@@ -20,14 +20,14 @@ import {
   resetAddLoanData,
   deleteLoanOffers,
   cloneLoanApplicationsByID,
-} from "../../../redux/Slices/smeLoansSlice";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
-import store from "../../../redux/store";
+} from "../../redux/Slices/smeLoansSlice";
+import convertToTitleCase from "../../utils/convertToTitleCase";
+import { hasViewOnlyAccessGroup3 } from "../../utils/roleUtils";
+import store from "../../redux/store";
 import {
   clearValidationError,
   validateForm,
-} from "../../../redux/Slices/validationSlice";
+} from "../../redux/Slices/validationSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -105,7 +105,7 @@ const LoanApplication = () => {
         generateLoanApplicationId()
       ).unwrap();
       navigate(
-        `/loan/loan-origination-system/sme/loans/add-loan/new/${loanApplicationId}`
+        `/loan/product-testing2/loan/add-loan/new/${loanApplicationId}`
       );
     } catch (error) {
       console.error("Failed to generate loan application ID:", error);
@@ -114,7 +114,7 @@ const LoanApplication = () => {
 
   const handleEditApplication = async (rowData) => {
     navigate(
-      `/loan/loan-origination-system/sme/loans/add-loan/${rowData?.loanApplicationId}`
+      `/loan/product-testing2/loan/add-loan/${rowData?.loanApplicationId}`
     );
     if (rowData.status === "Submitted" || rowData.status === "In Progress") {
       await dispatch(deleteLoanOffers(rowData?.loanApplicationId)).unwrap();
@@ -131,7 +131,7 @@ const LoanApplication = () => {
 
   const handleCloneLoanApplication = async (loanApplicationId) => {
     await dispatch(cloneLoanApplicationsByID(loanApplicationId)).unwrap();
-    navigate(`/loan/loan-origination-system/sme/loans/add-loan/${loanApplicationId}`);
+    navigate(`/loan/product-testing2/loan/add-loan/${loanApplicationId}`);
   }
 
   const renderActionList = (rowData) => {

@@ -1,23 +1,23 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Accordion from "../../Common/Accordion/Accordion";
+import Accordion from "../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
   updateLoanField,
   uploadDocumentFile,
-} from "../../../redux/Slices/smeLoansSlice";
+} from "../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
-import { yesNoOptions, verificationStatus } from "../../../data/LosData";
+import { sectorOptions, lhaBranchOptions } from "../../data/OptionsData";
+import { yesNoOptions, verificationStatus,overallStatusOptions } from "../../data/LosData";
 
-import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
+import DocumentUploaderVerifier from "../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 import {
   countryOptions,
   districtOptions,
   locationOptions,
-} from "../../../data/CountryData";
-import DynamicForm from "../../Common/DynamicForm/DynamicForm";
-import { isValidationFailed } from "../../../utils/isValidationFailed";
+} from "../../data/CountryData";
+import DynamicForm from "../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../utils/isValidationFailed";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
@@ -846,7 +846,7 @@ const AddLoanFields = ({ addLoanData }) => {
       labelName: "Verification Status",
       inputName: "verificationStatus",
       type: "select",
-      options: verificationStatus,
+      options: overallStatusOptions,
       validation: false,
     },
     {

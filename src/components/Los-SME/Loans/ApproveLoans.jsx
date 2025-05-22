@@ -132,7 +132,7 @@ const ApproveLoans = () => {
       uid: rowData.uid,
       username: userData.username,
       roleName: [roleName],
-      isDownPaymentPaid,
+      isDownPaymentPaid
     };
 
     await dispatch(approveLoan(approveLoanPayload)).unwrap();
@@ -208,9 +208,9 @@ const ApproveLoans = () => {
   }, [approveLoans, roleName, userData]);
 
   const [isDownPaymentPaid, setIsDownPaymentPaid] = useState(null);
-  const renderExpandedRow = (rowData) => {
 
-    return (<div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+  const renderExpandedRow = (rowData) => (
+    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
         <CardInfo
           cardIcon={UserIcon}
@@ -382,15 +382,16 @@ const ApproveLoans = () => {
         </div>
       )}
       <div className="w-full flex justify-end gap-2 px-5">
-        <div className="flex items-center mb-3">
-
-          <InputCheckbox
-            labelName={"Is Down Payment Paid?"}
-            inputName={"isDownPaymentPaid"}
-            inputChecked={isDownPaymentPaid}
-            onChange={(e) => setIsDownPaymentPaid(e.target.checked)}
-          />
-        </div>
+        {rowData.loanProductName.toLowerCase().includes("asset") &&
+          <div className="flex items-center mb-3">
+            <InputCheckbox
+              labelName={"Is Down Payment Paid?"}
+              inputName={"isDownPaymentPaid"}
+              inputChecked={isDownPaymentPaid}
+              onChange={(e) => setIsDownPaymentPaid(e.target.checked)}
+            />
+          </div>
+        }
         <Button
           buttonName={"View Loan Agreement"}
           onClick={() => handleLoanAgreement(rowData.loanId, rowData.uid)}
@@ -421,13 +422,13 @@ const ApproveLoans = () => {
               onClick={() => handleApprove(rowData)}
               rectangle={true}
               buttonIcon={FiCheckCircle}
-              disabled={!isDownPaymentPaid}
+              disabled={rowData.loanProductName.toLowerCase().includes("asset") ? !isDownPaymentPaid : false}
             />
           </>
         )}
       </div>
-    </div>)
-  };
+    </div>
+  );
 
   return (
     <div className={`flex flex-col gap-3`}>

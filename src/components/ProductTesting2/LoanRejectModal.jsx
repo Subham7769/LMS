@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import InputTextArea from "../../Common/InputTextArea/InputTextArea";
-import Button from "../../Common/Button/Button";
+import InputTextArea from "../Common/InputTextArea/InputTextArea";
+import Button from "../Common/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { updateValidationError } from "../../../redux/Slices/validationSlice";
+import { updateValidationError } from "../../redux/Slices/validationSlice";
 import {
   getPendingLoans,
   rejectLoan,
-} from "../../../redux/Slices/smeLoansSlice";
+} from "../../redux/Slices/smeLoansSlice";
 import { useNavigate } from "react-router-dom";
 
 const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
@@ -44,7 +44,7 @@ const LoanRejectModal = ({ isOpen, onClose, userDetails }) => {
         })
       ).unwrap();
       onClose();
-      navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
+      navigate(`/loan/product-testing2/loan-history`);
       setRejectionReason("");
     }
   };

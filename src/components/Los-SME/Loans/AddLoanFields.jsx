@@ -7,8 +7,6 @@ import {
 } from "../../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { sectorOptions, lhaBranchOptions } from "../../../data/OptionsData";
-import { yesNoOptions, verificationStatus } from "../../../data/LosData";
-
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import {
@@ -167,13 +165,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    dispatch(
-      updateLoanField({
-        section: "generalLoanDetails",
-        field: "interestMethod",
-        value: selectedLoanProduct?.interestMethod,
-      })
-    );
+    // dispatch(
+    //   updateLoanField({
+    //     section: "generalLoanDetails",
+    //     field: "repaymentTenureStr",
+    //     value: "",
+    //   })
+    // );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -706,45 +704,6 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
-  const equipmentVendorDetailsConfig = [
-    {
-      labelName: "Vendor Contact Person",
-      inputName: "vendorContactPerson",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Delivery Timeframe",
-      inputName: "deliveryTimeframe",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Warranty Details",
-      inputName: "warrantyDetails",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Trade-in details",
-      inputName: "tradeInDetails",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Installation Requirements",
-      inputName: "installationRequirements",
-      type: "checkbox",
-      validation: false,
-    },
-    {
-      labelName: "Maintenance Contract Included",
-      inputName: "maintenanceContractIncluded",
-      type: "checkbox",
-      validation: false,
-    },
-  ];
-
   const collateralDetailsConfig = [
     {
       labelName: "Collateral Type",
@@ -841,34 +800,6 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
-  const verificationWorkflowConfig = [
-    {
-      labelName: "Verification Status",
-      inputName: "verificationStatus",
-      type: "select",
-      options: verificationStatus,
-      validation: false,
-    },
-    {
-      labelName: "Verification Notes",
-      inputName: "VerificationNotes",
-      type: "text",
-      validation: false,
-    },
-    {
-      labelName: "Verification Date",
-      inputName: "verificationDate",
-      type: "date",
-      validation: false,
-    },
-    {
-      labelName: "To be verified by",
-      inputName: "toBeVerifiedBy",
-      type: "text",
-      validation: false,
-    },
-  ];
-
   const validationError = useSelector(
     (state) => state.validation.validationError
   );
@@ -917,7 +848,7 @@ const AddLoanFields = ({ addLoanData }) => {
           generalLoanDetailsConfig
         )}
       />
-      {/* <Accordion
+      <Accordion
         heading={"Profoma Details"}
         renderExpandedContent={() =>
           <DynamicForm
@@ -941,8 +872,8 @@ const AddLoanFields = ({ addLoanData }) => {
           />
         }
         error={isValidationFailed(validationError, offTakerConfig)}
-      /> */}
-      {/* <Accordion
+      />
+      <Accordion
         heading={"Supplier Details"}
         subHeading="(Not applicable to IDF)"
         renderExpandedContent={() =>
@@ -954,18 +885,6 @@ const AddLoanFields = ({ addLoanData }) => {
           />
         }
         error={isValidationFailed(validationError, supplierDetailsConfig)}
-      /> */}
-      <Accordion
-        heading={"Equipment Vendor Details"}
-        renderExpandedContent={() =>
-          <DynamicForm
-            details={addLoanData.equipmentVendorDetails}
-            config={equipmentVendorDetailsConfig}
-            sectionName={"equipmentVendorDetails"}
-            handleInputChange={handleInputChange}
-          />
-        }
-        error={isValidationFailed(validationError, equipmentVendorDetailsConfig)}
       />
       <Accordion
         heading={"Collateral Details"}
@@ -990,18 +909,6 @@ const AddLoanFields = ({ addLoanData }) => {
           />
         }
         error={isValidationFailed(validationError, lhaDetailsConfig)}
-      />
-      <Accordion
-        heading={"Verification Workflow"}
-        renderExpandedContent={() =>
-          <DynamicForm
-            details={addLoanData.verificationWorkflow}
-            config={verificationWorkflowConfig}
-            sectionName={"verificationWorkflow"}
-            handleInputChange={handleInputChange}
-          />
-        }
-        error={isValidationFailed(validationError, verificationWorkflowConfig)}
       />
       <Accordion
         heading={"Required Documents"}
