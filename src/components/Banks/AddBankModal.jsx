@@ -50,6 +50,7 @@ const AddBankModal = ({ isOpen, onClose }) => {
               inputValue={bankName}
               onChange={(e) => setBankName(e.target.value)}
               isValidation={true}
+              disabled={false}
             />
           </div>
           <div className="text-right">
