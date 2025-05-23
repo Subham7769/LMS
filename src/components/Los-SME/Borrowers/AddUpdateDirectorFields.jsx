@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -27,6 +27,7 @@ import {
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 import { fetchAllBank } from "../../../redux/Slices/bankSlice";
+import { useLocation } from "react-router-dom";
 
 const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
   const dispatch = useDispatch();
@@ -41,13 +42,6 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     []
   );
   const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } = useSelector((state) => state.bank);
-
-  // Fetch all Banks Data
-  useEffect(() => {
-    // if (bankOptions.length) {
-    dispatch(fetchAllBank());
-    // }
-  }, [])
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -158,35 +152,71 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
     );
   };
 
+
+  const location = useLocation();
+  const isUpdateDirector = location.pathname.includes('update-director');
+
+  // 1. Fetch all banks on mount
   useEffect(() => {
-    dispatch(
-      handleChangeReducer({
-        section: "bankDetails",
-        field: "branch",
-        value: "",
-      })
-    );
+    // if (!bankOptions.length) {
+    dispatch(fetchAllBank());
+    // }
+  }, []);
 
-    dispatch(
-      handleChangeReducer({
-        section: "bankDetails",
-        field: "branchCode",
-        value: "",
-      })
-    );
+  // 2. Set initial bankName if in update mode
+  useEffect(() => {
+    if (isUpdateDirector && BorrowerData?.bankDetails?.bankName) {
+      setBankName(BorrowerData.bankDetails.bankName);
+    }
+  }, [isUpdateDirector, BorrowerData?.bankDetails?.bankName]);
 
-    dispatch(
-      handleChangeReducer({
-        section: "bankDetails",
-        field: "sortCode",
-        value: "",
-      })
-    );
+  // 3. Set initial branch if in update mode
+  useEffect(() => {
+    if (isUpdateDirector && BorrowerData?.bankDetails?.branch) {
+      setBranchName(BorrowerData.bankDetails.branch);
+    }
+  }, [isUpdateDirector, BorrowerData?.bankDetails?.branch]);
+
+  // 4. Reset branch-related fields when bankName changes
+  const prevBankNameRef = useRef();
+
+  useEffect(() => {
+    const prevBankName = prevBankNameRef.current;
+    const currentBankName = BorrowerData.bankDetails.bankName;
+
+    if (prevBankName !== undefined && prevBankName !== currentBankName) {
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branch",
+          value: "",
+        })
+      );
+
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branchCode",
+          value: "",
+        })
+      );
+
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "sortCode",
+          value: "",
+        })
+      );
+    }
+
+    prevBankNameRef.current = currentBankName;
   }, [BorrowerData.bankDetails.bankName]);
 
+  // 5. Set sortCode and branchCode based on selected branch
   useEffect(() => {
-    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
-      return;
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch) return;
+
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
@@ -202,7 +232,7 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
         value: sortCodeBranchCodeOptions[branchName]?.sortCode,
       })
     );
-  }, [BorrowerData.bankDetails.branch]);
+  }, [BorrowerData.bankDetails.branch, branchName]);
 
   //   All Fields Configuration
   const personalDetailsConfig = [
