@@ -1,6 +1,6 @@
 import React from "react";
-import ListTable from "../../Common/ListTable/ListTable";
-import { CollateralRegisterHeaderList, CollateralRegisterList } from "../../../data/LosData";
+import ListTable from "../Common/ListTable/ListTable";
+import { CollateralRegisterHeaderList, CollateralRegisterList } from "../../data/LosData";
 
 const CollateralRegister = () => {
 

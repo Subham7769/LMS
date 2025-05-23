@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Button from "../../Common/Button/Button";
+import Button from "../Common/Button/Button";
 import { PrinterIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";

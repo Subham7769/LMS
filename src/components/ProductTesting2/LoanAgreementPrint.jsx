@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import convertToReadableString from "../../../utils/convertToReadableString";
+import convertToReadableString from "../../utils/convertToReadableString";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getLoanAgreement } from "../../../redux/Slices/smeLoansSlice";
-import { creditCommitteDecision, documentsData } from "../../../data/LosData";
-import longHornLogo from "../../../assets/image/longhorn-logo.png";
-import formatNumber from "../../../utils/formatNumber";
-import { convertDate } from "../../../utils/convertDate";
-import isDateString from "../../../utils/isDateString";
+import { getLoanAgreement } from "../../redux/Slices/smeLoansSlice";
+import { creditCommitteDecision, documentsData } from "../../data/LosData";
+import longHornLogo from "../../assets/image/longhorn-logo.png";
+import formatNumber from "../../utils/formatNumber";
+import { convertDate } from "../../utils/convertDate";
+import isDateString from "../../utils/isDateString";
 
 const ShimmerTable = () => {
   return (
