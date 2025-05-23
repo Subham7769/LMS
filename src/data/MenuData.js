@@ -239,6 +239,13 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "Bank Statement Analyzer",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/bank-statement-analyzer",
+    icon: "DocumentMagnifyingGlassIcon",
+    current: false,
+  },  
+  {
     title: "Approval Config",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/loan-approval",

@@ -56,6 +56,7 @@ import {
   CubeTransparentIcon,
   CpuChipIcon,
   BanknotesIcon,
+  DocumentMagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -122,6 +123,7 @@ const SideBar = () => {
     CubeTransparentIcon,
     CpuChipIcon,
     BanknotesIcon,
+    DocumentMagnifyingGlassIcon,
   };
 
   const functionMapping = {

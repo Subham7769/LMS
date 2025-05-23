@@ -513,6 +513,10 @@ const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
 
+const BankStatementAnalyzer = React.lazy(() =>
+  import("./components/BankStatementAnalyzer/BankStatementAnalyzer")
+);
+
 const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
@@ -733,6 +737,11 @@ const routes = [
         element: <Banks />,
         errorElement: <RouteErrorBoundary />,
       },
+      {
+        path: "bank-statement-analyzer",
+        element: <BankStatementAnalyzer />,
+        errorElement: <RouteErrorBoundary />,
+      },      
       {
         path: "loan-approval/:approvalsConfigurationsTempId",
         element: <LoanApproval />,

@@ -4,12 +4,19 @@ import Slider from "react-slick";
 import { setMenus } from "../../redux/Slices/sidebarSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-import BG from "../../assets/image/1.webp";
-import BG1 from "../../assets/image/2.webp";
-import BG2 from "../../assets/image/3.webp";
-import BG3 from "../../assets/image/4.webp";
-import BG4 from "../../assets/image/5.webp";
-import BG5 from "../../assets/image/6.jpg";
+// import BG from "../../assets/image/1.webp";
+// import BG1 from "../../assets/image/2.webp";
+// import BG2 from "../../assets/image/3.webp";
+// import BG3 from "../../assets/image/4.webp";
+// import BG4 from "../../assets/image/5.webp";
+// import BG5 from "../../assets/image/6.jpg";
+
+import BG from "../../assets/image/illustrations/undraw_payments_nbqu.svg";
+import BG1 from "../../assets/image/illustrations/undraw_data-analysis_b7cp.svg";
+import BG2 from "../../assets/image/illustrations/undraw_finance_m6vw.svg";
+import BG3 from "../../assets/image/illustrations/undraw_online-payments_p97e.svg";
+import BG4 from "../../assets/image/illustrations/undraw_credit-card-payments_y0vn.svg";
+import BG5 from "../../assets/image/illustrations/undraw_pay-with-credit-card_77g6.svg";
 
 import {
   setIsSignup,
@@ -169,25 +176,28 @@ const Login = () => {
     "mt-1 block w-full rounded-md border-border-gray-primary shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-200">
-      <div className="w-1/2 h-screen flex justify-between relative overflow-hidden">
-        <div className="w-full min-h-screen">
-          <Slider {...settings}>
-            {images.map((image, index) => (
-              <div key={index} className="flex items-center justify-center">
-                <img
-                  src={image}
-                  className="w-full h-screen object-cover block"
-                  alt={`Slide ${index}`}
-                />
-              </div>
-            ))}
-          </Slider>
+    <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-zinc-200">
+      {/* Image Section */}
+        <div className="w-full lg:w-1/2 h-64 lg:h-[60vh] flex justify-between relative overflow-hidden">
+          <div className="w-full h-full">
+            <Slider {...settings}>
+              {images.map((image, index) => (
+                <div key={index} className="flex items-center justify-center h-full">
+                  <img
+                    src={image}
+                    className="w-full h-full object-contain block"
+                    alt={`Slide ${index}`}
+                  />
+                </div>
+              ))}
+            </Slider>
+          </div>
+          {/* Optional Overlay (can keep hidden if not needed) */}
+          
         </div>
-        <div className="inset-0 bg-black bg-opacity-50 absolute z-10" />
-      </div>
 
-      <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-8 max-sm:w-full md:w-full lg:w-1/2 max-w-md mx-auto">
+      {/* Form Section */}
+      <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-6 w-full max-w-md mx-auto mt-4 lg:mt-0 lg:ml-4">
         <h2 className="text-2xl font-bold text-center mb-6">
           {isSignup === "Login"
             ? "Welcome Back"
@@ -195,6 +205,7 @@ const Login = () => {
             ? "Create an Account"
             : "Reset Your Password"}
         </h2>
+
         <form>
           {isSignup === "Signup" && (
             <div className="mb-4">
