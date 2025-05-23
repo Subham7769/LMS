@@ -41,7 +41,7 @@ const SearchView = ({
           User Not Found or Invalid ID
         </div>
       )}
-      <div className="bg-blue-50 mt-4 rounded-xl p-10">
+      <div className="bg-sky-500/20 mt-4 rounded-xl p-10">
         <h3 className="font-semibold">
           Search using ID provided during loan registration:
         </h3>

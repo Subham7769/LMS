@@ -7,6 +7,7 @@ import {
 } from "../../redux/Slices/userManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { updateValidationError } from "../../redux/Slices/validationSlice";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
   const [suspensionReason, setSuspensionReason] = useState("");
@@ -40,9 +41,13 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-4/5 ">
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
+        <div className="relative bg-white dark:bg-gray-800 flex flex-col w-3/4 md:w-1/2 rounded-lg shadow-lg p-4">
+          <XMarkIcon
+            onClick={onClose}
+            className="absolute top-1 right-1 h-6 w-6 cursor-pointer text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+          />
+          <form className="mb-4">
             <InputText
               labelName="Reason for Suspension"
               inputName="suspensionReason"
@@ -52,19 +57,17 @@ const SuspendUserModal = ({ isOpen, onClose, userDetails }) => {
               isValidation={true}
             />
           </form>
-          <div className="flex gap-3 justify-center md:justify-end">
+          <div className="flex gap-3 justify-end">
             <Button
               buttonName={"Cancel"}
               onClick={() => {
                 onClose();
               }}
-              buttonType="tertiary"
-              rectangle={true}
+              buttonType="destructive"
             />
             <Button
               buttonName={"Suspend"}
               onClick={handleSuspendUser}
-              rectangle={true}
               buttonType="secondary"
             />
           </div>

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Button from "../Button/Button";
-import InputText from "../InputText/InputText";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import {
   clearValidationError,
@@ -14,7 +12,7 @@ import SearchView from "./SearchView";
 
 const SearchBox = () => {
   const location = useLocation();
-  const [borrowerID, setBorrowerID] = useState("A85677655");
+  const [borrowerID, setBorrowerID] = useState("297732/10/5");
   const [borrowerNotFound, setBorrowerNotFound] = useState(false);
   const navigate = useNavigate(); // Adding useNavigate  for navigation
   const dispatch = useDispatch();
@@ -38,16 +36,10 @@ const SearchBox = () => {
           },
         }
       );
-      if (data.status === 404) {
+      if (!data.ok) {
         console.log("Borrower Not Found"); // Clear the token
         setBorrowerNotFound(true);
         navigate("/loan/customer-care"); // Redirect to customer-care page
-        return; // Stop further execution
-      }
-      // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
         return; // Stop further execution
       }
       navigate("/loan/customer-care/" + borrowerID + "/personal-info");
@@ -72,18 +64,13 @@ const SearchBox = () => {
           },
         }
       );
-      if (data.status === 404) {
+      if (!data.ok) {
         console.log("User Not Found"); // Clear the token
         setBorrowerNotFound(true);
         navigate("/loan/product-testing/term-loan"); // Redirect to login page
         return; // Stop further execution
       }
       // Check for token expiration or invalid token
-      if (data.status === 401 || data.status === 403) {
-        localStorage.removeItem("authToken"); // Clear the token
-        navigate("/login"); // Redirect to login page
-        return; // Stop further execution
-      }
       navigate(
         "/loan/product-testing/term-loan/" + borrowerID + "/loan-config"
       );

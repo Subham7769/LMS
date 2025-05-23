@@ -400,6 +400,10 @@ const ROLE_MAKER_ADMIN = [
   "Business Rule",
   "Global Config",
   "Decision Engine",
+  "Employer",
+  "Banks",
+  "Approval Config",
+  "Document Config",
 ];
 const ROLE_CHECKER_ADMIN = [
   "Home",

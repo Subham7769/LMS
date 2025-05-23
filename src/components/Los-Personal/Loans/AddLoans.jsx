@@ -148,11 +148,9 @@ const AddLoans = () => {
   return (
     <>
       <div
-        className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4`}
+        className={`text-gray-500 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4`}
       >
-        <div className="text-gray-500 dark:text-gray-300">
-          Loan Application ID: {addLoanData?.loanApplicationId}
-        </div>
+        Loan Application ID: {addLoanData?.loanApplicationId}
       </div>
       <AddLoanFields addLoanData={addLoanData} />
       {/* Resuable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
@@ -162,31 +160,31 @@ const AddLoans = () => {
         fetching max principal Amount
       </div>
       <div className="grid grid-cols-2 md:flex justify-end gap-5 ">
-          <Button
-            buttonName="Get Max Principal Amt"
-            onClick={getMaxPrincipal}
-            buttonType="tertiary"
-            loading={loading}
-            disabled={
-              !(
-                addLoanData?.generalLoanDetails?.loanDuration &&
-                addLoanData?.generalLoanDetails?.repaymentTenureStr
-              )
-            }
-          />
-          <Button
-            buttonName="Save Draft"
-            onClick={handleDraft}
-            buttonType="secondary"
-            loading={loading}
-          />
-          <Button buttonName="Submit" onClick={handleSubmit} loading={loading} />
-          <Button
-            buttonName="Cancel"
-            onClick={handleCanel}
-            loading={loading}
-            buttonType="destructive"
-          />
+        <Button
+          buttonName="Get Max Principal Amt"
+          onClick={getMaxPrincipal}
+          buttonType="tertiary"
+          loading={loading}
+          disabled={
+            !(
+              addLoanData?.generalLoanDetails?.loanDuration &&
+              addLoanData?.generalLoanDetails?.repaymentTenureStr
+            )
+          }
+        />
+        <Button
+          buttonName="Save Draft"
+          onClick={handleDraft}
+          buttonType="secondary"
+          loading={loading}
+        />
+        <Button buttonName="Submit" onClick={handleSubmit} loading={loading} />
+        <Button
+          buttonName="Cancel"
+          onClick={handleCanel}
+          loading={loading}
+          buttonType="destructive"
+        />
       </div>
     </>
   );

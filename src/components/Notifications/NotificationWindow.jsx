@@ -196,21 +196,21 @@ const NotificationWindow = () => {
   return (
     <div className="relative" ref={notificationRef}>
       <button
-        className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200 relative"
+        className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 transition-colors duration-200 relative"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle notifications"
         aria-expanded={isOpen}
       >
         <BellIcon className="text-gray-500/80 h-5 w-5" />
         {notifications.length >= 1 && (
-          <span className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+          <span className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full text-[9px] text-white flex items-center justify-center">
             {notifications.length}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute -right-48 lg:-right-20 mt-2 w-[80vw] lg:w-96 max-w-[96vw] bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-200 ease-in-out transform origin-top-right z-50">
+        <div className="absolute -right-48 lg:-right-20 mt-2 w-[80vw] lg:w-96 max-w-[96vw] bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700/60 transition-all duration-200 ease-in-out transform origin-top-right z-50">
           <div className="p-4 py-3 ">
             <h2 className="text-xs font-semibold text-gray-400 uppercase">
               Notifications
@@ -232,10 +232,10 @@ const NotificationWindow = () => {
               notifications.map((notification) => (
                 <div
                   key={notification.notificationId}
-                  className="border-b border-gray-100 last:border-b-0"
+                  className="border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                 >
                   <button
-                    className="w-full px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors duration-200"
+                    className="w-full px-4 py-3 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors duration-200"
                     onClick={() =>
                       toggleAccordion(
                         notification.notificationId,
@@ -267,7 +267,7 @@ const NotificationWindow = () => {
                     </div>
                     <div className="flex-grow text-left">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-gray-800">
+                        <h3 className="font-medium">
                           {notification.type === "UPDATE"
                             ? `Config UPDATE`
                             : notification.type === "NEW"
@@ -296,15 +296,15 @@ const NotificationWindow = () => {
                   </button>
                   <div
                     id={`notification-content-${notification.notificationId}`}
-                    className={`flex flex-col gap-1 px-4 py-0 bg-gray-50 transition-all duration-200 ${
+                    className={`flex flex-col gap-1 px-4 bg-gray-50 dark:bg-gray-700/60 transition-all duration-200 ${
                       expandedItems.includes(notification.notificationId)
-                        ? "max-h-fit opacity-100"
+                        ? "max-h-fit opacity-100 py-4"
                         : "max-h-0 opacity-0 overflow-hidden"
                     }`}
                     role="region"
                     aria-labelledby={`notification-${notification.notificationId}`}
                   >
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm">
                       {notification.type === "UPDATE" ? (
                         <>
                           You have{" "}
@@ -338,7 +338,7 @@ const NotificationWindow = () => {
                       notification.updates.map((item, index) =>
                         item.status === "CREATED" ? (
                           <div
-                            className="p-1 border-b border-gray-200 last:border-b-0"
+                            className="p-1 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
                             id={item.fieldName + index}
                             key={item.requestId}
                           >
@@ -364,7 +364,7 @@ const NotificationWindow = () => {
                                 <div className="flex justify-center align-middle gap-2">
                                   <Button
                                     buttonName="Approve"
-                                    className="text-[12px] bg-green-700 px-1 rounded-md"
+                                    buttonType="success"
                                     onClick={() =>
                                       handleApproveRequest(
                                         notification.notificationId,
@@ -374,7 +374,7 @@ const NotificationWindow = () => {
                                   />
                                   <Button
                                     buttonName="Reject"
-                                    className="text-[12px] bg-red-600 px-1 rounded-md"
+                                    buttonType="destructive"
                                     onClick={() =>
                                       handleRejectRequest(
                                         notification.notificationId,
@@ -396,14 +396,14 @@ const NotificationWindow = () => {
                       <div className="flex justify-evenly align-middle p-1 py-2">
                         <Button
                           buttonName="Approve"
-                          className="bg-green-700 p-2 py-1 rounded-md"
+                          buttonType="success"
                           onClick={() =>
                             handleApproveRequest(notification.notificationId)
                           }
                         />
                         <Button
                           buttonName="Reject"
-                          className="bg-red-600 p-2 py-1 rounded-md"
+                          buttonType="destructive"
                           onClick={() =>
                             handleRejectRequest(notification.notificationId)
                           }
@@ -418,9 +418,9 @@ const NotificationWindow = () => {
             )}
           </div>
 
-          <div className="p-3 border-t border-gray-200">
+          <div className="p-3 border-t border-gray-200 dark:border-gray-700">
             <Link to="/loan/notifications">
-              <button className="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 transition-colors duration-200">
+              <button className="w-full text-center font-medium text-sm text-violet-500 dark:text-violet-400 transition-colors duration-200 cursor-pointer">
                 Notifications History
               </button>
             </Link>

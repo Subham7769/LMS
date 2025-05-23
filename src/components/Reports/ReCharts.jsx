@@ -22,6 +22,7 @@ import Button from "../Common/Button/Button";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { deleteReportResult } from "../../redux/Slices/reportsSlice";
 import { useDispatch } from "react-redux";
+import { DeleteIcon } from "../../assets/icons";
 
 const chartOptions = [
   {
@@ -178,9 +179,9 @@ const ReCharts = ({ response, index }) => {
   }
   return (
     <>
-      <ContainerTile className={"my-5"} loading={loading}>
-        <div className="grid grid-cols-4 items-center">
-          <div className="col-span-3">Report: {configData[index].name}</div>
+      <ContainerTile className={"p-5"} loading={loading}>
+        <div className="grid xl:grid-cols-4 gap-y-3 items-center">
+          <div className="xl:col-span-3">Report: {configData[index].name}</div>
           <div className="grid grid-cols-4 items-end">
             <div className="col-span-3">
               <InputSelect
@@ -193,7 +194,7 @@ const ReCharts = ({ response, index }) => {
             </div>
             <div className="flex justify-end">
               <Button
-                buttonIcon={TrashIcon}
+                buttonIcon={DeleteIcon}
                 onClick={() => onDeleteReportingConfig(configData[index].name)}
                 circle={true}
                 buttonType="destructive"

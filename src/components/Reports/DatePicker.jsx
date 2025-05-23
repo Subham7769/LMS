@@ -31,7 +31,7 @@ const DatePicker = () => {
   return (
     <>
       <Popover className="relative">
-        <Popover.Button className="inline-flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+        <Popover.Button className="inline-flex items-center gap-x-1 text-sm/6 font-semibold ">
           <span>Quick Search</span>
           <ChevronDownIcon aria-hidden="true" className="size-5" />
         </Popover.Button>
@@ -45,9 +45,9 @@ const DatePicker = () => {
           leaveTo="transform opacity-0 scale-95"
         >
           <Popover.Panel className="h-[280px] absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in">
-            <div className="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm/6 shadow-lg ring-1 ring-gray-900/5 p-3">
+            <div className="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm/6 shadow-lg ring-1 ring-gray-900/5 p-3">
               <div className="font-semibold">Quick Select</div>
-              <div className="grid grid-cols-3 gap-4 border-b-2 py-3 mb-4">
+              <div className="grid grid-cols-3 gap-4 border-b-2 dark:border-gray-500 py-3 mb-4">
                 <InputText
                   inputName={"timeFrame"}
                   inputValue={"Last"}

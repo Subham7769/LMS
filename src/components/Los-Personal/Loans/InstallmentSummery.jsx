@@ -1,5 +1,3 @@
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { CalendarIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector } from "react-redux";

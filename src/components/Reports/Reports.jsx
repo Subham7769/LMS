@@ -13,6 +13,7 @@ import DatePicker from "./DatePicker";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { toast } from "react-toastify";
+import { CheckIcon } from "../../assets/icons";
 
 const Reports = () => {
   const dispatch = useDispatch();
@@ -59,8 +60,8 @@ const Reports = () => {
 
   return (
     <>
-      <ContainerTile loading={loading}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 items-end">
+      <ContainerTile loading={loading} className={"p-5"}>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-end">
           <InputSelect
             labelName={"Report Name"}
             inputName={"reportName"}
@@ -92,7 +93,7 @@ const Reports = () => {
             <DatePicker />
             <Button
               buttonName={"Generate"}
-              buttonIcon={CheckCircleIcon}
+              buttonIcon={CheckIcon}
               onClick={handleGenerateReport}
               rectangle={true}
             />

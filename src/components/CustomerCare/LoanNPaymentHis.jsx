@@ -14,19 +14,7 @@ const LoanNPaymentHist = () => {
   return (
     <div>
       {/* Tab Navigation */}
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-        <ul className="flex flex-wrap -mb-px">
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              id={tab.id}
-              label={tab.label}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          ))}
-        </ul>
-      </div>
+      <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Content based on active tab */}
       <div className="mt-4">

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
-import InputSelectMulti from "../Common/InputSelectMulti/InputSelectMulti";
+import InputSelect from "../Common/InputSelect/InputSelect";
 import {
   clearFormData,
   setFormData,
@@ -15,6 +15,7 @@ import {
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
   const dispatch = useDispatch();
@@ -22,11 +23,14 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
 
   useEffect(() => {
     dispatch(setFormData(userDetails));
-    const formattedRoleData = userDetails?.roles.map(({ id, name }) => ({
-      label: name,
-      value: id,
-    }));
-    dispatch(setUserRole(formattedRoleData));
+    const formattedRoleData2 = {
+      target: {
+        label: userDetails?.roles[0]?.name,
+        value: userDetails?.roles[0]?.id,
+        name: "userRole",
+      },
+    };
+    dispatch(setUserRole(formattedRoleData2));
     return () => {
       dispatch(clearValidationError());
     };
@@ -58,12 +62,20 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
   };
 
   if (!isOpen) return null;
+  console.log(userRole);
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-4/5 ">
-          <form className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
+        <div className="relative bg-white dark:bg-gray-800 flex flex-col w-10/12 rounded-lg shadow-lg p-4">
+          <XMarkIcon
+            onClick={() => {
+              onClose();
+              // dispatch(clearFormData());
+            }}
+            className="absolute top-1 right-1 h-6 w-6 cursor-pointer text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+          />
+          <form className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-4">
             <InputText
               labelName="First Name"
               inputName="firstname"
@@ -80,30 +92,27 @@ const EditUserModal = ({ isOpen, onClose, role, userDetails }) => {
               required
               isValidation={true}
             />
-            <InputSelectMulti
+            <InputSelect
               labelName="Roles"
               inputName="userRole"
               inputOptions={role}
-              isMulti={true}
-              inputValue={userRole}
+              inputValue={userRole?.target?.value}
               onChange={handleRoles}
               isValidation={true}
             />
           </form>
-          <div className="flex gap-3 justify-center md:justify-end">
+          <div className="flex gap-3 justify-end">
             <Button
               buttonName={"Cancel"}
               onClick={() => {
                 onClose();
                 // dispatch(clearFormData());
               }}
-              rectangle={true}
               buttonType="tertiary"
             />
             <Button
               buttonName={"Update"}
               onClick={updateData}
-              rectangle={true}
               buttonType="secondary"
             />
           </div>

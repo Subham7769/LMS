@@ -29,6 +29,7 @@ import store from "../../redux/store";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 import ListTableClassic from "../Common/ListTable/ListTableClassic";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
 
 const MinimumExpense = () => {
   const dispatch = useDispatch();
@@ -107,7 +108,7 @@ const MinimumExpense = () => {
       <h2 className="mb-6">
         <b
           title="Bare Minimum Expenses"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+          className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-500 hover:p-2 p-2 hover:rounded-md"
         >
           Bare Minimum Expenses
         </b>
@@ -152,9 +153,9 @@ const MinimumExpense = () => {
                 placeHolder="200"
                 isValidation={true}
               />
-              <div className="flex items-end">
+              <div className="flex items-end justify-end md:justify-start">
                 <Button
-                  buttonIcon={PlusIcon}
+                  buttonIcon={AddIcon}
                   onClick={handleAddFields}
                   circle={true}
                 />
@@ -196,7 +197,6 @@ const MinimumExpense = () => {
                   inputValue={expenseData?.dependantType}
                   onChange={(e) => handleChange(e, expenseData?.id)}
                   searchable={true}
-                  isClearable={true}
                 />
               </td>
 
@@ -231,15 +231,13 @@ const MinimumExpense = () => {
                 <td className="px-4 py-4 whitespace-nowrap min-w-32">
                   <div className="flex items-center gap-2">
                     <Button
-                      buttonIcon={CheckCircleIcon}
+                      buttonIcon={CheckIcon}
                       onClick={() => handleSave(expenseData?.id, index)}
-                      circle={true}
-                      buttonType="secondary"
+                      buttonType="success"
                     />
                     <Button
-                      buttonIcon={TrashIcon}
+                      buttonIcon={DeleteIcon}
                       onClick={() => handleDelete(expenseData?.id, index)}
-                      circle={true}
                       buttonType="destructive"
                     />
                   </div>

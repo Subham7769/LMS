@@ -25,6 +25,7 @@ import store from "../../redux/store";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
 import ListTableClassic from "../Common/ListTable/ListTableClassic";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
 
 const RiskGradeMatrix = () => {
   const dispatch = useDispatch();
@@ -82,7 +83,7 @@ const RiskGradeMatrix = () => {
       <h2 className="mb-6">
         <b
           title="Risk Grading Calculation"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+          className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-500 hover:p-2 p-2 hover:rounded-md"
         >
           Risk Grading Calculation
         </b>
@@ -94,7 +95,7 @@ const RiskGradeMatrix = () => {
             // error={error}
             className={"p-5 mb-5"}
           >
-            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
+            <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_120px] max-sm:grid-cols-2 gap-4">
               <InputNumber
                 labelName="From"
                 inputName="from"
@@ -146,12 +147,8 @@ const RiskGradeMatrix = () => {
                 placeHolder="R1"
                 isValidation={true}
               />
-              <div className="flex items-end">
-                <Button
-                  onClick={handleAddFields}
-                  buttonIcon={PlusIcon}
-                  circle={true}
-                />
+              <div className="flex items-end justify-end md:justify-start">
+                <Button onClick={handleAddFields} buttonIcon={AddIcon} />
               </div>
             </div>
           </ContainerTile>
@@ -232,14 +229,12 @@ const RiskGradeMatrix = () => {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => handleSave(riskGradingData.id, index)}
-                      buttonIcon={CheckCircleIcon}
-                      circle={true}
-                      buttonType="secondary"
+                      buttonIcon={CheckIcon}
+                      buttonType="success"
                     />
                     <Button
                       onClick={() => handleDelete(riskGradingData.id)}
-                      buttonIcon={TrashIcon}
-                      circle={true}
+                      buttonIcon={DeleteIcon}
                       buttonType="destructive"
                     />
                   </div>

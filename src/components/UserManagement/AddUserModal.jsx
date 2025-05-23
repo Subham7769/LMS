@@ -3,7 +3,7 @@ import InputText from "../Common/InputText/InputText";
 import Button from "../Common/Button/Button";
 import InputEmail from "../Common/InputEmail/InputEmail";
 import InputPassword from "../Common/InputPassword/InputPassword";
-import InputSelectMulti from "../Common/InputSelectMulti/InputSelectMulti";
+import InputSelect from "../Common/InputSelect/InputSelect";
 import { toast } from "react-toastify";
 import {
   createUser,
@@ -19,6 +19,7 @@ import {
   validateUserRole,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const AddUserModal = ({ isOpen, onClose, role }) => {
   const dispatch = useDispatch();
@@ -39,19 +40,22 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
   }, [dispatch]);
 
   const handleRoles = (selectedUserRole) => {
+    console.log(selectedUserRole);
     dispatch(setUserRole(selectedUserRole));
   };
 
   const updateData = async (e) => {
     e.preventDefault();
     const dataToValidate = { ...formData, confirmPassword };
+    console.log(formData);
+    console.log(userRole);
     await dispatch(validateForm(dataToValidate));
     const state = store.getState();
     const isValid = state.validation.isValid;
     const isValid2 = validateUserRole(userRole, dispatch);
     if (isValid && isValid2) {
       if (confirmPassword === formData.password) {
-        await dispatch(createUser({ formData, userRole })).unwrap();
+        await dispatch(createUser({ formData, userRole: userRole })).unwrap();
         dispatch(clearFormData());
         onClose();
       }
@@ -66,9 +70,16 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white flex flex-col gap-7 p-5 rounded-lg shadow-lg w-10/12 ">
-          <form className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
+        <div className="relative bg-white dark:bg-gray-800 flex flex-col w-10/12 rounded-lg shadow-lg p-4">
+          <XMarkIcon
+            onClick={() => {
+              onClose();
+              dispatch(clearFormData());
+            }}
+            className="absolute top-1 right-1 h-6 w-6 cursor-pointer text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+          />
+          <form className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-4 md:mb-0">
             <InputText
               labelName="User Name"
               inputName="username"
@@ -117,30 +128,27 @@ const AddUserModal = ({ isOpen, onClose, role }) => {
               required
               isValidation={true}
             />
-            <InputSelectMulti
+            <InputSelect
               labelName="Roles"
               inputName="userRole"
               inputOptions={role}
-              isMulti={true}
-              inputValue={userRole}
+              inputValue={userRole?.target?.value}
               onChange={handleRoles}
               isValidation={true}
             />
           </form>
-          <div className="flex gap-3 justify-center md:justify-end">
+          <div className="flex gap-3 justify-end">
             <Button
               buttonName={"Cancel"}
               onClick={() => {
                 onClose();
                 dispatch(clearFormData());
               }}
-              rectangle={true}
               buttonType="tertiary"
             />
             <Button
               buttonName={"Create User"}
               onClick={updateData}
-              rectangle={true}
               buttonType="secondary"
             />
           </div>

@@ -8,9 +8,11 @@ import {
 } from "../../redux/Slices/userManagementSlice";
 import Button from "../Common/Button/Button";
 import AddUserModal from "./AddUserModal";
-import ActionOption from "./ActionOption";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { clearValidationError } from "../../redux/Slices/validationSlice";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
+import ActionMenu from "./ActionMenu";
+import { AddIcon } from "../../assets/icons";
 
 const UserManagement = ({ role }) => {
   const dispatch = useDispatch();
@@ -40,69 +42,55 @@ const UserManagement = ({ role }) => {
   // console.log(selectedUserData);
 
   const options = { day: "2-digit", month: "short", year: "numeric" };
+  let ListHeader = [
+    { name: "User Name", sortKey: null },
+    { name: "Role", sortKey: null },
+    { name: "Status", sortKey: null },
+    { name: "Creation Date", sortKey: null },
+    { name: "Action", sortKey: null },
+  ];
   return (
     <>
-      <ContainerTile loading={loading}>
-        <div className="flex justify-between mb-5 items-end">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Users List
-          </h1>
-          <Button
-            buttonName={"Add User"}
-            onClick={handleAddUser}
-            rectangle={true}
-          />
+      <ContainerTile loading={loading} className={"p-5"}>
+        <div className="block md:flex justify-between items-center mb-4 md:mb-0">
+          <h2 className="mb-6">
+            <b className="text-xl font-semibold">User Management</b>
+            <div className="text-gray-600 text-sm">
+              Manage users and their roles
+            </div>
+          </h2>
+          <div className="text-right">
+            <Button
+              buttonIcon={AddIcon}
+              buttonName={"Add User"}
+              onClick={handleAddUser}
+              buttonType="primary"
+            />
+          </div>
         </div>
-        <div className="shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-          <table className="divide-y divide-gray-300 w-full">
-            <thead className="bg-gray-50">
-              <tr className="divide-x divide-gray-200">
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  User Name
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Role
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Status
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Creation Date
-                </th>
-                <th className="py-3.5 px-2 text-center text-gray-900">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {allUsersInfo?.map((item) => (
-                <tr
-                  key={item?.username}
-                  className="divide-x divide-gray-200 text-center"
-                >
-                  <td className="p-4 text-gray-500">{item?.username}</td>
-                  <td className="p-4 text-gray-500">{item?.roles[0]?.name}</td>
-                  <td className="p-4 text-gray-500">
-                    {item?.active ? "Active" : "Suspended"}
-                  </td>
-                  <td className="p-4 text-gray-500">
-                    {new Intl.DateTimeFormat("en-GB", options).format(
-                      item?.creationDate
-                    )}
-                  </td>
-                  <td className="p-4 text-gray-500">
-                    <div onClick={() => handleUserAction(item)}>
-                      <ActionOption
-                        userDataProp={selectedUserData}
-                        role={role}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ListTableClassic
+          ListName="List of Users"
+          ListNameLength={allUsersInfo?.length}
+          ListHeader={ListHeader}
+        >
+          {allUsersInfo?.map((item) => (
+            <tr key={item?.username}>
+              <td className="p-4">{item?.username}</td>
+              <td className="p-4">{item?.roles[0]?.name}</td>
+              <td className="p-4">{item?.active ? "Active" : "Suspended"}</td>
+              <td className="p-4">
+                {new Intl.DateTimeFormat("en-GB", options).format(
+                  item?.creationDate
+                )}
+              </td>
+              <td className="p-4">
+                <div onClick={() => handleUserAction(item)}>
+                  <ActionMenu userDataProp={selectedUserData} role={role} />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </ListTableClassic>
       </ContainerTile>
       <AddUserModal isOpen={isModalOpen} onClose={closeModal} role={role} />
     </>

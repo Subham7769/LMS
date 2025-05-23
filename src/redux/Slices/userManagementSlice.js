@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 // Async thunk for fetching user data
@@ -168,10 +167,12 @@ export const suspendUser = createAsyncThunk(
 export const createUser = createAsyncThunk(
   "userManagement/createUser",
   async ({ formData, userRole }, { rejectWithValue, dispatch }) => {
-    const selectedRoles = userRole.map((item) => ({
-      id: item.value,
-      name: item.label,
-    }));
+    const selectedRoles = [
+      {
+        id: userRole.target.value,
+        name: userRole.target.label,
+      }
+    ];
 
     const postData = {
       active: true,
@@ -213,10 +214,12 @@ export const updateUser = createAsyncThunk(
     { userDetails, formData, userRole },
     { rejectWithValue, dispatch }
   ) => {
-    const selectedRoles = userRole.map((item) => ({
-      id: item.value,
-      name: item.label,
-    }));
+    const selectedRoles = [
+      {
+        id: userRole.target.value,
+        name: userRole.target.label,
+      },
+    ];
 
     const postData = {
       active: true,

@@ -20,6 +20,7 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { AddIcon, DeleteIcon } from "../../assets/icons";
 
 const ServerConfig = () => {
   const [bindingData, setBindingData] = useState({});
@@ -158,8 +159,13 @@ const ServerConfig = () => {
 
   return (
     <>
-      <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold mb-5">
-        Server Configuration
+      <h2 className="mb-6">
+        <b
+          title="Bare Minimum Expenses"
+          className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-500 hover:p-2 p-2 hover:rounded-md"
+        >
+          Server Configuration
+        </b>
       </h2>
 
       {!hasViewOnlyAccessGroup2(roleName) && (
@@ -210,9 +216,8 @@ const ServerConfig = () => {
             />
             <div className="flex gap-4 justify-start items-center">
               <Button
-                buttonIcon={PlusIcon}
+                buttonIcon={AddIcon}
                 onClick={handleAddBindingNew}
-                circle={true}
                 buttonType="secondary"
               />
             </div>
@@ -222,7 +227,7 @@ const ServerConfig = () => {
             {Object.keys(newServerConfigData?.bindings || {}).length === 0 ? (
               <p>No bindings added</p>
             ) : (
-              <div className="grid grid-cols-4 gap-2 mb-5 items-center">
+              <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-2 gap-2 mb-5 items-center">
                 {Object.keys(newServerConfigData.bindings).map(
                   (key, bindingIndex) => (
                     <div
@@ -272,9 +277,8 @@ const ServerConfig = () => {
               {!hasViewOnlyAccessGroup2(roleName) && (
                 <div className="flex gap-4">
                   <Button
-                    buttonIcon={TrashIcon}
+                    buttonIcon={DeleteIcon}
                     onClick={() => handleDelete(scData.name)}
-                    circle={true}
                     buttonType="destructive"
                   />
                 </div>
@@ -318,9 +322,8 @@ const ServerConfig = () => {
               />
               <div className="flex gap-4 justify-start items-center">
                 <Button
-                  buttonIcon={PlusIcon}
+                  buttonIcon={AddIcon}
                   onClick={() => handleAddBinding(index)}
-                  circle={true}
                   buttonType="secondary"
                 />
               </div>
@@ -330,7 +333,7 @@ const ServerConfig = () => {
               {Object.keys(scData?.bindings || {}).length === 0 ? (
                 <p>No bindings added</p>
               ) : (
-                <div className="grid grid-cols-4 gap-2 mb-5 items-center">
+                <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-2 mb-5 items-center">
                   {Object.keys(scData.bindings).map((key, bindingIndex) => (
                     <div
                       key={bindingIndex}

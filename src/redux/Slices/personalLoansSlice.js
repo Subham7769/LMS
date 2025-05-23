@@ -979,6 +979,42 @@ export const getRefinanceDetails = createAsyncThunk(
   }
 );
 
+export const fetchBorrowerDataLoanHistory = createAsyncThunk(
+  "personalLoans/fetchBorrowerDataLoanHistory",
+  async ({ subID }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWER_INFO_LOAN_HISTORY}${subID}/all-loans`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 404) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Borrower Not Found");
+      }
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const initialState = {
   borrowerData: {},
   loanApplications: [],
@@ -1025,6 +1061,7 @@ const initialState = {
   approveLoans: [],
   approveLoansTotalElements: 0,
   loanHistory: [],
+  borrowerLoanHistory:[],
   paymentHistory: [],
   loanHistoryTotalElements: 0,
   loanConfigData: {},
@@ -1630,6 +1667,18 @@ const personalLoansSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(fetchBorrowerDataLoanHistory.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(fetchBorrowerDataLoanHistory.fulfilled, (state, action) => {
+        state.borrowerLoanHistory = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchBorrowerDataLoanHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });
