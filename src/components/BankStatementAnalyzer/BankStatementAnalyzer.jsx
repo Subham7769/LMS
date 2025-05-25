@@ -114,7 +114,7 @@ const BankStatementAnalyzer = (prop) => {
   const query = new URLSearchParams(location.search);
   const docIdFromURL = query.get('docId');
   const docId = prop?.docId || docIdFromURL;
-
+  const proposedMontlyFinancing = prop?.proposedMontlyFinancing || 5000;
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
@@ -243,7 +243,7 @@ const BankStatementAnalyzer = (prop) => {
                 Section 1: Cash Flow Analysis that contains Average Monthly Cash Flow,  Average Monthly Deposits,  Average Monthly Withdrawals,Monthwise Account Balance Trend with End Balance, Available Amount for Financing calculated with 30% of average monthly cash flow 
                 Section 2: Cash Flow Stability Assessment having Stability Score, Volatility Index as Low Medium High, Seasonal Patterns,Negative Balance Days,Insufficient Funds,Deposit Consistency,Revenue Diversification,Month-to-Month Variance
                 Section 3: Transaction Pattern Analysis with Top 5 income source categories and top 5 expense categories with total %, Recurring trasactions and Unusal transactions
-                Section 4: Debt Service Capacity having fields monthly Current Debt Obligations, 
+                Section 4: Debt Service Capacity having fields monthly Current Debt Obligations,Proposed Equipment Financing is ${proposedMontlyFinancing}. Calculate Total Debt Service=Current Debt Obligations+Proposed Equipment Financing. Using this value calculate Debt Service Coverage Ratio, DSCR Assessment as Adequet, marginal or Weak. Also show monthly Recommended Maximum Financing
                 Section 5: Bank Statement Risk Indicators with analysis for Bounced Checks,No Loan Defaults,Irregular Large Withdrawals,No Unusual Payment Patterns,Unexplained Cash Deposits,No Overdraft Occurrences,Consistent Revenue Stream,Stable Operating Expenses,Minor Balance Fluctuations,Strong Liquidity Ratio and finally Risk Assessment and Bank statement Reliability as Low medium high.
                 Identify the currency from the statement and add it to all the values.
                 `
@@ -322,7 +322,7 @@ useEffect(() => {
 
   const renderSection = (title, data) => (
     <ContainerTile loading={loading} key={title}>
-      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      <h2 className="font-semibold mb-2">{title}</h2>
       <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#f3f4f6' }}>
           <tr>
@@ -333,7 +333,7 @@ useEffect(() => {
         <tbody>
           {Object.entries(data).map(([key, value], idx) => (
             <tr key={idx}>
-              <td style={{ fontWeight: '500', color: '#374151' }}>{key}</td>
+              <td className="text-[14px] text-gray-600">{key}</td>
               <td style={{ color: '#111827' }}>
                 {Array.isArray(value) ? (
                   <ul className="list-disc list-inside pl-4">
@@ -379,12 +379,13 @@ useEffect(() => {
 
   return (
     <div className="max-w-5xl mx-auto p-5">
-      <h1 className="text-2xl font-bold mb-4">Bank Statement Analyzer</h1>
+      {!docId && <h1 className="text-2xl font-bold mb-4">Bank Statement Analyzer</h1> }
       <div className="flex gap-4 items-center mb-4">
         {!docId &&
           <input type="file" accept="application/pdf" onChange={handleFileChange} />
         }
-        <Button buttonIcon={PlusIcon} buttonName={loading ? 'Analyzing...' : 'Upload & Analyze'} onClick={handleUpload} disabled={loading || !!docId} rectangle={true} />
+        {!docId && loading ? <span>'Analyzing...'</span> :'' }
+        {!docId && <Button buttonIcon={PlusIcon} buttonName={loading ? 'Analyzing...' : 'Upload & Analyze'} onClick={handleUpload} disabled={loading || !!docId} rectangle={true} /> }
         <Button buttonIcon={PlusIcon} buttonName="Download PDF" onClick={handleExport} disabled={!analysisData} rectangle={true} />
       </div>
 

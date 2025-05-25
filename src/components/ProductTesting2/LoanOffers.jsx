@@ -29,6 +29,7 @@ import {
   clearValidationError,
   validateForm,
 } from "../../redux/Slices/validationSlice";
+import BankStatementAnalyzer from "../BankStatementAnalyzer/BankStatementAnalyzer";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,15 +42,34 @@ const LoanOffers = () => {
     loanProductOptions,
     loanConfigData,
     loanOfferFields,
+    addLoanData,
+    loanApplications,
     loading,
     error,
   } = useSelector((state) => state.smeLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const userName = userData?.username;
+  const [docId, setDocId] = useState("");
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
+
+    //Get the bank statement Document Id
+    // Step 1: Find the specific loan application
+    const targetLoan = loanApplications.find(
+      (loan) => loan.loanApplicationId === loanConfigData?.loanApplicationId
+    );
+    // Step 2: From that loan, find the document with the matching documentKey
+    const targetDoc = targetLoan?.documents?.find(
+      (doc) => doc.documentKey === "SIX_MONTHS_BANK_STATEMENT"
+    );
+    // Step 3: Extract the docId (if found)
+    const bankStatementdocId = targetDoc?.docId;
+
+    console.log(bankStatementdocId);
+    setDocId(bankStatementdocId);
+
     return () => {
       dispatch(clearValidationError());
       dispatch(resetLoanOfferFields());
@@ -95,7 +115,7 @@ const LoanOffers = () => {
 
   const InfoRow = ({ label, value }) => (
     <div className="mb-1.5">
-      <div className="text-gray-600">{label}:</div>
+      <div className="text-[14px] text-gray-600">{label}:</div>
       <div className="font-semibold text-lg">{value}</div>
     </div>
   );
@@ -430,6 +450,19 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
                   </div>
 
                 </div>
+              </CardInfo>
+              <CardInfo
+                cardTitle="Bank Statement Analysis"
+                className={
+                  "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
+                }
+                colorBG={"bg-background-light-white"}
+                cardIcon={CurrencyDollarIcon}
+                colorText={"text-blue-primary"}
+                loading={loading}
+              >
+                {/* {<BankStatementAnalyzer docId={docId} />} */}
+                {docId && <BankStatementAnalyzer docId={docId} proposedMontlyFinancing={formatNumber(ci?.installmentSummaryResponse[0]?.totalRequiredAmount.toFixed(2))} />}
               </CardInfo>
               <div>
                 <div className="text-center text-gray-500">
