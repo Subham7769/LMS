@@ -132,10 +132,7 @@ const LoanOffers = () => {
             isValidation={true}
           />
           <div className="text-right sm:text-left">
-            <Button
-              buttonName="Get Offers"
-              onClick={handleGetOffers}
-            />
+            <Button buttonName="Get Offers" onClick={handleGetOffers} />
           </div>
         </div>
       </ContainerTile>
@@ -430,6 +427,7 @@ const LoanOffers = () => {
             <InstallmentSummery
               onClose={closeModal}
               installmentConfigData={selectedInstallmentData}
+              loanConfigData={loanConfigData}
             />
           )}
         </div>

@@ -158,9 +158,9 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
 
   // 1. Fetch all banks on mount
   useEffect(() => {
-    // if (!bankOptions.length) {
+    if (!bankOptions.length) {
     dispatch(fetchAllBank());
-    // }
+    }
   }, []);
 
   // 2. Set initial bankName if in update mode

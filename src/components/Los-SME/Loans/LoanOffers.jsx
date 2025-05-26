@@ -1,4 +1,3 @@
-import InstallmentSummery from "./InstallmentSummery";
 import React, { useEffect, useState } from "react";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +28,7 @@ import {
   clearValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
+import InstallmentSummery from "../../Los-Personal/Loans/InstallmentSummery";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -427,9 +427,9 @@ const LoanOffers = () => {
           ))}
           {isModalOpen && selectedInstallmentData && (
             <InstallmentSummery
-              isOpen={isModalOpen}
               onClose={closeModal}
               installmentConfigData={selectedInstallmentData}
+              loanConfigData={loanConfigData}
             />
           )}
         </div>

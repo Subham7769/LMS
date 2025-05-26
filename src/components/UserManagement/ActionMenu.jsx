@@ -78,8 +78,9 @@ const ActionMenu = ({ userDataProp, getUser, role }) => {
 
   return (
     <>
-      <ActionOptions userNavigation={userNavigation} align={"right"}/>
+      <ActionOptions userNavigation={userNavigation} align={"right"} />
       <EditUserModal
+        title="Edit user details"
         isOpen={isModalOpen}
         onClose={closeModal}
         role={role}

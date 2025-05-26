@@ -1,6 +1,6 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useSelector } from "react-redux";
+import Modal from "../../Common/Modal/Modal";
 
 const ShimmerTable = () => {
   return (
@@ -34,25 +34,15 @@ const ViewPhotoModal = ({ isOpen, onClose, photoData }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm">
-        <div className="relative w-3/4 xl:w-1/3 p-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg transition-all duration-500 ease-in-out max-h-[80vh]">
-          {/* Close Button */}
-          {/* Close Button */}
-          <XMarkIcon
-            onClick={onClose}
-            className="absolute top-1 right-1 h-6 w-6 cursor-pointer"
+      <Modal title="View Photo" isFooter={false} secondaryOnClick={onClose}>
+        <div className="flex justify-center items-center w-full h-full overflow-hidden mt-2">
+          <img
+            src={photoData}
+            alt="Client Profile Not Uploaded Yet"
+            className="rounded-lg max-w-full max-h-[60vh] w-auto h-auto"
           />
-
-          {/* Profile Image */}
-          <div className="flex justify-center items-center w-full h-full overflow-hidden mt-2">
-            <img
-              src={photoData}
-              alt="Client Profile Not Uploaded Yet"
-              className="rounded-lg max-w-full max-h-[60vh] w-auto h-auto"
-            />
-          </div>
         </div>
-      </div>
+      </Modal>
     </>
   );
 };

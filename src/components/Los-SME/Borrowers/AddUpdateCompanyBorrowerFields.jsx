@@ -147,15 +147,15 @@ const AddUpdateCompanyBorrowerFields = ({
 
 
   const location = useLocation();
-  const isUpdateCompany = location.pathname.includes("update-borrower");
+  const isUpdateCompany = location.pathname.includes("update-company");
   const isDraftCompany = location.pathname.includes("draft");
   const isAddCompany = !isUpdateCompany && !isDraftCompany;
 
   // 1. Fetch all banks on mount
   useEffect(() => {
-    // if (!bankOptions.length) {
+    if (!bankOptions.length) {
     dispatch(fetchAllBank());
-    // }
+    }
   }, []);
 
   // 2. Set initial bankName if in update mode
@@ -176,7 +176,7 @@ const AddUpdateCompanyBorrowerFields = ({
   const prevBankNameRef = useRef();
 
   useEffect(() => {
-    if (!(isUpdateCompany || isDraftCompany)) return;
+    // if (!(isUpdateCompany || isDraftCompany)) return;
 
     const prevBankName = prevBankNameRef.current;
     const currentBankName = BorrowerData.bankDetails.bankName;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "../Button/Button";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import Modal from "../Modal/Modal";
 
 const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   const [cloneName, setCloneName] = useState("");
@@ -33,8 +33,16 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 flex flex-col p-5 rounded-lg shadow-lg w-3/4 xl:w-1/3">
+    <>
+      <Modal
+        primaryButtonName={"Create Clone"}
+        primaryOnClick={handleCreateClone}
+        secondaryOnClick={() => {
+          onClose();
+          setCloneName("");
+        }}
+        title={`Clone ${initialName}`}
+      >
         <div>
           <label
             className={`${
@@ -45,7 +53,7 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
           >
             {isValidationError
               ? "Field required"
-              : `Create Clone of ${initialName}`}
+              : `Enter name for the cloned version`}
           </label>
           <input
             type="text"
@@ -57,24 +65,12 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
             className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
           ${isValidationError ? "border-red-300" : ""} 
           `}
-            placeholder={"Enter Cloned Name"}
             onFocus={() => setIsValidationError(false)}
             autoFocus
           />
         </div>
-        <div className="flex gap-3 mt-5 justify-end">
-          <Button
-            buttonName={"Cancel"}
-            onClick={() => {
-              onClose();
-              setCloneName("");
-            }}
-            buttonType="secondary"
-          />
-          <Button buttonName={"Create Clone"} onClick={handleCreateClone} />
-        </div>
-      </div>
-    </div>
+      </Modal>
+    </>
   );
 };
 

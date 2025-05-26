@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { accountStatusOptionsPersonal } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
@@ -13,8 +12,6 @@ import { useDispatch } from "react-redux";
 import {
   fetchAllBorrowersByType,
   fetchBorrowerByField,
-  changeBorrowerStatus,
-  setUpdateBorrower,
 } from "../../../redux/Slices/personalBorrowersSlice";
 import { useNavigate } from "react-router-dom";
 import { convertDate } from "../../../utils/convertDate";
@@ -32,7 +29,6 @@ import {
   WindowIcon,
   MapPinIcon,
   CalendarIcon,
-  XMarkIcon,
   DocumentMinusIcon,
   DocumentIcon,
   BanknotesIcon
@@ -47,6 +43,7 @@ import { viewPhoto } from "../../../redux/Slices/personalBorrowersSlice";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 import { EditIcon } from "../../../assets/icons";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
+import ViewEditModal from "./ViewEditModal";
 
 const ViewBorrowers = () => {
   const navigate = useNavigate();
@@ -232,78 +229,12 @@ const ViewBorrowers = () => {
       }));
     };
 
-    const ViewEditModal = ({ isOpen, onClose }) => {
-      if (!isOpen) return null;
-
-      const handleEdit = (uid) => {
-        dispatch(setUpdateBorrower({ uid }));
-        navigate(
-          `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
-        );
-        // console.log(uid);
-      };
-
-      const handleChangeStatus = async (uid, newStatus) => {
-        console.log(uid);
-        setCurrentStatus(newStatus);
-        await dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
-        dispatch(
-          fetchAllBorrowersByType({
-            page: 0,
-            size: 10,
-            borrowerType: "PERSONAL_BORROWER",
-          })
-        );
-        navigate(
-          `/loan/loan-origination-system/personal/borrowers/view-borrower`
-        );
-        onClose();
-      };
-
-      return (
-        <>
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm">
-            <div className="relative w-3/4 xl:w-1/3 p-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg transition-all duration-500 ease-in-out">
-              <XMarkIcon
-                onClick={onClose}
-                className="absolute top-1 right-1 h-6 w-6 cursor-pointer"
-              />
-              <div className="flex justify-start gap-5 flex-col mt-4">
-                <InputSelect
-                  labelName={"Account Status"}
-                  inputName={"accountStatus"}
-                  inputOptions={accountStatusOptionsPersonal}
-                  inputValue={currentStatus}
-                  onChange={(e) => setCurrentStatus(e.target.value)}
-                  disabled={false}
-                />
-                <Button
-                  buttonName={"Change Status"}
-                  onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
-                  buttonType="tertiary"
-                />
-                {/* OR Separator with horizontal line */}
-                <div className="relative flex items-center my-2">
-                  <hr className="w-full border-gray-300" />
-                  <span className="absolute left-1/2 -translate-x-1/2 bg-white px-2 text-gray-500 text-sm">
-                    OR
-                  </span>
-                </div>
-                <Button
-                  buttonName={"Edit"}
-                  onClick={() => handleEdit(rowData.uid)}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      );
-    };
-    console.log(rowData)
     const totalSalaryNoDeductions = rowData.basicPay + rowData.housingAllowance + rowData.transportAllowance 
   + rowData.ruralHardshipAllowance + rowData.infectiousHealthRisk + rowData.healthShiftAllowance 
   + rowData.interfaceAllowance + rowData.responsibilityAllowance + rowData.doubleClassAllowance 
   + rowData.actingAllowance + rowData.otherAllowances;
+
+
     return (
       <div className="space-y-2 text-sm text-gray-600 border-y-2 dark:border-gray-600 p-5 relative">
         {rowData ? (
@@ -577,6 +508,9 @@ const ViewBorrowers = () => {
             <ViewEditModal
               isOpen={showEditModal}
               onClose={() => setEditModal(false)}
+              rowData={rowData}
+              setCurrentStatus={setCurrentStatus}
+              currentStatus={currentStatus}
             />
           </>
         ) : (

@@ -45,13 +45,13 @@ const UserManagement = ({ role }) => {
   let ListHeader = [
     { name: "User Name", sortKey: null },
     { name: "Role", sortKey: null },
-    { name: "Status", sortKey: null },
     { name: "Creation Date", sortKey: null },
+    { name: "Status", sortKey: null },
     { name: "Action", sortKey: null },
   ];
   return (
     <>
-      <ContainerTile loading={loading} className={"p-5"}>
+      <ContainerTile loading={loading} className={"px-5 pt-5 pb-0.5"}>
         <div className="block md:flex justify-between items-center mb-4 md:mb-0">
           <h2 className="mb-6">
             <b className="text-xl font-semibold">User Management</b>
@@ -77,12 +77,23 @@ const UserManagement = ({ role }) => {
             <tr key={item?.username}>
               <td className="p-4">{item?.username}</td>
               <td className="p-4">{item?.roles[0]?.name}</td>
-              <td className="p-4">{item?.active ? "Active" : "Suspended"}</td>
               <td className="p-4">
                 {new Intl.DateTimeFormat("en-GB", options).format(
                   item?.creationDate
                 )}
               </td>
+              <td className="p-4">
+                <span
+                  className={`inline-block min-w-24 rounded-full font-medium py-0.5 text-center ${
+                    item?.active
+                      ? "bg-green-500/20 text-green-700 px-2"
+                      : "bg-red-500/20 text-red-700 px-2"
+                  } `}
+                >
+                  {item?.active ? "Active" : "Suspended"}
+                </span>
+              </td>
+
               <td className="p-4">
                 <div onClick={() => handleUserAction(item)}>
                   <ActionMenu userDataProp={selectedUserData} role={role} />

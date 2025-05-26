@@ -346,9 +346,6 @@ const OutrightSettlementPrint = lazy(() =>
 const DisbursementFilePrint = lazy(() =>
   import("./components/Los-Personal/Loans/DisbursementFilePrint")
 );
-const CollateralRegister = lazy(() =>
-  import("./components/Los-Personal/Loans/CollateralRegister")
-);
 
 //------------Repayments-----------------
 const Repayments = lazy(() =>
@@ -386,7 +383,6 @@ const RefundHistory = lazy(() =>
 
 
 // LOS-SME Imports
-const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
 const BorrowersSME = lazy(() =>
   import("./components/Los-SME/Borrowers/Borrowers")
 );
@@ -433,9 +429,6 @@ const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
 const LoanHistorySME = lazy(() =>
   import("./components/Los-SME/Loans/LoanHistory")
 );
-const LoanAgreementSME = lazy(() =>
-  import("./components/Los-SME/Loans/LoanAgreement")
-);
 const LoanAgreementPrintSME = lazy(() =>
   import("./components/Los-SME/Loans/LoanAgreementPrint")
 );
@@ -447,9 +440,6 @@ const OutrightSettlementPrintSME = lazy(() =>
 );
 const DisbursementFilePrintSME = lazy(() =>
   import("./components/Los-SME/Loans/DisbursementFilePrint")
-);
-const CollateralRegisterSME = lazy(() =>
-  import("./components/Los-SME/Loans/CollateralRegister")
 );
 //------------Repayments-----------------
 const RepaymentsSME = lazy(() =>
@@ -937,11 +927,6 @@ const routes = [
       },
       // Accessing All New Created Child Components
       {
-        path: "loan-origination-system/sme",
-        element: <LosSME />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
         path: "loan-origination-system/sme/borrowers",
         element: <BorrowersSME />,
         errorElement: <RouteErrorBoundary />,
@@ -1034,11 +1019,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "loan-agreement/:loanApplicationId/:userId",
-            element: <LoanAgreementSME />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
             path: "loan-history",
             element: <LoanHistorySME />,
             errorElement: <RouteErrorBoundary />,
@@ -1046,11 +1026,6 @@ const routes = [
           {
             path: "loan-history/:uniqueID",
             element: <LoanHistorySME />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
-            path: "collateral-register",
-            element: <CollateralRegisterSME />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -1207,11 +1182,6 @@ const routes = [
           {
             path: "loan-history/:uniqueID",
             element: <LoanHistory />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
-            path: "collateral-register",
-            element: <CollateralRegister />,
             errorElement: <RouteErrorBoundary />,
           },
         ],

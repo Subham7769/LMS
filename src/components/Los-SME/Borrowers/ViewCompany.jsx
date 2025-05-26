@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { accountStatusOptionsSME } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
@@ -11,9 +10,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
   fetchAllCompanyBorrowersByType,
-  changeCompanyBorrowerStatus,
   fetchCompanyBorrowerByField,
-  setUpdateCompany,
   setUpdateDirector,
   setUpdateShareholder,
 } from "../../../redux/Slices/smeBorrowersSlice";
@@ -32,7 +29,6 @@ import {
   MapPinIcon,
   CalendarIcon,
   BanknotesIcon,
-  XMarkIcon,
   UsersIcon,
   DocumentTextIcon,
   ChartPieIcon,
@@ -46,6 +42,7 @@ import { convertDate } from "../../../utils/convertDate";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 import { toast } from "react-toastify";
 import { EditIcon } from "../../../assets/icons";
+import ViewEditModal from "./ViewEditModal";
 
 const ViewCompany = () => {
   const navigate = useNavigate();
@@ -215,82 +212,6 @@ const ViewCompany = () => {
       }));
     };
 
-    const ViewEditModal = ({ isOpen, onClose }) => {
-      if (!isOpen) return null;
-
-      const handleEdit = (uid) => {
-        dispatch(setUpdateCompany({ uid }));
-        navigate(
-          `/loan/loan-origination-system/sme/borrowers/update-company/${uid}`
-        );
-        console.log(uid);
-      };
-
-      const handleChangeStatus = async (uid, newStatus) => {
-        console.log(uid);
-        setCurrentStatus(newStatus);
-        await dispatch(
-          changeCompanyBorrowerStatus({ uid, newStatus })
-        ).unwrap();
-        dispatch(
-          fetchAllCompanyBorrowersByType({
-            page: 0,
-            size: 20,
-            borrowerType: "COMPANY_BORROWER",
-          })
-        );
-        navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
-        onClose();
-      };
-
-      return (
-        <>
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm">
-            <div className="relative w-3/4 xl:w-1/3 p-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg transition-all duration-500 ease-in-out">
-              <XMarkIcon
-                onClick={onClose}
-                className="absolute top-1 right-1 h-6 w-6 cursor-pointer"
-              />
-              <div className="flex justify-start gap-5 flex-col mt-4">
-                <InputSelect
-                  labelName={"Account Status"}
-                  inputName={"accountStatus"}
-                  inputOptions={accountStatusOptionsSME}
-                  inputValue={currentStatus}
-                  onChange={(e) => setCurrentStatus(e.target.value)}
-                  disabled={false}
-                />
-                <Button
-                  buttonName={"Change Status"}
-                  onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
-                  buttonType="tertiary"
-                />
-                {/* OR Separator with horizontal line */}
-                <div className="relative flex items-center my-2">
-                  <hr className="w-full border-gray-300" />
-                  <span className="absolute left-1/2 -translate-x-1/2 bg-white px-2 text-gray-500 text-sm">
-                    OR
-                  </span>
-                </div>
-                <Button
-                  buttonName={"Edit"}
-                  onClick={() => handleEdit(rowData.uid)}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      );
-    };
-
-    const handleEdit = (uid) => {
-      dispatch(setUpdateCompany({ uid }));
-      navigate(
-        `/loan/loan-origination-system/sme/borrowers/update-company/${uid}`
-      );
-      console.log(uid);
-    };
-
     const handleEditDirector = (uid, uniqueID) => {
       dispatch(setUpdateDirector({ uid, uniqueID }));
       navigate(
@@ -305,20 +226,6 @@ const ViewCompany = () => {
         `/loan/loan-origination-system/sme/borrowers/update-shareholder/${uid}`
       );
       console.log(uid);
-    };
-
-    const handleChangeStatus = async (uid, newStatus) => {
-      console.log(uid);
-      setCurrentStatus(newStatus);
-      await dispatch(changeCompanyBorrowerStatus({ uid, newStatus })).unwrap();
-      dispatch(
-        fetchAllCompanyBorrowersByType({
-          page: 0,
-          size: 20,
-          borrowerType: "COMPANY_BORROWER",
-        })
-      );
-      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     };
 
     return (
@@ -501,6 +408,9 @@ const ViewCompany = () => {
               <ViewEditModal
                 isOpen={showEditModal}
                 onClose={() => setEditModal(false)}
+                rowData={rowData}
+                setCurrentStatus={setCurrentStatus}
+                currentStatus={currentStatus}
               />
             </div>
           )}
