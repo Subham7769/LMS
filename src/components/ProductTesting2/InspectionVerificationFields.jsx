@@ -16,7 +16,7 @@ import { currencyOptions } from "../../data/CountryData";
 const InspectionVerificationFields = ({ inspectionVerification, handleFileReset, handleFileUpload, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector((state) => state.smeLoans);
-
+  console.log(inspectionVerification)
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
     let uploadedCount = 0;
