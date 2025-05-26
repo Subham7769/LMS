@@ -30,7 +30,7 @@ import {
 
 const Login = () => {
   const [imageIndex, setImageIndex] = useState(0);
-  const images = [BG, BG1, BG2, BG3, BG4, BG5];
+  const images = [BG, BG3, BG4, BG5];
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -160,7 +160,7 @@ const Login = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
@@ -185,7 +185,7 @@ const Login = () => {
                 <div key={index} className="flex items-center justify-center h-full">
                   <img
                     src={image}
-                    className="w-full h-full object-contain block"
+                    className="object-contain max-h-[60vh] w-auto p-6"
                     alt={`Slide ${index}`}
                   />
                 </div>
