@@ -886,7 +886,9 @@ export const getInspectionVerificationDetails = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
 
-      const url = `${import.meta.env.VITE_LOAN_READ_INSPECTION_VERIFICATION_DETAILS}?borrowerSerialNo=${borrowerSerialNo}&loanProductId=${loanProductId}`;
+      const url = `${
+        import.meta.env.VITE_LOAN_READ_INSPECTION_VERIFICATION_DETAILS
+      }?borrowerSerialNo=${borrowerSerialNo}&loanProductId=${loanProductId}`;
 
       const response = await fetch(url, {
         method: "GET",
@@ -897,7 +899,9 @@ export const getInspectionVerificationDetails = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to fetch inspection verification");
+        return rejectWithValue(
+          errorData.message || "Failed to fetch inspection verification"
+        );
       }
 
       const responseData = await response.json();
@@ -927,7 +931,9 @@ export const submitInspectionVerification = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to submit inspection verification");
+        return rejectWithValue(
+          errorData.message || "Failed to submit inspection verification"
+        );
       }
 
       const responseData = await response.json();
@@ -937,7 +943,6 @@ export const submitInspectionVerification = createAsyncThunk(
     }
   }
 );
-
 
 const initialState = {
   borrowerData: {},
@@ -1094,7 +1099,32 @@ const initialState = {
       warrantyDocumentationAvailable: false,
       insuranceRequirementsMet: false,
     },
-    documents: [],
+    documents: [
+      {
+          "docName": "",
+          "docId": "",
+          "verified": false,
+          "documentKey": "FRONT_VIEW"
+      },
+      {
+          "docName": "",
+          "docId": "",
+          "verified": false,
+          "documentKey": "REAR_VIEW"
+      },
+      {
+          "docName": "",
+          "docId": "",
+          "verified": false,
+          "documentKey": "SERIAL_NUMBER"
+      },
+      {
+          "docName": "",
+          "docId": "",
+          "verified": false,
+          "documentKey": "CRITICAL_ISSUES"
+      },
+  ],
     verificationOutcome: {
       fundingRecommendation: "",
       conditionRequirements: "",
@@ -1354,18 +1384,18 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
         state.loading = false;
- 
+
         // If the payload is an empty array, retain the existing documents
         if (Array.isArray(action.payload) && action.payload.length === 0) {
           return;
         }
- 
+
         state.addLoanData.documents = action.payload.map((doc) => {
           // Find matching document from existing state based on documentKeyName
           const existingDoc = state.addLoanData.documents.find(
             (d) => d.documentKey === doc.documentKeyName
           );
- 
+
           return {
             docName: existingDoc ? existingDoc.docName : "",
             docId: existingDoc ? existingDoc.docId : "",
@@ -1435,7 +1465,7 @@ const smeLoansSlice = createSlice({
       .addCase(fetchLoanProductData.fulfilled, (state, action) => {
         state.loading = false;
         state.loanProductData = action.payload;
-        console.log(action.payload)
+        console.log(action.payload);
         const updatedLoanProductOptions = action.payload
           .filter((item) => item.eligibleCustomerType === "CORPORATE")
           .map((item) => ({
@@ -1486,22 +1516,29 @@ const smeLoansSlice = createSlice({
       .addCase(uploadInspectionVerificationDocumentFile.pending, (state) => {
         // state.loading = true;
       })
-      .addCase(uploadInspectionVerificationDocumentFile.fulfilled, (state, action) => {
-        state.loading = false;
-        const { docId, documentKey } = action.payload;
-        state.inspectionVerification.documents = state.inspectionVerification.documents.map(
-          (doc) =>
-            doc.documentKey === documentKey
-              ? { ...doc, docId } // Update the matching document
-              : doc // Keep other documents unchanged
-        );
-        toast.success("File uploaded successfully");
-      })
-      .addCase(uploadInspectionVerificationDocumentFile.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
-      })
+      .addCase(
+        uploadInspectionVerificationDocumentFile.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          const { docId, documentKey } = action.payload;
+          state.inspectionVerification.documents =
+            state.inspectionVerification.documents.map(
+              (doc) =>
+                doc.documentKey === documentKey
+                  ? { ...doc, docId } // Update the matching document
+                  : doc // Keep other documents unchanged
+            );
+          toast.success("File uploaded successfully");
+        }
+      )
+      .addCase(
+        uploadInspectionVerificationDocumentFile.rejected,
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+          toast.error(`API Error : ${action.payload}`);
+        }
+      )
       .addCase(deleteDocumentFile.pending, (state) => {
         // state.loading = true;
         state.error = null;
@@ -1780,13 +1817,20 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getInspectionVerificationDetails.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload)
-        state.inspectionVerification = action.payload.responseData[0];
+        console.log(action.payload);
+        state.inspectionVerification = {
+          ...action.payload.responseData[0],
+          documents: [
+            ...initialState.inspectionVerification.documents,
+            ...action.payload.responseData[0].documents,
+          ],
+        };
         state.error = null;
       })
       .addCase(getInspectionVerificationDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Failed to fetch inspection verification details";
+        state.error =
+          action.payload || "Failed to fetch inspection verification details";
       })
       .addCase(submitInspectionVerification.pending, (state) => {
         state.loading = true;

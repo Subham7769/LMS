@@ -16,7 +16,6 @@ import { currencyOptions } from "../../data/CountryData";
 const InspectionVerificationFields = ({ inspectionVerification, handleFileReset, handleFileUpload, handleChangeReducer }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector((state) => state.smeLoans);
-  console.log(inspectionVerification)
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
     let uploadedCount = 0;
@@ -301,6 +300,7 @@ const InspectionVerificationFields = ({ inspectionVerification, handleFileReset,
   const validationError = useSelector((state) => state.validation.validationError);
 
   const requiredDocuments = (documents) => {
+    console.log(documents)
     return documents.map((document, index) => (
       <React.Fragment key={document.documentKey}>
         <DocumentUploaderVerifier
@@ -346,7 +346,7 @@ const InspectionVerificationFields = ({ inspectionVerification, handleFileReset,
 
       // Dispatch the upload action with the FormData
       // console.log(fileUploadParams);
-      dispatch(uploadInspectionVerificationDocumentFile({ formData, fileUploadParams }));
+      // dispatch(uploadInspectionVerificationDocumentFile({ formData, fileUploadParams }));
     }
   };
 
@@ -356,7 +356,7 @@ const InspectionVerificationFields = ({ inspectionVerification, handleFileReset,
       docId: docId,
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
-    dispatch(deleteDocumentFile(fileDeleteParams));
+    // dispatch(deleteDocumentFile(fileDeleteParams));
   };
 
   const handleFileUploads = (e) => {
