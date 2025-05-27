@@ -134,7 +134,6 @@ const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
 );
 
-
 // CreditScore Imports
 const CreditScorePage = lazy(() => import("./pages/CreditScorePage"));
 const CreateNewCreditScore = lazy(() =>
@@ -204,6 +203,23 @@ const FamilyDetails = lazy(() =>
 );
 const EmploymentDetails = lazy(() =>
   import("./components/ProductTesting/TermLoan/EmploymentDetails")
+);
+
+// Product Testing KSA
+const ProductTestingKSA = lazy(() =>
+  import("./components/ProductTestingKSA/ProductTestingKSA")
+);
+const Step1Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step1/Step1Container")
+);
+const Step2Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step2/Step2Container")
+);
+const Step3Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step3/Step3Container")
+);
+const Step4Container = lazy(() =>
+  import("./components/ProductTestingKSA/Step4/Step4Container")
 );
 
 // GlobalConfig Imports
@@ -362,9 +378,7 @@ const UploadRepayment = lazy(() =>
 );
 
 //------------Refund-----------------
-const Refund = lazy(() =>
-  import("./components/Los-Personal/Refund/Refund")
-);
+const Refund = lazy(() => import("./components/Los-Personal/Refund/Refund"));
 const RefundApplication = lazy(() =>
   import("./components/Los-Personal/Refund/RefundApplication")
 );
@@ -380,7 +394,6 @@ const RefundFormPrint = lazy(() =>
 const RefundHistory = lazy(() =>
   import("./components/Los-Personal/Refund/RefundHistory")
 );
-
 
 // LOS-SME Imports
 const BorrowersSME = lazy(() =>
@@ -1359,6 +1372,32 @@ const routes = [
           },
         ],
       },
+      {
+        path: "product-testing-KSA",
+        element: <ProductTestingKSA />,
+        children: [
+          {
+            path: "create-account",
+            element: <Step1Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "pre-eligibility-check",
+            element: <Step2Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility-verification",
+            element: <Step3Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-application",
+            element: <Step4Container />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
     ],
   },
 
@@ -1517,7 +1556,7 @@ const routes = [
         path: "loan-application",
         element: <CustomerLoanApplication />,
         errorElement: <RouteErrorBoundary />,
-      }
+      },
     ],
   },
 

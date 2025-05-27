@@ -5,12 +5,19 @@ import { setMenus } from "../../redux/Slices/sidebarSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { BoltIcon } from "@heroicons/react/24/outline";
 
-import BG from "../../assets/image/1.webp";
-import BG1 from "../../assets/image/2.webp";
-import BG2 from "../../assets/image/3.webp";
-import BG3 from "../../assets/image/4.webp";
-import BG4 from "../../assets/image/5.webp";
-import BG5 from "../../assets/image/6.jpg";
+// import BG from "../../assets/image/1.webp";
+// import BG1 from "../../assets/image/2.webp";
+// import BG2 from "../../assets/image/3.webp";
+// import BG3 from "../../assets/image/4.webp";
+// import BG4 from "../../assets/image/5.webp";
+// import BG5 from "../../assets/image/6.jpg";
+
+import BG from "../../assets/image/illustrations/undraw_payments_nbqu.svg";
+// import BG1 from "../../assets/image/illustrations/undraw_data-analysis_b7cp.svg";
+// import BG2 from "../../assets/image/illustrations/undraw_finance_m6vw.svg";
+import BG3 from "../../assets/image/illustrations/undraw_online-payments_p97e.svg";
+import BG4 from "../../assets/image/illustrations/undraw_credit-card-payments_y0vn.svg";
+import BG5 from "../../assets/image/illustrations/undraw_pay-with-credit-card_77g6.svg";
 
 import {
   setIsSignup,
@@ -25,7 +32,7 @@ import { LogoIcon } from "../../assets/icons";
 
 const Login = () => {
   const [imageIndex, setImageIndex] = useState(0);
-  const images = [BG, BG1, BG2, BG3, BG4, BG5];
+  const images = [BG, BG3, BG4, BG5];
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -155,7 +162,7 @@ const Login = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
@@ -179,25 +186,25 @@ const Login = () => {
   const InputStyle = "form-input w-full";
 
   return (
-    <div className="min-h-screen flex flex-row-reverse items-center justify-center bg-white relative">
-      <div className="hidden md:flex md:w-1/2 h-screen  justify-between relative overflow-hidden">
-        <div className="w-full min-h-screen">
+    <div className="min-h-screen flex items-center justify-center bg-white relative ">
+      <div className="hidden md:flex md:w-1/2 h-64 lg:h-[60vh]   justify-between relative overflow-hidden">
+        <div className="w-full h-full">
           <Slider {...settings}>
             {images.map((image, index) => (
-              <div key={index} className="flex items-center justify-center">
+              <div key={index} className="flex items-center justify-center h-full">
                 <img
                   src={image}
-                  className="w-full h-screen object-cover block"
+                  className="object-contain max-h-[60vh] w-auto p-6"
                   alt={`Slide ${index}`}
                 />
               </div>
             ))}
           </Slider>
         </div>
-        <div className="inset-0 bg-black/50 absolute z-10" />
+        {/* <div className="inset-0 bg-black/50 absolute z-10" /> */}
       </div>
 
-      <div className="bg-white bg-opacity-80 p-8 w-full md:w-1/2 max-w-md mx-auto">
+      <div className="bg-white bg-opacity-80 p-8 w-full md:w-1/2 max-w-md mx-auto rounded-lg md:border md:border-gray-300">
         {/* Header */}
         <div className="absolute top-3 left-0">
           {/* Logo */}
