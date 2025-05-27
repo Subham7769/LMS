@@ -17,11 +17,11 @@ function Dashboard() {
   ];
 
   const today = new Date();
-  const [days, setDays] = useState(30);
+  const [days, setDays] = useState(365);
   const [toDate, setToDate] = useState(today);
   const [fromDate, setFromDate] = useState(() => {
     const d = new Date();
-    d.setDate(d.getDate() - 30);
+    d.setDate(d.getDate() - 365);
     return d;
   });
   const [range, setRange] = useState({ from: fromDate, to: toDate });
