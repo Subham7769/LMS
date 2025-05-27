@@ -306,6 +306,16 @@ export const MenusInitial = [
     ],
     isOpen: false,
   },
+  {
+    title: "Product Testing KSA",
+    sectionName: "TESTING",
+    href: "/loan/product-testing-KSA/create-account",
+    icon: "HandRaisedIcon",
+    current: false,
+    submenu: false,
+    submenuItems: [],
+    isOpen: false,
+  },
   // {
   //   title: "Test Component",
   //   sectionName: "TESTING",
@@ -385,36 +395,6 @@ export const MenusInitial = [
         href: "/loan/loan-origination-system/sme/repayments/add-bulk-repayment",
         current: false,
       },
-      // {
-      //   name: "Profile",
-      //   href: "/loan/loan-origination-system/sme/profile",
-      //   current: false,
-      // },
-      // {
-      //   name: "Manage Partner",
-      //   href: "/loan/loan-origination-system/sme/manage-partner",
-      //   current: false,
-      // },
-      // {
-      //   name: "Cash Payable",
-      //   href: "/loan/loan-origination-system/sme/cash-payable",
-      //   current: false,
-      // },
-      // {
-      //   name: "Cash Receivable",
-      //   href: "/loan/loan-origination-system/sme/cash-receivable",
-      //   current: false,
-      // },
-      // {
-      //   name: "Working Capital",
-      //   href: "/loan/loan-origination-system/sme/working-capital",
-      //   current: false,
-      // },
-      // {
-      //   name: "Project Finance",
-      //   href: "/loan/loan-origination-system/sme/project-finance",
-      //   current: false,
-      // },
     ],
     isOpen: false,
   },
@@ -482,7 +462,7 @@ export const MenusInitial = [
     icon: "CubeTransparentIcon",
     current: false,
     isOpen: false,
-    openInNewTab:true,
+    openInNewTab: true,
   },
   // USER TOOLS
   {
