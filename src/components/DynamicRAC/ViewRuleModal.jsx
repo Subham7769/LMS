@@ -20,13 +20,13 @@ const ViewRuleModal = ({
   return (
     <>
       <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
-        <div className="relative w-[50%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
+        <div className="relative w-[50%] max-h-[80vh] bg-white dark:bg-gray-800 border border-gray-200 rounded-xl shadow-lg transition-all duration-500 ease-in-out  overflow-y-scroll">
           <div
             className={
-              "sticky bg-white z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
+              "sticky bg-white dark:bg-gray-800 z-50 left-0 top-0 flex justify-between align-middle p-5 py-5 border-b-2"
             }
           >
-            <p className={"font-semibold text-2xl"}>
+            <p className={"font-semibold text-2xl dark:text-gray-200"}>
               {convertToReadableString(
                 isEditMode ? `Edit ${currentRule.name} Rule` : "Add New Rule"
               )}

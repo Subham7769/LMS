@@ -90,14 +90,14 @@ const RuleComponent = ({
 
   const handleEdit = () => {
     dispatch(setCurrentRule({ sectionId, dynamicRacRuleId }));
-    setShowRuleModal(!showRuleModal);
-    setIsEditMode(!isEditMode);
+    setShowRuleModal(true);
+    setIsEditMode(true);
   };
 
   const cancelEdit = () => {
     dispatch(restoreRule({ sectionId, dynamicRacRuleId }));
-    setShowRuleModal(!showRuleModal);
-    setIsEditMode(!isEditMode);
+    setShowRuleModal(false);
+    setIsEditMode(false);
   };
 
   // Edit Number Config
@@ -212,7 +212,7 @@ const RuleComponent = ({
       headerComponent={
         <div className="flex gap-2">
           <StatusPill rule={rule} />
-          <p>{convertToReadableString(rule?.name)}</p>
+          {/* <p>{convertToReadableString(rule?.name)}</p> */}
         </div>
       }
     >
@@ -220,12 +220,12 @@ const RuleComponent = ({
         {/* New Addition */}
         {rule?.history?.updateBy === null &&
           !rule?.needDeleteApprove && (
-            <div className="p-3 flex flex-col gap-3 text-sm text-green-500 font-semibold bg-green-50 rounded-lg">
+            <div className="p-3 flex flex-col gap-3 text-sm text-green-500 font-semibold bg-green-50 dark:bg-gray-700 rounded-lg">
               <span className="flex justify-start align-middle">
                 <EyeIcon className="h-5 w-5 mr-2 " />
                 Proposed Value
               </span>
-              <p className="text-gray-700">
+              <p className="text-gray-700 dark:text-gray-200">
                 {/* Rule Main Literature Text for Number */}
                 {rule?.fieldType === "NUMBER" && (
                   <span>
@@ -262,12 +262,12 @@ const RuleComponent = ({
 
         {/* Approved Deleted Value */}
         {rule?.needDeleteApprove && (
-          <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
+          <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 dark:bg-gray-700 rounded-lg">
             <span className="flex justify-start align-middle">
               <EyeIcon className="h-5 w-5 mr-2 " />
               Current Value
             </span>
-            <p className="text-gray-700">
+            <p className="text-gray-700 dark:text-gray-200">
               {/* Rule Main Literature Text for Number */}
               {rule?.fieldType === "NUMBER" && (
                 <span>
@@ -300,12 +300,12 @@ const RuleComponent = ({
         {rule?.history?.updateBy !== null &&
           !rule?.needDeleteApprove && (
             <div className="grid grid-cols-2 gap-5">
-              <div className="p-3 flex flex-col gap-3 text-sm text-gray-500 font-semibold bg-gray-50 rounded-lg">
+              <div className="p-3 flex flex-col gap-3 text-sm text-gray-500 dark:text-gray-100 font-semibold bg-gray-100 dark:bg-gray-700 rounded-lg">
                 <span className="flex justify-start align-middle">
                   <EyeIcon className="h-5 w-5 mr-2 " />
                   Previous Version
                 </span>
-                <p className="text-gray-700">
+                <p className="text-gray-700 dark:text-gray-200">
                   {/* Rule Main Literature Text for Number */}
                   {rule?.fieldType === "NUMBER" && (
                     <span>
@@ -340,12 +340,12 @@ const RuleComponent = ({
                   )}
                 </p>
               </div>
-              <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 rounded-lg">
+              <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 dark:bg-gray-700 rounded-lg">
                 <span className="flex justify-start align-middle">
                   <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
                   New Version
                 </span>
-                <p className="text-gray-700">
+                <p className="text-gray-700 dark:text-gray-200">
                   {/* Rule Main Literature Text for Number */}
                   {rule?.fieldType === "NUMBER" && (
                     <span>{generateNumberSentence(rule)}</span>
@@ -360,12 +360,12 @@ const RuleComponent = ({
           )}
 
         {/* Risk Assessment */}
-        {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 rounded-lg">
+        {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 dark:bg-gray-700 rounded-lg">
           <span className="flex justify-start align-middle">
             <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
             Risk Assessment
           </span>
-          <p className="text-gray-700">
+          <p className="text-gray-700 dark:text-gray-200">
             These changes may cause product financial effects.
           </p>
         </div> */}

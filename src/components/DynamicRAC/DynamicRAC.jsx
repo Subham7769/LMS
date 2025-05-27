@@ -29,6 +29,7 @@ import {
   removeSection,
   setSectionSettings,
   deleteSection,
+  restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
 import ViewRuleModal from "./ViewRuleModal";
@@ -84,6 +85,7 @@ const DynamicRAC = () => {
     }),
     useSensor(TouchSensor)
   );
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -338,6 +340,11 @@ const DynamicRAC = () => {
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
+  const cancelEdit = () => {
+    dispatch(restoreRule());
+    setShowRuleModal(false);
+    setIsEditMode(false);
+  };
 
   // Droppable
   const DroppableSection = ({ section, children }) => {
@@ -349,7 +356,7 @@ const DynamicRAC = () => {
     });
 
     return (
-      <div ref={setNodeRef} className="border rounded-md p-4 bg-white">
+      <div ref={setNodeRef} className="border rounded-md p-4 bg-white dark:bg-gray-800">
         {children}
       </div>
     );
@@ -372,7 +379,6 @@ const DynamicRAC = () => {
       transform: !isDragDisabled && transform
         ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
         : undefined,
-      background: "white",
       padding: "8px",
       opacity: isDragging ? 0.7 : 1,
       cursor: isDragDisabled ? "not-allowed" : "grab",
@@ -382,8 +388,8 @@ const DynamicRAC = () => {
       <div
         ref={setNodeRef}
         {...(!isDragDisabled ? { ...listeners, ...attributes } : {})}
-        className="px-3 bg-white border rounded-md"
         style={style}
+        className="px-3 bg-white dark:bg-gray-800 border rounded-md"
       >
         <RuleComponent
           rule={rule}
@@ -437,10 +443,10 @@ const DynamicRAC = () => {
   const SectionBox = ({ roleName, EditorRolesDynamicRac, ViewerRolesDynamicRac, handleAddSection }) => {
     return (
       roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
-        <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-          <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
-          <h2 className="font-semibold">Create New Rac</h2>
-          <p className="flex flex-col items-center text-gray-500">
+        <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
+          <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold" />
+          <h2 className="font-semibold dark:text-gray-200">Create New Rac</h2>
+          <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
             Start by adding sections to your Risk Assessment Criteria.
           </p>
           <div className="flex gap-5">
@@ -454,10 +460,10 @@ const DynamicRAC = () => {
         </div>
       ) : (
         (roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName)) && (
-          <div className="bg-white flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-            <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold rotate-45" />
-            <h2 className="font-semibold">No Data to Review</h2>
-            <p className="flex flex-col items-center text-gray-500">
+          <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
+            <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold rotate-45" />
+            <h2 className="font-semibold dark:text-gray-200">No Data to Review</h2>
+            <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
               No Risk Assessment Criteria submitted for review yet.
             </p>
           </div>
@@ -470,9 +476,9 @@ const DynamicRAC = () => {
   const CriteriaBox = ({ roleName, EditorRolesDynamicRac, ViewerRolesDynamicRac, handleUseTemplate, handleAddRule, section }) => {
     return (
       roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
-        <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
-          <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold" />
-          <p className="flex flex-col items-center text-gray-500">
+        <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
+          <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold" />
+          <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
             <span>Click to add criteria to this section. You</span>
             <span>can also use an existing template as a starting point</span>
           </p>
@@ -491,9 +497,9 @@ const DynamicRAC = () => {
         </div>
       ) : (
         (roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName)) && (
-          <div className="bg-white flex justify-center flex-col items-center p-5 gap-3">
-            <PlusIcon className="text-blue-500 h-16 w-16 bg-blue-50 rounded-full p-4 font-extrabold rotate-45" />
-            <p className="flex flex-col items-center text-gray-500">
+          <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
+            <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold rotate-45" />
+            <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
               <span>No Risk Assessment Criteria available for review.</span>
             </p>
           </div>
@@ -505,7 +511,7 @@ const DynamicRAC = () => {
   // Header
   const HeaderBox = ({ roleName, section, dispatch, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
     return (
-      <div className="flex justify-between items-center p-5 bg-white border-b">
+      <div className="flex justify-between items-center p-5 bg-white dark:bg-gray-800 border-b">
         <div className="flex justify-center align-middle">
           <EllipsisVerticalIcon className="h-7 text-gray-500" />
           <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
@@ -520,14 +526,14 @@ const DynamicRAC = () => {
         {(roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
           <div className="flex justify-between items-center gap-5 hover:cursor-pointer">
             <div
-              className={"flex text-blue-500"}
+              className={"flex text-sky-500"}
               onClick={() => handleUseTemplate(section.sectionId, section.sectionName)}
             >
               <ArrowUpOnSquareIcon className="h-5 w-5" />
               <p>Use Template</p>
             </div>
             <div
-              className={"flex text-blue-500"}
+              className={"flex text-sky-500"}
               onClick={() => handleAddRule(section.sectionId, section.sectionName)}
             >
               <PlusIcon className="h-5 w-5" />
@@ -566,6 +572,13 @@ const DynamicRAC = () => {
             sectionId={selectedSectionId}
             sectionName={selectedSectionName}
             racId={racId}
+          />
+          <ViewRuleModal
+            isOpen={showRuleModal}
+            isEditMode={isEditMode}
+            onClose={cancelEdit}
+            sectionId={selectedSectionId}
+            sectionName={selectedSectionName}
           />
           {/* RAC Header */}
           <div className="flex justify-between gap-2  items-center w-full">
@@ -676,7 +689,7 @@ const DynamicRAC = () => {
                     sections?.map((section) => (
                       <DroppableSection key={section.sectionId} section={section}>
                         <div
-                          className={`shadow-md border-gray-300 border rounded-xl overflow-hidden ${section.size === "full" ? "col-span-3" :
+                          className={`shadow-md  border-gray-300 border rounded-xl overflow-hidden ${section.size === "full" ? "col-span-3" :
                             section.size === "half" ? "col-span-2" : "col-span-1"
                             }`}
                         >
@@ -724,7 +737,7 @@ const DynamicRAC = () => {
                 {/* DragOverlay here, outside the section render loop */}
                 <DragOverlay>
                   {activeRule ? (
-                    <div className="px-3 bg-white border rounded-md shadow-md p-2">
+                    <div className="px-3 bg-white dark:bg-gray-800 border rounded-md shadow-md p-2">
                       <RuleComponent
                         rule={activeRule}
                         racId={racId}

@@ -610,13 +610,13 @@ const ViewTemplateModal = ({
 
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
-      <div className="relative w-[75%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+      <div className="relative w-[75%] max-h-[80vh] bg-white dark:bg-gray-800 border border-gray-200 rounded-xl shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="sticky top-0 z-50 bg-white flex justify-between items-center p-5 border-b">
-          <p className="font-semibold text-2xl">Use Template</p>
+        <div className="sticky top-0 z-50 bg-white dark:bg-gray-800 flex justify-between items-center p-5 border-b">
+          <p className="font-semibold text-2xl dark:text-gray-200">Use Template</p>
           <XMarkIcon
             onClick={handleClose}
-            className="h-8 w-8 text-gray-500 cursor-pointer"
+            className="h-8 w-8 text-gray-500 cursor-pointer hover:text-red-500"
           />
         </div>
 
@@ -630,7 +630,7 @@ const ViewTemplateModal = ({
                 className={`py-3 px-2 border rounded-lg cursor-pointer text-center ${
                   selectedTemplateType.id === type.id
                     ? "bg-blue-500 text-white"
-                    : "bg-gray-100"
+                    : "bg-white dark:bg-gray-800"
                 }`}
                 onClick={() => setSelectedTemplateType(type)}
               >
@@ -641,31 +641,31 @@ const ViewTemplateModal = ({
 
           {/* Right Section - Templates List */}
           <div className="w-[80%] p-4 overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-3">Available Templates</h2>
+            <h2 className="text-xl font-semibold mb-3 dark:text-gray-200">Available Templates</h2>
             <div className="grid grid-cols-2 gap-3">
               {templates[selectedTemplateType.id].map((template, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col gap-2 p-4 border-2 bg-white rounded-lg ${
+                  className={`flex flex-col gap-2 p-4 border-2 bg-white dark:bg-gray-800 rounded-lg ${
                     selectedTemplate?.dynamicRacRuleId ===
                       template.dynamicRacRuleId && "border-blue-500"
                   }`}
                   onClick={() => setSelectedTemplate(template)}
                 >
                   <p className="flex justify-between items-center">
-                    <span className="font-semibold">{convertToReadableString(template.name)}</span>
+                    <span className="font-semibold text-gray-800 dark:text-gray-200 ">{convertToReadableString(template.name)}</span>
                     {selectedTemplateType.name !== "All templates" && (
-                      <span className="bg-gray-100 text-gray-500 text-[10px] font-semibold px-2 py-1 rounded ">
+                      <span className="text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-500 text-[10px] font-semibold px-2 py-1 rounded ">
                         {selectedTemplateType.name}
                       </span>
                     )}
                   </p>
                   {template.fieldType === "STRING" ? (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-600 dark:text-gray-200">
                       {generateStringSentence(template)}
                     </p>
                   ) : (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-600 dark:text-gray-200">
                       {generateNumberSentence(template)}
                     </p>
                   )}
@@ -674,7 +674,7 @@ const ViewTemplateModal = ({
                     {template.usageList.map((templateUsage) => {
                       if (templateUsage.used) {
                         return (
-                          <p className="bg-blue-100 w-fit rounded-xl px-2 text-blue-500 text-[10px] py-1">
+                          <p className="bg-sky-50 w-fit rounded-xl px-2 text-sky-500 text-[10px] py-1">
                             {templateUsage.ruleUsage}
                           </p>
                         );
@@ -687,16 +687,17 @@ const ViewTemplateModal = ({
           </div>
         </div>
         {/* Footer */}
-        <div className="sticky bottom-0 z-50 bg-white flex justify-end items-center gap-5  p-3 border-t">
+        <div className="sticky bottom-0 z-50 bg-white dark:bg-gray-800 flex justify-end items-center gap-5  p-3 border-t">
           <Button
             buttonName="Cancel"
             rectangle={true}
-            buttonType={"tertiary"}
+            buttonType={"destructive"}
             onClick={handleClose}
           />
 
           <Button
             buttonName="Use This Template"
+            buttonType={"primary"}
             rectangle={true}
             disabled={!selectedTemplate}
             onClick={() =>

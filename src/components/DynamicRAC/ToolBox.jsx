@@ -452,7 +452,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, isEditMode }) => {
               </div>
             )}
             {/* Blocked Checkbox */}
-            <div className="mt-5">
+            <div className="mt-8">
               <InputCheckbox
                 labelName="Block"
                 inputChecked={ruleConfig?.blocked}
