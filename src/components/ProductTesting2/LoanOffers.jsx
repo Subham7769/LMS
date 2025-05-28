@@ -19,6 +19,7 @@ import {
   CogIcon,
   CalculatorIcon,
   CurrencyDollarIcon,
+  ChartBarSquareIcon,
 } from "@heroicons/react/24/outline";
 import formatNumber from "../../utils/formatNumber";
 import CardInfo from "../Common/CardInfo/CardInfo";
@@ -30,10 +31,13 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import BankStatementAnalyzer from "../BankStatementAnalyzer/BankStatementAnalyzer";
+import BankAnalysisModal from "./BankAnalysisModal";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBankModalOpen, setIsBankModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
+  const [bankAnalysistData, setBankAnalysistData] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Adding useNavigate  for navigation
 
@@ -76,6 +80,8 @@ const LoanOffers = () => {
     };
   }, [dispatch]);
 
+  console.log(docId);
+
   const SubmitProceed = async (transactionId, index) => {
     const uid = loanOfferFields.uid;
     const proceedPayload = {
@@ -111,6 +117,16 @@ const LoanOffers = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedInstallmentData(null); // Clear the data when closing the modal
+  };
+
+  const handleBankAnalysistModal = (data) => {
+    setIsBankModalOpen(true);
+    setBankAnalysistData(data)
+  };
+
+  const closeBankModal = () => {
+    setIsBankModalOpen(false);
+    setBankAnalysistData(null); // Clear the data when closing the modal
   };
 
   const InfoRow = ({ label, value }) => (
@@ -381,7 +397,9 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
                 loading={loading}
               >
                 <div
-                  className={"shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5 text-center"}
+                  className={
+                    "shadow-md bg-blue-50 rounded-xl pb-8 pt-6 px-5 text-center"
+                  }
                 >
                   <div className="grid grid-cols-6 gap-4 items-center">
                     <div className="text-[14px]">
@@ -423,20 +441,20 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
                       <div className="text-gray-500">
                         ({ci?.annualInterestRatePercent}% APR)
                       </div>
-
                     </div>
                     <div className="text-[14px]">
                       <div className="text-gray-500">TermSheet</div>
                       <div className="font-semibold text-lg">
                         <a
-                          href={"/assets/files/Term_Sheet_Commercial_Asset_Financing.pdf"}
+                          href={
+                            "/assets/files/Term_Sheet_Commercial_Asset_Financing.pdf"
+                          }
                           className="text-blue-600 underline"
                           download="Term_Sheet_Commercial_Asset_Financing.pdf"
                         >
                           Download
                         </a>
                       </div>
-
                     </div>
                     <div className="text-center">
                       {!hasViewOnlyAccessGroup3(roleName) && (
@@ -448,21 +466,46 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
                       )}
                     </div>
                   </div>
-
                 </div>
               </CardInfo>
               <CardInfo
-                cardTitle="Bank Statement Analysis"
+                cardTitle="Analysis"
                 className={
-                  "border-2 border-blue-300 rounded-xl shadow-md px-4 pb-5"
+                  "border-2 border-yellow-300 rounded-xl shadow-md px-4 pb-5"
                 }
                 colorBG={"bg-background-light-white"}
-                cardIcon={CurrencyDollarIcon}
-                colorText={"text-blue-primary"}
+                cardIcon={ChartBarSquareIcon}
+                colorText={"text-yellow-700"}
                 loading={loading}
               >
                 {/* {<BankStatementAnalyzer docId={docId} />} */}
-                {docId && <BankStatementAnalyzer docId={docId} proposedMontlyFinancing={formatNumber(ci?.installmentSummaryResponse[0]?.totalRequiredAmount.toFixed(2))} />}
+                <div
+                  className={
+                    "shadow-md bg-yellow-50 rounded-xl pb-8 pt-6 px-5 text-center"
+                  }
+                >
+                  <div className="grid grid-cols-6 gap-4 items-center">
+                    <div
+                      className="cursor-pointer text-yellow-600 hover:underline"
+                      onClick={() =>
+                        handleBankAnalysistModal(ci?.installmentSummaryResponse)
+                      }
+                    >
+                      View Bank Analysis
+                    </div>
+                  </div>
+                </div>
+
+                {/* {docId && (
+                  <BankStatementAnalyzer
+                    docId={docId}
+                    proposedMontlyFinancing={formatNumber(
+                      ci?.installmentSummaryResponse[0]?.totalRequiredAmount.toFixed(
+                        2
+                      )
+                    )}
+                  />
+                )} */}
               </CardInfo>
               <div>
                 <div className="text-center text-gray-500">
@@ -479,6 +522,14 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
               isOpen={isModalOpen}
               onClose={closeModal}
               installmentConfigData={selectedInstallmentData}
+            />
+          )}
+          {isBankModalOpen && docId && (
+            <BankAnalysisModal
+              onClose={closeBankModal}
+              bankConfigData={bankAnalysistData}
+              docId={docId}
+              loading={loading}
             />
           )}
         </div>
