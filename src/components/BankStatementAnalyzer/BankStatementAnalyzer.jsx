@@ -105,6 +105,45 @@ const fetchDocumentBase64ByDocId = async (docId, authToken) => {
   }
 };
 
+const renderValue = (value) => {
+  if (Array.isArray(value)) {
+    return (
+      <ul className="list-disc list-inside pl-4">
+        {value.map((item, idx) => (
+          <li key={idx}>
+            {typeof item === 'object' && item !== null
+              ? Object.entries(item).map(([k, v]) => `${k}: ${v}`).join(', ')
+              : item?.toString()}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    return (
+      <table className="border border-gray-300 my-2">
+        <thead>
+          <tr>
+            <th className="border px-2 py-1 text-left bg-gray-100">Key</th>
+            <th className="border px-2 py-1 text-left bg-gray-100">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(value).map(([k, v], idx) => (
+            <tr key={idx}>
+              <td className="border px-2 py-1">{k}</td>
+              <td className="border px-2 py-1">{typeof v === 'object' ? JSON.stringify(v) : v}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
+  return value?.toString() ?? '';
+};
+
 const BankStatementAnalyzer = (prop) => {
   //const { docId } = prop;
 
@@ -240,12 +279,19 @@ const BankStatementAnalyzer = (prop) => {
               {
                 role: 'system',
                 content: `You are a bank statement analyzer. Return a JSON object grouped by sections: 
-                Section 1: Cash Flow Analysis that contains Average Monthly Cash Flow,  Average Monthly Deposits,  Average Monthly Withdrawals,Monthwise Account Balance Trend with End Balance, Available Amount for Financing calculated with 30% of average monthly cash flow 
-                Section 2: Cash Flow Stability Assessment having Stability Score, Volatility Index as Low Medium High, Seasonal Patterns,Negative Balance Days,Insufficient Funds,Deposit Consistency,Revenue Diversification,Month-to-Month Variance
-                Section 3: Transaction Pattern Analysis with Top 5 income source categories and top 5 expense categories with total %, Recurring trasactions and Unusal transactions
-                Section 4: Debt Service Capacity having fields monthly Current Debt Obligations,Proposed Equipment Financing is ${proposedMontlyFinancing}. Calculate Total Debt Service=Current Debt Obligations+Proposed Equipment Financing. Using this value calculate Debt Service Coverage Ratio, DSCR Assessment as Adequet, marginal or Weak. Also show monthly Recommended Maximum Financing
-                Section 5: Bank Statement Risk Indicators with analysis for Bounced Checks,No Loan Defaults,Irregular Large Withdrawals,No Unusual Payment Patterns,Unexplained Cash Deposits,No Overdraft Occurrences,Consistent Revenue Stream,Stable Operating Expenses,Minor Balance Fluctuations,Strong Liquidity Ratio and finally Risk Assessment and Bank statement Reliability as Low medium high.
+                Section 1: Bank details, customer details, account number, address of the customer  
+                Section 2: Cash Flow Analysis that contains Average Monthly Cash Flow,  Average Monthly Deposits,  Average Monthly Withdrawals,Monthwise Account Balance Trend with End Balance, Available Amount for Financing calculated with 30% of average monthly cash flow 
+                Section 3: Cash Flow Stability Assessment having Stability Score, Volatility Index as Low Medium High, Seasonal Patterns,Negative Balance Days,Insufficient Funds,Deposit Consistency,Revenue Diversification,Month-to-Month Variance
+                Section 4: Transaction Pattern Analysis with Top 5 income source categories and top 5 expense categories with total %, Recurring trasactions and Unusal transactions
+                Section 5: Debt Service Capacity having fields monthly Current Debt Obligations,Proposed Equipment Financing is ${proposedMontlyFinancing}. Calculate Total Debt Service=Current Debt Obligations+Proposed Equipment Financing. Using this value calculate Debt Service Coverage Ratio, DSCR Assessment as Adequet, marginal or Weak. Also show monthly Recommended Maximum Financing
+                Section 6: Bank Statement Risk Indicators with analysis for Bounced Checks,No Loan Defaults,Irregular Large Withdrawals,No Unusual Payment Patterns,Unexplained Cash Deposits,No Overdraft Occurrences,Consistent Revenue Stream,Stable Operating Expenses,Minor Balance Fluctuations,Strong Liquidity Ratio and finally Risk Assessment and Bank statement Reliability as Low medium high.
+                Section 7: End of day balance for each day 
                 Identify the currency from the statement and add it to all the values.
+                Ensure your response is a valid JSON object:
+              - Do NOT wrap it in triple backticks (no \`\`\`json).
+              - Do NOT include comments (like //).
+              - Do NOT add trailing commas.
+              - Only return the raw JSON object, nothing else.
                 `
               },
               {
@@ -272,6 +318,9 @@ const BankStatementAnalyzer = (prop) => {
         });
 
         parsedJson = JSON.parse(cleaned);
+        
+        console.log(parsedJson);
+
         setAnalysisData(parsedJson);
       } catch (e) {
         console.error("Failed to parse OpenAI response:", e);
@@ -320,47 +369,29 @@ useEffect(() => {
   fetchDocAndAnalyze();
 }, [docId]);
 
-  const renderSection = (title, data) => (
-    <ContainerTile loading={loading} key={title}>
-      <h2 className="font-semibold mb-2">{title}</h2>
-      <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead style={{ backgroundColor: '#f3f4f6' }}>
-          <tr>
-            <th style={{ textAlign: 'left', fontWeight: '600' }}>Parameter</th>
-            <th style={{ textAlign: 'left', fontWeight: '600' }}>Value</th>
+const renderSection = (title, data) => (
+  <ContainerTile loading={loading} key={title}>
+    <h2 className="font-semibold mb-2">{title}</h2>
+    <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <thead style={{ backgroundColor: '#f3f4f6' }}>
+        <tr>
+          <th style={{ textAlign: 'left', fontWeight: '600' }}>Parameter</th>
+          <th style={{ textAlign: 'left', fontWeight: '600' }}>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(data).map(([key, value], idx) => (
+          <tr key={idx}>
+            <td className="text-[14px] text-gray-600">{key}</td>
+            <td style={{ color: '#111827' }}>
+              {renderValue(value)}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {Object.entries(data).map(([key, value], idx) => (
-            <tr key={idx}>
-              <td className="text-[14px] text-gray-600">{key}</td>
-              <td style={{ color: '#111827' }}>
-                {Array.isArray(value) ? (
-                  <ul className="list-disc list-inside pl-4">
-                    {value.map((item, i) => (
-                      <li key={i}>
-                        {typeof item === 'object'
-                          ? Object.entries(item).map(([k, v]) => `${k}: ${v}`).join(', ')
-                          : item}
-                      </li>
-                    ))}
-                  </ul>
-                ) : typeof value === 'object' ? (
-                  <ul className="list-disc list-inside pl-4">
-                    {Object.entries(value).map(([k, v], i) => (
-                      <li key={i}>{k}: {v}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  value
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </ContainerTile>
-  );
+        ))}
+      </tbody>
+    </table>
+  </ContainerTile>
+);
 
   const renderPieChart = (data) => {
     const chartData = Object.entries(data).map(([key, value]) => ({ name: key, value: parseFloat(value) || 0 }));
