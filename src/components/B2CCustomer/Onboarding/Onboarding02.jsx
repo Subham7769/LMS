@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import * as Slider from "@radix-ui/react-slider";
+import { useActiveTab } from "../ActiveTabContext";
 
-function Onboarding02({ onNext, onBack, defaultData }) {
-  const [amount, setAmount] = useState(defaultData.amount || 1000);
-  const [period, setPeriod] = useState(defaultData.period || 12);
-  const [repayment, setRepayment] = useState(defaultData.repayment || 12);
-  const [interestRate, setInterestRate] = useState(0);
+function Onboarding02({ onNext, onBack }) {
+  const { formData, setFormData } = useActiveTab();
+
 
   useEffect(() => {
     fetch("/api/interest-rate")
       .then((res) => res.json())
-      .then((data) => setInterestRate(data.rate || 0));
+      .then((data) => setFormData({ ...formData, interestRate: data.rate }));
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onNext({ amount, period, repayment, interestRate });
+    onNext();
   };
 
   const sliderClass =
@@ -32,12 +31,12 @@ function Onboarding02({ onNext, onBack, defaultData }) {
         <form onSubmit={handleSubmit}>
           {/* Loan Amount */}
           <label className="block mb-1 font-medium">
-            Loan Amount: ₹{amount}
+            Loan Amount: ₹{formData.amount}
           </label>
           <Slider.Root
             className={sliderClass + " mb-6"}
-            value={[amount]}
-            onValueChange={([val]) => setAmount(val)}
+            value={[formData.amount]}
+            onValueChange={([val]) => setFormData({ ...formData, amount: val })}
             min={0}
             max={100000}
             step={1000}
@@ -50,12 +49,12 @@ function Onboarding02({ onNext, onBack, defaultData }) {
 
           {/* Loan Period */}
           <label className="block mb-1 font-medium">
-            Loan Period: {period} months
+            Loan Period: {formData.period} months
           </label>
           <Slider.Root
             className={sliderClass + " mb-6"}
-            value={[period]}
-            onValueChange={([val]) => setPeriod(val)}
+            value={[formData.period]}
+            onValueChange={([val]) => setFormData({ ...formData, period: val })}
             min={1}
             max={60}
             step={1}
@@ -68,12 +67,12 @@ function Onboarding02({ onNext, onBack, defaultData }) {
 
           {/* Repayment Tenure */}
           <label className="block mb-1 font-medium">
-            Repayment Tenure: {repayment} months
+            Repayment Tenure: {formData.repayment} months
           </label>
           <Slider.Root
             className={sliderClass + " mb-6"}
-            value={[repayment]}
-            onValueChange={([val]) => setRepayment(val)}
+            value={[formData.repayment]}
+            onValueChange={([val]) => setFormData({ ...formData, repayment: val })}
             min={1}
             max={60}
             step={1}
@@ -84,7 +83,7 @@ function Onboarding02({ onNext, onBack, defaultData }) {
             <Slider.Thumb className={thumbClass} />
           </Slider.Root>
 
-          <p className="text-sm mb-4">Interest Rate: {interestRate}%</p>
+          <p className="text-sm mb-4">Interest Rate: {formData.interestRate}%</p>
           <div className="flex justify-between">
             <button
               type="button"

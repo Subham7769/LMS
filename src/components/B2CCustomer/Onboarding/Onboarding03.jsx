@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import { registerDummyBorrower } from "../Actions/RegisterDummyBorrower";
+import { useActiveTab } from "../ActiveTabContext";
 
 function Onboarding03({ onNext, onBack, defaultData }) {
-  const [email, setEmail] = useState(defaultData.email || "");
-  const [basicPay, setBasicPay] = useState(defaultData.basicPay || "");
+  const { formData, setFormData } = useActiveTab();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const borrowerId = await registerDummyBorrower(email, basicPay);
+    const borrowerId = await registerDummyBorrower(formData.email, formData.basicPay);
+
+    if (isValid) {
+        dispatch(registerBorrower(addBorrowerData))
+          .unwrap()
+          .then(() => {
+            navigate(
+              `/loan/loan-origination-system/personal/borrowers/view-borrower`
+            );
+          });
+      }
+
     setLoading(false);
 
     if (borrowerId) {
-      onNext({ email, basicPay, borrowerId });
+      setFormData({ ...formData, borrowerId });
+      onNext();
     } else {
       alert("Failed to create borrower.");
     }
@@ -27,16 +39,16 @@ function Onboarding03({ onNext, onBack, defaultData }) {
           className="form-input w-full mb-4"
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={e => setFormData({ ...formData, email: e.target.value })}
           required
         />
         <input
           className="form-input w-full mb-4"
           type="number"
           placeholder="Basic Pay"
-          value={basicPay}
-          onChange={e => setBasicPay(e.target.value)}
+          value={formData.basicPay}
+          onChange={e => setFormData({ ...formData, basicPay: e.target.value })}
           required
         />
         <div className="flex justify-between">

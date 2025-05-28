@@ -479,6 +479,13 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
+  {
+    title: "B2C Customer",
+    sectionName: "USER TOOLS",
+    href: "/customer/loan-application",
+    icon: "CheckBadgeIcon",
+    current: false,
+  },
 ];
 export const allSectionName = [
   "LOAN MANAGEMENT",

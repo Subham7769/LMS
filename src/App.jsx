@@ -9,6 +9,8 @@ import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import AppLayoutB2C from "./components/AppLayout/AppLayoutB2C";
+import { ActiveTabProvider } from "./components/B2CCustomer/ActiveTabContext";  // Import the conte
+
 
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
@@ -1547,7 +1549,9 @@ const routes = [
     element: (
       <PageErrorBoundary>
         <ProtectedRoute>
-          <AppLayoutB2C />
+          <ActiveTabProvider>
+            <AppLayoutB2C />
+          </ActiveTabProvider>
         </ProtectedRoute>
       </PageErrorBoundary>
     ),
