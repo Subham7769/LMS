@@ -557,12 +557,6 @@ const LoanOffers = () => {
                     >
                       View Loan Document Analysis
                     </div>
-                    <div
-                      className="cursor-pointer text-yellow-600 hover:underline"
-                      onClick={() => handleDocumentAnalysisModal(2)}
-                    >
-                      View Company Document Analysis
-                    </div>
 
                   </div>
                 </div>
