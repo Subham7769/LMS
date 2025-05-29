@@ -31,7 +31,6 @@ import {
   deleteSection,
 } from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
-import ViewRuleModal from "./ViewRuleModal";
 import RuleComponent from "./RuleComponent";
 import ViewTemplateModal from "./ViewTemplateModal";
 import { useNavigate, useParams } from "react-router-dom";
@@ -57,6 +56,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import Toolbox from "./ToolBox";
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -542,7 +542,7 @@ const DynamicRAC = () => {
             onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
             initialName={name}
           />
-          <ViewRuleModal
+          <Toolbox
             isOpen={showRuleModal}
             onClose={() => setRuleModal(false)}
             sectionId={selectedSectionId}

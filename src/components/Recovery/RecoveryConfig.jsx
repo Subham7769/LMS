@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { FaInfoCircle } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import { PencilIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import InputSelect from "../Common/InputSelect/InputSelect";
-import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputText from "../Common/InputText/InputText";

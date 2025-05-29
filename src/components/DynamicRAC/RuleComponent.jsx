@@ -27,9 +27,10 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import getConditionForOperators from "./getConditionForOperators";
 import { convertDate } from "../../utils/convertDate";
-import ViewRuleModal from "./ViewRuleModal";
 import HoverButtonNew from "../Common/HoverButtonNew/HoverButtonNew";
 import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from '../../data/RoleBasedAccessAndView'
+import { DeleteIcon, EditIcon } from "../../assets/icons";
+import Toolbox from "./ToolBox";
 
 
 const RuleComponent = ({
@@ -149,55 +150,63 @@ const RuleComponent = ({
   }, [condition]);
 
   const ViewRuleAction = ({ rule, actions = false }) => {
-    return (<div className="flex justify-between items-center p-2 w-[100%] rounded-lg border">
-      <div className="flex-1 p-3 flex flex-col gap-3">
-        {/* Rule Status Pill */}
-        <StatusPill rule={rule} />
+    return (
+      <div className="p-5 rounded-lg border dark:border-gray-700">
+        <div className="flex flex-col gap-3">
+          {/* Rule Status Pill */}
+          <div className="flex justify-between items-center">
+            <StatusPill rule={rule} />
+            {/* Actions */}
+            {actions &&
+              !(
+                rule?.needDeleteApprove &&
+                ["CREATED", "REJECTED", "APPROVED"].includes(rule?.status)
+              ) && (
+                <div className="flex gap-5">
+                  <Button
+                    buttonIcon={EditIcon}
+                    onClick={handleEdit}
+                    buttonType="secondary"
+                  />
+                  <Button
+                    buttonIcon={DeleteIcon}
+                    onClick={handleEdit}
+                    buttonType="destructive"
+                  />
+                </div>
+              )}
+          </div>
 
-        {/* Rule Main Literature Text for Number */}
-        {rule?.fieldType === "NUMBER" && (
-          <h2>{generateNumberSentence(rule)}</h2>
-        )}
+          {/* Rule Main Literature Text for Number */}
+          {rule?.fieldType === "NUMBER" && (
+            <h2>{generateNumberSentence(rule)}</h2>
+          )}
 
-        {/* Rule Main Literature Text for String */}
-        {rule?.fieldType === "STRING" && (
-          <h2>{generateStringSentence(rule)}</h2>
-        )}
+          {/* Rule Main Literature Text for String */}
+          {rule?.fieldType === "STRING" && (
+            <h2>{generateStringSentence(rule)}</h2>
+          )}
 
-        {/* Rule sub-main Literature Text with status */}
-        <p className={"text-sm text-gray-500"}>
-          {rule?.status === "CREATED"
-            ? rule?.history?.updateBy
-              ? "Modified"
-              : "Newly Added"
-            : rule?.status === "REJECTED"
+          {/* Rule sub-main Literature Text with status */}
+          <p className={"text-sm text-gray-500"}>
+            {rule?.status === "CREATED"
+              ? rule?.history?.updateBy
+                ? "Modified"
+                : "Newly Added"
+              : rule?.status === "REJECTED"
               ? "Rejected"
               : rule?.status === "APPROVED"
-                ? "Approved"
-                : rule?.status}{" "}
-          By {rule?.history?.updateBy || rule?.history?.createdBy}{" "}
-          <span className="font-bold text-3xl mx-2">.</span>{" "}
-          {convertDate(
-            rule?.history?.lastUpdatedDate || rule?.history?.creationDate
-          )}
-        </p>
-      </div>
-      {/* Actions */}
-      {actions && !(rule?.needDeleteApprove && ["CREATED", "REJECTED", "APPROVED"].includes(rule?.status)) && (
-        <div className="flex flex-col gap-5">
-          <PencilIcon
-            onClick={handleEdit}
-            className="h-5 w-5  hover:text-indigo-500 hover:cursor-pointer"
-          />
-          <TrashIcon
-            onClick={() =>
-              handleRemoveRule(sectionId, rule?.dynamicRacRuleId)
-            }
-            className="h-5 w-5  hover:text-red-500 hover:cursor-pointer"
-          />
+              ? "Approved"
+              : rule?.status}{" "}
+            By {rule?.history?.updateBy || rule?.history?.createdBy}{" "}
+            <span className="font-bold text-3xl mx-2 relative -top-0.5">.</span>{" "}
+            {convertDate(
+              rule?.history?.lastUpdatedDate || rule?.history?.creationDate
+            )}
+          </p>
         </div>
-      )}
-    </div>)
+      </div>
+    );
   }
 
   const ViewRuleAccordion = ({ rule }) => {
@@ -417,7 +426,7 @@ const RuleComponent = ({
 
   return (
     <>
-      <ViewRuleModal
+      <Toolbox
         isOpen={showRuleModal}
         isEditMode={isEditMode}
         onClose={cancelEdit}

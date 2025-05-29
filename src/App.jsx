@@ -1555,6 +1555,7 @@ const routes = [
         </ProtectedRoute>
       </PageErrorBoundary>
     ),
+    
     children: [
       {
         path: "loan-application",

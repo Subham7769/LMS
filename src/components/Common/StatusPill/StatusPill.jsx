@@ -16,15 +16,15 @@ const StatusPill = ({ rule }) => {
         className={`px-2 w-fit py-1 rounded-full text-sm font-semibold ${
           (rule.status === "CREATED" || rule.status === "NEW") && !rule.needDeleteApprove
             ? rule.history.updateBy
-              ? "bg-yellow-100 text-yellow-700" // Modified (Pending Approval)
-              : "bg-green-100 text-green-700" // Newly Added
+              ? "bg-yellow-500/20 text-yellow-700" // Modified (Pending Approval)
+              : "bg-green-500/20 text-green-700" // Newly Added
             : rule.status === "REJECTED" ||
               (rule.status === "APPROVED" && rule.needDeleteApprove) ||
               (rule.status === "CREATED" && rule.needDeleteApprove)
-            ? "bg-red-100 text-red-700" // Rejected or requires delete approval
+            ? "bg-red-500/20 text-red-700" // Rejected or requires delete approval
             : rule.status === "APPROVED" && !rule.needDeleteApprove
-            ? "bg-green-100 text-green-700" // Approved without delete approval
-            : "bg-gray-100 text-gray-700" // Default case
+            ? "bg-green-500/20 text-green-700" // Approved without delete approval
+            : "bg-gray-500/20 text-gray-700" // Default case
         }`}
       >
         <div className={"flex justify-start align-middle gap-1"}>
