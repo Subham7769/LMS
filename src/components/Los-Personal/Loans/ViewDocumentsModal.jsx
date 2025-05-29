@@ -1,12 +1,17 @@
 import React from "react";
 import Button from "../../Common/Button/Button";
 import { useDispatch } from "react-redux";
-import { downloadDocumentFile, previewDocumentFile } from "../../../redux/Slices/personalLoansSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import { ArrowDownTrayIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Modal from "../../Common/Modal/Modal";
 
-const ViewDocumentsModal = ({ isOpen, onClose, documents }) => {
+const ViewDocumentsModal = ({
+  isOpen,
+  onClose,
+  documents,
+  downloadDocumentFile,
+  previewDocumentFile,
+}) => {
   const dispatch = useDispatch();
 
   if (!isOpen) return null;

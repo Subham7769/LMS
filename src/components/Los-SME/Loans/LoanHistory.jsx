@@ -9,6 +9,8 @@ import {
   generateLoanApplicationId,
   getRefinanceDetails,
   getRepaymentHistory,
+  downloadDocumentFile,
+  previewDocumentFile,
 } from "../../../redux/Slices/smeLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -21,7 +23,7 @@ import RepaymentHistoryModal from "../../Los-Personal/RepaymentHistoryModal";
 import { convertDate } from "../../../utils/convertDate";
 import { useNavigate, useParams } from "react-router-dom";
 import CardInfo from "../../Common/CardInfo/CardInfo";
-import ViewDocumentsModal from "./ViewDocumentsModal";
+import ViewDocumentsModal from "../../Los-Personal/Loans/ViewDocumentsModal";
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -575,6 +577,8 @@ const LoanHistory = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
     </div>
   );

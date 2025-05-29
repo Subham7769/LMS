@@ -21,6 +21,8 @@ import {
   getLoanStatement,
   getOutrightSettlement,
   getDisbursementFile,
+  downloadDocumentFile,
+  previewDocumentFile,
 } from "../../redux/Slices/personalLoansSlice";
 import ViewDocumentsModal from "../Los-Personal/Loans/ViewDocumentsModal";
 import FullLoanDetailModal from "../Los-Personal/FullLoanDetailModal";
@@ -346,6 +348,8 @@ const LoanHistory = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
     </div>
   );

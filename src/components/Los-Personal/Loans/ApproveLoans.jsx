@@ -9,6 +9,8 @@ import {
   getLoansByField,
   getPendingLoans,
   rejectLoan,
+  downloadDocumentFile,
+  previewDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
@@ -576,6 +578,8 @@ const ApproveLoans = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
 
       {isViewPopupOpen && selectedBorrowerData && (
