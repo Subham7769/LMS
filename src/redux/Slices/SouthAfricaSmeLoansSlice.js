@@ -1822,7 +1822,7 @@ const smeLoansSlice = createSlice({
           ...action.payload.responseData[0],
           documents: [
             ...initialState.inspectionVerification.documents,
-            // ...action.payload.responseData[0].documents,
+            ...action.payload.responseData[0].documents,
           ],
         };
         state.error = null;
