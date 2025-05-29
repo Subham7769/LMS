@@ -316,6 +316,7 @@ const BankStatementAnalyzer = (prop) => {
               - Do NOT include comments (like //).
               - Do NOT add trailing commas.
               - Only return the raw JSON object, nothing else.
+              - Ensure all json is correctly formatted without any errors.
                 `,
             },
             {

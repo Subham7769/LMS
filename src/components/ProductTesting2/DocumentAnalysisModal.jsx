@@ -5,9 +5,11 @@ import formatNumber from "../../utils/formatNumber";
 import BankStatementAnalyzer from "../BankStatementAnalyzer/BankStatementAnalyzer";
 import LoadingState from "../LoadingState/LoadingState";
 
-const BankAnalysisModal = ({ loading, onClose, bankConfigData, docId }) => {
-  console.log(docId);
-  console.log(bankConfigData);
+const DocumentAnalysisModal = ({ loading, onClose, configData }) => {
+const reportData = {
+  __html: configData
+};
+  console.log(configData);
   if (loading) {
     return <LoadingState />;
   }
@@ -22,18 +24,19 @@ const BankAnalysisModal = ({ loading, onClose, bankConfigData, docId }) => {
           >
             <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)" />
           </div>
+          <h2 className="text-2xl font-bold mb-4">Document Analysis Report</h2>
+          {console.log(configData)}
+          {configData ?
           <div className="overflow-auto h-[400px]">
-            <BankStatementAnalyzer
-              docId={docId}
-              proposedMontlyFinancing={formatNumber(
-                bankConfigData[0]?.totalRequiredAmount.toFixed(2)
-              )}
-            />
+            <div dangerouslySetInnerHTML={reportData} />
           </div>
+          :
+            <div>No report generated</div>
+          }
         </div>
       </div>
     </>
   );
 };
 
-export default BankAnalysisModal;
+export default DocumentAnalysisModal;

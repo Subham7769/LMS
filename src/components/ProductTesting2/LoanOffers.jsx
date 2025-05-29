@@ -11,6 +11,7 @@ import {
   handleProceed,
   resetLoanOfferFields,
   updateLoanOfferFields,
+  getLoanApplications,
 } from "../../redux/Slices/smeLoansSlice";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputText from "../Common/InputText/InputText";
@@ -30,12 +31,15 @@ import {
   clearValidationError,
   validateForm,
 } from "../../redux/Slices/validationSlice";
-import BankStatementAnalyzer from "../BankStatementAnalyzer/BankStatementAnalyzer";
+//import BankStatementAnalyzer from "../BankStatementAnalyzer/BankStatementAnalyzer";
 import BankAnalysisModal from "./BankAnalysisModal";
+import DocumentAnalysisModal from "./DocumentAnalysisModal";
+import { useDocumentAnalyzer } from "../../utils/useDocumentAnalyzer";
 
 const LoanOffers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBankModalOpen, setIsBankModalOpen] = useState(false);
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
   const [selectedInstallmentData, setSelectedInstallmentData] = useState(null);
   const [bankAnalysistData, setBankAnalysistData] = useState(null);
   const dispatch = useDispatch();
@@ -56,24 +60,34 @@ const LoanOffers = () => {
   const userName = userData?.username;
   const [docId, setDocId] = useState("");
 
+  const { fetchReport } = useDocumentAnalyzer();
+  const [documentAnalysisReport, setDocumentAnalysisReport] = useState();
+  const [companyDocsReport, setCompanyDocsReport] = useState();
+
   useEffect(() => {
     dispatch(fetchLoanProductData());
-
+    //dispatch(getLoanApplications());
     //Get the bank statement Document Id
     // Step 1: Find the specific loan application
+    console.log(loanApplications);
+    console.log(loanConfigData?.loanApplicationId);
+
     const targetLoan = loanApplications.find(
       (loan) => loan.loanApplicationId === loanConfigData?.loanApplicationId
     );
+    console.log(targetLoan);
     // Step 2: From that loan, find the document with the matching documentKey
     const targetDoc = targetLoan?.documents?.find(
       (doc) => doc.documentKey === "SIX_MONTHS_BANK_STATEMENT"
     );
     // Step 3: Extract the docId (if found)
-    const bankStatementdocId = targetDoc?.docId;
+    const bankStatementdocId = targetDoc?.docId ? targetDoc?.docId :"3121d3c1-5fbf-4862-b9b3-173e0c2fd11a";
 
     console.log(bankStatementdocId);
     setDocId(bankStatementdocId);
 
+    //Get the Document Analysis Report
+    //getDocumentAnalysisReport();
     return () => {
       dispatch(clearValidationError());
       dispatch(resetLoanOfferFields());
@@ -91,6 +105,46 @@ const LoanOffers = () => {
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
     navigate(`/loan/product-testing2/loan-history`);
+  };
+
+  const  formatReportToHTML = (text) => {
+    return text
+      // Bold text: **text**
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Italic text: *text*
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Line breaks after bullet points and major sections
+      .replace(/\n/g, '<br/>')
+      // Add spacing after main sections
+      .replace(/(\* \*\*.*?\*\*:)/g, '<br/><br/><span class="font-semibold">$1</span>')
+      // Add bullet formatting
+      .replace(/\* (?!\*)(.*?)$/gm, '<li>$1</li>')
+      // Wrap list items in <ul>
+      .replace(/(<li>.*<\/li>)/gs, '<ul class="list-disc ml-6">$1</ul>')
+      // Final cleanup: replace multiple <br/> with a single one
+      .replace(/(<br\/>\s*){2,}/g, '<br/><br/>');
+  }
+
+  const getDocumentAnalysisReport = async (reportType = 1) => {
+    // Step 1: Find the specific loan application
+    const targetLoan = loanApplications.find(
+      (loan) => loan.loanApplicationId === loanConfigData?.loanApplicationId
+    );
+    // Step 2: From that loan, find the document with the matching documentKey
+    var formattedDocAnalysisReport = "";
+    var docAnalysisReport = "";
+    switch(reportType){
+      
+      case 1: 
+        docAnalysisReport = await fetchReport(loanConfigData?.loanApplicationId);
+        formattedDocAnalysisReport = formatReportToHTML(docAnalysisReport);
+        break;
+      case 2: 
+        docAnalysisReport = await fetchReport(borrowerData?.companyDetails?.companyUniqueId);
+        formattedDocAnalysisReport = formatReportToHTML(docAnalysisReport);
+    }
+    setDocumentAnalysisReport(formattedDocAnalysisReport);
+   
   };
 
   const handleChange = (e) => {
@@ -129,6 +183,16 @@ const LoanOffers = () => {
     setBankAnalysistData(null); // Clear the data when closing the modal
   };
 
+  const handleDocumentAnalysisModal = (reportType) => {
+    getDocumentAnalysisReport(reportType);
+    setIsDocumentModalOpen(true);
+  };
+
+  const closeDocumentAnalysisModal = () => {
+    setIsDocumentModalOpen(false);
+    setDocumentAnalysisReport(null); // Clear the data when closing the modal
+  };
+
   const InfoRow = ({ label, value }) => (
     <div className="mb-1.5">
       <div className="text-[14px] text-gray-600">{label}:</div>
@@ -142,7 +206,7 @@ const LoanOffers = () => {
       <div className="font-semibold text-lg">{value} %</div>
     </div>
   );
-console.log(loanConfigData?.dynamicCashLoanOffers)
+//console.log(loanConfigData?.dynamicCashLoanOffers)
   return (
     <>
       <ContainerTile className={"mb-5 bg-gray-50"} loading={loading}>
@@ -469,7 +533,7 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
                 </div>
               </CardInfo>
               <CardInfo
-                cardTitle="Analysis"
+                cardTitle="Document Analysis"
                 className={
                   "border-2 border-yellow-300 rounded-xl shadow-md px-4 pb-5"
                 }
@@ -479,20 +543,27 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
                 loading={loading}
               >
                 {/* {<BankStatementAnalyzer docId={docId} />} */}
-                <div
-                  className={
-                    "shadow-md bg-yellow-50 rounded-xl pb-8 pt-6 px-5 text-center"
-                  }
-                >
-                  <div className="grid grid-cols-6 gap-4 items-center">
+                <div className="shadow-md rounded-xl pb-8 pt-6 px-5 text-center">
+                  <div className="flex justify-start gap-10">
                     <div
                       className="cursor-pointer text-yellow-600 hover:underline"
-                      onClick={() =>
-                        handleBankAnalysistModal(ci?.installmentSummaryResponse)
-                      }
+                      onClick={() => handleBankAnalysistModal(ci?.installmentSummaryResponse)}
                     >
                       View Bank Analysis
                     </div>
+                    <div
+                      className="cursor-pointer text-yellow-600 hover:underline"
+                      onClick={() => handleDocumentAnalysisModal(1)}
+                    >
+                      View Loan Document Analysis
+                    </div>
+                    <div
+                      className="cursor-pointer text-yellow-600 hover:underline"
+                      onClick={() => handleDocumentAnalysisModal(2)}
+                    >
+                      View Company Document Analysis
+                    </div>
+
                   </div>
                 </div>
 
@@ -532,6 +603,14 @@ console.log(loanConfigData?.dynamicCashLoanOffers)
               loading={loading}
             />
           )}
+          {isDocumentModalOpen && (
+            <DocumentAnalysisModal
+              onClose={closeDocumentAnalysisModal}
+              configData={documentAnalysisReport}
+              loading={loading}
+            />
+          )}
+
         </div>
       ) : (
         ""

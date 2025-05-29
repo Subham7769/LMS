@@ -19,6 +19,8 @@ import {
 import DynamicForm from "../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../utils/isValidationFailed";
 
+import { useDocumentAnalyzer } from "../../utils/useDocumentAnalyzer";
+
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
@@ -29,6 +31,7 @@ const AddLoanFields = ({ addLoanData }) => {
   const [filteredProvinces2, setFilteredProvinces2] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
 
+  const { uploadDocument,initiateAnalysis } = useDocumentAnalyzer();
 
   useEffect(() => {
     setFilteredProvinces1(
@@ -121,6 +124,7 @@ const AddLoanFields = ({ addLoanData }) => {
       // Dispatch the upload action with the FormData
       // console.log(fileUploadParams);
       dispatch(uploadDocumentFile({ formData, fileUploadParams }));
+      const docVerifierResponse = uploadDocument(fileUploadParams.loanApplicationId, fileUploadParams.documentKey, files[0]);
     }
   };
 

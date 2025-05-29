@@ -17,6 +17,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { useNavigate } from "react-router-dom";
+import { useDocumentAnalyzer } from "../../../utils/useDocumentAnalyzer";
+
 const AddDocuments = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const navigate = useNavigate();
@@ -30,7 +32,9 @@ const AddDocuments = () => {
     error,
     loading,
   } = useSelector((state) => state.smeBorrowers);
-
+  
+  const { uploadDocument,initiateAnalysis } = useDocumentAnalyzer();
+  
   useEffect(() => {
     dispatch(
       fetchCompanyDocuments({
@@ -66,6 +70,7 @@ const AddDocuments = () => {
 
       // Dispatch the upload action with the FormData
       dispatch(uploadCompanyDocumentFile({ formData, fileUploadParams }));
+      const docVerifierResponse = uploadDocument(companyId, fileUploadParams.documentKey, files[0]);
     }
   };
 
@@ -99,6 +104,9 @@ const AddDocuments = () => {
         auth: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
       })
     );
+    
+    const docVerifierResponse = initiateAnalysis(companyId);
+
   };
 
   const companyDocumentRequirements = (documents) => {

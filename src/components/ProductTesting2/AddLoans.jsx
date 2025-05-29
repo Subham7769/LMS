@@ -24,6 +24,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../utils/flattenToSimpleObject";
 import { toast } from "react-toastify";
+import { useDocumentAnalyzer } from "../../utils/useDocumentAnalyzer";  
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,9 @@ const AddLoans = () => {
   // const isValid = useSelector((state) => state.validation.isValid);
 
   // console.log(BorrowerId);
-
+  
+  const { initiateAnalysis } = useDocumentAnalyzer();
+  
   useEffect(() => {
     if (!currentPath.includes("new")) {
       dispatch(getLoanApplicationsByID(loanApplicationId));
@@ -80,7 +83,7 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
 
-  console.log(addLoanData)
+  //console.log(addLoanData)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,6 +118,9 @@ const AddLoans = () => {
     if (isValid) {
       await dispatch(saveDraftLoanData(updatedLoanData)).unwrap();
       await dispatch(submitLoan(submitPayload)).unwrap();
+
+      const docVerifierResponse = initiateAnalysis(loanApplicationId);
+
       navigate("/loan/product-testing2/inspection-verification");
     }
   };
