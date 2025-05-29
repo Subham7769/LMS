@@ -81,7 +81,7 @@ const LoanOffers = () => {
       (doc) => doc.documentKey === "SIX_MONTHS_BANK_STATEMENT"
     );
     // Step 3: Extract the docId (if found)
-    const bankStatementdocId = targetDoc?.docId ? targetDoc?.docId :"3121d3c1-5fbf-4862-b9b3-173e0c2fd11a";
+    const bankStatementdocId = targetDoc?.docId ? targetDoc?.docId :"d3b5c409-9b46-4ea8-91f6-61074fe81400";
 
     console.log(bankStatementdocId);
     setDocId(bankStatementdocId);
