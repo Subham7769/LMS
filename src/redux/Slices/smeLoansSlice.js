@@ -1018,6 +1018,23 @@ const initialState = {
       postalAddress: "",
       province: "",
     },
+    equipmentDetails: {
+      equipmentCategory: "",
+      makeManufacturer: "",
+      model: "",
+      yearOfManufacture: null,
+      serialNumberOrVIN: "",
+      newUsedStatus: "",
+      hourMeterOdometerReading: null,
+      economicLife: null,
+      expectedResidualValue: null,
+      conditionRating: "",
+      engineNumber: "",
+      equipmentSpecifications: "",
+      currentOwner: "",
+      equipmentUsagePurpose: "",
+      expectedUtilization: null,
+    },
     equipmentVendorDetails: {
       vendorContactPerson: "",
       deliveryTimeframe: "",
@@ -1101,30 +1118,30 @@ const initialState = {
     },
     documents: [
       {
-          "docName": "",
-          "docId": "",
-          "verified": false,
-          "documentKey": "FRONT_VIEW"
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "FRONT_VIEW",
       },
       {
-          "docName": "",
-          "docId": "",
-          "verified": false,
-          "documentKey": "REAR_VIEW"
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "REAR_VIEW",
       },
       {
-          "docName": "",
-          "docId": "",
-          "verified": false,
-          "documentKey": "SERIAL_NUMBER"
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "SERIAL_NUMBER",
       },
       {
-          "docName": "",
-          "docId": "",
-          "verified": false,
-          "documentKey": "CRITICAL_ISSUES"
+        docName: "",
+        docId: "",
+        verified: false,
+        documentKey: "CRITICAL_ISSUES",
       },
-  ],
+    ],
     verificationOutcome: {
       fundingRecommendation: "",
       conditionRequirements: "",
@@ -1357,6 +1374,7 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getLoanApplications.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload.content);
         state.loanApplications = action.payload.content;
         state.loanApplicationsTotalElements = action.payload.totalElements;
       })

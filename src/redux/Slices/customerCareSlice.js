@@ -377,6 +377,7 @@ const customerCareSlice = createSlice({
       })
       .addCase(fetchBorrowerData.fulfilled, (state, action) => {
         const { url } = action.meta.arg;
+        console.log(url)
         if (url.includes("/credit-profile")) {
           state.creditProfile = action.payload;
         } else if (url.includes("/loan-offers-calculations")) {

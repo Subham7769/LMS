@@ -7,7 +7,7 @@ import {
 } from "../../redux/Slices/smeLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { sectorOptions, lhaBranchOptions } from "../../data/OptionsData";
-import { yesNoOptions, verificationStatus,overallStatusOptions } from "../../data/LosData";
+import { yesNoOptions, verificationStatus, overallStatusOptions } from "../../data/LosData";
 
 import DocumentUploaderVerifier from "../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../utils/convertToTitleCase";
@@ -706,6 +706,115 @@ const AddLoanFields = ({ addLoanData }) => {
     },
   ];
 
+  const equipmentDetailsConfig = [
+    {
+      labelName: "Equipment Category",
+      inputName: "equipmentCategory",
+      type: "select",
+      options: [
+        { label: "Construction", value: "Construction" },
+        { label: "Manufacturing", value: "Manufacturing" },
+        { label: "Transportation", value: "Transportation" },
+        { label: "Agriculture", value: "Agriculture" },
+        { label: "Mining", value: "Mining" },
+        { label: "Forestry", value: "Forestry" },
+        { label: "Marine", value: "Marine" },
+        { label: "Industrial", value: "Industrial" },
+        { label: "Other", value: "Other" }
+      ],
+      validation: false,
+    },
+    {
+      labelName: "Make Manufacturer",
+      inputName: "makeManufacturer",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Model",
+      inputName: "model",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Year of Manufacture",
+      inputName: "yearOfManufacture",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Serial Number or VIN",
+      inputName: "serialNumberOrVIN",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Status",
+      inputName: "newUsedStatus",
+      type: "select",
+      options: [
+        { label: "New", value: "New" },
+        { label: "Used", value: "Used" },
+      ],
+      validation: false,
+    },
+    {
+      labelName: "Hour Meter Odometer Reading",
+      inputName: "hourMeterOdometerReading",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Economic Life",
+      inputName: "economicLife",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Expected Residual Value",
+      inputName: "expectedResidualValue",
+      type: "number",
+      validation: false,
+    },
+    {
+      labelName: "Condition Rating",
+      inputName: "conditionRating",
+      validation: false,
+      type: "rangeCondition",
+      inputLevels: ["Poor", "Fair", "Good", "Excellent"],
+    },
+    {
+      labelName: "Engine Number",
+      inputName: "engineNumber",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Equipment Specifications",
+      inputName: "equipmentSpecifications",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Current Owner",
+      inputName: "currentOwner",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Equipment Usage Purpose",
+      inputName: "equipmentUsagePurpose",
+      type: "text",
+      validation: false,
+    },
+    {
+      labelName: "Expected Utilization",
+      inputName: "expectedUtilization",
+      type: "text",
+      validation: false,
+    },
+  ];
+
   const equipmentVendorDetailsConfig = [
     {
       labelName: "Vendor Contact Person",
@@ -955,6 +1064,18 @@ const AddLoanFields = ({ addLoanData }) => {
         }
         error={isValidationFailed(validationError, supplierDetailsConfig)}
       /> */}
+      <Accordion
+        heading={"Equipment Details"}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={addLoanData.equipmentDetails}
+            config={equipmentDetailsConfig}
+            sectionName={"equipmentDetails"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        error={isValidationFailed(validationError, equipmentVendorDetailsConfig)}
+      />
       <Accordion
         heading={"Equipment Vendor Details"}
         renderExpandedContent={() =>
