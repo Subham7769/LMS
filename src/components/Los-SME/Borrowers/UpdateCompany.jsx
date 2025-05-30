@@ -4,7 +4,6 @@ import {
   handleChangeUpdateCompanyField,
   resetUpdateCompanyData,
   updateCompanyBorrowerInfo,
-  fetchAllCompanyBorrowersByLoanOfficer,
   draftCompanyBorrowerInfo,
   registerCompanyBorrower,
 } from "../../../redux/Slices/smeBorrowersSlice";
@@ -36,15 +35,6 @@ const UpdateCompany = () => {
       try {
         // Dispatch the first action and wait for fulfillment
         await dispatch(draftCompanyBorrowerInfo(addDraftCompanyData)).unwrap();
-  
-        // Now dispatch the second action
-        dispatch(
-          fetchAllCompanyBorrowersByLoanOfficer({
-            page: 0,
-            size: 20,
-            loanOfficer,
-          })
-        );
   
         // Navigate after both actions complete
         navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
@@ -102,15 +92,7 @@ const UpdateCompany = () => {
           await dispatch(
             updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
           ).unwrap();
-  
-          // Second dispatcher - only runs if first one succeeds
-          dispatch(
-            fetchAllCompanyBorrowersByLoanOfficer({
-              page: 0,
-              size: 20,
-              loanOfficer,
-            })
-          );
+
   
           // Navigate after both actions are completed
           navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
