@@ -65,7 +65,7 @@ const Onboarding01 = ({ onNext }) => {
                   checked={formData.loanType === value}
                   className="peer sr-only"
                 />
-                <div className="flex items-center bg-white dark:bg-gray-800 text-sm font-medium text-gray-800 dark:text-gray-100 p-4 rounded-lg border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-xs transition peer-checked:border-violet-500">
+                <div className="flex items-center bg-white dark:bg-gray-800 text-sm font-medium text-gray-800 dark:text-gray-100 p-4 rounded-lg border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-xs transition peer-checked:border-sky-600 peer-checked:bg-sky-50 ">
                   <Icon
                     className="h-5 w-5 mr-2 "
                     aria-hidden="true"
@@ -79,7 +79,7 @@ const Onboarding01 = ({ onNext }) => {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white ml-auto disabled:opacity-50"
+              className="btn bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded ml-auto disabled:opacity-50"
               disabled={!formData.loanType}
             >
               Next

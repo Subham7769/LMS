@@ -482,7 +482,7 @@ export const MenusInitial = [
   {
     title: "B2C Customer",
     sectionName: "USER TOOLS",
-    href: "/customer/loan-application",
+    href: "/customer/home",
     icon: "CheckBadgeIcon",
     current: false,
   },

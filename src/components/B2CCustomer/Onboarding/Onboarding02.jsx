@@ -17,17 +17,18 @@ function Onboarding02({ onNext, onBack }) {
     onNext();
   };
 
+
   const sliderClass =
     "relative flex items-center select-none touch-none w-full h-5";
   const thumbClass =
-    "block w-4 h-4 bg-violet-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500";
+    "block w-4 h-4 bg-sky-600 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500";
   const trackClass = "bg-gray-200 relative grow rounded-full h-[4px]";
-  const rangeClass = "absolute bg-violet-500 rounded-full h-full";
+  const rangeClass = "absolute bg-sky-600 rounded-full h-full";
 
   return (
     <div className="px-4 py-8">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Loan Details</h1>
+        <h1 className="text-2xl font-bold mb-6">Loan Details</h1>
         <form onSubmit={handleSubmit}>
           {/* Loan Amount */}
           <label className="block mb-1 font-medium">
@@ -94,7 +95,7 @@ function Onboarding02({ onNext, onBack }) {
             </button>
             <button
               type="submit"
-              className="btn bg-violet-500 text-white px-4 py-2 rounded"
+              className="btn bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded"
             >
               Next
             </button>

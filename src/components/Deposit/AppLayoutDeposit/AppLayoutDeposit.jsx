@@ -6,7 +6,7 @@ import Body from "../../Common/Body/Body";
 import LoadingState from "../../LoadingState/LoadingState";
 import DepositSideBar from "../../Common/DepositSideBar/DepositSideBar";
 
-const DepositAppLayout = () => {
+const AppLayoutDeposit = () => {
   return (
     <div className="flex flex-col max-h-screen">
       <Header />
@@ -25,4 +25,4 @@ const DepositAppLayout = () => {
   );
 };
 
-export default DepositAppLayout;
+export default AppLayoutDeposit;

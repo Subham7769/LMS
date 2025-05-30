@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function LoanOffer({ formData, onBack }) {
+function CustomerLoanOffer({ formData, onBack }) {
   const [offer, setOffer] = useState(null);
 
   useEffect(() => {
@@ -44,4 +44,4 @@ function LoanOffer({ formData, onBack }) {
   );
 }
 
-export default LoanOffer;
+export default CustomerLoanOffer;

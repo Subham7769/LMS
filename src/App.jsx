@@ -8,8 +8,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import AppLayoutB2C from "./components/AppLayout/AppLayoutB2C";
-import { ActiveTabProvider } from "./components/B2CCustomer/ActiveTabContext";  // Import the conte
 
 
 // Error Handlers Imports
@@ -472,8 +470,8 @@ const UploadRepaymentSME = lazy(() =>
 
 // ------------------------ Deposit Section Imports -----------------------------------
 
-const DepositAppLayout = React.lazy(() =>
-  import("./components/Deposit/DepositAppLayout/DepositAppLayout")
+const AppLayoutDeposit = React.lazy(() =>
+  import("./components/Deposit/AppLayoutDeposit/AppLayoutDeposit")
 );
 const CreateAccount = React.lazy(() =>
   import("./components/Deposit/Savings/CreateAccount")
@@ -504,11 +502,22 @@ const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
 const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
+
+
+// ------------------------ Customer Loan B2C Section Imports -----------------------------------
+
+import { ActiveTabProvider } from "./components/B2CCustomer/ActiveTabContext";  // Import the conte
+
+const AppLayoutB2C = lazy(() => import("./components/AppLayout/AppLayoutB2C"));
+
+const CustomerLoanHome = React.lazy(() =>
+  import("./components/B2CCustomer/Home")
+);
 const CustomerLoanApplication = React.lazy(() =>
   import("./components/B2CCustomer/CustomerLoanApplication")
 );
-const Onboarding01 = React.lazy(() =>
-  import("./components/B2CCustomer/Onboarding/Onboarding01")
+const CustomerLoanOffer = React.lazy(() =>
+  import("./components/B2CCustomer/Onboarding/CustomerLoanOffer")
 );
 const Onboarding02 = React.lazy(() =>
   import("./components/B2CCustomer/Onboarding/Onboarding02")
@@ -1408,7 +1417,7 @@ const routes = [
     element: (
       <PageErrorBoundary>
         <ProtectedRoute>
-          <DepositAppLayout />
+          <AppLayoutDeposit />
         </ProtectedRoute>
       </PageErrorBoundary>
     ),
@@ -1561,7 +1570,17 @@ const routes = [
         element: <CustomerLoanApplication />,
         errorElement: <RouteErrorBoundary />,
       },
+      {
+        path: "offers",
+        element: <CustomerLoanOffer />,
+        errorElement: <RouteErrorBoundary />,
+      },
     ],
+  },
+  {
+    path: "/customer/home",
+    element: <CustomerLoanHome />,
+    errorElement: <RouteErrorBoundary />,
   },
 
   // Catch-All Route for 404 Page Not Found
