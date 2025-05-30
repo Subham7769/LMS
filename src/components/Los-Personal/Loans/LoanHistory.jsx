@@ -14,6 +14,8 @@ import {
   getLoanStatement,
   getOutrightSettlement,
   closeLoan,
+  downloadDocumentFile,
+  previewDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -575,6 +577,8 @@ const LoanHistory = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
     </div>
   );

@@ -2,16 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
 import DynamicName from "../Common/DynamicName/DynamicName";
-import HoverButton from "../Common/HoverButton/HoverButton";
 import {
-  CheckCircleIcon,
   PlusIcon,
   ArrowUpOnSquareIcon,
   ArrowDownOnSquareIcon,
-  DocumentDuplicateIcon,
   EllipsisVerticalIcon,
+  DocumentArrowUpIcon,
 } from "@heroicons/react/24/outline";
-import { TrashIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
 import {
   fetchDynamicRacDetails,
@@ -32,7 +29,6 @@ import {
   restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
-import ViewRuleModal from "./ViewRuleModal";
 import RuleComponent from "./RuleComponent";
 import ViewTemplateModal from "./ViewTemplateModal";
 import { useNavigate, useParams } from "react-router-dom";
@@ -43,9 +39,10 @@ import {
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import store from "../../redux/store";
-import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from '../../data/RoleBasedAccessAndView'
-import ErrorFailure from "../Common/ErrorFailure/ErrorFailure";
-
+import {
+  ViewerRolesDynamicRac,
+  EditorRolesDynamicRac,
+} from "../../data/RoleBasedAccessAndView";
 import {
   DndContext,
   closestCenter,
@@ -57,7 +54,10 @@ import {
   useSensors,
   DragOverlay,
 } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import Toolbox from "./ToolBox";
 
 const DynamicRAC = () => {
   const { racId } = useParams();
@@ -73,7 +73,9 @@ const DynamicRAC = () => {
   const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
-  const { racConfig, loading, error } = useSelector((state) => state.dynamicRac);
+  const { racConfig, loading, error } = useSelector(
+    (state) => state.dynamicRac
+  );
   const { name } = racConfig?.racDetails;
   const sections = racConfig?.sections;
   const { roleName } = useSelector((state) => state.auth);
@@ -85,7 +87,6 @@ const DynamicRAC = () => {
     }),
     useSensor(TouchSensor)
   );
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,7 +199,9 @@ const DynamicRAC = () => {
     let destIndex = -1;
 
     newSections.forEach((section, sectionIdx) => {
-      const ruleIdx = section.rules.findIndex((rule) => rule.dynamicRacRuleId === activeId);
+      const ruleIdx = section.rules.findIndex(
+        (rule) => rule.dynamicRacRuleId === activeId
+      );
       if (ruleIdx !== -1) {
         sourceSectionIndex = sectionIdx;
         sourceIndex = ruleIdx;
@@ -206,7 +209,9 @@ const DynamicRAC = () => {
     });
 
     newSections.forEach((section, sectionIdx) => {
-      const ruleIdx = section.rules.findIndex((rule) => rule.dynamicRacRuleId === overId);
+      const ruleIdx = section.rules.findIndex(
+        (rule) => rule.dynamicRacRuleId === overId
+      );
       if (ruleIdx !== -1) {
         destSectionIndex = sectionIdx;
         destIndex = ruleIdx;
@@ -270,7 +275,6 @@ const DynamicRAC = () => {
     }
   };
 
-
   const createCloneDynamicRac = async (racId, racName) => {
     const action = await dispatch(cloneDynamicRac({ racId, racName }));
     if (action.type === "rac/cloneDynamicRac/fulfilled") {
@@ -279,9 +283,8 @@ const DynamicRAC = () => {
     }
   };
 
-
   // Updated handleDelete function
-  const handleDelete = async (racId) => {
+  const handleDelete = async () => {
     await dispatch(deleteDynamicRac(racId)).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacData());
@@ -313,8 +316,8 @@ const DynamicRAC = () => {
     });
   };
 
-  const handleUpdateName = (racId, newName) => {
-    console.log("handleUpdateName")
+  const handleUpdateName = (newName) => {
+    console.log("handleUpdateName");
     dispatch(updateRacConfigName({ newName }));
     dispatch(updateRacName({ racId, newName })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
@@ -356,29 +359,40 @@ const DynamicRAC = () => {
     });
 
     return (
-      <div ref={setNodeRef} className="border rounded-md p-4 bg-white dark:bg-gray-800">
+      <div ref={setNodeRef} className="">
         {children}
       </div>
     );
   };
 
   // Draggable
-  const DraggableRule = ({ rule, sectionId, sectionName, racId, roleName, handleSaveDynamicRAC }) => {
-    const isDragDisabled = roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName);
+  const DraggableRule = ({
+    rule,
+    sectionId,
+    sectionName,
+    racId,
+    roleName,
+    handleSaveDynamicRAC,
+  }) => {
+    const isDragDisabled =
+      roleName === "ROLE_CHECKER_ADMIN" ||
+      ViewerRolesDynamicRac.includes(roleName);
 
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-      disabled: isDragDisabled,
-      id: rule.dynamicRacRuleId,
-      data: {
-        rule,
-        sourceSectionId: sectionId, // renamed for clarity
-      },
-    });
+    const { attributes, listeners, setNodeRef, transform, isDragging } =
+      useDraggable({
+        disabled: isDragDisabled,
+        id: rule.dynamicRacRuleId,
+        data: {
+          rule,
+          sourceSectionId: sectionId, // renamed for clarity
+        },
+      });
 
     const style = {
-      transform: !isDragDisabled && transform
-        ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-        : undefined,
+      transform:
+        !isDragDisabled && transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : undefined,
       padding: "8px",
       opacity: isDragging ? 0.7 : 1,
       cursor: isDragDisabled ? "not-allowed" : "grab",
@@ -389,7 +403,7 @@ const DynamicRAC = () => {
         ref={setNodeRef}
         {...(!isDragDisabled ? { ...listeners, ...attributes } : {})}
         style={style}
-        className="px-3 bg-white dark:bg-gray-800 border rounded-md"
+        className="px-3 bg-white dark:bg-gray-800"
       >
         <RuleComponent
           rule={rule}
@@ -407,112 +421,109 @@ const DynamicRAC = () => {
     );
   };
 
-  // Loading
-  const LoadingSection = () => {
-    return (
-      <>
-        <div className="grid grid-cols-2 gap-5">
-          <div className="w-full flex flex-col gap-3 rounded-lg border-2 p-5">
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-          </div>
-          <div className="w-full flex flex-col items-end gap-3 rounded-lg border-2 p-5">
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-5 animate-pulse py-5">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <div
-              key={item}
-              className="w-full flex flex-col gap-3 rounded-lg border-2 p-5"
-            >
-              <div className="h-4 bg-gray-300 rounded w-full"></div>
-              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-            </div>
-          ))}
-        </div>
-      </>
-    )
-  }
-
   // Section Box
-  const SectionBox = ({ roleName, EditorRolesDynamicRac, ViewerRolesDynamicRac, handleAddSection }) => {
-    return (
-      roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
-        <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-          <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold" />
-          <h2 className="font-semibold dark:text-gray-200">Create New Rac</h2>
-          <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
-            Start by adding sections to your Risk Assessment Criteria.
-          </p>
-          <div className="flex gap-5">
-            <Button
-              buttonIcon={PlusIcon}
-              buttonName="Add First Section"
-              rectangle={true}
-              onClick={() => handleAddSection()}
-            />
-          </div>
+  const SectionBox = ({
+    roleName,
+    EditorRolesDynamicRac,
+    ViewerRolesDynamicRac,
+    handleAddSection,
+  }) => {
+    return roleName === "ROLE_MAKER_ADMIN" ||
+      EditorRolesDynamicRac.includes(roleName) ? (
+      <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3 border-2 dark:border-gray-800 rounded-lg">
+        <PlusIcon className="text-sky-700 h-16 w-16 bg-sky-500/20 rounded-full p-4 font-extrabold" />
+        <h2 className="font-semibold dark:text-gray-200">Create New Rac</h2>
+        <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
+          Start by adding sections to your Risk Assessment Criteria.
+        </p>
+        <div className="flex gap-5">
+          <Button
+            buttonIcon={PlusIcon}
+            buttonName="Add First Section"
+            rectangle={true}
+            onClick={() => handleAddSection()}
+          />
         </div>
-      ) : (
-        (roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName)) && (
-          <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
-            <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold rotate-45" />
-            <h2 className="font-semibold dark:text-gray-200">No Data to Review</h2>
-            <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
-              No Risk Assessment Criteria submitted for review yet.
-            </p>
-          </div>
-        )
+      </div>
+    ) : (
+      (roleName === "ROLE_CHECKER_ADMIN" ||
+        ViewerRolesDynamicRac.includes(roleName)) && (
+        <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3 border-2 rounded-lg">
+          <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold rotate-45" />
+          <h2 className="font-semibold dark:text-gray-200">
+            No Data to Review
+          </h2>
+          <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
+            No Risk Assessment Criteria submitted for review yet.
+          </p>
+        </div>
       )
-    )
-  }
+    );
+  };
 
   // Criteria Box
-  const CriteriaBox = ({ roleName, EditorRolesDynamicRac, ViewerRolesDynamicRac, handleUseTemplate, handleAddRule, section }) => {
-    return (
-      roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName) ? (
-        <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
-          <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold" />
-          <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
-            <span>Click to add criteria to this section. You</span>
-            <span>can also use an existing template as a starting point</span>
-          </p>
-          <div className="flex gap-5">
-            <HoverButton
-              icon={PlusIcon}
-              text="Add Criteria"
-              onClick={() => handleAddRule(section.sectionId, section.sectionName)}
-            />
-            <HoverButton
-              icon={ArrowUpOnSquareIcon}
-              text="Use Template"
-              onClick={() => handleUseTemplate(section.sectionId, section.sectionName)}
-            />
-          </div>
+  const CriteriaBox = ({
+    roleName,
+    EditorRolesDynamicRac,
+    ViewerRolesDynamicRac,
+    handleUseTemplate,
+    handleAddRule,
+    section,
+  }) => {
+    return roleName === "ROLE_MAKER_ADMIN" ||
+      EditorRolesDynamicRac.includes(roleName) ? (
+      <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
+        <PlusIcon className="text-sky-700 h-16 w-16 bg-sky-500/20 rounded-full p-4 font-extrabold" />
+        <p className="text-center text-gray-500 dark:text-gray-400">
+          Click to add criteria to this section. <br/> You can also use an existing
+          template as a starting point
+        </p>
+        <div className="flex gap-5">
+          <Button
+            buttonIcon={PlusIcon}
+            buttonName="Add Criteria"
+            buttonType="secondary"
+            onClick={() =>
+              handleAddRule(section.sectionId, section.sectionName)
+            }
+          />
+          <Button
+            buttonIcon={ArrowUpOnSquareIcon}
+            buttonName="Use Template"
+            buttonType="secondary"
+            onClick={() =>
+              handleUseTemplate(section.sectionId, section.sectionName)
+            }
+          />
         </div>
-      ) : (
-        (roleName === "ROLE_CHECKER_ADMIN" || ViewerRolesDynamicRac.includes(roleName)) && (
-          <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
-            <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold rotate-45" />
-            <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
-              <span>No Risk Assessment Criteria available for review.</span>
-            </p>
-          </div>
-        )
+      </div>
+    ) : (
+      (roleName === "ROLE_CHECKER_ADMIN" ||
+        ViewerRolesDynamicRac.includes(roleName)) && (
+        <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
+          <PlusIcon className="text-sky-500 h-16 w-16 bg-sky-50 rounded-full p-4 font-extrabold rotate-45" />
+          <p className="flex flex-col items-center text-gray-500 dark:text-gray-300">
+            <span>No Risk Assessment Criteria available for review.</span>
+          </p>
+        </div>
       )
-    )
-  }
+    );
+  };
 
   // Header
-  const HeaderBox = ({ roleName, section, dispatch, updateSection, EditorRolesDynamicRac, handleUseTemplate, handleAddRule, handleDeleteSection }) => {
+  const HeaderBox = ({
+    roleName,
+    section,
+    dispatch,
+    updateSection,
+    EditorRolesDynamicRac,
+    handleUseTemplate,
+    handleAddRule,
+    handleDeleteSection,
+  }) => {
     return (
-      <div className="flex justify-between items-center p-5 bg-white dark:bg-gray-800 border-b">
-        <div className="flex justify-center align-middle">
+      <div className="md:flex justify-between items-center p-5 bg-white dark:bg-gray-800 border-b dark:border-gray-600">
+        <div className="flex items-center mb-4 md:mb-0">
           <EllipsisVerticalIcon className="h-7 text-gray-500" />
           <EllipsisVerticalIcon className="h-7 text-gray-500 -ml-5" />
           <DynamicName
@@ -520,246 +531,224 @@ const DynamicRAC = () => {
             onSave={(name) =>
               dispatch(updateSection({ sectionId: section.sectionId, name }))
             }
-            editable={roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)}
+            editable={
+              roleName === "ROLE_MAKER_ADMIN" ||
+              EditorRolesDynamicRac.includes(roleName)
+            }
           />
         </div>
-        {(roleName === "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
-          <div className="flex justify-between items-center gap-5 hover:cursor-pointer">
-            <div
-              className={"flex text-sky-500"}
-              onClick={() => handleUseTemplate(section.sectionId, section.sectionName)}
-            >
-              <ArrowUpOnSquareIcon className="h-5 w-5" />
-              <p>Use Template</p>
-            </div>
-            <div
-              className={"flex text-sky-500"}
-              onClick={() => handleAddRule(section.sectionId, section.sectionName)}
-            >
-              <PlusIcon className="h-5 w-5" />
-              <p>Add Rule</p>
-            </div>
-
-            <TrashIcon
-              onClick={() => handleDeleteSection({ racId, sectionId: section.sectionId })}
-              className="h-5 w-5 hover:text-red-500"
+        {(roleName === "ROLE_MAKER_ADMIN" ||
+          EditorRolesDynamicRac.includes(roleName)) && (
+          <div className="flex justify-end items-center gap-2 hover:cursor-pointer">
+            <Button
+              buttonName="Use Template"
+              buttonType="tertiary"
+              onClick={() =>
+                handleUseTemplate(section.sectionId, section.sectionName)
+              }
+              buttonIcon={DocumentArrowUpIcon}
+            />
+            <Button
+              buttonName="Add Rule"
+              buttonType="tertiary"
+              onClick={() =>
+                handleAddRule(section.sectionId, section.sectionName)
+              }
+              buttonIcon={PlusIcon}
+            />
+            <Button
+              buttonType="destructive"
+              onClick={() =>
+                handleDeleteSection({ racId, sectionId: section.sectionId })
+              }
+              buttonIcon={DeleteIcon}
             />
           </div>
         )}
       </div>
-    )
-  }
-
+    );
+  };
 
   return (
-    <div className="relative">
-      {loading ? (
-        <LoadingSection />
-      ) : error ? (
-        <ErrorFailure error={error} />
-      ) : (
-        <div className="flex flex-col gap-2">
-          {/* Modals */}
-          <CloneModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
-            initialName={name}
-          />
-          <ViewTemplateModal
-            isOpen={templateModal}
-            onClose={() => setTemplateModal(false)}
-            sectionId={selectedSectionId}
-            sectionName={selectedSectionName}
-            racId={racId}
-          />
-          <ViewRuleModal
-            isOpen={showRuleModal}
-            isEditMode={isEditMode}
-            onClose={cancelEdit}
-            sectionId={selectedSectionId}
-            sectionName={selectedSectionName}
-          />
-          {/* RAC Header */}
-          <div className="flex justify-between gap-2  items-center w-full">
-            <DynamicName
-              initialName={name}
-              onSave={(newName) => handleUpdateName(racId, newName)}
-              editable={
-                roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)}
-            />
+    <>
+      <DynamicHeader
+        itemName={name}
+        handleNameUpdate={handleUpdateName}
+        handleClone={handleClone}
+        handleDelete={handleDelete}
+        loading={loading}
+      />
+      <CloneModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
+        initialName={name}
+      />
+      <ViewTemplateModal
+        isOpen={templateModal}
+        onClose={() => setTemplateModal(false)}
+        sectionId={selectedSectionId}
+        sectionName={selectedSectionName}
+        racId={racId}
+      />
+      <Toolbox
+        isOpen={showRuleModal}
+        isEditMode={isEditMode}
+        onClose={cancelEdit}
+        sectionId={selectedSectionId}
+        sectionName={selectedSectionName}
+      />
 
-            {(roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
+      {/* Utility Functions */}
+      <div className="flex justify-end gap-5 w-full mb-5">
+        {(roleName == "ROLE_MAKER_ADMIN" ||
+          EditorRolesDynamicRac.includes(roleName)) && (
+          <div className="flex gap-2 items-end">
+            <Button
+              buttonIcon={ArrowDownOnSquareIcon}
+              buttonName="Download"
+              buttonType="secondary"
+              onClick={() => dispatch(downloadConfig())}
+            />
+            <Button
+              buttonIcon={ArrowUpOnSquareIcon}
+              buttonName="Upload"
+              buttonType="secondary"
+              onClick={() => fileInputRef.current.click()}
+            />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              style={{ display: "none" }}
+              onChange={handleUploadConfig}
+            />
+            {(roleName == "ROLE_MAKER_ADMIN" ||
+              EditorRolesDynamicRac.includes(roleName)) && (
               <div>
                 {!sections.length < 1 && (
                   <Button
-                    buttonIcon={PlusIcon}
+                    buttonIcon={AddIcon}
                     buttonName="Add Section"
-                    rectangle={true}
+                    buttonType="secondary"
                     onClick={() => handleAddSection()}
                   />
                 )}
               </div>
             )}
           </div>
-
-          {/* Utility Functions */}
-          <div className="flex justify-between items-center">
-            <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
-              <div className="flex gap-2"></div>
-              {(roleName == "ROLE_MAKER_ADMIN" || EditorRolesDynamicRac.includes(roleName)) && (
-                <div className="flex gap-2 items-end">
-                  <HoverButton
-                    icon={ArrowDownOnSquareIcon}
-                    text="Download"
-                    color="yellow" // Automatically sets hover and background colors
-                    onClick={() => dispatch(downloadConfig())}
-                  />
-                  <HoverButton
-                    icon={ArrowUpOnSquareIcon}
-                    text="Upload"
-                    color="green" // Automatically sets hover and background colors
-                    onClick={() => fileInputRef.current.click()}
-                  />
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".json"
-                    style={{ display: "none" }}
-                    onChange={handleUploadConfig}
-                  />
-                  {roleName !== "ROLE_VIEWER" ? (
-                    <div className="flex gap-4">
-                      <HoverButton
-                        text={"Clone"}
-                        icon={DocumentDuplicateIcon}
-                        onClick={handleClone}
-                      />
-                      {sections.length > 0 && (
-                        <HoverButton
-                          className="mt-4"
-                          icon={CheckCircleIcon}
-                          text="Save"
-                          onClick={handleSaveDynamicRAC}
-                        />
-                      )}
-                      <div className="rounded-full border text-red-500 border-red-500 p-2 hover:bg-red-500 hover:text-white hover:cursor-pointer">
-                        <TrashIcon
-                          className="h-5 w-5"
-                          onClick={() => handleDelete(racId)}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Drag and Drop Context */}
-          <div className={`flex items-start "max-h-screen"`}>
-            <div
-              className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-screen overflow-hidden pb-20`}
-            >
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragStart={(event) => {
-                  console.log(event.active.data.current.rule)
-                  setActiveRule(event.active.data.current.rule);
-                }}
-                onDragEnd={(event) => {
-                  setActiveRule(null); // Clear overlay after drop
-                  onDragEnd(event);    // Your existing handler
-                }}
-                onDragCancel={() => setActiveRule(null)}
-              >
-                <div className="flex flex-col justify-center gap-3">
-                  {/* Add first Section Box */}
-                  {sections?.length < 1 ? (
-                    <SectionBox
+        )}
+      </div>
+      {/* Drag and Drop Context */}
+      <ContainerTile defaultClass={false} loading={loading}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={(event) => {
+            console.log(event.active.data.current.rule);
+            setActiveRule(event.active.data.current.rule);
+          }}
+          onDragEnd={(event) => {
+            setActiveRule(null); // Clear overlay after drop
+            onDragEnd(event); // Your existing handler
+          }}
+          onDragCancel={() => setActiveRule(null)}
+        >
+          <div className="flex flex-col justify-center gap-3">
+            {/* Add first Section Box */}
+            {sections?.length < 1 ? (
+              <SectionBox
+                roleName={roleName}
+                EditorRolesDynamicRac={EditorRolesDynamicRac}
+                ViewerRolesDynamicRac={ViewerRolesDynamicRac}
+                handleAddSection={handleAddSection}
+              />
+            ) : (
+              sections?.map((section) => (
+                <DroppableSection key={section.sectionId} section={section}>
+                  <div
+                    className={`shadow-md dark:border-gray-800 border rounded-xl overflow-hidden ${
+                      section.size === "full"
+                        ? "col-span-3"
+                        : section.size === "half"
+                        ? "col-span-2"
+                        : "col-span-1"
+                    }`}
+                  >
+                    {/* HeaderBox */}
+                    <HeaderBox
                       roleName={roleName}
+                      section={section}
+                      dispatch={dispatch}
+                      updateSection={updateSection}
                       EditorRolesDynamicRac={EditorRolesDynamicRac}
-                      ViewerRolesDynamicRac={ViewerRolesDynamicRac}
-                      handleAddSection={handleAddSection}
+                      handleUseTemplate={handleUseTemplate}
+                      handleAddRule={handleAddRule}
+                      handleDeleteSection={handleDeleteSection}
                     />
-                  ) : (
-                    sections?.map((section) => (
-                      <DroppableSection key={section.sectionId} section={section}>
-                        <div
-                          className={`shadow-md  border-gray-300 border rounded-xl overflow-hidden ${section.size === "full" ? "col-span-3" :
-                            section.size === "half" ? "col-span-2" : "col-span-1"
-                            }`}
-                        >
-                          {/* HeaderBox */}
-                          <HeaderBox
-                            roleName={roleName}
-                            section={section}
-                            dispatch={dispatch}
-                            updateSection={updateSection}
-                            EditorRolesDynamicRac={EditorRolesDynamicRac}
-                            handleUseTemplate={handleUseTemplate}
-                            handleAddRule={handleAddRule}
-                            handleDeleteSection={handleDeleteSection}
-                          />
-                          {/* Add Criteria Box */}
-                          {section?.rules?.length < 1 ? (
-                            <CriteriaBox
-                              roleName={roleName}
-                              EditorRolesDynamicRac={EditorRolesDynamicRac}
-                              ViewerRolesDynamicRac={ViewerRolesDynamicRac}
-                              handleUseTemplate={handleUseTemplate}
-                              handleAddRule={handleAddRule}
-                              section={section}
-                            />
-                          ) : (
-                            section?.rules?.map((rule, index) => (
-                              // Rule Component
-                              <DraggableRule
-                                key={rule.dynamicRacRuleId}
-                                rule={rule}
-                                sectionId={section.sectionId}
-                                sectionName={section.sectionName}
-                                racId={racId}
-                                roleName={roleName}
-                                handleSaveDynamicRAC={handleSaveDynamicRAC}
-                              />
-                            ))
-                          )}
-                        </div>
-                      </DroppableSection>
-                    ))
-                  )}
-                </div>
-
-                {/* DragOverlay here, outside the section render loop */}
-                <DragOverlay>
-                  {activeRule ? (
-                    <div className="px-3 bg-white dark:bg-gray-800 border rounded-md shadow-md p-2">
-                      <RuleComponent
-                        rule={activeRule}
-                        racId={racId}
-                        dynamicRacRuleId={activeRule.dynamicRacRuleId}
-                        sectionId={activeRule.sectionId}
-                        sectionName={activeRule.sectionName}
-                        handleSaveDynamicRAC={handleSaveDynamicRAC}
-                        isEditMode={false}
-                        setIsEditMode={() => { }}
-                        showRuleModal={false}
-                        setShowRuleModal={() => { }}
+                    {/* Add Criteria Box */}
+                    {section?.rules?.length < 1 ? (
+                      <CriteriaBox
+                        roleName={roleName}
+                        EditorRolesDynamicRac={EditorRolesDynamicRac}
+                        ViewerRolesDynamicRac={ViewerRolesDynamicRac}
+                        handleUseTemplate={handleUseTemplate}
+                        handleAddRule={handleAddRule}
+                        section={section}
                       />
-                    </div>
-                  ) : null}
-                </DragOverlay>
-              </DndContext>
-
-            </div>
+                    ) : (
+                      section?.rules?.map((rule, index) => (
+                        // Rule Component
+                        <DraggableRule
+                          key={rule.dynamicRacRuleId}
+                          rule={rule}
+                          sectionId={section.sectionId}
+                          sectionName={section.sectionName}
+                          racId={racId}
+                          roleName={roleName}
+                          handleSaveDynamicRAC={handleSaveDynamicRAC}
+                        />
+                      ))
+                    )}
+                  </div>
+                </DroppableSection>
+              ))
+            )}
           </div>
+
+          {/* DragOverlay here, outside the section render loop */}
+          <DragOverlay>
+            {activeRule ? (
+              <div className="px-3 bg-white dark:bg-gray-800 border rounded-md shadow-md p-2">
+                <RuleComponent
+                  rule={activeRule}
+                  racId={racId}
+                  dynamicRacRuleId={activeRule.dynamicRacRuleId}
+                  sectionId={activeRule.sectionId}
+                  sectionName={activeRule.sectionName}
+                  handleSaveDynamicRAC={handleSaveDynamicRAC}
+                  isEditMode={false}
+                  setIsEditMode={() => {}}
+                  showRuleModal={false}
+                  setShowRuleModal={() => {}}
+                />
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      </ContainerTile>
+      {roleName !== "ROLE_VIEWER" && (
+        <div className="mt-6 text-right">
+          {sections.length > 0 && (
+            <Button
+              buttonIcon={CheckIcon}
+              buttonName="Save"
+              onClick={handleSaveDynamicRAC}
+            />
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import convertToTitleCase from "../../utils/convertToTitleCase";
-import { nanoid } from "nanoid";
 import { sanitizeUid } from "../../utils/sanitizeUid";
 
 export const getLoanApplications = createAsyncThunk(

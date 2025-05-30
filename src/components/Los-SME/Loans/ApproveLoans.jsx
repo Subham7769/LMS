@@ -4,10 +4,12 @@ import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import {
   approveLoan,
+  downloadDocumentFile,
   getFullLoanDetails,
   getLoanAgreement,
   getLoansByField,
   getPendingLoans,
+  previewDocumentFile,
   rejectLoan,
 } from "../../../redux/Slices/smeLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -28,7 +30,7 @@ import {
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
-import ViewDocumentsModal from "./ViewDocumentsModal";
+import ViewDocumentsModal from "../../Los-Personal/Loans/ViewDocumentsModal";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import store from "../../../redux/store";
 import {
@@ -535,6 +537,8 @@ const ApproveLoans = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
     </div>
   );

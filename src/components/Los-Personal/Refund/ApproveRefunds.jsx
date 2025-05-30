@@ -32,6 +32,7 @@ import {
   getPendingRefundsByField,
 } from "../../../redux/Slices/personalRefundSlice";
 import RejectModal from "../RejectModal";
+import { downloadDocumentFile, previewDocumentFile } from "../../../redux/Slices/personalLoansSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -300,7 +301,9 @@ const ApproveRefunds = () => {
       </div>
       {rowData?.refundActionDetailsList && (
         <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
-          <div className="font-semibold text-xl mb-3">Refund Action History</div>
+          <div className="font-semibold text-xl mb-3">
+            Refund Action History
+          </div>
           {rowData?.refundActionDetailsList.map((action, index) => {
             const actionKeys = Object.keys(action);
             let sentence = "";
@@ -459,6 +462,8 @@ const ApproveRefunds = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
       {isViewPopupOpen && selectedBorrowerData && (
         <ViewBorrowerDetailsModal

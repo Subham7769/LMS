@@ -30,6 +30,7 @@ import calculateAging from "../../../utils/calculateAging";
 import { convertDate } from "../../../utils/convertDate";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import ViewBorrowerDetailsModal from "../Borrowers/ViewBorrowerDetailsModal";
+import { downloadDocumentFile, previewDocumentFile } from "../../../redux/Slices/personalLoansSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -397,6 +398,8 @@ const RefundHistory = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
       {isViewPopupOpen && selectedBorrowerData && (
         <ViewBorrowerDetailsModal

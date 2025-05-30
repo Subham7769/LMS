@@ -4,6 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 const Modal = ({
   primaryButtonName,
   primaryOnClick,
+  primaryDisabled,
   secondaryOnClick,
   title,
   children,
@@ -13,7 +14,9 @@ const Modal = ({
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
-        <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-auto w-3/4 ${modalWidth}`}>
+        <div
+          className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-auto w-3/4 ${modalWidth}`}
+        >
           <div className="px-5 py-3 border-b border-gray-200 dark:border-gray-700/60">
             <div className="flex justify-between items-center">
               <div className="font-semibold text-gray-800 dark:text-gray-100">
@@ -25,9 +28,9 @@ const Modal = ({
               />
             </div>
           </div>
-          <div className="px-5 py-4">{children}</div>
+          <div className="px-5 py-4 overflow-y-auto flex-1">{children}</div>
           {isFooter && (
-            <div className="px-5 py-4 border-t border-gray-200 dark:border-gray-700/60 flex gap-3 justify-end">
+            <div className="sticky bottom-0 px-5 py-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700/60 flex gap-3 justify-end">
               <Button
                 buttonName={"Cancel"}
                 onClick={secondaryOnClick}
@@ -41,6 +44,7 @@ const Modal = ({
                 buttonType="primary"
                 buttonSize="btn-sm"
                 className="min-w-[120px]"
+                disabled={primaryDisabled}
               />
             </div>
           )}

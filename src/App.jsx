@@ -294,25 +294,9 @@ const CreateNewReportingConfig = lazy(() =>
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
 
-// Invoice Discounting Imports
-const Registration = lazy(() => import("./components/Los-SME/Registration"));
-const ProfilePage = lazy(() => import("./components/Los-SME/ProfilePage"));
-const ManagePartner = lazy(() => import("./components/Los-SME/ManagePartner"));
-const CashPayable = lazy(() => import("./components/Los-SME/CashPayable"));
-const CashReceivable = lazy(() =>
-  import("./components/Los-SME/CashReceivable")
-);
-const WorkingCapital = lazy(() =>
-  import("./components/Los-SME/WorkingCapital")
-);
-const ProjectFinance = lazy(() =>
-  import("./components/Los-SME/ProjectFinance")
-);
-
 // LOS-Personal Imports
 
 //------------Borrowers-----------------
-const Los = lazy(() => import("./components/Los-Personal/Los"));
 const Borrowers = lazy(() =>
   import("./components/Los-Personal/Borrowers/Borrowers")
 );
@@ -1077,46 +1061,6 @@ const routes = [
         ],
       },
       {
-        path: "loan-origination-system/sme/borrowers",
-        element: <Registration />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/profile",
-        element: <ProfilePage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/manage-partner",
-        element: <ManagePartner />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/cash-payable",
-        element: <CashPayable />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/cash-receivable",
-        element: <CashReceivable />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/working-capital",
-        element: <WorkingCapital />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/project-finance",
-        element: <ProjectFinance />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/personal",
-        element: <Los />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
         path: "loan-origination-system/personal/borrowers",
         element: <Borrowers />,
         errorElement: <RouteErrorBoundary />,
@@ -1564,6 +1508,7 @@ const routes = [
         </ProtectedRoute>
       </PageErrorBoundary>
     ),
+    
     children: [
       {
         path: "loan-application",

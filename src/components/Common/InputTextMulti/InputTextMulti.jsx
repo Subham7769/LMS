@@ -64,8 +64,10 @@ const InputTextMulti = ({
     <div className="w-full">
       <label
         className={`block relative ${
-          validationError[validationKey] ? "text-red-600" : "text-gray-700 dark:text-gray-400"
-        } px-1 h-[22px] text-sm font-semibold`}
+          validationError[validationKey]
+            ? "text-red-600"
+            : "text-gray-700 dark:text-gray-400"
+        } px-1 h-[22px] text-sm font-medium mb-1`}
       >
         {validationError[validationKey] ? "Field required" : label}
         {required && <span className="ml-1 text-red-600">*</span>}
@@ -91,13 +93,13 @@ const InputTextMulti = ({
           onKeyDown={handleAddTag} // Handle key down events
           onFocus={() => dispatch(setValidationError(validationKey))}
           placeholder="Type and press Enter"
-          className={`block w-full rounded-md border-0 py-2 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
+          className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
           ${
             validationError[validationKey]
               ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-sky-600"
+              : ""
           } 
-          sm:text-sm sm:leading-6 disabled:cursor-not-allowed bg-white dark:bg-gray-700 disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
+          `}
           style={{
             appearance: "none", // General rule for most modern browsers
           }}
@@ -106,11 +108,11 @@ const InputTextMulti = ({
         />
       </div>
       {tag?.length > 0 && !disabled && (
-        <div className="flex flex-wrap items-center">
+        <div className="flex flex-wrap items-center mt-2">
           {tag?.map((tagItem, index) => (
             <span
               key={index}
-              className="bg-sky-700 text-white text-[14px] rounded-full px-3 py-1 m-1 flex items-center"
+              className="text-sky-700 bg-sky-500/20 text-[14px] rounded-full px-3 py-1 m-1 flex items-center"
             >
               {tagItem}
               <button
@@ -118,7 +120,7 @@ const InputTextMulti = ({
                   e.preventDefault(); // Prevent default form submission behavior
                   handleDeleteTag(tagItem);
                 }}
-                className="ml-2 text-white hover:text-gray-300 focus:outline-none"
+                className="ml-2"
               >
                 &times;
               </button>
