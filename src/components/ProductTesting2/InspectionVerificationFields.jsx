@@ -124,7 +124,7 @@ const InspectionVerificationFields = ({ inspectionVerification, handleFileReset,
     {
       labelName: "Hour Meter/Odometer Reading",
       inputName: "hourMeterReading",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {

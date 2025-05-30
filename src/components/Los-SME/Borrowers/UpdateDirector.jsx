@@ -15,14 +15,13 @@ import store from "../../../redux/store";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateDirector = () => {
-  const {companyId,updateDirectorData, error, loading } = useSelector(
+  const { companyId, updateDirectorData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
   const { uid } = useParams();
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
-
 
   console.log(updateDirectorData);
 
@@ -33,16 +32,8 @@ const UpdateDirector = () => {
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
-      dispatch(updateDirectorInfo({ updateDirectorData, uid }))
-        .unwrap()
-        .then(() => {
-          dispatch(fetchAllCompanyBorrowersByLoanOfficer({ page: 0, size: 20, loanOfficer }))
-            .unwrap()
-            .then(() => {
-              dispatch(fetchCompanyDetails({ companyId }));
-            });
-          navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
-        });
+      dispatch(updateDirectorInfo({ updateDirectorData, uid })).unwrap();
+      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     }
   };
 

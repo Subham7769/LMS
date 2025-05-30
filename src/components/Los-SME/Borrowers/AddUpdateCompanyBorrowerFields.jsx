@@ -35,7 +35,8 @@ const AddUpdateCompanyBorrowerFields = ({
   const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
     []
   );
-  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } = useSelector((state) => state.bank);
+  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } =
+    useSelector((state) => state.bank);
   const loanOfficer = localStorage.getItem("username");
 
   useEffect(() => {
@@ -111,21 +112,17 @@ const AddUpdateCompanyBorrowerFields = ({
 
   const handleInputChange = (e, section, index) => {
     const { name, value, type, label, checked } = e.target;
-    console.log(e.target)
+    console.log(e.target);
     if (name === "bankName") {
-      setBankName(value)
-
-    }
-    else if (name === "branch") {
-      setBranchName(value)
-
+      setBankName(value);
+    } else if (name === "branch") {
+      setBranchName(value);
     }
 
     // Use section to update the correct part of the state
     dispatch(
       handleChangeReducer({ section, field: name, value, type, checked, index })
     );
-
   };
 
   const handleFileUpload = (e, section) => {
@@ -137,8 +134,8 @@ const AddUpdateCompanyBorrowerFields = ({
   };
 
   const location = useLocation();
-  const isUpdateCompany = location.pathname.includes('update-company');
-  const isDraftCompany = location.pathname.includes('update-company/draft');
+  const isUpdateCompany = location.pathname.includes("update-company");
+  const isDraftCompany = location.pathname.includes("update-company/draft");
 
   // 1. Fetch all banks on mount
   useEffect(() => {
@@ -199,7 +196,8 @@ const AddUpdateCompanyBorrowerFields = ({
 
   // 5. Set sortCode and branchCode based on selected branch
   useEffect(() => {
-    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch) return;
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
+      return;
 
     dispatch(
       handleChangeReducer({
@@ -217,7 +215,6 @@ const AddUpdateCompanyBorrowerFields = ({
       })
     );
   }, [BorrowerData.bankDetails.branch, branchName]);
-
 
   //   All Fields Configuration
   const companyDetailsConfig = [
@@ -313,7 +310,7 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "No. of Permanent Employees",
       inputName: "numberOfPermanentEmployees",
-      type: "number",
+      type: "text",
       validation: true,
     },
   ];
@@ -502,7 +499,7 @@ const AddUpdateCompanyBorrowerFields = ({
     <>
       <Accordion
         heading={"General Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           // companyDetails(BorrowerData.companyDetails)
           <DynamicForm
             details={BorrowerData.companyDetails}
@@ -510,43 +507,40 @@ const AddUpdateCompanyBorrowerFields = ({
             sectionName={"companyDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         isOpen={true}
         error={isValidationFailed(validationError, companyDetailsConfig)}
       />
 
       <Accordion
         heading={"Contact Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.companyContactDetails}
             config={companyContactDetailsConfig}
             sectionName={"companyContactDetails"}
             handleInputChange={handleInputChange}
           />
-        }
-        error={isValidationFailed(
-          validationError,
-          companyContactDetailsConfig
         )}
+        error={isValidationFailed(validationError, companyContactDetailsConfig)}
       />
 
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.bankDetails}
             config={bankDetailsConfig}
             sectionName={"bankDetails"}
             handleInputChange={handleInputChange}
           />
-        }
+        )}
         error={isValidationFailed(validationError, bankDetailsConfig)}
       />
 
       <Accordion
         heading={"Other Details"}
-        renderExpandedContent={() =>
+        renderExpandedContent={() => (
           <DynamicForm
             details={BorrowerData.companyOtherDetails}
             config={companyOtherDetailsConfig}
@@ -554,11 +548,8 @@ const AddUpdateCompanyBorrowerFields = ({
             handleInputChange={handleInputChange}
             handleFileUploads={handleFileUpload}
           />
-        }
-        error={isValidationFailed(
-          validationError,
-          companyOtherDetailsConfig
         )}
+        error={isValidationFailed(validationError, companyOtherDetailsConfig)}
       />
     </>
   );
