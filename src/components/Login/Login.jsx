@@ -155,7 +155,7 @@ const LoginPage = () => {
             </div>
             <div>
               <h1 className="text-3xl font-extrabold bg-gradient-to-br from-violet-500 to-violet-400 bg-clip-text text-transparent">
-                LoanPro
+                PhotonMatters
               </h1>
               <p className="text-slate-400 text-sm font-medium">
                 Enterprise Loan Management
