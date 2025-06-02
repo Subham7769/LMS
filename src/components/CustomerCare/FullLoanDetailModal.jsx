@@ -59,10 +59,10 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
       </div>
     </div>
     <div className="grid grid-cols-[auto,1fr] gap-x-2 pl-4">
-      <div>Submit Date</div>
+      <div>Release Date</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {convertDate(loanDetails.submitDate)}
+        {convertDate(loanDetails.releaseDate)}
       </div>
     </div>
   </div>

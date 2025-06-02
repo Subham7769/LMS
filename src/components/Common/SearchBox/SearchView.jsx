@@ -10,7 +10,6 @@ const SearchView = ({
   handleSearch,
   searchIDArray,
   searchShowArray,
-  borrowerNotFound,
 }) => {
   return (
     <div className="flex flex-col gap-5 px-5">
@@ -36,11 +35,7 @@ const SearchView = ({
           />
         </div>
       </div>
-      {borrowerNotFound && (
-        <div className="text-red-700 rounded mt-4 text-center p-5 bg-red-100">
-          User Not Found or Invalid ID
-        </div>
-      )}
+
       <div className="bg-blue-50 mt-4 rounded-xl p-10">
         <h3 className="font-semibold">
           Search using ID provided during loan registration:
