@@ -16,6 +16,7 @@ module.exports = {
         center: true,
         padding: "15px",
       },
+
       fontFamily: {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
       },

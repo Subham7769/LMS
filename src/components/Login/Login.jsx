@@ -13,35 +13,35 @@ import {
 import { setMenus } from "../../redux/Slices/sidebarSlice";
 import InputPassword from "../Common/InputPassword/InputPassword";
 import InputEmail from "../Common/InputEmail/InputEmail";
-import {
-  ChartBarIcon,
-  LockClosedIcon,
-  StarIcon,
-  UserIcon,
-} from "@heroicons/react/20/solid";
+import { LockClosedIcon, UserIcon } from "@heroicons/react/20/solid";
 import { LogoIcon } from "../../assets/icons";
-import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathRoundedSquareIcon,
+  Cog6ToothIcon,
+  ComputerDesktopIcon,
+  CpuChipIcon,
+} from "@heroicons/react/24/outline";
 
 const heroSectionCards = [
   {
-    title: "Smart Analytics",
-    desc: "Real-time insights and predictive modeling for better lending decisions",
-    Icon: ChartBarIcon,
+    title: "Smart Debt Collections",
+    desc: "Configurable workflows for collections, Deploy Recovery equations, Create Hardship programs",
+    Icon: ArrowPathRoundedSquareIcon,
   },
   {
-    title: "Bank-Grade Security",
-    desc: "End-to-end encryption and compliance with financial regulations",
-    Icon: LockClosedIcon,
+    title: "Agentic & Gen AI Integration",
+    desc: "Advanced AI capabilities for enhanced decision-making and Consumer onboarding",
+    Icon: CpuChipIcon,
   },
   {
-    title: "Automated Workflows",
-    desc: "Streamline approval processes with customizable automation rules",
-    Icon: StarIcon,
+    title: "Dynamic Business Rule Engine",
+    desc: "Automated decisioning and scoring engines for loans, recovery, affordability calculations & more",
+    Icon: Cog6ToothIcon,
   },
   {
-    title: "Compliance Ready",
-    desc: "Built-in regulatory compliance and audit trail capabilities",
-    Icon: ClipboardDocumentCheckIcon,
+    title: "Adaptive Setup",
+    desc: "Tailor-made workflows, products, approval documents and pricing structures",
+    Icon: ComputerDesktopIcon,
   },
 ];
 
@@ -75,9 +75,9 @@ const LoginPage = () => {
       }, stepTime);
     };
     setTimeout(() => {
-      animateValue("loans", 2.5, 2000);
-      animateValue("institutions", 150, 2000);
-      animateValue("uptime", 99.9, 2000);
+      animateValue("loans", 200, 2000);
+      animateValue("institutions", 6, 2000);
+      animateValue("uptime", 500, 2000);
     }, 1000);
   }, []);
 
@@ -129,12 +129,21 @@ const LoginPage = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
-      <div className="absolute inset-0 opacity-10 bg-[url('/grid.png')] animate-pulse z-0" />
+      <div
+        className="fixed inset-0 z-0 opacity-10 animate-gridPulse pointer-events-none"
+        style={{
+          backgroundImage: `
+      linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
+    `,
+          backgroundSize: "50px 50px",
+        }}
+      ></div>
       <div className="absolute inset-0 pointer-events-none z-0">
         {["💰", "📊", "🔒", "⚡"].map((icon, i) => (
           <div
             key={i}
-            className={`absolute w-10 h-10 bg-violet-500/10 rounded-lg flex items-center justify-center animate-[float_8s_ease-in-out_infinite]`}
+            className={`absolute w-10 h-10 bg-violet-500/10 rounded-lg flex items-center justify-center animate-float`}
             style={{
               top: `${[15, 70, 40, 25][i]}%`,
               left: `${[10, 80, 5, 85][i]}%`,
@@ -145,10 +154,12 @@ const LoginPage = () => {
           </div>
         ))}
       </div>
-      <div className="relative grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] w-full rounded-2xl overflow-hidden shadow-2xl backdrop-blur-2xl bg-slate-900/95 animate-[slideIn_1s_ease-out]">
+      <div className="relative grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] w-full rounded-2xl overflow-hidden shadow-card backdrop-blur-2xl bg-slate-900/95 animate-slideIn">
         {/* HERO SECTION */}
         <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-10 lg:p-20 relative">
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle,rgba(34,197,94,0.1)_0%,transparent_50%)] animate-pulse" />
+          <div
+            className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_50%)] animate-pulse"
+          />
           <div className="relative z-10 flex items-center mb-10">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-xl mr-5">
               <LogoIcon className="h-8 w-8 fill-white" />
@@ -173,11 +184,11 @@ const LoginPage = () => {
               management.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
+            <div className="hidden sm:grid sm:grid-cols-2 gap-5 mb-10">
               {heroSectionCards.map((feature, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-800/80 border border-violet-500/20 rounded-xl p-6 backdrop-blur-md transition-all duration-300 hover:translate-y-[-5px] hover:border-violet-500/40 hover:shadow-[0_15px_40px_rgba(139,92,246,0.1)]"
+                  className="bg-slate-800/80 border border-violet-500/20 rounded-xl p-6 backdrop-blur-md transition-all duration-300 hover:translate-y-[-5px] hover:rotate-[1deg] hover:border-violet-500/40 hover:shadow-[0_15px_40px_rgba(139,92,246,0.1)]"
                 >
                   <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center mb-4">
                     {React.createElement(feature.Icon, {
@@ -192,13 +203,19 @@ const LoginPage = () => {
               ))}
             </div>
 
-            <div className="flex gap-10 text-center">
+            <div className="hidden sm:grid grid-cols-4 gap-10 text-center">
               <div>
                 <div className="text-violet-500 text-2xl font-bold">
-                  ${stats.loans.toFixed(1)}B+
+                  {stats.loans}K+
                 </div>
                 <div className="text-slate-500 text-xs uppercase tracking-wider">
-                  Loans Processed
+                  Loans requests/day
+                </div>
+              </div>
+              <div>
+                <div className="text-violet-500 text-2xl font-bold">0.1-2%</div>
+                <div className="text-slate-500 text-xs uppercase tracking-wider">
+                  Bad Debt Rate
                 </div>
               </div>
               <div>
@@ -206,22 +223,23 @@ const LoginPage = () => {
                   {stats.institutions}+
                 </div>
                 <div className="text-slate-500 text-xs uppercase tracking-wider">
-                  Financial Institutions
+                  Regulatory Frameworks
+                  <span className="lowercase block">(multiple regions)</span>
                 </div>
               </div>
               <div>
                 <div className="text-violet-500 text-2xl font-bold">
-                  {stats.uptime.toFixed(1)}%
+                  ${stats.uptime}M+
                 </div>
                 <div className="text-slate-500 text-xs uppercase tracking-wider">
-                  Uptime
+                  Designed for high loans volumes
                 </div>
               </div>
             </div>
           </div>
         </div>
         {/* LOGIN SECTION */}
-        <div className="bg-white px-5 py-10 lg:p-20 flex flex-col justify-center">
+        <div className="bg-white px-5 py-10 lg:p-20 flex flex-col">
           <div className="text-center mb-8">
             <div className="inline-flex items-center bg-violet-500/10 text-violet-700 px-4 py-2 rounded-full border border-violet-500/20 text-sm font-semibold mb-4">
               🔒{" "}
@@ -238,7 +256,7 @@ const LoginPage = () => {
             </h2>
             <p className="text-slate-500 text-base">
               {isSignup === "Login"
-                ? "Access your loan management dashboard"
+                ? "Access your loan management platform"
                 : "Provide the required information to continue"}
             </p>
           </div>
@@ -374,7 +392,7 @@ const LoginPage = () => {
                     resetPassword(email, newPassword, confirmPassword);
                   }
                 }}
-                className="group relative w-full px-6 py-4 bg-gradient-to-br from-violet-500 to-violet-600 text-white text-base font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(139,92,246,0.4)]"
+                className="cursor-pointer group relative w-full px-6 py-4 bg-gradient-to-br from-violet-500 to-violet-600 text-white text-base font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(139,92,246,0.4)]"
               >
                 {/* Shine Effect */}
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />

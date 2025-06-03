@@ -43,6 +43,23 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "DRL Ruleset",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/drl-ruleset",
+    icon: "ClipboardDocumentCheckIcon",
+    submenu: true,
+    createButton: true,
+    editable: true,
+    createFunction: "createNewDrlRuleset",
+    buttonName: "Create DRL Ruleset",
+    placeholder: "Enter Name",
+    navigateSuccess: "/loan/drl-ruleset/",
+    navigateFail: "/login",
+    submenuItems: [],
+    isOpen: false,
+    current: false,
+  },
+  {
     title: "Loan Schema",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/project", //previous -> "/project/loan-form"
