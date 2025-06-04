@@ -31,7 +31,7 @@ import {
 import { useDispatch } from "react-redux";
 import RuleComponent from "./RuleComponent";
 import ViewTemplateModal from "./ViewTemplateModal";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
 import {
   clearValidationError,
@@ -54,29 +54,26 @@ import {
   useSensors,
   DragOverlay,
 } from "@dnd-kit/core";
-import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
-import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
+import InputTextArea from "../Common/InputTextArea/InputTextArea";
+import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Toolbox from "./ToolBox";
+import EquationModal from "./EquationModal";
 
 const RuleManager = () => {
   const { racId } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [activeRule, setActiveRule] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isOpenSectionSettings, setIsOpenSectionSettings] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
+  const [showEquationModal, setShowEquationModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [templateModal, setTemplateModal] = useState(false);
-  const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
   const { racConfig, loading, error } = useSelector(
     (state) => state.dynamicRac
   );
-  const { name } = racConfig?.racDetails;
   const sections = racConfig?.sections;
   const { roleName } = useSelector((state) => state.auth);
   const sensors = useSensors(
@@ -87,6 +84,8 @@ const RuleManager = () => {
     }),
     useSensor(TouchSensor)
   );
+  const { dRulesData, handleChange } = useOutletContext();
+  const ruleManagerData = dRulesData.ruleManagerData;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -275,53 +274,11 @@ const RuleManager = () => {
     }
   };
 
-  const createCloneDynamicRac = async (racId, racName) => {
-    const action = await dispatch(cloneDynamicRac({ racId, racName }));
-    if (action.type === "rac/cloneDynamicRac/fulfilled") {
-      navigate(`/loan/dynamic-rac/${action.payload.racId}`);
-      dispatch(fetchDynamicRacData());
-    }
-  };
-
-  // Updated handleDelete function
-  const handleDelete = async () => {
-    await dispatch(deleteDynamicRac(racId)).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        dispatch(fetchDynamicRacData());
-        navigate("/loan/dynamic-rac");
-      }
-    });
-  };
-
-  const handleClone = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleSectionSettings = ({ sectionId }) => {
-    setIsOpenSectionSettings(!isOpenSectionSettings);
-    dispatch(setSectionSettings({ sectionId, newSize }));
-    setNewSize("");
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleDeleteSection = ({ racId, sectionId }) => {
     dispatch(removeSection({ sectionId }));
     dispatch(deleteSection({ racId, sectionId })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
         dispatch(fetchDynamicRacDetails(racId));
-      }
-    });
-  };
-
-  const handleUpdateName = (newName) => {
-    console.log("handleUpdateName");
-    dispatch(updateRacConfigName({ newName }));
-    dispatch(updateRacName({ racId, newName })).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        dispatch(fetchDynamicRacData());
       }
     });
   };
@@ -347,6 +304,14 @@ const RuleManager = () => {
     dispatch(restoreRule());
     setShowRuleModal(false);
     setIsEditMode(false);
+  };
+
+  const handleEditEquation = () => {
+    setShowEquationModal(true);
+  };
+
+  const closeEquationModal = () => {
+    setShowEquationModal(false);
   };
 
   // Droppable
@@ -475,8 +440,8 @@ const RuleManager = () => {
       <div className="bg-white dark:bg-gray-800 flex justify-center flex-col items-center p-5 gap-3">
         <PlusIcon className="text-sky-700 h-16 w-16 bg-sky-500/20 rounded-full p-4 font-extrabold" />
         <p className="text-center text-gray-500 dark:text-gray-400">
-          Click to add criteria to this section. <br/> You can also use an existing
-          template as a starting point
+          Click to add criteria to this section. <br /> You can also use an
+          existing template as a starting point
         </p>
         <div className="flex gap-5">
           <Button
@@ -571,19 +536,6 @@ const RuleManager = () => {
 
   return (
     <>
-      <DynamicHeader
-        itemName={name}
-        handleNameUpdate={handleUpdateName}
-        handleClone={handleClone}
-        handleDelete={handleDelete}
-        loading={loading}
-      />
-      <CloneModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onCreateClone={(racName) => createCloneDynamicRac(racId, racName)}
-        initialName={name}
-      />
       <ViewTemplateModal
         isOpen={templateModal}
         onClose={() => setTemplateModal(false)}
@@ -736,6 +688,18 @@ const RuleManager = () => {
             ) : null}
           </DragOverlay>
         </DndContext>
+        <div className="shadow-md p-5 rounded-xl border dark:border-gray-700 mt-5">
+          <div className="flex justify-between gap-5">
+            <h2>{ruleManagerData?.ruleManagerEquation}</h2>
+            <div>
+              <Button
+                buttonIcon={EditIcon}
+                onClick={handleEditEquation}
+                buttonType="secondary"
+              />
+            </div>
+          </div>
+        </div>
       </ContainerTile>
       {roleName !== "ROLE_VIEWER" && (
         <div className="mt-6 text-right">
@@ -748,6 +712,12 @@ const RuleManager = () => {
           )}
         </div>
       )}
+      <EquationModal
+        isOpen={showEquationModal}
+        onClose={closeEquationModal}
+        ruleManagerData={ruleManagerData}
+        handleChange={handleChange}
+      />
     </>
   );
 };

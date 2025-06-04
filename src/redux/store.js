@@ -38,6 +38,7 @@ import bankSlice from "./Slices/bankSlice.js";
 import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
 import documentConfigSlice from "./Slices/documentConfigSlice.js";
 import personalRefundSlice from "./Slices/personalRefundSlice.js";
+import drlRulesetSlice from "./Slices/drlRulesetSlice";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
 import AutoLogoutMiddleware from "./Middlewares/AutoLogoutMiddleware";
@@ -82,6 +83,7 @@ const store = configureStore({
     loanApproval: loanApprovalSlice,
     documentConfig: documentConfigSlice,
     personalRefund: personalRefundSlice,
+    drlRuleset: drlRulesetSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(AutoLogoutMiddleware, checkTokenMiddleware),

@@ -29,7 +29,7 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import { toast } from "react-toastify";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import ToggleSwitch from "../Common/ToggleSwitch/ToggleSwitch";
-import { CheckIcon } from "../../assets/icons";
+import { CheckIcon, EditIcon } from "../../assets/icons";
 
 const RecoveryConfig = () => {
   const { recoveryEquationTempId } = useParams();
@@ -212,13 +212,13 @@ const RecoveryConfig = () => {
           <div className="text-right">
             {!hasViewOnlyAccess(roleName) && isEditingEquation ? (
               <Button
-                buttonIcon={CheckCircleIcon}
+                buttonIcon={CheckIcon}
                 onClick={saveSettings}
                 buttonType="secondary"
               />
             ) : (
               <Button
-                buttonIcon={PencilIcon}
+                buttonIcon={EditIcon}
                 onClick={toggleEditEquation}
                 buttonType="secondary"
               />

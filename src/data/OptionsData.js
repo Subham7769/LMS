@@ -282,3 +282,13 @@ export const upcomingMonths = [
   { label: "After 2 Months", value: 2 },
   { label: "After 3 Months", value: 3 },
 ];
+
+export const categoryOptions = [
+  { value: "riskBasedPricing", label: "Risk Based Pricing" },
+  { value: "creditScore", label: "Credit Score" },
+  { value: "eligibleTenure", label: "Eligible Tenure" },
+  { value: "dbrConfig", label: "DBR Config" },
+  { value: "approvalConfig", label: "Approval Config" },
+  { value: "dealerCommissions", label: "Dealer Commissions" },
+  { value: "loanProcessing", label: "Loan Processing" },
+];
