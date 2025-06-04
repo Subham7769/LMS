@@ -4,18 +4,23 @@ import { useActiveTab } from "../ActiveTabContext";
 import { registerBorrower } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch } from "react-redux";
 import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/personalLoansSlice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Onboarding03({ onNext, onBack, defaultData }) {
   const { formData, setFormData } = useActiveTab();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    
     const today = new Date();
-    const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+    const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    console.log(formattedDate)
 
     const dummyBorrowerData = {
       personalDetails: {
@@ -137,10 +142,10 @@ function Onboarding03({ onNext, onBack, defaultData }) {
           "interestMethod": "REDUCING",
           "loanInterest": formData.interestRate,
           "loanInterestType": "YEAR",
-          "loanInterestStr": "48.0000% PER YEAR REDUCING",
+          "loanInterestStr": `${formData.interestRate}% PER YEAR REDUCING`,
           "loanDuration": formData.period,
           "loanDurationType": "MONTH",
-          "loanDurationStr": "1 MONTH",
+          "loanDurationStr": `${formData.period} MONTHS`,
           "repaymentTenure": formData.repayment,
           "repaymentTenureType": "MONTH",
           "repaymentTenureStr": `${formData.repayment} MONTHS`,
@@ -152,7 +157,7 @@ function Onboarding03({ onNext, onBack, defaultData }) {
           "lhacoName": "",
           "sector": "",
           "uniqueID": formData.email,
-          "loanCreationDate": "",
+          "loanCreationDate": formattedDate,
           "firstEmiDate": ""
         },
         "documents": [
@@ -211,17 +216,17 @@ function Onboarding03({ onNext, onBack, defaultData }) {
       console.log("Submitted Loan!");
 
       // 6. Navigate
-      navigate("/loan/loan-origination-system/personal/loans/loan-offers");
+      navigate("/customer/loan-offers");
 
     } catch (error) {
       console.error("Loan Submission Error:", error);
-      alert(`Error: ${error}`);
+      toast(`Error: ${error}`);
     } finally {
       setLoading(false);
     }
   };
 
-
+// console.log(formData)
 
 
   return (

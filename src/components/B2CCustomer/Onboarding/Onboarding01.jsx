@@ -16,7 +16,7 @@ const Onboarding01 = ({ onNext }) => {
 
   const dispatch = useDispatch();
   const { formData, setFormData } = useActiveTab();
-  const { loanProductOptions } = useSelector((state) => state.personalLoans);
+  const { loanProductOptions, loanProductData } = useSelector((state) => state.personalLoans);
 
   const iconMap = {
     "Individual Loans": UserIcon,
@@ -38,6 +38,8 @@ const Onboarding01 = ({ onNext }) => {
       };
     });
   }, [loanProductOptions]);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

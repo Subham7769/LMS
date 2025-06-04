@@ -1,89 +1,97 @@
 import React, { useEffect, useState } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import { useActiveTab } from "../ActiveTabContext";
+import { useSelector } from "react-redux";
+import { isYesterday } from "date-fns";
+import InputSlider from "../../Common/InputSlider/InputSlider";
 
 function Onboarding02({ onNext, onBack }) {
   const { formData, setFormData } = useActiveTab();
-
-
-  useEffect(() => {
-    fetch("/api/interest-rate")
-      .then((res) => res.json())
-      .then((data) => setFormData({ ...formData, interestRate: data.rate }));
-  }, []);
+  const { loanProductData } = useSelector((state) => state.personalLoans);
+  const [interestRate, setInterestRate] = useState(0);
+  const [repaymentTenure, setRepaymentTenure] = useState("");
+  const [loanPeriod, setLoanPeriod] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onNext();
   };
 
+  useEffect(() => {
+    if (loanProductData) {
+      const loanProduct = loanProductData.filter(
+        (item) => item.loanProductId === formData.loanType
+      );
+      console.log(loanProduct)
+      const eligibleTenures = loanProduct[0]?.interestEligibleTenure || [];
 
-  const sliderClass =
-    "relative flex items-center select-none touch-none w-full h-5";
-  const thumbClass =
-    "block w-4 h-4 bg-sky-600 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500";
-  const trackClass = "bg-gray-200 relative grow rounded-full h-[4px]";
-  const rangeClass = "absolute bg-sky-600 rounded-full h-full";
+      const LoanPeriodArr = [...new Set(eligibleTenures.map(item => item.loanTenure))];
+      const RepaymentTenureArr = [...new Set(eligibleTenures.map(item => item.repaymentTenure))];
+
+      setLoanPeriod(LoanPeriodArr);
+      setRepaymentTenure(RepaymentTenureArr);
+    }
+  }, [loanProductData]);
+
+  useEffect(() => {
+    if (loanProductData) {
+      const loanProduct = loanProductData.filter(
+        (item) => item.loanProductId === formData.loanType
+      );
+      const eligibleTenures = loanProduct[0]?.interestEligibleTenure || [];
+
+      const matchedTenure = eligibleTenures.find(item => Number(item.loanTenure) === Number(formData.period));
+
+      if (matchedTenure) {
+        setFormData({
+          ...formData,
+          interestRate: parseFloat(matchedTenure.interestRate) || 0,
+          repayment: matchedTenure.repaymentTenure || "",
+        });
+      }
+    }
+  }, [formData.period])
+
+  // console.log("formData-", formData)
+
 
   return (
     <div className="px-4 py-8">
       <div className="max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-6">Loan Details</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-8">
           {/* Loan Amount */}
-          <label className="block mb-1 font-medium">
-            Loan Amount: ₹{formData.amount}
-          </label>
-          <Slider.Root
-            className={sliderClass + " mb-6"}
-            value={[formData.amount]}
-            onValueChange={([val]) => setFormData({ ...formData, amount: val })}
-            min={0}
-            max={100000}
-            step={1000}
-          >
-            <Slider.Track className={trackClass}>
-              <Slider.Range className={rangeClass} />
-            </Slider.Track>
-            <Slider.Thumb className={thumbClass} />
-          </Slider.Root>
+          <InputSlider
+            labelName="Loan Amount"
+            inputName={"amount"}
+            inputLevels={Array.from({ length: 10 }, (_, i) => (i + 1) * 20000)}
+            inputValue={formData.amount}
+            coloredTheme={false}
+            onChange={({ target: { value } }) => setFormData({ ...formData, amount: value })}
+          />
 
           {/* Loan Period */}
-          <label className="block mb-1 font-medium">
-            Loan Period: {formData.period} months
-          </label>
-          <Slider.Root
-            className={sliderClass + " mb-6"}
-            value={[formData.period]}
-            onValueChange={([val]) => setFormData({ ...formData, period: val })}
-            min={1}
-            max={60}
-            step={1}
-          >
-            <Slider.Track className={trackClass}>
-              <Slider.Range className={rangeClass} />
-            </Slider.Track>
-            <Slider.Thumb className={thumbClass} />
-          </Slider.Root>
+          <InputSlider
+            labelName="Loan Period"
+            inputName={"period"}
+            inputLevels={loanPeriod}
+            inputValue={formData.period}
+            coloredTheme={false}
+            onChange={({ target: { value } }) => setFormData({ ...formData, period: value })}
+          />
 
           {/* Repayment Tenure */}
-          <label className="block mb-1 font-medium">
-            Repayment Tenure: {formData.repayment} months
-          </label>
-          <Slider.Root
-            className={sliderClass + " mb-6"}
-            value={[formData.repayment]}
-            onValueChange={([val]) => setFormData({ ...formData, repayment: val })}
-            min={1}
-            max={60}
-            step={1}
-          >
-            <Slider.Track className={trackClass}>
-              <Slider.Range className={rangeClass} />
-            </Slider.Track>
-            <Slider.Thumb className={thumbClass} />
-          </Slider.Root>
+          <InputSlider
+            labelName="Repayment Tenure"
+            inputName={"repayment"}
+            inputLevels={repaymentTenure}
+            inputValue={formData.repayment}
+            coloredTheme={false}
+            onChange={({ target: { value } }) => setFormData({ ...formData, repayment: value })}
+            disabled={true}
+          />
 
+          {/* Interest Rate */}
           <p className="text-sm mb-4">Interest Rate: {formData.interestRate}%</p>
           <div className="flex justify-between">
             <button

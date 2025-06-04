@@ -501,7 +501,7 @@ const CustomerLoanApplication = React.lazy(() =>
   import("./components/B2CCustomer/CustomerLoanApplication")
 );
 const CustomerLoanOffer = React.lazy(() =>
-  import("./components/B2CCustomer/Onboarding/CustomerLoanOffer")
+  import("./components/B2CCustomer/CustomerLoanOffer")
 );
 const Onboarding02 = React.lazy(() =>
   import("./components/B2CCustomer/Onboarding/Onboarding02")
@@ -1516,7 +1516,7 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "offers",
+        path: "loan-offers",
         element: <CustomerLoanOffer />,
         errorElement: <RouteErrorBoundary />,
       },

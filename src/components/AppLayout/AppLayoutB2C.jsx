@@ -3,11 +3,11 @@ import { useActiveTab } from "../B2CCustomer/ActiveTabContext";  // Import the h
 
 const AppLayoutB2C = () => {
   const { subStep, formData } = useActiveTab();  // Access current subStep from context
-  console.log(formData)
+  // console.log(formData)
   return (
-    <main className="bg-white dark:bg-gray-900 relative flex">
+    <main className="bg-white dark:bg-gray-900 relative">
 
-      <div className="w-full md:w-1/2 min-h-[100dvh] h-full flex flex-col after:flex-1">
+      <div className="w-full  min-h-[100dvh] h-full flex flex-col after:flex-1">
         {/* Header */}
         <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           <Link className="block" to="/customer/home">
