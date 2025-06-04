@@ -14,12 +14,14 @@ import { hasViewOnlyAccess } from "../../../utils/roleUtils";
 import Tooltip from "../Tooltip/Tooltip";
 
 const InputText = ({
+  suffixIcon: SuffixIcon,
   labelName,
   toolTipText,
   inputName,
   inputValue,
   onChange,
   placeHolder = "",
+  className = "",
   disabled,
   readOnly = false,
   isValidation = false,
@@ -74,26 +76,34 @@ const InputText = ({
           </Tooltip>
         )}
       </div>
-
-      <input
-        type="text"
-        name={inputName}
-        value={inputValue}
-        onChange={onChange}
-        onFocus={() => {
-          dispatch(setValidationError(validationKey));
-          dispatch(setUpdateMap(inputName));
-        }}
-        placeholder={placeHolder}
-        disabled={disabled}
-        className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
+      <div className="relative">
+        <input
+          type="text"
+          name={inputName}
+          value={inputValue}
+          onChange={onChange}
+          onFocus={() => {
+            dispatch(setValidationError(validationKey));
+            dispatch(setUpdateMap(inputName));
+          }}
+          placeholder={placeHolder}
+          disabled={disabled}
+          className={`form-input w-full ${className} dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
           ${validationError[validationKey] ? "border-red-300" : ""} 
           `}
-        required
-        readOnly={readOnly}
-        autoFocus={isAutoFocus}
-        maxLength={maxLength}
-      />
+          required
+          readOnly={readOnly}
+          autoFocus={isAutoFocus}
+          maxLength={maxLength}
+        />
+        {SuffixIcon && (
+          <div className="absolute inset-0 left-auto flex items-center pointer-events-none">
+            <span className="text-sm text-gray-400 dark:text-gray-500 font-medium px-3">
+              <SuffixIcon className={"h-5 w-5"} aria-hidden="true" />
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

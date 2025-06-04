@@ -52,6 +52,12 @@ const RacPage = lazy(() => import("./pages/RacPage"));
 const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
 
+// DRL Ruleset Imports
+const DrlRulesetPage = lazy(() => import("./pages/DRLRulesetPage"));
+const DRLRuleset = lazy(() => import("./components/DRLRuleset/DRLRuleset"));
+const BasicInfo = lazy(() => import("./components/DRLRuleset/BasicInfo"));
+const RuleManager = lazy(() => import("./components/DRLRuleset/RuleManager"));
+
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
 const RecoveryConfig = lazy(() =>
@@ -547,6 +553,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "drl-ruleset",
+        element: <DrlRulesetPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "recovery",
         element: <RecoveryPage />,
         errorElement: <RouteErrorBoundary />,
@@ -838,6 +849,23 @@ const routes = [
         path: "dynamic-rac/:racId",
         element: <DynamicRAC />,
         errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "drl-ruleset/:racId",
+        element: <DRLRuleset />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-info",
+            element: <BasicInfo />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "rule-manager",
+            element: <RuleManager />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "reporting-config/:RCName",
@@ -1508,7 +1536,7 @@ const routes = [
         </ProtectedRoute>
       </PageErrorBoundary>
     ),
-    
+
     children: [
       {
         path: "loan-application",

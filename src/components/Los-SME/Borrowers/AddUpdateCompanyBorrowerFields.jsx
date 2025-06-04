@@ -306,7 +306,7 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "No. of Permanent Employees",
       inputName: "numberOfPermanentEmployees",
-      type: "number",
+      type: "text",
       validation: true,
     },
   ];

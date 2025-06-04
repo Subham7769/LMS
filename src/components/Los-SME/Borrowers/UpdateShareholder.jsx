@@ -15,7 +15,7 @@ import store from "../../../redux/store";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateShareholder = () => {
-  const { companyId,updateShareholderData, error, loading } = useSelector(
+  const { companyId, updateShareholderData, error, loading } = useSelector(
     (state) => state.smeBorrowers
   );
   const dispatch = useDispatch();
@@ -23,23 +23,17 @@ const UpdateShareholder = () => {
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
 
-  console.log(updateShareholderData)
+  console.log(updateShareholderData);
 
   const handleUpdate = async (uid) => {
-
     await dispatch(validateForm(flattenToSimpleObject(updateShareholderData)));
 
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
-      dispatch(updateShareholderInfo({ updateShareholderData, uid }))
-        .unwrap()
-        .then(() => {
-          dispatch(fetchAllCompanyBorrowersByLoanOfficer({ page: 0, size: 20, loanOfficer }));
-          dispatch(fetchCompanyDetails({ companyId }))
-          navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
-        })
+      dispatch(updateShareholderInfo({ updateShareholderData, uid })).unwrap();
+      navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
     }
   };
 
