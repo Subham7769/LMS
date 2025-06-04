@@ -157,9 +157,7 @@ const LoginPage = () => {
       <div className="relative grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] w-full rounded-2xl overflow-hidden shadow-card backdrop-blur-2xl bg-slate-900/95 animate-slideIn">
         {/* HERO SECTION */}
         <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-10 lg:p-20 relative">
-          <div
-            className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_50%)] animate-pulse"
-          />
+          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_50%)] animate-pulse" />
           <div className="relative z-10 flex items-center mb-10">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-xl mr-5">
               <LogoIcon className="h-8 w-8 fill-white" />
@@ -203,7 +201,7 @@ const LoginPage = () => {
               ))}
             </div>
 
-            <div className="hidden sm:grid grid-cols-4 gap-10 text-center">
+            <div className="hidden sm:grid grid-cols-3 gap-10 text-center">
               <div>
                 <div className="text-violet-500 text-2xl font-bold">
                   {stats.loans}K+
@@ -216,15 +214,6 @@ const LoginPage = () => {
                 <div className="text-violet-500 text-2xl font-bold">0.1-2%</div>
                 <div className="text-slate-500 text-xs uppercase tracking-wider">
                   Bad Debt Rate
-                </div>
-              </div>
-              <div>
-                <div className="text-violet-500 text-2xl font-bold">
-                  {stats.institutions}+
-                </div>
-                <div className="text-slate-500 text-xs uppercase tracking-wider">
-                  Regulatory Frameworks
-                  <span className="lowercase block">(multiple regions)</span>
                 </div>
               </div>
               <div>
@@ -358,7 +347,7 @@ const LoginPage = () => {
                       dispatch(resetError());
                       dispatch(setButtonText("Set New Password"));
                     }}
-                    className="hover:underline"
+                    className="hover:underline cursor-pointer"
                   >
                     Forgot Password?
                   </button>
@@ -371,7 +360,7 @@ const LoginPage = () => {
                       dispatch(resetError());
                       dispatch(setButtonText("Login"));
                     }}
-                    className="hover:underline"
+                    className="hover:underline cursor-pointer"
                   >
                     Back to Login
                   </button>
@@ -426,7 +415,7 @@ const LoginPage = () => {
                     dispatch(resetError());
                     dispatch(setButtonText("Sign Up"));
                   }}
-                  className="text-violet-600 font-semibold hover:underline"
+                  className="text-violet-600 font-semibold hover:underline cursor-pointer"
                 >
                   Request Account
                 </button>
@@ -441,7 +430,7 @@ const LoginPage = () => {
                     dispatch(resetError());
                     dispatch(setButtonText("Login"));
                   }}
-                  className="text-violet-600 font-semibold hover:underline"
+                  className="text-violet-600 font-semibold hover:underline cursor-pointer"
                 >
                   Login
                 </button>
