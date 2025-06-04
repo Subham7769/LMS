@@ -137,8 +137,8 @@ const HomePage = () => {
                                 {/* Desktop sign in links */}
                                 <ul className="flex grow justify-end flex-wrap items-center">
                                     <li className="ml-3">
-                                        <a className="btn-sm inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" href="apply.html">
-                                            Get your card
+                                        <a className="btn-sm inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" onClick={() => navigate("/customer/loan-application")} >
+                                            Get your Loan Approved
                                             <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                 <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M1 6.002h7.586L6.293 8.295a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.416l-4-4a1 1 0 0 0-1.414 1.416l2.293 2.293H1a1 1 0 1 0 0 2Z" />
@@ -184,8 +184,8 @@ const HomePage = () => {
                                         {/* Buttons */}
                                         <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-12 md:mb-0" data-aos-delay="300">
                                             <div>
-                                                <a className="btn-sm w-full inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" href="apply.html">
-                                                    Get your card
+                                                <a className="btn-sm w-full inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                    Get your Loan Approved
                                                     <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                         <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M1 6.002h7.586L6.293 8.295a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.416l-4-4a1 1 0 0 0-1.414 1.416l2.293 2.293H1a1 1 0 1 0 0 2Z" />
@@ -314,8 +314,8 @@ const HomePage = () => {
                                             {/* Button */}
                                             <div className="max-w-xs mx-auto sm:max-w-none mb-8" data-aos-anchor="[data-aos-id-2]" data-aos-delay="300">
                                                 <div>
-                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" href="apply.html">
-                                                        Get your card
+                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                        Get your Loan Approved
                                                         <span className="tracking-normal text-sky-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                             <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M1 6.002h7.586L6.293 8.295a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.416l-4-4a1 1 0 0 0-1.414 1.416l2.293 2.293H1a1 1 0 1 0 0 2Z" />
@@ -378,8 +378,8 @@ const HomePage = () => {
                                             {/* Button */}
                                             <div className="max-w-xs mx-auto sm:max-w-none mb-8" data-aos-anchor="[data-aos-id-3]" data-aos-delay="300">
                                                 <div>
-                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" href="apply.html">
-                                                        Get your card
+                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                        Get your Loan Approved
                                                         <span className="tracking-normal text-sky-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                             <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M1 6.002h7.586L6.293 8.295a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.416l-4-4a1 1 0 0 0-1.414 1.416l2.293 2.293H1a1 1 0 1 0 0 2Z" />
@@ -476,8 +476,8 @@ const HomePage = () => {
                                             {/* Button */}
                                             <div className="max-w-xs mx-auto sm:max-w-none" data-aos-anchor="[data-aos-id-4]" data-aos-delay="300">
                                                 <div>
-                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" href="apply.html">
-                                                        Get your card
+                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                        Get your Loan Approved
                                                         <span className="tracking-normal text-sky-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                             <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M1 6.002h7.586L6.293 8.295a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.416l-4-4a1 1 0 0 0-1.414 1.416l2.293 2.293H1a1 1 0 1 0 0 2Z" />
@@ -839,7 +839,7 @@ const HomePage = () => {
                                         <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-12 md:mb-0">
                                             <div>
                                                 <a className="btn-sm w-full inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" href="apply.html">
-                                                    Get your card
+                                                    Get your Loan Approved
                                                     <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                         <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M1 6.002h7.586L6.293 8.295a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.416l-4-4a1 1 0 0 0-1.414 1.416l2.293 2.293H1a1 1 0 1 0 0 2Z" />
