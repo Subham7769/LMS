@@ -6,6 +6,10 @@ import DashboardCard04 from "./DashboardCard04";
 
 import DropdownFilter from "../Common/DropdownFilter/DropdownFilter";
 import DatePickerWithRange from "../Common/DatePickerWithRange/DatePickerWithRange"; // uses Calendar inside
+import DashboardCard05 from "./DashboardCard05";
+import DashboardCard06 from "./DashboardCard06";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAppConfigData } from "../../redux/Slices/appConfigSlice";
 
 function Dashboard() {
   const dateOptions = [
@@ -26,7 +30,11 @@ function Dashboard() {
   });
   const [range, setRange] = useState({ from: fromDate, to: toDate });
 
+  const dispatch = useDispatch();
+  const { appConfig } = useSelector((state) => state.appConfig);
+
   useEffect(() => {
+    dispatch(fetchAppConfigData());
     const newFrom = new Date(toDate);
     newFrom.setDate(newFrom.getDate() - days);
     setFromDate(newFrom);
@@ -74,6 +82,9 @@ function Dashboard() {
         </div>
       </div>
 
+      <div className="grid grid-cols-12 gap-6 mb-6">
+        <DashboardCard06 fromDate={formattedFromDate} toDate={formattedToDate} appConfig={appConfig} />
+      </div>
       {/* Dashboard Cards */}
       <div className="grid grid-cols-12 gap-6">
         <DashboardCard01
@@ -84,14 +95,19 @@ function Dashboard() {
           fromDate={formattedFromDate}
           toDate={formattedToDate}
         />
+        <DashboardCard05
+          fromDate={formattedFromDate}
+          toDate={formattedToDate}
+        />              
         <DashboardCard03
           fromDate={formattedFromDate}
           toDate={formattedToDate}
         />
-        <DashboardCard04
+  
+        {/* <DashboardCard04
           fromDate={formattedFromDate}
           toDate={formattedToDate}
-        />
+        /> */}
       </div>
     </div>
   );
