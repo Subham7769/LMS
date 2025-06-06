@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import {
-  TrashIcon,
-  PencilIcon,
-  DocumentDuplicateIcon,
-} from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -19,10 +13,8 @@ import {
   getRefundApplications,
   getRefundApplicationsByID,
   cancelRefundApplicationsByID,
-  cloneRefundApplicationsByID,
   getRefundApplicationByField,
   resetRefundData,
-  updateRefundField,
   getOpenLoans,
 } from "../../../redux/Slices/personalRefundSlice";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -150,14 +142,13 @@ const RefundApplication = () => {
     }
     return (
       <div className="flex gap-4 ">
-        {rowData.status !== "Submitted" && (
           <Button
             onClick={() => handleEditApplication(rowData)}
             buttonIcon={EditIcon}
             className={``}
             buttonType="secondary"
+            disabled={rowData.status === "Submitted"}
           />
-        )}
         {rowData.status !== "Rejected" && (
           <Button
             onClick={() => handleRejectApplication(rowData.refundApplicationId)}

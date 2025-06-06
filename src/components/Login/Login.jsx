@@ -21,6 +21,8 @@ import {
   ComputerDesktopIcon,
   CpuChipIcon,
 } from "@heroicons/react/24/outline";
+import Illustration from "../../assets/image/illustrations/undraw_metrics_5v8d.svg";
+
 
 const heroSectionCards = [
   {
@@ -409,16 +411,18 @@ const LoginPage = () => {
             {isSignup === "Login" && (
               <p>
                 Need access to the system?{" "}
-                <button
-                  onClick={() => {
-                    dispatch(setIsSignup("Signup"));
-                    dispatch(resetError());
-                    dispatch(setButtonText("Sign Up"));
-                  }}
+                <a
+                  // onClick={() => {
+                  //   dispatch(setIsSignup("Signup"));
+                  //   dispatch(resetError());
+                  //   dispatch(setButtonText("Sign Up"));
+                  // }}
+                  href="https://49356640.hs-sites.com/photonmatters-request-account"
+                  target="blank"
                   className="text-violet-600 font-semibold hover:underline cursor-pointer"
                 >
                   Request Account
-                </button>
+                </a>
               </p>
             )}
             {isSignup === "Signup" && (
@@ -440,7 +444,7 @@ const LoginPage = () => {
 
           <div className="flex justify-center gap-6 mt-10 text-slate-500 text-sm opacity-70">
             <div className="flex items-center gap-2">
-              🛡️ <span>SOC 2 Certified</span>
+              🛡️ <span>ISO/IEC 27001-aligned</span>
             </div>
             <div className="flex items-center gap-2">
               🔐 <span>256-bit Encryption</span>
@@ -448,6 +452,10 @@ const LoginPage = () => {
             <div className="flex items-center gap-2">
               ✓ <span>GDPR Compliant</span>
             </div>
+          </div>
+          <div className="flex justify-center mt-10">
+            <img src={Illustration} alt="Metrics Illustration" className="" />
+            {/* w-2/5 max-w-xs md:max-w-sm lg:max-w-md */}
           </div>
         </div>
       </div>
