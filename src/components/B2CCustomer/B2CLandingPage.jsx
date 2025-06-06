@@ -3,6 +3,10 @@ import './css/vendors/aos.css';
 import './css/vendors/swiper-bundle.min.css';
 import './style.css';
 import { useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+
 import heroImage from './images/hero-image.png';
 import heroIllustration from './images/hero-illustration.svg';
 import cardsIllustration from './images/cards-illustration.svg';
@@ -15,6 +19,11 @@ import logos from './images/logos.png';
 
 import quoteAuthor01 from './images/quote-author-01.jpg';
 import quoteAuthor02 from './images/quote-author-02.jpg';
+
+import testimonial01 from './images/testimonial-01.jpg';
+import testimonial02 from './images/testimonial-02.jpg';
+import testimonialSign01 from './images/testimonial-sign-01.svg';
+import testimonialSign02 from './images/testimonial-sign-02.svg';
 
 import pricingImage01 from './images/pricing-01.png';
 import pricingImage02 from './images/pricing-02.png';
@@ -92,11 +101,43 @@ const pricingPlans = [
     },
 ];
 
+const features = [
+    "Identity verifications",
+    "Secure credit card data tokenization",
+    "Online and mobile payments",
+    "Global regulations and compliance", // Corrected the typo: "IGlobal" ➜ "Global"
+];
+
+const testimonials = [
+    {
+        id: 1,
+        image: testimonial01,
+        signImage: testimonialSign01,
+        text: `" This card is awesome. The app lets me link foreign cards with a new one which makes everything 100 times easier. Like Apple Pay, online shopping without useless phone confirmation. I wish I knew this earlier. "`,
+        name: "Elisa Koeppel",
+        role: "CEO & Co-Founder",
+        signWidth: 150,
+        signHeight: 71,
+        alt: "Testimonial 01",
+    },
+    {
+        id: 2,
+        image: testimonial02,
+        signImage: testimonialSign02,
+        text: `" This card allows us to achieve compliance with minimal effort, spend practically no time on payments-related customer support, and keep the user experience on our platform. "`,
+        name: "Maria Gress",
+        role: "CEO & Co-Founder",
+        signWidth: 105,
+        signHeight: 61,
+        alt: "Testimonial 02",
+    },
+];
 
 
-const HomePage = () => {
+
+const B2CLandingPage = () => {
     const navigate = useNavigate();
-    // onClick={() => navigate("/customer/loan-application")}
+
     return (
         <div className="font-aspekta antialiased bg-white text-slate-800 font-[350]">
             {/* Page wrapper */}
@@ -161,7 +202,7 @@ const HomePage = () => {
                     <section className="relative">
 
                         {/* Bg */}
-                        <div className="absolute inset-0 rounded-bl-[100px] mb-28 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 pointer-events-none " aria-hidden="true"></div>
+                        <div className="absolute inset-0 rounded-bl-[100px] mb-28 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 pointer-events-none z-0" aria-hidden="true"></div>
 
                         <div className="max-w-6xl mx-auto px-4 sm:px-6">
                             <div className="pt-36 md:pt-40 md:pb-20">
@@ -194,7 +235,7 @@ const HomePage = () => {
                                                 </a>
                                             </div>
                                             <div>
-                                                <a className="btn-sm w-full inline-flex items-center text-white bg-linear-to-tr from-blue-400 hover:bg-blue-500 shadow-xs relative before:absolute before:inset-0 before:bg-blue-400/60 before: before:rounded-full" href="support.html">Read documentation</a>
+                                                <a className="btn-sm w-full inline-flex items-center text-white bg-linear-to-tr from-blue-400 hover:bg-blue-500 shadow-xs relative before:absolute before:inset-0 " href="support.html">Read documentation</a>
                                             </div>
                                         </div>
 
@@ -202,17 +243,30 @@ const HomePage = () => {
 
                                     {/* Image */}
                                     <div className="md:absolute md:left-[600px] md:top-0 -mb-12 md:-mt-12 md:mb-0">
-                                        <div className="relative -ml-3 -mr-24 md:mx-0">
-                                            <img className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 mt-16 md:mt-0 pointer-events-none max-w-none mix-blend-lighten" src={heroIllustration} width="960" height="960" aria-hidden="true" />
-                                            <div data-aos-anchor="[data-aos-id-2]">
+                                        <div className="relative -mx-16 md:mx-0">
+                                            {/* Background Illustration (behind) */}
+                                            <img
+                                                className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 mt-16 md:mt-0 pointer-events-none max-w-none mix-blend-lighten z-0 m-auto"
+                                                src={heroIllustration}
+                                                width="960"
+                                                height="960"
+                                                aria-hidden="true"
+                                            />
 
-                                                <img src={heroImage} className="md:max-w-none" width="548" height="545" alt="Credit card" />
+                                            {/* Foreground Image */}
+                                            <div className="relative z-10">
+                                                <img
+                                                    src={heroImage}
+                                                    className="md:max-w-none md:rotate-[0deg] max-w-[450px] md:ml-0 ml-12 max-h-[545px] m-auto"
+                                                    width="548"
+                                                    height="545"
+                                                    alt="Features 01"
+                                                />
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
-
                             </div>
                         </div>
                     </section>
@@ -338,20 +392,33 @@ const HomePage = () => {
                                         </div>
 
                                         {/* Image */}
-                                        <div className="md:absolute md:left-[412px] md:top-0 -mb-12 mt-8 md:mt-36 md:mb-0 z-10">
+                                        <div className="md:absolute md:left-[412px] md:top-0 -mb-12 mt-8 md:mt-36 md:mb-0">
                                             <div className="relative -mx-16 md:mx-0">
-                                                <img className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 mt-16 md:mt-0 pointer-events-none  max-w-none mix-blend-lighten" src={cardsIllustration} width="742" height="742" aria-hidden="true" />
-                                                <div data-aos-anchor="[data-aos-id-2]">
-                                                    <img src={features02} className="md:max-w-none md:rotate-[48deg]" width="775" height="450" alt="Feaatures 01" />
+                                                {/* Background Illustration (Behind) */}
+                                                <img
+                                                    className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 mt-16 md:mt-0 pointer-events-none max-w-none mix-blend-lighten z-0"
+                                                    src={cardsIllustration}
+                                                    width="742"
+                                                    height="742"
+                                                    aria-hidden="true"
+                                                />
+
+                                                {/* Foreground Image (Above) */}
+                                                <div data-aos-anchor="[data-aos-id-2]" className="relative z-10">
+                                                    <img
+                                                        src={features02}
+                                                        className="md:max-w-none md:rotate-[48deg] m-auto max-w-[400px] max-h-[545px]"
+                                                        width="775"
+                                                        height="450"
+                                                        alt="Features 01"
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
-
                                 </div>
                             </div>
-
                         </div>
                     </section>
 
@@ -590,36 +657,25 @@ const HomePage = () => {
                                             {/* Copy */}
                                             <h2 className="h2 mb-4" data-aos-anchor="[data-aos-id-6]" data-aos-delay="100">Compliance built card for businesses and professionals</h2>
                                             <p className="text-lg text-slate-500 mb-6" data-aos-anchor="[data-aos-id-6]" data-aos-delay="200">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua minim veniam, quis nostrud exercitation.</p>
-                                            <ul className="inline-flex flex-col text-slate-500 space-y-2.5" data-aos-anchor="[data-aos-id-6]" data-aos-delay="300">
-                                                <li className="flex items-center">
-                                                    <svg className="shrink-0 mr-3" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle className="fill-blue-100" cx="10" cy="10" r="10" />
-                                                        <path className="fill-blue-500" d="M15.335 7.933 14.87 7c-4.025 1.167-6.067 3.733-6.067 3.733l-1.867-1.4-.933.934L8.802 14c2.158-4.025 6.533-6.067 6.533-6.067Z" />
-                                                    </svg>
-                                                    <span>Identity verifications</span>
-                                                </li>
-                                                <li className="flex items-center">
-                                                    <svg className="shrink-0 mr-3" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle className="fill-blue-100" cx="10" cy="10" r="10" />
-                                                        <path className="fill-blue-500" d="M15.335 7.933 14.87 7c-4.025 1.167-6.067 3.733-6.067 3.733l-1.867-1.4-.933.934L8.802 14c2.158-4.025 6.533-6.067 6.533-6.067Z" />
-                                                    </svg>
-                                                    <span>Secure credit card data tokenization</span>
-                                                </li>
-                                                <li className="flex items-center">
-                                                    <svg className="shrink-0 mr-3" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle className="fill-blue-100" cx="10" cy="10" r="10" />
-                                                        <path className="fill-blue-500" d="M15.335 7.933 14.87 7c-4.025 1.167-6.067 3.733-6.067 3.733l-1.867-1.4-.933.934L8.802 14c2.158-4.025 6.533-6.067 6.533-6.067Z" />
-                                                    </svg>
-                                                    <span>Online and mobile payments</span>
-                                                </li>
-                                                <li className="flex items-center">
-                                                    <svg className="shrink-0 mr-3" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle className="fill-blue-100" cx="10" cy="10" r="10" />
-                                                        <path className="fill-blue-500" d="M15.335 7.933 14.87 7c-4.025 1.167-6.067 3.733-6.067 3.733l-1.867-1.4-.933.934L8.802 14c2.158-4.025 6.533-6.067 6.533-6.067Z" />
-                                                    </svg>
-                                                    <span>IGlobal regulations and compliance</span>
-                                                </li>
+                                            <ul
+                                                className="inline-flex flex-col text-slate-500 space-y-2.5"
+                                                data-aos-anchor="[data-aos-id-6]"
+                                                data-aos-delay="300"
+                                            >
+                                                {features.map((text, index) => (
+                                                    <li key={index} className="flex items-center">
+                                                        <svg className="shrink-0 mr-3" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                                                            <circle className="fill-blue-100" cx="10" cy="10" r="10" />
+                                                            <path
+                                                                className="fill-blue-500"
+                                                                d="M15.335 7.933 14.87 7c-4.025 1.167-6.067 3.733-6.067 3.733l-1.867-1.4-.933.934L8.802 14c2.158-4.025 6.533-6.067 6.533-6.067Z"
+                                                            />
+                                                        </svg>
+                                                        <span>{text}</span>
+                                                    </li>
+                                                ))}
                                             </ul>
+
 
                                         </div>
 
@@ -632,38 +688,46 @@ const HomePage = () => {
                                                 {/* Carousel built with Swiper.js [https://swiperjs.com/] */}
                                                 {/* * Initialized in src/js/main.js */}
                                                 {/* * Custom styles in src/css/additional-styles/theme.scss */}
-                                                <div className="testimonial-carousel swiper-container max-w-sm mx-auto sm:max-w-none">
-                                                    <div className="swiper-wrapper">
+                                                <div className="testimonial-carousel max-w-sm mx-auto sm:max-w-none">
 
-                                                        {/* Card #1 */}
-                                                        <div className="swiper-slide flex flex-col h-auto shadow-2xl text-left">
-                                                            <div className="relative after:absolute after:inset-0 after:bg-linear-to-t after:from-slate-700">
-                                                                <img src="./images/testimonial-01.jpg" className="md:max-w-none" width="384" height="180" alt="Testiomonial 01" />
-                                                            </div>
-                                                            <div className="grow flex flex-col relative bg-linear-to-t from-slate-800 to-slate-700 p-6 pt-14">
-                                                                <img className="absolute bottom-full translate-y-1/2" src="./images/testimonial-sign-01.svg" width="150" height="71" alt="Testiomonial sign 01" />
-                                                                <p className="grow font-medium text-slate-200 mb-4">" This card is awesome. The app lets me link foreign cards with a new one which makes everything 100 times easier. Like Apple Pay, online shopping without useless phone confirmation. I wish I knew this earlier. "</p>
-                                                                <div className="font-medium text-sm text-slate-500">
-                                                                    <span className="text-slate-200">Elisa Koeppel</span> - <span className="text-slate-400">CEO & Co-Founder</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <Swiper
+                                                        // install Swiper modules
+                                                        modules={[Navigation, Pagination, A11y]}
+                                                        spaceBetween={10}
+                                                        slidesPerView={1}
+                                                        navigation
+                                                        pagination={{ clickable: true }}
+                                                    // scrollbar={{ draggable: true }}
+                                                    // onSwiper={(swiper) => console.log(swiper)}
+                                                    // onSlideChange={() => console.log('slide change')}
+                                                    >
+                                                        {testimonials.map((item) => (
+                                                            <>
+                                                                <SwiperSlide>
+                                                                    <div key={item.id} className="swiper-slide flex flex-col h-auto shadow-2xl text-left">
+                                                                        <div className="relative after:absolute after:inset-0 after:bg-linear-to-t after:from-slate-700">
+                                                                            <img src={item.image} className="md:max-w-none" width="384" height="180" alt={item.alt} />
+                                                                        </div>
+                                                                        <div className="grow flex flex-col relative bg-linear-to-t from-slate-800 to-slate-700 p-6 pt-14">
+                                                                            <img
+                                                                                className="absolute bottom-full translate-y-1/2"
+                                                                                src={item.signImage}
+                                                                                width={item.signWidth}
+                                                                                height={item.signHeight}
+                                                                                alt={`${item.alt} sign`}
+                                                                            />
+                                                                            <p className="grow font-medium text-slate-200 mb-4">{item.text}</p>
+                                                                            <div className="font-medium text-sm text-slate-500">
+                                                                                <span className="text-slate-200">{item.name}</span> - <span className="text-slate-400">{item.role}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </SwiperSlide>
+                                                            </>
 
-                                                        {/* Card #2 */}
-                                                        <div className="swiper-slide flex flex-col h-auto shadow-2xl text-left">
-                                                            <div className="relative after:absolute after:inset-0 after:bg-linear-to-t after:from-slate-700">
-                                                                <img src="./images/testimonial-02.jpg" className="md:max-w-none" width="384" height="180" alt="Testiomonial 02" />
-                                                            </div>
-                                                            <div className="grow flex flex-col relative bg-linear-to-t from-slate-800 to-slate-700 p-6 pt-14">
-                                                                <img className="absolute bottom-full translate-y-1/2" src="./images/testimonial-sign-02.svg" width="105" height="46" alt="Testiomonial sign 02" />
-                                                                <p className="grow font-medium text-slate-200 mb-4">" This card allows us to achieve compliance with minimal effort, spend practically no time on payments-related customer support, and keep the user experience on our platform. "</p>
-                                                                <div className="font-medium text-sm text-slate-500">
-                                                                    <span className="text-slate-200">Maria Gress</span> - <span className="text-slate-400">CEO & Co-Founder</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        ))}
+                                                    </Swiper>
 
-                                                    </div>
                                                 </div>
 
                                                 {/* Bullets */}
@@ -689,6 +753,7 @@ const HomePage = () => {
                             {/* Bg */}
                             <div className="absolute inset-0 rounded-tr-[100px] mb-24 md:mb-0 border-2 border-slate-100 pointer-events-none " aria-hidden="true"></div>
                             <div className="absolute inset-0 rounded-tr-[100px] mb-24 md:mb-0 bg-linear-to-t from-white pointer-events-none " aria-hidden="true"></div>
+
 
                             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                                 <div className="py-12 md:py-20">
@@ -838,7 +903,7 @@ const HomePage = () => {
                                     <div className="shrink-0">
                                         <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-12 md:mb-0">
                                             <div>
-                                                <a className="btn-sm w-full inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" href="apply.html">
+                                                <a className="btn-sm w-full inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
                                                     Get your Loan Approved
                                                     <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                         <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -997,4 +1062,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default B2CLandingPage;

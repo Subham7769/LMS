@@ -1,1 +1,0 @@
-// Deprecated as LoanOffer.jsx replaces this in the new structure.

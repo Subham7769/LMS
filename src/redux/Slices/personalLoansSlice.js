@@ -1061,10 +1061,10 @@ const initialState = {
   approveLoans: [],
   approveLoansTotalElements: 0,
   loanHistory: [],
-  borrowerLoanHistory:[],
+  borrowerLoanHistory: [],
   paymentHistory: [],
   loanHistoryTotalElements: 0,
-  loanConfigData: {},
+  loanConfigData:{},
   loanProductData: [],
   loanProductOptions: [],
   loanOfferFields: {

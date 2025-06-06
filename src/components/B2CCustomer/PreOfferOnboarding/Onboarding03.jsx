@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { registerDummyBorrower } from "../Actions/RegisterDummyBorrower";
 import { useActiveTab } from "../ActiveTabContext";
 import { registerBorrower } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch } from "react-redux";
 import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/personalLoansSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PersonDetailsSection from "./PersonDetailsSection";
 
-function Onboarding03({ onNext, onBack, defaultData }) {
-  const { formData, setFormData } = useActiveTab();
+function Onboarding03({ onNext, onBack }) {
+  const { formData } = useActiveTab();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ function Onboarding03({ onNext, onBack, defaultData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const today = new Date();
     const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     console.log(formattedDate)
@@ -226,30 +226,17 @@ function Onboarding03({ onNext, onBack, defaultData }) {
     }
   };
 
-// console.log(formData)
-
+  // console.log(formData)
 
   return (
     <div className="px-4 py-8">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Contact & Salary</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            className="form-input w-full mb-4 py-4"
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-            required
-          />
-          <input
-            className="form-input w-full mb-4 py-4"
-            type="number"
-            placeholder="Basic Pay"
-            value={formData.basicPay}
-            onChange={e => setFormData({ ...formData, basicPay: e.target.value })}
-            required
-          />
+        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">Contact & Salary</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
+
+          {/* Person Details Section */}
+          <PersonDetailsSection />
+          
           <div className="flex justify-between">
             <button
               type="button"
@@ -260,7 +247,7 @@ function Onboarding03({ onNext, onBack, defaultData }) {
             </button>
             <button
               type="submit"
-              className="btn bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded"
+              className="btn bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
               disabled={loading}
             >
               {loading ? "Creating..." : "Next"}

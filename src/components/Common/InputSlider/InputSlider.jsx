@@ -33,7 +33,7 @@ const InputSlider = ({
     : 0;
   const stepCount = inputLevels.length - 1;
   const colors = generateColors(inputLevels.length);
-  const selectedColor = coloredTheme ? colors[index] : "#56b1f3"; // default indigo
+  const selectedColor = coloredTheme ? colors[index] : "#2B7FFF"; 
 
    if (!Array.isArray(inputLevels) || inputLevels.length < 2) {
     return (
@@ -77,7 +77,7 @@ const InputSlider = ({
               style={{
                 left: 0,
                 width: `${(index / stepCount) * 100}%`,
-                backgroundColor: coloredTheme ? selectedColor : "#56b1f3",
+                backgroundColor: coloredTheme ? selectedColor : "#2B7FFF",
               }}
             />
             {children}
@@ -92,7 +92,7 @@ const InputSlider = ({
               width: "1.2rem",
               borderRadius: "50%",
               backgroundColor: "#fff",
-              border: `2px solid ${coloredTheme ? selectedColor : "#56b1f3"}`,
+              border: `2px solid ${coloredTheme ? selectedColor : "#2B7FFF"}`,
               // boxShadow: "0 0 0 2px #888",
               cursor: "pointer",
             }}

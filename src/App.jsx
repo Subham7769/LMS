@@ -498,22 +498,16 @@ const Internal = React.lazy(() =>
 
 import { ActiveTabProvider } from "./components/B2CCustomer/ActiveTabContext";  // Import the conte
 
-const AppLayoutB2C = lazy(() => import("./components/AppLayout/AppLayoutB2C"));
+const AppLayoutB2C = lazy(() => import("./components/B2CCustomer/B2CAppLayout/B2CAppLayout"));
 
-const CustomerLoanHome = React.lazy(() =>
-  import("./components/B2CCustomer/Home")
+const B2CLandingPage = React.lazy(() =>
+  import("./components/B2CCustomer/B2CLandingPage")
 );
-const CustomerLoanApplication = React.lazy(() =>
-  import("./components/B2CCustomer/CustomerLoanApplication")
+const PreOfferOnBoarding = React.lazy(() =>
+  import("./components/B2CCustomer/PreOfferOnboarding/PreOfferOnBoarding")
 );
-const CustomerLoanOffer = React.lazy(() =>
-  import("./components/B2CCustomer/CustomerLoanOffer")
-);
-const Onboarding02 = React.lazy(() =>
-  import("./components/B2CCustomer/Onboarding/Onboarding02")
-);
-const Onboarding03 = React.lazy(() =>
-  import("./components/B2CCustomer/Onboarding/Onboarding03")
+const B2CLoanOfferLayoutScreen = React.lazy(() =>
+  import("./components/B2CCustomer/B2CAppLayout/B2CLoanOfferLayout")
 );
 
 const routes = [
@@ -1540,19 +1534,19 @@ const routes = [
     children: [
       {
         path: "loan-application",
-        element: <CustomerLoanApplication />,
+        element: <PreOfferOnBoarding />,
         errorElement: <RouteErrorBoundary />,
       },
       {
         path: "loan-offers",
-        element: <CustomerLoanOffer />,
+        element: <B2CLoanOfferLayoutScreen />,
         errorElement: <RouteErrorBoundary />,
       },
     ],
   },
   {
     path: "/customer/home",
-    element: <CustomerLoanHome />,
+    element: <B2CLandingPage />,
     errorElement: <RouteErrorBoundary />,
   },
 
