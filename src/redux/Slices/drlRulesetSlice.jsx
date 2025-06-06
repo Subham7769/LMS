@@ -23,7 +23,48 @@ const drlRulesetInitialState = {
       },
       ruleManagerEquation:
         "((creditTpScore-300)*A/550) + (nationality*B) + (netIncome*C) + (dependents*D) + (maritalStatus*E) + (residentialStatus*F)",
-      parameterTags: [],
+      parameterTags: [
+        { name: "nationality", fieldType: "STRING" },
+        { name: "creditScore", fieldType: "NUMBER" },
+      ],
+      paramertersData: [
+        {
+          id: 1,
+          min: 0,
+          max: 1,
+          categoryValue: "US",
+          numericalScore: 0.98,
+          baseline: true,
+          impact: "Refernce",
+        },
+        {
+          id: 2,
+          min: 0,
+          max: 1,
+          categoryValue: "UK",
+          numericalScore: 0.95,
+          baseline: false,
+          impact: "High",
+        },
+        {
+          id: 3,
+          min: 0,
+          max: 1,
+          categoryValue: "Germany",
+          numericalScore: 0.75,
+          baseline: false,
+          impact: "Medium",
+        },
+        {
+          id: 4,
+          min: 0,
+          max: 1,
+          categoryValue: "Other EU",
+          numericalScore: 0.4,
+          baseline: false,
+          impact: "Low",
+        },
+      ],
     },
   },
   loading: false,
@@ -38,23 +79,43 @@ const drlRulesetSlice = createSlice({
       const { name, value } = action.payload;
       state.dRulesData.basicInfoData[name] = value;
     },
-    handleChangeRuleManageroData: (state, action) => {
+    handleChangeRuleManagerData: (state, action) => {
       const { name, value } = action.payload;
       state.dRulesData.ruleManagerData[name] = value;
     },
     addParameterTag: (state, action) => {
-      const tag = action.payload;
+      const newTag = action.payload; // { name, fieldType }
       const existingTags = state.dRulesData.ruleManagerData.parameterTags;
-      if (tag && !existingTags.includes(tag)) {
-        state.dRulesData.ruleManagerData.parameterTags.push(tag);
+
+      const isDuplicate = existingTags.some(
+        (tag) => tag.name === newTag.name && tag.fieldType === newTag.fieldType
+      );
+
+      if (newTag.name && newTag.fieldType && !isDuplicate) {
+        state.dRulesData.ruleManagerData.parameterTags.push(newTag);
       }
+    },
+
+    handleChangeParametersData: (state, action) => {
+      const { id, name, value } = action.payload;
+      // console.log(id);
+      const updatedData = state.dRulesData.ruleManagerData.paramertersData.map(
+        (item) => {
+          if (item.id === id) {
+            return { ...item, [name]: value };
+          }
+          return item;
+        }
+      );
+      state.dRulesData.ruleManagerData.paramertersData = updatedData;
     },
   },
 });
 
 export const {
   handleChangeBasicInfoData,
-  handleChangeRuleManageroData,
+  handleChangeRuleManagerData,
   addParameterTag,
+  handleChangeParametersData,
 } = drlRulesetSlice.actions;
 export default drlRulesetSlice.reducer;

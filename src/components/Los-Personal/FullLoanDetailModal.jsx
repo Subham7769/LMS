@@ -7,17 +7,7 @@ import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
 import { convertDate } from "../../utils/convertDate";
 import { toast } from "react-toastify";
 import Modal from "../Common/Modal/Modal";
-
-const ShimmerTable = () => {
-  return (
-    <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-gray-200 rounded"></div>
-      <div className="h-4 bg-gray-200 rounded"></div>
-      <div className="h-4 bg-gray-200 rounded"></div>
-      <div className="h-4 bg-gray-200 rounded"></div>
-    </div>
-  );
-};
+import ShimmerTable from "../Common/ShimmerTable/ShimmerTable";
 
 const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
   if (!isOpen) return null;
