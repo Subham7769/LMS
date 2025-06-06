@@ -54,7 +54,7 @@ const RechartsPieChart = ({ data, width = '100%', height = 300 }) => {
           fill="#8884d8"
           paddingAngle={5}
           label={({ name, value, percent }) =>
-            percent > 0.03 ? `${name} (${value.toLocaleString()})` : ''
+            percent > 0.03 ? `${value.toLocaleString()}` : ''
           }
           labelLine={({ percent }) => percent > 0.03}
         >
@@ -63,7 +63,7 @@ const RechartsPieChart = ({ data, width = '100%', height = 300 }) => {
           ))}
         </Pie>
         <Tooltip formatter={(value) => value.toLocaleString()} />
-        <Legend layout="horizontal" verticalAlign="bottom" align="center" />
+        <Legend layout="horizontal" verticalAlign="bottom" align="center" formatter={(value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}/>
       </PieChart>
     </ResponsiveContainer>
   );

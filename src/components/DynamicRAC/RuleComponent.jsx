@@ -170,7 +170,9 @@ const RuleComponent = ({
                   />
                   <Button
                     buttonIcon={DeleteIcon}
-                    onClick={handleEdit}
+                    onClick={() =>
+                      handleRemoveRule(sectionId, rule?.dynamicRacRuleId)
+                    }
                     buttonType="destructive"
                   />
                 </div>

@@ -8,6 +8,7 @@ import {
   ArrowDownOnSquareIcon,
   EllipsisVerticalIcon,
   DocumentArrowUpIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import {
@@ -59,6 +60,8 @@ import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Toolbox from "./ToolBox";
 import EquationModal from "./EquationModal";
+import ParametersModal from "./ParametersModal";
+import { handleChangeRuleManageroData } from "../../redux/Slices/drlRulesetSlice";
 
 const RuleManager = () => {
   const { racId } = useParams();
@@ -67,6 +70,7 @@ const RuleManager = () => {
   const [activeRule, setActiveRule] = useState(null);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showEquationModal, setShowEquationModal] = useState(false);
+  const [showParameterModal, setShowParameterModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [templateModal, setTemplateModal] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(null);
@@ -84,7 +88,7 @@ const RuleManager = () => {
     }),
     useSensor(TouchSensor)
   );
-  const { dRulesData, handleChange } = useOutletContext();
+  const { dRulesData } = useOutletContext();
   const ruleManagerData = dRulesData.ruleManagerData;
 
   useEffect(() => {
@@ -312,6 +316,26 @@ const RuleManager = () => {
 
   const closeEquationModal = () => {
     setShowEquationModal(false);
+  };
+
+  const handleSelectParamters = () => {
+    setShowParameterModal(true);
+  };
+
+  const closeParameterModal = () => {
+    setShowParameterModal(false);
+  };
+
+  const removeTag = (indexToRemove) => {
+    const updatedTags = ruleManagerData.parameterTags.filter(
+      (_, i) => i !== indexToRemove
+    );
+    dispatch(
+      handleChangeRuleManageroData({
+        name: "parameterTags",
+        value: updatedTags,
+      })
+    );
   };
 
   // Droppable
@@ -700,8 +724,35 @@ const RuleManager = () => {
             </div>
           </div>
         </div>
+        <div className="shadow-md p-5 rounded-xl border dark:border-gray-700 mt-5">
+          <div className="flex gap-5">
+            <div>
+              <Button
+                buttonName="Select Parameters"
+                buttonType="secondary"
+                onClick={handleSelectParamters}
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-2 w-full">
+              {ruleManagerData.parameterTags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="bg-sky-500/20 text-sky-700 text-xs font-medium px-3 py-1 rounded-full flex justify-between items-center gap-1"
+                >
+                  <span className="truncate text-center w-full">{tag}</span>
+                  <button
+                    onClick={() => removeTag(index)}
+                    className="text-sky-700 hover:text-sky-900 transition cursor-pointer"
+                  >
+                    <XMarkIcon className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </ContainerTile>
-      {roleName !== "ROLE_VIEWER" && (
+      {/* {roleName !== "ROLE_VIEWER" && (
         <div className="mt-6 text-right">
           {sections.length > 0 && (
             <Button
@@ -711,12 +762,15 @@ const RuleManager = () => {
             />
           )}
         </div>
-      )}
+      )} */}
       <EquationModal
         isOpen={showEquationModal}
         onClose={closeEquationModal}
         ruleManagerData={ruleManagerData}
-        handleChange={handleChange}
+      />
+      <ParametersModal
+        isOpen={showParameterModal}
+        onClose={closeParameterModal}
       />
     </>
   );
