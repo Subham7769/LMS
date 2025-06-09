@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "../Common/Modal/Modal";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
@@ -11,9 +11,18 @@ import ToggleSwitch from "../Common/ToggleSwitch/ToggleSwitch";
 import ShimmerTable from "../Common/ShimmerTable/ShimmerTable";
 import { handleChangeParametersData } from "../../redux/Slices/drlRulesetSlice";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import AddCategoryModal from "./AddCategoryModal";
 
-const ParameterDataModal = ({ loading, isOpen, onClose, tag, paramertersData }) => {
+const ParameterDataModal = ({
+  loading,
+  isOpen,
+  onClose,
+  tag,
+  ruleManagerData,
+}) => {
+  const [showAddCategory, setShowAddCategory] = useState(false);
   const dispatch = useDispatch();
+  const { paramertersData, addCategoryData } = ruleManagerData;
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
 
@@ -44,6 +53,14 @@ const ParameterDataModal = ({ loading, isOpen, onClose, tag, paramertersData }) 
         normalizedStatus?.includes(key)
       )?.[1] || "bg-gray-400/20 text-gray-500 dark:text-gray-400 px-2"
     );
+  };
+
+  const handleAddCategory = () => {
+    setShowAddCategory(true);
+  };
+
+  const closeAddCategoryModal = () => {
+    setShowAddCategory(false);
   };
 
   let ListHeader = [];
@@ -96,6 +113,7 @@ const ParameterDataModal = ({ loading, isOpen, onClose, tag, paramertersData }) 
               buttonName="Add Category"
               buttonIcon={AddIcon}
               buttonType="primary"
+              onClick={handleAddCategory}
             />
           </div>
         </div>
@@ -189,6 +207,12 @@ const ParameterDataModal = ({ loading, isOpen, onClose, tag, paramertersData }) 
           Higher scores indicate positive impact on the outcome.
         </div>
       </Modal>
+      <AddCategoryModal
+        isOpen={showAddCategory}
+        onClose={closeAddCategoryModal}
+        tag={tag}
+        addCategoryData={addCategoryData}
+      />
     </>
   );
 };

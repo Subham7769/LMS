@@ -65,6 +65,12 @@ const drlRulesetInitialState = {
           impact: "Low",
         },
       ],
+      addCategoryData: {
+        min: "",
+        max: "",
+        categoryValue: "",
+        numericalScore: "",
+      },
     },
   },
   loading: false,
@@ -95,19 +101,30 @@ const drlRulesetSlice = createSlice({
         state.dRulesData.ruleManagerData.parameterTags.push(newTag);
       }
     },
-
     handleChangeParametersData: (state, action) => {
       const { id, name, value } = action.payload;
-      // console.log(id);
+
       const updatedData = state.dRulesData.ruleManagerData.paramertersData.map(
         (item) => {
+          if (name === "baseline") {
+            return {
+              ...item,
+              baseline: item.id === id ? value : false,
+            };
+          }
+
           if (item.id === id) {
             return { ...item, [name]: value };
           }
           return item;
         }
       );
+
       state.dRulesData.ruleManagerData.paramertersData = updatedData;
+    },
+    handleChangeAddCategoryData: (state, action) => {
+      const { name, value } = action.payload;
+      state.dRulesData.ruleManagerData.addCategoryData[name] = value;
     },
   },
 });
@@ -117,5 +134,6 @@ export const {
   handleChangeRuleManagerData,
   addParameterTag,
   handleChangeParametersData,
+  handleChangeAddCategoryData,
 } = drlRulesetSlice.actions;
 export default drlRulesetSlice.reducer;

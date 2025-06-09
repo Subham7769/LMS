@@ -61,6 +61,8 @@ import EquationModal from "./EquationModal";
 import SelectParametersModal from "./SelectParametersModal";
 import { handleChangeRuleManagerData } from "../../redux/Slices/drlRulesetSlice";
 import ParameterDataModal from "./ParameterDataModal";
+import SalienceModal from "./SalienceModal";
+import NaturalLanguageModal from "./NaturalLanguageModal";
 
 const RuleManager = () => {
   const { racId } = useParams();
@@ -74,6 +76,8 @@ const RuleManager = () => {
   const [selectedTag, setSelectedTag] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [templateModal, setTemplateModal] = useState(false);
+  const [salienceModal, setSalienceModal] = useState(false);
+  const [naturalLanguageModal, setNaturalLanguageModal] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
   const { racConfig, loading, error } = useSelector(
@@ -305,6 +309,26 @@ const RuleManager = () => {
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
+  const handleSalienceModal = (sectionId, sectionName) => {
+    setSelectedSectionId(sectionId); // Update sectionId first
+    setSelectedSectionName(sectionName); // Update sectionId first
+    setTimeout(() => setSalienceModal(true), 0); // Open modal after state updates
+  };
+
+  const closeSalienceModal = () => {
+    setSalienceModal(false);
+  }
+
+  const handleNaturalLanguageModal = (sectionId, sectionName) => {
+    setSelectedSectionId(sectionId); // Update sectionId first
+    setSelectedSectionName(sectionName); // Update sectionId first
+    setTimeout(() => setNaturalLanguageModal(true), 0); // Open modal after state updates
+  };
+
+  const closeNaturalLanguageModal = () => {
+    setNaturalLanguageModal(false);
+  };
+
   const cancelEdit = () => {
     dispatch(restoreRule());
     setShowRuleModal(false);
@@ -518,6 +542,8 @@ const RuleManager = () => {
     updateSection,
     EditorRolesDynamicRac,
     handleUseTemplate,
+    handleSalienceModal,
+    handleNaturalLanguageModal,
     handleAddRule,
     handleDeleteSection,
   }) => {
@@ -539,30 +565,51 @@ const RuleManager = () => {
         </div>
         {(roleName === "ROLE_MAKER_ADMIN" ||
           EditorRolesDynamicRac.includes(roleName)) && (
-          <div className="flex justify-end items-center gap-2 hover:cursor-pointer">
-            <Button
-              buttonName="Use Template"
-              buttonType="tertiary"
-              onClick={() =>
-                handleUseTemplate(section.sectionId, section.sectionName)
-              }
-              buttonIcon={DocumentArrowUpIcon}
-            />
-            <Button
-              buttonName="Add Rule"
-              buttonType="tertiary"
-              onClick={() =>
-                handleAddRule(section.sectionId, section.sectionName)
-              }
-              buttonIcon={PlusIcon}
-            />
-            <Button
-              buttonType="destructive"
-              onClick={() =>
-                handleDeleteSection({ racId, sectionId: section.sectionId })
-              }
-              buttonIcon={DeleteIcon}
-            />
+          <div className="flex flex-col xl:flex-row gap-2 hover:cursor-pointer">
+            <div className="flex justify-end items-center gap-2">
+              <Button
+                buttonName="Natural Language"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleNaturalLanguageModal(
+                    section.sectionId,
+                    section.sectionName
+                  )
+                }
+              />
+              <Button
+                buttonName="Salience"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleSalienceModal(section.sectionId, section.sectionName)
+                }
+              />
+            </div>
+            <div className="flex justify-end items-center gap-2">
+              <Button
+                buttonName="Use Template"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleUseTemplate(section.sectionId, section.sectionName)
+                }
+                buttonIcon={DocumentArrowUpIcon}
+              />
+              <Button
+                buttonName="Add Rule"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleAddRule(section.sectionId, section.sectionName)
+                }
+                buttonIcon={PlusIcon}
+              />
+              <Button
+                buttonType="destructive"
+                onClick={() =>
+                  handleDeleteSection({ racId, sectionId: section.sectionId })
+                }
+                buttonIcon={DeleteIcon}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -670,6 +717,8 @@ const RuleManager = () => {
                       updateSection={updateSection}
                       EditorRolesDynamicRac={EditorRolesDynamicRac}
                       handleUseTemplate={handleUseTemplate}
+                      handleSalienceModal={handleSalienceModal}
+                      handleNaturalLanguageModal={handleNaturalLanguageModal}
                       handleAddRule={handleAddRule}
                       handleDeleteSection={handleDeleteSection}
                     />
@@ -781,7 +830,12 @@ const RuleManager = () => {
         isOpen={showParameterDataModal}
         onClose={closeParameterDataModal}
         tag={selectedTag}
-        paramertersData={ruleManagerData?.paramertersData}
+        ruleManagerData={ruleManagerData}
+      />
+      <SalienceModal isOpen={salienceModal} onClose={closeSalienceModal} />
+      <NaturalLanguageModal
+        isOpen={naturalLanguageModal}
+        onClose={closeNaturalLanguageModal}
       />
     </>
   );
