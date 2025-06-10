@@ -1044,7 +1044,7 @@ export default function CRUDForm() {
                   <Button
                     key={type}
                     onClick={() => addField(type)}
-                    className="h-24 bg-white hover:bg-gray-50 text-gray-800 font-semibold border border-border-gray-primary rounded-lg shadow"
+                    className="h-24 bg-white hover:bg-gray-50 text-gray-800 font-semibold border border-gray-300 rounded-lg shadow"
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add {type}
                   </Button>

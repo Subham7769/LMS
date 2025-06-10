@@ -31,6 +31,7 @@ import {
 import { viewPhoto } from "../../redux/Slices/personalBorrowersSlice";
 import ViewPhotoModal from "../Los-Personal/Borrowers/ViewPhotoModal";
 import toPascalCase from "../../utils/toPascalCase";
+import ShimmerTable from "../Common/ShimmerTable/ShimmerTable";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
@@ -794,17 +795,6 @@ const PersonalInfo = () => {
     );
   };
   console.log(personalInfo);
-
-  const ShimmerTable = () => {
-    return (
-      <div className="grid grid-cols-4 gap-4 animate-pulse">
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-        <div className="h-4 bg-background-light-primary rounded"></div>
-      </div>
-    );
-  };
 
   if (loading) {
     return (

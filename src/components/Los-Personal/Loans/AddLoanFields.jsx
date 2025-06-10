@@ -137,13 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-      dispatch(
-        updateLoanField({
-          section: "generalLoanDetails",
-          field: "interestMethod",
-          value: selectedLoanProduct?.interestMethod,
-        })
-      );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -261,16 +261,16 @@ const AddLoanFields = ({ addLoanData }) => {
   // }, [selectedLoanProduct]);
 
   useEffect(() => {
-      if (!selectedLoanProduct) return;
-  
-      dispatch(
-        updateLoanField({
-          section: "generalLoanDetails",
-          field: "interestMethod",
-          value: selectedLoanProduct?.interestMethod,
-        })
-      );
-    }, [selectedLoanProduct]);
+    if (!selectedLoanProduct) return;
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
+  }, [selectedLoanProduct]);
 
   const today = new Date();
   const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =
@@ -462,7 +462,7 @@ const AddLoanFields = ({ addLoanData }) => {
     return documents.map((document, index) => (
       <React.Fragment key={document.documentKey}>
         {document.documentKey === "ATM_CARD" ? (
-          <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
+          <div className="flex justify-between items-center border-b border-gray-300 dark:border-gray-600 mb-3 pb-3">
             <div>ATM Card</div>
             <div className="flex gap-x-5 items-baseline">
               <CreditCardIcon className="h-5 w-5" aria-hidden="true" />

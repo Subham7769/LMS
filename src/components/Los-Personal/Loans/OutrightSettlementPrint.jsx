@@ -111,7 +111,7 @@ const OutrightSettlementPrint = () => {
             </tr>
           </table>
           {/* Borrower Information */}
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <tr className="border border-gray-300">
               <td
                 colSpan={7}
@@ -158,7 +158,7 @@ const OutrightSettlementPrint = () => {
             </tr>
           </table>
           {/* Loan Informantion */}
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <tr className="border border-gray-300">
               <td
                 colSpan={7}
@@ -213,11 +213,11 @@ const OutrightSettlementPrint = () => {
             </tr>
           </table>
           {/* Transactions */}
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <thead>
               <tr className="bg-background-light-secondary">
                 <th
-                  className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                  className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                   colSpan={6}
                 >
                   DETAILS OF CUSTOMER LOAN STATEMENT
@@ -228,7 +228,7 @@ const OutrightSettlementPrint = () => {
                   (key) => (
                     <th
                       key={key}
-                      className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                      className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                     >
                       {convertToReadableString(key)}
                     </th>
@@ -243,7 +243,7 @@ const OutrightSettlementPrint = () => {
                     {Object.values(lsTransaction).map((value, valueIndex) => (
                       <td
                         key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                       >
                         {value}
                       </td>
@@ -254,46 +254,46 @@ const OutrightSettlementPrint = () => {
             </tbody>
           </table>
 
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <thead>
               <tr className="bg-background-light-secondary">
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   0-29 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   30-59 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   60-89 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   Above 89 Days
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(outrightSettlement.days0to29)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(outrightSettlement.days30to59)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(outrightSettlement.days60to89)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(outrightSettlement.above89Days)}
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table">
             <thead>
               <tr className="bg-background-light-secondary">
                 <th
-                  className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                  className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                   colSpan={3}
                 >
                   OUTRIGHT SETTMENT DETAILS
@@ -307,7 +307,7 @@ const OutrightSettlementPrint = () => {
                     {Object.values(lsTransaction).map((value, valueIndex) => (
                       <td
                         key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                       >
                         {value}
                       </td>

@@ -2,7 +2,11 @@ import React from "react";
 import Button from "../../Common/Button/Button";
 import { useDispatch } from "react-redux";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { ArrowDownTrayIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownTrayIcon,
+  EyeIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Modal from "../../Common/Modal/Modal";
 
 const ViewDocumentsModal = ({
@@ -53,7 +57,7 @@ const ViewDocumentsModal = ({
           filteredDocuments.map((doc) => (
             <div
               key={doc.docId}
-              className="grid grid-cols-2 my-2 border-b border-border-gray-primary pb-2 items-center"
+              className="grid grid-cols-2 my-2 border-b border-gray-300 pb-2 items-center"
             >
               <div>{convertToTitleCase(doc.documentKey)}</div>
               <div className="flex justify-center gap-2">

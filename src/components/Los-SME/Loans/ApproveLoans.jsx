@@ -343,7 +343,7 @@ const ApproveLoans = () => {
             <CardInfo
               cardIcon={BanknotesIcon}
               cardTitle="Refinancing Details"
-              className={"bg-white border-border-gray-primary border"}
+              className={"bg-white border-gray-300 border"}
               colorText={"text-blue-primary"}
             >
               {rowData?.refinanceDetails.map((refinance) => (
