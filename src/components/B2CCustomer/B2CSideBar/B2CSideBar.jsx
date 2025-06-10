@@ -162,11 +162,11 @@ const SideBar = () => {
 
         try {
             // 1. Register Borrower
-            const borrowerResponse = await dispatch(registerBorrower(dummyBorrowerData)).unwrap();
+            // const borrowerResponse = await dispatch(registerBorrower(dummyBorrowerData)).unwrap();
             //   console.log("Borrower Registered:", borrowerResponse.registrationResults);
 
             // 2. Generate Loan Application ID
-            const loanApplicationId = await dispatch(generateLoanApplicationId()).unwrap();
+            // const loanApplicationId = await dispatch(generateLoanApplicationId()).unwrap();
             //   console.log("Loan Application ID:", loanApplicationId);
 
             // 3. Prepare Loan Data
@@ -272,18 +272,18 @@ const SideBar = () => {
         <>
             {/* Sidebar backdrop (mobile only) */}
             <div
-                className={`fixed inset-0 bg-gray-900/30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${open ? "opacity-100" : "opacity-0 pointer-events-none"
+                className={` inset-0 bg-gray-900/30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${open ? "opacity-100" : "opacity-0 pointer-events-none"
                     }`}
                 aria-hidden="true"
             ></div>
             <div
-                className={`z-40 absolute top-0 left-0  lg:relative overflow-y-auto h-screen no-scrollbar lg:bg-gray-100 dark:lg:bg-gray-900/90 flex transform duration-1000 ease-in-out ${open ? "w-[17rem] " : "lg:w-6 w-0 "
+                className={`z-40 absolute top-0 left-0  lg:relative overflow-y-auto h-screen no-scrollbar flex transform duration-1000 ease-in-out ${open ? "w-[17rem] " : "lg:w-4 w-0 "
                     }`}
             >
                 {/* Collapse Button */}
                 <button
                     onClick={handleToggleSidebar}
-                    className={`hidden lg:block z-30 absolute ${open ? "right-2" : "right-1"}  top-56 bg-gray-800 dark:border border-gray-400 h-16 w-4 rounded-full p-0`}
+                    className={`hidden lg:block z-50 absolute ${open ? "right-2" : "right-0"}  top-56 bg-gray-800 dark:border border-gray-400 h-16 w-4 rounded-full p-0`}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -302,8 +302,8 @@ const SideBar = () => {
                     </svg>
                 </button>
                 <div
-                    className={`pt-4 border-r h-auto ${open ? "w-64 px-4" : "lg:w-10 w-0 pl-1 pr-2"
-                        } overflow-y-auto no-scrollbar border-gray-200 dark:border-gray-800  bg-white dark:bg-gray-800 transition-[width,padding] duration-1000 ease-in-out`}
+                    className={`pt-4 h-auto ${open ? "w-64 px-4  border-r" : "lg:w-10 w-0 pl-1 pr-2"
+                        } overflow-y-auto no-scrollbar border-gray-200 dark:border-gray-500  bg-white dark:bg-gray-800 transition-[width,padding] duration-1000 ease-in-out`}
                 >
                     <div className="w-full flex shrink-0 items-center justify-between lg:w-1/3">
                         <ArrowLeftIcon

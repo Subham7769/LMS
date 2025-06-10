@@ -46,7 +46,7 @@ const InputSlider = ({
   return (
     <div className="w-full px-1">
       {labelName && (
-        <label className="block text-gray-800 font-semibold mb-2 text-sm ml-1">
+        <label className="block text-gray-800 dark:text-gray-100 font-semibold mb-2 text-sm ml-1">
           {labelName} : {inputValue}
         </label>
       )}

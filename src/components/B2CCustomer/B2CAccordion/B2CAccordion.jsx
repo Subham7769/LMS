@@ -3,7 +3,17 @@ import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import formatNumber from "../../../utils/formatNumber";
 import Button from "../../Common/Button/Button";
 import { SunIcon } from "@heroicons/react/20/solid";
-
+import { useNavigate } from "react-router-dom";
+import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
+import { sanitizeUid } from "../../../utils/sanitizeUid";
+import {
+  fetchBorrowerById,
+  fetchLoanProductData,
+  getLoanOffers,
+  handleProceed,
+  resetLoanOfferFields,
+  updateLoanOfferFields,
+} from "../../../redux/Slices/personalLoansSlice";
 
 const B2CAccordion = ({
   icon: Icon,
@@ -11,12 +21,27 @@ const B2CAccordion = ({
   error = false,
   isOpen = false,
   data,
+  index,
   children,
 }) => {
   const [isExpanded, setIsExpanded] = useState(isOpen);
+  const navigate = useNavigate(); // Adding useNavigate for navigation
+
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
+  };
+
+    const SubmitProceed = async (transactionId, index) => {
+    // const uid = sanitizeUid(loanOfferFields.uid);
+
+    // const proceedPayload = {
+    //   transactionId: transactionId,
+    //   loanApplicationId: loanConfigData.loanApplicationId,
+    //   createdBy: userName,
+    // };
+    // await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
+    navigate(`/customer/loan-finalization`);
   };
 
   return (

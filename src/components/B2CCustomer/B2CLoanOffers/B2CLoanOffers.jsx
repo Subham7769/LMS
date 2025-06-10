@@ -19,8 +19,7 @@ import {
 } from "@heroicons/react/24/outline";
 import formatNumber from "../../../utils/formatNumber";
 import CardInfo from "../../Common/CardInfo/CardInfo";
-import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
-import { sanitizeUid } from "../../../utils/sanitizeUid";
+
 import {
   clearValidationError,
   validateForm,
@@ -30,7 +29,6 @@ import B2CAccordion from "../B2CAccordion/B2CAccordion";
 
 const B2CLoanOffers = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Adding useNavigate for navigation
 
   const {
     loanProductOptions,
@@ -52,18 +50,6 @@ const B2CLoanOffers = () => {
       dispatch(resetLoanOfferFields());
     };
   }, [dispatch]);
-
-  const SubmitProceed = async (transactionId, index) => {
-    const uid = sanitizeUid(loanOfferFields.uid);
-
-    const proceedPayload = {
-      transactionId: transactionId,
-      loanApplicationId: loanConfigData.loanApplicationId,
-      createdBy: userName,
-    };
-    await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
-    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
-  };
 
 
   const InfoRow = ({ label, value }) => (
@@ -110,6 +96,7 @@ const B2CLoanOffers = () => {
             <React.Fragment key={index}>
               <B2CAccordion
                 data={offer}
+                index={index}
                 renderExpandedContent={() => (
                   <div className="flex flex-col gap-5">
                     <div className="grid md:grid-cols-3 gap-3">

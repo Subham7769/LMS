@@ -42,7 +42,17 @@ const ProductListSection = () => {
                         checked={formData.loanType === value}
                         className="peer sr-only"
                     />
-                    <div className="flex items-center bg-white dark:bg-gray-800 text-sm font-medium text-gray-800 dark:text-gray-100 p-4 rounded-lg border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-xs transition peer-checked:border-blue-600 peer-checked:bg-blue-100 ">
+                    <div className="flex items-center 
+                bg-white dark:bg-gray-800 
+                text-sm font-medium 
+                text-gray-800 dark:text-gray-100 
+                p-4 rounded-lg 
+                border border-gray-200 dark:border-gray-700/60 
+                hover:border-gray-300 dark:hover:border-gray-600 
+                shadow-xs transition 
+                peer-checked:border-blue-600 
+                peer-checked:bg-blue-100 
+                dark:peer-checked:bg-blue-900">
                         <Icon
                             className="h-5 w-5 mr-2 "
                             aria-hidden="true"

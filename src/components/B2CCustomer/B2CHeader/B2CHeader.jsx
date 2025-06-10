@@ -21,7 +21,7 @@ const B2CHeader = () => {
         <div className="flex  h-16 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 z-0" aria-hidden="true">
 
             {/* Hamburger Icon for Mobile View*/}
-            <div className="flex shrink-0 items-center justify-center md:hidden px-5">
+            <div className="flex shrink-0 items-center justify-center md:hidden md:px-5">
                 {!open &&  pathname.includes("/loan-offers")  && (
                     <Bars3Icon
                         className={`h-8 w-auto text-white`}
@@ -31,7 +31,7 @@ const B2CHeader = () => {
             </div>
 
             {/* Site branding */}
-            <div className="shrink-0 mr-4 flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
+            <div className="shrink-0 flex items-center justify-center sm:px-6 px-4 lg:px-8 ">
                 {/* Logo */}
                 <a className="block" onClick={() => navigate("/customer/home")} aria-label="Cruip">
                     <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">

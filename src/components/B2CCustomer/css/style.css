@@ -79,3 +79,15 @@
 [x-cloak=""] {
     display: none;
 }
+/* Chrome, Safari, Edge */
+input[type="date"]::-webkit-datetime-edit {
+  color: transparent !important; /* Always transparent */
+}
+/* Firefox */
+input[type="date"]::-moz-datetime-edit {
+  color: transparent !important;
+}
+/* Fallback for IE/Edge (if needed) */
+input[type="date"]:-ms-input-placeholder {
+  color: transparent !important;
+}
