@@ -7,25 +7,31 @@ const ToggleSwitch = ({
   inputChecked,
   onChange,
   disabled,
+  onLabel = "On",
+  offLabel = "Off",
 }) => {
   return (
-    <li className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700/60">
+    <li
+      className={`flex justify-between items-center py-3 ${label ? "border-b" : ""} border-gray-200 dark:border-gray-700/60`}
+    >
       {/* Left */}
-      <div>
-        <div className="text-gray-800 dark:text-gray-100 font-semibold">
-          {label}
-        </div>
-        {description && (
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            {description}
+      {label && (
+        <div className="mr-4">
+          <div className="text-gray-800 dark:text-gray-100 font-semibold">
+            {label}
           </div>
-        )}
-      </div>
+          {description && (
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {description}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Right */}
-      <div className="flex items-center ml-4">
+      <div className="flex items-center">
         <div className="text-sm text-gray-400 dark:text-gray-500 italic mr-2">
-          {inputChecked ? "On" : "Off"}
+          {inputChecked ? onLabel : offLabel}
         </div>
         <div className="form-switch relative inline-block w-11 mr-2 align-middle select-none transition duration-200 ease-in">
           <input

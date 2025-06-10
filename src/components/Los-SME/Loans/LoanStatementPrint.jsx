@@ -94,7 +94,7 @@ const LoanStatementPrint = () => {
             </tr>
           </table>
           {/* Borrower Information */}
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <tr className="border border-gray-300">
               <td
                 colSpan={7}
@@ -141,7 +141,7 @@ const LoanStatementPrint = () => {
             </tr>
           </table>
           {/* Loan Informantion */}
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <tr className="border border-gray-300">
               <td
                 colSpan={7}
@@ -196,14 +196,14 @@ const LoanStatementPrint = () => {
             </tr>
           </table>
           {/* Transactions */}
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <thead>
               <tr className="bg-background-light-secondary">
                 {Object.keys(transformedLoanStatementTransactions[0]).map(
                   (key) => (
                     <th
                       key={key}
-                      className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                      className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                     >
                       {convertToReadableString(key)}
                     </th>
@@ -218,7 +218,7 @@ const LoanStatementPrint = () => {
                     {Object.values(lsTransaction).map((value, valueIndex) => (
                       <td
                         key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                       >
                         {value}
                       </td>
@@ -229,70 +229,70 @@ const LoanStatementPrint = () => {
             </tbody>
           </table>
 
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <thead>
               <tr className="bg-background-light-secondary">
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   0-29 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   30-59 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   60-89 Days
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   Above 89 Days
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.days0to29)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.days30to59)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.days60to89)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.above89Days)}
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table">
             <thead>
               <tr className="bg-background-light-secondary">
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   Total Expected to date
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   Total Paid to date
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   Arrears
                 </th>
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   Advance Payment
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.totalExpectedToDate)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.totalPaidToDate)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {formatNumber(loanStatement.arrears)}
                 </td>
-                <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                   {loanStatement.advancePayment}
                 </td>
               </tr>

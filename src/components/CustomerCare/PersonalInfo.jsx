@@ -31,6 +31,7 @@ import {
 import { viewPhoto } from "../../redux/Slices/personalBorrowersSlice";
 import ViewPhotoModal from "../Los-Personal/Borrowers/ViewPhotoModal";
 import toPascalCase from "../../utils/toPascalCase";
+import ShimmerTable from "../Common/ShimmerTable/ShimmerTable";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
@@ -42,7 +43,6 @@ const PersonalInfo = () => {
   const { personalInfo, loading, error } = useSelector(
     (state) => state.customerCare
   );
-
 
   function flattenToSimpleObjectArray(filteredBorrowers) {
     return filteredBorrowers.map((borrower) => {
@@ -96,7 +96,6 @@ const PersonalInfo = () => {
   const flattenDataCompany = flattenToSimpleObjectArray([
     personalInfo?.companyBorrowerProfile,
   ]);
-
 
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
@@ -795,7 +794,18 @@ const PersonalInfo = () => {
       </div>
     );
   };
-console.log(personalInfo)
+  console.log(personalInfo);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -805,9 +815,7 @@ console.log(personalInfo)
             alt=""
           /> */}
         <div className="flex justify-between items-center text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4">
-          <div>
-            Customer Id: {personalInfo.customerId}
-          </div>
+          <div>Customer Id: {personalInfo.customerId}</div>
           {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" && (
             <div>
               Borrower Id:{" "}
@@ -826,7 +834,7 @@ console.log(personalInfo)
         </div>
 
         <>
-          {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (
+          {personalInfo?.borrowerProfileType === "PERSONAL_BORROWER" ? (
             <>{renderExpandedRowPersonal(...transformFlattenData)}</>
           ) : (
             <>{renderExpandedRowCompany(...transformFlattenDataCompany)}</>

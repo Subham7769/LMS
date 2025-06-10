@@ -5,7 +5,7 @@ import Button from "../Common/Button/Button";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import { useDispatch, useSelector } from "react-redux";
 import { AddIcon } from "../../assets/icons";
-import { handleChangeRuleManageroData } from "../../redux/Slices/drlRulesetSlice";
+import { handleChangeRuleManagerData } from "../../redux/Slices/drlRulesetSlice";
 
 const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
 
   const handleChangeEquation = (e) => {
     const { name, value } = e.target;
-    dispatch(handleChangeRuleManageroData({ name, value }));
+    dispatch(handleChangeRuleManagerData({ name, value }));
   };
 
   const addParamter = () => {
@@ -55,7 +55,7 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
           : `${existingEquation} ${ruleConfig.name}`;
 
       dispatch(
-        handleChangeRuleManageroData({
+        handleChangeRuleManagerData({
           name: "ruleManagerEquation",
           value: appendedEquation,
         })
@@ -74,9 +74,8 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
         primaryOnClick={onClose}
         secondaryOnClick={onClose}
         title={"Update Rules Equation"}
-        modalWidth="lg:w-3/4"
       >
-        <div className="mb-10">
+        <div className="mb-5">
           <div className={`flex flex-col gap-2`}>
             <div className="grid gap-2 md:grid-cols-2">
               <InputSelect
@@ -143,6 +142,7 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
           inputName="ruleManagerEquation"
           inputValue={ruleManagerData.ruleManagerEquation}
           onChange={handleChangeEquation}
+          rowCount={3}
         />
       </Modal>
     </>

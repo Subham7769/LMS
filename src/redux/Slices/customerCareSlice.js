@@ -116,14 +116,6 @@ export const fetchBorrowerData = createAsyncThunk(
           },
         }
       );
-      if (response.status === 404) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Borrower Not Found");
-      }
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        return rejectWithValue({ message: "Unauthorized" });
-      }
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to get Details");

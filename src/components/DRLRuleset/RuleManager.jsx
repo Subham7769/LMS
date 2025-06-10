@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import CloneModal from "../Common/CloneModal/CloneModal";
 import Button from "../Common/Button/Button";
 import DynamicName from "../Common/DynamicName/DynamicName";
 import {
@@ -55,13 +54,15 @@ import {
   useSensors,
   DragOverlay,
 } from "@dnd-kit/core";
-import InputTextArea from "../Common/InputTextArea/InputTextArea";
-import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Toolbox from "./ToolBox";
 import EquationModal from "./EquationModal";
-import ParametersModal from "./ParametersModal";
-import { handleChangeRuleManageroData } from "../../redux/Slices/drlRulesetSlice";
+import SelectParametersModal from "./SelectParametersModal";
+import { handleChangeRuleManagerData } from "../../redux/Slices/drlRulesetSlice";
+import ParameterDataModal from "./ParameterDataModal";
+import SalienceModal from "./SalienceModal";
+import NaturalLanguageModal from "./NaturalLanguageModal";
 
 const RuleManager = () => {
   const { racId } = useParams();
@@ -70,9 +71,13 @@ const RuleManager = () => {
   const [activeRule, setActiveRule] = useState(null);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showEquationModal, setShowEquationModal] = useState(false);
-  const [showParameterModal, setShowParameterModal] = useState(false);
+  const [showSelectParameterModal, setShowSelectParameterModal] = useState(false);
+  const [showParameterDataModal, setShowParameterDataModal] = useState(false);
+  const [selectedTag, setSelectedTag] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [templateModal, setTemplateModal] = useState(false);
+  const [salienceModal, setSalienceModal] = useState(false);
+  const [naturalLanguageModal, setNaturalLanguageModal] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
   const { racConfig, loading, error } = useSelector(
@@ -304,6 +309,26 @@ const RuleManager = () => {
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
+  const handleSalienceModal = (sectionId, sectionName) => {
+    setSelectedSectionId(sectionId); // Update sectionId first
+    setSelectedSectionName(sectionName); // Update sectionId first
+    setTimeout(() => setSalienceModal(true), 0); // Open modal after state updates
+  };
+
+  const closeSalienceModal = () => {
+    setSalienceModal(false);
+  }
+
+  const handleNaturalLanguageModal = (sectionId, sectionName) => {
+    setSelectedSectionId(sectionId); // Update sectionId first
+    setSelectedSectionName(sectionName); // Update sectionId first
+    setTimeout(() => setNaturalLanguageModal(true), 0); // Open modal after state updates
+  };
+
+  const closeNaturalLanguageModal = () => {
+    setNaturalLanguageModal(false);
+  };
+
   const cancelEdit = () => {
     dispatch(restoreRule());
     setShowRuleModal(false);
@@ -319,11 +344,11 @@ const RuleManager = () => {
   };
 
   const handleSelectParamters = () => {
-    setShowParameterModal(true);
+    setShowSelectParameterModal(true);
   };
 
-  const closeParameterModal = () => {
-    setShowParameterModal(false);
+  const closeSelectParametersModal = () => {
+    setShowSelectParameterModal(false);
   };
 
   const removeTag = (indexToRemove) => {
@@ -331,11 +356,21 @@ const RuleManager = () => {
       (_, i) => i !== indexToRemove
     );
     dispatch(
-      handleChangeRuleManageroData({
+      handleChangeRuleManagerData({
         name: "parameterTags",
         value: updatedTags,
       })
     );
+  };
+
+  const handleParameterDataModal = (tag) => {
+    setShowParameterDataModal(true);
+    setSelectedTag(tag);
+    // API call to fetch paramtersData
+  };
+
+  const closeParameterDataModal = () => {
+    setShowParameterDataModal(false);
   };
 
   // Droppable
@@ -507,6 +542,8 @@ const RuleManager = () => {
     updateSection,
     EditorRolesDynamicRac,
     handleUseTemplate,
+    handleSalienceModal,
+    handleNaturalLanguageModal,
     handleAddRule,
     handleDeleteSection,
   }) => {
@@ -528,30 +565,51 @@ const RuleManager = () => {
         </div>
         {(roleName === "ROLE_MAKER_ADMIN" ||
           EditorRolesDynamicRac.includes(roleName)) && (
-          <div className="flex justify-end items-center gap-2 hover:cursor-pointer">
-            <Button
-              buttonName="Use Template"
-              buttonType="tertiary"
-              onClick={() =>
-                handleUseTemplate(section.sectionId, section.sectionName)
-              }
-              buttonIcon={DocumentArrowUpIcon}
-            />
-            <Button
-              buttonName="Add Rule"
-              buttonType="tertiary"
-              onClick={() =>
-                handleAddRule(section.sectionId, section.sectionName)
-              }
-              buttonIcon={PlusIcon}
-            />
-            <Button
-              buttonType="destructive"
-              onClick={() =>
-                handleDeleteSection({ racId, sectionId: section.sectionId })
-              }
-              buttonIcon={DeleteIcon}
-            />
+          <div className="flex flex-col xl:flex-row gap-2 hover:cursor-pointer">
+            <div className="flex justify-end items-center gap-2">
+              <Button
+                buttonName="Natural Language"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleNaturalLanguageModal(
+                    section.sectionId,
+                    section.sectionName
+                  )
+                }
+              />
+              <Button
+                buttonName="Salience"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleSalienceModal(section.sectionId, section.sectionName)
+                }
+              />
+            </div>
+            <div className="flex justify-end items-center gap-2">
+              <Button
+                buttonName="Use Template"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleUseTemplate(section.sectionId, section.sectionName)
+                }
+                buttonIcon={DocumentArrowUpIcon}
+              />
+              <Button
+                buttonName="Add Rule"
+                buttonType="tertiary"
+                onClick={() =>
+                  handleAddRule(section.sectionId, section.sectionName)
+                }
+                buttonIcon={PlusIcon}
+              />
+              <Button
+                buttonType="destructive"
+                onClick={() =>
+                  handleDeleteSection({ racId, sectionId: section.sectionId })
+                }
+                buttonIcon={DeleteIcon}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -659,6 +717,8 @@ const RuleManager = () => {
                       updateSection={updateSection}
                       EditorRolesDynamicRac={EditorRolesDynamicRac}
                       handleUseTemplate={handleUseTemplate}
+                      handleSalienceModal={handleSalienceModal}
+                      handleNaturalLanguageModal={handleNaturalLanguageModal}
                       handleAddRule={handleAddRule}
                       handleDeleteSection={handleDeleteSection}
                     />
@@ -733,13 +793,18 @@ const RuleManager = () => {
                 onClick={handleSelectParamters}
               />
             </div>
-            <div className="grid grid-cols-3 gap-2 w-full">
+            <div className="grid grid-cols-3 gap-2 flex-1">
               {ruleManagerData.parameterTags.map((tag, index) => (
                 <div
                   key={index}
-                  className="bg-sky-500/20 text-sky-700 text-xs font-medium px-3 py-1 rounded-full flex justify-between items-center gap-1"
+                  className="bg-sky-500/20 text-sky-700 text-sm font-medium px-3 py-1 rounded-full flex justify-between items-center gap-1"
                 >
-                  <span className="truncate text-center w-full">{tag}</span>
+                  <span
+                    className="truncate text-center w-full cursor-pointer"
+                    onClick={() => handleParameterDataModal(tag)}
+                  >
+                    {tag.name}
+                  </span>
                   <button
                     onClick={() => removeTag(index)}
                     className="text-sky-700 hover:text-sky-900 transition cursor-pointer"
@@ -752,25 +817,25 @@ const RuleManager = () => {
           </div>
         </div>
       </ContainerTile>
-      {/* {roleName !== "ROLE_VIEWER" && (
-        <div className="mt-6 text-right">
-          {sections.length > 0 && (
-            <Button
-              buttonIcon={CheckIcon}
-              buttonName="Save"
-              onClick={handleSaveDynamicRAC}
-            />
-          )}
-        </div>
-      )} */}
       <EquationModal
         isOpen={showEquationModal}
         onClose={closeEquationModal}
         ruleManagerData={ruleManagerData}
       />
-      <ParametersModal
-        isOpen={showParameterModal}
-        onClose={closeParameterModal}
+      <SelectParametersModal
+        isOpen={showSelectParameterModal}
+        onClose={closeSelectParametersModal}
+      />
+      <ParameterDataModal
+        isOpen={showParameterDataModal}
+        onClose={closeParameterDataModal}
+        tag={selectedTag}
+        ruleManagerData={ruleManagerData}
+      />
+      <SalienceModal isOpen={salienceModal} onClose={closeSalienceModal} />
+      <NaturalLanguageModal
+        isOpen={naturalLanguageModal}
+        onClose={closeNaturalLanguageModal}
       />
     </>
   );

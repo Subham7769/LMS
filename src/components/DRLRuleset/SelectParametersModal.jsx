@@ -3,12 +3,11 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import Button from "../Common/Button/Button";
-import { useParams } from "react-router-dom";
 import Modal from "../Common/Modal/Modal";
 import { AddIcon } from "../../assets/icons";
 import { addParameterTag } from "../../redux/Slices/drlRulesetSlice";
 
-const ParametersModal = ({
+const SelectParametersModal = ({
   isOpen,
   onClose,
 }) => {
@@ -48,13 +47,13 @@ const ParametersModal = ({
   };
 
   const addParamter = () => {
-    if (ruleConfig.name) {
-      dispatch(addParameterTag(ruleConfig.name));
-      setRuleConfig((prev) => ({ ...prev, name: "" })); // optional reset
+    const { name, fieldType } = ruleConfig;
+    if (name && fieldType) {
+      dispatch(addParameterTag({ name, fieldType }));
+      setRuleConfig((prev) => ({ ...prev, name: "" })); // reset only name if needed
       onClose();
     }
   };
-
   
 
   if (!isOpen) return null;
@@ -78,7 +77,6 @@ const ParametersModal = ({
             inputValue={ruleConfig.criteriaType}
             onChange={handleChange}
             dropdownTextSize={"small"}
-            isValidation={true}
           />
 
           <InputSelect
@@ -95,7 +93,6 @@ const ParametersModal = ({
             inputValue={ruleConfig.fieldType}
             onChange={handleChange}
             dropdownTextSize={"small"}
-            isValidation={true}
           />
         </div>
         <div className="flex gap-5 items-end">
@@ -131,4 +128,4 @@ const ParametersModal = ({
   );
 };
 
-export default ParametersModal;
+export default SelectParametersModal;

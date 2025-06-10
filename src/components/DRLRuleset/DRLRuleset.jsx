@@ -64,7 +64,6 @@ const DRLRuleset = () => {
                 {/* {!loading && ( */}
                 <Button
                   buttonName={"Update"}
-                  buttonIcon={CheckIcon}
                   // onClick={handleUpdate}
                   buttonType={"primary"}
                   // loading={loading}
