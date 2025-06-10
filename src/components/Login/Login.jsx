@@ -396,7 +396,7 @@ const LoginPage = () => {
                       {buttonText} <span className="animate-pulse">...</span>
                     </>
                   ) : isSignup === "Login" ? (
-                    "Access Dashboard"
+                    "Access Platform"
                   ) : isSignup === "Signup" ? (
                     "Sign Up"
                   ) : (
