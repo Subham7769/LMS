@@ -43,7 +43,6 @@ const PersonalInfo = () => {
     (state) => state.customerCare
   );
 
-
   function flattenToSimpleObjectArray(filteredBorrowers) {
     return filteredBorrowers.map((borrower) => {
       const result = {};
@@ -96,7 +95,6 @@ const PersonalInfo = () => {
   const flattenDataCompany = flattenToSimpleObjectArray([
     personalInfo?.companyBorrowerProfile,
   ]);
-
 
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
@@ -795,7 +793,29 @@ const PersonalInfo = () => {
       </div>
     );
   };
-console.log(personalInfo)
+  console.log(personalInfo);
+
+  const ShimmerTable = () => {
+    return (
+      <div className="grid grid-cols-4 gap-4 animate-pulse">
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+      </div>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -805,9 +825,7 @@ console.log(personalInfo)
             alt=""
           /> */}
         <div className="flex justify-between items-center text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4">
-          <div>
-            Customer Id: {personalInfo.customerId}
-          </div>
+          <div>Customer Id: {personalInfo.customerId}</div>
           {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" && (
             <div>
               Borrower Id:{" "}
@@ -826,7 +844,7 @@ console.log(personalInfo)
         </div>
 
         <>
-          {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (
+          {personalInfo?.borrowerProfileType === "PERSONAL_BORROWER" ? (
             <>{renderExpandedRowPersonal(...transformFlattenData)}</>
           ) : (
             <>{renderExpandedRowCompany(...transformFlattenDataCompany)}</>

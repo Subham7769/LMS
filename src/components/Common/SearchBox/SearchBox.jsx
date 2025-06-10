@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import {
@@ -9,12 +9,12 @@ import { useDispatch } from "react-redux";
 import store from "../../../redux/store";
 import { fetchAccountDetailsById } from "../../../redux/Slices/accountsSlice";
 import SearchView from "./SearchView";
+import { toast } from "react-toastify";
 
 const SearchBox = () => {
   const location = useLocation();
   const [borrowerID, setBorrowerID] = useState("297732/10/5");
-  const [borrowerNotFound, setBorrowerNotFound] = useState(false);
-  const navigate = useNavigate(); // Adding useNavigate  for navigation
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,13 +37,11 @@ const SearchBox = () => {
         }
       );
       if (!data.ok) {
-        console.log("Borrower Not Found"); // Clear the token
-        setBorrowerNotFound(true);
-        navigate("/loan/customer-care"); // Redirect to customer-care page
-        return; // Stop further execution
+        toast("Borrower Not Found")
+        return;
+      } else {
+        navigate("/loan/customer-care/" + borrowerID + "/personal-info");
       }
-      navigate("/loan/customer-care/" + borrowerID + "/personal-info");
-      setBorrowerNotFound(false);
     } catch (error) {
       console.error(error);
     }
@@ -53,8 +51,7 @@ const SearchBox = () => {
     try {
       const token = localStorage.getItem("authToken");
       const data = await fetch(
-        `${
-          import.meta.env.VITE_USER_PRODUCT_TESTING_REGISTRATION_RESULT_GET
+        `${import.meta.env.VITE_USER_PRODUCT_TESTING_REGISTRATION_RESULT_GET
         }${borrowerID}`,
         {
           method: "GET",
@@ -65,16 +62,12 @@ const SearchBox = () => {
         }
       );
       if (!data.ok) {
-        console.log("User Not Found"); // Clear the token
-        setBorrowerNotFound(true);
-        navigate("/loan/product-testing/term-loan"); // Redirect to login page
-        return; // Stop further execution
+        toast("User Not Found");
+        return;
       }
-      // Check for token expiration or invalid token
-      navigate(
-        "/loan/product-testing/term-loan/" + borrowerID + "/loan-config"
-      );
-      setBorrowerNotFound(false);
+      else {
+        navigate("/loan/product-testing/term-loan/" + borrowerID + "/loan-config");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -91,7 +84,7 @@ const SearchBox = () => {
     const state = store.getState();
     const accountDetails = state.accounts.accountDetails;
     if (accountDetails.length == 0) {
-      setBorrowerNotFound(true);
+      toast("Borrower Not Found")
     } else {
       navigate(`/deposit/savings/accounts/${borrowerID}/summary`);
     }
@@ -131,6 +124,7 @@ const SearchBox = () => {
     "Repayment history and schedule",
     "Previous rejection records",
   ];
+
   const ProductTestingSearchIDArray = [
     "For individuals: Passport (AB123456) or NRC (12/AHKANA(N)123456)",
     "For companies: Business Registration (87654321) or Tax ID",
@@ -144,92 +138,49 @@ const SearchBox = () => {
   ];
 
   return (
-    <>
-      {/* <div className="flex items-center gap-5 justify-center mt-10">
-        <div>
-          {location.pathname === "/loan/customer-care"
-            ? "Customer ID"
-            : location.pathname === "/deposit/savings/accounts"
-            ? "User ID."
-            : location.pathname === "/loan/product-testing/term-loan"
-            ? "Term Loan Borrower ID"
-            : "Overdraft Loan Borrower ID"}
-        </div>
-        <div>
-          <InputText
-            inputName="borrowerID"
-            inputValue={borrowerID}
-            onChange={(e) => {
-              setBorrowerID(e.target.value);
-            }}
-            placeHolder="1234567890"
-            isValidation={true}
-          />
-        </div>
-        <div>
-          <Button
-            buttonName={"Search"}
-            onClick={handleClick}
-            rectangle={true}
-          />
-        </div>
-      </div> */}
-      {/* {borrowerNotFound && (
-        <div className="text-red-600 mt-4 text-center p-5 bg-red-300 ">
-          User Not Found or Invalid ID
-        </div>
-      )} */}
-
-      {
-        <div>
-          {location.pathname === "/loan/customer-care" ? (
-            <SearchView
-              heading="Customer Care - Borrower Search"
-              subHeading="Search registered borrowers or companies using their identification numbers"
-              borrowerID={borrowerID}
-              borrowerNotFound={borrowerNotFound}
-              onChange={(e) => setBorrowerID(e.target.value)}
-              handleSearch={handleClick}
-              searchIDArray={CustomerCareSearchIDArray}
-              searchShowArray={CustomerCareSearchShowArray}
-            />
-          ) : location.pathname === "/deposit/savings/accounts" ? (
-            <SearchView
-              heading="Accounts - Borrower Search"
-              subHeading="Search registered borrowers or companies using their identification numbers"
-              borrowerID={borrowerID}
-              borrowerNotFound={borrowerNotFound}
-              onChange={(e) => setBorrowerID(e.target.value)}
-              handleSearch={handleClick}
-              searchIDArray={["ID1", "ID2", "ID3"]}
-              searchShowArray={["Info1", "Info2", "Info3"]}
-            />
-          ) : location.pathname === "/loan/product-testing/term-loan" ? (
-            <SearchView
-              heading="Product Testing - Borrower Search"
-              subHeading="Search registered borrowers or companies using their identification numbers"
-              borrowerID={borrowerID}
-              borrowerNotFound={borrowerNotFound}
-              onChange={(e) => setBorrowerID(e.target.value)}
-              handleSearch={handleClick}
-              searchIDArray={ProductTestingSearchIDArray}
-              searchShowArray={ProductTestingSearchShowArray}
-            />
-          ) : (
-            <SearchView
-              heading="Product Testing - Borrower Search"
-              subHeading="Search registered borrowers or companies using their identification numbers"
-              borrowerID={borrowerID}
-              borrowerNotFound={borrowerNotFound}
-              onChange={(e) => setBorrowerID(e.target.value)}
-              handleSearch={handleClick}
-              searchIDArray={ProductTestingSearchIDArray}
-              searchShowArray={ProductTestingSearchShowArray}
-            />
-          )}
-        </div>
-      }
-    </>
+    <div>
+      {location.pathname === "/loan/customer-care" ? (
+        <SearchView
+          heading="Customer Care - Borrower Search"
+          subHeading="Search registered borrowers or companies using their identification numbers"
+          borrowerID={borrowerID}
+          onChange={(e) => setBorrowerID(e.target.value)}
+          handleSearch={handleClick}
+          searchIDArray={CustomerCareSearchIDArray}
+          searchShowArray={CustomerCareSearchShowArray}
+        />
+      ) : location.pathname === "/deposit/savings/accounts" ? (
+        <SearchView
+          heading="Accounts - Borrower Search"
+          subHeading="Search registered borrowers or companies using their identification numbers"
+          borrowerID={borrowerID}
+          onChange={(e) => setBorrowerID(e.target.value)}
+          handleSearch={handleClick}
+          searchIDArray={["ID1", "ID2", "ID3"]}
+          searchShowArray={["Info1", "Info2", "Info3"]}
+        />
+      ) : location.pathname === "/loan/product-testing/term-loan" ? (
+        <SearchView
+          heading="Product Testing - Borrower Search"
+          subHeading="Search registered borrowers or companies using their identification numbers"
+          borrowerID={borrowerID}
+          onChange={(e) => setBorrowerID(e.target.value)}
+          handleSearch={handleClick}
+          searchIDArray={ProductTestingSearchIDArray}
+          searchShowArray={ProductTestingSearchShowArray}
+        />
+      ) : (
+        <SearchView
+          heading="Product Testing - Borrower Search"
+          subHeading="Search registered borrowers or companies using their identification numbers"
+          borrowerID={borrowerID}
+          onChange={(e) => setBorrowerID(e.target.value)}
+          handleSearch={handleClick}
+          searchIDArray={ProductTestingSearchIDArray}
+          searchShowArray={ProductTestingSearchShowArray}
+        />
+      )}
+    </div>
   );
 };
 
