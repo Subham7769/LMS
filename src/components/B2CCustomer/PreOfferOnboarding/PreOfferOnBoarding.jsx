@@ -7,7 +7,7 @@ import B2CProgressBar from "../B2CProgressBar/B2CProgressBar";
 
 
 const PreOfferOnBoarding = () => {
-  const { preOfferSubStep, preOfferNext, preOfferBack, preOfferSteps } = useActiveTab();
+  const { preOfferSubStep, preOfferNext, preOfferBack, preOfferSteps, setPreOfferSubStep } = useActiveTab();
 
 
   const renderPreOfferSubStep = () => {
@@ -26,7 +26,7 @@ const PreOfferOnBoarding = () => {
   return <div className="flex flex-col justify-between">
     <div className="flex flex-col md:w-1/2">
     {/* Progress bar */}
-      <B2CProgressBar SubStep={preOfferSubStep} Steps={preOfferSteps}/>
+      <B2CProgressBar SetSubStep={setPreOfferSubStep} SubStep={preOfferSubStep} Steps={preOfferSteps}/>
 
       {/* Onboarding Steps */}
       {renderPreOfferSubStep()}

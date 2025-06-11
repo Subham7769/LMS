@@ -1,4 +1,4 @@
-import EmploymentDetailSection from "./EmploymentDetailSection";
+import FamilyReferenceDetailSection from "./FamilyReferenceDetailSection";
 
 function Onboarding02({ onNext, onBack }) {
 
@@ -11,12 +11,12 @@ function Onboarding02({ onNext, onBack }) {
   return (
     <div className="px-4">
       <div className="w-[90%] mx-auto">
-        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-4">Employment Details</h1>
+        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-4">Family Reference</h1>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
 
           {/* Employment Details Section */}
           <div className="grid grid-cols-2 gap-2">
-            <EmploymentDetailSection />
+            <FamilyReferenceDetailSection />
           </div>
 
           <div className="flex justify-between">

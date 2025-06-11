@@ -229,14 +229,17 @@ function Onboarding03({ onNext, onBack }) {
   // console.log(formData)
 
   return (
-    <div className="px-4 py-8">
-      <div className="max-w-md mx-auto">
-        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">Contact & Salary</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
+    <div className="px-4">
+      <div className="w-[90%] mx-auto">
+        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-4">Contact & Salary</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
 
           {/* Person Details Section */}
-          <PersonDetailsSection />
-          
+          <div className="grid grid-cols-2 gap-2">
+
+            <PersonDetailsSection />
+          </div>
+
           <div className="flex justify-between">
             <button
               type="button"

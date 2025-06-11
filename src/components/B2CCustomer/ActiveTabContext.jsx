@@ -16,6 +16,7 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
     basicPay: "",
     borrowerId: "",
     interestRate: 0,
+
     title: "",
     firstName: "",
     surname: "",
@@ -25,97 +26,66 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
     dateOfBirth: "",
     placeOfBirth: "",
     mobile1: "",
-    houseNumber: "", 
+    houseNumber: "",
     street: "",
     residentialArea: "",
     country: "",
-  });
+    creditScore: "",
 
-  const abc = {
-    contactDetails: {
-      mobile1: "",
-      mobile2: "", //optional
-      landlinePhone: "", //optional
-      houseNumber: "", //optional
-      street: "",
-      residentialArea: "",
-      country: "Zambia",
-      province: "", //optional
-      district: "", //optional
-      email: "",
-      postBox: "", //optional
-    },
-    employmentDetails: {
-      employer: "",
-      occupation: "",
-      employmentDistrict: "", //optional
-      employmentLocation: "",
-      workStartDate: "",
-      workPhoneNumber: "", //optional
-      workPhysicalAddress: "", //optional
-      employeeNo: "",
-      workType: "",
-      ministry: "",
-    },
-    incomeOnPaySlip: {
-      basicPay: "",
-      housingAllowance: "",
-      transportAllowance: "",
-      ruralHardshipAllowance: "",
-      infectiousHealthRisk: "",
-      healthShiftAllowance: "",
-      interfaceAllowance: "",
-      responsibilityAllowance: "",
-      doubleClassAllowance: "",
-      actingAllowance: "",
-      otherAllowances: "",
-    },
-    deductionOnPaySlip: {
-      totalDeductionsOnPayslip: "",
-      totalDeductionsNotOnPayslip: "",
-    },
-    bankDetails: {
-      bankName: "",
-      accountName: "",
-      accountType: "",
-      branch: "",
-      branchCode: "",
-      sortCode: "",
-      accountNo: "",
-    },
-    nextOfKinDetails: {
-      kinTitle: "",
-      kinSurname: "",
-      kinOtherName: "", //optional
-      kinNrcNo: "",
-      kinGender: "",
-      kinRelationship: "",
-      kinMobile1: "",
-      kinMobile2: "", //optional
-      kinEmail: "",
-      kinHouseNo: "", //optional
-      kinStreet: "",
-      kinResidentialArea: "",
-      kinDistrict: "", //optional
-      kinCountry: "Zambia",
-      kinProvince: "", //optional
-      kinEmployer: "",
-      kinOccupation: "",
-      kinLocation: "", //optional
-      kinWorkPhoneNumber: "", //optional
-    },
-    otherDetails: {
-      reasonForBorrowing: "", //optional
-      sourceOfRepayment: "", //optional
-      groupId: "",
-      creditScore: "",
-      customerPhotoId: "",
-    },
-  }
+
+    workType: "",
+    employer: "",
+    occupation: "",
+    employmentLocation: "",
+    workStartDate: "",
+    employeeNo: "",
+    ministry: "",
+
+    basicPay: "",
+    housingAllowance: "",
+    transportAllowance: "",
+    ruralHardshipAllowance: "",
+    infectiousHealthRisk: "",
+    healthShiftAllowance: "",
+    interfaceAllowance: "",
+    responsibilityAllowance: "",
+    doubleClassAllowance: "",
+    actingAllowance: "",
+    otherAllowances: "",
+    totalDeductionsOnPayslip: "",
+    totalDeductionsNotOnPayslip: "",
+
+    bankName: "",
+    accountName: "",
+    accountType: "",
+    branch: "",
+    branchCode: "",
+    sortCode: "",
+    accountNo: "",
+
+    kinTitle: "",
+    kinSurname: "",
+    kinNrcNo: "",
+    kinGender: "",
+    kinRelationship: "",
+    kinMobile1: "",
+    kinEmail: "",
+    kinStreet: "",
+    kinResidentialArea: "",
+    kinCountry: "India",
+    kinEmployer: "",
+    kinOccupation: "",
+
+    atmCard:"",
+    bankStatement:"",
+    employerForm:"",
+    paySlip:"",
+
+  });
 
 
   const [preOfferSteps, setPreOfferSteps] = useState([0, 1, 2])
-  const [postOfferSteps, setPostOfferSteps] = useState([0, 1, 2, 3, 4])
+  const [postOfferSteps, setPostOfferSteps] = useState([0, 1, 2, 3, 4, 5])
 
   const [preOfferSubStep, setPreOfferSubStep] = useState(0);
   const [postOfferSubStep, setPostOfferSubStep] = useState(0);

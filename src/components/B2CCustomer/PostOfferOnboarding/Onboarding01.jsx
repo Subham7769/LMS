@@ -1,35 +1,17 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import {
-  fetchLoanProductData
-} from "../../../redux/Slices/personalLoansSlice";
-
-import { useActiveTab } from "../ActiveTabContext";
 import PersonDetailsSection from "./PersonDetailsSection";
 
 
 const Onboarding01 = ({ onNext }) => {
 
-  const dispatch = useDispatch();
-  const { formData } = useActiveTab();
-
-  useEffect(() => {
-    dispatch(fetchLoanProductData());
-  }, [dispatch]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.loanType) {
       onNext();
-    }
   };
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-4">
       <div className="w-[90%] mx-auto">
-        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">
-          Personal Details
-        </h1>
+        <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-4">Personal Details</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
 
@@ -37,7 +19,7 @@ const Onboarding01 = ({ onNext }) => {
           {/* Person Details Section */}
           <div className="grid grid-cols-2 gap-2">
 
-          <PersonDetailsSection />
+            <PersonDetailsSection />
           </div>
 
           <div className="flex justify-end">

@@ -1,10 +1,7 @@
-import { useLocation } from 'react-router-dom';
 import { useActiveTab } from '../ActiveTabContext';
 
 const PersonDetailsSection = () => {
     const { formData, setFormData } = useActiveTab();
-    const location = useLocation();
-    const { pathname } = location;
 
     return (
         <>
@@ -148,6 +145,14 @@ const PersonDetailsSection = () => {
                 <option value="JP">Japan</option>
                 {/* Add more countries as needed */}
             </select>
+            <input
+                className="form-input w-full py-4"
+                type="number"
+                placeholder="Credit Score"
+                value={formData.creditScore}
+                onChange={e => setFormData({ ...formData, creditScore: e.target.value })}
+                required
+            />
         </>
     )
 }

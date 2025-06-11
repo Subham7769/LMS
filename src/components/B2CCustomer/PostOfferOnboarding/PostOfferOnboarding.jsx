@@ -1,6 +1,9 @@
 import Onboarding01 from './Onboarding01';
 import Onboarding02 from './Onboarding02';
 import Onboarding03 from './Onboarding03';
+import Onboarding04 from './Onboarding04';
+import Onboarding05 from './Onboarding05';
+import Onboarding06 from './Onboarding06';
 import OnboardingImage from "../images/loan_banner_freepik.png";
 import '../style.css';
 
@@ -9,7 +12,7 @@ import B2CProgressBar from "../B2CProgressBar/B2CProgressBar";
 
 
 const PostOfferOnboarding = () => {
-  const { postOfferSubStep, postOfferNext, postOfferBack, postOfferSteps } = useActiveTab();
+  const { postOfferSubStep, postOfferNext, postOfferBack, postOfferSteps, setPostOfferSubStep } = useActiveTab();
 
   const renderPostOfferSubStep = () => {
     switch (postOfferSubStep) {
@@ -19,6 +22,12 @@ const PostOfferOnboarding = () => {
         return <Onboarding02 onNext={postOfferNext} onBack={postOfferBack} />;
       case 2:
         return <Onboarding03 onNext={postOfferNext} onBack={postOfferBack} />;
+      case 3:
+        return <Onboarding04 onNext={postOfferNext} onBack={postOfferBack} />;
+      case 4:
+        return <Onboarding05 onNext={postOfferNext} onBack={postOfferBack} />;
+      case 5:
+        return <Onboarding06 onNext={postOfferNext} onBack={postOfferBack} />;
       default:
         return null;
     }
@@ -27,7 +36,7 @@ const PostOfferOnboarding = () => {
   return <div className="flex flex-col justify-between">
     <div className="flex flex-col md:w-1/2">
       {/* Progress bar */}
-      <B2CProgressBar SubStep={postOfferSubStep} Steps={postOfferSteps} />
+      <B2CProgressBar SetSubStep={setPostOfferSubStep} SubStep={postOfferSubStep} Steps={postOfferSteps} />
 
       {/* Onboarding Steps */}
       {renderPostOfferSubStep()}
