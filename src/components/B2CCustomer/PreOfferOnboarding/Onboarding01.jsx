@@ -39,7 +39,7 @@ const Onboarding01 = ({ onNext }) => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="btn bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:hover:bg-gray-500"
+              className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:hover:bg-gray-500"
               disabled={!formData.loanType}
             >
               Next

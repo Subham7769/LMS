@@ -29,7 +29,7 @@ function Onboarding02({ onNext, onBack }) {
             </button>
             <button
               type="submit"
-              className="btn bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
+              className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
             >
               Next
             </button>

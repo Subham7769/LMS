@@ -76,7 +76,7 @@ function LoanRequirementSection({ onNext, onBack }) {
       />
 
       {/* Repayment Tenure */}
-      <InputSlider
+      {/* <InputSlider
         labelName="Repayment Tenure"
         inputName={"repayment"}
         inputLevels={repaymentTenure}
@@ -84,7 +84,7 @@ function LoanRequirementSection({ onNext, onBack }) {
         coloredTheme={false}
         onChange={({ target: { value } }) => setFormData({ ...formData, repayment: value })}
         disabled={true}
-      />
+      /> */}
 
       {/* Interest Rate */}
       <p className="text-sm">Interest Rate: {formData.interestRate}%</p>

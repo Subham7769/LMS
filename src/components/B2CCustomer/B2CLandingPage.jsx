@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import 'swiper/css';
+import { motion } from "framer-motion";
+
 
 import heroImage from './images/hero-image.png';
 import heroIllustration from './images/hero-illustration.svg';
@@ -228,6 +230,18 @@ const helpLinks = [
     "Report Fraud"
 ];
 
+const animationProps = {
+    animate: { opacity: 1, x: 0 },
+    transition: { duration: 5 },
+    initial: "hidden",
+    whileInView: "visible",
+    viewport: { once: true },
+    variants: {
+        visible: { opacity: 1, scale: 1 },
+        hidden: { opacity: 0, scale: 0 },
+    },
+};
+
 const B2CLandingPage = () => {
     const navigate = useNavigate();
     const [selected, setSelected] = useState(null)
@@ -272,7 +286,7 @@ const B2CLandingPage = () => {
                                 {/* Desktop sign in links */}
                                 <ul className="flex grow justify-end flex-wrap items-center">
                                     <li className="ml-3">
-                                        <a className="btn-sm inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" onClick={() => navigate("/customer/loan-application")} >
+                                        <a className="btn-sm inline-flex hover:cursor-pointer items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" onClick={() => navigate("/customer/loan-application")} >
                                             Get your Loan Approved
                                             <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                 <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -298,7 +312,18 @@ const B2CLandingPage = () => {
                         {/* Bg */}
                         <div className="absolute inset-0 rounded-bl-[100px] mb-28 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 pointer-events-none z-0" aria-hidden="true"></div>
 
-                        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: -20 }}
+                            transition={{
+                                opacity: { duration: 1.2 },
+                                y: {
+                                    duration: 1.5,
+                                    repeatType: "reverse",
+                                    ease: "easeInOut",
+                                },
+                            }}
+                            className="max-w-6xl mx-auto px-4 sm:px-6">
                             <div className="pt-36 md:pt-40 md:pb-20">
 
                                 {/* Hero content */}
@@ -322,7 +347,7 @@ const B2CLandingPage = () => {
                                         {/* Buttons */}
                                         <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-12 md:mb-0" data-aos-delay="300">
                                             <div>
-                                                <a className="btn-sm w-full inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                <a className="btn-sm hover:cursor-pointer w-full inline-flex items-center text-slate-100 bg-slate-800 hover:bg-slate-900 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
                                                     Get your Loan Approved
                                                     <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                         <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -332,7 +357,7 @@ const B2CLandingPage = () => {
                                                 </a>
                                             </div>
                                             <div>
-                                                <a className="btn-sm w-full inline-flex items-center text-white bg-linear-to-tr from-blue-400 hover:bg-blue-500 shadow-xs relative before:absolute before:inset-0 " href="support.html">Read documentation</a>
+                                                <a className="btn-sm w-full hover:cursor-pointer inline-flex items-center text-white bg-linear-to-tr from-blue-400 hover:bg-blue-500 shadow-xs relative before:absolute before:inset-0 " href="support.html">Read documentation</a>
                                             </div>
                                         </div>
 
@@ -365,7 +390,7 @@ const B2CLandingPage = () => {
 
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     </section>
 
                     {/* Section #1 */}
@@ -374,10 +399,23 @@ const B2CLandingPage = () => {
                             <div className="py-12 md:py-28 md:pb-20">
 
                                 {/* Items */}
-                                <div className="max-w-sm mx-auto grid gap-12 md:grid-cols-3 md:-mx-9 md:gap-0 items-start md:max-w-none">
+                                <div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: -20 }}
+                                    transition={{
+                                        opacity: { duration: 1.2 },
+                                        y: {
+                                            duration: 1.5,
+                                            repeatType: "reverse",
+                                            ease: "easeInOut",
+                                        },
+                                    }}
+                                    className="max-w-sm mx-auto grid gap-12 md:grid-cols-3 md:-mx-9 md:gap-0 items-start md:max-w-none">
 
                                     {/* 1st item */}
-                                    <div className="relative md:px-9 after:hidden md:after:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-16 after:bg-slate-200 last:after:hidden" data-aos-delay="100">
+                                    <motion.div
+                                        {...animationProps} transition={{ delay: 0.1 }}
+                                        className="relative md:px-9 after:hidden md:after:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-16 after:bg-slate-200 last:after:hidden" data-aos-delay="100">
                                         <div className="mb-3">
                                             <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg">
                                                 <defs>
@@ -395,10 +433,12 @@ const B2CLandingPage = () => {
                                         <h4 className="text-xl font-bold mb-1">Fast & Simple Application</h4>
                                         <p className="text-slate-500">Complete your loan application in minutes. Our streamlined process requires minimal documentation so
                                             you can focus on what matters most.</p>
-                                    </div>
+                                    </motion.div>
 
                                     {/* 2nd item */}
-                                    <div className="relative md:px-9 after:hidden md:after:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-16 after:bg-slate-200 last:after:hidden">
+                                    <motion.div
+                                        {...animationProps} transition={{ delay: 0.2 }}
+                                        className="relative md:px-9 after:hidden md:after:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-16 after:bg-slate-200 last:after:hidden">
                                         <div className="mb-3">
                                             <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg">
                                                 <defs>
@@ -416,11 +456,13 @@ const B2CLandingPage = () => {
                                         <h4 className="text-xl font-bold mb-1">Competitive Rates</h4>
                                         <p className="text-slate-500">Get access to competitive interest rates personalized to your financial profile. Pre-qualify without
                                             affecting your credit score.</p>
-                                    </div>
+                                    </motion.div>
 
 
                                     {/* 3rd item */}
-                                    <div className="relative md:px-9 after:hidden md:after:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-16 after:bg-slate-200 last:after:hidden" data-aos-delay="200">
+                                    <motion.div
+                                        {...animationProps} transition={{ delay: 0.3 }}
+                                        className="relative md:px-9 after:hidden md:after:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-16 after:bg-slate-200 last:after:hidden" data-aos-delay="200">
                                         <div className="mb-3">
                                             <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg">
                                                 <defs>
@@ -438,7 +480,7 @@ const B2CLandingPage = () => {
                                         <h4 className="text-xl font-bold mb-1">Quick Funding</h4>
                                         <p className="text-slate-500">Once approved, receive funds directly to your account as soon as the next business day. No waiting
                                             weeks for the money you need.</p>
-                                    </div>
+                                    </motion.div>
 
                                 </div>
 
@@ -453,8 +495,21 @@ const B2CLandingPage = () => {
                             {/* Bg */}
                             <div className="absolute inset-0 rounded-tr-[100px] mb-24 md:mb-0 bg-slate-800 pointer-events-none " aria-hidden="true"></div>
 
-                            <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                                <div className="pt-12 md:py-20">
+                            <div
+                                className="max-w-6xl mx-auto px-4 sm:px-6">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: -20 }}
+                                    viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                                    transition={{
+                                        opacity: { duration: 1.2 },
+                                        y: {
+                                            duration: 1.5,
+                                            repeatType: "reverse",
+                                            ease: "easeInOut",
+                                        },
+                                    }}
+                                    className="pt-12 md:py-20 ">
 
                                     {/* Section content */}
                                     <div className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left">
@@ -471,7 +526,7 @@ const B2CLandingPage = () => {
                                             {/* Button */}
                                             <div className="max-w-xs mx-auto sm:max-w-none mb-8" data-aos-anchor="[data-aos-id-2]" data-aos-delay="300">
                                                 <div>
-                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                    <a className="btn-sm hover:cursor-pointer inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
                                                         Get your Loan Approved
                                                         <span className="tracking-normal text-sky-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                             <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -521,7 +576,7 @@ const B2CLandingPage = () => {
                                         </div>
 
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
                         </div>
                     </section>
@@ -537,7 +592,19 @@ const B2CLandingPage = () => {
                                 <div className="pb-6 pt-12 md:pt-20">
 
                                     {/* Section content */}
-                                    <div className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left flex flex-col md:flex-row items-center justify-end">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: -20 }}
+                                        viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                                        transition={{
+                                            opacity: { duration: 1.2 },
+                                            y: {
+                                                duration: 1.5,
+                                                repeatType: "reverse",
+                                                ease: "easeInOut",
+                                            },
+                                        }}
+                                        className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left flex flex-col md:flex-row items-center justify-end">
 
                                         {/* Content */}
                                         <div className="w-[512px] max-w-full shrink-0 md:order-1">
@@ -550,7 +617,7 @@ const B2CLandingPage = () => {
                                             {/* Button */}
                                             <div className="max-w-xs mx-auto sm:max-w-none mb-8" data-aos-anchor="[data-aos-id-3]" data-aos-delay="300">
                                                 <div>
-                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                    <a className="btn-sm hover:cursor-pointer inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
                                                         Get your Loan Approved
                                                         <span className="tracking-normal text-sky-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                             <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -581,7 +648,7 @@ const B2CLandingPage = () => {
                                             </div>
                                         </div>
 
-                                    </div>
+                                    </motion.div>
 
                                 </div>
                             </div>
@@ -601,7 +668,19 @@ const B2CLandingPage = () => {
                                 <div className="py-12 md:py-20">
 
                                     {/* Section content */}
-                                    <div className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left flex flex-col md:flex-row items-center">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: -20 }}
+                                        viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                                        transition={{
+                                            opacity: { duration: 1.2 },
+                                            y: {
+                                                duration: 1.5,
+                                                repeatType: "reverse",
+                                                ease: "easeInOut",
+                                            },
+                                        }}
+                                        className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left flex flex-col md:flex-row items-center">
 
                                         {/* Content */}
                                         <div className="w-[512px] max-w-full shrink-0">
@@ -649,7 +728,7 @@ const B2CLandingPage = () => {
                                             {/* Button */}
                                             <div className="max-w-xs mx-auto sm:max-w-none" data-aos-anchor="[data-aos-id-4]" data-aos-delay="300">
                                                 <div>
-                                                    <a className="btn-sm inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                    <a className="btn-sm hover:cursor-pointer inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
                                                         Get your Loan Approved
                                                         <span className="tracking-normal text-sky-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                             <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -669,7 +748,7 @@ const B2CLandingPage = () => {
                                             </div>
                                         </div>
 
-                                    </div>
+                                    </motion.div>
 
                                 </div>
                             </div>
@@ -688,7 +767,19 @@ const B2CLandingPage = () => {
                                 <div className="py-12 md:py-20">
 
                                     {/* Section content */}
-                                    <div className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: -20 }}
+                                        viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                                        transition={{
+                                            opacity: { duration: 1.2 },
+                                            y: {
+                                                duration: 1.5,
+                                                repeatType: "reverse",
+                                                ease: "easeInOut",
+                                            },
+                                        }}
+                                        className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left">
 
                                         {/* Section header */}
                                         <div className="md:max-w-3xl mb-12 md:mb-20">
@@ -736,7 +827,7 @@ const B2CLandingPage = () => {
 
                                         </div>
 
-                                    </div>
+                                    </motion.div>
 
                                 </div>
                             </div>
@@ -755,7 +846,19 @@ const B2CLandingPage = () => {
                                 <div className="py-12 md:py-20">
 
                                     {/* Section content */}
-                                    <div className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left flex flex-col md:flex-row items-center justify-end">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: -20 }}
+                                        viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                                        transition={{
+                                            opacity: { duration: 1.2 },
+                                            y: {
+                                                duration: 1.5,
+                                                repeatType: "reverse",
+                                                ease: "easeInOut",
+                                            },
+                                        }}
+                                        className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left flex flex-col md:flex-row items-center justify-end">
 
                                         {/* Content */}
                                         <div className="w-[512px] max-w-full shrink-0 md:order-1">
@@ -844,7 +947,7 @@ const B2CLandingPage = () => {
                                             </div>
                                         </div>
 
-                                    </div>
+                                    </motion.div>
 
                                 </div>
                             </div>
@@ -865,7 +968,19 @@ const B2CLandingPage = () => {
                                 <div className="py-12 md:py-20">
 
                                     {/* Section content */}
-                                    <div className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: -20 }}
+                                        viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                                        transition={{
+                                            opacity: { duration: 1.2 },
+                                            y: {
+                                                duration: 1.5,
+                                                repeatType: "reverse",
+                                                ease: "easeInOut",
+                                            },
+                                        }}
+                                        className="relative max-w-xl mx-auto md:max-w-none text-center md:text-left">
 
                                         {/* Section header */}
                                         <div className="md:max-w-3xl mb-12 md:mb-20">
@@ -919,7 +1034,7 @@ const B2CLandingPage = () => {
 
                                         </div>
 
-                                    </div>
+                                    </motion.div>
 
                                 </div>
                             </div>
@@ -929,7 +1044,19 @@ const B2CLandingPage = () => {
 
                     {/* FAQs */}
                     <section>
-                        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: -20 }}
+                            viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                            transition={{
+                                opacity: { duration: 1.2 },
+                                y: {
+                                    duration: 1.5,
+                                    repeatType: "reverse",
+                                    ease: "easeInOut",
+                                },
+                            }}
+                            className="max-w-6xl mx-auto px-4 sm:px-6">
                             <div className="pb-12 md:pb-20">
 
                                 {/* Section header */}
@@ -966,13 +1093,25 @@ const B2CLandingPage = () => {
                                 </div>
 
                             </div>
-                        </div>
+                        </motion.div>
                     </section>
 
                     {/* CTA */}
                     <section className="relative bg-slate-800">
 
-                        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: -20 }}
+                            viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                            transition={{
+                                opacity: { duration: 1.2 },
+                                y: {
+                                    duration: 1.5,
+                                    repeatType: "reverse",
+                                    ease: "easeInOut",
+                                },
+                            }}
+                            className="max-w-6xl mx-auto px-4 sm:px-6">
                             <div className="py-12 md:py-20">
 
                                 <div className="sm:flex sm:flex-col lg:flex-row justify-between items-center">
@@ -987,7 +1126,7 @@ const B2CLandingPage = () => {
                                     <div className="shrink-0">
                                         <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-12 md:mb-0">
                                             <div>
-                                                <a className="btn-sm w-full inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
+                                                <a className="btn-sm w-full hover:cursor-pointer inline-flex items-center text-blue-50 bg-blue-500 hover:bg-blue-600 group shadow-xs" onClick={() => navigate("/customer/loan-application")}>
                                                     Get your Loan Approved
                                                     <span className="tracking-normal text-sky-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-2">
                                                         <svg className="fill-current" width="12" height="10" xmlns="http://www.w3.org/2000/svg">
@@ -1006,7 +1145,7 @@ const B2CLandingPage = () => {
 
                             </div>
 
-                        </div>
+                        </motion.div>
                     </section>
 
                 </main>
@@ -1019,7 +1158,19 @@ const B2CLandingPage = () => {
                         <img className="max-w-none" src={footerIllustration} width="1940" height="381" alt="Footer illustration" />
                     </div>
 
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: -20 }}
+                        viewport={{ once: true, amount: 0.2 }} // you can adjust amount as needed
+                        transition={{
+                            opacity: { duration: 1.2 },
+                            y: {
+                                duration: 1.5,
+                                repeatType: "reverse",
+                                ease: "easeInOut",
+                            },
+                        }}
+                        className="max-w-6xl mx-auto px-4 sm:px-6">
 
                         {/* Blocks */}
                         <div className="grid sm:grid-cols-12 lg:grid-cols-10 gap-8 py-8 border-t border-slate-700">
@@ -1124,14 +1275,14 @@ const B2CLandingPage = () => {
                                 will be approved. Minimum and maximum loan amounts vary by state
                             </div>
 
-                            <div className="text-xs text-slate-500 "> 
+                            <div className="text-xs text-slate-500 ">
                                 All loans are subject to credit approval and verification. Funds are typically deposited via ACH for delivery
                                 next business day if approved by 5pm CT Monday-Friday. Availability of funds is subject to processing times
                                 from your bank, which are outside our control.
                             </div>
                         </div>
 
-                    </div>
+                    </motion.div>
                 </footer>
             </div>
         </div>
