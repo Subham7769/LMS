@@ -507,7 +507,7 @@ const PreOfferOnBoarding = React.lazy(() =>
   import("./components/B2CCustomer/PreOfferOnboarding/PreOfferOnBoarding")
 );
 const PostOfferOnboarding = React.lazy(() =>
-  import("./components/B2CCustomer/PostOfferOnBoarding/PostOfferOnboarding")
+  import("./components/B2CCustomer/PostOfferOnboarding/PostOfferOnboarding")
 );
 const B2CLoanOfferLayoutScreen = React.lazy(() =>
   import("./components/B2CCustomer/B2CAppLayout/B2CLoanOfferLayout")
