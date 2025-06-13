@@ -20,6 +20,7 @@ import {
   fetchDynamicRacData,
   fetchReportingConfigData,
   setMenus,
+  fetchDrlRulesetData,
 } from "../../../redux/Slices/sidebarSlice";
 import {
   RectangleGroupIcon,
@@ -76,7 +77,9 @@ import { allSectionName } from "../../../data/MenuData.js";
 import CreateNew from "../CreateNew/CreateNew";
 import { setRole } from "../../../redux/Slices/authSlice";
 import { createNewDocumentConfig } from "../../../utils/createNewDocumentConfig.js";
-import { LogoIcon } from "../../../assets/icons.jsx";
+// import { LogoIcon } from "../../../assets/icons.jsx";
+import LogoIcon from "../../../assets/can.png";
+import { createNewDrlRuleset } from "../../../utils/createNewDrlRuleset.js";
 
 const SideBar = () => {
   const dispatch = useDispatch();
@@ -132,6 +135,7 @@ const SideBar = () => {
     createNewProject,
     createNewRecovery,
     createNewAffordability,
+    createNewDrlRuleset,
     createNewLoanApproval,
     createNewDocumentConfig,
     createNewProductGroup,
@@ -164,6 +168,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        // dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -183,6 +188,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        // dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -205,6 +211,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        // dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -235,6 +242,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        // dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -252,6 +260,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        // dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -274,6 +283,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
+        // dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -346,10 +356,17 @@ const SideBar = () => {
           } overflow-y-auto no-scrollbar border-gray-200 dark:border-gray-800  bg-white dark:bg-gray-800 transition-[width,padding] duration-1000 ease-in-out`}
         >
           <div className="w-full flex shrink-0 items-center justify-between lg:w-1/3">
-            <LogoIcon
+            {/* <LogoIcon
               className={`h-8 ${
                 open ? "w-auto" : "hidden"
               } mb-10 fill-violet-500`}
+            /> */}
+            <img
+              src={LogoIcon}
+              alt="logo"
+              className={`${
+                open ? "w-auto" : "hidden"
+              } mb-10`}
             />
             <ArrowLeftIcon
               className={`h-6 w-auto mb-10 lg:hidden`}

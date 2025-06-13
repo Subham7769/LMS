@@ -4,14 +4,14 @@ import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Button from "../Common/Button/Button";
 import SectionSidebar from "../Common/Sidebar/SectionSidebar";
-import { CheckIcon } from "../../assets/icons";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
-import { handleChangeBasicInfoData } from "../../redux/Slices/drlRulesetSlice";
+import { deleteDrlRuleset, fetchDrulesName, handleChangeBasicInfoData, updateDrulesName } from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchDrlRulesetData } from "../../redux/Slices/sidebarSlice";
 
 const DRLRuleset = () => {
   const { racId } = useParams();
-  const { dRulesData, loading, error } = useSelector(
+  const { itemName, dRulesData, loading, error } = useSelector(
     (state) => state.drlRuleset
   );
   const dispatch = useDispatch();
@@ -24,6 +24,20 @@ const DRLRuleset = () => {
       dispatch(handleChangeBasicInfoData({ name, value }));
     }
   };
+
+  const handleNameUpdate = async (newName) => {
+      await dispatch(
+        updateDrulesName({ dRulesTempId, newName })
+      );
+      dispatch(fetchDrulesName(dRulesTempId));
+      dispatch(fetchDrlRulesetData());
+    };
+  
+    const handleDelete = async () => {
+      await dispatch(deleteDrlRuleset(dRulesTempId)).unwrap();
+      await dispatch(fetchDrlRulesetData());
+      navigate("/loan/drl-eruleset");
+    };
 
   const basePath = `/loan/drl-ruleset/${racId}`;
 
@@ -40,10 +54,10 @@ const DRLRuleset = () => {
   return (
     <>
       <DynamicHeader
-        itemName={"DRL Ruleset"}
+        itemName={itemName}
         isEditable={true}
-        // handleNameUpdate={updateName}
-        // handleDelete={handleDelete}
+        handleNameUpdate={handleNameUpdate}
+        handleDelete={handleDelete}
         loading={loading}
       />
       <ContainerTile>

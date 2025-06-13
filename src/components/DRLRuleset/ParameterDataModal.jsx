@@ -72,8 +72,13 @@ const ParameterDataModal = ({
     );
   }
 
+  if (tag?.fieldType === "STRING") {
+    ListHeader.push(
+      { name: "Category Value", sortKey: null },
+    );
+  }
+
   ListHeader.push(
-    { name: "Category Value", sortKey: null },
     { name: "Numerical Score", sortKey: null },
     { name: "Baseline", sortKey: null },
     { name: "Impact", sortKey: null }
@@ -147,15 +152,19 @@ const ParameterDataModal = ({
                     </td>
                   </>
                 )}
-                <td className="px-4 py-4 whitespace-nowrap">
-                  <InputText
-                    inputName="categoryValue"
-                    inputValue={paramData?.categoryValue}
-                    onChange={(e) => handleChange(e, paramData?.id)}
-                    isValidation={true}
-                    isIndex={paramData?.dataIndex}
-                  />
-                </td>
+                {tag?.fieldType === "STRING" && (
+                  <>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <InputText
+                        inputName="categoryValue"
+                        inputValue={paramData?.categoryValue}
+                        onChange={(e) => handleChange(e, paramData?.id)}
+                        isValidation={true}
+                        isIndex={paramData?.dataIndex}
+                      />
+                    </td>
+                  </>
+                )}
                 <td className="px-4 py-4 whitespace-nowrap">
                   <InputText
                     inputName="numericalScore"
