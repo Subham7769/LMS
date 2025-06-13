@@ -37,12 +37,16 @@ const AddCategoryModal = ({ isOpen, onClose, tag, addCategoryData }) => {
               />
             </>
           )}
-          <InputText
-            labelName={"Category Value"}
-            inputName={"categoryValue"}
-            inputValue={addCategoryData.categoryValue}
-            onChange={handleChange}
-          />
+          {tag?.fieldType === "STRING" && (
+            <>
+              <InputText
+                labelName={"Category Value"}
+                inputName={"categoryValue"}
+                inputValue={addCategoryData.categoryValue}
+                onChange={handleChange}
+              />
+            </>
+          )}
           <InputText
             labelName={"Numerical Score"}
             inputName={"numericalScore"}

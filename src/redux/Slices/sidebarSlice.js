@@ -121,6 +121,24 @@ export const fetchLoanApprovalData = createAsyncThunk(
   }
 );
 
+export const fetchDrlRulesetData = createAsyncThunk(
+  "fetchDrlRulesetData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_DRULES_READ_ALL_RULESET}`;
+    const transformData = (data) => {
+      return data.map(({ name, dRulesTempId }) => ({
+        name: name.replace(/-/g, " "),
+        href: "/loan/drl-ruleset/" + dRulesTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchDocumentConfigData = createAsyncThunk(
   "fetchDocumentConfigData",
   async (_, { rejectWithValue }) => {
@@ -841,6 +859,27 @@ const sidebarSlice = createSlice({
         state.menus = updatedMenus;
       })
       .addCase(fetchLoanApprovalData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
+      })
+
+      .addCase(fetchDrlRulesetData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDrlRulesetData.fulfilled, (state, action) => {
+        state.loading = false;
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "DRL Ruleset") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+      })
+      .addCase(fetchDrlRulesetData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         toast.error(`API Error : ${action.error.message}`);

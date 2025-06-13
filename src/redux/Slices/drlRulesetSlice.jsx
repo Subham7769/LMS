@@ -1,7 +1,100 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+import { HeaderList, DRLRulesetList } from "../../data/DRLRulesetData";
+
+export const fetchDrulesName = createAsyncThunk(
+  "drlRuleset/fetchDrulesName",
+  async (dRulesTempId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_DRULES_NAME_READ}${dRulesTempId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
+      }
+      const data = await response.json();
+      return data.name;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateDrulesName = createAsyncThunk(
+  "drlRuleset/updateDrulesName",
+  async ({ dRulesTempId, newName }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${
+      import.meta.env.VITE_DRULES_NAME_UPDATE
+    }${dRulesTempId}/name/${newName}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        return newName;
+      } else {
+        return rejectWithValue("Failed to update name");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteDrlRuleset = createAsyncThunk(
+  "drlRuleset/deleteDrlRuleset",
+  async (dRulesTempId, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(
+      `${import.meta.env.VITE_DRULES_DELETE}${dRulesTempId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return rejectWithValue("Failed to delete");
+    }
+
+    return dRulesTempId; // Return the ID for any further processing
+  }
+);
+
+export const fetchList = createAsyncThunk(
+  "drlRuleset/fetchList",
+  async (_, { getState }) => {
+    const sideBarState = getState().sidebar;
+    const Menu = sideBarState?.menus.find(
+      (menu) => menu.title === "DRL Ruleset"
+    );
+    const submenuItems = Menu ? Menu.submenuItems : [];
+    return submenuItems;
+  }
+);
 
 // Initial state
 const drlRulesetInitialState = {
+  itemName: "DRL Ruleset",
   dRulesData: {
     basicInfoData: {
       category: "",
@@ -73,6 +166,10 @@ const drlRulesetInitialState = {
       },
     },
   },
+  dRulesStatsData: {
+    HeaderList,
+    DRLRulesetList,
+  },
   loading: false,
   error: null,
 };
@@ -126,6 +223,62 @@ const drlRulesetSlice = createSlice({
       const { name, value } = action.payload;
       state.dRulesData.ruleManagerData.addCategoryData[name] = value;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchList.pending, (state) => {
+        state.loading = true; // Data is being fetched
+        state.error = null;
+      })
+      .addCase(fetchList.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedList = action.payload.map((newListItem, index) => ({
+          name: newListItem.name,
+          href: newListItem.href,
+        }));
+        state.dRulesStatsData.DRLRulesetList = updatedList;
+      })
+      .addCase(fetchList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchDrulesName.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDrulesName.fulfilled, (state, action) => {
+        state.loading = false;
+        state.itemName = action.payload;
+      })
+      .addCase(fetchDrulesName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateDrulesName.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateDrulesName.fulfilled, (state, action) => {
+        state.loading = false;
+        state.itemName = action.payload;
+        toast.success("Name updated successfully!");
+      })
+      .addCase(updateDrulesName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(deleteDrlRuleset.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteDrlRuleset.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("DRL Ruleset deleted successfully!");
+      })
+      .addCase(deleteDrlRuleset.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`API Error : ${action.payload}`);
+      });
   },
 });
 

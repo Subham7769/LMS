@@ -14,7 +14,8 @@ import { setMenus } from "../../redux/Slices/sidebarSlice";
 import InputPassword from "../Common/InputPassword/InputPassword";
 import InputEmail from "../Common/InputEmail/InputEmail";
 import { LockClosedIcon, UserIcon } from "@heroicons/react/20/solid";
-import { LogoIcon } from "../../assets/icons";
+// import { LogoIcon } from "../../assets/icons";
+import LogoIcon from "../../assets/can.png";
 import {
   ArrowPathRoundedSquareIcon,
   Cog6ToothIcon,
@@ -22,7 +23,6 @@ import {
   CpuChipIcon,
 } from "@heroicons/react/24/outline";
 import Illustration from "../../assets/image/illustrations/undraw_metrics_5v8d.svg";
-
 
 const heroSectionCards = [
   {
@@ -161,8 +161,9 @@ const LoginPage = () => {
         <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-10 lg:p-20 relative">
           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_50%)] animate-pulse" />
           <div className="relative z-10 flex items-center mb-10">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-xl mr-5">
-              <LogoIcon className="h-8 w-8 fill-white" />
+            <div className="w-16 h-16 flex items-center justify-center mr-5">
+              {/* <LogoIcon className="h-8 w-8 fill-white" /> */}
+              <img src={LogoIcon} alt="logo" />
             </div>
             <div>
               <h1 className="text-3xl font-extrabold bg-gradient-to-br from-violet-500 to-violet-400 bg-clip-text text-transparent">
