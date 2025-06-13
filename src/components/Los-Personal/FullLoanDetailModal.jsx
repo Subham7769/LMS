@@ -1,8 +1,3 @@
-import {
-  XCircleIcon,
-  CalendarIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
 import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
 import { convertDate } from "../../utils/convertDate";
 import { toast } from "react-toastify";

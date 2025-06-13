@@ -228,6 +228,33 @@ const Step4Container = lazy(() =>
   import("./components/ProductTestingKSA/Step4/Step4Container")
 );
 
+// ProductTesting2 Imports
+const ProductTesting2 = lazy(() =>
+  import("./components/ProductTesting2/ProductTesting2")
+);
+const LoanOffersPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanOffers")
+);
+const InspectionVerification = lazy(() =>
+  import("./components/ProductTesting2/InspectionVerification")
+);
+const ApproveLoansPT2 = lazy(() =>
+  import("./components/ProductTesting2/ApproveLoans")
+);
+const LoanApplicationPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanApplication")
+);
+const AddLoansPT2 = lazy(() => import("./components/ProductTesting2/AddLoans"));
+const LoanHistoryPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanHistory")
+);
+const LoanAgreementPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanAgreement")
+);
+const CollateralRegisterPT2 = lazy(() =>
+  import("./components/ProductTesting2/CollateralRegister")
+);
+
 // GlobalConfig Imports
 const LiabilitiesMatrix = lazy(() =>
   import("./components/GlobalConfig/LiabilitiesMatrix")
@@ -1378,6 +1405,73 @@ const routes = [
           },
         ],
       },
+      {
+        path: "product-testing2",
+        element: <ProductTesting2 />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "loan-application",
+            element: <LoanApplicationPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan/add-loan/new/:loanApplicationId",
+            element: <AddLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan/add-loan/:loanApplicationId",
+            element: <AddLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan/add-loan/new/:loanApplicationId/:BorrowerId",
+            element: <AddLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-offers",
+            element: <LoanOffersPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "inspection-verification",
+            element: <InspectionVerification />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "inspection-verification/:loanApplicationId",
+            element: <InspectionVerification />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-loans",
+            element: <ApproveLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-agreement/:loanApplicationId/:userId",
+            element: <LoanAgreementPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history",
+            element: <LoanHistoryPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history/:uniqueID",
+            element: <LoanHistoryPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "collateral-register",
+            element: <CollateralRegisterPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
     ],
   },
 
@@ -1545,9 +1639,9 @@ const routes = [
         element: <B2CLoanOfferLayoutScreen />,
         errorElement: <RouteErrorBoundary />,
       },
-       {
+      {
         path: "loan-finalization",
-        element: <PostOfferOnboarding/>,
+        element: <PostOfferOnboarding />,
         errorElement: <RouteErrorBoundary />,
       },
     ],

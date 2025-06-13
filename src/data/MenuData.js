@@ -333,6 +333,15 @@ export const MenusInitial = [
     submenuItems: [],
     isOpen: false,
   },
+  {
+    title: "Asset Financing",
+    sectionName: "TESTING",
+    href: "/loan/product-testing2/loan-application",
+    icon: "DocumentCurrencyRupeeIcon",
+    current: false,
+    submenu: false,
+    isOpen: false,
+  },
   // {
   //   title: "Test Component",
   //   sectionName: "TESTING",

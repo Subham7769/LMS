@@ -112,7 +112,7 @@ const LoanApplication = () => {
     setPlaSearchBy("");
     setPlaSearchValue("");
     setCurrentPage(0);
-    dispatch(getLoanApplications({ page: 0, size: 20 }));
+    dispatch(getLoanApplications({ page: 0, size: 10 }));
   };
 
   const handleNewApplication = async () => {

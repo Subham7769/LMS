@@ -203,6 +203,39 @@ export const yesNoOptions = [
   { label: "No", value: "no" }
 ];
 
+export const inspectionTypeOptions = [
+  { label: "Pre-Funding", value: "Pre-Funding" },
+  { label: "Delivery", value: "Delivery" },
+  { label: "Post-Installation", value: "Post-Installation" },
+];
+
+export const overallStatusOptions = [
+  { label: "Pending", value: "Pending" },
+  { label: "In Progress", value: "In Progress" },
+  { label: "Completed", value: "Completed" },
+  { label: "Failed", value: "Failed" },
+];
+
+export const verificationStatus = [
+  { value: "PENDING", label: "PENDING" },
+  { value: "SCHEDULED", label: "SCHEDULED" },
+  { value: "COMPLETED", label: "COMPLETED" },
+  { value: "DECLINED", label: "DECLINED" },
+];
+
+export const overallConditionOptions = [
+  { value: "Excellent", label: "Excellent" },
+  { value: "Good", label: "Good" },
+  { value: "Fair", label: "Fair" },
+  { value: "Poor", label: "Poor" },
+];
+
+export const usageLevelOptions = [
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+  { value: "Excessive", label: "Excessive" },
+];
 
 export const repaymentOptions = [
   { label: "Ignore", value: "ignore" },

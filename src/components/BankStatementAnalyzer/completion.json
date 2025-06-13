@@ -1,0 +1,36 @@
+{
+    "id": "chatcmpl-Bb2PCXzpDAy5X3WnrMVhy0brqAun1",
+    "object": "chat.completion",
+    "created": 1748167082,
+    "model": "gpt-4o-2024-08-06",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "```json\n{\n  \"Section 1: Cash Flow Analysis\": {\n    \"Average Monthly Cash Flow\": \"133,695.33\",\n    \"Average Monthly Deposits\": \"150,194.67\",\n    \"Average Monthly Withdrawals\": \"16,499.33\",\n    \"Monthwise Account Balance Trend with End Balance\": {\n      \"November 2024\": \"329,974\",\n      \"December 2024\": \"325,051\",\n      \"January 2025\": \"393,698\",\n      \"February 2025\": \"614,559\",\n      \"March 2025\": \"703,010\",\n      \"April 2025\": \"826,568\",\n      \"May 2025\": \"826,568\"\n    },\n    \"Available Amount for Financing\": \"40,108.60\"\n  },\n  \"Section 2: Cash Flow Stability Assessment\": {\n    \"Stability Score\": \"Medium\",\n    \"Volatility Index\": \"Medium\",\n    \"Seasonal Patterns\": \"Salary inflow around month-end\",\n    \"Negative Balance Days\": \"0\",\n    \"Insufficient Funds\": \"0\",\n    \"Deposit Consistency\": \"High consistency with monthly salary deposits\",\n    \"Revenue Diversification\": \"Primarily from salary with occasional interest\",\n    \"Month-to-Month Variance\": \"Moderate variance observed, with highest increase in February\"\n  },\n  \"Section 3: Transaction Pattern Analysis\": {\n    \"Top 5 Income Source Categories\": [\n      {\"Salary\": \"85%\"},\n      {\"Interest Paid\": \"10%\"},\n      {\"Unexplained Deposits\": \"5%\"}\n    ],\n    \"Top 5 Expense Categories\": [\n      {\"Debt Repayment\": \"35%\"},\n      {\"Card Payment\": \"25%\"},\n      {\"Betting\": \"15%\"},\n      {\"Installment Payment\": \"15%\"},\n      {\"Grocery\": \"10%\"}\n    ],\n    \"Recurring Transactions\": [\"Monthly Salary\", \"Debt Repayment\"],\n    \"Unusual Transactions\": [\"High-frequency Betting\"]\n  },\n  \"Section 4: Debt Service Capacity\": {\n    \"Monthly Current Debt Obligations\": \"4,000\",\n    \"Proposed Equipment Financing\": \"1,686.11\",\n    \"Total Debt Service\": \"5,686.11\",\n    \"Debt Service Coverage Ratio\": \"23.5\",\n    \"DSCR Assessment\": \"Adequate\",\n    \"Recommended Maximum Financing\": \"35,000\"\n  },\n  \"Section 5: Bank Statement Risk Indicators\": {\n    \"Bounced Checks\": \"None\",\n    \"No Loan Defaults\": \"Confirmed\",\n    \"Irregular Large Withdrawals\": \"Occasional\",\n    \"No Unusual Payment Patterns\": \"Confirmed\",\n    \"Unexplained Cash Deposits\": \"Likely salary-related\",\n    \"No Overdraft Occurrences\": \"Confirmed\",\n    \"Consistent Revenue Stream\": \"Confirmed\",\n    \"Stable Operating Expenses\": \"Moderate\",\n    \"Minor Balance Fluctuations\": \"Observed\",\n    \"Strong Liquidity Ratio\": \"Confirmed\",\n    \"Risk Assessment\": \"Low\",\n    \"Bank Statement Reliability\": \"High\"\n  },\n  \"Currency\": \"Not Specified\"\n}\n```\nNote: The currency was not identified in the provided statement data, please replace \"Not Specified\" with the actual currency if known. Calculations are based on the available data, and exact debt obligations need more explicit detail from the statement for precise DSCR and recommendations.",
+                "refusal": null,
+                "annotations": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 2065,
+        "completion_tokens": 715,
+        "total_tokens": 2780,
+        "prompt_tokens_details": {
+            "cached_tokens": 2048,
+            "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+        }
+    },
+    "service_tier": "default",
+    "system_fingerprint": "fp_07871e2ad8"
+}
