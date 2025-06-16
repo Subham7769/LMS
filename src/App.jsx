@@ -255,6 +255,11 @@ const CollateralRegisterPT2 = lazy(() =>
   import("./components/ProductTesting2/CollateralRegister")
 );
 
+// Bank Statement Analyser Imports
+const BankStatementAnalyzer = React.lazy(() =>
+  import("./components/BankStatementAnalyzer/BankStatementAnalyzer")
+);
+
 // GlobalConfig Imports
 const LiabilitiesMatrix = lazy(() =>
   import("./components/GlobalConfig/LiabilitiesMatrix")
@@ -1471,6 +1476,11 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
         ],
+      },
+      {
+        path: "bank-statement-analyzer",
+        element: <BankStatementAnalyzer />,
+        errorElement: <RouteErrorBoundary />,
       },
     ],
   },

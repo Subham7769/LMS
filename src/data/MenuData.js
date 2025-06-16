@@ -342,6 +342,13 @@ export const MenusInitial = [
     submenu: false,
     isOpen: false,
   },
+  {
+    title: "Bank Statement Analyzer",
+    sectionName: "TESTING",
+    href: "/loan/bank-statement-analyzer",
+    icon: "DocumentMagnifyingGlassIcon",
+    current: false,
+  },
   // {
   //   title: "Test Component",
   //   sectionName: "TESTING",

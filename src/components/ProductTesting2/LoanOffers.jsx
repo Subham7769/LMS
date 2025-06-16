@@ -219,7 +219,7 @@ const LoanOffers = () => {
   return (
     <>
       <ContainerTile className={"p-5"} loading={loading}>
-        <div className="grid grid-cols-3 gap-5 items-end">
+        <div className="grid sm:grid-cols-3 gap-5 items-end">
           <InputSelect
             labelName={"Loan Product"}
             inputName="loanProductId"

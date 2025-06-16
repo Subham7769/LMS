@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
 import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
-import ListTable from "../Common/ListTable/ListTable";
-
-import { saveAs } from "file-saver";
+import InputFile from "../Common/InputFile/InputFile";
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -16,16 +13,11 @@ import {
 } from "recharts";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Accordion from "../Common/Accordion/Accordion";
-import LoadingState from "../LoadingState/LoadingState";
+import { toast } from "react-toastify";
+import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 
 const DOC_AI_ENDPOINT = import.meta.env.VITE_DOC_AI_ENDPOINT;
-const DOC_AI_TOKEN = import.meta.env.VITE_DOC_AI_TOKEN;
 const OPENAI_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 const serviceAccount = {
@@ -92,13 +84,13 @@ const generateAccessToken = async () => {
 
 const fetchDocumentBase64ByDocId = async (docId, authToken) => {
   const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_COMPANY}${docId}`;
-
+  const token = localStorage.getItem("authToken");
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -162,6 +154,7 @@ const BankStatementAnalyzer = (prop) => {
   //const { docId } = prop;
 
   const location = useLocation();
+  const toastId = useRef(null);
 
   // Support both prop and URL docId
   const query = new URLSearchParams(location.search);
@@ -172,38 +165,6 @@ const BankStatementAnalyzer = (prop) => {
   const [loading, setLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState();
   const [dashboardHTML, setDashboardHTML] = useState("");
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  // const handleExport = () => {
-  //   if (!dashboardHTML) return;
-  //   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-
-  //   doc.setFont("Courier", "bold");
-  //   doc.setFontSize(12);
-  //   doc.text("Cash Flow Analysis Results", 40, 40);
-
-  //   const metrics = [
-  //     ["Average Monthly Cash Flow", "AED 925,000"],
-  //     ["Average Monthly Deposits", "AED 1,850,000"],
-  //     ["Average Monthly Withdrawals", "AED 925,000"],
-  //     ["End Balance (APR)", "AED 635,000"],
-  //     ["Available for Financing (30%)", "AED 277,500"],
-  //   ];
-
-  //   autoTable(doc, {
-  //     head: [["Metric", "Value"]],
-  //     body: metrics,
-  //     startY: 55,
-  //     theme: 'grid',
-  //     headStyles: { fillColor: [52, 73, 94] },
-  //     styles: { font: 'courier', fontSize: 10 },
-  //   });
-
-  //   setLoading(false);
-  // };
 
   const handleExport = () => {
     if (!analysisData) {
@@ -274,6 +235,7 @@ const BankStatementAnalyzer = (prop) => {
 
   const analyzeWithDocument = async (pdfBase64) => {
     setLoading(true);
+    toastId.current = toast.loading("Parsing the doc..."); // Show loader
     try {
       const token = await generateAccessToken();
 
@@ -294,6 +256,12 @@ const BankStatementAnalyzer = (prop) => {
       );
 
       const documentJson = docAIResponse.data;
+
+      // ✅ Update the existing toast instead of creating new one
+      toast.update(toastId.current, {
+        render: "Analyzing the content...",
+        isLoading: true,
+      });
 
       const openaiResponse = await axios.post(
         "https://api.openai.com/v1/chat/completions",
@@ -352,9 +320,22 @@ const BankStatementAnalyzer = (prop) => {
         console.log(parsedJson);
 
         setAnalysisData(parsedJson);
+        // ✅ Update the toast to success
+        toast.update(toastId.current, {
+          render: "Analysis complete!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
       } catch (e) {
         console.error("Failed to parse OpenAI response:", e);
-        alert("Failed to parse analysis result. Check console for details.");
+        // ❌ Update the toast to error
+        toast.update(toastId.current, {
+          render: "Failed to analyze document.",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
     } catch (error) {
       console.error("Error analyzing statement:", error);
@@ -363,14 +344,17 @@ const BankStatementAnalyzer = (prop) => {
     setLoading(false);
   };
 
-  const handleUpload = async () => {
-    if (!file) return alert("Please upload a PDF file");
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64Content = reader.result.split(",")[1];
-      await analyzeWithDocument(base64Content);
-    };
-    reader.readAsDataURL(file);
+  const handleFileChange = async (e) => {
+    setFile(e.target.value);
+    const { files } = e.target;
+    if (files && files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Content = reader.result.split(",")[1];
+        await analyzeWithDocument(base64Content);
+      };
+      reader.readAsDataURL(files[0]);
+    }
   };
 
   // Auto-start if docId is provided
@@ -408,8 +392,8 @@ const BankStatementAnalyzer = (prop) => {
         <tbody>
           {Object.entries(data).map(([key, value], idx) => (
             <tr key={idx}>
-              <td className="text-[14px] text-gray-600">{key}</td>
-              <td style={{ color: "#111827" }}>{renderValue(value)}</td>
+              <td className="text-[14px]">{key}</td>
+              <td>{renderValue(value)}</td>
             </tr>
           ))}
         </tbody>
@@ -445,40 +429,27 @@ const BankStatementAnalyzer = (prop) => {
     );
   };
 
-  if (docId && loading) {
-    return <LoadingState />;
-  }
-
   return (
     <div className="">
-      {!docId && (
-        <h1 className="text-2xl font-bold mb-4">Bank Statement Analyzer</h1>
-      )}
-      <div className="flex gap-4 items-center justify-end mb-4 mx-4">
+      {!docId && <DynamicHeader itemName={"Bank Statement Analyzer"} isEditable={false} />}
+      <div className="flex flex-col md:flex-row gap-y-4 md:items-end justify-between mb-4">
         {!docId && (
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
+          <InputFile
+            labelName="Upload & Analyze"
+            placeholder={"Upload only pdf files."}
+            inputName={"file"}
+            inputValue={file}
+            onChange={(e) => handleFileChange(e)}
           />
         )}
-        {!docId && loading ? <span>'Analyzing...'</span> : ""}
-        {!docId && (
+        <div className="text-right">
           <Button
-            buttonIcon={PlusIcon}
-            buttonName={loading ? "Analyzing..." : "Upload & Analyze"}
-            onClick={handleUpload}
-            disabled={loading || !!docId}
+            buttonName="Download PDF"
+            onClick={handleExport}
+            disabled={!analysisData}
             rectangle={true}
           />
-        )}
-        <Button
-          buttonIcon={PlusIcon}
-          buttonName="Download PDF"
-          onClick={handleExport}
-          disabled={!analysisData}
-          rectangle={true}
-        />
+        </div>
       </div>
 
       {analysisData && (

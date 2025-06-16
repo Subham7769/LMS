@@ -49,6 +49,7 @@ import {
   BeakerIcon,
   ChartBarIcon,
   DocumentCurrencyRupeeIcon,
+  DocumentMagnifyingGlassIcon,
   NewspaperIcon,
   AtSymbolIcon,
   WrenchScrewdriverIcon,
@@ -121,6 +122,7 @@ const SideBar = () => {
     BeakerIcon,
     ChartBarIcon,
     DocumentCurrencyRupeeIcon,
+    DocumentMagnifyingGlassIcon,
     NewspaperIcon,
     AtSymbolIcon,
     WrenchScrewdriverIcon,
@@ -364,9 +366,7 @@ const SideBar = () => {
             <img
               src={LogoIcon}
               alt="logo"
-              className={`${
-                open ? "w-auto" : "hidden"
-              } mb-10`}
+              className={`h-8 lg:h-auto ${open ? "w-auto" : "hidden"} mb-5`}
             />
             <ArrowLeftIcon
               className={`h-6 w-auto mb-10 lg:hidden`}
