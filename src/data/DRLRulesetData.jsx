@@ -1,36 +1,3 @@
-import {
-  ClipboardDocumentListIcon,
-  CurrencyRupeeIcon,
-  UsersIcon,
-} from "@heroicons/react/24/outline";
-
-export const RacStats = [
-  {
-    id: 1,
-    name: "Avg. Approval Daily",
-    stat: "723",
-    icon: UsersIcon,
-    change: "122",
-    changeType: "increase",
-  },
-  {
-    id: 2,
-    name: "Active RAC",
-    stat: "2 / 3",
-    icon: CurrencyRupeeIcon,
-    change: "5.4%",
-    changeType: "increase",
-  },
-  {
-    id: 3,
-    name: "Avg. Rejection / Day",
-    stat: "24.57",
-    icon: ClipboardDocumentListIcon,
-    change: "3.2%",
-    changeType: "decrease",
-  },
-];
-
 export const HeaderList = [
   "Name",
   "Rule Category",

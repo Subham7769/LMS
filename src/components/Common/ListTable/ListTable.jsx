@@ -250,12 +250,12 @@ const ListTable = ({
                     <tr key={indexOfFirstItem + rowIndex}>
                       {Object.keys(product).map((key, idx) =>
                         key !== "href" ? (
-                          <td
-                            key={idx}
-                            className={`px-4 py-4 whitespace-nowrap`}
-                          >
+                          <td key={idx} className={`px-4 py-4 break-words `}>
                             {product.href ? (
-                              <Link className="w-full block" to={product.href}>
+                              <Link
+                                className="w-full block whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]"
+                                to={product.href}
+                              >
                                 {product[key]}
                               </Link>
                             ) : Editable ||
@@ -289,6 +289,7 @@ const ListTable = ({
                         >
                           {ListAction.map((item, buttonIndex) => (
                             <Button
+                              buttonName={item.name}
                               buttonIcon={
                                 ListAction.length > 1 && buttonIndex === 0
                                   ? editingRowIndex ===

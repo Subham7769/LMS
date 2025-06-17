@@ -490,6 +490,12 @@ const UploadRepaymentSME = lazy(() =>
   import("./components/Los-SME/Repayments/UploadRepayment")
 );
 
+// ---------------------- Workflow Management Imports ----------------------------
+const WorkflowsPage = lazy(() => import("./pages/WorkflowsPage"));
+const InstancesPage = lazy(() => import("./pages/InstancesPage"));
+const IncidentsPage = lazy(() => import("./pages/IncidentsPage"));
+const MyTasksPage = lazy(() => import("./pages/MyTasksPage"));
+
 // ------------------------ Deposit Section Imports -----------------------------------
 
 const AppLayoutDeposit = React.lazy(() =>
@@ -679,6 +685,26 @@ const routes = [
       {
         path: "reports",
         element: <ReportsPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "workflows",
+        element: <WorkflowsPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "instances",
+        element: <InstancesPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "incidents",
+        element: <IncidentsPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "my-tasks",
+        element: <MyTasksPage />,
         errorElement: <RouteErrorBoundary />,
       },
 

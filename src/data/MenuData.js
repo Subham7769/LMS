@@ -519,6 +519,63 @@ export const MenusInitial = [
     icon: "CheckBadgeIcon",
     current: false,
   },
+
+  // WORKFLOW MANAGEMENT
+  {
+    title: "Workflows",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/loan/workflows",
+    icon: "RectangleGroupIcon",
+    current: false,
+    submenu: true,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Instances",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/loan/instances",
+    icon: "RectangleGroupIcon",
+    current: false,
+    submenu: true,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Incidents",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/loan/incidents",
+    icon: "RectangleGroupIcon",
+    current: false,
+    submenu: true,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "My Tasks",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/loan/my-tasks",
+    icon: "RectangleGroupIcon",
+    current: false,
+    submenu: true,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
+  {
+    title: "Notifications",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/loan/notifications",
+    icon: "RectangleGroupIcon",
+    current: false,
+    submenu: true,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
 ];
 export const allSectionName = [
   "LOAN MANAGEMENT",
@@ -528,4 +585,5 @@ export const allSectionName = [
   "LOAN ORIGINATION",
   "REPORTS & ANALYSIS",
   "USER TOOLS",
+  "WORKFLOW MANAGEMENT",
 ];

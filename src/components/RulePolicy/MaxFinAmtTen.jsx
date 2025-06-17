@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { PlusIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
