@@ -9,7 +9,7 @@ const B2CAppLayout = () => {
       {/* Header */}
       <B2CHeader />
 
-      <div className="w-full  min-h-[100dvh] h-full flex flex-col after:flex-1">
+      <div className="w-full  min-h-[calc(100vh-4rem)] h-full flex flex-col after:flex-1">
         {/* Main Content */}
         <Outlet />
       </div>

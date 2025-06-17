@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useActiveTab } from "../ActiveTabContext";
-import { registerBorrower } from "../../../redux/Slices/personalBorrowersSlice";
+import { registerB2CBorrower } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch } from "react-redux";
-import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/personalLoansSlice";
+import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/B2CLoansSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PersonDetailsSection from "./PersonDetailsSection";
@@ -120,7 +120,7 @@ function Onboarding03({ onNext, onBack }) {
 
     try {
       // 1. Register Borrower
-      const borrowerResponse = await dispatch(registerBorrower(dummyBorrowerData)).unwrap();
+      const borrowerResponse = await dispatch(registerB2CBorrower(dummyBorrowerData)).unwrap();
       console.log("Borrower Registered:", borrowerResponse.registrationResults);
 
       // 2. Generate Loan Application ID

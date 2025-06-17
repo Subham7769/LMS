@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import UploadDocuments from "./UploadDocuments";
 
 function Onboarding02({ onNext, onBack }) {
+  const navigate = useNavigate();
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +33,7 @@ function Onboarding02({ onNext, onBack }) {
             <button
               type="submit"
               className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={()=>navigate("/customer/thank-you")}
             >
               Next
             </button>

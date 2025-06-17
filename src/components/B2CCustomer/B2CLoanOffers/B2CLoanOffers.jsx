@@ -9,7 +9,7 @@ import {
   handleProceed,
   resetLoanOfferFields,
   updateLoanOfferFields,
-} from "../../../redux/Slices/personalLoansSlice";
+} from "../../../redux/Slices/B2CLoansSlice";
 import {
   UserIcon,
   CogIcon,
@@ -35,7 +35,7 @@ const B2CLoanOffers = () => {
     loanConfigData,
     loanOfferFields,
     loading,
-  } = useSelector((state) => state.personalLoans);
+  } = useSelector((state) => state.B2CPersonalLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const userName = userData?.username || "";

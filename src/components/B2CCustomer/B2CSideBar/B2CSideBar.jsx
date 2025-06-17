@@ -7,8 +7,8 @@ import { setRole } from "../../../redux/Slices/authSlice";
 import ProductListSection from "../PreOfferOnboarding/ProductListSection";
 import LoanRequirementSection from "../PreOfferOnboarding/LoanRequirementSection";
 import PersonDetailsSection from "../PreOfferOnboarding/PersonDetailsSection";
-import { registerBorrower } from "../../../redux/Slices/personalBorrowersSlice";
-import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/personalLoansSlice";
+import { registerB2CBorrower } from "../../../redux/Slices/B2CLoansSlice";
+import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/B2CLoansSlice";
 import { useActiveTab } from "../ActiveTabContext";
 import Button from '../../Common/Button/Button'
 
@@ -162,7 +162,7 @@ const SideBar = () => {
 
         try {
             // 1. Register Borrower
-            // const borrowerResponse = await dispatch(registerBorrower(dummyBorrowerData)).unwrap();
+            // const borrowerResponse = await dispatch(registerB2CBorrower(dummyBorrowerData)).unwrap();
             //   console.log("Borrower Registered:", borrowerResponse.registrationResults);
 
             // 2. Generate Loan Application ID
@@ -277,7 +277,7 @@ const SideBar = () => {
                 aria-hidden="true"
             ></div>
             <div
-                className={`z-40 absolute top-0 left-0  lg:relative overflow-y-auto h-screen no-scrollbar flex transform duration-1000 ease-in-out ${open ? "w-[17rem] " : "lg:w-4 w-0 "
+                className={`z-40 absolute top-0 left-0 md:static  lg:relative overflow-y-auto h-screen no-scrollbar flex transform duration-1000 ease-in-out ${open ? "w-[17rem] " : "lg:w-4 w-0 "
                     }`}
             >
                 {/* Collapse Button */}

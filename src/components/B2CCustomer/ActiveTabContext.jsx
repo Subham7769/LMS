@@ -41,7 +41,7 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
     employeeNo: "",
     ministry: "",
 
-    basicPay: "",
+
     housingAllowance: "",
     transportAllowance: "",
     ruralHardshipAllowance: "",

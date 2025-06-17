@@ -21,7 +21,7 @@ const B2CHeader = () => {
         <div className="flex  h-16 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 z-0" aria-hidden="true">
 
             {/* Hamburger Icon for Mobile View*/}
-            <div className="flex shrink-0 items-center justify-center md:hidden md:px-5">
+            <div className="flex shrink-0 items-center justify-center md:hidden md:px-5 ml-4">
                 {!open &&  pathname.includes("/loan-offers")  && (
                     <Bars3Icon
                         className={`h-8 w-auto text-white`}
