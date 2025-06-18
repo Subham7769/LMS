@@ -92,7 +92,7 @@ const InputDate = ({
           icon={<CalendarDaysIcon className="h-5 w-5" aria-hidden="true" />}
           popperClassName="text-xs"
           portalId="root-portal" // Ensures calendar renders outside the overflow
-          popperContainer={({ children }) => <div>{children}</div>} // Fixes clipping issue
+          popperContainer={({ children }) => <div className="z-[60] relative">{children}</div>} // Fixes clipping issue
         />
       </div>
     </>

@@ -79,7 +79,7 @@ import CreateNew from "../CreateNew/CreateNew";
 import { setRole } from "../../../redux/Slices/authSlice";
 import { createNewDocumentConfig } from "../../../utils/createNewDocumentConfig.js";
 // import { LogoIcon } from "../../../assets/icons.jsx";
-import LogoIcon from "../../../assets/can.png";
+import LogoIcon from "../../../assets/logo.png";
 import { createNewDrlRuleset } from "../../../utils/createNewDrlRuleset.js";
 
 const SideBar = () => {
@@ -366,7 +366,7 @@ const SideBar = () => {
             <img
               src={LogoIcon}
               alt="logo"
-              className={`h-8 lg:h-auto ${open ? "w-auto" : "hidden"} mb-5`}
+              className={`h-8 ${open ? "w-auto" : "hidden"} mb-5`}
             />
             <ArrowLeftIcon
               className={`h-6 w-auto mb-10 lg:hidden`}

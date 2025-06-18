@@ -232,9 +232,56 @@ const NotificationWindow = () => {
               notifications.map((notification) => (
                 <div
                   key={notification.notificationId}
-                  className="border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                  className="border-b border-gray-200 dark:border-gray-700/60 last:border-b-0"
                 >
-                  <button
+                  <Link
+                    className="block py-2 px-4 hover:bg-gray-50 dark:hover:bg-gray-700/20"
+                    to="/loan/notifications"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <span className="block text-sm mb-2">
+                      📣{" "}
+                      <span className="font-medium text-gray-800 dark:text-gray-100">
+                        {notification.type === "UPDATE"
+                          ? `Config UPDATE`
+                          : notification.type === "NEW"
+                          ? `New ${notification.sectionName}`
+                          : `New Update`}
+                      </span>{" "}
+                      {notification.type === "UPDATE" ? (
+                        <>
+                          You have{" "}
+                          {roleName !== "ROLE_MAKER_ADMIN"
+                            ? "received"
+                            : "sent"}{" "}
+                          an approval request for {notification.type} in{" "}
+                          <Link to={notification.routingLink}>
+                            {notification.subSectionName}
+                          </Link>{" "}
+                          {notification.sectionName}.
+                        </>
+                      ) : notification.type === "NEW" ? (
+                        <>
+                          You have{" "}
+                          {roleName !== "ROLE_MAKER_ADMIN"
+                            ? "received"
+                            : "sent"}{" "}
+                          an approval request for newly created{" "}
+                          {notification.sectionName}{" "}
+                          <Link to={notification.routingLink}>
+                            <b>{notification.subSectionName}</b>
+                          </Link>
+                          .
+                        </>
+                      ) : (
+                        "You have received a new approval request."
+                      )}
+                    </span>
+                    <span className="block text-xs font-medium text-gray-400 dark:text-gray-500">
+                      {getTimeDifference(notification.requestedAt)}
+                    </span>
+                  </Link>
+                  {/* <button
                     className="w-full px-4 py-3 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors duration-200"
                     onClick={() =>
                       toggleAccordion(
@@ -412,19 +459,19 @@ const NotificationWindow = () => {
                     ) : (
                       ""
                     )}
-                  </div>
+                  </div> */}
                 </div>
               ))
             )}
           </div>
 
-          <div className="p-3 border-t border-gray-200 dark:border-gray-700">
+          {/* <div className="p-3 border-t border-gray-200 dark:border-gray-700">
             <Link to="/loan/notifications">
               <button className="w-full text-center font-medium text-sm text-violet-500 dark:text-violet-400 transition-colors duration-200 cursor-pointer">
                 Notifications History
               </button>
             </Link>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

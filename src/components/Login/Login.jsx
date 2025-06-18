@@ -15,7 +15,7 @@ import InputPassword from "../Common/InputPassword/InputPassword";
 import InputEmail from "../Common/InputEmail/InputEmail";
 import { LockClosedIcon, UserIcon } from "@heroicons/react/20/solid";
 // import { LogoIcon } from "../../assets/icons";
-import LogoIcon from "../../assets/can.png";
+import LogoIcon from "../../assets/logo.png";
 import {
   ArrowPathRoundedSquareIcon,
   Cog6ToothIcon,
