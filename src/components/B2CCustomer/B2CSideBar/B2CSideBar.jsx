@@ -7,10 +7,11 @@ import { setRole } from "../../../redux/Slices/authSlice";
 import ProductListSection from "../PreOfferOnboarding/ProductListSection";
 import LoanRequirementSection from "../PreOfferOnboarding/LoanRequirementSection";
 import PersonDetailsSection from "../PreOfferOnboarding/PersonDetailsSection";
-import { registerB2CBorrower } from "../../../redux/Slices/B2CLoansSlice";
-import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/B2CLoansSlice";
+import { registerB2CPersonalBorrower } from "../../../redux/Slices/B2CLoansSlice";
+import { generatePersonalLoanApplicationId, saveDraftLoanData, submitPersonalLoan } from "../../../redux/Slices/B2CLoansSlice";
 import { useActiveTab } from "../ActiveTabContext";
 import Button from '../../Common/Button/Button'
+import { toast } from "react-toastify";
 
 
 
@@ -18,17 +19,15 @@ const SideBar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const { pathname } = location;
-    const { menus, error, submenuStates, open } = useSelector(
-        (state) => state.sidebar
-    );
+    const { menus, error, submenuStates, open } = useSelector((state) => state.sidebar);
     const { roleName } = useSelector((state) => state.auth);
     const roleNameLocal = localStorage.getItem("roleName");
     const { formData } = useActiveTab();
     const [loading, setLoading] = useState(false);
+    const { loanConfigData } = useSelector((state) => state.B2CLoans);
+    const { loanApplicationId } = loanConfigData
 
 
-
-    // console.log(roleName);
     if (!roleName) {
         dispatch(setRole(roleNameLocal));
     }
@@ -161,15 +160,8 @@ const SideBar = () => {
         };
 
         try {
-            // 1. Register Borrower
-            // const borrowerResponse = await dispatch(registerB2CBorrower(dummyBorrowerData)).unwrap();
-            //   console.log("Borrower Registered:", borrowerResponse.registrationResults);
 
-            // 2. Generate Loan Application ID
-            // const loanApplicationId = await dispatch(generateLoanApplicationId()).unwrap();
-            //   console.log("Loan Application ID:", loanApplicationId);
-
-            // 3. Prepare Loan Data
+            // 1. Prepare Loan Data
             const dummyLoanData = {
                 "loanApplicationId": loanApplicationId,
                 "borrowerName": "Anonymous User",
@@ -243,21 +235,21 @@ const SideBar = () => {
                 ]
             }
 
-            // 4. Save Draft
+            // 2. Save Draft
             await dispatch(saveDraftLoanData(dummyLoanData)).unwrap();
             //   console.log("Saved Draft Loan!");
 
-            // 5. Submit Loan
+            // 3. Submit Loan
             const submitPayload = {
                 ...dummyLoanData.generalLoanDetails,
                 documents: dummyLoanData.documents,
                 loanApplicationId,
                 refinanceDetails: dummyLoanData.refinanceDetails,
             };
-            await dispatch(submitLoan(submitPayload)).unwrap();
+            await dispatch(submitPersonalLoan(submitPayload)).unwrap();
             //   console.log("Submitted Loan!");
 
-            // 6. Navigate
+            // 4. Navigate
             //   navigate("/customer/loan-offers");
 
         } catch (error) {
@@ -283,7 +275,7 @@ const SideBar = () => {
                 {/* Collapse Button */}
                 <button
                     onClick={handleToggleSidebar}
-                    className={`hidden lg:block z-50 absolute ${open ? "right-2" : "right-0"}  top-56 bg-gray-800 dark:border border-gray-400 h-16 w-4 rounded-full p-0`}
+                    className={`hidden md:block z-50 absolute ${open ? "right-2" : "right-0"}  top-56 bg-gray-800 dark:border border-gray-400 h-16 w-4 rounded-full p-0`}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -311,26 +303,26 @@ const SideBar = () => {
                             onClick={handleToggleSidebar}
                         />
                     </div>
-                        <div   className={`flex flex-col align-middle gap-2 transform duration-500 ease-in-out transition-opacity ${open ? "opacity-100" : "opacity-0"}`}>
+                    <div className={`flex flex-col align-middle gap-2 transform duration-500 ease-in-out transition-opacity ${open ? "opacity-100" : "opacity-0"}`}>
 
-                            <p className="font-bold ">Loan Products</p>
-                            {/* Product List Section */}
-                            <ProductListSection />
+                        <p className="font-bold ">Loan Products</p>
+                        {/* Product List Section */}
+                        <ProductListSection />
 
-                            <p className="font-bold mt-5">Loan Config</p>
-                            {/* Loan Amount, Period, Repayment, Interest Rate */}
-                            <LoanRequirementSection />
+                        <p className="font-bold mt-5">Loan Config</p>
+                        {/* Loan Amount, Period, Repayment, Interest Rate */}
+                        <LoanRequirementSection />
 
-                            {/* Person Details Section */}
-                            <PersonDetailsSection />
+                        {/* Person Details Section */}
+                        <PersonDetailsSection />
 
-                            <Button
-                                buttonName={loading ? "Updating..." : "Submit"}
-                                onClick={handleSubmit}
-                                disabled={loading}
-                            />
+                        <Button
+                            buttonName={loading ? "Updating..." : "Submit"}
+                            onClick={handleSubmit}
+                            disabled={loading}
+                        />
 
-                        </div>
+                    </div>
                 </div>
             </div>
         </>

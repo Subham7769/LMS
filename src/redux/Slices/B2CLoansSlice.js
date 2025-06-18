@@ -3,9 +3,36 @@ import { toast } from "react-toastify";
 import convertToTitleCase from "../../utils/convertToTitleCase";
 import { sanitizeUid } from "../../utils/sanitizeUid";
 
-// Register a Borrower
-export const registerB2CBorrower = createAsyncThunk(
-  "borrowers/registerB2CBorrower", // action type
+// PRODUCTS
+export const fetchLoanProductData = createAsyncThunk(
+  "B2CLoan/fetchLoanProductData",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_B2C_READ_ALL_PRODUCT}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// BORROWERS
+export const registerB2CPersonalBorrower = createAsyncThunk(
+  "B2CLoan/registerB2CPersonalBorrower", // action type
   async (addBorrowerData, { rejectWithValue }) => {
     try {
       const auth = localStorage.getItem("authToken");
@@ -34,14 +61,13 @@ export const registerB2CBorrower = createAsyncThunk(
   }
 );
 
-
-export const fetchLoanProductData = createAsyncThunk(
-  "personalLoans/fetchLoanProductData",
-  async (_, { rejectWithValue }) => {
+export const fetchPersonalBorrowerById = createAsyncThunk(
+  "B2CLoan/fetchPersonalBorrowerById",
+  async (uid, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_B2C_READ_ALL_PRODUCT}`,
+        `${import.meta.env.VITE_LOAN_READ_BORROWER_PROFILE}${uid}`,
         {
           method: "GET",
           headers: {
@@ -61,6 +87,206 @@ export const fetchLoanProductData = createAsyncThunk(
   }
 );
 
+export const updatePersonalBorrowerInfo = createAsyncThunk(
+  "B2CLoan/updatePersonalBorrowerInfo", // Action type
+  async ({ borrowerData, uid }, { rejectWithValue }) => {
+    try {
+      const auth = localStorage.getItem("authToken"); // Retrieve the auth token
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWERS_UPDATE_PERSONAL_BORROWER}${uid}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth}`,
+          },
+          body: JSON.stringify(borrowerData), // Send updated borrower data
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to update borrower information"
+        );
+      }
+    } catch (error) {
+      return rejectWithValue(error.message); // Return the error message
+    }
+  }
+);
+
+// LOANS
+export const generatePersonalLoanApplicationId = createAsyncThunk(
+  "B2CLoan/generatePersonalLoanApplicationId",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_B2C_GET_DRAFT_APPLICATION_ID}PERSONAL`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to generate ID");
+      }
+      const responseData = await response.json();
+      return responseData.sequenceId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const saveDraftLoanData = createAsyncThunk(
+  "B2CLoan/saveDraftLoanData",
+  async (addLoanData, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_LOAN_SAVE_DRAFT_PERSONAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(addLoanData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const submitPersonalLoan = createAsyncThunk(
+  "B2CLoan/submitPersonalLoan",
+  async (generalLoanDetails, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_B2C_SUBMIT_CREATE_PERSONAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(generalLoanDetails),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const handleProceed = createAsyncThunk(
+  "personalLoans/handleProceed",
+  async ({ proceedPayload, uid }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${
+      import.meta.env.VITE_LOAN_SUBMIT_PUT_PERSONAL
+    }${uid}/submit-loan`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(proceedPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getB2CLoanOffers = createAsyncThunk(
+  "B2CLoan/getB2CLoanOffers",
+  async (loanOfferFields, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_LOAN_READ_LOAN_OFFERS_PERSONAL}${
+          loanOfferFields.loanProductId
+        }/caching/${loanOfferFields.uid}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// LOGIN
+export const B2CLogin = createAsyncThunk(
+  "B2CLoan/B2CLogin",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_B2C_LOGIN}`,
+        requestOptions
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to login");
+      }
+
+      const data = await response.json();
+      const token = data.token ? data.token.replace("Bearer ", "") : null; // Ensure token exists in the response
+
+      return { token, data };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// old one
 export const getLoanApplications = createAsyncThunk(
   "personalLoans/getLoanApplications",
   async ({ page, size }, { rejectWithValue }) => {
@@ -223,33 +449,6 @@ export const getLoanApplicationByField = createAsyncThunk(
       return responseData;
     } catch (error) {
       return rejectWithValue(error.message);
-    }
-  }
-);
-
-
-export const fetchBorrowerById = createAsyncThunk(
-  "personalLoans/fetchBorrowerById",
-  async (uid, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_LOAN_READ_BORROWER_PROFILE}${uid}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to fetch");
-      }
-      const responseData = await response.json();
-      return responseData;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -456,60 +655,6 @@ export const getMaxPrincipalData = createAsyncThunk(
   }
 );
 
-export const saveDraftLoanData = createAsyncThunk(
-  "personalLoans/saveDraftLoanData",
-  async (addLoanData, { rejectWithValue }) => {
-    const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_SAVE_DRAFT_PERSONAL}`;
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(addLoanData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to transfer");
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const submitLoan = createAsyncThunk(
-  "personalLoans/submitLoan",
-  async (generalLoanDetails, { rejectWithValue }) => {
-    const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_SUBMIT_CREATE_PERSONAL}`;
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(generalLoanDetails),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to transfer");
-      }
-      const responseData = await response.json();
-      return responseData;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 export const getLoanOffers = createAsyncThunk(
   "personalLoans/getLoanOffers",
   async (loanOfferFields, { rejectWithValue }) => {
@@ -561,36 +706,6 @@ export const deleteLoanOffers = createAsyncThunk(
       }
     } catch (error) {
       return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const handleProceed = createAsyncThunk(
-  "personalLoans/handleProceed",
-  async ({ proceedPayload, uid }, { rejectWithValue }) => {
-    const token = localStorage.getItem("authToken");
-    const url = `${
-      import.meta.env.VITE_LOAN_SUBMIT_PUT_PERSONAL
-    }${uid}/submit-loan`;
-
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(proceedPayload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to transfer");
-      }
-      const responseData = await response.json();
-      return responseData;
-    } catch (error) {
-      return rejectWithValue(error.message);
     }
   }
 );
@@ -932,32 +1047,6 @@ export const getDisbursementFile = createAsyncThunk(
   }
 );
 
-export const generateLoanApplicationId = createAsyncThunk(
-  "personalLoans/generateLoanApplicationId",
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_GET_DRAFT_APPLICATION_ID}PERSONAL`;
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to generate ID");
-      }
-      const responseData = await response.json();
-      return responseData.sequenceId;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 export const closeLoan = createAsyncThunk(
   "personalLoans/closeLoan",
   async (closeLoanPayload, { rejectWithValue }) => {
@@ -1049,7 +1138,6 @@ export const fetchBorrowerDataLoanHistory = createAsyncThunk(
 );
 
 const initialState = {
-  borrowerData: {},
   loanApplications: [],
   loanApplicationsTotalElements: 0,
   addLoanData: {
@@ -1057,11 +1145,11 @@ const initialState = {
     borrowerType: "PERSONAL_BORROWER",
     generalLoanDetails: {
       borrowerId: "",
-      disbursedBy: "Bank",
+      disbursedBy: "Online",
       interestMethod: "",
       loanDurationStr: "",
       loanDuration: "",
-      loanDurationType: "",
+      loanDurationType: "MONTH",
       loanInterest: 0,
       loanInterestType: "",
       loanInterestStr: "",
@@ -1097,177 +1185,7 @@ const initialState = {
   borrowerLoanHistory: [],
   paymentHistory: [],
   loanHistoryTotalElements: 0,
-  loanConfigData: {
-    profile: {
-      cashTCL: 1500000,
-      netCashTCL: 1500000,
-      cashCreditScore: 0.9,
-    },
-    cashLoanStats: {
-      maxLoanDuration: 186,
-      minLoanDuration: 186,
-      maxLoanDurationMonths: 6,
-      minLoanDurationMonths: 6,
-      maxLoanAmount: 60000,
-      minLoanAmount: 60000,
-      maxTenure: 6,
-      minTenure: 6,
-      maxEligibleDuration: 1116,
-      minEligibleDuration: 31,
-      maxEligibleDurationMonths: 36,
-      minEligibleDurationMonths: 1,
-      minLoanProductAmount: 100,
-      maxLoanAmountForBorrower: 151315,
-    },
-    dynamicCashLoanOffers: [
-      {
-        transactionId: "2bd78e19-51b4-438a-a368-cc31c78caadc",
-        serviceFee: 2700,
-        serviceFeeTax: 0,
-        totalLoanAmount: 71374.28,
-        totalInterestAmount: 8674.28,
-        totalManagementFee: 0,
-        totalManagementVatFee: 0,
-        principalAmount: 60000,
-        duration: 186,
-        instalmentsNumber: 6,
-        dailyInterestRate: 0.00126598497855257,
-        durationInMonths: 6,
-        schema: "Payroll Backed Loans",
-        installmentSummaryResponse: [
-          {
-            installmentValue: 11445.71,
-            installmentDate: "2025-07-10",
-            totalRequiredAmount: 11895.71,
-            interestValue: 2400,
-            principalValue: 9045.71,
-            closingAmount: 60000,
-            earlySettlementFee: 0,
-            savedFee: 8674.26,
-            savedFeePercent: 100,
-            principalOutstandingAmount: 50954.29,
-            totalOutstandingAmount: 59478.55,
-            termCost: 0,
-            thirdPartyCost: 0,
-            serviceFee: 450,
-            managementFee: 0,
-            vatFee: 0,
-          },
-          {
-            installmentValue: 11445.71,
-            installmentDate: "2025-08-10",
-            totalRequiredAmount: 11895.71,
-            interestValue: 2038.17,
-            principalValue: 9407.54,
-            closingAmount: 50954.29,
-            earlySettlementFee: 0,
-            savedFee: 6274.26,
-            savedFeePercent: 100,
-            principalOutstandingAmount: 41546.75,
-            totalOutstandingAmount: 47582.84,
-            termCost: 0,
-            thirdPartyCost: 0,
-            serviceFee: 450,
-            managementFee: 0,
-            vatFee: 0,
-          },
-          {
-            installmentValue: 11445.71,
-            installmentDate: "2025-09-10",
-            totalRequiredAmount: 11895.71,
-            interestValue: 1661.87,
-            principalValue: 9783.84,
-            closingAmount: 41546.75,
-            earlySettlementFee: 0,
-            savedFee: 4236.09,
-            savedFeePercent: 100,
-            principalOutstandingAmount: 31762.91,
-            totalOutstandingAmount: 35687.13,
-            termCost: 0,
-            thirdPartyCost: 0,
-            serviceFee: 450,
-            managementFee: 0,
-            vatFee: 0,
-          },
-          {
-            installmentValue: 11445.71,
-            installmentDate: "2025-10-10",
-            totalRequiredAmount: 11895.71,
-            interestValue: 1270.52,
-            principalValue: 10175.19,
-            closingAmount: 31762.91,
-            earlySettlementFee: 0,
-            savedFee: 2574.22,
-            savedFeePercent: 100,
-            principalOutstandingAmount: 21587.72,
-            totalOutstandingAmount: 23791.42,
-            termCost: 0,
-            thirdPartyCost: 0,
-            serviceFee: 450,
-            managementFee: 0,
-            vatFee: 0,
-          },
-          {
-            installmentValue: 11445.71,
-            installmentDate: "2025-11-10",
-            totalRequiredAmount: 11895.71,
-            interestValue: 863.51,
-            principalValue: 10582.2,
-            closingAmount: 21587.72,
-            earlySettlementFee: 0,
-            savedFee: 1303.7,
-            savedFeePercent: 100,
-            principalOutstandingAmount: 11005.52,
-            totalOutstandingAmount: 11895.71,
-            termCost: 0,
-            thirdPartyCost: 0,
-            serviceFee: 450,
-            managementFee: 0,
-            vatFee: 0,
-          },
-          {
-            installmentValue: 11445.71,
-            installmentDate: "2025-12-10",
-            totalRequiredAmount: 11895.71,
-            interestValue: 440.19,
-            principalValue: 11005.52,
-            closingAmount: 11005.52,
-            earlySettlementFee: 0,
-            savedFee: 440.19,
-            savedFeePercent: 100,
-            principalOutstandingAmount: 0,
-            totalOutstandingAmount: 0,
-            termCost: 0,
-            thirdPartyCost: 0,
-            serviceFee: 450,
-            managementFee: 0,
-            vatFee: 0,
-          },
-        ],
-        annualInterestRatePercent: 24,
-        dailyInterestRatePercentWithoutFee: 0.13,
-        annualInterestRatePercentWithoutFee: 24,
-        monthlyInterestRatePercent: 4,
-        aprAsPerTenorPercent: 0,
-        monthlyInterestRatePercentWithoutFee: 4,
-        annualFlatRatePercent: 48,
-        monthlyFlatRatePercent: 4,
-        aprWithoutFeePerMonthPercent: 2,
-        aprPerMonthPercent: 2,
-        loanFlatRate: 0.14457,
-        averageNumberOfInstallment: 6.016438356098449,
-        disbursedAmount: 55928,
-        crbCharge: 100,
-        insuranceFee: 2400,
-        insuranceLevy: 72,
-        applicationFees: 1500,
-        discountRate: 0,
-        discountFee: 0,
-      },
-    ],
-    loanApplicationId: "LHPX129",
-  },
-  loanProductData: [],
+  loanConfigData: {},
   loanProductOptions: [],
   loanOfferFields: {
     loanProductId: "",
@@ -1278,14 +1196,119 @@ const initialState = {
   loanStatement: {},
   disbursement: {},
   outrightSettlement: {},
+  loanProductData: [],
+  borrowerId: "",
+  personalBorrower: {
+    personalDetails: {
+      fullName: "",
+      title: "",
+      firstName: "",
+      surname: "",
+      otherName: "", //optional
+      uniqueIDType: "",
+      uniqueID: "",
+      gender: "",
+      maritalStatus: "",
+      nationality: "Indian",
+      dateOfBirth: "",
+      placeOfBirth: "",
+      loanOfficer: "",
+    },
+    contactDetails: {
+      address: "",
+      mobile1: "",
+      mobile2: "", //optional
+      landlinePhone: "", //optional
+      houseNumber: "", //optional
+      street: "",
+      residentialArea: "",
+      country: "India",
+      province: "", //optional
+      district: "", //optional
+      email: "",
+      postBox: "", //optional
+    },
+    employmentDetails: {
+      employer: "",
+      occupation: "",
+      employmentDistrict: "", //optional
+      employmentLocation: "",
+      workStartDate: "",
+      workPhoneNumber: "", //optional
+      workPhysicalAddress: "", //optional
+      employeeNo: "",
+      workType: "",
+      ministry: "",
+    },
+    incomeOnPaySlip: {
+      basicPay: "",
+      housingAllowance: "",
+      transportAllowance: "",
+      ruralHardshipAllowance: "",
+      infectiousHealthRisk: "",
+      healthShiftAllowance: "",
+      interfaceAllowance: "",
+      responsibilityAllowance: "",
+      doubleClassAllowance: "",
+      actingAllowance: "",
+      otherAllowances: "",
+    },
+    deductionOnPaySlip: {
+      totalDeductionsOnPayslip: "",
+      totalDeductionsNotOnPayslip: "",
+    },
+    bankDetails: {
+      bankName: "",
+      accountName: "",
+      accountType: "",
+      branch: "",
+      branchCode: "",
+      sortCode: "",
+      accountNo: "",
+    },
+    nextOfKinDetails: {
+      kinFullName: "",
+      kinAddress: "",
+      kinTitle: "",
+      kinSurname: "",
+      kinOtherName: "", //optional
+      kinNrcNo: "",
+      kinGender: "",
+      kinRelationship: "",
+      kinMobile1: "",
+      kinMobile2: "", //optional
+      kinEmail: "",
+      kinHouseNo: "", //optional
+      kinStreet: "",
+      kinResidentialArea: "",
+      kinDistrict: "", //optional
+      kinCountry: "Zambia",
+      kinProvince: "", //optional
+      kinEmployer: "",
+      kinOccupation: "",
+      kinLocation: "", //optional
+      kinWorkPhoneNumber: "", //optional
+    },
+    otherDetails: {
+      reasonForBorrowing: "", //optional
+      sourceOfRepayment: "", //optional
+      groupId: "",
+      creditScore: "",
+      customerPhotoId: "",
+    },
+  },
   error: null,
   loading: false,
 };
 
 const B2CLoansSlice = createSlice({
-  name: "personalLoans",
+  name: "B2CLoansSlice",
   initialState,
   reducers: {
+    updatePersonalBorrowerField: (state, action) => {
+      const { section, field, value } = action.payload;
+      state.personalBorrower[section][field] = value;
+    },
     resetAddLoanData: (state, action) => {
       state.addLoanData = initialState.addLoanData;
     },
@@ -1341,27 +1364,158 @@ const B2CLoansSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerB2CBorrower.pending, (state) => {
+      .addCase(fetchLoanProductData.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerB2CBorrower.fulfilled, (state, action) => {
+      .addCase(fetchLoanProductData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanProductData = action.payload;
+        const updatedLoanProductOptions = action.payload
+          .filter((item) => item.eligibleCustomerType === "CONSUMER")
+          .map((item) => ({
+            label: convertToTitleCase(item.productType),
+            value: item.loanProductId,
+          }));
+        state.loanProductOptions = updatedLoanProductOptions;
+        state.addLoanData.generalLoanDetails.loanProductId =
+          updatedLoanProductOptions[0].value;
+      })
+      .addCase(fetchLoanProductData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(registerB2CPersonalBorrower.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerB2CPersonalBorrower.fulfilled, (state, action) => {
         state.loading = false;
         toast.success("Borrower Registered Successfully");
       })
-      .addCase(registerB2CBorrower.rejected, (state, action) => {
+      .addCase(registerB2CPersonalBorrower.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Store the error message
         toast.error(`API Error : ${action.payload}`); // Notify the user of the error
       })
-      .addCase(generateLoanApplicationId.pending, (state) => {
+      .addCase(generatePersonalLoanApplicationId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(generateLoanApplicationId.fulfilled, (state, action) => {
+      .addCase(generatePersonalLoanApplicationId.fulfilled, (state, action) => {
         state.addLoanData.loanApplicationId = action.payload;
       })
-      .addCase(generateLoanApplicationId.rejected, (state, action) => {
+      .addCase(generatePersonalLoanApplicationId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(saveDraftLoanData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(saveDraftLoanData.fulfilled, (state, action) => {
+        state.loading = false;
+        // toast(`Draft Saved Successfully`);
+      })
+      .addCase(saveDraftLoanData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(submitPersonalLoan.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(submitPersonalLoan.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanConfigData = action.payload;
+        state.loanOfferFields.loanProductId =
+          state.addLoanData.generalLoanDetails.loanProductId;
+        state.addLoanData = initialState.addLoanData;
+        toast.success("Offer Generated Successfully");
+      })
+      .addCase(submitPersonalLoan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(B2CLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(B2CLogin.fulfilled, (state, action) => {
+        state.loanOfferFields = {
+          uid: action.payload.data.borrowerId,
+          loanProductId: action.payload.data.cachedLoanProductId,
+        };
+        // state.userData = action.payload.data;
+        // state.token = action.payload.token;
+        // state.isAuthenticated = true;
+
+        // // Store in localStorage
+        // localStorage.setItem("userData", JSON.stringify(action.payload.data));
+        // localStorage.setItem("authToken", action.payload.token);
+        // localStorage.setItem("roleName", action.payload.data?.roles[0]?.name);
+        // localStorage.setItem("username", action.payload?.data?.username);
+
+        // Welcome Toast
+        toast(`Welcome User`);
+      })
+      .addCase(B2CLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Login failed";
+        toast.error(`Failed to login: ${action.payload}`);
+      })
+      .addCase(handleProceed.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(handleProceed.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Loan submitted. Please complete disbursement details.");
+      })
+      .addCase(handleProceed.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error: ${action.payload}`);
+      })
+      .addCase(getB2CLoanOffers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getB2CLoanOffers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loanConfigData = action.payload;
+      })
+      .addCase(getB2CLoanOffers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(fetchPersonalBorrowerById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPersonalBorrowerById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.personalBorrower = action.payload;
+      })
+      .addCase(fetchPersonalBorrowerById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updatePersonalBorrowerInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updatePersonalBorrowerInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Borrower Information Updated Successfully");
+      })
+      .addCase(updatePersonalBorrowerInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
@@ -1476,41 +1630,7 @@ const B2CLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
       })
-      .addCase(fetchLoanProductData.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchLoanProductData.fulfilled, (state, action) => {
-        state.loading = false;
-        state.loanProductData = action.payload;
-        const updatedLoanProductOptions = action.payload
-          .filter((item) => item.eligibleCustomerType === "CONSUMER")
-          .map((item) => ({
-            label: convertToTitleCase(item.productType),
-            value: item.loanProductId,
-          }));
-        state.loanProductOptions = updatedLoanProductOptions;
-        state.addLoanData.generalLoanDetails.loanProductId =
-          updatedLoanProductOptions[0].value;
-      })
-      .addCase(fetchLoanProductData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
-      })
-      .addCase(fetchBorrowerById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchBorrowerById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.borrowerData = action.payload;
-      })
-      .addCase(fetchBorrowerById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
-      })
+
       .addCase(uploadSignedLoanAgreement.pending, (state) => {
         state.loading = true; //
       })
@@ -1580,19 +1700,7 @@ const B2CLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
-      .addCase(saveDraftLoanData.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(saveDraftLoanData.fulfilled, (state, action) => {
-        state.loading = false;
-        toast(`Draft Saved Successfully`);
-      })
-      .addCase(saveDraftLoanData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
-      })
+
       .addCase(getMaxPrincipalData.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -1607,25 +1715,7 @@ const B2CLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
-      .addCase(submitLoan.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(submitLoan.fulfilled, (state, action) => {
-        state.loading = false;
-        state.loanConfigData = action.payload;
-        state.loanOfferFields.loanProductId =
-          state.addLoanData.generalLoanDetails.loanProductId;
-        state.loanOfferFields.uid =
-          state.addLoanData.generalLoanDetails.uniqueID;
-        state.addLoanData = initialState.addLoanData;
-        toast.success("Offer generated successfully");
-      })
-      .addCase(submitLoan.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
-      })
+
       .addCase(getLoanOffers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -1650,21 +1740,6 @@ const B2CLoansSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
-      })
-      .addCase(handleProceed.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(handleProceed.fulfilled, (state, action) => {
-        state.loading = false;
-        toast.success(
-          "Loan submitted successfully. Awaiting approval from the next step approver."
-        );
-      })
-      .addCase(handleProceed.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`API Error: ${action.payload}`);
       })
       .addCase(getPendingLoans.pending, (state) => {
         state.loading = true;
@@ -1899,6 +1974,7 @@ const B2CLoansSlice = createSlice({
 });
 
 export const {
+  updatePersonalBorrowerField,
   resetAddLoanData,
   updateLoanField,
   updateLoanOfferFields,

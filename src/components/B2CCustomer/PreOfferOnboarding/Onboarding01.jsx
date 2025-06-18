@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   fetchLoanProductData
-} from "../../../redux/Slices/personalLoansSlice";
+} from "../../../redux/Slices/B2CLoansSlice";
 
 import { useActiveTab } from "../ActiveTabContext";
 import ProductListSection from "./ProductListSection";

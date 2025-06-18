@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { updatePersonalBorrowerInfo } from "../../redux/Slices/B2CLoansSlice";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const ActiveTabContext = createContext();
 
@@ -16,85 +19,50 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
     basicPay: "",
     borrowerId: "",
     interestRate: 0,
-
-    title: "",
-    firstName: "",
-    surname: "",
-    gender: "",
-    maritalStatus: "",
-    nationality: "India",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    mobile1: "",
-    houseNumber: "",
-    street: "",
-    residentialArea: "",
-    country: "",
-    creditScore: "",
-
-
-    workType: "",
-    employer: "",
-    occupation: "",
-    employmentLocation: "",
-    workStartDate: "",
-    employeeNo: "",
-    ministry: "",
-
-
-    housingAllowance: "",
-    transportAllowance: "",
-    ruralHardshipAllowance: "",
-    infectiousHealthRisk: "",
-    healthShiftAllowance: "",
-    interfaceAllowance: "",
-    responsibilityAllowance: "",
-    doubleClassAllowance: "",
-    actingAllowance: "",
-    otherAllowances: "",
-    totalDeductionsOnPayslip: "",
-    totalDeductionsNotOnPayslip: "",
-
-    bankName: "",
-    accountName: "",
-    accountType: "",
-    branch: "",
-    branchCode: "",
-    sortCode: "",
-    accountNo: "",
-
-    kinTitle: "",
-    kinSurname: "",
-    kinNrcNo: "",
-    kinGender: "",
-    kinRelationship: "",
-    kinMobile1: "",
-    kinEmail: "",
-    kinStreet: "",
-    kinResidentialArea: "",
-    kinCountry: "India",
-    kinEmployer: "",
-    kinOccupation: "",
-
-    atmCard:"",
-    bankStatement:"",
-    employerForm:"",
-    paySlip:"",
-
+    password: "",
   });
+  const dispatch = useDispatch();
 
+  const { personalBorrower, loanOfferFields } = useSelector((state) => state.B2CLoans)
+  const { uid } = loanOfferFields;
 
   const [preOfferSteps, setPreOfferSteps] = useState([0, 1, 2])
   const [postOfferSteps, setPostOfferSteps] = useState([0, 1, 2, 3, 4, 5])
 
   const [preOfferSubStep, setPreOfferSubStep] = useState(0);
   const [postOfferSubStep, setPostOfferSubStep] = useState(0);
-  console.log(preOfferSubStep)
+
+  useEffect(() => {
+    if (loanOfferFields?.uid) {
+      setFormData((prev) => ({
+        ...prev,
+        borrowerId: loanOfferFields.uid,
+      }));
+    }
+  }, [loanOfferFields?.uid]);
+
+  useEffect(() => {
+    if (uid) {
+      setPreOfferSubStep(0);
+      setPostOfferSubStep(0);
+      // optionally reset formData here
+    }
+  }, [uid]);
+
+  console.log(loanOfferFields)
 
   const preOfferNext = () => setPreOfferSubStep((prev) => Math.min(prev + 1, preOfferSteps.length - 1));
   const preOfferBack = () => setPreOfferSubStep((prev) => Math.max(prev - 1, 0));
 
-  const postOfferNext = () => setPostOfferSubStep((prev) => Math.min(prev + 1, postOfferSteps.length - 1));
+  const postOfferNext = async () => {
+    if (!uid || !personalBorrower) {
+      console.warn("Missing UID or personal borrower data");
+      return;
+    }
+
+    await dispatch(updatePersonalBorrowerInfo({ borrowerData: personalBorrower, uid })).unwrap();
+    setPostOfferSubStep((prev) => Math.min(prev + 1, postOfferSteps.length - 1));
+  };
   const postOfferBack = () => setPostOfferSubStep((prev) => Math.max(prev - 1, 0));
 
 

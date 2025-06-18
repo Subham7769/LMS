@@ -7,7 +7,7 @@ function Onboarding02({ onNext, onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onNext();
+    navigate("/customer/thank-you")
   };
 
 
@@ -33,9 +33,8 @@ function Onboarding02({ onNext, onBack }) {
             <button
               type="submit"
               className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={()=>navigate("/customer/thank-you")}
             >
-              Next
+              Complete Application
             </button>
           </div>
         </form>

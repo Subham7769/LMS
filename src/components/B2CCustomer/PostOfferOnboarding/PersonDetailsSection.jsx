@@ -1,14 +1,22 @@
-import { useActiveTab } from '../ActiveTabContext';
+import { updatePersonalBorrowerField, updateLoanField } from "../../../redux/Slices/B2CLoansSlice";
+import { useDispatch, useSelector } from 'react-redux';
 
 const PersonDetailsSection = () => {
-    const { formData, setFormData } = useActiveTab();
+    const dispatch = useDispatch();
+    const { personalBorrower } = useSelector((state) => state.B2CLoans)
+
+    const handleInputChange = (e, section) => {
+        const { name, value, type, checked } = e.target;
+        dispatch(updatePersonalBorrowerField({ section, field: name, value, type, checked }));
+    };
 
     return (
         <>
             <select
                 className="form-input w-full py-4"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                name="title"
+                value={personalBorrower.personalDetails.title}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
                 required
             >
                 <option value="">Select Title</option>
@@ -19,138 +27,168 @@ const PersonDetailsSection = () => {
                 <option value="Dr">Dr</option>
                 <option value="Prof">Prof</option>
             </select>
-            <input
+            {/* <input
                 className="form-input w-full py-4"
                 type="text"
                 placeholder="First Name"
-                value={formData.firstName}
-                onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                name="firstName"
+                value={personalBorrower.personalDetails.firstName}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
                 required
             />
             <input
                 className="form-input w-full py-4"
                 type="text"
-                placeholder="Surname"
-                value={formData.surname}
-                onChange={e => setFormData({ ...formData, surname: e.target.value })}
+                placeholder="surname"
+                name="surname"
+                value={personalBorrower.personalDetails.surname}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
+                required
+            /> */}
+            <input
+                className="form-input w-full py-4"
+                type="text"
+                placeholder="Full Name"
+                name="fullName"
+                value={personalBorrower.personalDetails.fullName}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
                 required
             />
             <select
                 className="form-input w-full py-4"
-                value={formData.gender}
-                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                name="gender"
+                value={personalBorrower.personalDetails.gender}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
                 required
             >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Non-binary">Non-binary</option>
-                <option value="Other">Other</option>
-                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="">SELECT GENDER</option>
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+                <option value="NON-BINARY">NON-BINARY</option>
+                <option value="OTHER">OTHER</option>
+                <option value="PREFER NOT TO SAY">PREFER NOT TO SAY</option>
             </select>
             <div className="relative">
                 <input
                     type="date"
                     className="form-input w-full py-4 text-gray-900"
-                    value={formData.dateOfBirth}
-                    onChange={e => setFormData({ ...formData, dateOfBirth: e.target.value })}
+                    name="dateOfBirth"
+                    value={personalBorrower.personalDetails.dateOfBirth}
+                    onChange={(e) => handleInputChange(e, "personalDetails")}
                     required
                     onFocus={(e) => e.target.showPicker()} // Optional: shows date picker on focus
                 />
-                {!formData.dateOfBirth && (
+                {!personalBorrower.personalDetails.dateOfBirth && (
                     <span className="absolute left-4 top-4 text-gray-400 pointer-events-none">
                         Date of Birth (dd-mm-yyyy)
                     </span>
                 )}
             </div>
+
+            <select
+                className="form-input w-full py-4"
+                name="nationality"
+                value={personalBorrower.personalDetails.nationality}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
+                required
+            >
+                <option value="">Select Nationality</option>
+                <option value="Afghan">Afghan</option>
+                <option value="Albanian">Albanian</option>
+                <option value="Algerian">Algerian</option>
+                <option value="American">American</option>
+                <option value="British">British</option>
+                <option value="Chinese">Chinese</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+                <option value="Indian">Indian</option>
+                <option value="Indonesian">Indonesian</option>
+                <option value="Italian">Italian</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Nigerian">Nigerian</option>
+                <option value="Pakistani">Pakistani</option>
+                <option value="Russian">Russian</option>
+                <option value="South African">South African</option>
+                <option value="Spanish">Spanish</option>
+                {/* Add more as needed */}
+            </select>
             <input
                 className="form-input w-full py-4"
                 type="text"
                 placeholder="Place of Birth"
-                value={formData.placeOfBirth}
-                onChange={e => setFormData({ ...formData, placeOfBirth: e.target.value })}
+                name="placeOfBirth"
+                value={personalBorrower.personalDetails.placeOfBirth}
+                onChange={(e) => handleInputChange(e, "personalDetails")}
                 required
             />
-            <select
-                className="form-input w-full py-4"
-                value={formData.nationality}
-                onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
-                required
-            >
-                <option value="">Select Nationality</option>
-                <option value="AF">Afghan</option>
-                <option value="AL">Albanian</option>
-                <option value="DZ">Algerian</option>
-                <option value="US">American</option>
-                <option value="GB">British</option>
-                <option value="CN">Chinese</option>
-                <option value="FR">French</option>
-                <option value="DE">German</option>
-                <option value="IN">Indian</option>
-                <option value="ID">Indonesian</option>
-                <option value="IT">Italian</option>
-                <option value="JP">Japanese</option>
-                <option value="NG">Nigerian</option>
-                <option value="PK">Pakistani</option>
-                <option value="RU">Russian</option>
-                <option value="ZA">South African</option>
-                <option value="ES">Spanish</option>
-                {/* Add more as needed */}
-            </select>
-
             <input
                 className="form-input w-full py-4"
                 type="number"
-                placeholder="Mobile"
-                value={formData.mobile1}
-                onChange={e => setFormData({ ...formData, mobile1: e.target.value })}
+                placeholder="mobile1"
+                name="mobile1"
+                value={personalBorrower.contactDetails.mobile1}
+                onChange={(e) => handleInputChange(e, "contactDetails")}
                 required
             />
-            <input
+            {/* <input
                 className="form-input w-full py-4"
                 type="text"
                 placeholder="House Number"
-                value={formData.houseNumber}
-                onChange={e => setFormData({ ...formData, houseNumber: e.target.value })}
+                name="houseNumber"
+                value={personalBorrower.contactDetails.houseNumber}
+                onChange={(e) => handleInputChange(e, "contactDetails")}
                 required
             />
             <input
                 className="form-input w-full py-4"
                 type="text"
                 placeholder="Street"
-                value={formData.street}
-                onChange={e => setFormData({ ...formData, street: e.target.value })}
+                name="street"
+                value={personalBorrower.contactDetails.street}
+                onChange={(e) => handleInputChange(e, "contactDetails")}
                 required
             />
             <input
                 className="form-input w-full py-4"
                 type="text"
                 placeholder="Residential Area"
-                value={formData.residentialArea}
-                onChange={e => setFormData({ ...formData, residentialArea: e.target.value })}
+                name="residentialArea"
+                value={personalBorrower.contactDetails.residentialArea}
+                onChange={(e) => handleInputChange(e, "contactDetails")}
+                required
+            /> */}
+            <input
+                className="form-input w-full py-4"
+                type="text"
+                placeholder="Address"
+                name="address"
+                value={personalBorrower.contactDetails.address}
+                onChange={(e) => handleInputChange(e, "contactDetails")}
                 required
             />
             <select
                 className="form-input w-full  py-4"
-                value={formData.country}
-                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                name="country"
+                value={personalBorrower.contactDetails.country}
+                onChange={(e) => handleInputChange(e, "contactDetails")}
                 required
             >
                 <option value="">Select Country</option>
-                <option value="US">United States</option>
-                <option value="GB">United Kingdom</option>
-                <option value="CA">Canada</option>
-                <option value="AU">Australia</option>
-                <option value="IN">India</option>
-                <option value="JP">Japan</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="India">India</option>
+                <option value="Japan">Japan</option>
                 {/* Add more countries as needed */}
             </select>
             <input
                 className="form-input w-full py-4"
                 type="number"
                 placeholder="Credit Score"
-                value={formData.creditScore}
-                onChange={e => setFormData({ ...formData, creditScore: e.target.value })}
+                name="creditScore"
+                value={personalBorrower.otherDetails.creditScore}
+                onChange={(e) => handleInputChange(e, "otherDetails")}
                 required
             />
         </>

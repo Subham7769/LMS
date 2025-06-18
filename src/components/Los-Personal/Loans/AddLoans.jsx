@@ -63,6 +63,7 @@ const AddLoans = () => {
     };
   }, [dispatch, loanApplicationId, decodedBorrowerId]);
 
+  // Fetch Documents by Id
   useEffect(() => {
     if (addLoanData?.generalLoanDetails?.loanProductId) {
       const selectedDynamicDoc = loanProductData.find(
@@ -79,7 +80,7 @@ const AddLoans = () => {
     }
   }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
 
-  // console.log(addLoanData);
+  // console.log(loanOfferFields);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to the sanitized uniqueID

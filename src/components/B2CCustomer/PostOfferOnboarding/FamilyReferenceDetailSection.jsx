@@ -1,17 +1,25 @@
-import { useActiveTab } from "../ActiveTabContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePersonalBorrowerField } from "../../../redux/Slices/B2CLoansSlice";
 
 
 function FamilyReferenceDetailSection() {
-  const { formData, setFormData } = useActiveTab();
+  const dispatch = useDispatch();
+  const { personalBorrower } = useSelector((state) => state.B2CLoans)
 
+  const handleInputChange = (e, section) => {
+    const { name, value, type, checked } = e.target;
+    console.log(e)
+    dispatch(updatePersonalBorrowerField({ section, field: name, value, type, checked }));
+  };
 
   return (
     <>
       {/* Kin Title (Dropdown) */}
       <select
         className="form-input w-full py-4"
-        value={formData.kinTitle}
-        onChange={(e) => setFormData({ ...formData, kinTitle: e.target.value })}
+        name="kinTitle"
+        value={personalBorrower.nextOfKinDetails.kinTitle}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       >
         <option value="">Select Title</option>
         <option value="Mr">Mr</option>
@@ -21,29 +29,33 @@ function FamilyReferenceDetailSection() {
         <option value="Dr">Dr</option>
       </select>
 
-      {/* Kin Surname */}
+
+      {/* Kin Full Name */}
       <input
+        className="form-input w-full py-4"
+        type="text"
+        placeholder="Full Name"
+        name="kinFullName"
+        value={personalBorrower.nextOfKinDetails.kinFullName}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+      />
+
+      {/* Kin Surname */}
+      {/* <input
         className="form-input w-full py-4"
         type="text"
         placeholder="Surname"
-        value={formData.kinSurname}
-        onChange={(e) => setFormData({ ...formData, kinSurname: e.target.value })}
-      />
-
-      {/* Kin NRC No */}
-      <input
-        className="form-input w-full py-4"
-        type="text"
-        placeholder="NRC Number"
-        value={formData.kinNrcNo}
-        onChange={(e) => setFormData({ ...formData, kinNrcNo: e.target.value })}
-      />
+        name="kinSurname"
+        value={personalBorrower.nextOfKinDetails.kinSurname}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+      /> */}
 
       {/* Kin Gender (Dropdown) */}
       <select
         className="form-input w-full py-4"
-        value={formData.kinGender}
-        onChange={(e) => setFormData({ ...formData, kinGender: e.target.value })}
+        name="kinGender"
+        value={personalBorrower.nextOfKinDetails.kinGender}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       >
         <option value="">Select Gender</option>
         <option value="Male">Male</option>
@@ -51,11 +63,22 @@ function FamilyReferenceDetailSection() {
         <option value="Other">Other</option>
       </select>
 
+      {/* Kin NRC No */}
+      <input
+        className="form-input w-full py-4"
+        type="text"
+        placeholder="NRC Number"
+        name="kinNrcNo"
+        value={personalBorrower.nextOfKinDetails.kinNrcNo}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+      />
+
       {/* Kin Relationship (Dropdown) */}
       <select
         className="form-input w-full py-4"
-        value={formData.kinRelationship}
-        onChange={(e) => setFormData({ ...formData, kinRelationship: e.target.value })}
+        name="kinRelationship"
+        value={personalBorrower.nextOfKinDetails.kinRelationship}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       >
         <option value="">Select Relationship</option>
         <option value="Spouse">Spouse</option>
@@ -92,44 +115,59 @@ function FamilyReferenceDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Mobile Number"
-        value={formData.kinMobile1}
-        onChange={(e) => setFormData({ ...formData, kinMobile1: e.target.value })}
+        name="kinMobile1"
+        value={personalBorrower.nextOfKinDetails.kinMobile1}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       />
 
       {/* Kin Email */}
       <input
         className="form-input w-full py-4"
         type="email"
-        placeholder="Email Address"
-        value={formData.kinEmail}
-        onChange={(e) => setFormData({ ...formData, kinEmail: e.target.value })}
+        placeholder="Email"
+        name="kinEmail"
+        value={personalBorrower.nextOfKinDetails.kinEmail}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+      />
+
+      {/* Kin Address */}
+      <input
+        className="form-input w-full py-4"
+        type="text"
+        placeholder="Address"
+        name="kinAddress"
+        value={personalBorrower.nextOfKinDetails.kinAddress}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       />
 
       {/* Kin Street */}
-      <input
+      {/* <input
         className="form-input w-full py-4"
         type="text"
         placeholder="Street"
-        value={formData.kinStreet}
-        onChange={(e) => setFormData({ ...formData, kinStreet: e.target.value })}
-      />
+        name="kinStreet"
+        value={personalBorrower.nextOfKinDetails.kinStreet}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+      /> */}
 
       {/* Kin Residential Area */}
-      <input
+      {/* <input
         className="form-input w-full py-4"
         type="text"
         placeholder="Residential Area"
-        value={formData.kinResidentialArea}
-        onChange={(e) => setFormData({ ...formData, kinResidentialArea: e.target.value })}
-      />
+        name="kinResidentialArea"
+        value={personalBorrower.nextOfKinDetails.kinResidentialArea}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
+      /> */}
 
       {/* Kin Country (default = Zambia) */}
       <input
         className="form-input w-full py-4"
         type="text"
         placeholder="Country"
-        value={formData.kinCountry}
-        onChange={(e) => setFormData({ ...formData, kinCountry: e.target.value })}
+        name="kinCountry"
+        value={personalBorrower.nextOfKinDetails.kinCountry}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       />
 
       {/* Kin Employer */}
@@ -137,8 +175,9 @@ function FamilyReferenceDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Employer Name"
-        value={formData.kinEmployer}
-        onChange={(e) => setFormData({ ...formData, kinEmployer: e.target.value })}
+        name="kinEmployer"
+        value={personalBorrower.nextOfKinDetails.kinEmployer}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       />
 
       {/* Kin Occupation */}
@@ -146,8 +185,9 @@ function FamilyReferenceDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Occupation"
-        value={formData.kinOccupation}
-        onChange={(e) => setFormData({ ...formData, kinOccupation: e.target.value })}
+        name="kinOccupation"
+        value={personalBorrower.nextOfKinDetails.kinOccupation}
+        onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       />
 
     </>

@@ -1,8 +1,16 @@
-import { useActiveTab } from "../ActiveTabContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePersonalBorrowerField } from "../../../redux/Slices/B2CLoansSlice";
 
 
 function IncomeDetailSection() {
-  const { formData, setFormData } = useActiveTab();
+  const dispatch = useDispatch();
+  const { personalBorrower } = useSelector((state) => state.B2CLoans)
+
+  const handleInputChange = (e, section) => {
+    const { name, value, type, checked } = e.target;
+    console.log(e)
+    dispatch(updatePersonalBorrowerField({ section, field: name, value, type, checked }));
+  };
 
   return (
     <>
@@ -11,8 +19,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Basic Pay"
-        value={formData.basicPay}
-        onChange={(e) => setFormData({ ...formData, basicPay: e.target.value })}
+        name="basicPay"
+        value={personalBorrower.incomeOnPaySlip.basicPay}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
         required
       />
 
@@ -21,8 +30,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Housing Allowance"
-        value={formData.housingAllowance}
-        onChange={(e) => setFormData({ ...formData, housingAllowance: e.target.value })}
+        name="housingAllowance"
+        value={personalBorrower.incomeOnPaySlip.housingAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Transport Allowance */}
@@ -30,8 +40,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Transport Allowance"
-        value={formData.transportAllowance}
-        onChange={(e) => setFormData({ ...formData, transportAllowance: e.target.value })}
+        name="transportAllowance"
+        value={personalBorrower.incomeOnPaySlip.transportAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Rural/Remote Hardship Allowance */}
@@ -39,8 +50,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Rural/Remote Hardship Allowance"
-        value={formData.ruralHardshipAllowance}
-        onChange={(e) => setFormData({ ...formData, ruralHardshipAllowance: e.target.value })}
+        name="ruralHardshipAllowance"
+        value={personalBorrower.incomeOnPaySlip.ruralHardshipAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Infectious Health Risk */}
@@ -48,8 +60,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Infectious Health Risk"
-        value={formData.infectiousHealthRisk}
-        onChange={(e) => setFormData({ ...formData, infectiousHealthRisk: e.target.value })}
+        name="infectiousHealthRisk"
+        value={personalBorrower.incomeOnPaySlip.infectiousHealthRisk}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Health Shift Allowance */}
@@ -57,8 +70,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Health Shift Allowance"
-        value={formData.healthShiftAllowance}
-        onChange={(e) => setFormData({ ...formData, healthShiftAllowance: e.target.value })}
+        name="healthShiftAllowance"
+        value={personalBorrower.incomeOnPaySlip.healthShiftAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Interface Allowance */}
@@ -66,8 +80,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Interface Allowance"
-        value={formData.interfaceAllowance}
-        onChange={(e) => setFormData({ ...formData, interfaceAllowance: e.target.value })}
+        name="interfaceAllowance"
+        value={personalBorrower.incomeOnPaySlip.interfaceAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Responsibility Allowance */}
@@ -75,8 +90,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Responsibility Allowance"
-        value={formData.responsibilityAllowance}
-        onChange={(e) => setFormData({ ...formData, responsibilityAllowance: e.target.value })}
+        name="responsibilityAllowance"
+        value={personalBorrower.incomeOnPaySlip.responsibilityAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Double Class Allowance */}
@@ -84,8 +100,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Double Class Allowance"
-        value={formData.doubleClassAllowance}
-        onChange={(e) => setFormData({ ...formData, doubleClassAllowance: e.target.value })}
+        name="doubleClassAllowance"
+        value={personalBorrower.incomeOnPaySlip.doubleClassAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Acting Allowance */}
@@ -93,8 +110,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Acting Allowance"
-        value={formData.actingAllowance}
-        onChange={(e) => setFormData({ ...formData, actingAllowance: e.target.value })}
+        name="actingAllowance"
+        value={personalBorrower.incomeOnPaySlip.actingAllowance}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Other Allowances */}
@@ -102,8 +120,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Other Allowances"
-        value={formData.otherAllowances}
-        onChange={(e) => setFormData({ ...formData, otherAllowances: e.target.value })}
+        name="otherAllowances"
+        value={personalBorrower.incomeOnPaySlip.otherAllowances}
+        onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
       />
 
       {/* Total Deductions On Payslip */}
@@ -111,8 +130,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Total Deductions On Payslip"
-        value={formData.totalDeductionsOnPayslip}
-        onChange={(e) => setFormData({ ...formData, totalDeductionsOnPayslip: e.target.value })}
+        name="totalDeductionsOnPayslip"
+        value={personalBorrower.deductionOnPaySlip.totalDeductionsOnPayslip}
+        onChange={(e) => handleInputChange(e, "deductionOnPaySlip")}
       />
 
       {/*Total Deductions Not On Payslip */}
@@ -120,8 +140,9 @@ function IncomeDetailSection() {
         className="form-input w-full py-4"
         type="number"
         placeholder="Total Deductions Not On Payslip"
-        value={formData.totalDeductionsNotOnPayslip}
-        onChange={(e) => setFormData({ ...formData, totalDeductionsNotOnPayslip: e.target.value })}
+        name="totalDeductionsNotOnPayslip"
+        value={personalBorrower.deductionOnPaySlip.totalDeductionsNotOnPayslip}
+        onChange={(e) => handleInputChange(e, "deductionOnPaySlip")}
       />
 
     </>

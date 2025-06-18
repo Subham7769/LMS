@@ -1,5 +1,4 @@
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
-import { useSelector } from "react-redux";
 import { convertDate } from "../../../utils/convertDate";
 import formatNumber from "../../../utils/formatNumber";
 import Modal from "../../Common/Modal/Modal";

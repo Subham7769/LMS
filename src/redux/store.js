@@ -40,6 +40,7 @@ import documentConfigSlice from "./Slices/documentConfigSlice.js";
 import personalRefundSlice from "./Slices/personalRefundSlice.js";
 import drlRulesetSlice from "./Slices/drlRulesetSlice";
 import B2CLoansSlice from "./Slices/B2CLoansSlice.js";
+import southAfricaSmeLoansSlice from "./Slices/southAfricaSmeLoansSlice";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
 import AutoLogoutMiddleware from "./Middlewares/AutoLogoutMiddleware";
@@ -85,7 +86,8 @@ const store = configureStore({
     documentConfig: documentConfigSlice,
     personalRefund: personalRefundSlice,
     drlRuleset: drlRulesetSlice,
-    B2CLoansSlice: B2CLoansSlice,
+    B2CLoans: B2CLoansSlice,
+    southAfricaSmeLoans: southAfricaSmeLoansSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(AutoLogoutMiddleware, checkTokenMiddleware),

@@ -1,8 +1,16 @@
-import { useActiveTab } from "../ActiveTabContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePersonalBorrowerField } from "../../../redux/Slices/B2CLoansSlice";
 
 
 function EmploymentDetailSection() {
-  const { formData, setFormData } = useActiveTab();
+  const dispatch = useDispatch();
+  const { personalBorrower } = useSelector((state) => state.B2CLoans)
+
+  const handleInputChange = (e, section) => {
+    const { name, value, type, checked } = e.target;
+    console.log(e)
+    dispatch(updatePersonalBorrowerField({ section, field: name, value, type, checked }));
+  };
 
   return (
     <>
@@ -10,8 +18,9 @@ function EmploymentDetailSection() {
       <>
         <select
           className="form-input w-full py-4"
-          value={formData.workType}
-          onChange={(e) => setFormData({ ...formData, workType: e.target.value })}
+          name="workType"
+          value={personalBorrower.employmentDetails.workType}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
           required
         >
           <option value="">Select Work Type</option>
@@ -25,8 +34,9 @@ function EmploymentDetailSection() {
         </select>
         <select
           className="form-input w-full py-4"
-          value={formData.ministry}
-          onChange={(e) => setFormData({ ...formData, ministry: e.target.value })}
+          name="ministry"
+          value={personalBorrower.employmentDetails.ministry}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
           required
         >
           <option value="">Select Ministry</option>
@@ -42,8 +52,9 @@ function EmploymentDetailSection() {
         </select>
         <select
           className="form-input w-full py-4"
-          value={formData.employer}
-          onChange={(e) => setFormData({ ...formData, employer: e.target.value })}
+          name="employer"
+          value={personalBorrower.employmentDetails.employer}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
           required
         >
           <option value="">Select Employer</option>
@@ -62,16 +73,18 @@ function EmploymentDetailSection() {
           className="form-input w-full py-4"
           type="text"
           placeholder="Occupation"
-          value={formData.occupation}
-          onChange={e => setFormData({ ...formData, occupation: e.target.value })}
+          name="occupation"
+          value={personalBorrower.employmentDetails.occupation}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
           required
         />
         <input
           className="form-input w-full py-4"
           type="text"
           placeholder="Employee No."
-          value={formData.employeeNo}
-          onChange={e => setFormData({ ...formData, employeeNo: e.target.value })}
+          name="employeeNo"
+          value={personalBorrower.employmentDetails.employeeNo}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
           required
         />
 
@@ -79,12 +92,13 @@ function EmploymentDetailSection() {
           <input
             type="date"
             className="form-input w-full py-4 text-gray-900"
-            value={formData.workStartDate}
-            onChange={e => setFormData({ ...formData, workStartDate: e.target.value })}
+            name="workStartDate"
+            value={personalBorrower.employmentDetails.workStartDate}
+            onChange={(e) => handleInputChange(e, "employmentDetails")}
             required
             onFocus={(e) => e.target.showPicker()} // Optional: shows date picker on focus
           />
-          {!formData.workStartDate && (
+          {!personalBorrower.employmentDetails.workStartDate && (
             <span className="absolute left-4 top-4 text-gray-400 pointer-events-none">
               Work Start Date (dd-mm-yyyy)
             </span>
@@ -94,11 +108,12 @@ function EmploymentDetailSection() {
           className="form-input w-full py-4"
           type="text"
           placeholder="Location"
-          value={formData.employmentLocation}
-          onChange={e => setFormData({ ...formData, employmentLocation: e.target.value })}
+          name="employmentLocation"
+          value={personalBorrower.employmentDetails.employmentLocation}
+          onChange={(e) => handleInputChange(e, "employmentDetails")}
           required
         />
-                
+
       </>
 
     </>

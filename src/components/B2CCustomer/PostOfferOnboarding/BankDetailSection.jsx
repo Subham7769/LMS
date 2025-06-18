@@ -1,8 +1,15 @@
-import { useActiveTab } from "../ActiveTabContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePersonalBorrowerField } from "../../../redux/Slices/B2CLoansSlice";
 
 function BankDetailSection() {
-  const { formData, setFormData } = useActiveTab();
+  const dispatch = useDispatch();
+  const { personalBorrower } = useSelector((state) => state.B2CLoans)
 
+  const handleInputChange = (e, section) => {
+    const { name, value, type, checked } = e.target;
+    console.log(e)
+    dispatch(updatePersonalBorrowerField({ section, field: name, value, type, checked }));
+  };
 
   return (
     <>
@@ -11,8 +18,9 @@ function BankDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Enter Bank Name"
-        value={formData.bankName}
-        onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
+        name="bankName"
+        value={personalBorrower.bankDetails.bankName}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       />
 
@@ -21,16 +29,18 @@ function BankDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Enter Account Name"
-        value={formData.accountName}
-        onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
+        name="accountName"
+        value={personalBorrower.bankDetails.accountName}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       />
 
       {/* Account Type */}
       <select
         className="form-input w-full py-4"
-        value={formData.accountType}
-        onChange={(e) => setFormData({ ...formData, accountType: e.target.value })}
+        name="accountType"
+        value={personalBorrower.bankDetails.accountType}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       >
         <option value="">Select Account Type</option>
@@ -48,8 +58,9 @@ function BankDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Enter Account Number"
-        value={formData.accountNo}
-        onChange={(e) => setFormData({ ...formData, accountNo: e.target.value })}
+        name="accountNo"
+        value={personalBorrower.bankDetails.accountNo}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       />
 
@@ -58,8 +69,9 @@ function BankDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Enter Branch Name"
-        value={formData.branch}
-        onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
+        name="branch"
+        value={personalBorrower.bankDetails.branch}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       />
 
@@ -68,8 +80,9 @@ function BankDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Enter Branch Code"
-        value={formData.branchCode}
-        onChange={(e) => setFormData({ ...formData, branchCode: e.target.value })}
+        name="branchCode"
+        value={personalBorrower.bankDetails.branchCode}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       />
 
@@ -78,8 +91,9 @@ function BankDetailSection() {
         className="form-input w-full py-4"
         type="text"
         placeholder="Enter Sort Code"
-        value={formData.sortCode}
-        onChange={(e) => setFormData({ ...formData, sortCode: e.target.value })}
+        name="sortCode"
+        value={personalBorrower.bankDetails.sortCode}
+        onChange={(e) => handleInputChange(e, "bankDetails")}
         required
       />
 

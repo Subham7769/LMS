@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../../Common/Button/Button";
 import {
-  fetchBorrowerById,
+  fetchPersonalBorrowerById,
   fetchLoanProductData,
   getLoanOffers,
   handleProceed,
   resetLoanOfferFields,
-  updateLoanOfferFields,
+  getB2CLoanOffers,
 } from "../../../redux/Slices/B2CLoansSlice";
 import {
   UserIcon,
@@ -29,27 +29,25 @@ import B2CAccordion from "../B2CAccordion/B2CAccordion";
 
 const B2CLoanOffers = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const {
-    loanProductOptions,
-    loanConfigData,
-    loanOfferFields,
-    loading,
-  } = useSelector((state) => state.B2CPersonalLoans);
+  const { loanProductOptions, loanConfigData, loanOfferFields, loading, } = useSelector((state) => state.B2CLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
   const userName = userData?.username || "";
+  const { uid, loanProductId } = loanOfferFields;
 
-  useEffect(() => {
-    dispatch(fetchLoanProductData());
-    if (loanOfferFields?.uid) {
-      // dispatch(fetchBorrowerById(sanitizeUid(loanOfferFields?.uid)));
-    }
-    return () => {
-      dispatch(clearValidationError());
-      dispatch(resetLoanOfferFields());
-    };
-  }, [dispatch]);
+
+useEffect(() => {
+  if (uid && loanProductId) {
+    dispatch(fetchPersonalBorrowerById(uid));
+    dispatch(getB2CLoanOffers({ uid, loanProductId }));
+  }
+
+  return () => {
+    dispatch(clearValidationError());
+  };
+}, [uid, loanProductId]);
 
 
   const InfoRow = ({ label, value }) => (

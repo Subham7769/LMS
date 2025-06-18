@@ -10,7 +10,7 @@ import {
 const ProductListSection = () => {
 
     const { formData, setFormData } = useActiveTab();
-    const { loanProductOptions, loanProductData } = useSelector((state) => state.personalLoans);
+    const { loanProductOptions, loanProductData } = useSelector((state) => state.B2CLoans);
 
     const iconMap = {
         "Individual Loans": UserIcon,

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import formatNumber from "../../../utils/formatNumber";
 import Button from "../../Common/Button/Button";
 import { SunIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
-import { hasViewOnlyAccessGroup3 } from "../../../utils/roleUtils";
-import { sanitizeUid } from "../../../utils/sanitizeUid";
 import {
-  fetchBorrowerById,
+  fetchPersonalBorrowerById,
   fetchLoanProductData,
-  getLoanOffers,
+  getB2CLoanOffers,
   handleProceed,
   resetLoanOfferFields,
   updateLoanOfferFields,
-} from "../../../redux/Slices/personalLoansSlice";
+} from "../../../redux/Slices/B2CLoansSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const B2CAccordion = ({
   icon: Icon,
@@ -26,21 +24,23 @@ const B2CAccordion = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(isOpen);
   const navigate = useNavigate(); // Adding useNavigate for navigation
+  const dispatch = useDispatch();
+  const { loanConfigData, loanOfferFields, } = useSelector((state) => state.B2CLoans);
 
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
-    const SubmitProceed = async (transactionId, index) => {
-    // const uid = sanitizeUid(loanOfferFields.uid);
+  const SubmitProceed = async (transactionId, index) => {
+    const uid = loanOfferFields.uid;
 
-    // const proceedPayload = {
-    //   transactionId: transactionId,
-    //   loanApplicationId: loanConfigData.loanApplicationId,
-    //   createdBy: userName,
-    // };
-    // await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
+    const proceedPayload = {
+      transactionId: transactionId,
+      loanApplicationId: loanConfigData.loanApplicationId,
+      createdBy: "OnlineUser",
+    };
+    await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
     navigate(`/customer/loan-finalization`);
   };
 

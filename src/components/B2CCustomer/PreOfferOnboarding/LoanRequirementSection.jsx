@@ -5,7 +5,7 @@ import InputSlider from "../../Common/InputSlider/InputSlider";
 
 function LoanRequirementSection({ onNext, onBack }) {
   const { formData, setFormData } = useActiveTab();
-  const { loanProductData } = useSelector((state) => state.personalLoans);
+  const { loanProductData } = useSelector((state) => state.B2CLoans);
   const [repaymentTenure, setRepaymentTenure] = useState(["1","2"]);
   const [loanPeriod, setLoanPeriod] = useState(["1","2"]);
 
@@ -13,13 +13,12 @@ function LoanRequirementSection({ onNext, onBack }) {
     e.preventDefault();
     onNext();
   };
-
+ 
   useEffect(() => {
     if (loanProductData) {
       const loanProduct = loanProductData.filter(
         (item) => item.loanProductId === formData.loanType
       );
-      console.log(loanProduct)
       const eligibleTenures = loanProduct[0]?.interestEligibleTenure || [];
 
       const LoanPeriodArr = [...new Set(eligibleTenures.map(item => item.loanTenure))];
@@ -49,7 +48,6 @@ function LoanRequirementSection({ onNext, onBack }) {
     }
   }, [formData.period])
 
-  console.log("formData-", formData)
 
 
   return (

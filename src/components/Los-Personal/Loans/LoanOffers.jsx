@@ -54,7 +54,6 @@ const LoanOffers = () => {
     }
     return () => {
       dispatch(clearValidationError());
-      dispatch(resetLoanOfferFields());
     };
   }, [dispatch]);
 

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useActiveTab } from "../ActiveTabContext";
-import { registerB2CBorrower } from "../../../redux/Slices/B2CLoansSlice";
+import { registerB2CPersonalBorrower } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch } from "react-redux";
-import { generateLoanApplicationId, saveDraftLoanData, submitLoan } from "../../../redux/Slices/B2CLoansSlice";
+import { generatePersonalLoanApplicationId, saveDraftLoanData, submitPersonalLoan, B2CLogin } from "../../../redux/Slices/B2CLoansSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PersonDetailsSection from "./PersonDetailsSection";
@@ -37,6 +37,8 @@ function Onboarding03({ onNext, onBack }) {
         placeOfBirth: "Zambia",
         loanOfficer: "superadmin",
       },
+      password: formData.password,
+      cachedLoanProductId:formData.loanType,
       contactDetails: {
         mobile1: 9999999999,
         mobile2: "",
@@ -120,14 +122,18 @@ function Onboarding03({ onNext, onBack }) {
 
     try {
       // 1. Register Borrower
-      const borrowerResponse = await dispatch(registerB2CBorrower(dummyBorrowerData)).unwrap();
+      const borrowerResponse = await dispatch(registerB2CPersonalBorrower(dummyBorrowerData)).unwrap();
       console.log("Borrower Registered:", borrowerResponse.registrationResults);
+      
+      // 2. Login Borrower
+      const loginResponse = await dispatch(B2CLogin({ email: formData.email, password: formData.password })).unwrap();
+      console.log("Borrower LoggedIn :", loginResponse);
 
-      // 2. Generate Loan Application ID
-      const loanApplicationId = await dispatch(generateLoanApplicationId()).unwrap();
+      // 3. Generate Loan Application ID
+      const loanApplicationId = await dispatch(generatePersonalLoanApplicationId()).unwrap();
       console.log("Loan Application ID:", loanApplicationId);
 
-      // 3. Prepare Loan Data
+      // 4. Prepare Loan Data
       const dummyLoanData = {
         "loanApplicationId": loanApplicationId,
         "borrowerName": "Anonymous User",
@@ -201,21 +207,21 @@ function Onboarding03({ onNext, onBack }) {
         ]
       }
 
-      // 4. Save Draft
+      // 5. Save Draft
       await dispatch(saveDraftLoanData(dummyLoanData)).unwrap();
       console.log("Saved Draft Loan!");
 
-      // 5. Submit Loan
+      // 6. Submit Loan
       const submitPayload = {
         ...dummyLoanData.generalLoanDetails,
         documents: dummyLoanData.documents,
         loanApplicationId,
         refinanceDetails: dummyLoanData.refinanceDetails,
       };
-      await dispatch(submitLoan(submitPayload)).unwrap();
+      await dispatch(submitPersonalLoan(submitPayload)).unwrap();
       console.log("Submitted Loan!");
-
-      // 6. Navigate
+      
+      // 7. Navigate
       navigate("/customer/loan-offers");
 
     } catch (error) {
