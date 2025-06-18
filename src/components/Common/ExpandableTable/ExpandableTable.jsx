@@ -98,6 +98,7 @@ const ExpandableTable = ({
                           in_progress: "bg-yellow-500/20 text-yellow-700 px-2",
                           pending: "bg-yellow-500/20 text-yellow-700 px-2",
                           new: "bg-yellow-500/20 text-yellow-700 px-2",
+                          created: "bg-yellow-500/20 text-yellow-700 px-2",
                           rejected: "bg-red-500/20 text-red-700 px-2",
                           defaulter: "bg-red-500/20 text-red-700 px-2",
                           defaulted: "bg-red-500/20 text-red-700 px-2",
