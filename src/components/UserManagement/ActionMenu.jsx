@@ -42,7 +42,7 @@ const ActionMenu = ({ userDataProp, getUser, role }) => {
 
   const handleActivateUser = async () => {
     await dispatch(activateUser(userDataProp.username)).unwrap();
-    await dispatch(fetchUsers()).unwrap();
+    await dispatch(fetchUsers({ page: 0, size: 10 })).unwrap();
     dispatch(clearFormData());
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsers,
@@ -13,18 +13,30 @@ import { clearValidationError } from "../../redux/Slices/validationSlice";
 import ListTableClassic from "../Common/ListTable/ListTableClassic";
 import ActionMenu from "./ActionMenu";
 import { AddIcon } from "../../assets/icons";
+import Pagination from "../Common/Pagination/Pagination";
 
 const UserManagement = ({ role }) => {
   const dispatch = useDispatch();
-  const { allUsersInfo, loading, selectedUserData, isModalOpen, error } =
-    useSelector((state) => state.userManagement);
+  const {
+    allUsersInfo,
+    loading,
+    selectedUserData,
+    isModalOpen,
+    allUsersInfoTotalElements,
+  } = useSelector((state) => state.userManagement);
+  // Pagination state
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
-    dispatch(fetchUsers());
     return () => {
       dispatch(clearValidationError());
     };
   }, [dispatch]);
+
+  const dispatcherFunction = (currentPage, pageSize) => {
+    dispatch(fetchUsers({ page: currentPage, size: pageSize }));
+  };
 
   const handleAddUser = () => {
     dispatch(setIsModalOpen(true));
@@ -103,6 +115,13 @@ const UserManagement = ({ role }) => {
           ))}
         </ListTableClassic>
       </ContainerTile>
+      <Pagination
+        totalElements={allUsersInfoTotalElements}
+        dispatcherFunction={dispatcherFunction}
+        pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
       <AddUserModal isOpen={isModalOpen} onClose={closeModal} role={role} />
     </>
   );
