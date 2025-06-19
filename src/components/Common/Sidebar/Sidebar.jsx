@@ -357,7 +357,7 @@ const SideBar = () => {
             open ? "w-64 px-4" : "lg:w-10 w-0 pl-1 pr-2"
           } overflow-y-auto no-scrollbar border-gray-200 dark:border-gray-800  bg-white dark:bg-gray-800 transition-[width,padding] duration-1000 ease-in-out`}
         >
-          <div className="w-full flex shrink-0 items-center justify-between lg:w-1/3">
+          <div className="w-full flex shrink-0 items-center justify-between">
             {/* <LogoIcon
               className={`h-8 ${
                 open ? "w-auto" : "hidden"
@@ -366,7 +366,7 @@ const SideBar = () => {
             <img
               src={LogoIcon}
               alt="logo"
-              className={`h-8 ${open ? "w-auto" : "hidden"} mb-5`}
+              className={`h-8 ${open ? "w-auto" : "hidden"} ml-3 mb-5`}
             />
             <ArrowLeftIcon
               className={`h-6 w-auto mb-10 lg:hidden`}
