@@ -147,7 +147,7 @@ function DashboardCard05(props) {
       ) : error ? (
         <div className="p-5 text-sm text-red-600 dark:text-red-400">{error}</div>
       ) : (
-        <RechartsPieChart data={chartData} height={240} />
+        <RechartsPieChart data={chartData} height={350} innerRadius={0} outerRadius={100} paddingAngle={0} />
       )}
     </div>
   );

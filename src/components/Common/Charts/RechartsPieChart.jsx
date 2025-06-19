@@ -14,7 +14,7 @@ const generateColor = (index) => {
   return `hsl(${hue}, 70%, 60%)`;
 };
 
-const RechartsPieChart = ({ data, width = '100%', height = 300 }) => {
+const RechartsPieChart = ({ data, width = '100%', height = 300,innerRadius = 50, outerRadius = 100, paddingAngle = 5 }) => {
   if (!data?.labels || !data?.datasets?.length) return null;
 
   const dataset = data.datasets[0];
@@ -42,17 +42,17 @@ const RechartsPieChart = ({ data, width = '100%', height = 300 }) => {
 
   return (
     <ResponsiveContainer width={width} height={height}>
-      <PieChart>
+      <PieChart margin={{ top: 10, right: 10, bottom: 50, left: 10 }}>
         <Pie
           data={chartData}
           dataKey="value"
           nameKey="name"
           cx="50%"
           cy="50%"
-          innerRadius={50}
-          outerRadius={100}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
           fill="#8884d8"
-          paddingAngle={5}
+          paddingAngle={paddingAngle}
           label={({ name, value, percent }) =>
             percent > 0.03 ? `${value.toLocaleString()}` : ''
           }
