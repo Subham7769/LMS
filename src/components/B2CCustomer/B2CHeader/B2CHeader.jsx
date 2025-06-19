@@ -34,7 +34,7 @@ const B2CHeader = () => {
     }
     return (
         <>
-            <div className={`flex justify-between align-middle ${pathname.includes("/loan-application") ? "w-[50%]" : "w-full"}  h-16 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 z-0`} aria-hidden="true">
+            <div className={`flex justify-between align-middle ${pathname.includes("/loan-application") ? "md:w-[50%]" : "w-full"}  h-16 md:mb-0 bg-linear-to-tr from-blue-600 to-blue-500 z-0`} aria-hidden="true">
 
                 <div className='flex'>
                     {/* Hamburger Icon for Mobile View*/}
