@@ -10,6 +10,8 @@ import {
   handleProceed,
   resetLoanOfferFields,
   updateLoanOfferFields,
+  OfferSelected,
+  getFullLoanDetails,
 } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -25,7 +27,7 @@ const B2CAccordion = ({
   const [isExpanded, setIsExpanded] = useState(isOpen);
   const navigate = useNavigate(); // Adding useNavigate for navigation
   const dispatch = useDispatch();
-  const { loanConfigData, loanOfferFields, } = useSelector((state) => state.B2CLoans);
+  const { loanConfigData, loanOfferFields, cachedDetails} = useSelector((state) => state.B2CLoans);
 
 
   const toggleExpand = () => {
@@ -40,7 +42,19 @@ const B2CAccordion = ({
       loanApplicationId: loanConfigData.loanApplicationId,
       createdBy: "OnlineUser",
     };
-    await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
+
+    const proceedResponse = await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
+    console.log(proceedResponse)
+
+    if (proceedResponse.loanId) {
+      await dispatch(OfferSelected({ uid, loanId: proceedResponse.loanId })).unwrap();
+      await dispatch(getFullLoanDetails({ uid, loanId: proceedResponse.loanId })).unwrap();
+    }
+    else if(cachedDetails?.loanId){
+      await dispatch(OfferSelected({ uid, loanId: cachedDetails?.loanId })).unwrap();
+      await dispatch(getFullLoanDetails({ uid, loanId: cachedDetails?.loanId })).unwrap();
+
+    }
     navigate(`/customer/loan-finalization`);
   };
 

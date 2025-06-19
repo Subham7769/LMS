@@ -36,10 +36,10 @@ const ProductListSection = () => {
                 <label key={value} className="relative block cursor-pointer">
                     <input
                         type="radio"
-                        name="loanType"
+                        name="loanProductId"
                         value={value}
-                        onChange={() => setFormData({ ...formData, loanType: value })}
-                        checked={formData.loanType === value}
+                        onChange={() => setFormData({ ...formData, loanProductId: value })}
+                        checked={formData.loanProductId === value}
                         className="peer sr-only"
                     />
                     <div className="flex items-center 

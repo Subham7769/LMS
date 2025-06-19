@@ -67,7 +67,7 @@ export const fetchPersonalBorrowerById = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_LOAN_READ_BORROWER_PROFILE}${uid}`,
+        `${import.meta.env.VITE_B2C_READ_BORROWER_PROFILE}${uid}`,
         {
           method: "GET",
           headers: {
@@ -93,7 +93,7 @@ export const updatePersonalBorrowerInfo = createAsyncThunk(
     try {
       const auth = localStorage.getItem("authToken"); // Retrieve the auth token
       const response = await fetch(
-        `${import.meta.env.VITE_BORROWERS_UPDATE_PERSONAL_BORROWER}${uid}`,
+        `${import.meta.env.VITE_B2C_UPDATE_PERSONAL_BORROWER}${uid}`,
         {
           method: "PUT",
           headers: {
@@ -147,7 +147,7 @@ export const saveDraftLoanData = createAsyncThunk(
   "B2CLoan/saveDraftLoanData",
   async (addLoanData, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
-    const url = `${import.meta.env.VITE_LOAN_SAVE_DRAFT_PERSONAL}`;
+    const url = `${import.meta.env.VITE_B2C_SAVE_DRAFT_PERSONAL}`;
 
     try {
       const response = await fetch(url, {
@@ -197,12 +197,40 @@ export const submitPersonalLoan = createAsyncThunk(
   }
 );
 
+export const OfferSelected = createAsyncThunk(
+  "B2CLoan/OfferSelected",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_B2C_OFFER_SELECTED_PERSONAL}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ loanId, uid }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to transfer");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const handleProceed = createAsyncThunk(
   "personalLoans/handleProceed",
   async ({ proceedPayload, uid }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${
-      import.meta.env.VITE_LOAN_SUBMIT_PUT_PERSONAL
+      import.meta.env.VITE_B2C_SUBMIT_PUT_PERSONAL
     }${uid}/submit-loan`;
 
     try {
@@ -233,9 +261,37 @@ export const getB2CLoanOffers = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_LOAN_READ_LOAN_OFFERS_PERSONAL}${
+        `${import.meta.env.VITE_B2C_READ_LOAN_OFFERS_PERSONAL}${
           loanOfferFields.loanProductId
         }/caching/${loanOfferFields.uid}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getFullLoanDetails = createAsyncThunk(
+  "B2CLoan/getFullLoanDetails",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_B2C_READ_FULL_LOAN_DETAILS_BY_ID_PERSONAL
+        }${uid}/loan-details/${loanId}`,
         {
           method: "GET",
           headers: {
@@ -879,34 +935,6 @@ export const getLoanHistoryByField = createAsyncThunk(
   }
 );
 
-export const getFullLoanDetails = createAsyncThunk(
-  "personalLoans/getFullLoanDetails",
-  async ({ loanId, uid }, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_LOAN_READ_FULL_LOAN_DETAILS_BY_ID_PERSONAL
-        }${uid}/loan-details/${loanId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to fetch");
-      }
-      const responseData = await response.json();
-      return responseData;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export const getRepaymentHistory = createAsyncThunk(
   "personalLoans/getRepaymentHistory",
   async ({ loanId }, { rejectWithValue }) => {
@@ -1297,6 +1325,8 @@ const initialState = {
       customerPhotoId: "",
     },
   },
+  cachedDetails: {},
+
   error: null,
   loading: false,
 };
@@ -1441,15 +1471,29 @@ const B2CLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
       })
+      .addCase(OfferSelected.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(OfferSelected.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("Fill in your details to proceed with this offer.");
+      })
+      .addCase(OfferSelected.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
       .addCase(B2CLogin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(B2CLogin.fulfilled, (state, action) => {
         state.loanOfferFields = {
-          uid: action.payload.data.borrowerId,
-          loanProductId: action.payload.data.cachedLoanProductId,
+          uid: action.payload.data.cachedDetails.cachedBorrowerId,
+          loanProductId: action.payload.data.cachedDetails.cachedLoanProductId,
         };
+        state.cachedDetails = { ...action.payload.data.cachedDetails };
         // state.userData = action.payload.data;
         // state.token = action.payload.token;
         // state.isAuthenticated = true;
@@ -1519,6 +1563,19 @@ const B2CLoansSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getFullLoanDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getFullLoanDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.fullLoanDetails = action.payload;
+      })
+      .addCase(getFullLoanDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(getLoanApplications.pending, (state) => {
         state.loading = true;
@@ -1844,19 +1901,7 @@ const B2CLoansSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error: ${action.payload}`);
       })
-      .addCase(getFullLoanDetails.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getFullLoanDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.fullLoanDetails = action.payload;
-      })
-      .addCase(getFullLoanDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(`Error: ${action.payload}`);
-      })
+
       .addCase(getRepaymentHistory.pending, (state) => {
         state.loading = true;
         state.error = null;

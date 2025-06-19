@@ -23,6 +23,17 @@ function Onboarding03({ onNext, onBack }) {
     console.log(formattedDate)
 
     const dummyBorrowerData = {
+      cachedDetails: {
+        cachedPeriod: formData.period,
+        cachedRepayment: formData.repayment,
+        cachedAmount: formData.amount,
+        cachedEmail: formData.email,
+        cachedBasicPay: formData.basicPay,
+        cachedBorrowerId: formData.borrowerId,
+        cachedInterestRate: formData.interestRate,
+        cachedLoanProductId: formData.loanProductId,
+        cachedPassword: formData.password,
+      },
       personalDetails: {
         title: "Mr.",
         firstName: "Sample",
@@ -37,8 +48,6 @@ function Onboarding03({ onNext, onBack }) {
         placeOfBirth: "Zambia",
         loanOfficer: "superadmin",
       },
-      password: formData.password,
-      cachedLoanProductId:formData.loanType,
       contactDetails: {
         mobile1: 9999999999,
         mobile2: "",
@@ -124,7 +133,7 @@ function Onboarding03({ onNext, onBack }) {
       // 1. Register Borrower
       const borrowerResponse = await dispatch(registerB2CPersonalBorrower(dummyBorrowerData)).unwrap();
       console.log("Borrower Registered:", borrowerResponse.registrationResults);
-      
+
       // 2. Login Borrower
       const loginResponse = await dispatch(B2CLogin({ email: formData.email, password: formData.password })).unwrap();
       console.log("Borrower LoggedIn :", loginResponse);
@@ -140,7 +149,7 @@ function Onboarding03({ onNext, onBack }) {
         "borrowerType": "PERSONAL_BORROWER",
         "status": "IN_PROGRESS",
         "generalLoanDetails": {
-          "loanProductId": formData.loanType,
+          "loanProductId": formData.loanProductId,
           "borrowerId": formData.email,
           "disbursedBy": "Bank",
           "principalAmount": formData.amount,
@@ -220,7 +229,7 @@ function Onboarding03({ onNext, onBack }) {
       };
       await dispatch(submitPersonalLoan(submitPayload)).unwrap();
       console.log("Submitted Loan!");
-      
+
       // 7. Navigate
       navigate("/customer/loan-offers");
 

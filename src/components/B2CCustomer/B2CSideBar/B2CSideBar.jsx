@@ -23,7 +23,7 @@ const SideBar = () => {
     const { roleName } = useSelector((state) => state.auth);
     const roleNameLocal = localStorage.getItem("roleName");
     const { formData } = useActiveTab();
-    const [loading, setLoading] = useState(false);
+    const [submitLoading, setSubmitLoading] = useState(false);
     const { loanConfigData } = useSelector((state) => state.B2CLoans);
     const { loanApplicationId } = loanConfigData
 
@@ -57,107 +57,11 @@ const SideBar = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setSubmitLoading(true);
 
         const today = new Date();
         const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
         // console.log(formattedDate)
-
-        const dummyBorrowerData = {
-            personalDetails: {
-                title: "Mr.",
-                firstName: "Sample",
-                surname: "User",
-                otherName: "",
-                uniqueIDType: "EMAIL",
-                uniqueID: formData.email,
-                gender: "MALE",
-                maritalStatus: "SINGLE",
-                nationality: "Zambia",
-                dateOfBirth: "2000-01-01",
-                placeOfBirth: "Zambia",
-                loanOfficer: "superadmin",
-            },
-            contactDetails: {
-                mobile1: 9999999999,
-                mobile2: "",
-                landlinePhone: "",
-                houseNumber: "",
-                street: "Street1",
-                residentialArea: "Res1",
-                country: "Zambia",
-                province: "Lusaka",
-                district: "",
-                email: formData.email,
-                postBox: "",
-            },
-            employmentDetails: {
-                employer: "Longhorn Associates",
-                occupation: "PM",
-                employmentDistrict: "",
-                employmentLocation: "EmpLocation",
-                workStartDate: "2021-04-03",
-                workPhoneNumber: "",
-                workPhysicalAddress: "",
-                employeeNo: "PM01",
-                workType: "Full-time",
-                ministry: "MINISTRY_HEALTH",
-            },
-            incomeOnPaySlip: {
-                basicPay: Number(formData.basicPay),
-                housingAllowance: "",
-                transportAllowance: "",
-                ruralHardshipAllowance: "",
-                infectiousHealthRisk: "",
-                healthShiftAllowance: "",
-                interfaceAllowance: "",
-                responsibilityAllowance: "",
-                doubleClassAllowance: "",
-                actingAllowance: "",
-                otherAllowances: "",
-            },
-            deductionOnPaySlip: {
-                totalDeductionsOnPayslip: "",
-                totalDeductionsNotOnPayslip: "",
-            },
-            bankDetails: {
-                bankName: "Access Bank Zambia",
-                accountName: "DummyAccount",
-                accountType: "Savings",
-                branch: "Cairo Road Branch",
-                branchCode: "040001",
-                sortCode: "04-00-01",
-                accountNo: 12345678,
-            },
-            nextOfKinDetails: {
-                kinTitle: "Mr.",
-                kinSurname: "Surname",
-                kinOtherName: "",
-                kinNrcNo: "",
-                kinGender: "MALE",
-                kinRelationship: "EMPLOYER",
-                kinMobile1: 9999999999,
-                kinMobile2: "",
-                kinEmail: "",
-                kinHouseNo: "",
-                kinStreet: "Street1",
-                kinResidentialArea: "Res1",
-                kinDistrict: "",
-                kinCountry: "Zambia",
-                kinProvince: "",
-                kinEmployer: "DummyEmp",
-                kinOccupation: "Service",
-                kinLocation: "",
-                kinWorkPhoneNumber: "",
-            },
-            otherDetails: {
-                reasonForBorrowing: "",
-                sourceOfRepayment: "",
-                groupId: "",
-                creditScore: 0.9,
-                customerPhotoId: "",
-            },
-        };
 
         try {
 
@@ -168,7 +72,7 @@ const SideBar = () => {
                 "borrowerType": "PERSONAL_BORROWER",
                 "status": "IN_PROGRESS",
                 "generalLoanDetails": {
-                    "loanProductId": formData.loanType,
+                    "loanProductId": formData.loanProductId,
                     "borrowerId": formData.email,
                     "disbursedBy": "Bank",
                     "principalAmount": formData.amount,
@@ -186,7 +90,7 @@ const SideBar = () => {
                     "reasonForBorrowing": null,
                     "refinancedLoanId": null,
                     "refinancedLoanAmount": 0,
-                    "branch": "Lusaka",
+                    "branch": "Online",
                     "agentName": "",
                     "lhacoName": "",
                     "sector": "",
@@ -256,9 +160,22 @@ const SideBar = () => {
             console.error("Loan Submission Error:", error);
             toast(`Error: ${error}`);
         } finally {
-            setLoading(false);
+            setSubmitLoading(false);
         }
     };
+
+    
+  const ShimmerTable = () => {
+    return (
+      <div className="grid grid-cols-4 gap-4 animate-pulse">
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+      </div>
+    );
+  };
+
 
     return (
         <>
@@ -317,9 +234,9 @@ const SideBar = () => {
                         <PersonDetailsSection />
 
                         <Button
-                            buttonName={loading ? "Updating..." : "Submit"}
+                            buttonName={submitLoading ? "Updating..." : "Submit"}
                             onClick={handleSubmit}
-                            disabled={loading}
+                            disabled={submitLoading}
                         />
 
                     </div>

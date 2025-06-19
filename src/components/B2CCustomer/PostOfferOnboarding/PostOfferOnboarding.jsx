@@ -9,10 +9,14 @@ import '../style.css';
 
 import { useActiveTab } from "../ActiveTabContext";
 import B2CProgressBar from "../B2CProgressBar/B2CProgressBar";
+import { useSelector } from 'react-redux';
+import LoanDetails from './LoanDetails';
 
 
 const PostOfferOnboarding = () => {
   const { postOfferSubStep, postOfferNext, postOfferBack, postOfferSteps, setPostOfferSubStep } = useActiveTab();
+  const { fullLoanDetails } = useSelector((state) => state.B2CLoans);
+
 
   const renderPostOfferSubStep = () => {
     switch (postOfferSubStep) {
@@ -33,7 +37,7 @@ const PostOfferOnboarding = () => {
     }
   };
 
-  return <div className="flex flex-col justify-between">
+  return <div className="flex flex-col md:flex-row  justify-between">
     <div className="flex flex-col md:w-1/2">
       {/* Progress bar */}
       <B2CProgressBar SetSubStep={setPostOfferSubStep} SubStep={postOfferSubStep} Steps={postOfferSteps} />
@@ -42,7 +46,7 @@ const PostOfferOnboarding = () => {
       {renderPostOfferSubStep()}
     </div>
     {/* Image Section */}
-    <div className="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true">
+    {/* <div className="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true">
       <img
         className="object-cover object-center w-full h-full"
         src={OnboardingImage}
@@ -50,7 +54,8 @@ const PostOfferOnboarding = () => {
         height="1024"
         alt="Onboarding"
       />
-    </div>
+    </div> */}
+    <LoanDetails/>
   </div>;
 
 };

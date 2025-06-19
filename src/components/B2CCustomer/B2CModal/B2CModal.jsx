@@ -10,7 +10,7 @@ const B2CModal = ({
   loading,
   children,
   isFooter = true,
-  modalWidth = "lg:w-1/2",
+  modalWidth = "lg:w-1/3",
 }) => {
   return (
     <>

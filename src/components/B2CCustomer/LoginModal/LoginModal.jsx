@@ -24,7 +24,7 @@ const handleLogin = async () => {
 
     // console.log("Login Response:", res); // ✅ Add this to debug
 
-    if (res?.data?.borrowerId && res?.data?.cachedLoanProductId) {
+    if (res?.data?.cachedDetails.cachedBorrowerId && res?.data?.cachedDetails.cachedLoanProductId) {
       navigate("/customer/loan-offers");
     } else {
       toast.error("Missing loan data after login");

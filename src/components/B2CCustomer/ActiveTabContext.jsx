@@ -11,7 +11,7 @@ export const useActiveTab = () => {
 
 export const ActiveTabProvider = ({ children, setActiveTab }) => {
   const [formData, setFormData] = useState({
-    loanType: "",
+    loanProductId: "",
     amount: "",
     period: "",
     repayment: "",
@@ -23,7 +23,7 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
   });
   const dispatch = useDispatch();
 
-  const { personalBorrower, loanOfferFields } = useSelector((state) => state.B2CLoans)
+  const { personalBorrower, loanOfferFields, cachedDetails } = useSelector((state) => state.B2CLoans)
   const { uid } = loanOfferFields;
 
   const [preOfferSteps, setPreOfferSteps] = useState([0, 1, 2])
@@ -49,7 +49,36 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
     }
   }, [uid]);
 
-  console.log(loanOfferFields)
+useEffect(() => {
+  if (cachedDetails && Object.keys(cachedDetails).length > 0) {
+    const {
+      cachedPeriod,
+      cachedRepayment,
+      cachedAmount,
+      cachedEmail,
+      cachedBasicPay,
+      cachedBorrowerId,
+      cachedInterestRate,
+      cachedLoanProductId,
+      cachedLoanId,
+    } = cachedDetails;
+
+    setFormData((prev) => ({
+      ...prev,
+      period: cachedPeriod,
+      repayment: cachedRepayment,
+      amount: cachedAmount,
+      email: cachedEmail,
+      basicPay: cachedBasicPay,
+      borrowerId: cachedBorrowerId,
+      interestRate: cachedInterestRate,
+      loanProductId: cachedLoanProductId,
+      loanId:cachedLoanId,
+    }));
+  }
+}, [cachedDetails]);
+
+  // console.log(loanOfferFields)
 
   const preOfferNext = () => setPreOfferSubStep((prev) => Math.min(prev + 1, preOfferSteps.length - 1));
   const preOfferBack = () => setPreOfferSubStep((prev) => Math.max(prev - 1, 0));

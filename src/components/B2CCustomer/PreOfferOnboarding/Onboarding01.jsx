@@ -19,7 +19,7 @@ const Onboarding01 = ({ onNext }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.loanType) {
+    if (formData.loanProductId) {
       onNext();
     }
   };
@@ -40,7 +40,7 @@ const Onboarding01 = ({ onNext }) => {
             <button
               type="submit"
               className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:hover:bg-gray-500"
-              disabled={!formData.loanType}
+              disabled={!formData.loanProductId}
             >
               Next
             </button>

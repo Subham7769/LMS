@@ -17,7 +17,7 @@ function LoanRequirementSection({ onNext, onBack }) {
   useEffect(() => {
     if (loanProductData) {
       const loanProduct = loanProductData.filter(
-        (item) => item.loanProductId === formData.loanType
+        (item) => item.loanProductId === formData.loanProductId
       );
       const eligibleTenures = loanProduct[0]?.interestEligibleTenure || [];
 
@@ -32,7 +32,7 @@ function LoanRequirementSection({ onNext, onBack }) {
   useEffect(() => {
     if (loanProductData) {
       const loanProduct = loanProductData.filter(
-        (item) => item.loanProductId === formData.loanType
+        (item) => item.loanProductId === formData.loanProductId
       );
       const eligibleTenures = loanProduct[0]?.interestEligibleTenure || [];
 
