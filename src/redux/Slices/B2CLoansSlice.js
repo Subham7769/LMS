@@ -485,33 +485,6 @@ export const getLoanApplicationsByID = createAsyncThunk(
   }
 );
 
-export const getDocsByIdnUsage = createAsyncThunk(
-  "B2CLoans/getDocsByIdnUsage",
-  async ({ dynamicDocumentTempId, usage }, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_LOAN_READ_DOCUMENTS_BY_ID_AND_USAGE
-        }${dynamicDocumentTempId}/usage/${usage}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to fetch");
-      }
-      const responseData = await response.json();
-      return responseData;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
 
 export const cancelLoanApplicationsByID = createAsyncThunk(
   "B2CLoans/cancelLoanApplicationsByID",
