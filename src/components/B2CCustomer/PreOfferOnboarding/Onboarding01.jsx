@@ -1,25 +1,41 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchLoanProductData
+  fetchLoanProductData,
+  getDocsByIdnUsage
 } from "../../../redux/Slices/B2CLoansSlice";
 
-import { useActiveTab } from "../ActiveTabContext";
 import ProductListSection from "./ProductListSection";
 
 
 const Onboarding01 = ({ onNext }) => {
-
   const dispatch = useDispatch();
-  const { formData } = useActiveTab();
+  const { addLoanData,loanProductData } = useSelector((state) => state.B2CLoans);
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
   }, [dispatch]);
 
+  // Fetch Documents by Id
+  useEffect(() => {
+    if (addLoanData?.generalLoanDetails?.loanProductId) {
+      const selectedDynamicDoc = loanProductData.find(
+        (product) =>
+          product?.loanProductId ===
+          addLoanData?.generalLoanDetails?.loanProductId
+      );
+      dispatch(
+        getDocsByIdnUsage({
+          dynamicDocumentTempId: selectedDynamicDoc?.dynamicDocumentTempId,
+          usage: "BORROWER_OFFERS",
+        })
+      );
+    }
+  }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.loanProductId) {
+    if (addLoanData.generalLoanDetails.loanProductId) {
       onNext();
     }
   };
@@ -40,7 +56,7 @@ const Onboarding01 = ({ onNext }) => {
             <button
               type="submit"
               className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:hover:bg-gray-500"
-              disabled={!formData.loanProductId}
+              disabled={!addLoanData.generalLoanDetails.loanProductId}
             >
               Next
             </button>

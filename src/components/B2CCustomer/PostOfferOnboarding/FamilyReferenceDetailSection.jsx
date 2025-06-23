@@ -57,10 +57,12 @@ function FamilyReferenceDetailSection() {
         value={personalBorrower.nextOfKinDetails.kinGender}
         onChange={(e) => handleInputChange(e, "nextOfKinDetails")}
       >
-        <option value="">Select Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
+        <option value="">SELECT GENDER</option>
+        <option value="MALE">MALE</option>
+        <option value="FEMALE">FEMALE</option>
+        <option value="NON-BINARY">NON-BINARY</option>
+        <option value="OTHER">OTHER</option>
+        <option value="PREFER NOT TO SAY">PREFER NOT TO SAY</option>
       </select>
 
       {/* Kin NRC No */}

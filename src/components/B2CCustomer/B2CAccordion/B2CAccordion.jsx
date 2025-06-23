@@ -4,12 +4,7 @@ import Button from "../../Common/Button/Button";
 import { SunIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
 import {
-  fetchPersonalBorrowerById,
-  fetchLoanProductData,
-  getB2CLoanOffers,
   handleProceed,
-  resetLoanOfferFields,
-  updateLoanOfferFields,
   OfferSelected,
   getFullLoanDetails,
 } from "../../../redux/Slices/B2CLoansSlice";
@@ -27,15 +22,14 @@ const B2CAccordion = ({
   const [isExpanded, setIsExpanded] = useState(isOpen);
   const navigate = useNavigate(); // Adding useNavigate for navigation
   const dispatch = useDispatch();
-  const { loanConfigData, loanOfferFields, cachedDetails} = useSelector((state) => state.B2CLoans);
-
-
+  const { loanConfigData, personalBorrower } = useSelector((state) => state.B2CLoans);
+  const { cachedBorrowerId } = personalBorrower.cachedDetails
+console.log(cachedBorrowerId)
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
   const SubmitProceed = async (transactionId, index) => {
-    const uid = loanOfferFields.uid;
 
     const proceedPayload = {
       transactionId: transactionId,
@@ -43,17 +37,12 @@ const B2CAccordion = ({
       createdBy: "OnlineUser",
     };
 
-    const proceedResponse = await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
+    const proceedResponse = await dispatch(handleProceed({ proceedPayload, uid: cachedBorrowerId })).unwrap();
     console.log(proceedResponse)
 
     if (proceedResponse.loanId) {
-      await dispatch(OfferSelected({ uid, loanId: proceedResponse.loanId })).unwrap();
-      await dispatch(getFullLoanDetails({ uid, loanId: proceedResponse.loanId })).unwrap();
-    }
-    else if(cachedDetails?.loanId){
-      await dispatch(OfferSelected({ uid, loanId: cachedDetails?.loanId })).unwrap();
-      await dispatch(getFullLoanDetails({ uid, loanId: cachedDetails?.loanId })).unwrap();
-
+      await dispatch(OfferSelected({ uid: cachedBorrowerId, loanId: proceedResponse.loanId })).unwrap();
+      await dispatch(getFullLoanDetails({ uid: cachedBorrowerId, loanId: proceedResponse.loanId })).unwrap();
     }
     navigate(`/customer/loan-finalization`);
   };

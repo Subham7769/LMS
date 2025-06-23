@@ -11,19 +11,21 @@ const generateColors = (count) =>
 const InputSlider = ({
   labelName,
   inputName,
-  inputLevels = [],
+  inputLevels = [1,2,3],
   inputValue,
   coloredTheme = false,
   onChange,
   disabled = false,
 }) => {
-  if (!Array.isArray(inputLevels) || inputLevels.length < 2) {
+  if (inputLevels.length < 2) {
     return (
       <div className="text-red-600 text-sm">
         ⚠️ Input levels must have at least two values.
       </div>
     );
   }
+
+console.log("inputLevels in slider:", inputLevels); 
 
   const firstType = typeof inputLevels[0];
   const coercedValue =
@@ -76,11 +78,13 @@ const InputSlider = ({
             {children}
           </div>
         )}
-        renderThumb={({ props }) => (
-          <div
-            {...props}
+        renderThumb={({ props }) => {
+          const { key, ...restProps } = props;
+          return (<div
+            key={key} // ✅ Pass key explicitly
+            {...restProps}
             style={{
-              ...props.style,
+              ...restProps.style,
               height: "1.2rem",
               width: "1.2rem",
               borderRadius: "50%",
@@ -88,8 +92,8 @@ const InputSlider = ({
               border: `2px solid ${selectedColor}`,
               cursor: "pointer",
             }}
-          />
-        )}
+          />)
+        }}
       />
     </div>
   );

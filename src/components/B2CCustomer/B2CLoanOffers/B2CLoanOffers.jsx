@@ -27,24 +27,31 @@ const B2CLoanOffers = () => {
   const {
     loanProductOptions,
     loanConfigData,
-    loanOfferFields,
+    personalBorrower,
     loading,
   } = useSelector((state) => state.B2CLoans);
 
-  const { userData } = useSelector((state) => state.auth);
-  const uid = loanOfferFields?.uid;
-  const loanProductId = loanOfferFields?.loanProductId;
+  const uid = personalBorrower.cachedDetails?.cachedBorrowerId;
+  const loanProductId = personalBorrower.cachedDetails?.cachedLoanProductId;
 
   useEffect(() => {
+
+    if (!uid && !loanProductId) {
+        navigate("/customer/loan-application");
+        return;
+      }
+
     const fetchOffers = async () => {
-      console.log("Effect triggered: UID and loanProductId", { uid, loanProductId });
+      // console.log("Effect triggered: UID and loanProductId", { uid, loanProductId });
 
       if (uid && loanProductId) {
         try {
-          dispatch(fetchPersonalBorrowerById(uid));
           const response = await dispatch(getB2CLoanOffers({ uid, loanProductId })).unwrap();
           if (response.message) {
-            navigate("/customer/loan-finalization");
+            setTimeout(() => {
+
+              navigate("/customer/loan-finalization");
+            }, 100)
           }
         } catch (error) {
           console.error("Error fetching loan offers:", error);
@@ -53,7 +60,7 @@ const B2CLoanOffers = () => {
     };
 
     fetchOffers(); // Call the async function
-  }, [uid, loanProductId, dispatch, navigate]);
+  }, [uid, loanProductId ]);
 
   const InfoRow = ({ label, value }) => (
     <div className="mb-1.5">
@@ -78,16 +85,14 @@ const B2CLoanOffers = () => {
     </div>
   );
 
-  // 🚨 Guard if UID or loanProductId is missing
-  if (!uid || !loanProductId) {
-    return (
-      <ContainerTile className="p-6">
-        <div className="text-center text-gray-600 text-sm">
-          Waiting for loan offer info... Please complete previous steps.
-        </div>
-      </ContainerTile>
-    );
-  }
+  // // 🚨 Guard if UID or loanProductId is missing
+  // if (!uid || !loanProductId) {
+  //   return (
+  //       <div className="text-center text-gray-600 text-sm">
+  //         Waiting for loan offer info... Please complete previous steps.
+  //       </div>
+  //   );
+  // }
 
   return (
     <div className="flex justify-center w-full p-5">

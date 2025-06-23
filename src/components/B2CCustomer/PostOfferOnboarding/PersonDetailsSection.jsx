@@ -1,14 +1,27 @@
-import { updatePersonalBorrowerField, updateLoanField } from "../../../redux/Slices/B2CLoansSlice";
+import { useEffect } from "react";
+import { updatePersonalBorrowerField, fetchPersonalBorrowerById } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch, useSelector } from 'react-redux';
 
 const PersonDetailsSection = () => {
     const dispatch = useDispatch();
-    const { personalBorrower } = useSelector((state) => state.B2CLoans)
+    const { personalBorrower, loading } = useSelector((state) => state.B2CLoans)
+    const { cachedBorrowerId } = personalBorrower?.cachedDetails;
+
+    useEffect(() => {
+        const uid = cachedBorrowerId;
+        if (!uid) {
+            
+            dispatch(fetchPersonalBorrowerById(uid));
+        }
+    }, [cachedBorrowerId, dispatch])
 
     const handleInputChange = (e, section) => {
         const { name, value, type, checked } = e.target;
         dispatch(updatePersonalBorrowerField({ section, field: name, value, type, checked }));
     };
+    if (loading) {
+        return (<p>Loading...</p>)
+    }
 
     return (
         <>

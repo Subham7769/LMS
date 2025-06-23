@@ -23,8 +23,8 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
   });
   const dispatch = useDispatch();
 
-  const { personalBorrower, loanOfferFields, cachedDetails } = useSelector((state) => state.B2CLoans)
-  const { uid } = loanOfferFields;
+  const { personalBorrower } = useSelector((state) => state.B2CLoans)
+  const { cachedBorrowerId } = personalBorrower?.cachedDetails;
 
   const [preOfferSteps, setPreOfferSteps] = useState([0, 1, 2])
   const [postOfferSteps, setPostOfferSteps] = useState([0, 1, 2, 3, 4, 5])
@@ -32,64 +32,27 @@ export const ActiveTabProvider = ({ children, setActiveTab }) => {
   const [preOfferSubStep, setPreOfferSubStep] = useState(0);
   const [postOfferSubStep, setPostOfferSubStep] = useState(0);
 
-  useEffect(() => {
-    if (loanOfferFields?.uid) {
-      setFormData((prev) => ({
-        ...prev,
-        borrowerId: loanOfferFields.uid,
-      }));
-    }
-  }, [loanOfferFields?.uid]);
 
   useEffect(() => {
-    if (uid) {
+    if (cachedBorrowerId) {
       setPreOfferSubStep(0);
       setPostOfferSubStep(0);
       // optionally reset formData here
     }
-  }, [uid]);
+  }, [cachedBorrowerId]);
 
-useEffect(() => {
-  if (cachedDetails && Object.keys(cachedDetails).length > 0) {
-    const {
-      cachedPeriod,
-      cachedRepayment,
-      cachedAmount,
-      cachedEmail,
-      cachedBasicPay,
-      cachedBorrowerId,
-      cachedInterestRate,
-      cachedLoanProductId,
-      cachedLoanId,
-    } = cachedDetails;
 
-    setFormData((prev) => ({
-      ...prev,
-      period: cachedPeriod,
-      repayment: cachedRepayment,
-      amount: cachedAmount,
-      email: cachedEmail,
-      basicPay: cachedBasicPay,
-      borrowerId: cachedBorrowerId,
-      interestRate: cachedInterestRate,
-      loanProductId: cachedLoanProductId,
-      loanId:cachedLoanId,
-    }));
-  }
-}, [cachedDetails]);
-
-  // console.log(loanOfferFields)
 
   const preOfferNext = () => setPreOfferSubStep((prev) => Math.min(prev + 1, preOfferSteps.length - 1));
   const preOfferBack = () => setPreOfferSubStep((prev) => Math.max(prev - 1, 0));
 
   const postOfferNext = async () => {
-    if (!uid || !personalBorrower) {
-      console.warn("Missing UID or personal borrower data");
+    if (!cachedBorrowerId || !personalBorrower) {
+      console.warn("Missing cachedBorrowerId or personal borrower data");
       return;
     }
 
-    await dispatch(updatePersonalBorrowerInfo({ borrowerData: personalBorrower, uid })).unwrap();
+    await dispatch(updatePersonalBorrowerInfo({ borrowerData: personalBorrower, uid:cachedBorrowerId })).unwrap();
     setPostOfferSubStep((prev) => Math.min(prev + 1, postOfferSteps.length - 1));
   };
   const postOfferBack = () => setPostOfferSubStep((prev) => Math.max(prev - 1, 0));

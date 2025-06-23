@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import { useActiveTab } from "../ActiveTabContext";
-import { registerB2CPersonalBorrower } from "../../../redux/Slices/B2CLoansSlice";
-import { useDispatch } from "react-redux";
+import { registerB2CPersonalBorrower, updatePersonalBorrowerField } from "../../../redux/Slices/B2CLoansSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { generatePersonalLoanApplicationId, saveDraftLoanData, submitPersonalLoan, B2CLogin } from "../../../redux/Slices/B2CLoansSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PersonDetailsSection from "./PersonDetailsSection";
 
 function Onboarding03({ onNext, onBack }) {
-  const { formData } = useActiveTab();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { addLoanData, personalBorrower } = useSelector((state) => state.B2CLoans)
 
 
   const handleSubmit = async (e) => {
@@ -22,210 +21,40 @@ function Onboarding03({ onNext, onBack }) {
     const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     console.log(formattedDate)
 
-    const dummyBorrowerData = {
-      cachedDetails: {
-        cachedPeriod: formData.period,
-        cachedRepayment: formData.repayment,
-        cachedAmount: formData.amount,
-        cachedEmail: formData.email,
-        cachedBasicPay: formData.basicPay,
-        cachedBorrowerId: formData.borrowerId,
-        cachedInterestRate: formData.interestRate,
-        cachedLoanProductId: formData.loanProductId,
-        cachedPassword: formData.password,
-      },
-      personalDetails: {
-        title: "Mr.",
-        firstName: "Sample",
-        surname: "User",
-        otherName: "",
-        uniqueIDType: "EMAIL",
-        uniqueID: formData.email,
-        gender: "MALE",
-        maritalStatus: "SINGLE",
-        nationality: "Zambia",
-        dateOfBirth: "2000-01-01",
-        placeOfBirth: "Zambia",
-        loanOfficer: "superadmin",
-      },
-      contactDetails: {
-        mobile1: 9999999999,
-        mobile2: "",
-        landlinePhone: "",
-        houseNumber: "",
-        street: "Street1",
-        residentialArea: "Res1",
-        country: "Zambia",
-        province: "Lusaka",
-        district: "",
-        email: formData.email,
-        postBox: "",
-      },
-      employmentDetails: {
-        employer: "Longhorn Associates",
-        occupation: "PM",
-        employmentDistrict: "",
-        employmentLocation: "EmpLocation",
-        workStartDate: "2021-04-03",
-        workPhoneNumber: "",
-        workPhysicalAddress: "",
-        employeeNo: "PM01",
-        workType: "Full-time",
-        ministry: "MINISTRY_HEALTH",
-      },
-      incomeOnPaySlip: {
-        basicPay: Number(formData.basicPay),
-        housingAllowance: "",
-        transportAllowance: "",
-        ruralHardshipAllowance: "",
-        infectiousHealthRisk: "",
-        healthShiftAllowance: "",
-        interfaceAllowance: "",
-        responsibilityAllowance: "",
-        doubleClassAllowance: "",
-        actingAllowance: "",
-        otherAllowances: "",
-      },
-      deductionOnPaySlip: {
-        totalDeductionsOnPayslip: "",
-        totalDeductionsNotOnPayslip: "",
-      },
-      bankDetails: {
-        bankName: "Access Bank Zambia",
-        accountName: "DummyAccount",
-        accountType: "Savings",
-        branch: "Cairo Road Branch",
-        branchCode: "040001",
-        sortCode: "04-00-01",
-        accountNo: 12345678,
-      },
-      nextOfKinDetails: {
-        kinTitle: "Mr.",
-        kinSurname: "Surname",
-        kinOtherName: "",
-        kinNrcNo: "",
-        kinGender: "MALE",
-        kinRelationship: "EMPLOYER",
-        kinMobile1: 9999999999,
-        kinMobile2: "",
-        kinEmail: "",
-        kinHouseNo: "",
-        kinStreet: "Street1",
-        kinResidentialArea: "Res1",
-        kinDistrict: "",
-        kinCountry: "Zambia",
-        kinProvince: "",
-        kinEmployer: "DummyEmp",
-        kinOccupation: "Service",
-        kinLocation: "",
-        kinWorkPhoneNumber: "",
-      },
-      otherDetails: {
-        reasonForBorrowing: "",
-        sourceOfRepayment: "",
-        groupId: "",
-        creditScore: 0.9,
-        customerPhotoId: "",
-      },
-    };
 
     try {
-      // 1. Register Borrower
-      const borrowerResponse = await dispatch(registerB2CPersonalBorrower(dummyBorrowerData)).unwrap();
-      console.log("Borrower Registered:", borrowerResponse.registrationResults);
-
-      // 2. Login Borrower
-      const loginResponse = await dispatch(B2CLogin({ email: formData.email, password: formData.password })).unwrap();
-      console.log("Borrower LoggedIn :", loginResponse);
-
-      // 3. Generate Loan Application ID
+      // 1. Generate Loan Application ID
       const loanApplicationId = await dispatch(generatePersonalLoanApplicationId()).unwrap();
       console.log("Loan Application ID:", loanApplicationId);
 
-      // 4. Prepare Loan Data
-      const dummyLoanData = {
-        "loanApplicationId": loanApplicationId,
-        "borrowerName": "Anonymous User",
-        "borrowerType": "PERSONAL_BORROWER",
-        "status": "IN_PROGRESS",
-        "generalLoanDetails": {
-          "loanProductId": formData.loanProductId,
-          "borrowerId": formData.email,
-          "disbursedBy": "Bank",
-          "principalAmount": formData.amount,
-          "loanReleaseDate": formattedDate,
-          "interestMethod": "REDUCING",
-          "loanInterest": formData.interestRate,
-          "loanInterestType": "YEAR",
-          "loanInterestStr": `${formData.interestRate}% PER YEAR REDUCING`,
-          "loanDuration": formData.period,
-          "loanDurationType": "MONTH",
-          "loanDurationStr": `${formData.period} MONTHS`,
-          "repaymentTenure": formData.repayment,
-          "repaymentTenureType": "MONTH",
-          "repaymentTenureStr": `${formData.repayment} MONTHS`,
-          "reasonForBorrowing": null,
-          "refinancedLoanId": null,
-          "refinancedLoanAmount": 0,
-          "branch": "Lusaka",
-          "agentName": "",
-          "lhacoName": "",
-          "sector": "",
-          "uniqueID": formData.email,
-          "loanCreationDate": formattedDate,
-          "firstEmiDate": ""
-        },
-        "documents": [
-          {
-            "docId": "",
-            "loanApplicationId": loanApplicationId,
-            "size": 0,
-            "documentKey": "PAY_SLIP",
-            "verified": false
-          },
-          {
-            "docId": "",
-            "loanApplicationId": loanApplicationId,
-            "size": 0,
-            "documentKey": "EMPLOYER_FORM",
-            "verified": false
-          },
-          {
-            "docId": "",
-            "loanApplicationId": loanApplicationId,
-            "size": 0,
-            "documentKey": "BANK_STATEMENT",
-            "verified": false
-          },
-          {
-            "docId": "",
-            "loanApplicationId": loanApplicationId,
-            "size": 0,
-            "documentKey": "ATM_CARD",
-            "verified": false
-          }
-        ],
-        "refinanceDetails": [
-          {
-            "name": "",
-            "loanId": "",
-            "installmentOnPaySlip": 0,
-            "refinanceAmount": 0,
-            "refinanceYesNo": false
-          }
-        ]
-      }
+      dispatch(updatePersonalBorrowerField({ section: "cachedDetails", field: "cachedLoanApplicationId", value: loanApplicationId }));
+
+      // 2. Register Borrower
+      const borrowerResponse = await dispatch(registerB2CPersonalBorrower({
+        ...personalBorrower,
+        cachedDetails: {
+          ...personalBorrower.cachedDetails,
+          cachedLoanApplicationId: loanApplicationId
+        }
+      })).unwrap();
+
+      console.log("Borrower Registered:", borrowerResponse.registrationResults);
+
+      // 3. Login Borrower
+      const loginResponse = await dispatch(B2CLogin({ email: personalBorrower.cachedDetails.cachedEmail, password: personalBorrower.cachedDetails.cachedPassword })).unwrap();
+      console.log("Borrower LoggedIn :", loginResponse);
+
 
       // 5. Save Draft
-      await dispatch(saveDraftLoanData(dummyLoanData)).unwrap();
+      await dispatch(saveDraftLoanData(addLoanData)).unwrap();
       console.log("Saved Draft Loan!");
 
       // 6. Submit Loan
       const submitPayload = {
-        ...dummyLoanData.generalLoanDetails,
-        documents: dummyLoanData.documents,
+        ...addLoanData.generalLoanDetails,
+        documents: addLoanData.documents,
         loanApplicationId,
-        refinanceDetails: dummyLoanData.refinanceDetails,
+        refinanceDetails: addLoanData.refinanceDetails,
       };
       await dispatch(submitPersonalLoan(submitPayload)).unwrap();
       console.log("Submitted Loan!");
@@ -241,7 +70,6 @@ function Onboarding03({ onNext, onBack }) {
     }
   };
 
-  // console.log(formData)
 
   return (
     <div className="px-4 py-8">

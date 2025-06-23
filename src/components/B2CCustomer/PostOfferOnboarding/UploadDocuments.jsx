@@ -1,60 +1,118 @@
 import React, { useEffect, useState } from "react";
-import { useActiveTab } from "../ActiveTabContext";
+import { CreditCardIcon } from "@heroicons/react/24/outline";
+import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
+import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
+import { deleteDocumentFile, fetchLoanProductData, getDocsByIdnUsage, updateLoanField, updatePersonalBorrowerField, uploadDocumentFile } from "../../../redux/Slices/B2CLoansSlice";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { useDispatch, useSelector } from "react-redux";
 
 
-function UploadDocuments() {
-  const { formData, setFormData } = useActiveTab();
+function UploadDocuments({ documents }) {
+  const dispatch = useDispatch();
+  const { addLoanData, loading, fullLoanDetails, personalBorrower, loanProductData } = useSelector((state) => state.B2CLoans);
+
+  useEffect(() => {
+    dispatch(fetchLoanProductData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const cachedLoanProductId = personalBorrower?.cachedDetails?.cachedLoanProductId;
+
+    if (loanProductData.length > 0 && cachedLoanProductId) {
+      const selectedDynamicDoc = loanProductData.find(
+        (product) => product?.loanProductId === cachedLoanProductId
+      );
+
+      if (selectedDynamicDoc?.dynamicDocumentTempId) {
+        dispatch(
+          getDocsByIdnUsage({
+            dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
+            usage: "BORROWER_OFFERS",
+          })
+        );
+      }
+    }
+  }, [
+    loanProductData, // wait for product data
+    personalBorrower?.cachedDetails?.cachedLoanProductId, // wait for cached value
+    dispatch,
+  ]);
+
+
+  const handleInputChange = (e, section, index) => {
+    const { name, value, type, checked } = e.target;
+    console.log(e)
+    dispatch(updateLoanField({ section, field: name, value, type, checked, index }));
+  };
+
+  const handleFileChange = (e, section, index) => {
+    const fileUploadParams = {
+      loanApplicationId: addLoanData?.loanApplicationId,
+      documentKey: addLoanData?.documents[index].documentKey,
+      verified: addLoanData?.documents[index].verified,
+      borrowerType: "PERSONAL_BORROWER",
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+
+    const { name, value, type, checked, files } = e.target;
+
+    dispatch(
+      updateLoanField({ section, field: name, value, type, checked, index })
+    );
+
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      // Dispatch the upload action with the FormData
+      // console.log(fileUploadParams);
+      dispatch(uploadDocumentFile({ formData, fileUploadParams }));
+    }
+  };
+
+  const handleDeleteDocument = (docId) => {
+    if (!docId) return;
+    const fileDeleteParams = {
+      docId: docId,
+      authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+    };
+    dispatch(deleteDocumentFile(fileDeleteParams));
+  };
 
   return (
-    <>
-      {[
-        { label: "ATM Card", field: "atmCard" },
-        { label: "Bank Statement", field: "bankStatement" },
-        { label: "Employer Form", field: "employerForm" },
-        { label: "Pay Slip", field: "paySlip" }
-      ].map((doc) => (
-        <div key={doc.field} className="mb-6">
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-            {doc.label}
-          </label>
-
-          <div className="relative flex items-center justify-between p-4 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 transition hover:border-blue-500">
-            <div className="w-full flex align-middle justify-start gap-1">
-              <input
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                id={doc.field}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    [doc.field]: e.target.files[0]
-                  })
-                }
-                className="hidden"
-              />
-              <label
-                htmlFor={doc.field}
-                className="cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md w-fit transition"
-              >
-                {formData[doc.field] ? "Replace File" : "Upload File"}
-              </label>
-
-              {formData[doc.field] && (
-                <p className="text-xs text-gray-600 dark:text-gray-300 mt-3">
-                  {formData[doc.field].name}
-                </p>
-              )}
+    <div className="flex flex-col gap-5 justify-center align-middle">
+      {documents.map((document, index) => (
+        <React.Fragment key={document.documentKey}>
+          {document.documentKey === "ATM_CARD" ? (
+            <div className="flex justify-between items-center border-b border-gray-300 dark:border-gray-600 mb-3 pb-3">
+              <div>ATM Card</div>
+              <div className="flex gap-x-5 items-baseline">
+                <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
+                <div>
+                  <InputCheckbox
+                    labelName={"Verified"}
+                    inputChecked={documents[index]?.verified}
+                    onChange={(e) => handleInputChange(e, "documents", index)}
+                    inputName="verified"
+                  />
+                </div>
+              </div>
             </div>
-
-            {formData[doc.field] && (
-              <span className="flex  w-fit text-center text-green-600 font-semibold text-sm">
-                <span>✅</span><span> Verified</span>
-              </span>
-            )}
-          </div>
-        </div>
+          ) : (
+            <DocumentUploaderVerifier
+              label={convertToTitleCase(document.documentKey)}
+              inputFileName="docName"
+              inputFileValue={documents[index]?.docName}
+              onFileChange={(e) => handleFileChange(e, "documents", index)}
+              onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
+              checkboxName="verified"
+              checkboxChecked={documents[index]?.verified}
+              onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
+            />
+          )}
+        </React.Fragment>
       ))}
-    </>
+    </div>
   );
 }
 

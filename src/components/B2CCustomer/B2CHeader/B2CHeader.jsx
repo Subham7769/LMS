@@ -4,7 +4,7 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar } from '../../../redux/Slices/sidebarSlice';
 import { PowerIcon, ArrowLeftEndOnRectangleIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/20/solid';
-import { resetLoanOfferFields } from '../../../redux/Slices/B2CLoansSlice';
+import { resetCachedDataFields } from '../../../redux/Slices/B2CLoansSlice';
 import LoginModal from '../LoginModal/LoginModal';
 
 const B2CHeader = () => {
@@ -12,15 +12,15 @@ const B2CHeader = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { open } = useSelector((state) => state.sidebar);
-    const { loanOfferFields } = useSelector((state) => state.B2CLoans);
-    const { uid } = loanOfferFields;
+    const { personalBorrower } = useSelector((state) => state.B2CLoans);
+    const { cachedBorrowerId } = personalBorrower.cachedDetails;
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (uid) {
+        if (cachedBorrowerId) {
             setShowModal(false)
         }
-    }, [uid]);
+    }, [cachedBorrowerId]);
 
 
     const handleToggleSidebar = () => {
@@ -28,7 +28,7 @@ const B2CHeader = () => {
     };
 
     const handleLogOut = () => {
-        dispatch(resetLoanOfferFields())
+        dispatch(resetCachedDataFields())
         navigate("/customer/loan-application")
         console.log("/customer/loan-application")
     }
@@ -73,16 +73,16 @@ const B2CHeader = () => {
 
                 <div
                     className="group relative flex shrink-0 items-center justify-center px-8 cursor-pointer"
-                    // title={uid ? "Logout" : "Login"}
-                    onClick={uid ? handleLogOut : () => setShowModal(true)}
+                    // title={cachedBorrowerId ? "Logout" : "Login"}
+                    onClick={cachedBorrowerId ? handleLogOut : () => setShowModal(true)}
                 >
                     {/* Hover Text */}
                     <span className="absolute left-[-40px] text-sm whitespace-nowrap font-medium text-white bg-black/70 px-3 py-1 rounded-lg opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out z-10">
-                        {uid ? "Logout" : "Login"}
+                        {cachedBorrowerId ? "Logout" : "Login"}
                     </span>
 
                     {/* Icon */}
-                    {uid ? (
+                    {cachedBorrowerId ? (
                         <ArrowRightStartOnRectangleIcon
                             className="h-8 w-auto font-extrabold text-red-500 hover:text-red-600 hover:bg-red-100 hover:p-1 rounded-full transition-all ease-in-out duration-300"
                         />

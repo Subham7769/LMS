@@ -4,19 +4,32 @@ import Onboarding03 from './Onboarding03';
 import Onboarding04 from './Onboarding04';
 import Onboarding05 from './Onboarding05';
 import Onboarding06 from './Onboarding06';
-import OnboardingImage from "../images/loan_banner_freepik.png";
 import '../style.css';
 
 import { useActiveTab } from "../ActiveTabContext";
 import B2CProgressBar from "../B2CProgressBar/B2CProgressBar";
 import { useSelector } from 'react-redux';
 import LoanDetails from './LoanDetails';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const PostOfferOnboarding = () => {
-  const { postOfferSubStep, postOfferNext, postOfferBack, postOfferSteps, setPostOfferSubStep } = useActiveTab();
-  const { fullLoanDetails } = useSelector((state) => state.B2CLoans);
+  const navigate = useNavigate();
 
+  const { postOfferSubStep, postOfferNext, postOfferBack, postOfferSteps, setPostOfferSubStep } = useActiveTab();
+  const { personalBorrower } = useSelector((state) => state.B2CLoans);
+  const { cachedBorrowerId } = personalBorrower?.cachedDetails;
+
+  useEffect(() => {
+    console.log("🚀 useEffect check:", { cachedBorrowerId });
+
+    if (!cachedBorrowerId || String(cachedBorrowerId).trim() === "") {
+      console.log("❌ No cachedBorrowerId → navigating");
+      navigate("/customer/loan-application");
+      return;
+    }
+  }, [cachedBorrowerId, navigate]);
 
   const renderPostOfferSubStep = () => {
     switch (postOfferSubStep) {
@@ -45,17 +58,9 @@ const PostOfferOnboarding = () => {
       {/* Onboarding Steps */}
       {renderPostOfferSubStep()}
     </div>
-    {/* Image Section */}
-    {/* <div className="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true">
-      <img
-        className="object-cover object-center w-full h-full"
-        src={OnboardingImage}
-        width="760"
-        height="1024"
-        alt="Onboarding"
-      />
-    </div> */}
-    <LoanDetails/>
+
+    {/* Loan Section */}
+    <LoanDetails />
   </div>;
 
 };

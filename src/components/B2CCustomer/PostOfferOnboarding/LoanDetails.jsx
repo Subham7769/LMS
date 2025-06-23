@@ -8,23 +8,38 @@ import { toast } from 'react-toastify';
 
 const LoanDetails = () => {
     const dispatch = useDispatch();
-    const { loading, fullLoanDetails, cachedDetails } = useSelector((state) => state.B2CLoans);
+    const { loading, fullLoanDetails, personalBorrower } = useSelector((state) => state.B2CLoans);
+    const borrowerId = personalBorrower?.cachedDetails?.cachedBorrowerId;
+    const loanId = personalBorrower?.cachedDetails?.cachedLoanId;
 
-    console.log(fullLoanDetails)
+    console.log(" borrowerId, loanId Value :", { borrowerId, loanId });
+
+
+    const shouldFetch = borrowerId?.trim() && loanId?.trim()
+
     useEffect(() => {
-        const borrowerId = cachedDetails?.cachedBorrowerId;
-        const loanId = cachedDetails?.cachedLoanId;
+        if (!shouldFetch) return;
 
-        if (borrowerId && loanId && Object.keys(fullLoanDetails || {}).length === 0) {
-            dispatch(getFullLoanDetails({ uid: borrowerId, loanId }))
-                .unwrap()
-                .catch((err) => {
-                    toast.error("Failed to fetch loan details.");
-                    console.error(err);
-                });
-        }
-    }, [cachedDetails, fullLoanDetails, dispatch]);
+        console.log("Fetching loan details:", { borrowerId, loanId });
 
+        dispatch(getFullLoanDetails({ uid: borrowerId, loanId }))
+            .unwrap()
+            .catch((err) => {
+                toast.error("Failed to fetch loan details.");
+                console.error(err);
+            });
+    }, [shouldFetch, borrowerId, loanId, dispatch]);
+
+    const ShimmerTable = () => {
+        return (
+            <div className="grid grid-cols-4 gap-4 animate-pulse">
+                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded"></div>
+            </div>
+        );
+    };
 
 
     const columns = [
@@ -34,6 +49,58 @@ const LoanDetails = () => {
         { label: "Amount", field: "amount" },
         { label: "Status", field: "status" },
     ];
+
+    if (loading) {
+        return (
+            <div className='flex flex-col gap-2 p-5 w-full shadow-[-8px_0_8px_-4px_rgba(96,165,250,0.3)] min-h-[calc(100vh-4rem)]  bg-linear-to-tr from-blue-100 to-blue-500  md:w-1/2'>
+                <p className='text-center py-2 font-bold text-3xl text-white '>{"-"}</p>
+                <div className="grid grid-cols-1 gap-2  shadow-md">
+                    {/* General Info Section */}
+                    <div className="p-6 bg-white border border-gray-200 rounded-lg">
+                        <h2 className="text-xl font-semibold text-gray-800 border-l-4 border-blue-500 pl-3">
+                            General Info
+                        </h2>
+
+                        <div className='mt-4 grid grid-cols-1 gap-x-4 gap-y-6'>
+                            <ShimmerTable />
+                            <ShimmerTable />
+                            <ShimmerTable />
+                            <ShimmerTable />
+                        </div>
+
+                    </div>
+
+                    {/* Financials Section */}
+                    <div className="p-6 border-t bg-white border border-gray-200 rounded-lg">
+                        <h2 className="text-xl font-semibold text-gray-800 border-l-4 border-blue-500 pl-3">
+                            Financials
+                        </h2>
+                        <div className='mt-4 grid grid-cols-1  gap-x-4 gap-y-6'>
+                            <ShimmerTable />
+                            <ShimmerTable />
+                            <ShimmerTable />
+                            <ShimmerTable />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-6 border-t bg-white border border-gray-200 rounded-lg">
+                    <h2 className="text-xl font-semibold text-gray-800 border-l-4 border-blue-500 pl-3">
+                        EMI Schedule
+                    </h2>
+                    <div className='mt-4 grid grid-cols-1  gap-x-4 gap-y-6'>
+                        <ShimmerTable />
+                        <ShimmerTable />
+                        <ShimmerTable />
+                        <ShimmerTable />
+                    </div>
+                </div>
+            </div>)
+    }
+
+    console.log(fullLoanDetails)
+
+
 
     const today = new Date();
     const nextDueDate = fullLoanDetails?.installments?.find(
@@ -58,7 +125,7 @@ const LoanDetails = () => {
 
     return (
         <div className='flex flex-col gap-2 p-5 w-full shadow-[-8px_0_8px_-4px_rgba(96,165,250,0.3)] min-h-[calc(100vh-4rem)]  bg-linear-to-tr from-blue-100 to-blue-500  md:w-1/2'>
-            <p className='text-center py-2 font-bold text-3xl text-white '>{fullLoanDetails.loanType}</p>
+            <p className='text-center py-2 font-bold text-3xl text-white '>{fullLoanDetails?.loanType ?? "-"}</p>
             <div className="grid grid-cols-1 gap-2  shadow-md">
                 {/* General Info Section */}
                 <div className="p-6 bg-white border border-gray-200 rounded-lg">
@@ -70,9 +137,9 @@ const LoanDetails = () => {
                         <div>
                             <p className="text-sm text-gray-500">Loan ID</p>
                             <div className="flex items-center mt-1">
-                                <p className="font-medium text-gray-900">{fullLoanDetails.loanId}</p>
+                                <p className="font-medium text-gray-900">{fullLoanDetails?.loanId ?? "-"}</p>
                                 <button
-                                    onClick={() => navigator.clipboard.writeText(fullLoanDetails.loanId)}
+                                    onClick={() => copyToClipboard()}
                                     className="ml-2 px-2 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded hover:bg-blue-100 focus:outline-none"
                                 >
                                     Copy
@@ -83,27 +150,28 @@ const LoanDetails = () => {
                         <div>
                             <p className="text-sm text-gray-500">Total Amount</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.totalAmount.toLocaleString()}
+                                {fullLoanDetails?.totalAmount?.toLocaleString() ?? "-"}
                             </p>
                         </div>
                         {/* Release Date */}
                         <div>
                             <p className="text-sm text-gray-500">Release Date</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {convertDate(fullLoanDetails.releaseDate)}
+                                {convertDate(fullLoanDetails?.releaseDate)}
                             </p>
                         </div>
                         {/* Next Due Date */}
                         <div>
                             <p className="text-sm text-gray-500">Next Due Date</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.nextDueDate
-                                    ? convertDate(fullLoanDetails.nextDueDate)
+                                {fullLoanDetails?.nextDueDate
+                                    ? convertDate(fullLoanDetails?.nextDueDate)
                                     : '-'}
                             </p>
                         </div>
                     </div>
                 </div>
+
                 {/* Financials Section */}
                 <div className="p-6 border-t bg-white border border-gray-200 rounded-lg">
                     <h2 className="text-xl font-semibold text-gray-800 border-l-4 border-blue-500 pl-3">
@@ -114,35 +182,35 @@ const LoanDetails = () => {
                         <div>
                             <p className="text-sm text-gray-500">Wallet Balance</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.walletBalance.toLocaleString()}
+                                {fullLoanDetails?.walletBalance?.toLocaleString() ?? "-"}
                             </p>
                         </div>
                         {/* Remaining Principal */}
                         <div>
                             <p className="text-sm text-gray-500">Remaining Principal</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.remainingPrincipal.toLocaleString()}
+                                {fullLoanDetails?.remainingPrincipal?.toLocaleString() ?? "-"}
                             </p>
                         </div>
                         {/* Remaining Interest */}
                         <div>
                             <p className="text-sm text-gray-500">Remaining Interest</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.remainingInterest.toLocaleString()}
+                                {fullLoanDetails?.remainingInterest?.toLocaleString() ?? "-"}
                             </p>
                         </div>
                         {/* XC Closing Amount */}
                         <div>
                             <p className="text-sm text-gray-500">XC Closing Amount</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.xcClosingAmount.toLocaleString()}
+                                {fullLoanDetails?.xcClosingAmount?.toLocaleString() ?? "-"}
                             </p>
                         </div>
                         {/* Total Outstanding */}
                         <div>
                             <p className="text-sm text-gray-500">Total Outstanding</p>
                             <p className="mt-1 font-medium text-gray-900">
-                                {fullLoanDetails.totalOutstanding.toLocaleString()}
+                                {fullLoanDetails?.totalOutstanding?.toLocaleString() ?? "-"}
                             </p>
                         </div>
                     </div>
@@ -155,6 +223,7 @@ const LoanDetails = () => {
                     columns={columns}
                     data={dataWithEmiNo}
                     defaultClass={false}
+                    loading={loading}
                     className={
                         "bg-white dark:bg-gray-800 shadow-md border dark:border-gray-700 relative "
                     }

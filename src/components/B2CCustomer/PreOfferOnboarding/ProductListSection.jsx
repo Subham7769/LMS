@@ -1,16 +1,22 @@
 import React, { useMemo } from 'react'
-import { useActiveTab } from '../ActiveTabContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     UserIcon,
     BuildingOffice2Icon,
     DocumentIcon,
 } from "@heroicons/react/20/solid";
+import { updateAddLoanDataGeneralDetailsField, updatePersonalBorrowerField } from '../../../redux/Slices/B2CLoansSlice';
 
 const ProductListSection = () => {
+    const dispatch = useDispatch();
+    const { loanProductOptions, loanProductData, addLoanData } = useSelector((state) => state.B2CLoans);
 
-    const { formData, setFormData } = useActiveTab();
-    const { loanProductOptions, loanProductData } = useSelector((state) => state.B2CLoans);
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        dispatch(updateAddLoanDataGeneralDetailsField({ field: name, value, type, checked }));
+        dispatch(updatePersonalBorrowerField({ section:"cachedDetails", field: "cachedLoanProductId", value, type, checked }));
+
+    };
 
     const iconMap = {
         "Individual Loans": UserIcon,
@@ -29,17 +35,20 @@ const ProductListSection = () => {
         });
     }, [loanProductOptions]);
 
-
+// console.log(displayLoanProducts)
     return (
         <>
-            {displayLoanProducts.map(({ label, value, Icon }) => (
+            {displayLoanProducts.map(({ label, value, Icon }) => {
+                //  console.log("addLoanData.generalLoanDetails.loanProductId:", addLoanData.generalLoanDetails.loanProductId);
+                //  console.log("Radio Value:", value, "Checked:", addLoanData.generalLoanDetails.loanProductId === value);
+                return (
                 <label key={value} className="relative block cursor-pointer">
                     <input
                         type="radio"
                         name="loanProductId"
                         value={value}
-                        onChange={() => setFormData({ ...formData, loanProductId: value })}
-                        checked={formData.loanProductId === value}
+                        onChange={(e) => handleInputChange(e)}
+                        checked={addLoanData.generalLoanDetails.loanProductId === value}
                         className="peer sr-only"
                     />
                     <div className="flex items-center 
@@ -60,7 +69,7 @@ const ProductListSection = () => {
                         <span>{label}</span>
                     </div>
                 </label>
-            ))}
+            )})}
         </>
     )
 }

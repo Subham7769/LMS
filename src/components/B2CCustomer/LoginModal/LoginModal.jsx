@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid"; // or use HeroIcons / any SVG
 import B2CModal from "../B2CModal/B2CModal";
-import { B2CLogin } from "../../../redux/Slices/B2CLoansSlice";
+import { B2CLogin, fetchPersonalBorrowerById } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,26 +17,28 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-const handleLogin = async () => {
-  setLoading(true);
-  try {
-    const res = await dispatch(B2CLogin({ email, password })).unwrap();
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const res = await dispatch(B2CLogin({ email, password })).unwrap();
 
-    // console.log("Login Response:", res); // ✅ Add this to debug
+      console.log("Login Response:", res); // ✅ Add this to debug
 
-    if (res?.data?.cachedDetails.cachedBorrowerId && res?.data?.cachedDetails.cachedLoanProductId) {
-      navigate("/customer/loan-offers");
-    } else {
-      toast.error("Missing loan data after login");
+      if (res?.data?.cachedDetails.cachedBorrowerId && res?.data?.cachedDetails.cachedLoanApplicationId) {
+        dispatch(fetchPersonalBorrowerById(res?.data?.cachedDetails.cachedBorrowerId));
+
+        navigate("/customer/loan-offers");
+      } else {
+        toast.error("Missing loan data after login");
+      }
+    } catch (error) {
+      // console.error("Login failed:", error);
+      toast.error("Login failed.");
+    } finally {
+      setLoading(false);
+      onClose();
     }
-  } catch (error) {
-    // console.error("Login failed:", error);
-    toast.error("Login failed.");
-  } finally {
-    setLoading(false);
-    onClose();
-  }
-};
+  };
 
   return (
     <>
@@ -45,7 +47,7 @@ const handleLogin = async () => {
         primaryOnClick={handleLogin}
         secondaryButtonName={"Cancel"}
         secondaryOnClick={onClose}
-        title={"Add New Bank Branch"}
+        title={"Login"}
       >
         <div className="flex flex-col space-y-3">
           <input
