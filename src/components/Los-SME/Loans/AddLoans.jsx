@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
-import { validateForm } from "../../../redux/Slices/validationSlice";
+import {
+  validateForm,
+  validateFormNullCheck,
+} from "../../../redux/Slices/validationSlice";
 import {
   saveDraftLoanData,
   submitLoan,
@@ -24,6 +27,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import { toast } from "react-toastify";
+import { fieldToSectionMapPersonalLoans } from "../../../data/fieldSectionMapData";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -34,6 +38,7 @@ const AddLoans = () => {
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.smeLoans
   );
+  const sectionRefs = useRef({});
   // Decode the BorrowerId to restore its original value
   const decodedBorrowerId = decodeURIComponent(BorrowerId);
   // const isValid = useSelector((state) => state.validation.isValid);
@@ -47,11 +52,13 @@ const AddLoans = () => {
     dispatch(fetchLoanProductData());
     const keysArray = [
       "loanProductId",
-      "borrowerId",
       "disbursedBy",
-      "loanReleaseDate",
+      "uniqueID",
       "loanDurationStr",
       "repaymentTenureStr",
+      "principalAmount",
+      "loanCreationDate",
+      "loanReleaseDate",
       "branch",
     ];
     dispatch(setFields(keysArray));
@@ -87,6 +94,9 @@ const AddLoans = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure borrowerId is set to the sanitized uniqueID
+    if (!addLoanData?.generalLoanDetails?.uniqueID) {
+      toast.error("Please enter a valid Borrower Unique ID ");
+    }
     const sanitizedUniqueID = sanitizeUid(
       addLoanData.generalLoanDetails.uniqueID
     );
@@ -97,10 +107,22 @@ const AddLoans = () => {
         borrowerId: sanitizedUniqueID,
       },
     };
-    await dispatch(validateForm(flattenToSimpleObject(updatedLoanData)));
+    await dispatch(
+      validateFormNullCheck(flattenToSimpleObject(updatedLoanData))
+    );
     // console.log(updatedLoanData);
     const state = store.getState();
     const isValid = state.validation.isValid;
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalLoans[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     const submitPayload = {
       ...updatedLoanData.generalLoanDetails,
       documents: updatedLoanData.documents,
@@ -120,7 +142,7 @@ const AddLoans = () => {
 
   const handleDraft = async () => {
     // Ensure borrowerId is set to the sanitized uniqueID
-    if(!addLoanData?.generalLoanDetails?.uniqueID){
+    if (!addLoanData?.generalLoanDetails?.uniqueID) {
       toast.error("Please enter a valid Borrower Serial No. ");
     }
     const sanitizedUniqueID = sanitizeUid(
@@ -166,7 +188,7 @@ const AddLoans = () => {
           Loan Application ID: {addLoanData?.loanApplicationId}
         </div>
       </div>
-      <AddLoanFields addLoanData={addLoanData} />
+      <AddLoanFields addLoanData={addLoanData} sectionRefs={sectionRefs} />
       {/* Reusable Button component not used because bg-gray-600 was not getting applied over bg-indigo-600 */}
       <div className="flex justify-between mt-5 items-end">
         <div className="text-xs text-text-light-tertiary flex items-center gap-1">

@@ -19,17 +19,16 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
-import {
-  BankNameOptions,
-  BranchNameOptions,
-  bankBranches,
-} from "../../../data/BankData";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 import { fetchAllBank } from "../../../redux/Slices/bankSlice";
 import { useLocation } from "react-router-dom";
 
-const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
+const AddUpdateDirectorFields = ({
+  BorrowerData,
+  handleChangeReducer,
+  sectionRefs,
+}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
@@ -41,7 +40,8 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
   const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
     []
   );
-  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } = useSelector((state) => state.bank);
+  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } =
+    useSelector((state) => state.bank);
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -69,17 +69,17 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
 
   useEffect(() => {
     const keysArray = [
-      "companyId",
       "title",
       "firstName",
       "surname",
-      "uniqueIDType",
-      "uniqueID",
       "gender",
       "maritalStatus",
+      "uniqueIDType",
+      "uniqueID",
       "nationality",
       "dateOfBirth",
       "placeOfBirth",
+
       "mobile1",
       "street",
       "residentialArea",
@@ -127,39 +127,26 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
 
   const handleInputChange = (e, section, index) => {
     const { name, value, type, label, checked } = e.target;
-    console.log(e.target)
+    // console.log(e.target);
     if (name === "bankName") {
-      setBankName(value)
-
-    }
-    else if (name === "branch") {
-      setBranchName(value)
-
+      setBankName(value);
+    } else if (name === "branch") {
+      setBranchName(value);
     }
 
     // Use section to update the correct part of the state
     dispatch(
       handleChangeReducer({ section, field: name, value, type, checked, index })
     );
-
   };
-
-  const handleFileUpload = (e, section) => {
-    const { name, value, type, checked, files } = e.target;
-    console.log(name);
-    dispatch(
-      handleChangeReducer({ section, field: name, value: files[0], type })
-    );
-  };
-
 
   const location = useLocation();
-  const isUpdateDirector = location.pathname.includes('update-director');
+  const isUpdateDirector = location.pathname.includes("update-director");
 
   // 1. Fetch all banks on mount
   useEffect(() => {
     if (!bankOptions.length) {
-    dispatch(fetchAllBank());
+      dispatch(fetchAllBank());
     }
   }, []);
 
@@ -215,7 +202,8 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
 
   // 5. Set sortCode and branchCode based on selected branch
   useEffect(() => {
-    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch) return;
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
+      return;
 
     dispatch(
       handleChangeReducer({
@@ -530,7 +518,12 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
       validation: false,
       maxLength: 10,
     },
-    { labelName: "Mobile 2", inputName: "kinMobile2", type: "text", maxLength: 10, },
+    {
+      labelName: "Mobile 2",
+      inputName: "kinMobile2",
+      type: "text",
+      maxLength: 10,
+    },
     {
       labelName: "Email",
       inputName: "kinEmail",
@@ -609,31 +602,47 @@ const AddUpdateDirectorFields = ({ BorrowerData, handleChangeReducer }) => {
 
   return (
     <>
-      <Accordion
-        heading={"Personal Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.personalDetails}
-            config={personalDetailsConfig}
-            sectionName={"personalDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsConfig)}
-      />
-      <Accordion
-        heading={"Contact Preferences"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.contactDetails}
-            config={contactDetailsConfig}
-            sectionName={"contactDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        error={isValidationFailed(validationError, contactDetailsConfig)}
-      />
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["personalDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Personal Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.personalDetails}
+              config={personalDetailsConfig}
+              sectionName={"personalDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          isOpen={true}
+          error={isValidationFailed(validationError, personalDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["contactDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Contact Preferences"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.contactDetails}
+              config={contactDetailsConfig}
+              sectionName={"contactDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, contactDetailsConfig)}
+        />
+      </div>
       <Accordion
         heading={"Professional Status"}
         renderExpandedContent={() => (

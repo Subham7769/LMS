@@ -226,7 +226,7 @@ export const OfferSelected = createAsyncThunk(
 );
 
 export const handleProceed = createAsyncThunk(
-  "personalLoans/handleProceed",
+  "B2CLoans/handleProceed",
   async ({ proceedPayload, uid }, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${
@@ -430,7 +430,7 @@ export const B2CLogin = createAsyncThunk(
  
 // old one
 export const getLoanApplications = createAsyncThunk(
-  "personalLoans/getLoanApplications",
+  "B2CLoans/getLoanApplications",
   async ({ page, size }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -458,7 +458,7 @@ export const getLoanApplications = createAsyncThunk(
 );
 
 export const getLoanApplicationsByID = createAsyncThunk(
-  "personalLoans/getLoanApplicationsByID",
+  "B2CLoans/getLoanApplicationsByID",
   async (loanApplicationId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -485,8 +485,36 @@ export const getLoanApplicationsByID = createAsyncThunk(
   }
 );
 
+export const getDocsByIdnUsage = createAsyncThunk(
+  "B2CLoans/getDocsByIdnUsage",
+  async ({ dynamicDocumentTempId, usage }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_DOCUMENTS_BY_ID_AND_USAGE
+        }${dynamicDocumentTempId}/usage/${usage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const cancelLoanApplicationsByID = createAsyncThunk(
-  "personalLoans/cancelLoanApplicationsByID",
+  "B2CLoans/cancelLoanApplicationsByID",
   async (loanApplicationId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -512,7 +540,7 @@ export const cancelLoanApplicationsByID = createAsyncThunk(
 );
 
 export const cloneLoanApplicationsByID = createAsyncThunk(
-  "personalLoans/cloneLoanApplicationsByID",
+  "B2CLoans/cloneLoanApplicationsByID",
   async (loanApplicationId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -540,7 +568,7 @@ export const cloneLoanApplicationsByID = createAsyncThunk(
 );
 
 export const getLoanApplicationByField = createAsyncThunk(
-  "personalLoans/getLoanApplicationByField",
+  "B2CLoans/getLoanApplicationByField",
   async ({ field, value }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -568,7 +596,7 @@ export const getLoanApplicationByField = createAsyncThunk(
 );
 
 export const uploadSignedLoanAgreement = createAsyncThunk(
-  "personalLoans/uploadSignedLoanAgreement",
+  "B2CLoans/uploadSignedLoanAgreement",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -598,8 +626,66 @@ export const uploadSignedLoanAgreement = createAsyncThunk(
   }
 );
 
+export const uploadDocumentFile = createAsyncThunk(
+  "B2CLoans/uploadDocumentFile",
+  async ({ formData, fileUploadParams }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const { loanApplicationId, documentKey, verified, borrowerType } =
+        fileUploadParams;
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_FILE_UPLOAD_PERSONAL
+        }?loanApplicationId=${loanApplicationId}&documentKey=${documentKey}&verified=${verified}&borrowerType=${borrowerType}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to upload");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteDocumentFile = createAsyncThunk(
+  "B2CLoans/deleteDocumentFile",
+  async (fileDeleteParams, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const { docId } = fileDeleteParams;
+    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to delete");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const downloadDocumentFile = createAsyncThunk(
-  "personalLoans/downloadDocumentFile",
+  "B2CLoans/downloadDocumentFile",
   async (fileDownloadParams, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const { docId, docName } = fileDownloadParams;
@@ -645,7 +731,7 @@ export const downloadDocumentFile = createAsyncThunk(
 );
 
 export const previewDocumentFile = createAsyncThunk(
-  "personalLoans/previewDocumentFile",
+  "B2CLoans/previewDocumentFile",
   async (filePreviewParams, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const { docId } = filePreviewParams;
@@ -684,7 +770,7 @@ export const previewDocumentFile = createAsyncThunk(
 );
 
 export const getMaxPrincipalData = createAsyncThunk(
-  "personalLoans/getMaxPrincipalData",
+  "B2CLoans/getMaxPrincipalData",
   async (maxPrincipalPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${import.meta.env.VITE_LOAN_GET_MAX_PRINCIPAL}`;
@@ -712,7 +798,7 @@ export const getMaxPrincipalData = createAsyncThunk(
 );
 
 export const getLoanOffers = createAsyncThunk(
-  "personalLoans/getLoanOffers",
+  "B2CLoans/getLoanOffers",
   async (loanOfferFields, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -741,7 +827,7 @@ export const getLoanOffers = createAsyncThunk(
 );
 
 export const deleteLoanOffers = createAsyncThunk(
-  "personalLoans/deleteLoanOffers",
+  "B2CLoans/deleteLoanOffers",
   async (loanApplicationId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -767,7 +853,7 @@ export const deleteLoanOffers = createAsyncThunk(
 );
 
 export const getPendingLoans = createAsyncThunk(
-  "personalLoans/getPendingLoans",
+  "B2CLoans/getPendingLoans",
   async ({ page, size, getPayload }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -797,7 +883,7 @@ export const getPendingLoans = createAsyncThunk(
 );
 
 export const getLoansByField = createAsyncThunk(
-  "personalLoans/getLoansByField",
+  "B2CLoans/getLoansByField",
   async ({ field, value, getPayload }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -827,7 +913,7 @@ export const getLoansByField = createAsyncThunk(
 );
 
 export const approveLoan = createAsyncThunk(
-  "personalLoans/approveLoan",
+  "B2CLoans/approveLoan",
   async (approveLoanPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${import.meta.env.VITE_LOAN_APPROVE_PERSONAL}`;
@@ -854,7 +940,7 @@ export const approveLoan = createAsyncThunk(
 );
 
 export const rejectLoan = createAsyncThunk(
-  "personalLoans/rejectLoan",
+  "B2CLoans/rejectLoan",
   async (rejectLoanPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${import.meta.env.VITE_LOAN_REJECT_PERSONAL}`;
@@ -880,7 +966,7 @@ export const rejectLoan = createAsyncThunk(
 );
 
 export const getLoanHistory = createAsyncThunk(
-  "personalLoans/getLoanHistory",
+  "B2CLoans/getLoanHistory",
   async ({ page, size }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -908,7 +994,7 @@ export const getLoanHistory = createAsyncThunk(
 );
 
 export const getLoanHistoryByField = createAsyncThunk(
-  "personalLoans/getLoanHistoryByField",
+  "B2CLoans/getLoanHistoryByField",
   async ({ field, value }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -936,7 +1022,7 @@ export const getLoanHistoryByField = createAsyncThunk(
 );
 
 export const getRepaymentHistory = createAsyncThunk(
-  "personalLoans/getRepaymentHistory",
+  "B2CLoans/getRepaymentHistory",
   async ({ loanId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -964,7 +1050,7 @@ export const getRepaymentHistory = createAsyncThunk(
 );
 
 export const getLoanAgreement = createAsyncThunk(
-  "personalLoans/getLoanAgreement",
+  "B2CLoans/getLoanAgreement",
   async ({ loanId, uid }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -992,7 +1078,7 @@ export const getLoanAgreement = createAsyncThunk(
 );
 
 export const getLoanStatement = createAsyncThunk(
-  "personalLoans/getLoanStatement",
+  "B2CLoans/getLoanStatement",
   async ({ loanId, uid }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -1020,7 +1106,7 @@ export const getLoanStatement = createAsyncThunk(
 );
 
 export const getOutrightSettlement = createAsyncThunk(
-  "personalLoans/getOutrightSettlement",
+  "B2CLoans/getOutrightSettlement",
   async ({ loanId, uid }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -1048,7 +1134,7 @@ export const getOutrightSettlement = createAsyncThunk(
 );
 
 export const getDisbursementFile = createAsyncThunk(
-  "personalLoans/getDisbursementFile",
+  "B2CLoans/getDisbursementFile",
   async ({ loanId, uid }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -1076,7 +1162,7 @@ export const getDisbursementFile = createAsyncThunk(
 );
 
 export const closeLoan = createAsyncThunk(
-  "personalLoans/closeLoan",
+  "B2CLoans/closeLoan",
   async (closeLoanPayload, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const url = `${import.meta.env.VITE_LOAN_CLOSE_VIA_WALLET}`;
@@ -1102,7 +1188,7 @@ export const closeLoan = createAsyncThunk(
 );
 
 export const getRefinanceDetails = createAsyncThunk(
-  "personalLoans/getRefinanceDetails",
+  "B2CLoans/getRefinanceDetails",
   async ({ loanId, uid, uniqueID }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -1130,7 +1216,7 @@ export const getRefinanceDetails = createAsyncThunk(
 );
 
 export const fetchBorrowerDataLoanHistory = createAsyncThunk(
-  "personalLoans/fetchBorrowerDataLoanHistory",
+  "B2CLoans/fetchBorrowerDataLoanHistory",
   async ({ subID }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -1340,7 +1426,7 @@ const initialState = {
 };
 
 const B2CLoansSlice = createSlice({
-  name: "B2CLoansSlice",
+  name: "B2CLoans",
   initialState,
   reducers: {
     updateAddLoanDataGeneralDetailsField: (state, action) => {

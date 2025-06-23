@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetBorrowerData,
@@ -16,7 +16,8 @@ import store from "../../../redux/store";
 import { useNavigate, useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
-import flattenToSimpleObject from "../../../utils/flattenToSimpleObject"; 
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
 
 const AddNewBorrowers = () => {
   // const isValid = useSelector((state) => state.validation.isValid);
@@ -26,10 +27,11 @@ const AddNewBorrowers = () => {
   const { addBorrowerData, error, loading } = useSelector(
     (state) => state.personalBorrowers
   );
+  const sectionRefs = useRef({});
 
-  useEffect(() => {
-    dispatch(getDraftBorrowerByID(borrowerProfileDraftId));
-  }, [borrowerProfileDraftId]);
+  // useEffect(() => {
+  //   dispatch(getDraftBorrowerByID(borrowerProfileDraftId));
+  // }, [borrowerProfileDraftId]);
 
   if (!addBorrowerData.personalDetails.loanOfficer) {
     const loanOfficer = localStorage.getItem("username");
@@ -42,7 +44,6 @@ const AddNewBorrowers = () => {
     );
   }
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,6 +53,19 @@ const AddNewBorrowers = () => {
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      console.log(sectionRefs);
+      console.log(ref);
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
 
     if (isValid) {
       dispatch(registerBorrower(addBorrowerData))
@@ -67,15 +81,19 @@ const AddNewBorrowers = () => {
   const handleDraft = () => {
     const addDraftBorrowerData = {
       borrowerType: "PERSONAL_BORROWER",
-      borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
+      borrowerProfileDraftId: borrowerProfileDraftId
+        ? borrowerProfileDraftId
+        : nanoid(),
       personalBorrowerProfileDraft: { ...addBorrowerData },
     };
-    if (addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails.firstName !== "") {
-
+    if (
+      addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails
+        .firstName !== ""
+    ) {
       dispatch(draftBorrowerInfo(addDraftBorrowerData));
       navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
       dispatch(resetBorrowerData());
-    }else{
+    } else {
       toast.error("First Name is required");
     }
   };
@@ -91,6 +109,7 @@ const AddNewBorrowers = () => {
         handleChangeReducer={updateAddBorrowerField}
         handleFileReset={resetBorrowerFile}
         handleFileUpload={uploadBorrowerPhotoFile}
+        sectionRefs={sectionRefs}
       />
       <div className="flex justify-end gap-5 col-span-4">
         <Button
@@ -111,11 +130,7 @@ const AddNewBorrowers = () => {
           buttonType={"secondary"}
           loading={loading}
         />
-        <Button
-          buttonName="Submit"
-          onClick={handleSubmit}
-          loading={loading}
-        />
+        <Button buttonName="Submit" onClick={handleSubmit} loading={loading} />
       </div>
     </>
   );

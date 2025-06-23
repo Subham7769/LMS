@@ -9,7 +9,6 @@ import {
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -35,7 +34,7 @@ const AddCompany = () => {
   } = useSelector((state) => state.smeBorrowers);
 
   // console.log(allDraftedCompanies)
-  console.log(flattenToSimpleObjectArray(filteredBorrowers));
+  // console.log(flattenToSimpleObjectArray(filteredBorrowers));
 
   const applyFilters = () => {
     const filtered = allDraftedCompanies.filter((DraftedCompany) => {

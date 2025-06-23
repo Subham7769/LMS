@@ -1039,7 +1039,7 @@ const initialState = {
       repaymentTenure: 0,
       repaymentTenureType: "",
       repaymentTenureStr: "",
-      principalAmount: 0,
+      principalAmount: "",
       sector: "",
       branch: "",
       agentName: "",

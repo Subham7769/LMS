@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Button from "../../Common/Button/Button";
 import {
   handleChangeUpdateCompanyField,
@@ -8,12 +8,13 @@ import {
   registerCompanyBorrower,
 } from "../../../redux/Slices/smeBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { validateForm } from "../../../redux/Slices/validationSlice";
+import { validateFormNullCheck } from "../../../redux/Slices/validationSlice";
 import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import { toast } from "react-toastify";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { fieldToSectionMapSMEBorrowersCompany } from "../../../data/fieldSectionMapData";
 
 const UpdateCompany = () => {
   const { updateCompanyData, error, loading } = useSelector(
@@ -23,6 +24,7 @@ const UpdateCompany = () => {
   const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
   const loanOfficer = localStorage.getItem("username");
+  const sectionRefs = useRef({});
 
   const handleDraftUpdate = async () => {
     const addDraftCompanyData = {
@@ -30,12 +32,15 @@ const UpdateCompany = () => {
       borrowerType: "COMPANY_BORROWER",
       companyBorrowerProfileDraft: { ...updateCompanyData },
     };
-  
-    if (addDraftCompanyData.companyBorrowerProfileDraft.companyDetails.companyName !== "") {
+
+    if (
+      addDraftCompanyData.companyBorrowerProfileDraft.companyDetails
+        .companyName !== ""
+    ) {
       try {
         // Dispatch the first action and wait for fulfillment
         await dispatch(draftCompanyBorrowerInfo(addDraftCompanyData)).unwrap();
-  
+
         // Navigate after both actions complete
         navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
       } catch (error) {
@@ -46,57 +51,78 @@ const UpdateCompany = () => {
       toast.error("Company Name Required");
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Dispatch the validation action
-    await dispatch(validateForm(flattenToSimpleObject(updateCompanyData)));
+    await dispatch(validateFormNullCheck(flattenToSimpleObject(updateCompanyData)));
 
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
-
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapSMEBorrowersCompany[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       let addCompanyData = {};
       if (borrowerProfileDraftId) {
-        addCompanyData = { ...updateCompanyData, borrowerProfileDraftId }
+        addCompanyData = { ...updateCompanyData, borrowerProfileDraftId };
       } else {
-        addCompanyData = updateCompanyData
+        addCompanyData = updateCompanyData;
       }
       dispatch(registerCompanyBorrower(addCompanyData)).then((action) => {
         if (action.type.endsWith("fulfilled")) {
-          navigate('/loan/loan-origination-system/sme/borrowers/add-director');
+          navigate("/loan/loan-origination-system/sme/borrowers/add-director");
         }
-        dispatch(resetUpdateCompanyData())
+        dispatch(resetUpdateCompanyData());
       });
     }
-
   };
 
   const handleBorrowerUpdate = async (uid) => {
     if (uid) {
       const { registrationDate, ...restUpdateCompanyData } = updateCompanyData;
-  
+
       // Validate form first
-      await dispatch(validateForm(flattenToSimpleObject(restUpdateCompanyData)));
-  
+      await dispatch(
+        validateFormNullCheck(flattenToSimpleObject(restUpdateCompanyData))
+      );
+
       // Get updated state for validation result
       const state = store.getState(); // Ensure 'store' is imported from your Redux setup
       const isValid = state.validation.isValid; // Adjust based on your validation state structure
-  
+      const firstInvalidKey = Object.keys(
+        state.validation.validationError
+      ).find((key) => state.validation.validationError[key]);
+      if (firstInvalidKey) {
+        const sectionName =
+          fieldToSectionMapSMEBorrowersCompany[firstInvalidKey];
+        const ref = sectionRefs.current[sectionName];
+        if (ref?.scrollIntoView) {
+          ref.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
       if (isValid) {
         try {
           // First dispatcher - ensure success before continuing
           await dispatch(
-            updateCompanyBorrowerInfo({ UpdateCompanyData: restUpdateCompanyData, uid })
+            updateCompanyBorrowerInfo({
+              UpdateCompanyData: restUpdateCompanyData,
+              uid,
+            })
           ).unwrap();
 
-  
           // Navigate after both actions are completed
           navigate(`/loan/loan-origination-system/sme/borrowers/view-company`);
-  
+
           // Reset form data
           dispatch(resetUpdateCompanyData());
         } catch (error) {
@@ -111,7 +137,6 @@ const UpdateCompany = () => {
       navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
     }
   };
-  
 
   const handleCancel = () => {
     dispatch(resetUpdateCompanyData());
@@ -127,6 +152,7 @@ const UpdateCompany = () => {
       <AddUpdateCompanyBorrowerFields
         BorrowerData={updateCompanyData}
         handleChangeReducer={handleChangeUpdateCompanyField}
+        sectionRefs={sectionRefs}
       />
       <div className="flex justify-end gap-5 col-span-4">
         <Button
@@ -135,24 +161,27 @@ const UpdateCompany = () => {
           buttonType="destructive"
           loading={loading}
         />
-        {borrowerProfileDraftId && (<>
-          <Button
-            buttonName="Update Draft"
-            onClick={handleDraftUpdate}
-            buttonType={"secondary"}
-            loading={loading}
-          />
-          <Button
-            buttonName="Submit"
-            onClick={handleSubmit}
-            loading={loading}
-          />
-        </>
+        {borrowerProfileDraftId && (
+          <>
+            <Button
+              buttonName="Update Draft"
+              onClick={handleDraftUpdate}
+              buttonType={"secondary"}
+              loading={loading}
+            />
+            <Button
+              buttonName="Submit"
+              onClick={handleSubmit}
+              loading={loading}
+            />
+          </>
         )}
-        {uid && <Button
-          buttonName="Update"
-          onClick={() => handleBorrowerUpdate(uid)}
-        />}
+        {uid && (
+          <Button
+            buttonName="Update"
+            onClick={() => handleBorrowerUpdate(uid)}
+          />
+        )}
       </div>
     </>
   );
