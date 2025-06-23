@@ -599,63 +599,6 @@ export const uploadSignedLoanAgreement = createAsyncThunk(
   }
 );
 
-export const uploadDocumentFile = createAsyncThunk(
-  "B2CLoans/uploadDocumentFile",
-  async ({ formData, fileUploadParams }, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const { loanApplicationId, documentKey, verified, borrowerType } =
-        fileUploadParams;
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_LOAN_FILE_UPLOAD_PERSONAL
-        }?loanApplicationId=${loanApplicationId}&documentKey=${documentKey}&verified=${verified}&borrowerType=${borrowerType}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to upload");
-      }
-      const responseData = await response.json();
-      return responseData;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const deleteDocumentFile = createAsyncThunk(
-  "B2CLoans/deleteDocumentFile",
-  async (fileDeleteParams, { rejectWithValue }) => {
-    const token = localStorage.getItem("authToken");
-    const { docId } = fileDeleteParams;
-    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
-
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Failed to delete");
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 export const downloadDocumentFile = createAsyncThunk(
   "B2CLoans/downloadDocumentFile",
