@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
-import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   setCompanyId,
@@ -18,13 +17,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import { ArchiveBoxIcon, CalendarIcon, EnvelopeIcon, HomeIcon, MapPinIcon, PhoneIcon, PlusIcon, UserCircleIcon, WindowIcon } from "@heroicons/react/24/outline";
+import {
+  ArchiveBoxIcon,
+  CalendarIcon,
+  EnvelopeIcon,
+  HomeIcon,
+  MapPinIcon,
+  PhoneIcon,
+  PlusIcon,
+  UserCircleIcon,
+  WindowIcon,
+} from "@heroicons/react/24/outline";
 import AddUpdateShareholderFields from "./AddUpdateShareholderFields";
 import { useNavigate } from "react-router-dom";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
+import store from "../../../redux/store";
 const AddShareHolder = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const dispatch = useDispatch();
@@ -39,10 +50,10 @@ const AddShareHolder = () => {
     loading,
   } = useSelector((state) => state.smeBorrowers);
   const loanOfficer = localStorage.getItem("username");
-
+  const sectionRefs = useRef({});
 
   useEffect(() => {
-    dispatch(fetchAllCompanyBorrowers())
+    dispatch(fetchAllCompanyBorrowers());
   }, [dispatch]);
 
   // console.log(isValid);
@@ -50,6 +61,17 @@ const AddShareHolder = () => {
   const handleSubmitNewShareholder = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(shareHolderDetails)));
+    const state = store.getState(); 
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       dispatch(addShareholderInfo({ shareHolderDetails, companyId }))
         .unwrap()
@@ -276,6 +298,7 @@ const AddShareHolder = () => {
                     <AddUpdateShareholderFields
                       BorrowerData={Data}
                       handleChangeReducer={handleChangeAddShareholderField}
+                      sectionRefs={sectionRefs}
                     />
                     <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
                       <Button

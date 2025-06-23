@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
@@ -27,7 +27,6 @@ import {
   HomeIcon,
   MapPinIcon,
   PhoneIcon,
-  PlusIcon,
   UserCircleIcon,
   UserIcon,
   UsersIcon,
@@ -38,6 +37,8 @@ import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
 import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
+import store from "../../../redux/store";
 const AddDirector = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ const AddDirector = () => {
     loading,
   } = useSelector((state) => state.smeBorrowers);
   const loanOfficer = localStorage.getItem("username");
+  const sectionRefs = useRef({});
 
   useEffect(() => {
     dispatch(fetchAllCompanyBorrowers());
@@ -59,6 +61,17 @@ const AddDirector = () => {
   const handleSubmitNewDirector = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(directorsKycDetails)));
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       dispatch(addDirectorInfo({ directorsKycDetails, companyId }))
         .unwrap()
@@ -444,6 +457,7 @@ const AddDirector = () => {
                     <AddUpdateDirectorFields
                       BorrowerData={Data}
                       handleChangeReducer={handleChangeAddDirectorField}
+                      sectionRefs={sectionRefs}
                     />
                     <div className="flex justify-end gap-5 col-span-4 mt-4">
                       <Button

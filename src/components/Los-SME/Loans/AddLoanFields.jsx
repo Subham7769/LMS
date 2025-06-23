@@ -17,7 +17,7 @@ import {
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
-const AddLoanFields = ({ addLoanData }) => {
+const AddLoanFields = ({ addLoanData, sectionRefs }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
     (state) => state.smeLoans
@@ -136,8 +136,6 @@ const AddLoanFields = ({ addLoanData }) => {
     (product) =>
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
-
-  console.log(selectedLoanProduct);
 
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
@@ -848,31 +846,47 @@ const AddLoanFields = ({ addLoanData }) => {
 
   return (
     <>
-      <Accordion
-        heading={"General Loan Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={addLoanData.generalLoanDetails}
-            config={generalLoanDetailsConfig}
-            sectionName={"generalLoanDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        isOpen={true}
-        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
-      />
-      <Accordion
-        heading={"Profoma Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={addLoanData.proformaDetails}
-            config={proformaDetailsConfig}
-            sectionName={"proformaDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        error={isValidationFailed(validationError, proformaDetailsConfig)}
-      />
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["generalLoanDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"General Loan Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={addLoanData.generalLoanDetails}
+              config={generalLoanDetailsConfig}
+              sectionName={"generalLoanDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          isOpen={true}
+          error={isValidationFailed(validationError, generalLoanDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["proformaDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Profoma Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={addLoanData.proformaDetails}
+              config={proformaDetailsConfig}
+              sectionName={"proformaDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, proformaDetailsConfig)}
+        />
+      </div>
       <Accordion
         heading={"Off-Taker Details"}
         subHeading="(applicable to IDF and POF)"

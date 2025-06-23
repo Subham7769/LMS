@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
 import {
   updateBorrowerUpdateField,
@@ -20,6 +20,7 @@ import { nanoid } from "nanoid";
 import { draftBorrowerInfo } from "../../../redux/Slices/personalBorrowersSlice";
 import { toast } from "react-toastify";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
 
 const UpdateBorrower = () => {
   const { updateBorrowerData, loading } = useSelector(
@@ -28,6 +29,7 @@ const UpdateBorrower = () => {
   const dispatch = useDispatch();
   const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
+  const sectionRefs = useRef({});
 
   console.log(uid);
   console.log(Object.keys(updateBorrowerData).length === 0);
@@ -87,8 +89,12 @@ const UpdateBorrower = () => {
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
     if (isValid) {
-      await dispatch(updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })).unwrap();
-      navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
+      await dispatch(
+        updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
+      ).unwrap();
+      navigate(
+        `/loan/loan-origination-system/personal/borrowers/view-borrower`
+      );
     }
   };
 
@@ -101,7 +107,19 @@ const UpdateBorrower = () => {
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
 
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      console.log(sectionRefs);
+      console.log(ref);
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       let addBorrowerData = {};
       if (borrowerProfileDraftId) {
@@ -135,6 +153,7 @@ const UpdateBorrower = () => {
         handleChangeReducer={updateBorrowerUpdateField}
         handleFileReset={resetBorrowerFile}
         handleFileUpload={uploadBorrowerPhotoFile}
+        sectionRefs={sectionRefs}
       />
       <div className="flex justify-end gap-5 col-span-4">
         <Button

@@ -828,7 +828,7 @@ const initialState = {
       natureOfBusiness: "",
       natureOfCompany: "",
       numberOfPermanentEmployees: "",
-      province: "",
+      registeredProvince: "",
       registeredDistrict: "",
     },
     companyContactDetails: {

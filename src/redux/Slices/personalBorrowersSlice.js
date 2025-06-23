@@ -642,7 +642,7 @@ const borrowersSlice = createSlice({
       .addCase(getDraftBorrowerByID.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        // toast.error(`API Error : ${action.payload}`);
+        toast.error(`API Error : ${action.payload}`);
       })
       .addCase(fetchDraftedBorrowerByField.pending, (state) => {
         state.loading = true;
