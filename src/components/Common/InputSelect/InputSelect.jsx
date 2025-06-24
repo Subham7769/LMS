@@ -38,14 +38,18 @@ const InputSelect = ({
   const roleName = userData?.roles[0]?.name;
 
   const handleChange = (selectedOption) => {
-    onChange({
-      target: {
-        name: inputName,
-        value: selectedOption ? selectedOption.value : "",
-        label:selectedOption ? selectedOption.label : "",
-        id: inputId,
-      },
-    });
+    onChange(
+      isMulti
+        ? selectedOption.map((opt) => opt.value)
+        : {
+            target: {
+              name: inputName,
+              value: selectedOption ? selectedOption.value : "",
+              label: selectedOption ? selectedOption.label : "",
+              id: inputId,
+            },
+          }
+    );
   };
 
   // Define custom styles based on dropdownTextSize prop
@@ -64,7 +68,10 @@ const InputSelect = ({
     control: (provided) => ({
       ...provided,
       border: "1px solid #ccc",
-      height: "30px",
+      // height: "30px",
+      // REMOVE fixed height
+      minHeight: "38px", // Recommended by react-select (default)
+      height: "auto", // Allow height to grow
       padding: 0,
       boxShadow: "none",
       "&:hover": {
@@ -85,7 +92,7 @@ const InputSelect = ({
           ? "1rem"
           : "0.875rem", // Convert px to rem
       color: "#9ca3af", // Equivalent to Tailwind's text-gray-400
-    }),    
+    }),
     singleValue: (provided) => ({
       ...provided,
       fontSize:
@@ -138,7 +145,9 @@ const InputSelect = ({
         options={inputOptions}
         value={
           isMulti
-            ? inputValue
+            ? inputOptions?.filter((option) =>
+                inputValue?.includes(option.value)
+              )
             : inputOptions?.find((option) => option.value === inputValue) ||
               null
         }
@@ -154,6 +163,7 @@ const InputSelect = ({
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}
+        closeMenuOnSelect={!isMulti}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef } from "react";
 import Button from "../../Common/Button/Button";
 import {
   resetCompanyData,
@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { fieldToSectionMapSMEBorrowersCompany } from "../../../data/fieldSectionMapData";
 
 const AddNewCompany = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const AddNewCompany = () => {
     (state) => state.smeBorrowers
   );
   // console.log(addCompanyData)
+  const sectionRefs = useRef({});
 
   if (!addCompanyData.companyDetails.loanOfficer) {
     const loanOfficer = localStorage.getItem("username");
@@ -43,17 +45,24 @@ const AddNewCompany = () => {
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
-
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapSMEBorrowersCompany[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       dispatch(registerCompanyBorrower(addCompanyData)).then((action) => {
         if (action.type.endsWith("fulfilled")) {
-          navigate('/loan/loan-origination-system/sme/borrowers/add-director');
+          navigate("/loan/loan-origination-system/sme/borrowers/add-director");
         }
-        dispatch(resetCompanyData())
+        dispatch(resetCompanyData());
       });
-
     }
-
   };
 
   const handleDraft = () => {
@@ -61,16 +70,18 @@ const AddNewCompany = () => {
       borrowerType: "COMPANY_BORROWER",
       borrowerProfileDraftId: nanoid(),
       companyBorrowerProfileDraft: { ...addCompanyData },
-    }
-    if (addDraftCompanyData.companyBorrowerProfileDraft.companyDetails.companyName !== "") {
-
-      dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
+    };
+    if (
+      addDraftCompanyData.companyBorrowerProfileDraft.companyDetails
+        .companyName !== ""
+    ) {
+      dispatch(draftCompanyBorrowerInfo(addDraftCompanyData));
       navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
-      dispatch(resetCompanyData())
+      dispatch(resetCompanyData());
     } else {
       toast.error("Company Name Required");
     }
-  }
+  };
 
   const handleCancel = () => {
     navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
@@ -81,6 +92,7 @@ const AddNewCompany = () => {
       <AddUpdateCompanyBorrowerFields
         BorrowerData={addCompanyData}
         handleChangeReducer={handleChangeAddCompanyField}
+        sectionRefs={sectionRefs}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
         <Button
@@ -108,7 +120,6 @@ const AddNewCompany = () => {
           rectangle={true}
           loading={loading}
         />
-
       </div>
     </>
   );

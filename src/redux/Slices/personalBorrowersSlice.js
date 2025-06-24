@@ -491,6 +491,7 @@ const initialState = {
       employeeNo: "",
       workType: "",
       ministry: "",
+      sector: "",
     },
     incomeOnPaySlip: {
       basicPay: "",

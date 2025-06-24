@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
 import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
@@ -20,11 +20,28 @@ import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateDirectorFields from "../../Los-SME/Borrowers/AddUpdateDirectorFields";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import { ArchiveBoxIcon, BriefcaseIcon, BuildingOffice2Icon, CalendarIcon, EnvelopeIcon, HomeIcon, MapPinIcon, PhoneIcon, PlusIcon, UserCircleIcon, UserIcon, UsersIcon, WindowIcon } from "@heroicons/react/24/outline";
+import {
+  ArchiveBoxIcon,
+  BriefcaseIcon,
+  BuildingOffice2Icon,
+  CalendarIcon,
+  EnvelopeIcon,
+  HomeIcon,
+  MapPinIcon,
+  PhoneIcon,
+  PlusIcon,
+  UserCircleIcon,
+  UserIcon,
+  UsersIcon,
+  WindowIcon,
+} from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
 import CardInfo from "../../Common/CardInfo/CardInfo";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
+import store from "../../../redux/store";
+
 const AddDirector = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const navigate = useNavigate();
@@ -38,16 +55,26 @@ const AddDirector = () => {
     loading,
   } = useSelector((state) => state.smeBorrowers);
   const loanOfficer = localStorage.getItem("username");
+  const sectionRefs = useRef({});
 
   useEffect(() => {
     dispatch(fetchAllCompanyBorrowers());
   }, [dispatch]);
 
-
-
   const handleSubmitNewDirector = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(directorsKycDetails)));
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setupAdd commentMore actions
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       dispatch(addDirectorInfo({ directorsKycDetails, companyId }))
         .unwrap()
@@ -75,38 +102,36 @@ const AddDirector = () => {
     dispatch(deleteDirectorInfo({ companyId: uid, directorId: uniqueID }))
       .unwrap()
       .then(() => {
-        dispatch(fetchCompanyDetails({ companyId: uid })).unwrap()
-          .then(() => {
-
-          })
+        dispatch(fetchCompanyDetails({ companyId: uid }))
+          .unwrap()
+          .then(() => {});
       });
   };
 
-    const handleViewPhoto = async (e, photoId) => {
-      e.preventDefault();
-      e.stopPropagation();
-  
-      if (photoId) {
-        const filePreviewParams = {
-          authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
-          docId: photoId,
-        };
-        setShowPhotoModal(true);
-        try {
-          const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
-  
-          if (result.base64Content) {
-            console.log(result);
-            setPhotoData(
-              `data:${result.contentType};base64,${result.base64Content}`
-            );
-          }
-        } catch (error) {
-          console.error("Error fetching photo:", error);
+  const handleViewPhoto = async (e, photoId) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (photoId) {
+      const filePreviewParams = {
+        authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+        docId: photoId,
+      };
+      setShowPhotoModal(true);
+      try {
+        const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
+
+        if (result.base64Content) {
+          console.log(result);
+          setPhotoData(
+            `data:${result.contentType};base64,${result.base64Content}`
+          );
         }
+      } catch (error) {
+        console.error("Error fetching photo:", error);
       }
-    };
-  
+    }
+  };
 
   return (
     <>
@@ -146,13 +171,20 @@ const AddDirector = () => {
                 renderExpandedContent={() => (
                   <div className="grid grid-cols-[80%_20%] gap-4 px-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
-
                       {/* Director Personal Details */}
                       <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
                         <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
                           <div
-                            onClick={(e) => handleViewPhoto(e, director.otherDetails.customerPhotoId)}
-                            className={`${director.otherDetails.customerPhotoId && "cursor-pointer"}`}
+                            onClick={(e) =>
+                              handleViewPhoto(
+                                e,
+                                director.otherDetails.customerPhotoId
+                              )
+                            }
+                            className={`${
+                              director.otherDetails.customerPhotoId &&
+                              "cursor-pointer"
+                            }`}
                             title={"View Client Photo"}
                           >
                             <UserCircleIcon
@@ -182,9 +214,10 @@ const AddDirector = () => {
                             ]
                               .filter(Boolean)
                               .join(" ")}{" "}
-                            is a {director.personalDetails.age}-year-old {director.personalDetails.nationality} national.
-                            They are {director.personalDetails.maritalStatus} and identify as{" "}
-                            {director.personalDetails.gender}.
+                            is a {director.personalDetails.age}-year-old{" "}
+                            {director.personalDetails.nationality} national.
+                            They are {director.personalDetails.maritalStatus}{" "}
+                            and identify as {director.personalDetails.gender}.
                           </p>
                           <div className="grid grid-cols-2 gap-4">
                             <CardInfoRow
@@ -257,9 +290,10 @@ const AddDirector = () => {
                       >
                         <div className="space-y-2 flex flex-col gap-5 p-3">
                           <p>
-                            Working as a {director.employmentDetails.occupation} at {director.employmentDetails.employer}{" "}
-                            since {director.employmentDetails.workStartDate} in a {director.employmentDetails.workType}{" "}
-                            capacity.
+                            Working as a {director.employmentDetails.occupation}{" "}
+                            at {director.employmentDetails.employer} since{" "}
+                            {director.employmentDetails.workStartDate} in a{" "}
+                            {director.employmentDetails.workType} capacity.
                           </p>
 
                           <div className="grid grid-cols-2 gap-4">
@@ -271,7 +305,9 @@ const AddDirector = () => {
                             <CardInfoRow
                               icon={MapPinIcon}
                               label="Work Location"
-                              value={director.employmentDetails.workPhysicalAddress}
+                              value={
+                                director.employmentDetails.workPhysicalAddress
+                              }
                             />
                           </div>
                         </div>
@@ -286,7 +322,8 @@ const AddDirector = () => {
                       >
                         <div className="space-y-2 flex flex-col gap-5 p-3">
                           <p>
-                            Maintains a {director.bankDetails.accountType} account with {director.bankDetails.bankName}.
+                            Maintains a {director.bankDetails.accountType}{" "}
+                            account with {director.bankDetails.bankName}.
                           </p>
 
                           <div className="grid grid-cols-2 gap-4">
@@ -304,7 +341,11 @@ const AddDirector = () => {
                               icon={MapPinIcon}
                               label="Branch"
                               value={
-                                director.bankDetails.branch + " " + "(" + director.bankDetails.branchCode + ")"
+                                director.bankDetails.branch +
+                                " " +
+                                "(" +
+                                director.bankDetails.branchCode +
+                                ")"
                               }
                             />
                             <CardInfoRow
@@ -325,9 +366,19 @@ const AddDirector = () => {
                       >
                         <div className="space-y-2 flex flex-col gap-5 p-3">
                           <p>
-                            {director.nextOfKinDetails.kinTitle} {director.nextOfKinDetails.kinOtherName} {director.nextOfKinDetails.kinSurname}, the {director.nextOfKinDetails.kinRelationship} of the applicant.
-                            They works as a <strong>{director.nextOfKinDetails.kinOccupation}</strong> at <strong>{director.nextOfKinDetails.kinEmployer}</strong>.
-
+                            {director.nextOfKinDetails.kinTitle}{" "}
+                            {director.nextOfKinDetails.kinOtherName}{" "}
+                            {director.nextOfKinDetails.kinSurname}, the{" "}
+                            {director.nextOfKinDetails.kinRelationship} of the
+                            applicant. They works as a{" "}
+                            <strong>
+                              {director.nextOfKinDetails.kinOccupation}
+                            </strong>{" "}
+                            at{" "}
+                            <strong>
+                              {director.nextOfKinDetails.kinEmployer}
+                            </strong>
+                            .
                           </p>
                           <p>
                             Currently residing in{" "}
@@ -362,7 +413,6 @@ const AddDirector = () => {
                           </div>
                         </div>
                       </CardInfo>
-
                     </div>
                     {/*Director Actions */}
                     <div className="flex justify-start gap-5 flex-col mt-4">
@@ -409,6 +459,7 @@ const AddDirector = () => {
                     <AddUpdateDirectorFields
                       BorrowerData={Data}
                       handleChangeReducer={handleChangeAddDirectorField}
+                      sectionRefs={sectionRefs}
                     />
                     <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
                       <Button

@@ -33,7 +33,7 @@ const AddCompany = () => {
   } = useSelector((state) => state.smeBorrowers);
 
   // console.log(allDraftedCompanies)
-  console.log(flattenToSimpleObjectArray(filteredBorrowers));
+  // console.log(flattenToSimpleObjectArray(filteredBorrowers));
 
   const applyFilters = () => {
     const filtered = allDraftedCompanies.filter((DraftedCompany) => {
