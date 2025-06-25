@@ -25,9 +25,13 @@ const LoginModal = ({ isOpen, onClose }) => {
       console.log("Login Response:", res); // ✅ Add this to debug
 
       if (res?.data?.cachedDetails.cachedBorrowerId && res?.data?.cachedDetails.cachedLoanApplicationId) {
-        dispatch(fetchPersonalBorrowerById(res?.data?.cachedDetails.cachedBorrowerId));
-
-        navigate("/customer/loan-offers");
+        if (res?.data?.cachedDetails.cachedLoanId) {
+          navigate("/customer/final-loan");
+          return;
+        }else{
+          dispatch(fetchPersonalBorrowerById(res?.data?.cachedDetails.cachedBorrowerId));
+          navigate("/customer/loan-offers");
+        }
       } else {
         toast.error("Missing loan data after login");
       }
