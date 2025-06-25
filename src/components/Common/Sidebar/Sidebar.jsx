@@ -78,7 +78,6 @@ import { allSectionName } from "../../../data/MenuData.js";
 import CreateNew from "../CreateNew/CreateNew";
 import { setRole } from "../../../redux/Slices/authSlice";
 import { createNewDocumentConfig } from "../../../utils/createNewDocumentConfig.js";
-// import { LogoIcon } from "../../../assets/icons.jsx";
 import LogoIcon from "../../../assets/logo.png";
 import { createNewDrlRuleset } from "../../../utils/createNewDrlRuleset.js";
 
@@ -330,46 +329,21 @@ const SideBar = () => {
           open ? "w-[17rem]" : "lg:w-14 w-0"
         }`}
       >
-        {/* Collapse Button */}
-        <button
-          onClick={handleToggleSidebar}
-          className={`hidden lg:block z-30 absolute right-2 top-56 bg-gray-800 dark:border border-gray-400 h-16 w-4 rounded-full p-0`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-4 w-4 text-white transition-transform duration-300 ${
-              open ? "rotate-180" : ""
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
         <ul
           className={`pt-4 border-r h-auto ${
             open ? "w-64 px-4" : "lg:w-10 w-0 pl-1 pr-2"
           } overflow-y-auto no-scrollbar border-gray-200 dark:border-gray-800  bg-white dark:bg-gray-800 transition-[width,padding] duration-1000 ease-in-out`}
         >
           <div className="w-full flex shrink-0 items-center justify-between">
-            {/* <LogoIcon
-              className={`h-8 ${
-                open ? "w-auto" : "hidden"
-              } mb-10 fill-violet-500`}
-            /> */}
             <img
               src={LogoIcon}
               alt="logo"
               className={`h-8 ${open ? "w-auto" : "hidden"} ml-3 mb-5`}
             />
             <ArrowLeftIcon
-              className={`h-6 w-auto mb-10 lg:hidden`}
+              className={`h-6 w-auto mb-5 ${
+                open ? "" : "lg:rotate-180"
+              } transform duration-1000 ease-in-out cursor-pointer`}
               onClick={handleToggleSidebar}
             />
           </div>
@@ -477,8 +451,13 @@ const SideBar = () => {
                                 className="text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                                 onClick={() => handleToggleSidebarOnMobile()}
                               >
-                                <li className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md ">
-                                  {submenuItem.name}
+                                <li
+                                  className="text-sm transition duration-150 flex items-center gap-x-4 overflow-hidden cursor-pointer p-2 pl-[3.25rem] rounded-md "
+                                  title={submenuItem.name}
+                                >
+                                  <span className="truncate block max-w-full">
+                                    {submenuItem.name}
+                                  </span>
                                 </li>
                               </NavLink>
                             </div>

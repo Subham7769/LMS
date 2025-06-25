@@ -495,9 +495,6 @@ const LoanHistory = () => {
     );
   };
 
-  console.log("loanHistoryData", loanHistoryData);
-  console.log("loanDetails", fullLoanDetails);
-
   return (
     <div className={`flex flex-col gap-3`}>
       <ContainerTile

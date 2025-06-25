@@ -121,7 +121,7 @@ const employerInitialState = {
     affordabilityCriteriaTempId: "",
     firstEmiDay: "",
     moratoriumMonths: "",
-    ministries: "",
+    ministries: [],
   },
   loading: false,
   error: null,

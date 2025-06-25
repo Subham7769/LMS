@@ -1,14 +1,8 @@
 import { useEffect } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import { typeOptions, options } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import InputSelectNew from "../Common/InputSelectMulti/InputSelect";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";

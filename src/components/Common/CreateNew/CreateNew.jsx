@@ -125,7 +125,12 @@ const CreateNew = ({
         editable ? setEditing(!isEditing) : navigate(navigateSuccess);
       }}
     >
-      <p>{buttonName}</p>
+      <p
+        className="truncate block max-w-[85%]" // Control width for truncation
+        title={buttonName} // Tooltip
+      >
+        {buttonName}
+      </p>
       <div>
         <PlusIcon className="h-6 w-6 shrink-0" />
       </div>

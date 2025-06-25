@@ -178,7 +178,12 @@ const ExpandableTable = ({
                                 ) : centerAlignedFields.includes(
                                     col.field.toLowerCase()
                                   ) ? (
-                                  rowData[col.field]
+                                  <span
+                                    className="truncate block whitespace-nowrap overflow-hidden text-ellipsis w-[90px]"
+                                    title={rowData[col.field]}
+                                  >
+                                    {rowData[col.field]}
+                                  </span>
                                 ) : typeof rowData[col.field] === "number" ? (
                                   formatNumber(rowData[col.field])
                                 ) : rowData[col.field] === "ACTIVATED" ? (

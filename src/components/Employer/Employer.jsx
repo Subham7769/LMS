@@ -23,7 +23,8 @@ import AddEmployerModal from "./AddEmployerModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 import ListTableClassic from "../Common/ListTable/ListTableClassic";
-import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
+import { AddIcon, CheckIcon, DeleteIcon, EditIcon } from "../../assets/icons";
+import EditEmployerModal from "./EditEmployerModal";
 
 const Employer = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,8 @@ const Employer = () => {
   const [employerOptions, setEmployerOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showEmployerModal, setShowEmployerModal] = useState(false);
+  const [showEditEmployerModal, setShowEditEmployerModal] = useState(false);
+  const [editEmployerIndex, setEditEmployerIndex] = useState("");
 
   useEffect(() => {
     dispatch(fetchEmployerData());
@@ -69,8 +72,12 @@ const Employer = () => {
   }, [allEmployerData]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(setEmployerData({ name, value }));
+    if (Array.isArray(e)) {
+      dispatch(setEmployerData({ name: "ministries", value: e }));
+    } else {
+      const { name, value } = e.target;
+      dispatch(setEmployerData({ name, value }));
+    }
   };
 
   const handleAddFields = async () => {
@@ -84,9 +91,13 @@ const Employer = () => {
   };
 
   const handleChange = (e, id) => {
-    const { name, value } = e.target;
     if (!hasViewOnlyAccess(roleName)) {
-      dispatch(handleChangeEmployerData({ id, name, value }));
+      if (Array.isArray(e)) {
+        dispatch(handleChangeEmployerData({ id, name: "ministries", value: e }));
+      } else {
+        const { name, value } = e.target;
+        dispatch(handleChangeEmployerData({ id, name, value }));
+      }
     }
   };
 
@@ -98,6 +109,7 @@ const Employer = () => {
       const updatePayload = allEmployerData[index];
       dispatch(updateEmployerData({ updatePayload, id }));
     }
+    setShowEditEmployerModal(false);
   };
 
   const handleDelete = async (id) => {
@@ -112,6 +124,15 @@ const Employer = () => {
     setShowEmployerModal(false);
   };
 
+  const handleEditEmployer = (index) => {
+    setShowEditEmployerModal(true);
+    setEditEmployerIndex(index);
+  };
+
+  const closeEditEmployerModal = () => {
+    setShowEditEmployerModal(false);
+  };
+
   // **Filter employers based on search term**
   const filteredEmployers = allEmployerData?.filter((emp) =>
     emp?.employerName?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -124,11 +145,11 @@ const Employer = () => {
     { name: "Which Month ?", sortKey: null },
     { name: "Creation Date", sortKey: null },
   ];
-  
-    // Conditionally add the "Actions" column if roleName has view only access
-    if (!hasViewOnlyAccess(roleName)) {
-      ListHeader.push({ name: "Actions", sortKey: null });
-    }
+
+  // Conditionally add the "Actions" column if roleName has view only access
+  if (!hasViewOnlyAccess(roleName)) {
+    ListHeader.push({ name: "Actions", sortKey: null });
+  }
 
   return (
     <>
@@ -217,6 +238,11 @@ const Employer = () => {
                 {!hasViewOnlyAccess(roleName) && (
                   <td className="px-4 py-4 whitespace-nowrap flex gap-2">
                     <Button
+                      buttonIcon={EditIcon}
+                      onClick={() => handleEditEmployer(index)}
+                      buttonType="secondary"
+                    />
+                    <Button
                       buttonIcon={CheckIcon}
                       onClick={() => handleSave(empData?.employerId, index)}
                       buttonType="success"
@@ -241,6 +267,14 @@ const Employer = () => {
             affordabilityOptions={affordabilityOptions}
             employerOptions={employerOptions}
             setEmployerOptions={setEmployerOptions}
+          />
+          <EditEmployerModal
+            isOpen={showEditEmployerModal}
+            onClose={closeEditEmployerModal}
+            index={editEmployerIndex}
+            affordabilityOptions={affordabilityOptions}
+            handleChange={handleChange}
+            handleSave={handleSave}
           />
         </div>
       </ContainerTile>

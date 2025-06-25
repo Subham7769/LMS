@@ -10,7 +10,6 @@ import {
 import {
   maritalStatus,
   workType,
-  ministriesOptions,
   title,
   gender,
   accountType,
@@ -29,6 +28,8 @@ import {
 } from "../../../redux/Slices/employerSlice";
 import { useLocation } from "react-router-dom";
 import { fetchAllBank } from "../../../redux/Slices/bankSlice";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { sectorOptions } from "../../../data/OptionsData";
 
 const AddUpdateBorrowerFields = ({
   BorrowerData,
@@ -55,7 +56,7 @@ const AddUpdateBorrowerFields = ({
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const [employerOptions, setEmployerOptions] = useState([]);
-  console.log(BorrowerData.bankDetails);
+  const [ministriesOptions, setMinistriesOptions] = useState([]);
   const { menus } = useSelector((state) => state.sidebar);
   const [defaultAffordability, setDefaultAffordability] = useState([]);
 
@@ -114,13 +115,44 @@ const AddUpdateBorrowerFields = ({
   useEffect(() => {
     //create employer dropdown
     if (allEmployerData?.length) {
-      const options = allEmployerData.map(({ employerId, employerName }) => ({
+      const options = allEmployerData.map(({ employerName }) => ({
         value: employerName,
         label: employerName,
       }));
       setEmployerOptions(options);
     }
   }, [allEmployerData]);
+
+  useEffect(() => {
+    if (
+      !BorrowerData?.employmentDetails?.employer ||
+      !allEmployerData?.length
+    ) {
+      setMinistriesOptions([]);
+      return;
+    }
+
+    const selectedEmployer = allEmployerData.find(
+      (emp) => emp.employerName === BorrowerData.employmentDetails.employer
+    );
+
+    const ministries = selectedEmployer?.ministries || [];
+
+    const formattedOptions = ministries.map((ministry) => ({
+      value: ministry,
+      label: convertToTitleCase(ministry),
+    }));
+
+    setMinistriesOptions(formattedOptions);
+
+    dispatch(
+      handleChangeReducer({
+        section: "employmentDetails",
+        field: "ministry",
+        value: "No Ministry Selected",
+      })
+    );
+  }, [BorrowerData?.employmentDetails?.employer, allEmployerData]);
 
   useEffect(() => {
     console.log(menus);
@@ -487,14 +519,6 @@ const AddUpdateBorrowerFields = ({
       validation: true,
     },
     {
-      labelName: "Ministry",
-      inputName: "ministry",
-      type: "select",
-      options: ministriesOptions,
-      validation: false,
-      searchable: true,
-    },
-    {
       labelName: "Employer",
       inputName: "employer",
       type: "InputSelectCreatable",
@@ -504,6 +528,22 @@ const AddUpdateBorrowerFields = ({
       onCreateOption: handleNewEmployer,
       setEmployerOptions: setEmployerOptions,
       clearable: true,
+    },
+    {
+      labelName: "Ministry",
+      inputName: "ministry",
+      type: "select",
+      options: ministriesOptions,
+      validation: false,
+      searchable: true,
+      colSpan: 2,
+    },
+    {
+      labelName: "Sector",
+      inputName: "sector",
+      type: "select",
+      options: sectorOptions,
+      validation: false,
     },
     {
       labelName: "Occupation",
