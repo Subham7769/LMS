@@ -46,7 +46,7 @@ function Onboarding03({ onNext, onBack }) {
 
 
       // 5. Save Draft
-      await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+      await dispatch(saveDraftLoanData({...addLoanData,loanApplicationId})).unwrap();
       console.log("Saved Draft Loan!");
 
       // 6. Submit Loan

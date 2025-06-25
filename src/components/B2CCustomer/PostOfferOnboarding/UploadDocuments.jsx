@@ -11,32 +11,8 @@ function UploadDocuments({ documents }) {
   const dispatch = useDispatch();
   const { addLoanData, loading, fullLoanDetails, personalBorrower, loanProductData } = useSelector((state) => state.B2CLoans);
 
-  useEffect(() => {
-    dispatch(fetchLoanProductData());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const cachedLoanProductId = personalBorrower?.cachedDetails?.cachedLoanProductId;
-
-    if (loanProductData.length > 0 && cachedLoanProductId) {
-      const selectedDynamicDoc = loanProductData.find(
-        (product) => product?.loanProductId === cachedLoanProductId
-      );
-
-      if (selectedDynamicDoc?.dynamicDocumentTempId) {
-        dispatch(
-          getDocsByIdnUsage({
-            dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
-            usage: "BORROWER_OFFERS",
-          })
-        );
-      }
-    }
-  }, [
-    loanProductData, // wait for product data
-    personalBorrower?.cachedDetails?.cachedLoanProductId, // wait for cached value
-    dispatch,
-  ]);
+  console.log("addLoanData - ",addLoanData)
+  console.log("personalBorrower - ",personalBorrower)
 
 
   const handleInputChange = (e, section, index) => {

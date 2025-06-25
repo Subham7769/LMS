@@ -550,6 +550,13 @@ const PostOfferOnboarding = React.lazy(() =>
 const B2CLoanOfferLayoutScreen = React.lazy(() =>
   import("./components/B2CCustomer/B2CAppLayout/B2CLoanOfferLayout")
 );
+const B2CLoanOffers = React.lazy(() =>
+  import("./components/B2CCustomer/B2CLoanOffers/B2CLoanOffers")
+);
+const LoanDetails = React.lazy(() =>
+  import("./components/B2CCustomer/PostOfferOnboarding/LoanDetails")
+);
+
 const ThankYouPage = React.lazy(() =>
   import("./components/B2CCustomer/ThankYouPage")
 );
@@ -1681,6 +1688,16 @@ const routes = [
       {
         path: "loan-finalization",
         element: <PostOfferOnboarding />,
+        errorElement: <RouteErrorBoundary />,
+      },
+       {
+        path: "final-offers",
+        element: <B2CLoanOffers/>,
+        errorElement: <RouteErrorBoundary />,
+      },
+       {
+        path: "final-loan",
+        element: <LoanDetails/>,
         errorElement: <RouteErrorBoundary />,
       },
        {

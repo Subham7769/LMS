@@ -9,10 +9,7 @@ const PersonDetailsSection = () => {
 
     useEffect(() => {
         const uid = cachedBorrowerId;
-        if (!uid) {
-            
-            dispatch(fetchPersonalBorrowerById(uid));
-        }
+        dispatch(fetchPersonalBorrowerById(uid));
     }, [cachedBorrowerId, dispatch])
 
     const handleInputChange = (e, section) => {

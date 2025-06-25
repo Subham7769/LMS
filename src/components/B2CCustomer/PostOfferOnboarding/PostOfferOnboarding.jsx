@@ -10,6 +10,7 @@ import { useActiveTab } from "../ActiveTabContext";
 import B2CProgressBar from "../B2CProgressBar/B2CProgressBar";
 import { useSelector } from 'react-redux';
 import LoanDetails from './LoanDetails';
+import B2CLoanOffers from '../B2CLoanOffers/B2CLoanOffers'
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,7 +61,7 @@ const PostOfferOnboarding = () => {
     </div>
 
     {/* Loan Section */}
-    <LoanDetails />
+    <B2CLoanOffers />
   </div>;
 
 };

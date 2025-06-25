@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   fetchPersonalBorrowerById,
@@ -19,10 +19,13 @@ import formatNumber from "../../../utils/formatNumber";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import B2CAccordion from "../B2CAccordion/B2CAccordion";
+import { isEmpty } from "lodash";
 
 const B2CLoanOffers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+      const { pathname } = useLocation();
+  
 
   const {
     loanProductOptions,
@@ -34,7 +37,10 @@ const B2CLoanOffers = () => {
   const uid = personalBorrower.cachedDetails?.cachedBorrowerId;
   const loanProductId = personalBorrower.cachedDetails?.cachedLoanProductId;
 
+  const [isSuccess, setIsSuccess] = useState(false)
+
   useEffect(() => {
+   
 
     if (!uid && !loanProductId) {
         navigate("/customer/loan-application");
@@ -42,12 +48,14 @@ const B2CLoanOffers = () => {
       }
 
     const fetchOffers = async () => {
+       
       // console.log("Effect triggered: UID and loanProductId", { uid, loanProductId });
 
-      if (uid && loanProductId) {
+      if (uid && loanProductId  && isEmpty(loanConfigData)) {
         try {
           const response = await dispatch(getB2CLoanOffers({ uid, loanProductId })).unwrap();
           if (response.message) {
+          
             setTimeout(() => {
 
               navigate("/customer/loan-finalization");
@@ -57,10 +65,10 @@ const B2CLoanOffers = () => {
           console.error("Error fetching loan offers:", error);
         }
       }
-    };
+    };             
 
     fetchOffers(); // Call the async function
-  }, [uid, loanProductId ]);
+  }, [uid, loanProductId, isSuccess,loanConfigData  ]);
 
   const InfoRow = ({ label, value }) => (
     <div className="mb-1.5">
@@ -95,15 +103,15 @@ const B2CLoanOffers = () => {
   // }
 
   return (
-    <div className="flex justify-center w-full p-5">
+    <div className={`flex justify-center ${pathname.includes("/loan-finalization") ? "md:w-1/2 shadow-[-8px_0_8px_-4px_rgba(96,165,250,0.3)] min-h-[calc(100vh-4rem)]  bg-linear-to-tr from-blue-100 to-blue-500" : "flex-1"} p-5`}>
       {loanConfigData?.message ? (
         <ContainerTile loading={loading} className="p-5">
           <div className="text-center">{loanConfigData.message}</div>
         </ContainerTile>
       ) : Object.keys(loanConfigData || {}).length > 0 ? (
-        <div className="flex flex-col gap-5 mt-2 w-full">
-          <div className="text-xl font-semibold">Your Loan Offer</div>
-          <div>
+        <div className={`flex flex-col gap-5 mt-2  `}>
+          <div className={`text-xl font-semibold ${pathname.includes("/loan-finalization") ? "text-white" : "" }`}>Your Loan Offer</div>
+          <div className={`${pathname.includes("/loan-finalization") ? "text-white" : "" }`}>
             Let's review the details of your{" "}
             {
               loanProductOptions.find(
@@ -113,7 +121,7 @@ const B2CLoanOffers = () => {
             offer
           </div>
 
-          <div className="text-right xl:-mt-14 text-xs">
+          <div className={`text-right xl:-mt-14 text-xs ${pathname.includes("/loan-finalization") ? "text-white" : "" }`}>
             <div className="text-xs">Applied Schema</div>
             <div className="text-sm">
               {loanConfigData?.dynamicCashLoanOffers?.[0]?.schema}

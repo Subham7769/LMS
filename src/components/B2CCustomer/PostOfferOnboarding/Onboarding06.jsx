@@ -1,36 +1,88 @@
 import { useNavigate } from "react-router-dom";
 import UploadDocuments from "./UploadDocuments";
-import { useEffect } from "react";
-import { getDocsByIdnUsage } from "../../../redux/Slices/B2CLoansSlice";
+import { useEffect, useRef } from "react";
+import { getDocsByIdnUsage, fetchLoanProductData, fetchPersonalBorrowerById, getLoanApplicationsByID, saveDraftLoanData, submitPersonalLoan, deleteLoanOffers } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function Onboarding02({ onNext, onBack }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { addLoanData, loading, loanProductData } = useSelector((state) => state.B2CLoans);
+  const { addLoanData, loading, loanProductData, personalBorrower } = useSelector((state) => state.B2CLoans);
 
-  // Fetch Documents by Id
   useEffect(() => {
-    if (addLoanData?.generalLoanDetails?.loanProductId) {
+    dispatch(fetchLoanProductData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const BorrowerId = personalBorrower?.cachedDetails?.cachedBorrowerId;
+    const loanApplicationId = personalBorrower?.cachedDetails?.cachedLoanApplicationId;
+
+    const init = async () => {
+      if (BorrowerId) {
+        dispatch(fetchPersonalBorrowerById(BorrowerId));
+      }
+
+      if (loanApplicationId) {
+        try {
+          // 0. Delete Cached Offers
+          await dispatch(deleteLoanOffers(loanApplicationId)).unwrap();
+
+          // 1. Then get loan application
+          await dispatch(getLoanApplicationsByID(loanApplicationId)).unwrap();
+        } catch (err) {
+          console.error("Failed to delete loan offers:", err);
+        }
+      }
+    };
+
+    init();
+  }, []);
+
+  useEffect(() => {
+    const cachedLoanProductId = personalBorrower?.cachedDetails?.cachedLoanProductId;
+
+    if (loanProductData.length > 0 && cachedLoanProductId) {
       const selectedDynamicDoc = loanProductData.find(
-        (product) =>
-          product?.loanProductId ===
-          addLoanData?.generalLoanDetails?.loanProductId
+        (product) => product?.loanProductId === cachedLoanProductId
       );
-      dispatch(
-        getDocsByIdnUsage({
-          dynamicDocumentTempId: selectedDynamicDoc?.dynamicDocumentTempId,
-          usage: "BORROWER_OFFERS",
-        })
-      );
+
+      if (selectedDynamicDoc?.dynamicDocumentTempId) {
+        dispatch(
+          getDocsByIdnUsage({
+            dynamicDocumentTempId: selectedDynamicDoc.dynamicDocumentTempId,
+            usage: "BORROWER_OFFERS",
+          })
+        );
+      }
     }
-  }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
+  }, [
+    loanProductData,
+    personalBorrower?.cachedDetails?.cachedLoanProductId,
+    dispatch,
+  ]);
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/customer/thank-you")
+    const loanApplicationId = personalBorrower?.cachedDetails?.cachedLoanApplicationId;
+
+    // 1. Save Draft
+    await dispatch(saveDraftLoanData(addLoanData)).unwrap();
+    console.log("Saved Draft Loan!");
+
+    // 2. Submit Loan
+    const submitPayload = {
+      ...addLoanData.generalLoanDetails,
+      documents: addLoanData.documents,
+      loanApplicationId,
+      refinanceDetails: addLoanData.refinanceDetails,
+    };
+    await dispatch(submitPersonalLoan(submitPayload)).unwrap();
+    console.log("Submitted Loan!");
+
+    // 7. Navigate
+    navigate("/customer/final-offers");
   };
 
 

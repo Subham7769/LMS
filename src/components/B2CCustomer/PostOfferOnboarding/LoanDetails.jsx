@@ -5,17 +5,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFullLoanDetails } from "../../../redux/Slices/B2CLoansSlice";
 import { convertDate } from "../../../utils/convertDate";
 import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 
 const LoanDetails = () => {
     const dispatch = useDispatch();
+    const { pathname } = useLocation();
+    const navigate = useNavigate()
+
     const { loading, fullLoanDetails, personalBorrower } = useSelector((state) => state.B2CLoans);
     const borrowerId = personalBorrower?.cachedDetails?.cachedBorrowerId;
     const loanId = personalBorrower?.cachedDetails?.cachedLoanId;
 
-    console.log(" borrowerId, loanId Value :", { borrowerId, loanId });
+    // console.log(" borrowerId, loanId Value :", { borrowerId, loanId });
 
 
-    const shouldFetch = borrowerId?.trim() && loanId?.trim()
+    const shouldFetch = borrowerId?.trim() && loanId?.trim() && isEmpty(fullLoanDetails)
 
     useEffect(() => {
         if (!shouldFetch) return;
@@ -98,7 +103,7 @@ const LoanDetails = () => {
             </div>)
     }
 
-    console.log(fullLoanDetails)
+    // console.log(fullLoanDetails)
 
 
 
@@ -124,9 +129,9 @@ const LoanDetails = () => {
     };
 
     return (
-        <div className='flex flex-col gap-2 p-5 w-full shadow-[-8px_0_8px_-4px_rgba(96,165,250,0.3)] min-h-[calc(100vh-4rem)]  bg-linear-to-tr from-blue-100 to-blue-500  md:w-1/2'>
+        <div className={`flex flex-col gap-2 p-5 w-full shadow-[-8px_0_8px_-4px_rgba(96,165,250,0.3)] min-h-[calc(100vh-4rem)]  bg-linear-to-tr from-blue-100 to-blue-500  ${pathname.includes("/final-loan") ? "w-full" : "md:w-1/2"}`}>
             <p className='text-center py-2 font-bold text-3xl text-white '>{fullLoanDetails?.loanType ?? "-"}</p>
-            <div className="grid grid-cols-1 gap-2  shadow-md">
+            <div className={`grid  ${pathname.includes("/final-loan") ? "grid-cols-2" : "grid-cols-1"}  gap-2  shadow-md`}>
                 {/* General Info Section */}
                 <div className="p-6 bg-white border border-gray-200 rounded-lg">
                     <h2 className="text-xl font-semibold text-gray-800 border-l-4 border-blue-500 pl-3">
@@ -229,6 +234,17 @@ const LoanDetails = () => {
                     }
                 />
             </div>
+            {pathname.includes("/final-loan") && (
+                <div className='text-center'>
+                    <button
+                        onClick={() => navigate("/customer/thank-you")}
+                        className="btn hover:cursor-pointer bg-blue-600 hover:bg-blue-500 text-white text-2xl w-1/2 py-4 rounded"
+                    >
+                        Finalize My Loan
+                    </button>
+                </div>
+            )
+            }
         </div>
     )
 }

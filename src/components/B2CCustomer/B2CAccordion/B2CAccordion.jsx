@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import formatNumber from "../../../utils/formatNumber";
 import Button from "../../Common/Button/Button";
 import { SunIcon } from "@heroicons/react/20/solid";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   handleProceed,
   OfferSelected,
   getFullLoanDetails,
+  updatePersonalBorrowerField,
 } from "../../../redux/Slices/B2CLoansSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,29 +23,35 @@ const B2CAccordion = ({
   const [isExpanded, setIsExpanded] = useState(isOpen);
   const navigate = useNavigate(); // Adding useNavigate for navigation
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const { loanConfigData, personalBorrower } = useSelector((state) => state.B2CLoans);
   const { cachedBorrowerId } = personalBorrower.cachedDetails
-console.log(cachedBorrowerId)
+
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
   const SubmitProceed = async (transactionId, index) => {
+    if (pathname.includes("/loan-offers")) {
+      navigate(`/customer/loan-finalization`);
+    } else if (pathname.includes("/final-offers")) {
+      const proceedPayload = {
+        transactionId: transactionId,
+        loanApplicationId: loanConfigData.loanApplicationId,
+        createdBy: "OnlineUser",
+      };
 
-    const proceedPayload = {
-      transactionId: transactionId,
-      loanApplicationId: loanConfigData.loanApplicationId,
-      createdBy: "OnlineUser",
-    };
+      const proceedResponse = await dispatch(handleProceed({ proceedPayload, uid: cachedBorrowerId })).unwrap();
+      console.log(proceedResponse)
 
-    const proceedResponse = await dispatch(handleProceed({ proceedPayload, uid: cachedBorrowerId })).unwrap();
-    console.log(proceedResponse)
-
-    if (proceedResponse.loanId) {
-      await dispatch(OfferSelected({ uid: cachedBorrowerId, loanId: proceedResponse.loanId })).unwrap();
-      await dispatch(getFullLoanDetails({ uid: cachedBorrowerId, loanId: proceedResponse.loanId })).unwrap();
+      if (proceedResponse.loanId) {
+        dispatch(updatePersonalBorrowerField({ section: "cachedDetails", field: "cachedLoanId", value: proceedResponse.loanId }));
+        await dispatch(OfferSelected({ uid: cachedBorrowerId, loanId: proceedResponse.loanId })).unwrap();
+        await dispatch(getFullLoanDetails({ uid: cachedBorrowerId, loanId: proceedResponse.loanId })).unwrap();
+        navigate(`/customer/final-loan`);
+      }
     }
-    navigate(`/customer/loan-finalization`);
+
   };
 
   return (
@@ -113,13 +120,13 @@ console.log(cachedBorrowerId)
           </div>
 
           {/* Button */}
-          <div className="flex items-center justify-start md:justify-center">
+          {(pathname.includes("/loan-offers") || pathname.includes("/final-offers") ) && <div className="flex items-center justify-start md:justify-center">
             <Button
               buttonName={"Proceed"}
               onClick={() => SubmitProceed(data.transactionId, index)}
               className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition duration-200"
             />
-          </div>
+          </div>}
         </div>
 
       </div>
