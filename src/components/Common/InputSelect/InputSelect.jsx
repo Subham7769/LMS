@@ -54,16 +54,19 @@ const InputSelect = ({
   }, []);
 
   const handleChange = (selectedOption) => {
-    onChange({
-      target: {
-        name: inputName,
-        value: selectedOption ? selectedOption.value : "",
-        label:selectedOption ? selectedOption.label : "",
-        id: inputId,
-      },
-    });
+    onChange(
+      isMulti
+        ? selectedOption.map((opt) => opt.value)
+        : {
+            target: {
+              name: inputName,
+              value: selectedOption ? selectedOption.value : "",
+              label: selectedOption ? selectedOption.label : "",
+              id: inputId,
+            },
+          }
+    );
   };
-
 
   // Define custom styles based on dropdownTextSize prop
   const customStyles = {
@@ -100,7 +103,10 @@ const InputSelect = ({
       border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
       padding: 0,
       boxShadow: "none",
-      height: 28,
+      // height: 28,
+      // REMOVE fixed height
+      minHeight: "38px", // Recommended by react-select (default)
+      height: "auto", // Allow height to grow
       borderRadius: "0.5rem",
       "&:hover": {
         border: isDarkMode ? "1px solid #4b5563" : "1px solid #aaa",
@@ -147,11 +153,35 @@ const InputSelect = ({
     }),
     valueContainer: (provided, state) => ({
       ...provided,
-      display: "flex",
       backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
       color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
+      display: "flex",
+      flexWrap: "wrap", // allow wrapping
+      alignItems: "center",
+      padding: "2px 8px", // optional: padding adjustment
+      overflow: "hidden", // avoid overflow issues
     }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Ensure dropdown is on top
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: isDarkMode ? "#374151" : "#e5e7eb",
+      borderRadius: "0.25rem",
+      padding: "2px 6px",
+      margin: "2px",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      fontSize: "0.75rem",
+      color: isDarkMode ? "#d1d5db" : "#1f2937",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: isDarkMode ? "#9ca3af" : "#4b5563",
+      ":hover": {
+        backgroundColor: isDarkMode ? "#4b5563" : "#e5e7eb",
+        color: "#000",
+      },
+    }),
   };
 
   let validationKey = isIndex ? `${inputName}_${isIndex}` : inputName;
@@ -242,7 +272,9 @@ const InputSelect = ({
         }}
         value={
           isMulti
-            ? inputValue
+            ? inputOptions?.filter((option) =>
+                inputValue?.includes(option.value)
+              )
             : inputOptions?.find((option) => option.value === inputValue) ||
               null
         }
@@ -258,6 +290,7 @@ const InputSelect = ({
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}
+        closeMenuOnSelect={!isMulti} // improves UX with multi
         menuPortalTarget={document.body} // Render dropdown outside of overflow
       />
     </div>

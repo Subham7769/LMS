@@ -1,66 +1,64 @@
 import React from "react";
 import InputSelect from "../Common/InputSelect/InputSelect";
-import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
+import InputText from "../Common/InputText/InputText";
 import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 import Modal from "../Common/Modal/Modal";
 import { ministriesOptions } from "../../data/LosData";
+import { useSelector } from "react-redux";
 
-const AddEmployerModal = ({
+const EditEmployerModal = ({
   isOpen,
   onClose,
-  employerData,
+  index,
   affordabilityOptions,
-  handleInputChange,
-  handleAddFields,
-  employerOptions,
-  setEmployerOptions,
+  handleChange,
+  handleSave,
 }) => {
-  if (!isOpen) return null;
+  const { allEmployerData } = useSelector((state) => state.employer);
+  const empData = allEmployerData[index];
 
-  console.log(employerData);
+  if (!isOpen || !empData) return null;
+
+  console.log(empData);
 
   return (
     <>
       <Modal
-        primaryButtonName={"Add"}
-        primaryOnClick={handleAddFields}
+        primaryButtonName={"Update"}
+        primaryOnClick={() => handleSave(empData?.employerId, index)}
         secondaryOnClick={onClose}
-        title={"Add New Employer"}
+        title={"Edit Employer"}
       >
         <div className="grid md:grid-cols-2 gap-4 mb-5 mt-3">
-          <InputSelectCreatable
+          <InputText
             labelName="Employer Name"
-            inputOptions={employerOptions}
             inputName="employerName"
-            inputValue={employerData?.employerName}
-            onChange={handleInputChange}
+            inputValue={empData?.employerName}
+            onChange={(e) => handleChange(e, empData?.employerId)}
             isValidation={true}
-            searchable={true}
-            setInputOptions={setEmployerOptions}
-            isClearable={true}
           />
           <InputSelect
             labelName="Affordability Criteria"
             inputOptions={affordabilityOptions}
             inputName="affordabilityCriteriaTempId"
-            inputValue={employerData?.affordabilityCriteriaTempId}
-            onChange={handleInputChange}
+            inputValue={empData?.affordabilityCriteriaTempId}
+            onChange={(e) => handleChange(e, empData?.employerId)}
             isValidation={true}
           />
           <InputSelect
             labelName="Day of Month"
             inputOptions={daysOfMonth}
             inputName="firstEmiDay"
-            inputValue={employerData?.firstEmiDay}
-            onChange={handleInputChange}
+            inputValue={empData?.firstEmiDay}
+            onChange={(e) => handleChange(e, empData?.employerId)}
             isValidation={true}
           />
           <InputSelect
             labelName="Which Month ?"
             inputOptions={upcomingMonths}
             inputName="moratoriumMonths"
-            inputValue={employerData?.moratoriumMonths}
-            onChange={handleInputChange}
+            inputValue={empData?.moratoriumMonths}
+            onChange={(e) => handleChange(e, empData?.employerId)}
             isValidation={true}
           />
           <div className="md:col-span-2">
@@ -68,8 +66,8 @@ const AddEmployerModal = ({
               labelName="Ministry"
               inputOptions={ministriesOptions}
               inputName="ministries"
-              inputValue={employerData?.ministries}
-              onChange={handleInputChange}
+              inputValue={empData?.ministries}
+              onChange={(e) => handleChange(e, empData?.employerId)}
               isValidation={true}
               isMulti={true}
               searchable={true}
@@ -82,4 +80,4 @@ const AddEmployerModal = ({
   );
 };
 
-export default AddEmployerModal;
+export default EditEmployerModal;

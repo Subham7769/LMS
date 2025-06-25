@@ -31,8 +31,8 @@ const UpdateBorrower = () => {
   const navigate = useNavigate();
   const sectionRefs = useRef({});
 
-  console.log(uid);
-  console.log(Object.keys(updateBorrowerData).length === 0);
+  // console.log(uid);
+  // console.log(Object.keys(updateBorrowerData).length === 0);
 
   useEffect(() => {
     if (uid && Object.keys(updateBorrowerData).length === 0) {
@@ -88,6 +88,19 @@ const UpdateBorrower = () => {
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      console.log(sectionRefs);
+      console.log(ref);
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       await dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })

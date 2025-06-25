@@ -3,7 +3,6 @@ import AddLoanFields from "./AddLoanFields";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../Common/Button/Button";
 import {
-  validateForm,
   validateFormNullCheck,
 } from "../../../redux/Slices/validationSlice";
 import {
