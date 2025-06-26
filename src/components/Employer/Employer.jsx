@@ -3,6 +3,7 @@ import {
   PlusIcon,
   TrashIcon,
   CheckCircleIcon,
+  PencilIcon,
 } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
@@ -28,7 +29,6 @@ import AddEmployerModal from "./AddEmployerModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 import EditEmployerModal from "./EditEmployerModal";
-import { PencilIcon } from "@heroicons/react/24/outline";
 
 const Employer = () => {
   const dispatch = useDispatch();
