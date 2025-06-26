@@ -186,7 +186,7 @@ const SideBar = () => {
                 aria-hidden="true"
             ></div>
             <div
-                className={`z-40 absolute top-0 left-0 md:static  lg:relative overflow-y-auto h-screen no-scrollbar flex transform duration-1000 ease-in-out ${open ? "w-[17rem] " : "lg:w-4 w-0 "
+                className={`z-40   md:static relative top-0 left-0 overflow-y-auto h-screen no-scrollbar flex transform duration-1000 ease-in-out ${open ? "w-[17rem] " : "lg:w-4 w-0 "
                     }`}
             >
                 {/* Collapse Button */}

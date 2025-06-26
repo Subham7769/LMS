@@ -109,7 +109,7 @@ const B2CLoanOffers = () => {
           <div className="text-center">{loanConfigData.message}</div>
         </ContainerTile>
       ) : Object.keys(loanConfigData || {}).length > 0 ? (
-        <div className={`flex flex-col gap-5 mt-2  `}>
+        <div className={`flex-1 flex flex-col gap-5 mt-2  `}>
           <div className={`text-xl font-semibold ${pathname.includes("/loan-finalization") ? "text-white" : "" }`}>Your Loan Offer</div>
           <div className={`${pathname.includes("/loan-finalization") ? "text-white" : "" }`}>
             Let's review the details of your{" "}

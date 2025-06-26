@@ -318,7 +318,7 @@ export const getDocsByIdnUsage = createAsyncThunk(
       const token = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_READ_DOCUMENTS_BY_ID_AND_USAGE
+          import.meta.env.VITE_B2C_READ_DOCUMENTS_BY_ID_AND_USAGE
         }${dynamicDocumentTempId}/usage/${usage}`,
         {
           method: "GET",
@@ -348,7 +348,7 @@ export const uploadDocumentFile = createAsyncThunk(
         fileUploadParams;
       const response = await fetch(
         `${
-          import.meta.env.VITE_LOAN_FILE_UPLOAD_PERSONAL
+          import.meta.env.VITE_B2C_FILE_UPLOAD_PERSONAL
         }?loanApplicationId=${loanApplicationId}&documentKey=${documentKey}&verified=${verified}&borrowerType=${borrowerType}`,
         {
           method: "POST",
@@ -376,7 +376,7 @@ export const deleteDocumentFile = createAsyncThunk(
   async (fileDeleteParams, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const { docId } = fileDeleteParams;
-    const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
+    const url = `${import.meta.env.VITE_B2C_FILE_DELETE_PERSONAL}${docId}`;
 
     try {
       const response = await fetch(url, {

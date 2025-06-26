@@ -52,8 +52,8 @@ const PersonDetailsSection = () => {
                 onChange={(e) => handleInputChange(e, "incomeOnPaySlip")}
                 required
             />
-            <div className={`relative group w-full ${pathname.includes("loan-offers") && "hidden"} `} >
-                <input
+            {/* <div className={`relative group w-full ${pathname.includes("loan-offers") && "hidden"} `} > */}
+                {/* <input
                     className="form-input w-full mb-4 py-4 pr-12"
                     type={showPassword ? "text" : "password"}
                     placeholder="Create Password"
@@ -62,25 +62,25 @@ const PersonDetailsSection = () => {
                     onChange={(e) => handleInputChange(e, "cachedDetails")}
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
                     required
-                />
+                /> */}
 
                 {/* 👁 Password Toggle Icon */}
-                <button
+                {/* <button
                     type="button"
                     onClick={() => setShowPassword(prev => !prev)}
                     className="absolute right-4 top-7 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                     {showPassword ? <EyeSlashIcon className='h-5 w-5' /> : <EyeIcon className='h-5 w-5' />}
-                </button>
+                </button> */}
 
                 {/* 🧠 Tooltip on hover */}
-                <div className="absolute bottom-full left-0 mb-2 hidden w-32 rounded bg-gray-900 text-[9px] text-white p-1 group-hover:block z-10 shadow-lg">
+                {/* <div className="absolute bottom-full left-0 mb-2 hidden w-32 rounded bg-gray-900 text-[9px] text-white p-1 group-hover:block z-10 shadow-lg">
                     • At least 8 characters<br />
                     • One uppercase letter<br />
                     • One lowercase letter<br />
                     • One number
-                </div>
-            </div>
+                </div> */}
+            {/* </div> */}
         </>
     )
 }

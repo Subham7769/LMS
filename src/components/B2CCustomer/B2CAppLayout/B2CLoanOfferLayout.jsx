@@ -11,11 +11,11 @@ const B2CLoanOfferLayoutScreen = () => {
     }
 
     return (
-        <div className="flex relative bg-white dark:bg-gray-800 border-amber-100 border-4">
+        <div className="flex bg-white dark:bg-gray-800">
             <B2CSideBar />
-            <div className={"flex justify-center flex-1"} >
-                <B2CLoanOffers />
-            </div>
+
+            <B2CLoanOffers />
+
         </div>
     )
 }
